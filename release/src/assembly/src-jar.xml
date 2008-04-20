@@ -1,0 +1,11 @@
+<component>
+  <fileSets>
+    <fileSet>
+      <outputDirectory></outputDirectory>
+      <directory>../core/target</directory>
+      <includes>
+        <include>powermock-*-sources.jar</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+</component>

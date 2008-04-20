@@ -1,0 +1,16 @@
+<?xml version="1.0"?><project>
+  <parent>
+    <artifactId>powermock</artifactId>
+    <groupId>org.powermock</groupId>
+    <version>0.5-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.powermock.examples</groupId>
+  <artifactId>powermock-examples</artifactId>
+  <packaging>pom</packaging>
+  <name>powermock-examples</name>
+  <url>http://maven.apache.org</url>  
+  <modules>
+    <module>dom4j</module>
+  </modules>
+</project>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <parent>
+    <artifactId>powermock</artifactId>
+    <groupId>org.powermock</groupId>
+    <version>0.5-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.powermock.modules</groupId>
+  <artifactId>powermock-modules</artifactId>
+  <packaging>pom</packaging>
+  <name>powermock-modules</name>
+  <url>http://maven.apache.org</url>
+   <modules>
+    <module>junit3</module>
+    <module>junit4</module>
+    <module>junit4-common</module>
+    <module>junit4-legacy</module>
+  </modules>
+</project>

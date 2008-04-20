@@ -1,0 +1,17 @@
+<assembly>
+  <id>buildable</id>
+  <formats>
+    <format>dir</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <moduleSets>
+    <moduleSet>
+      <includes>
+        <include>org.powermock:powermock-core</include>
+      </includes>
+      <sources>
+        <outputDirectory>sources/${artifactId}</outputDirectory>
+      </sources>
+    </moduleSet>
+  </moduleSets>
+</assembly>

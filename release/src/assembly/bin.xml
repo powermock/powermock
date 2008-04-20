@@ -1,0 +1,20 @@
+<assembly>
+  <id>bin</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <componentDescriptors>
+    <componentDescriptor>src/assembly/javadoc.xml</componentDescriptor>
+    <componentDescriptor>src/assembly/src-jar.xml</componentDescriptor>
+  </componentDescriptors>
+  <includeBaseDirectory>true</includeBaseDirectory>
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory></outputDirectory>
+      <unpack>false</unpack>
+      <includes>
+        <include>org.powermock:powermock-core</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+</assembly>
