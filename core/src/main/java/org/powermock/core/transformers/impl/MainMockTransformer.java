@@ -15,9 +15,6 @@
  */
 package org.powermock.core.transformers.impl;
 
-import org.powermock.core.MockGateway;
-import org.powermock.core.transformers.MockTransformer;
-
 import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtConstructor;
@@ -32,17 +29,26 @@ import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
 import javassist.expr.NewExpr;
 
+import org.powermock.core.MockGateway;
+import org.powermock.core.transformers.MockTransformer;
+
 public class MainMockTransformer implements MockTransformer {
 
 	protected static final String METHOD_PREFIX = "____";
 
 	public CtClass transform(final CtClass clazz) throws Exception {
-
-		// CtConstructor classInitializer = clazz.makeClassInitializer();
-		// classInitializer.setBody("{}");
-
 		if (clazz.isFrozen()) {
 			clazz.defrost();
+		}
+
+		if (MockGateway.staticConstructorCall(clazz.getName()) != MockGateway.PROCEED) {
+			CtConstructor classInitializer = clazz.makeClassInitializer();
+			classInitializer.setBody("{}");
+		}
+		
+		// This should probably be configurable
+		if (Modifier.isFinal(clazz.getModifiers())) {
+			clazz.setModifiers(clazz.getModifiers() ^ Modifier.FINAL);
 		}
 
 		for (CtMethod m : clazz.getDeclaredMethods()) {

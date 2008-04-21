@@ -52,7 +52,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 	final private String ignoredClass = "net.sf.cglib.proxy.Enhancer$EnhancerKey$$KeyFactoryByCGLIB$$";
 	private ClassPool classPool = new ClassPool();
 
-	public MockClassLoader(Class<?>... classesToMock) {
+	public MockClassLoader(String... classesToMock) {
 		super(MockClassLoader.class.getClassLoader(), new String[] { "java.",
 				"javax.", "sun.", "org.junit.", "junit.",
 				"org.powermock.modules.junit4.internal.",
@@ -69,12 +69,13 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 	 * classes will be byte-code manipulated to allow for testing.
 	 * 
 	 * @param classes
-	 *            The classes that will be appended to the list of classes that
-	 *            will be byte-code modified to enable testability.
+	 *            The fully qualified name of the classes that will be appended
+	 *            to the list of classes that will be byte-code modified to
+	 *            enable testability.
 	 */
-	public void addClassesToModify(Class<?>... classes) {
-		for (Class<?> clazz : classes) {
-			modify.add(clazz.getName());
+	public void addClassesToModify(String... classes) {
+		for (String clazz : classes) {
+			modify.add(clazz);
 		}
 	}
 

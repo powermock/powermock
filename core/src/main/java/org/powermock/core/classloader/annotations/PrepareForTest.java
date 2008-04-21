@@ -30,4 +30,6 @@ import org.powermock.core.classloader.annotations.internal.IndicateReloadClass;
 @Inherited
 public @interface PrepareForTest {
 	Class<?>[] value() default IndicateReloadClass.class;
+	
+	String[] fullyQualifiedNames() default "";
 }

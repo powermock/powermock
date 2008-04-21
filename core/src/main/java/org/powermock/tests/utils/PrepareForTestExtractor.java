@@ -18,7 +18,7 @@ package org.powermock.tests.utils;
 import java.lang.reflect.Method;
 
 public interface PrepareForTestExtractor {
-	public Class<?>[] getClassLevelElements(Class<?> testCase);
+	public String[] getClassLevelElements(Class<?> testCase);
 
-	public Class<?>[] getMethodLevelElements(Method testMethod);
+	public String[] getMethodLevelElements(Method testMethod);
 }

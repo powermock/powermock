@@ -37,7 +37,8 @@ import org.powermock.core.invocationcontrol.newinstance.NewInvocationControl;
 
 public class PowerMock {
 
-	public static synchronized <T> T createMock(Class<T> type, Method... methods) {
+	public static synchronized <T> T createMock(Class<T> type,
+			Method... methods) {
 		return doMock(type, false, methods);
 	}
 
@@ -51,14 +52,16 @@ public class PowerMock {
 		doMock(type, true, methods);
 	}
 
-	private static <T> T doMock(Class<T> type, boolean isStatic, Method... methods) {
+	private static <T> T doMock(Class<T> type, boolean isStatic,
+			Method... methods) {
 		MocksControl control = null;
 		T mock = null;
 		if (type.isInterface()) {
 			control = (MocksControl) EasyMock.createControl();
 			mock = control.createMock(type);
 		} else {
-			control = (MocksControl) org.easymock.classextension.EasyMock.createControl();
+			control = (MocksControl) org.easymock.classextension.EasyMock
+					.createControl();
 			mock = ((MocksClassControl) control).createMock(type, methods);
 		}
 
@@ -93,7 +96,8 @@ public class PowerMock {
 	 *            methods in that class will be mocked).
 	 * @return A mock object of type <T>.
 	 */
-	public static synchronized <T> T mockAllExcept(Class<T> type, String... methodNames) {
+	public static synchronized <T> T mockAllExcept(Class<T> type,
+			String... methodNames) {
 
 		if (methodNames.length == 0) {
 			return createMock(type);
@@ -122,13 +126,16 @@ public class PowerMock {
 	 * @param moreTypes
 	 * @return
 	 */
-	public static synchronized <T> T mockAllExcept(Class<T> type, String methodNameToExclude, Class<?> firstArgumentType, Class<?>... moreTypes) {
+	public static synchronized <T> T mockAllExcept(Class<T> type,
+			String methodNameToExclude, Class<?> firstArgumentType,
+			Class<?>... moreTypes) {
 		/*
 		 * The reason why we've split the first and "additional types" is
 		 * because it should not intervene with the mockAllExcept(type,
 		 * String...methodNames) method.
 		 */
-		Class<?>[] argumentTypes = mergeArgumentTypes(firstArgumentType, moreTypes);
+		Class<?>[] argumentTypes = mergeArgumentTypes(firstArgumentType,
+				moreTypes);
 
 		Method[] methods = type.getDeclaredMethods();
 		List<Method> methodList = new ArrayList<Method>();
@@ -157,11 +164,13 @@ public class PowerMock {
 		return createMock(type, methodList.toArray(new Method[0]));
 	}
 
-	private static Class<?>[] mergeArgumentTypes(Class<?> firstArgumentType, Class<?>... additionalArgumentTypes) {
+	private static Class<?>[] mergeArgumentTypes(Class<?> firstArgumentType,
+			Class<?>... additionalArgumentTypes) {
 		Class<?>[] argumentTypes = new Class[additionalArgumentTypes.length + 1];
 		argumentTypes[0] = firstArgumentType;
 		if (additionalArgumentTypes.length != 0) {
-			System.arraycopy(additionalArgumentTypes, 0, argumentTypes, 1, additionalArgumentTypes.length);
+			System.arraycopy(additionalArgumentTypes, 0, argumentTypes, 1,
+					additionalArgumentTypes.length);
 		}
 		return argumentTypes;
 	}
@@ -177,8 +186,11 @@ public class PowerMock {
 	 * @param additionalArgumentTypes
 	 * @return
 	 */
-	public static synchronized <T> T mockMethod(Class<T> type, String methodNameToMock, Class<?> firstArgumentType, Class<?>... additionalArgumentTypes) {
-		return doMockSpecific(type, methodNameToMock, mergeArgumentTypes(firstArgumentType, additionalArgumentTypes));
+	public static synchronized <T> T mockMethod(Class<T> type,
+			String methodNameToMock, Class<?> firstArgumentType,
+			Class<?>... additionalArgumentTypes) {
+		return doMockSpecific(type, methodNameToMock, mergeArgumentTypes(
+				firstArgumentType, additionalArgumentTypes));
 	}
 
 	/**
@@ -193,8 +205,11 @@ public class PowerMock {
 	 * @param additionalArgumentTypes
 	 *            Optional additional argument types.
 	 */
-	public static synchronized void mockStaticMethod(Class<?> clazz, String methodNameToMock, Class<?> firstArgumentType, Class<?>... additionalArgumentTypes) {
-		doMockSpecific(clazz, methodNameToMock, mergeArgumentTypes(firstArgumentType, additionalArgumentTypes));
+	public static synchronized void mockStaticMethod(Class<?> clazz,
+			String methodNameToMock, Class<?> firstArgumentType,
+			Class<?>... additionalArgumentTypes) {
+		doMockSpecific(clazz, methodNameToMock, mergeArgumentTypes(
+				firstArgumentType, additionalArgumentTypes));
 	}
 
 	/**
@@ -217,12 +232,15 @@ public class PowerMock {
 	 *            with the second parameter as <code>null</code> (i.e. all
 	 *            methods in that class will be mocked).
 	 */
-	public static synchronized void mockStaticMethod(Class<?> clazz, String... methodNames) {
+	public static synchronized void mockStaticMethod(Class<?> clazz,
+			String... methodNames) {
 		mockStatic(clazz, Whitebox.getMethods(clazz, methodNames));
 	}
 
-	static <T> T doMockSpecific(Class<T> type, String methodNameToMock, Class<?>... argumentTypes) {
-		Method methodToMock = Whitebox.findMethodOrThrowException(type, methodNameToMock, argumentTypes);
+	static <T> T doMockSpecific(Class<T> type, String methodNameToMock,
+			Class<?>... argumentTypes) {
+		Method methodToMock = Whitebox.findMethodOrThrowException(type,
+				methodNameToMock, argumentTypes);
 		if (Modifier.isStatic(methodToMock.getModifiers())) {
 			mockStatic(type, methodToMock);
 			return null;
@@ -253,20 +271,25 @@ public class PowerMock {
 	 *            methods in that class will be mocked).
 	 * @return A mock object of type <T>.
 	 */
-	public static synchronized <T> T mockMethod(Class<T> type, String... methodNames) {
+	public static synchronized <T> T mockMethod(Class<T> type,
+			String... methodNames) {
 		return createMock(type, Whitebox.getMethods(type, methodNames));
 	}
 
-	public static synchronized <T> IExpectationSetters<T> expectPrivate(Class<?> clazz, Method method, Object... arguments) {
+	public static synchronized <T> IExpectationSetters<T> expectPrivate(
+			Class<?> clazz, Method method, Object... arguments) {
 		return doExpectPrivate(clazz, method, arguments);
 	}
 
-	public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, Method method, Object... arguments) {
+	public static synchronized <T> IExpectationSetters<T> expectPrivate(
+			Object instance, Method method, Object... arguments) {
 		return doExpectPrivate(instance, method, arguments);
 	}
 
 	@SuppressWarnings("all")
-	public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, String methodName, Class<?>[] parameterTypes, Object... arguments) {
+	public static synchronized <T> IExpectationSetters<T> expectPrivate(
+			Object instance, String methodName, Class<?>[] parameterTypes,
+			Object... arguments) {
 
 		if (arguments == null) {
 			arguments = new Object[0];
@@ -275,12 +298,15 @@ public class PowerMock {
 		if (instance == null) {
 			throw new IllegalArgumentException("instance cannot be null.");
 		} else if (arguments.length != parameterTypes.length) {
-			throw new IllegalArgumentException("The length of the arguments must be equal to the number of parameter types.");
+			throw new IllegalArgumentException(
+					"The length of the arguments must be equal to the number of parameter types.");
 		}
 
-		Method foundMethod = Whitebox.getMethod(instance.getClass(), methodName, parameterTypes);
+		Method foundMethod = Whitebox.getMethod(instance.getClass(),
+				methodName, parameterTypes);
 
-		Whitebox.throwExceptionIfMethodWasNotFound(instance.getClass(), methodName, foundMethod, parameterTypes);
+		Whitebox.throwExceptionIfMethodWasNotFound(instance.getClass(),
+				methodName, foundMethod, parameterTypes);
 
 		return doExpectPrivate(instance, foundMethod, arguments);
 	}
@@ -291,26 +317,34 @@ public class PowerMock {
 	 * public class).
 	 */
 	@SuppressWarnings("unchecked")
-	public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, String methodName, Object... arguments) {
+	public static synchronized <T> IExpectationSetters<T> expectPrivate(
+			Object instance, String methodName, Object... arguments) {
 
-		Method methodToExpect = Whitebox.findMethodOrThrowException(instance, methodName, arguments);
+		Method methodToExpect = Whitebox.findMethodOrThrowException(instance,
+				methodName, arguments);
 		return doExpectPrivate(instance, methodToExpect, arguments);
 	}
 
-	public static synchronized IExpectationSetters<Object> expectVoid(Object instance, String methodName, Object... arguments) {
-		Method methodToExpect = Whitebox.findMethodOrThrowException(instance, methodName, arguments);
+	public static synchronized IExpectationSetters<Object> expectVoid(
+			Object instance, String methodName, Object... arguments) {
+		Method methodToExpect = Whitebox.findMethodOrThrowException(instance,
+				methodName, arguments);
 		doInvokeMethod(instance, methodToExpect, arguments);
 		return org.easymock.classextension.EasyMock.expectLastCall();
 	}
 
-	public static synchronized IExpectationSetters<Object> expectVoid(Class<?> clazz, String methodName, Object... arguments) {
-		Method methodToExpect = Whitebox.findMethodOrThrowException(clazz, methodName, arguments);
+	public static synchronized IExpectationSetters<Object> expectVoid(
+			Class<?> clazz, String methodName, Object... arguments) {
+		Method methodToExpect = Whitebox.findMethodOrThrowException(clazz,
+				methodName, arguments);
 		doInvokeMethod(clazz, methodToExpect, arguments);
 		return org.easymock.classextension.EasyMock.expectLastCall();
 	}
 
 	@SuppressWarnings("all")
-	public static synchronized IExpectationSetters<Object> expectVoid(Object instance, String methodName, Class<?>[] parameterTypes, Object... arguments) {
+	public static synchronized IExpectationSetters<Object> expectVoid(
+			Object instance, String methodName, Class<?>[] parameterTypes,
+			Object... arguments) {
 
 		if (arguments == null) {
 			arguments = new Object[0];
@@ -319,12 +353,15 @@ public class PowerMock {
 		if (instance == null) {
 			throw new IllegalArgumentException("instance cannot be null.");
 		} else if (arguments.length != parameterTypes.length) {
-			throw new IllegalArgumentException("The length of the arguments must be equal to the number of parameter types.");
+			throw new IllegalArgumentException(
+					"The length of the arguments must be equal to the number of parameter types.");
 		}
 
-		Method foundMethod = Whitebox.getMethod(instance.getClass(), methodName, parameterTypes);
+		Method foundMethod = Whitebox.getMethod(instance.getClass(),
+				methodName, parameterTypes);
 
-		Whitebox.throwExceptionIfMethodWasNotFound(instance.getClass(), methodName, foundMethod, parameterTypes);
+		Whitebox.throwExceptionIfMethodWasNotFound(instance.getClass(),
+				methodName, foundMethod, parameterTypes);
 
 		return org.easymock.classextension.EasyMock.expectLastCall();
 	}
@@ -342,12 +379,14 @@ public class PowerMock {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T> IExpectationSetters<T> doExpectPrivate(Object instance, Method methodToExpect, Object... arguments) {
+	private static <T> IExpectationSetters<T> doExpectPrivate(Object instance,
+			Method methodToExpect, Object... arguments) {
 		doInvokeMethod(instance, methodToExpect, arguments);
 		return (IExpectationSetters<T>) getLastControl(methodToExpect.getName());
 	}
 
-	private static void doInvokeMethod(Object instance, Method methodToExpect, Object... arguments) {
+	private static void doInvokeMethod(Object instance, Method methodToExpect,
+			Object... arguments) {
 		if (methodToExpect == null) {
 			throw new IllegalArgumentException("Method cannot be null");
 		}
@@ -357,16 +396,22 @@ public class PowerMock {
 		try {
 			methodToExpect.invoke(instance, arguments);
 		} catch (Exception e) {
-			throw new RuntimeException("Failed to invoke method '" + methodToExpect.getName() + "'. Reason was: '" + e.getMessage() + "'.", e);
+			throw new RuntimeException("Failed to invoke method '"
+					+ methodToExpect.getName() + "'. Reason was: '"
+					+ e.getMessage() + "'.", e);
 		}
 	}
 
 	private static MocksControl getLastControl(String methodName) {
 		final MocksControl lastControl = LastControl.lastControl();
 		if (lastControl == null) {
-			throw new RuntimeException("Failed to expect method " + methodName + ". Perhaps you have forgot to prepare the mock for testing using the @"
-					+ PrepareForTest.class.getSimpleName() + " annotation? If you're using JUnit 3, make sure you've created a "
-					+ "PowerMock suite and added the test class to that suite.");
+			throw new RuntimeException(
+					"Failed to expect method "
+							+ methodName
+							+ ". Perhaps you have forgot to prepare the mock for testing using the @"
+							+ PrepareForTest.class.getSimpleName()
+							+ " annotation? If you're using JUnit 3, make sure you've created a "
+							+ "PowerMock suite and added the test class to that suite.");
 		}
 		return lastControl;
 	}
@@ -379,7 +424,8 @@ public class PowerMock {
 					invocationHandler.getControl().replay();
 				}
 
-				NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceSubstitute(type);
+				NewInvocationControl<?> newInvocationControl = MockRepository
+						.getNewInstanceSubstitute(type);
 				if (newInvocationControl != null) {
 					EasyMock.replay(newInvocationControl);
 				}
@@ -397,12 +443,15 @@ public class PowerMock {
 				if (invocationHandler != null) {
 					invocationHandler.getControl().verify();
 				}
-				NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceSubstitute(type);
+				NewInvocationControl<?> newInvocationControl = MockRepository
+						.getNewInstanceSubstitute(type);
 				if (newInvocationControl != null) {
 					try {
 						EasyMock.verify(newInvocationControl);
 					} catch (AssertionError e) {
-						PowerMockUtils.throwAssertionErrorForNewSubstitutionFailure(e, type);
+						PowerMockUtils
+								.throwAssertionErrorForNewSubstitutionFailure(
+										e, type);
 					}
 				}
 			}
@@ -417,28 +466,33 @@ public class PowerMock {
 	}
 
 	private static MockInvocationHandler getClassInvocationHandler(Class<?> type) {
-		final MethodInvocationControl invocationControl = MockRepository.getClassMethodInvocationControl(type);
+		final MethodInvocationControl invocationControl = MockRepository
+				.getClassMethodInvocationControl(type);
 
 		return toInvocationHandler(invocationControl);
 	}
 
-	private static MockInvocationHandler getInstanceInvocationHandler(Object instance) {
-		final MethodInvocationControl invocationControl = MockRepository.getInstanceMethodInvocationControl(instance);
+	private static MockInvocationHandler getInstanceInvocationHandler(
+			Object instance) {
+		final MethodInvocationControl invocationControl = MockRepository
+				.getInstanceMethodInvocationControl(instance);
 		return toInvocationHandler(invocationControl);
 	}
 
-	private static MockInvocationHandler toInvocationHandler(final MethodInvocationControl invocationControl) {
+	private static MockInvocationHandler toInvocationHandler(
+			final MethodInvocationControl invocationControl) {
 		if (invocationControl == null) {
 			return null;
 		}
-		return ((MockInvocationHandler) invocationControl.getInvocationHandler());
+		return ((MockInvocationHandler) invocationControl
+				.getInvocationHandler());
 	}
 
 	public static synchronized void replay(Object... objects) {
 		try {
 			for (Object tested : objects) {
 				if (tested instanceof Class) {
-					replay((Class<?>)tested);
+					replay((Class<?>) tested);
 				} else {
 					MockInvocationHandler instanceInvocationHandler = getInstanceInvocationHandler(tested);
 					if (instanceInvocationHandler != null) {
@@ -451,10 +505,11 @@ public class PowerMock {
 					}
 				}
 
-//				NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceSubstitute(tested.getClass().getSuperclass());
-//				if (newInvocationControl != null) {
-//					EasyMock.replay(newInvocationControl);
-//				}
+				// NewInvocationControl<?> newInvocationControl =
+				// MockRepository.getNewInstanceSubstitute(tested.getClass().getSuperclass());
+				// if (newInvocationControl != null) {
+				// EasyMock.replay(newInvocationControl);
+				// }
 			}
 		} catch (Throwable t) {
 			clearState();
@@ -466,7 +521,7 @@ public class PowerMock {
 		try {
 			for (Object tested : objects) {
 				if (tested instanceof Class) {
-					verifyClass((Class<?>)tested);
+					verifyClass((Class<?>) tested);
 				} else {
 					MockInvocationHandler instanceInvocationHandler = getInstanceInvocationHandler(tested);
 					if (instanceInvocationHandler != null) {
@@ -510,20 +565,23 @@ public class PowerMock {
 	 * @return A mock object of the same type as the mock.
 	 */
 	public static synchronized <T> T mockConstruction(Class<T> type) {
-		T replacementMock = org.easymock.classextension.EasyMock.createMock(type);
+		T replacementMock = org.easymock.classextension.EasyMock
+				.createMock(type);
 		/*
 		 * If the class in an inner/member class we need to add the prefix. This
 		 * is necessary since the NewAndPrivateMockTransformer requires a
 		 * distinction between normal classes and anonymous inner classes.
 		 */
-		final String mockRepositoryKey = MockRepository.getMockRepositoryClassKey(type);
+		final String mockRepositoryKey = MockRepository
+				.getMockRepositoryClassKey(type);
 
 		MockRepository.putMock(mockRepositoryKey, replacementMock);
 		return replacementMock;
 	}
 
 	@SuppressWarnings("unchecked")
-	public static synchronized <T> IExpectationSetters<T> expectNew(Class<T> type) {
+	public static synchronized <T> IExpectationSetters<T> expectNew(
+			Class<T> type) {
 		if (type == null) {
 			throw new IllegalArgumentException("type cannot be null");
 		}
@@ -533,9 +591,11 @@ public class PowerMock {
 		/*
 		 * Check if this object has been mocked before
 		 */
-		NewInvocationControl<T> newInvocationControl = (NewInvocationControl<T>) MockRepository.getNewInstanceSubstitute(unmockedType);
+		NewInvocationControl<T> newInvocationControl = (NewInvocationControl<T>) MockRepository
+				.getNewInstanceSubstitute(unmockedType);
 		if (newInvocationControl == null) {
-			newInvocationControl = EasyMock.createMock(NewInvocationControl.class);
+			newInvocationControl = EasyMock
+					.createMock(NewInvocationControl.class);
 			MockRepository.putNewInstanceSubstitute(type, newInvocationControl);
 		}
 		return EasyMock.expect(newInvocationControl.createInstance());
@@ -560,7 +620,8 @@ public class PowerMock {
 	 *            suppressed.
 	 * 
 	 */
-	public static synchronized void suppressConstructorCodeHierarchy(Class<?>... classes) {
+	public static synchronized void suppressConstructorCodeHierarchy(
+			Class<?>... classes) {
 		for (Class<?> clazz : classes) {
 			Class<?> tempClass = clazz;
 			while (tempClass != Object.class) {
@@ -570,7 +631,8 @@ public class PowerMock {
 		}
 	}
 
-	public static synchronized void suppressConstructorCode(Constructor<?>... constructors) {
+	public static synchronized void suppressConstructorCode(
+			Constructor<?>... constructors) {
 		for (Constructor<?> constructor : constructors) {
 			MockGateway.addConstructorToSuppress(constructor);
 		}
@@ -584,8 +646,10 @@ public class PowerMock {
 	 * @param parameterTypes
 	 *            The parameter types of the constructor to suppress.
 	 */
-	public static synchronized void suppressSpecificConstructor(Class<?> clazz, Class<?>... parameterTypes) {
-		MockGateway.addConstructorToSuppress(Whitebox.getConstructor(clazz, parameterTypes));
+	public static synchronized void suppressSpecificConstructor(Class<?> clazz,
+			Class<?>... parameterTypes) {
+		MockGateway.addConstructorToSuppress(Whitebox.getConstructor(clazz,
+				parameterTypes));
 	}
 
 	/**
@@ -600,7 +664,8 @@ public class PowerMock {
 		}
 	}
 
-	public static synchronized void suppressConstructorCode(Class<?> clazz, boolean excludePrivateConstructors) {
+	public static synchronized void suppressConstructorCode(Class<?> clazz,
+			boolean excludePrivateConstructors) {
 		Constructor<?>[] ctors = null;
 
 		if (excludePrivateConstructors) {
@@ -632,7 +697,8 @@ public class PowerMock {
 		}
 	}
 
-	public static synchronized void suppressMethodCode(Class<?> clazz, boolean excludePrivateMethods) {
+	public static synchronized void suppressMethodCode(Class<?> clazz,
+			boolean excludePrivateMethods) {
 		Method[] methods = null;
 
 		if (excludePrivateMethods) {
@@ -646,12 +712,14 @@ public class PowerMock {
 		}
 	}
 
-	public static synchronized void suppressMethodCode(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
+	public static synchronized void suppressMethodCode(Class<?> clazz,
+			String methodName, Class<?>... parameterTypes) {
 		Method method = null;
 		if (parameterTypes.length > 0) {
 			method = Whitebox.getMethod(clazz, methodName, parameterTypes);
 		} else {
-			method = Whitebox.findMethodOrThrowException(clazz, methodName, parameterTypes);
+			method = Whitebox.findMethodOrThrowException(clazz, methodName,
+					parameterTypes);
 		}
 		MockGateway.addMethodToSuppress(method);
 	}

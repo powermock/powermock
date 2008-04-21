@@ -17,8 +17,11 @@ package org.powermock.tests.utils.impl;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.core.classloader.annotations.internal.IndicateReloadClass;
 import org.powermock.tests.utils.PrepareForTestExtractor;
 
 /**
@@ -31,26 +34,42 @@ public class PrepareForTestExtractorImpl implements PrepareForTestExtractor {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Class<?>[] getClassLevelElements(Class<?> testCase) {
+	public String[] getClassLevelElements(Class<?> testCase) {
 		return doGetEntitiesForAnnotation(testCase);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Class<?>[] getMethodLevelElements(Method testMethod) {
+	public String[] getMethodLevelElements(Method testMethod) {
 		return doGetEntitiesForAnnotation(testMethod);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	private Class<?>[] doGetEntitiesForAnnotation(AnnotatedElement element) {
-		PrepareForTest annotation = element.getAnnotation(PrepareForTest.class);
-		Class<?>[] classesToMock = new Class<?>[0];
-		if (annotation != null) {
-			classesToMock = annotation.value();
+	private String[] doGetEntitiesForAnnotation(AnnotatedElement element) {
+		List<String> all = new LinkedList<String>();
+
+		PrepareForTest prepareAnnotation = element
+				.getAnnotation(PrepareForTest.class);
+		if (prepareAnnotation != null) {
+			final Class<?>[] classesToMock = prepareAnnotation.value();
+			for (Class<?> classToMock : classesToMock) {
+				if (!classToMock.equals(IndicateReloadClass.class)) {
+					all.add(classToMock.getName());
+				}
+			}
+			String[] fullyQualifiedNames = prepareAnnotation
+					.fullyQualifiedNames();
+			for (String string : fullyQualifiedNames) {
+				if (!"".equals(string)) {
+					all.add(string);
+				}
+			}
 		}
-		return classesToMock;
+
+		return all.toArray(new String[0]);
 	}
+
 }

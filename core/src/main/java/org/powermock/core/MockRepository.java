@@ -17,6 +17,7 @@ package org.powermock.core;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -49,6 +50,13 @@ public class MockRepository {
 	private static Map<Object, MethodInvocationControl> instanceMocks = new HashMap<Object, MethodInvocationControl>();
 
 	/**
+	 * Holds info about which class that should have their static initializers
+	 * suppressed.
+	 */
+	private static Set<String> suppressStaticInitializers = Collections
+			.synchronizedSet(new HashSet<String>());
+
+	/**
 	 * Hash map that maps between a fully qualified class name and the mock
 	 * object for that class.
 	 */
@@ -68,6 +76,7 @@ public class MockRepository {
 		classMocks.clear();
 		instanceMocks.clear();
 		newSubstitutions.clear();
+		suppressStaticInitializers.clear();
 	}
 
 	public static String getMockRepositoryClassKey(Class<?> type) {
@@ -136,5 +145,45 @@ public class MockRepository {
 	public static synchronized NewInvocationControl<?> putNewInstanceSubstitute(
 			Class<?> type, NewInvocationControl<?> fakeNewMock) {
 		return newSubstitutions.put(type, fakeNewMock);
+	}
+
+	/**
+	 * Add a fully qualified class name for a class that should have its static
+	 * initializers suppressed.
+	 * 
+	 * @param className
+	 *            The fully qualified class name for a class that should have
+	 *            its static initializers suppressed.
+	 */
+	public static synchronized void addSuppressStaticInitializer(
+			String className) {
+		suppressStaticInitializers.add(className);
+	}
+
+	/**
+	 * Remove a fully qualified class name for a class that should no longer
+	 * have its static initializers suppressed.
+	 * 
+	 * @param className
+	 *            The fully qualified class name for a class that should no
+	 *            longer have its static initializers suppressed.
+	 */
+	public static synchronized void removeSuppressStaticInitializer(
+			String className) {
+		suppressStaticInitializers.remove(className);
+	}
+
+	/**
+	 * Check whether or not a class with the fully qualified name should have
+	 * its static initializers suppressed.
+	 * 
+	 * @param className
+	 *            <code>true</code> if class with the fully qualified name
+	 *            <code>className</code> should have its static initializers
+	 *            suppressed, <code>false</code> otherwise.
+	 */
+	public static synchronized boolean shouldSuppressStaticInitializerFor(
+			String className) {
+		return suppressStaticInitializers.contains(className);
 	}
 }

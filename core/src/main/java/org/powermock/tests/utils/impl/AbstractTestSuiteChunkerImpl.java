@@ -30,6 +30,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.MainMockTransformer;
 import org.powermock.tests.utils.PrepareForTestExtractor;
+import org.powermock.tests.utils.StaticConstructorSuppressionExtractor;
 import org.powermock.tests.utils.TestSuiteChunker;
 
 /**
@@ -47,6 +48,8 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements
 	private static final int INTERNAL_INDEX_NOT_FOUND = NOT_INITIALIZED;
 
 	protected final PrepareForTestExtractor prepareForTestExtractor = new PrepareForTestExtractorImpl();
+
+	private final StaticConstructorSuppressionExtractor suppressionExtractor = new StaticConstructorSuppressImpl();
 
 	/*
 	 * The classes listed in this set has been chunked and its delegates has
@@ -86,14 +89,34 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements
 	}
 
 	protected void chunkClass(Class<?> testClass) {
-		MockClassLoader defaultMockLoader = createNewMockClassloader(prepareForTestExtractor
-				.getClassLevelElements(testClass));
+		final String[] prepareForTestClasses = prepareForTestExtractor
+				.getClassLevelElements(testClass);
+		final String[] suppressStaticClasses = suppressionExtractor
+				.getClassLevelElements(testClass);
+		String[] classesToLoadedByMockClassLoader = new String[prepareForTestClasses.length
+				+ suppressStaticClasses.length];
+		System.arraycopy(prepareForTestClasses, 0,
+				classesToLoadedByMockClassLoader, 0,
+				prepareForTestClasses.length);
+		System.arraycopy(suppressStaticClasses, 0,
+				classesToLoadedByMockClassLoader, prepareForTestClasses.length,
+				suppressStaticClasses.length);
+		MockClassLoader defaultMockLoader = createNewMockClassloader(classesToLoadedByMockClassLoader);
 		List<Method> currentClassloaderMethods = new LinkedList<Method>();
 		// Put the first suite in the map of internal suites.
 		Map<MockClassLoader, List<Method>> suites = new ConcurrentHashMap<MockClassLoader, List<Method>>();
 		suites.put(defaultMockLoader, currentClassloaderMethods);
 		internalSuites.put(testClass, suites);
 		initEntries(testClass, currentClassloaderMethods, internalSuites);
+	}
+
+	public MockClassLoader createNewMockClassloader(String[] classes) {
+		List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
+		mockTransformerChain.add(new MainMockTransformer());
+
+		MockClassLoader mockLoader = new MockClassLoader(classes);
+		mockLoader.setMockTransformerChain(mockTransformerChain);
+		return mockLoader;
 	}
 
 	/**
@@ -110,15 +133,6 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements
 			delegates.add(runnerDelegator);
 		}
 		delegatesCreatedForTheseClasses.add(testClass);
-	}
-
-	public MockClassLoader createNewMockClassloader(Class<?>[] classes) {
-		List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
-		mockTransformerChain.add(new MainMockTransformer());
-
-		MockClassLoader mockLoader = new MockClassLoader(classes);
-		mockLoader.setMockTransformerChain(mockTransformerChain);
-		return mockLoader;
 	}
 
 	protected abstract T createDelegatorFromClassloader(
