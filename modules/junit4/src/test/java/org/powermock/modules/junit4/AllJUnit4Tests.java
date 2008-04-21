@@ -15,6 +15,9 @@
  */
 package org.powermock.modules.junit4;
 
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 import org.powermock.modules.junit4.constructor.PrivateConstructorInstantiationDemoTest;
 import org.powermock.modules.junit4.expectnew.ExpectNewDemoTest;
 import org.powermock.modules.junit4.expectvoid.ExpectVoidDemoTest;
@@ -28,20 +31,18 @@ import org.powermock.modules.junit4.privatefield.SimplePrivateFieldServiceClassT
 import org.powermock.modules.junit4.privatemocking.PrivateMethodDemoTest;
 import org.powermock.modules.junit4.singleton.StupidSingletonTest;
 import org.powermock.modules.junit4.staticandinstance.StaticAndInstanceDemoTest;
+import org.powermock.modules.junit4.staticinitializer.StaticInitializerExampleTest;
 import org.powermock.modules.junit4.suppressconstructor.SuppressConstructorDemoTest;
 import org.powermock.modules.junit4.suppressconstructor.SuppressConstructorHierarchyDemoTest;
 import org.powermock.modules.junit4.suppressconstructor.SuppressSpecificConstructorDemoTest;
 import org.powermock.modules.junit4.suppressmethod.SuppressMethodTest;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses( { PrivateConstructorInstantiationDemoTest.class,
-		ExpectNewDemoTest.class, ExpectVoidDemoTest.class,
-		StupidFinalTest.class, MockSelfDemoTest.class,
-		MockSelfDemoWithSubClassTest.class, StupidNewTest.class,
-		StupidPrivateFinalTest.class,
+@SuiteClasses( { StaticInitializerExampleTest.class,
+		PrivateConstructorInstantiationDemoTest.class, ExpectNewDemoTest.class,
+		ExpectVoidDemoTest.class, StupidFinalTest.class,
+		MockSelfDemoTest.class, MockSelfDemoWithSubClassTest.class,
+		StupidNewTest.class, StupidPrivateFinalTest.class,
 		MockSelfPrivateFieldServiceClassTest.class,
 		SimplePrivateFieldServiceClassTest.class, PrivateMethodDemoTest.class,
 		StupidSingletonTest.class, StaticAndInstanceDemoTest.class,

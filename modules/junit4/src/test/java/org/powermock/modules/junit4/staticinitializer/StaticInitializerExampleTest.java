@@ -15,18 +15,23 @@
  */
 package org.powermock.modules.junit4.staticinitializer;
 
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.junit.Ignore;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import samples.staticinitializer.StaticInitializerExample;
 
 @RunWith(PowerMockRunner.class)
+@SuppressStaticInitializationFor("samples.staticinitializer.StaticInitializerExample")
 public class StaticInitializerExampleTest {
 
 	@Test
-	@Ignore
 	public void testname() throws Exception {
-
+		Assert
+				.assertNull(
+						"Should be null because the static initializer should be suppressed",
+						StaticInitializerExample.getMySet());
 	}
 }
