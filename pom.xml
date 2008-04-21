@@ -30,18 +30,42 @@
 	</licenses>
 	<developers>
 		<developer>
+			<id>johanhaleby</id>
 			<name>Johan Haleby</name>
 			<organization>Jayway</organization>
-			<organizationUrl>www.jayway.se</organizationUrl>
+			<organizationUrl>http://www.jayway.se</organizationUrl>
 			<email>johan.haleby at jayway.se</email>
+			<timezone>+1</timezone>
 		</developer>
 		<developer>
+			<id>jakr</id>
 			<name>Jan Kronquist</name>
 			<organization>Jayway</organization>
-			<organizationUrl>www.jayway.se</organizationUrl>
+			<organizationUrl>http://www.jayway.se</organizationUrl>
 			<email>jan.kronquist at jayway.se</email>
+			<timezone>+1</timezone>
 		</developer>
 	</developers>
+	<scm>
+		<connection>scm:svn:https://powermock.svn.sourceforge.net/svnroot/powermock/trunk</connection>
+		<developerConnection>scm:svn:https://powermock.svn.sourceforge.net/svnroot/powermock/trunk</developerConnection>
+		<url>http://powermock.svn.sourceforge.net/viewcvs.cgi/powermock/trunk</url>
+	</scm>
+	<distributionManagement>
+		<!--
+			Provide username and such in your local settings.xml, as
+			described in:
+			
+			http://maven.apache.org/maven-settings/settings.html
+		-->
+		<site>
+			<id>website</id>
+			<name>SourceForge Site</name>
+			<url>
+				scp://shell.sourceforge.net/home/groups/p/po/powermock/htdocs/
+			</url>
+		</site>
+	</distributionManagement>
 	<modules>
 		<module>core</module>
 		<module>examples</module>
@@ -77,6 +101,9 @@
 							http://java.sun.com/j2se/1.5.0/docs/api
 						</link>
 					</links>
+					<excludes>
+						<exclude>samples</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 			<plugin>
