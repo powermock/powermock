@@ -77,12 +77,13 @@ public class PowerMock {
 	/**
 	 * A utility method that may be used to specify several methods that should
 	 * <i>not</i> be mocked in an easy manner (by just passing in the method
-	 * names of the method you wish not to mock). Note that you cannot uniquely
-	 * specify a method to exclude using this method if there are several
-	 * methods with the same name in <code>type</code>. This method will mock
-	 * ALL methods that match the supplied name regardless of parameter types
-	 * and signature. If this is the case you should fall-back on using the
-	 * {@link #createMock(Class, Method...)} method instead.
+	 * names of the method you wish <i>not</i> to mock). Note that you cannot
+	 * uniquely specify a method to exclude using this method if there are
+	 * several methods with the same name in <code>type</code>. This method
+	 * will mock ALL methods that doesn't match the supplied name(s) regardless
+	 * of parameter types and signature. If this is not the case you should
+	 * fall-back on using the {@link #createMock(Class, Method...)} method
+	 * instead.
 	 * 
 	 * @param <T>
 	 *            The type of the mock.
@@ -504,12 +505,6 @@ public class PowerMock {
 						org.easymock.classextension.EasyMock.replay(tested);
 					}
 				}
-
-				// NewInvocationControl<?> newInvocationControl =
-				// MockRepository.getNewInstanceSubstitute(tested.getClass().getSuperclass());
-				// if (newInvocationControl != null) {
-				// EasyMock.replay(newInvocationControl);
-				// }
 			}
 		} catch (Throwable t) {
 			clearState();
@@ -686,7 +681,7 @@ public class PowerMock {
 	}
 
 	/**
-	 * Suppress all methods for this class. TODO IMplement for objects as well.
+	 * Suppress all methods for this class. TODO Implement for objects as well.
 	 * 
 	 * @param classes
 	 *            The class which methods will be suppressed.
