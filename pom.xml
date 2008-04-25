@@ -59,14 +59,18 @@
 			http://maven.apache.org/maven-settings/settings.html
 		-->
 		<site>
-			<id>website</id>
+			<id>powermock-website</id>
 			<name>SourceForge Site</name>
 			<url>
 				scp://shell.sourceforge.net/home/groups/p/po/powermock/htdocs/
 			</url>
 		</site>
 	</distributionManagement>
-	<modules>
+	<issueManagement>
+		<system>Jira</system>
+		<url>https://springldap.waygroup.se/jira</url>
+	</issueManagement>
+  	<modules>
 		<module>core</module>
 		<module>examples</module>
 		<module>modules</module>
@@ -101,9 +105,7 @@
 							http://java.sun.com/j2se/1.5.0/docs/api
 						</link>
 					</links>
-					<excludes>
-						<exclude>samples</exclude>
-					</excludes>
+					<excludePackageNames>samples*:org.powermock.tests*:org.powermock.examples*</excludePackageNames>
 				</configuration>
 			</plugin>
 			<plugin>
