@@ -32,8 +32,6 @@ import org.powermock.core.invocationcontrol.newinstance.NewInvocationControl;
  * Hold mock objects that should be used instead of the concrete implementation.
  * Mock transformers may use this class to gather information on which classes
  * and methods that are mocked.
- * 
- * @author Johan Haleby
  */
 public class MockRepository {
 

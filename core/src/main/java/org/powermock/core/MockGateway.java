@@ -27,6 +27,10 @@ import org.powermock.Whitebox;
 import org.powermock.core.invocationcontrol.method.MethodInvocationControl;
 import org.powermock.core.invocationcontrol.newinstance.NewInvocationControl;
 
+/**
+ * All mock invocations are routed through this gateway. This includes method calls, construction of new instances and more.
+ * Do not use this class directly, but always go through the PowerMock facade.
+ */
 public class MockGateway {
 
 	public static final Object PROCEED = new Object();
