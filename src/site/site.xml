@@ -18,7 +18,8 @@
 
 		<menu name="Overview">
 			<item name="Home" href="/" />
-			<item name="Downloads" href="downloads/releases.html" />
+			<item name="Sourceforge" href="http://sourceforge.net/projects/powermock/" />
+			<item name="Downloads" href="http://sourceforge.net/project/showfiles.php?group_id=224812" />
 		</menu>
 
 		<menu name="Documentation">
