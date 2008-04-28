@@ -2,14 +2,52 @@
                                              Getting started with PowerMock
                                              ------------------------------
 
-Getting started
+Installing
 
-* Installing
++----------------------------------------------------------------------------------+
+svn checkout https://powermock.svn.sourceforge.net/svnroot/powermock/trunk powermock
+cd powermock
+mvn install
++----------------------------------------------------------------------------------+
+
+Usage
+
+ Add the following to your pom.xml:
+
++--------------------------------------------------------------------+
+<dependency>
+	<groupId>org.powermock</groupId>
+	<artifactId>powermock-core</artifactId>
+	<version>0.5</version>
+	<scope>test</scope>
+</dependency>
+<dependency>
+	<groupId>org.powermock.modules</groupId>
+	<artifactId>powermock-module-junit4</artifactId>
+	<version>0.5</version>
+	<scope>test</scope>
+</dependency>
+<dependency>
+	<groupId>org.easymock</groupId>
+	<artifactId>easymockclassextension</artifactId>
+	<version>2.2.2</version>
+	<scope>test</scope>
+</dependency>
++--------------------------------------------------------------------+
+
+ Write a test like this:
+
++--------------------------------------------------------------------+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest( { YourClassWitEgStaticMethod.class })
+public class YourTestCase {
+...
+}
++--------------------------------------------------------------------+
+
+ Please refer to the example projects for JUnit 3 samples.
 
 
+ NOTE! If you are using JUnit4 and extending TestCase you must use the @Test annotation on your test methods, otherwise PowerMock will cause an error. We are looking in to this issue.
 
-	* Sub steps
-
-	* second
-* Usage
 
