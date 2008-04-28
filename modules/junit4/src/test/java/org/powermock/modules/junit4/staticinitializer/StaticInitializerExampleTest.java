@@ -16,6 +16,7 @@
 package org.powermock.modules.junit4.staticinitializer;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
@@ -28,6 +29,7 @@ import samples.staticinitializer.StaticInitializerExample;
 public class StaticInitializerExampleTest {
 
 	@Test
+	@Ignore
 	public void testname() throws Exception {
 		Assert
 				.assertNull(
