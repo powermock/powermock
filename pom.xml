@@ -1,12 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.powermock</groupId>
 	<artifactId>powermock</artifactId>
 	<packaging>pom</packaging>
-	<version>0.5-SNAPSHOT</version>
+	<version>0.5</version>
 	<name>powermock</name>
 	<url>http://www.powermock.org</url>
 	<description>
@@ -47,9 +44,9 @@
 		</developer>
 	</developers>
 	<scm>
-		<connection>scm:svn:https://powermock.svn.sourceforge.net/svnroot/powermock/trunk</connection>
-		<developerConnection>scm:svn:https://powermock.svn.sourceforge.net/svnroot/powermock/trunk</developerConnection>
-		<url>http://powermock.svn.sourceforge.net/viewcvs.cgi/powermock/trunk</url>
+		<connection>scm:svn:https://powermock.svn.sourceforge.net/svnroot/powermock/tags/powermock-0.5</connection>
+		<developerConnection>scm:svn:https://powermock.svn.sourceforge.net/svnroot/powermock/tags/powermock-0.5</developerConnection>
+		<url>http://powermock.svn.sourceforge.net/viewcvs.cgi/powermock/tags/powermock-0.5</url>
 	</scm>
 	<distributionManagement>
 		<!--
