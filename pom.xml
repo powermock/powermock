@@ -3,7 +3,7 @@
 	<groupId>org.powermock</groupId>
 	<artifactId>powermock</artifactId>
 	<packaging>pom</packaging>
-	<version>0.5</version>
+	<version>0.5-SNAPSHOT</version>
 	<name>powermock</name>
 	<url>http://www.powermock.org</url>
 	<description>

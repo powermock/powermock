@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>powermock-examples</artifactId>
 		<groupId>org.powermock.examples</groupId>
-		<version>0.5</version>
+		<version>0.5-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.powermock.examples</groupId>
@@ -11,7 +11,7 @@
 	<name>powermock-examples-dom4j</name>
 	<url>http://maven.apache.org</url>
 	<properties>
-		<powermock.version>0.5</powermock.version>
+		<powermock.version>0.5-SNAPSHOT</powermock.version>
 	</properties>
 	<dependencies>
 		<dependency>
