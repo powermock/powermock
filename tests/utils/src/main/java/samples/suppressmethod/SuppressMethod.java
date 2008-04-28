@@ -21,6 +21,10 @@ public class SuppressMethod {
 		return new Object();
 	}
 
+	public static Object getObjectStatic() {
+		return new Object();
+	}
+
 	public byte getByte() {
 		return Byte.MAX_VALUE;
 	}

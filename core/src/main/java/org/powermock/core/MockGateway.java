@@ -109,7 +109,7 @@ public class MockGateway {
 		if (newInvocationControl != null) {
 			return newInvocationControl.createInstance();
 		}
-		Object mockConstructionReplacement = MockRepository.getMock(type
+		Object mockConstructionReplacement = MockRepository.getMockConstructionMock(type
 				.getName());
 		if (mockConstructionReplacement == null) {
 			// Check if we should suppress the constructor code

@@ -41,7 +41,7 @@ public class PowerMockJUnit4LegacyRunnerDelegateImpl extends TestClassRunner
 			String[] methodsToRun) throws InitializationError {
 		super(klass);
 		try {
-			filter(new JTestRackJUnit4LegacyFilter(methodsToRun));
+			filter(new PowerMockJUnit4LegacyFilter(methodsToRun));
 		} catch (NoTestsRemainException e) {
 			throw new RuntimeException(e);
 		}

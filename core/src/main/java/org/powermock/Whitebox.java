@@ -28,6 +28,10 @@ import net.sf.cglib.proxy.Enhancer;
 
 import org.powermock.core.PrimitiveWrapper;
 
+/**
+ * Various utilities for accessing internals of a class. 
+ * Basically a simplified reflection utility intended for tests.
+ */
 public class Whitebox {
 
 	/**
@@ -88,6 +92,13 @@ public class Whitebox {
 		}
 	}
 
+	/**
+	 * Set the value of a field using reflection.
+	 * 
+	 * @param object			the object to modify
+	 * @param fieldName			the name of the field
+	 * @param value				the new value of the field
+	 */
 	public static void setInternalState(Object object, String fieldName,
 			Object value) {
 
@@ -99,6 +110,16 @@ public class Whitebox {
 		setInternalState(object, fieldName, value, object.getClass());
 	}
 
+	/**
+	 * Set the value of a field using reflection.
+	 * Use this method when you need to specify in which class the field is declared. 
+	 * This might be useful when you have mocked the instance you are trying to modify.
+	 * 
+	 * @param object			the object to modify
+	 * @param fieldName			the name of the field
+	 * @param value				the new value of the field
+	 * @param where				which class the field is defined
+	 */
 	public static void setInternalState(Object object, String fieldName,
 			Object value, Class<?> where) {
 
@@ -139,6 +160,12 @@ public class Whitebox {
 		return tempClass;
 	}
 
+	/**
+	 * Get the value of a field using reflection.
+	 * 
+	 * @param object			the object to modify
+	 * @param fieldName			the name of the field
+	 */
 	public static Object getInternalState(Object object, String fieldName) {
 		if (object == null) {
 			throw new IllegalArgumentException(
@@ -147,11 +174,32 @@ public class Whitebox {
 		return getInternalState(object, fieldName, object.getClass());
 	}
 
+	/**
+	 * Get the value of a field using reflection.
+	 * Use this method when you need to specify in which class the field is declared. 
+	 * This might be useful when you have mocked the instance you are trying to access.
+	 * 
+	 * @param object			the object to modify
+	 * @param fieldName			the name of the field
+	 * @param where				which class the field is defined
+	 */
 	public static Object getInternalState(Object object, String fieldName,
 			Class<?> where) {
 		return getInternalState(object, fieldName, where, Object.class);
 	}
 
+	/**
+	 * Get the value of a field using reflection.
+	 * Use this method when you need to specify in which class the field is declared. 
+	 * This might be useful when you have mocked the instance you are trying to access.
+	 * Use this method to avoid casting.
+	 * 
+	 * @param <T>				the expected type of the field
+	 * @param object			the object to modify
+	 * @param fieldName			the name of the field
+	 * @param where				which class the field is defined
+	 * @param type				the expected type of the field
+	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getInternalState(Object object, String fieldName,
 			Class<?> where, T type) {
@@ -191,7 +239,8 @@ public class Whitebox {
 	}
 
 	/**
-	 * Invoke a test for a private or inner class method.
+	 * Invoke a private or inner class method.
+	 * This might be useful to test private methods.
 	 */
 	public static synchronized Object invokeMethod(Object tested,
 			String methodToExecute, Object... arguments) {
@@ -199,7 +248,8 @@ public class Whitebox {
 	}
 
 	/**
-	 * Invoke a test for a private or inner class method.
+	 * Invoke a private or inner class method.
+	 * This might be useful to test private methods.
 	 */
 	public static synchronized Object invokeMethod(Class<?> clazz,
 			String methodToExecute, Object... arguments) {

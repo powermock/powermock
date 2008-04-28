@@ -60,19 +60,19 @@ public class MockRepository {
 	 * Hash map that maps between a fully qualified class name and the mock
 	 * object for that class.
 	 */
-	private static final Map<String, Object> mocks = new HashMap<String, Object>();
+	private static final Map<String, Object> mockConstructionMocks = new HashMap<String, Object>();
 
-	public synchronized static Object putMock(String fullyQualifiedClassName,
+	public synchronized static Object putMockConstructionMock(String fullyQualifiedClassName,
 			Object mock) {
-		return mocks.put(fullyQualifiedClassName, mock);
+		return mockConstructionMocks.put(fullyQualifiedClassName, mock);
 	}
 
-	public synchronized static Object getMock(String fullyQualifiedClassName) {
-		return mocks.get(fullyQualifiedClassName);
+	public synchronized static Object getMockConstructionMock(String fullyQualifiedClassName) {
+		return mockConstructionMocks.get(fullyQualifiedClassName);
 	}
 
 	public synchronized static void clear() {
-		mocks.clear();
+		mockConstructionMocks.clear();
 		classMocks.clear();
 		instanceMocks.clear();
 		newSubstitutions.clear();

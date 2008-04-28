@@ -43,6 +43,15 @@ public class SuppressMethodTest {
 	}
 
 	@Test
+	public void testGetObjectStatic() throws Exception {
+		suppressMethodCode(SuppressMethod.class, "getObjectStatic");
+
+		assertNull(
+				"A method returning Object should return null after suppressing method code.",
+				SuppressMethod.getObjectStatic());
+	}
+
+	@Test
 	public void testGetByte() throws Exception {
 		suppressMethodCode(SuppressMethod.class, "getByte");
 

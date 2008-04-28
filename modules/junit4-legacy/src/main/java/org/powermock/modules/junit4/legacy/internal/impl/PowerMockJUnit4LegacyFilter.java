@@ -25,11 +25,11 @@ import org.junit.runner.manipulation.Filter;
  * 
  * @author Johan Haleby
  */
-public class JTestRackJUnit4LegacyFilter extends Filter {
+public class PowerMockJUnit4LegacyFilter extends Filter {
 
 	private final String[] methodNamesToRun;
 
-	public JTestRackJUnit4LegacyFilter(String[] methodNamesToRun) {
+	public PowerMockJUnit4LegacyFilter(String[] methodNamesToRun) {
 		this.methodNamesToRun = methodNamesToRun;
 	}
 
