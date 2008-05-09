@@ -15,7 +15,7 @@
  */
 package samples.finalmocking;
 
-public class StupidFinal {
+public class FinalDemo {
 
 	public final String say(String string) {
 		return "Hello " + string;
