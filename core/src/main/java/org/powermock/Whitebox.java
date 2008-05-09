@@ -29,8 +29,8 @@ import net.sf.cglib.proxy.Enhancer;
 import org.powermock.core.PrimitiveWrapper;
 
 /**
- * Various utilities for accessing internals of a class. 
- * Basically a simplified reflection utility intended for tests.
+ * Various utilities for accessing internals of a class. Basically a simplified
+ * reflection utility intended for tests.
  */
 public class Whitebox {
 
@@ -52,8 +52,7 @@ public class Whitebox {
 	 *            All parameter types of the method (may be <code>null</code>).
 	 * @return A <code>java.lang.reflect.Method</code>.
 	 */
-	public static Method getMethod(Class<?> type, String methodName,
-			Class<?>... parameterTypes) {
+	public static Method getMethod(Class<?> type, String methodName, Class<?>... parameterTypes) {
 		final Class<?> unmockedType = getUnmockedType(type);
 		try {
 			return unmockedType.getDeclaredMethod(methodName, parameterTypes);
@@ -61,8 +60,7 @@ public class Whitebox {
 			try {
 				return unmockedType.getMethod(methodName, parameterTypes);
 			} catch (Exception e1) {
-				throw new IllegalArgumentException("Failed to lookup method.",
-						e1);
+				throw new IllegalArgumentException("Failed to lookup method.", e1);
 			}
 		} catch (Exception e) {
 			throw new IllegalArgumentException("Failed to lookup method.", e);
@@ -81,47 +79,49 @@ public class Whitebox {
 	 *            <code>null</code>).
 	 * @return A <code>java.lang.reflect.Constructor</code>.
 	 */
-	public static Constructor<?> getConstructor(Class<?> type,
-			Class<?>... parameterTypes) {
+	public static Constructor<?> getConstructor(Class<?> type, Class<?>... parameterTypes) {
 
 		try {
 			return getUnmockedType(type).getDeclaredConstructor(parameterTypes);
 		} catch (Exception e) {
-			throw new IllegalArgumentException("Failed to lookup constructor.",
-					e);
+			throw new IllegalArgumentException("Failed to lookup constructor.", e);
 		}
 	}
 
 	/**
 	 * Set the value of a field using reflection.
 	 * 
-	 * @param object			the object to modify
-	 * @param fieldName			the name of the field
-	 * @param value				the new value of the field
+	 * @param object
+	 *            the object to modify
+	 * @param fieldName
+	 *            the name of the field
+	 * @param value
+	 *            the new value of the field
 	 */
-	public static void setInternalState(Object object, String fieldName,
-			Object value) {
+	public static void setInternalState(Object object, String fieldName, Object value) {
 
 		if (object == null) {
-			throw new IllegalArgumentException(
-					"The object parameter cannot be null in method invocation Whitebox.setInternalState(..).");
+			throw new IllegalArgumentException("The object parameter cannot be null in method invocation Whitebox.setInternalState(..).");
 		}
 
 		setInternalState(object, fieldName, value, object.getClass());
 	}
 
 	/**
-	 * Set the value of a field using reflection.
-	 * Use this method when you need to specify in which class the field is declared. 
-	 * This might be useful when you have mocked the instance you are trying to modify.
+	 * Set the value of a field using reflection. Use this method when you need
+	 * to specify in which class the field is declared. This might be useful
+	 * when you have mocked the instance you are trying to modify.
 	 * 
-	 * @param object			the object to modify
-	 * @param fieldName			the name of the field
-	 * @param value				the new value of the field
-	 * @param where				which class the field is defined
+	 * @param object
+	 *            the object to modify
+	 * @param fieldName
+	 *            the name of the field
+	 * @param value
+	 *            the new value of the field
+	 * @param where
+	 *            which class the field is defined
 	 */
-	public static void setInternalState(Object object, String fieldName,
-			Object value, Class<?> where) {
+	public static void setInternalState(Object object, String fieldName, Object value, Class<?> where) {
 
 		Class<?> tempClass = findField(object, fieldName, where);
 
@@ -131,30 +131,22 @@ public class Whitebox {
 			field.setAccessible(true);
 			field.set(object, value);
 		} catch (NoSuchFieldException e) {
-			throw new RuntimeException("Field '" + fieldName
-					+ "' was not found in class " + object.getClass());
+			throw new RuntimeException("Field '" + fieldName + "' was not found in class " + object.getClass());
 		} catch (Exception e) {
-			throw new RuntimeException(
-					"Internal Error: Failed to set field in method setInternalState.",
-					e);
+			throw new RuntimeException("Internal Error: Failed to set field in method setInternalState.", e);
 		}
 	}
 
-	private static Class<?> findField(Object object, String fieldName,
-			Class<?> where) {
-		if (object == null || fieldName == null || fieldName.equals("")
-				|| fieldName.startsWith(" ")) {
-			throw new IllegalArgumentException(
-					"object, field name, and \"where\" must not be empty or null.");
+	private static Class<?> findField(Object object, String fieldName, Class<?> where) {
+		if (object == null || fieldName == null || fieldName.equals("") || fieldName.startsWith(" ")) {
+			throw new IllegalArgumentException("object, field name, and \"where\" must not be empty or null.");
 		}
 
 		Class<?> tempClass = object.getClass();
 		while (!tempClass.equals(where)) {
 			tempClass = tempClass.getSuperclass();
 			if (tempClass.equals(Object.class)) {
-				throw new IllegalArgumentException("The field " + fieldName
-						+ " was not found in the class heirachy for "
-						+ object.getClass());
+				throw new IllegalArgumentException("The field " + fieldName + " was not found in the class heirachy for " + object.getClass());
 			}
 		}
 		return tempClass;
@@ -163,46 +155,53 @@ public class Whitebox {
 	/**
 	 * Get the value of a field using reflection.
 	 * 
-	 * @param object			the object to modify
-	 * @param fieldName			the name of the field
+	 * @param object
+	 *            the object to modify
+	 * @param fieldName
+	 *            the name of the field
 	 */
 	public static Object getInternalState(Object object, String fieldName) {
 		if (object == null) {
-			throw new IllegalArgumentException(
-					"The object parameter cannot be null in method invocation Whitebox.getInternalState(..).");
+			throw new IllegalArgumentException("The object parameter cannot be null in method invocation Whitebox.getInternalState(..).");
 		}
 		return getInternalState(object, fieldName, object.getClass());
 	}
 
 	/**
-	 * Get the value of a field using reflection.
-	 * Use this method when you need to specify in which class the field is declared. 
-	 * This might be useful when you have mocked the instance you are trying to access.
+	 * Get the value of a field using reflection. Use this method when you need
+	 * to specify in which class the field is declared. This might be useful
+	 * when you have mocked the instance you are trying to access.
 	 * 
-	 * @param object			the object to modify
-	 * @param fieldName			the name of the field
-	 * @param where				which class the field is defined
+	 * @param object
+	 *            the object to modify
+	 * @param fieldName
+	 *            the name of the field
+	 * @param where
+	 *            which class the field is defined
 	 */
-	public static Object getInternalState(Object object, String fieldName,
-			Class<?> where) {
+	public static Object getInternalState(Object object, String fieldName, Class<?> where) {
 		return getInternalState(object, fieldName, where, Object.class);
 	}
 
 	/**
-	 * Get the value of a field using reflection.
-	 * Use this method when you need to specify in which class the field is declared. 
-	 * This might be useful when you have mocked the instance you are trying to access.
-	 * Use this method to avoid casting.
+	 * Get the value of a field using reflection. Use this method when you need
+	 * to specify in which class the field is declared. This might be useful
+	 * when you have mocked the instance you are trying to access. Use this
+	 * method to avoid casting.
 	 * 
-	 * @param <T>				the expected type of the field
-	 * @param object			the object to modify
-	 * @param fieldName			the name of the field
-	 * @param where				which class the field is defined
-	 * @param type				the expected type of the field
+	 * @param <T>
+	 *            the expected type of the field
+	 * @param object
+	 *            the object to modify
+	 * @param fieldName
+	 *            the name of the field
+	 * @param where
+	 *            which class the field is defined
+	 * @param type
+	 *            the expected type of the field
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T getInternalState(Object object, String fieldName,
-			Class<?> where, T type) {
+	public static <T> T getInternalState(Object object, String fieldName, Class<?> where, T type) {
 
 		if (type == null) {
 			throw new IllegalArgumentException("type cannot be null.");
@@ -229,37 +228,38 @@ public class Whitebox {
 			// }
 			return (T) fieldValue;
 		} catch (NoSuchFieldException e) {
-			throw new RuntimeException("Field '" + fieldName
-					+ "' was not found in class " + object.getClass());
+			throw new RuntimeException("Field '" + fieldName + "' was not found in class " + object.getClass());
 		} catch (Exception e) {
-			throw new RuntimeException(
-					"Internal error: Failed to get field in method getInternalState.",
-					e);
+			throw new RuntimeException("Internal error: Failed to get field in method getInternalState.", e);
 		}
 	}
 
 	/**
-	 * Invoke a private or inner class method.
-	 * This might be useful to test private methods.
+	 * Invoke a private or inner class method. This might be useful to test
+	 * private methods.
 	 */
-	public static synchronized Object invokeMethod(Object tested,
-			String methodToExecute, Object... arguments) {
-		return doInvokeMethod(tested, methodToExecute, arguments);
+	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Object... arguments) {
+		return doInvokeMethod(tested, null, methodToExecute, arguments);
 	}
 
 	/**
-	 * Invoke a private or inner class method.
-	 * This might be useful to test private methods.
+	 * Invoke a private or inner class method in that is located in a subclass
+	 * of tested. This might be useful to test private methods.
 	 */
-	public static synchronized Object invokeMethod(Class<?> clazz,
-			String methodToExecute, Object... arguments) {
-		return doInvokeMethod(clazz, methodToExecute, arguments);
+	public static synchronized Object invokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments) {
+		return doInvokeMethod(tested, declaringClass, methodToExecute, arguments);
 	}
 
-	private static Object doInvokeMethod(Object tested, String methodToExecute,
-			Object... arguments) {
-		Method methodToInvoke = findMethodOrThrowException(tested,
-				methodToExecute, arguments);
+	/**
+	 * Invoke a private or inner class method. This might be useful to test
+	 * private methods.
+	 */
+	public static synchronized Object invokeMethod(Class<?> clazz, String methodToExecute, Object... arguments) {
+		return doInvokeMethod(clazz, null, methodToExecute, arguments);
+	}
+
+	private static Object doInvokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments) {
+		Method methodToInvoke = findMethodOrThrowException(tested, declaringClass, methodToExecute, arguments);
 
 		methodToInvoke.setAccessible(true);
 
@@ -267,9 +267,8 @@ public class Whitebox {
 		try {
 			return methodToInvoke.invoke(tested, arguments);
 		} catch (Exception e) {
-			throw new RuntimeException("Failed to invoke method "
-					+ methodToExecute + " on object " + tested
-					+ ". Reason was \"" + e.getMessage() + "\".", e);
+			throw new RuntimeException("Failed to invoke method " + methodToExecute + " on object " + tested + ". Reason was \"" + e.getMessage()
+					+ "\".", e);
 		}
 	}
 
@@ -279,12 +278,14 @@ public class Whitebox {
 	 * {@link Whitebox#throwExceptionIfMethodWasNotFound(Object, String, Method, Object...)}.
 	 * 
 	 * @param tested
+	 * @param declaringClass
+	 *            The class where the method is supposed to be declared (may be
+	 *            <code>null</code>).
 	 * @param methodToExecute
 	 * @param arguments
 	 * @return
 	 */
-	static Method findMethodOrThrowException(Object tested,
-			String methodToExecute, Object... arguments) {
+	static Method findMethodOrThrowException(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments) {
 		/*
 		 * Get methods from the type if it's not mocked or from the super type
 		 * if the tested object is mocked.
@@ -296,9 +297,12 @@ public class Whitebox {
 			testedType = tested.getClass();
 		}
 
-		Method[] methods = Enhancer.isEnhanced(testedType) ? testedType
-				.getSuperclass().getDeclaredMethods() : testedType
-				.getDeclaredMethods();
+		Method[] methods = null;
+		if (declaringClass == null) {
+			methods = Enhancer.isEnhanced(testedType) ? testedType.getSuperclass().getDeclaredMethods() : testedType.getDeclaredMethods();
+		} else {
+			methods = declaringClass.getDeclaredMethods();
+		}
 		Method potentialMethodToInvoke = null;
 		for (Method method : methods) {
 			if (method.getName().equals(methodToExecute)) {
@@ -318,9 +322,7 @@ public class Whitebox {
 					}
 
 					for (int i = 0; i < paramTypes.length; i++) {
-						if (!paramTypes[i].equals(PrimitiveWrapper
-								.getPrimitiveFromWrapperType(arguments[i]
-										.getClass()))) {
+						if (!paramTypes[i].equals(PrimitiveWrapper.getPrimitiveFromWrapperType(arguments[i].getClass()))) {
 							primitiveMethodFound = false;
 							break;
 						}
@@ -337,42 +339,110 @@ public class Whitebox {
 							 * the same name and the same number of arguments
 							 * but one is using wrapper types.
 							 */
-							throwExceptionWhenMultipleMethodMatchesFound(new Method[] {
-									potentialMethodToInvoke, method });
+							throwExceptionWhenMultipleMethodMatchesFound(new Method[] { potentialMethodToInvoke, method });
 						}
 					}
-				} else if (arguments != null
-						&& (paramTypes.length != arguments.length)) {
+				} else if (arguments != null && (paramTypes.length != arguments.length)) {
 					continue;
 				}
 			}
 		}
 
-		Whitebox.throwExceptionIfMethodWasNotFound(tested.getClass(),
-				methodToExecute, potentialMethodToInvoke, arguments);
+		Whitebox.throwExceptionIfMethodWasNotFound(tested.getClass(), methodToExecute, potentialMethodToInvoke, arguments);
 		return potentialMethodToInvoke;
 	}
 
-	static void throwExceptionIfMethodWasNotFound(Class<?> type,
-			String methodName, Method methodToMock, Object... arguments) {
-		if (methodToMock == null) {
-			StringBuilder argumentsAsString = new StringBuilder();
-			for (Object argument : arguments) {
-				String argumentName = null;
-				if (argument instanceof Class) {
-					argumentName = ((Class<?>) argument).getName();
-				} else {
-					argumentName = argument.getClass().getName();
+	/**
+	 * Finds and returns a certain constructor. If the constructor couldn't be
+	 * found this method delegates to
+	 * {@link Whitebox#throwExceptionIfConstructorWasNotFound(Class, Object...).
+	 * 
+	 * @param type
+	 * @param arguments
+	 * @return
+	 */
+	static Constructor<?> findConstructorOrThrowException(Class<?> type, Object... arguments) {
+		if (type == null) {
+			throw new IllegalArgumentException("Class type cannot be null.");
+		}
+
+		Class<?> unmockedType = getUnmockedType(type);
+
+		Constructor<?>[] constructors = unmockedType.getDeclaredConstructors();
+		Constructor<?> potentialConstructor = null;
+		for (Constructor<?> constructor : constructors) {
+			Class<?>[] paramTypes = constructor.getParameterTypes();
+			if ((arguments != null && (paramTypes.length == arguments.length))) {
+				if (paramTypes.length == 0) {
+					potentialConstructor = constructor;
+					break;
+				}
+				boolean wrappedConstructorFound = true;
+				boolean primitiveConstructorFound = true;
+				for (int i = 0; i < paramTypes.length; i++) {
+					if (!paramTypes[i].equals(arguments[i].getClass())) {
+						wrappedConstructorFound = false;
+						break;
+					}
 				}
 
-				argumentsAsString.append(argumentName).append(" ");
+				for (int i = 0; i < paramTypes.length; i++) {
+					if (!paramTypes[i].equals(PrimitiveWrapper.getPrimitiveFromWrapperType(arguments[i].getClass()))) {
+						primitiveConstructorFound = false;
+						break;
+					}
+				}
+
+				if (wrappedConstructorFound || primitiveConstructorFound) {
+					if (potentialConstructor == null) {
+						potentialConstructor = constructor;
+					} else {
+						/*
+						 * We've already found a constructor match before, this
+						 * means that PowerMock cannot determine which method to
+						 * expect since there are two methods with the same name
+						 * and the same number of arguments but one is using
+						 * wrapper types.
+						 */
+						throwExceptionWhenMultipleConstructorMatchesFound(new Constructor<?>[] { potentialConstructor, constructor });
+					}
+				}
+			} else if (arguments != null && (paramTypes.length != arguments.length)) {
+				continue;
+			}
+		}
+
+		Whitebox.throwExceptionIfConstructorWasNotFound(type.getClass(), potentialConstructor, arguments);
+		return potentialConstructor;
+	}
+
+	static void throwExceptionIfMethodWasNotFound(Class<?> type, String methodName, Method methodToMock, Object... arguments) {
+		if (methodToMock == null) {
+			throw new IllegalArgumentException("No method found with name '" + methodName + "' with argument types: [ "
+					+ getArgumentsAsString(arguments) + "] in class " + getUnmockedType(type).getName());
+		}
+	}
+
+	static void throwExceptionIfConstructorWasNotFound(Class<?> type, Constructor<?> potentialConstructor, Object... arguments) {
+		if (potentialConstructor == null) {
+			throw new IllegalArgumentException("No constructor found in class '" + getUnmockedType(type).getName() + "' with argument types: [ "
+					+ getArgumentsAsString(arguments) + "]");
+		}
+	}
+
+	private static String getArgumentsAsString(Object... arguments) {
+		StringBuilder argumentsAsString = new StringBuilder();
+		for (Object argument : arguments) {
+			String argumentName = null;
+			if (argument instanceof Class) {
+				argumentName = ((Class<?>) argument).getName();
+			} else {
+				argumentName = argument.getClass().getName();
 			}
 
-			throw new IllegalArgumentException("No method found with name '"
-					+ methodName + "' with argument types: [ "
-					+ argumentsAsString.toString() + "] in class "
-					+ (Enhancer.isEnhanced(type) ? type.getSuperclass() : type));
+			argumentsAsString.append(argumentName).append(" ");
 		}
+		return argumentsAsString.toString();
 	}
 
 	/**
@@ -399,20 +469,16 @@ public class Whitebox {
 	 * 
 	 * @return The object created after the constructor has been invoked.
 	 */
-	public static <T> T invokeConstructor(
-			Class<T> classThatContainsTheConstructorToTest,
-			Class<?>[] parameterTypes, Object[] arguments) {
+	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Class<?>[] parameterTypes, Object[] arguments) {
 		if (parameterTypes != null || arguments != null) {
 			if (parameterTypes.length != arguments.length) {
-				throw new IllegalArgumentException(
-						"parameterTypes and arguments must have the same length");
+				throw new IllegalArgumentException("parameterTypes and arguments must have the same length");
 			}
 		}
 
 		Constructor<T> constructor = null;
 		try {
-			constructor = classThatContainsTheConstructorToTest
-					.getDeclaredConstructor(parameterTypes);
+			constructor = classThatContainsTheConstructorToTest.getDeclaredConstructor(parameterTypes);
 		} catch (Exception e) {
 			throw new RuntimeException("Could not lookup the constructor", e);
 		}
@@ -427,8 +493,7 @@ public class Whitebox {
 	 * 
 	 * @return The object created after the constructor has been invoked.
 	 */
-	public static <T> T invokeConstructor(
-			Class<T> classThatContainsTheConstructorToTest, Object... arguments) {
+	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Object... arguments) {
 		Class<?>[] argumentTypes = new Class<?>[arguments.length];
 		for (int i = 0; i < arguments.length; i++) {
 			argumentTypes[i] = arguments[i].getClass();
@@ -440,47 +505,39 @@ public class Whitebox {
 		Constructor<T> potentialContstructorPrimitive = null;
 
 		try {
-			potentialContstructorWrapped = classThatContainsTheConstructorToTest
-					.getDeclaredConstructor(argumentTypes);
+			potentialContstructorWrapped = classThatContainsTheConstructorToTest.getDeclaredConstructor(argumentTypes);
 		} catch (Exception e) {
 			// Do nothing, we'll try with primitive type next.
 		}
 
 		try {
-			potentialContstructorPrimitive = classThatContainsTheConstructorToTest
-					.getDeclaredConstructor(PrimitiveWrapper
-							.toPrimitiveType(argumentTypes));
+			potentialContstructorPrimitive = classThatContainsTheConstructorToTest.getDeclaredConstructor(PrimitiveWrapper
+					.toPrimitiveType(argumentTypes));
 		} catch (Exception e) {
 			// Do nothing
 		}
 
-		if (potentialContstructorPrimitive == null
-				|| potentialContstructorWrapped != null) {
+		if (potentialContstructorPrimitive == null || potentialContstructorWrapped != null) {
 			constructor = potentialContstructorWrapped;
-		} else if (potentialContstructorPrimitive != null
-				&& potentialContstructorWrapped == null) {
+		} else if (potentialContstructorPrimitive != null && potentialContstructorWrapped == null) {
 			constructor = potentialContstructorPrimitive;
-		} else if (potentialContstructorPrimitive == null
-				&& potentialContstructorWrapped == null) {
+		} else if (potentialContstructorPrimitive == null && potentialContstructorWrapped == null) {
 			throw new RuntimeException("Could not lookup the constructor");
 		} else {
-			throw new RuntimeException(
-					"Could not determine which constructor to execute. Please specify the parameter types by hand.");
+			throw new RuntimeException("Could not determine which constructor to execute. Please specify the parameter types by hand.");
 		}
 
 		return createInstance(constructor, arguments);
 	}
 
-	private static <T> T createInstance(Constructor<T> constructor,
-			Object... arguments) {
+	private static <T> T createInstance(Constructor<T> constructor, Object... arguments) {
 		constructor.setAccessible(true);
 
 		T createdObject = null;
 		try {
 			createdObject = constructor.newInstance(arguments);
 		} catch (InvocationTargetException e) {
-			throw new RuntimeException(
-					"An exception was caught when executing the constructor", e);
+			throw new RuntimeException("An exception was caught when executing the constructor", e);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -527,8 +584,7 @@ public class Whitebox {
 	 * @param parameterTypes
 	 * @return
 	 */
-	static <T> Method findMethod(Class<T> type, String methodNameToMock,
-			Class<?>... parameterTypes) {
+	static <T> Method findMethod(Class<T> type, String methodNameToMock, Class<?>... parameterTypes) {
 		List<Method> matchingMethodsList = new LinkedList<Method>();
 		outer: for (Method method : getAllMethods(type)) {
 			if (method.getName().equals(methodNameToMock)) {
@@ -571,15 +627,11 @@ public class Whitebox {
 				}
 
 				if (methodToMock == null) {
-					Whitebox
-							.throwExceptionWhenMultipleMethodMatchesFound(matchingMethodsList
-									.toArray(new Method[0]));
+					Whitebox.throwExceptionWhenMultipleMethodMatchesFound(matchingMethodsList.toArray(new Method[0]));
 				}
 			} else {
 				// We've found several matching methods.
-				Whitebox
-						.throwExceptionWhenMultipleMethodMatchesFound(matchingMethodsList
-								.toArray(new Method[0]));
+				Whitebox.throwExceptionWhenMultipleMethodMatchesFound(matchingMethodsList.toArray(new Method[0]));
 			}
 		}
 
@@ -602,14 +654,12 @@ public class Whitebox {
 
 	static void throwExceptionWhenMultipleMethodMatchesFound(Method[] methods) {
 		if (methods == null || methods.length < 2) {
-			throw new IllegalArgumentException(
-					"Internal error: throwExceptionWhenMultipleMethodMatchesFound needs at least two methods.");
+			throw new IllegalArgumentException("Internal error: throwExceptionWhenMultipleMethodMatchesFound needs at least two methods.");
 		}
 		StringBuilder sb = new StringBuilder();
 		sb
 				.append("Several matching methods found, please specify the argument parameter types so that PowerMock can determine which method you're refering to.\n");
-		sb.append("Matching methods in class ").append(
-				methods[0].getDeclaringClass().getName()).append(" were:\n");
+		sb.append("Matching methods in class ").append(methods[0].getDeclaringClass().getName()).append(" were:\n");
 
 		for (Method method : methods) {
 			sb.append(method.getReturnType().getName()).append(" ");
@@ -623,12 +673,30 @@ public class Whitebox {
 		throw new RuntimeException(sb.toString());
 	}
 
+	static void throwExceptionWhenMultipleConstructorMatchesFound(Constructor<?>[] constructors) {
+		if (constructors == null || constructors.length < 2) {
+			throw new IllegalArgumentException("Internal error: throwExceptionWhenMultipleMethodMatchesFound needs at least two methods.");
+		}
+		StringBuilder sb = new StringBuilder();
+		sb
+				.append("Several matching constructors found, please specify the argument parameter types so that PowerMock can determine which method you're refering to.\n");
+		sb.append("Matching constructors in class ").append(constructors[0].getDeclaringClass().getName()).append(" were:\n");
+
+		for (Constructor<?> constructor : constructors) {
+			sb.append(constructor.getName()).append("( ");
+			final Class<?>[] parameterTypes = constructor.getParameterTypes();
+			for (Class<?> paramType : parameterTypes) {
+				sb.append(paramType.getName()).append(".class ");
+			}
+			sb.append(")\n");
+		}
+		throw new RuntimeException(sb.toString());
+	}
+
 	@SuppressWarnings("all")
-	static Method findMethodOrThrowException(Class<?> type, String methodName,
-			Class<?>... parameterTypes) {
+	static Method findMethodOrThrowException(Class<?> type, String methodName, Class<?>... parameterTypes) {
 		Method methodToMock = findMethod(type, methodName, parameterTypes);
-		throwExceptionIfMethodWasNotFound(type, methodName, methodToMock,
-				parameterTypes);
+		throwExceptionIfMethodWasNotFound(type, methodName, methodToMock, parameterTypes);
 		return methodToMock;
 	}
 
