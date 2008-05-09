@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import junit.framework.TestCase;
+
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.modules.junit4.common.internal.JUnit4TestSuiteChunker;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
