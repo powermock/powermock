@@ -26,21 +26,19 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import samples.finalmocking.StupidFinal;
-
+import samples.finalmocking.FinalDemo;
 
 /**
  * Test class to demonstrate non-static final mocking.
  * 
- * @author Johan Haleby
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(StupidFinal.class)
-public class StupidFinalTest {
+@PrepareForTest(FinalDemo.class)
+public class FinalDemoTest {
 
 	@Test
 	public void testSay() throws Exception {
-		StupidFinal tested = createMock(StupidFinal.class);
+		FinalDemo tested = createMock(FinalDemo.class);
 		String expected = "Hello altered World";
 		expect(tested.say("hello")).andReturn("Hello altered World");
 		replay(tested);
@@ -57,7 +55,7 @@ public class StupidFinalTest {
 
 	@Test
 	public void testSayFinalNative() throws Exception {
-		StupidFinal tested = createMock(StupidFinal.class);
+		FinalDemo tested = createMock(FinalDemo.class);
 		String expected = "Hello altered World";
 		expect(tested.sayFinalNative("hello")).andReturn("Hello altered World");
 		replay(tested);

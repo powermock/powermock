@@ -19,9 +19,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.powermock.modules.junit4.constructor.PrivateConstructorInstantiationDemoTest;
+import org.powermock.modules.junit4.constructorargs.ConstructorArgsDemoTest;
 import org.powermock.modules.junit4.expectnew.ExpectNewDemoTest;
 import org.powermock.modules.junit4.expectvoid.ExpectVoidDemoTest;
-import org.powermock.modules.junit4.finalmocking.StupidFinalTest;
+import org.powermock.modules.junit4.finalmocking.FinalDemoTest;
 import org.powermock.modules.junit4.mockself.MockSelfDemoTest;
 import org.powermock.modules.junit4.mockself.MockSelfDemoWithSubClassTest;
 import org.powermock.modules.junit4.newmocking.StupidNewTest;
@@ -40,7 +41,7 @@ import org.powermock.modules.junit4.suppressmethod.SuppressMethodTest;
 @RunWith(Suite.class)
 @SuiteClasses( { StaticInitializerExampleTest.class,
 		PrivateConstructorInstantiationDemoTest.class, ExpectNewDemoTest.class,
-		ExpectVoidDemoTest.class, StupidFinalTest.class,
+		ExpectVoidDemoTest.class, FinalDemoTest.class,
 		MockSelfDemoTest.class, MockSelfDemoWithSubClassTest.class,
 		StupidNewTest.class, StupidPrivateFinalTest.class,
 		MockSelfPrivateFieldServiceClassTest.class,
@@ -48,6 +49,6 @@ import org.powermock.modules.junit4.suppressmethod.SuppressMethodTest;
 		StupidSingletonTest.class, StaticAndInstanceDemoTest.class,
 		SuppressMethodTest.class, SuppressConstructorDemoTest.class,
 		SuppressConstructorHierarchyDemoTest.class,
-		SuppressSpecificConstructorDemoTest.class })
+		SuppressSpecificConstructorDemoTest.class, ConstructorArgsDemoTest.class })
 public class AllJUnit4Tests {
 }

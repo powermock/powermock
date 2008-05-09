@@ -37,13 +37,10 @@ import samples.newmocking.MyClass;
 /**
  * Test class to demonstrate new instance mocking using expectNew(..).
  * 
- * @author Johan Haleby
  */
-// TODO: completely disabled
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { MyClass.class, ExpectNewDemo.class })
 public class ExpectNewDemoTest {
-	// TODO: completely disabled
 
 	@Test
 	public void testNewWithCheckedException() throws Exception {
@@ -121,8 +118,7 @@ public class ExpectNewDemoTest {
 		ExpectNewDemo tested = new ExpectNewDemo();
 
 		final String expectedFailMessage = "testing";
-		expectNew(MyClass.class).andThrow(
-				new RuntimeException(expectedFailMessage));
+		expectNew(MyClass.class).andThrow(new RuntimeException(expectedFailMessage));
 
 		replay(MyClass.class);
 
@@ -146,7 +142,7 @@ public class ExpectNewDemoTest {
 		assertEquals("World", myClassMock1.getMessage());
 		verify(myClassMock1);
 	}
-	
+
 	@Test
 	@Ignore("This is buggy and thus should be ignored, but why??")
 	public void testMultipleNew() throws Exception {
@@ -201,10 +197,8 @@ public class ExpectNewDemoTest {
 			verify(myClassMock1, MyClass.class);
 			fail("Should throw AssertionError.");
 		} catch (AssertionError e) {
-			assertEquals(
-					"\nExpectation failure on verify:\nExpected a new instance call on "
-							+ "class samples.newmocking.MyClass 4 times but was actually 3 times.",
-					e.getMessage());
+			assertEquals("\nExpectation failure on verify:\nExpected a new instance call on "
+					+ "class samples.newmocking.MyClass 4 times but was actually 3 times.", e.getMessage());
 		}
 	}
 
@@ -265,8 +259,7 @@ public class ExpectNewDemoTest {
 	}
 
 	@Test
-	public void testSimpleMultipleNew_withRange_lowerBoundLessThan0()
-			throws Exception {
+	public void testSimpleMultipleNew_withRange_lowerBoundLessThan0() throws Exception {
 		MyClass myClassMock1 = createMock(MyClass.class);
 
 		try {
@@ -279,8 +272,7 @@ public class ExpectNewDemoTest {
 	}
 
 	@Test
-	public void testSimpleMultipleNew_withRange_upperBoundLessThan0()
-			throws Exception {
+	public void testSimpleMultipleNew_withRange_upperBoundLessThan0() throws Exception {
 
 		MyClass myClassMock1 = createMock(MyClass.class);
 		try {
@@ -292,8 +284,7 @@ public class ExpectNewDemoTest {
 	}
 
 	@Test
-	public void testSimpleMultipleNew_withRange_upperBoundLessThanLowerBound()
-			throws Exception {
+	public void testSimpleMultipleNew_withRange_upperBoundLessThanLowerBound() throws Exception {
 
 		MyClass myClassMock1 = createMock(MyClass.class);
 		try {
@@ -333,8 +324,7 @@ public class ExpectNewDemoTest {
 	}
 
 	@Test
-	public void testSimpleMultipleNew_withRange_notWithinRange()
-			throws Exception {
+	public void testSimpleMultipleNew_withRange_notWithinRange() throws Exception {
 		ExpectNewDemo tested = new ExpectNewDemo();
 		MyClass myClassMock1 = createMock(MyClass.class);
 
@@ -348,10 +338,8 @@ public class ExpectNewDemoTest {
 			verify(myClassMock1, MyClass.class);
 			fail("Should throw AssertionError.");
 		} catch (AssertionError e) {
-			assertEquals(
-					"\nExpectation failure on verify:\nExpected a new instance call on "
-							+ "class samples.newmocking.MyClass between 5 and 7 times but was actually 3 times.",
-					e.getMessage());
+			assertEquals("\nExpectation failure on verify:\nExpected a new instance call on "
+					+ "class samples.newmocking.MyClass between 5 and 7 times but was actually 3 times.", e.getMessage());
 		}
 	}
 }
