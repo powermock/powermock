@@ -15,10 +15,18 @@
  */
 package org.powermock.modules.junit4.legacy.internal.impl;
 
-import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.internal.runners.BeforeAndAfterRunner;
 import org.junit.internal.runners.InitializationError;
 import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.manipulation.NoTestsRemainException;
+import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunNotifier;
+import org.powermock.Whitebox;
+import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
+import org.powermock.modules.junit4.legacy.internal.impl.testcaseworkaround.PowerMockJUnit4LegacyTestClassMethodsRunner;
+import org.powermock.modules.junit4.legacy.internal.impl.testcaseworkaround.PowerMockJUnit4LegacyTestIntrospector;
 
 /**
  * A JUnit4 legacy (i.e. v4.0-4.3) test runner that only runs a specified set of
@@ -32,14 +40,12 @@ import org.junit.runner.manipulation.NoTestsRemainException;
  * @author Johan Haleby
  * 
  */
-public class PowerMockJUnit4LegacyRunnerDelegateImpl extends TestClassRunner
-		implements PowerMockJUnitRunnerDelegate {
+public class PowerMockJUnit4LegacyRunnerDelegateImpl extends TestClassRunner implements PowerMockJUnitRunnerDelegate {
 
 	private final int testCount;
 
-	public PowerMockJUnit4LegacyRunnerDelegateImpl(Class<?> klass,
-			String[] methodsToRun) throws InitializationError {
-		super(klass);
+	public PowerMockJUnit4LegacyRunnerDelegateImpl(Class<?> klass, String[] methodsToRun) throws InitializationError {
+		super(klass, new PowerMockJUnit4LegacyTestClassMethodsRunner(klass));
 		try {
 			filter(new PowerMockJUnit4LegacyFilter(methodsToRun));
 		} catch (NoTestsRemainException e) {
@@ -47,6 +53,25 @@ public class PowerMockJUnit4LegacyRunnerDelegateImpl extends TestClassRunner
 		}
 
 		testCount = methodsToRun.length;
+	}
+
+	@Override
+	public void run(final RunNotifier notifier) {
+		BeforeAndAfterRunner runner = new BeforeAndAfterRunner(getTestClass(), BeforeClass.class, AfterClass.class, null) {
+			@Override
+			protected void runUnprotected() {
+				fEnclosedRunner.run(notifier);
+			}
+
+			@Override
+			protected void addFailure(Throwable targetException) {
+				notifier.fireTestFailure(new Failure(getDescription(), targetException));
+			}
+		};
+
+		Whitebox.setInternalState(runner, "fTestIntrospector", new PowerMockJUnit4LegacyTestIntrospector(getTestClass()), BeforeAndAfterRunner.class);
+
+		runner.runProtected();
 	}
 
 	/**

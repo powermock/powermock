@@ -15,6 +15,7 @@
  */
 package org.powermock.modules.junit4.legacy;
 
+import org.powermock.modules.junit4.legacy.noannotation.NoAnnotationUsageTest;
 import org.powermock.modules.junit4.legacy.singleton.StupidSingletonTest;
 import org.powermock.modules.junit4.legacy.suppressconstructor.SuppressConstructorHierarchyDemoTest;
 import org.junit.runner.RunWith;
@@ -22,7 +23,6 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses( { StupidSingletonTest.class,
-		SuppressConstructorHierarchyDemoTest.class })
+@SuiteClasses( { StupidSingletonTest.class, SuppressConstructorHierarchyDemoTest.class, NoAnnotationUsageTest.class })
 public class AllJUnit4LegacyTests {
 }
