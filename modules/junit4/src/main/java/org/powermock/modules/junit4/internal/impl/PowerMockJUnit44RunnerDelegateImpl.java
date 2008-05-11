@@ -24,8 +24,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.powermock.Whitebox;
-import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.junit.internal.runners.ClassRoadie;
 import org.junit.internal.runners.InitializationError;
 import org.junit.internal.runners.JUnit4ClassRunner;
@@ -41,6 +39,9 @@ import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
+import org.powermock.Whitebox;
+import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
+import org.powermock.modules.junit4.internal.impl.testcaseworkaround.PowerMockJUnit4MethodValidator;
 
 /**
  * A JUnit4 test runner that only runs a specified set of test methods in a test
@@ -55,20 +56,17 @@ import org.junit.runner.notification.RunNotifier;
  * @author Johan Haleby
  * 
  */
-public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements
-		Filterable, Sortable, PowerMockJUnitRunnerDelegate {
+public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filterable, Sortable, PowerMockJUnitRunnerDelegate {
 	private final List<Method> testMethods;
 	private TestClass testClass;
 
-	public PowerMockJUnit44RunnerDelegateImpl(Class<?> klass,
-			String[] methodsToRun) throws InitializationError {
+	public PowerMockJUnit44RunnerDelegateImpl(Class<?> klass, String[] methodsToRun) throws InitializationError {
 		testClass = new TestClass(klass);
 		testMethods = getTestMethods(klass, methodsToRun);
 		validate();
 	}
 
-	public PowerMockJUnit44RunnerDelegateImpl(Class<?> klass)
-			throws InitializationError {
+	public PowerMockJUnit44RunnerDelegateImpl(Class<?> klass) throws InitializationError {
 		this(klass, null);
 	}
 
@@ -77,8 +75,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements
 		if (methodsToRun == null) {
 			// The getTestMethods of TestClass is not visible so we need to look
 			// it invoke it using reflection.
-			return (List<Method>) Whitebox.invokeMethod(testClass,
-					"getTestMethods");
+			return (List<Method>) Whitebox.invokeMethod(testClass, "getTestMethods");
 		} else {
 			List<Method> foundMethods = new LinkedList<Method>();
 			Method[] methods = klass.getMethods();
@@ -94,7 +91,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements
 	}
 
 	protected void validate() throws InitializationError {
-		MethodValidator methodValidator = new MethodValidator(testClass);
+		MethodValidator methodValidator = new PowerMockJUnit4MethodValidator(testClass);
 		methodValidator.validateMethodsForDefaultRunner();
 		methodValidator.assertValid();
 	}
@@ -126,8 +123,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements
 	 */
 	@Override
 	public Description getDescription() {
-		Description spec = Description.createSuiteDescription(getName(),
-				classAnnotations());
+		Description spec = Description.createSuiteDescription(getName(), classAnnotations());
 		List<Method> testMethods = this.testMethods;
 		for (Method method : testMethods)
 			spec.addChild(methodDescription(method));
@@ -171,8 +167,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements
 	}
 
 	protected Description methodDescription(Method method) {
-		return Description.createTestDescription(getTestClass().getJavaClass(),
-				testName(method), testAnnotations(method));
+		return Description.createTestDescription(getTestClass().getJavaClass(), testName(method), testAnnotations(method));
 	}
 
 	protected Annotation[] testAnnotations(Method method) {
@@ -192,8 +187,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements
 	public void sort(final Sorter sorter) {
 		Collections.sort(testMethods, new Comparator<Method>() {
 			public int compare(Method o1, Method o2) {
-				return sorter.compare(methodDescription(o1),
-						methodDescription(o2));
+				return sorter.compare(methodDescription(o1), methodDescription(o2));
 			}
 		});
 	}
