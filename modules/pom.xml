@@ -10,8 +10,7 @@
   <artifactId>powermock-modules</artifactId>
   <packaging>pom</packaging>
   <name>powermock-modules</name>
-  <url>http://maven.apache.org</url>
-   <modules>
+  <modules>
     <module>junit3</module>
     <module>junit4</module>
     <module>junit4-common</module>

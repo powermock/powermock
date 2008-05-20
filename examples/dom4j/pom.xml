@@ -9,10 +9,6 @@
 	<groupId>org.powermock.examples</groupId>
 	<artifactId>powermock-examples-dom4j</artifactId>
 	<name>powermock-examples-dom4j</name>
-	<url>http://maven.apache.org</url>
-	<properties>
-		<powermock.version>0.6-SNAPSHOT</powermock.version>
-	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>dom4j</groupId>

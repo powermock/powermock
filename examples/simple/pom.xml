@@ -13,19 +13,16 @@
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-core</artifactId>
-			<version>0.6-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.powermock.modules</groupId>
 			<artifactId>powermock-module-junit4</artifactId>
-			<version>0.6-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.easymock</groupId>
 			<artifactId>easymockclassextension</artifactId>
-			<version>2.2.2</version>
 			<scope>test</scope>
 		</dependency>
         <dependency>
