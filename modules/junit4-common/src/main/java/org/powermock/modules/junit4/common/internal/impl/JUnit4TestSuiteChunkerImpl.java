@@ -25,16 +25,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import junit.framework.TestCase;
-
-import org.powermock.core.classloader.MockClassLoader;
-import org.powermock.modules.junit4.common.internal.JUnit4TestSuiteChunker;
-import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
-import org.powermock.tests.utils.impl.AbstractTestSuiteChunkerImpl;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
+import org.powermock.core.classloader.MockClassLoader;
+import org.powermock.modules.junit4.common.internal.JUnit4TestSuiteChunker;
+import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
+import org.powermock.tests.utils.impl.AbstractTestSuiteChunkerImpl;
 
 public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<PowerMockJUnitRunnerDelegate> implements JUnit4TestSuiteChunker {
 
