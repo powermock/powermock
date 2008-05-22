@@ -17,32 +17,34 @@ package org.powermock.examples.dom4j;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
-import static org.powermock.PowerMock.createMock;
-import static org.powermock.PowerMock.mockMethod;
-import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.verify;
-import static org.powermock.PowerMock.mockStatic;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.powermock.PowerMock.createMock;
+import static org.powermock.PowerMock.mockMethod;
+import static org.powermock.PowerMock.mockStatic;
+import static org.powermock.PowerMock.replay;
+import static org.powermock.PowerMock.verify;
 
 import java.lang.reflect.Method;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
  * Unit test for the {@link AbstractXMLRequestCreatorBase} class.
  */
 @RunWith(PowerMockRunner.class)
+@SuppressStaticInitializationFor("org.dom4j.tree.AbstractNode")
 @PrepareForTest( { DocumentHelper.class })
 public class AbstractXMLRequestCreatorBaseTest {
 	private AbstractXMLRequestCreatorBase mTested;
@@ -62,7 +64,6 @@ public class AbstractXMLRequestCreatorBaseTest {
 		mRootElementMock = createMock(Element.class);
 		mHEADERElementMock = createMock(Element.class);
 		mBodyElementMock = createMock(Element.class);
-		mockStatic(DocumentHelper.class);
 	}
 
 	@After
@@ -78,18 +79,14 @@ public class AbstractXMLRequestCreatorBaseTest {
 	 * Replay all mocks
 	 */
 	protected void replayAll() {
-		replay(mTested, mDocumentMock, mRootElementMock, mHEADERElementMock,
-				mBodyElementMock);
-		replay(DocumentHelper.class);
+		replay(mTested, mDocumentMock, mRootElementMock, mHEADERElementMock, mBodyElementMock);
 	}
 
 	/**
 	 * Verify all mocks
 	 */
 	protected void verifyAll() {
-		verify(mTested, mDocumentMock, mRootElementMock, mHEADERElementMock,
-				mBodyElementMock);
-		verify(DocumentHelper.class);
+		verify(mTested, mDocumentMock, mRootElementMock, mHEADERElementMock, mBodyElementMock);
 	}
 
 	/**
@@ -100,7 +97,8 @@ public class AbstractXMLRequestCreatorBaseTest {
 	 */
 	@Test
 	@PrepareForTest
-	@Ignore
+	@SuppressStaticInitializationFor
+	@Ignore("This test case seems to be executed by the wrong classloader. Why??")
 	public void testConvertDocumentToByteArray() throws Exception {
 		// Create a fake document.
 		Document document = DocumentHelper.createDocument();
@@ -122,38 +120,31 @@ public class AbstractXMLRequestCreatorBaseTest {
 	 *             If something unexpected goes wrong.
 	 */
 	@Test
-	@Ignore
 	public void testCreateRequest() throws Exception {
-		mTested = mockMethod(AbstractXMLRequestCreatorBase.class,
-				"convertDocumentToByteArray", "createBody", "generateRandomId");
-
+		mTested = mockMethod(AbstractXMLRequestCreatorBase.class, "convertDocumentToByteArray", "createBody", "generateRandomId");
+		mockStatic(DocumentHelper.class);
 		// Expectations
 		final String[] params = new String[] { "String1", "String2" };
 		final byte[] expected = new byte[] { 42 };
 
 		expect(DocumentHelper.createDocument()).andReturn(mDocumentMock);
-		expect(mDocumentMock.addElement(XMLProtocol.ENCODE_ELEMENT)).andReturn(
-				mRootElementMock);
-		expect(mRootElementMock.addElement(XMLProtocol.HEADER_ELEMENT))
-				.andReturn(mHEADERElementMock);
+		expect(mDocumentMock.addElement(XMLProtocol.ENCODE_ELEMENT)).andReturn(mRootElementMock);
+		expect(mRootElementMock.addElement(XMLProtocol.HEADER_ELEMENT)).andReturn(mHEADERElementMock);
 		final String id = "213";
 		expect(mTested.generateRandomId()).andReturn(id);
-		expect(
-				mHEADERElementMock.addAttribute(
-						XMLProtocol.HEADER_MSG_ID_ATTRIBUTE, id)).andReturn(
-				null);
-		expect(mRootElementMock.addElement(XMLProtocol.BODY_ELEMENT))
-				.andReturn(mBodyElementMock);
+		expect(mHEADERElementMock.addAttribute(XMLProtocol.HEADER_MSG_ID_ATTRIBUTE, id)).andReturn(null);
+		expect(mRootElementMock.addElement(XMLProtocol.BODY_ELEMENT)).andReturn(mBodyElementMock);
 		mTested.createBody(mBodyElementMock, params);
 		expectLastCall().times(1);
-		expect(mTested.convertDocumentToByteArray(mDocumentMock)).andReturn(
-				expected);
+		expect(mTested.convertDocumentToByteArray(mDocumentMock)).andReturn(expected);
 
 		replayAll();
+		replay(DocumentHelper.class);
 
 		byte[] actual = mTested.createRequest(params);
 
 		verifyAll();
+		verify(DocumentHelper.class);
 
 		assertArrayEquals(expected, actual);
 	}
