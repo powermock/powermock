@@ -44,36 +44,19 @@ public class ExpectNewDemo {
 
 	public String multipleNew() {
 		MyClass myClass1 = new MyClass();
-		 System.out.println("myClass1 before = " + myClass1);
 		MyClass myClass2 = new MyClass();
-		
-		 System.out.println("myClass1 = " + myClass1);
-		 System.out.println("myClass2 = " + myClass2);
-		 System.out.println("myClass1 = " + System.identityHashCode(myClass1));
-		 System.out.println("myClass2 = " + System.identityHashCode(myClass2));
-//		if (myClass2 == null) {
-//			System.out.println("hello!!!!!");
-//		} else {
-//			System.out.println("before");
-//			 String qwe = myClass2.toString();
-//			System.out.println("myClass2 = " + qwe);
-//				System.out.println("qweqwe");
-//		}
-		// TODO THIS DOESN'T WORK!?! WHY???
-//		 final String message1 = myClass1.getMessage();
-//		 final String message2 = myClass2.getMessage();
-//		 return message1 + message2;
-		// System.out.println(myClass1.getMessage());
-		// System.out.println(myClass2.getMessage());
-		return myClass1.getMessage() + myClass2.getMessage();
+
+		final String message1 = myClass1.getMessage();
+		final String message2 = myClass2.getMessage();
+		return message1 + message2;
 	}
-	
+
 	public void simpleMultipleNew() {
 		new MyClass();
 		new MyClass();
 		new MyClass();
 	}
-	
+
 	public void simpleSingleNew() {
 		new MyClass();
 	}
