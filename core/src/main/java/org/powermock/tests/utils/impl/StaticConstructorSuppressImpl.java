@@ -6,35 +6,28 @@ import java.util.List;
 
 import org.powermock.core.MockRepository;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
-import org.powermock.tests.utils.StaticConstructorSuppressionExtractor;
-
+import org.powermock.tests.utils.TestClassesExtractor;
 
 /**
- * Default implementation of the {@link StaticConstructorSuppressionExtractor}
- * interface.
+ * Implementation of the {@link TestClassesExtractor} interface for classes that
+ * should have their static initializers suppressed.
  * 
- * @author Johan Haleby
  */
-public class StaticConstructorSuppressImpl implements StaticConstructorSuppressionExtractor {
+public class StaticConstructorSuppressImpl implements TestClassesExtractor {
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public String[] getClassLevelElements(Class<?> testCase) {
-		return doGetEntitiesForAnnotation(testCase);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	private String[] doGetEntitiesForAnnotation(AnnotatedElement element) {
+	public String[] getTestClasses(AnnotatedElement element) {
 		List<String> all = new LinkedList<String>();
 
 		SuppressStaticInitializationFor annotation = element.getAnnotation(SuppressStaticInitializationFor.class);
 		if (annotation != null) {
 			final String[] value = annotation.value();
 			for (String classToSuppress : value) {
-				all.add(classToSuppress);
+				if (!"".equals(classToSuppress)) {
+					all.add(classToSuppress);
+				}
 				MockRepository.addSuppressStaticInitializer(classToSuppress);
 			}
 		}

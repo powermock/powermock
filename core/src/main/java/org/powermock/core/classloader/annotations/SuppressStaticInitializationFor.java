@@ -8,10 +8,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 // TODO Should also support methods so that it'll work with chunking..
-@Target( { ElementType.TYPE })
+@Target( { ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
 public @interface SuppressStaticInitializationFor {
-	String[] value();
+	String[] value() default "";
 }
