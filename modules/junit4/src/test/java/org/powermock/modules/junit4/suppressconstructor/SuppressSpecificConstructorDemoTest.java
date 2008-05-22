@@ -15,18 +15,19 @@
  */
 package org.powermock.modules.junit4.suppressconstructor;
 
-import static org.powermock.PowerMock.suppressSpecificConstructor;
 import static org.junit.Assert.fail;
+import static org.powermock.PowerMock.suppressSpecificConstructor;
 
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import samples.suppressconstructor.SuppressSpecificConstructorDemo;
 
 @RunWith(PowerMockRunner.class)
-// @PrepareForTest( { SuppressSpecificConstructorDemo.class,
+//@PrepareForTest( { SuppressSpecificConstructorDemo.class,
 // SuppressSpecificConstructorDemoTest.class })
 public class SuppressSpecificConstructorDemoTest {
 

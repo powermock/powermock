@@ -29,7 +29,7 @@ import samples.staticinitializer.StaticInitializerExample;
 public class StaticInitializerExampleTest {
 
 	@Test
-	@Ignore
+	@Ignore("Because problems with maven???")
 	public void testname() throws Exception {
 		Assert
 				.assertNull(

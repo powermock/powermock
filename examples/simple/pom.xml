@@ -7,8 +7,8 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.powermock.examples</groupId>
-	<artifactId>simple</artifactId>
-	<name>simple</name>
+	<artifactId>powermock-examples-simple</artifactId>
+	<name>Simple Demo how to use PowerMock</name>
 	<dependencies>
 		<dependency>
 			<groupId>org.powermock</groupId>

@@ -54,7 +54,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 
 	public MockClassLoader(String... classesToMock) {
 		super(MockClassLoader.class.getClassLoader(), new String[] { "java.",
-				"sun.", "org.junit.", "junit.",
+				"javax.swing.", "sun.", "org.junit.", "junit.",
 				"org.powermock.modules.junit4.internal.",
 				"org.powermock.modules.junit4.legacy.internal.",
 				"org.powermock.modules.junit4.common.internal",

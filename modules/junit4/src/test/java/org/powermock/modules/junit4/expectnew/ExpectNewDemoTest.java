@@ -144,7 +144,6 @@ public class ExpectNewDemoTest {
 	}
 
 	@Test
-	@Ignore("This is buggy and thus should be ignored, but why??")
 	public void testMultipleNew() throws Exception {
 		ExpectNewDemo tested = new ExpectNewDemo();
 

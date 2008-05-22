@@ -22,6 +22,7 @@ import static org.junit.Assert.fail;
 import java.lang.reflect.Method;
 
 import org.powermock.Whitebox;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -58,6 +59,7 @@ public class WhiteBoxTest {
 	}
 
 	@Test
+	@Ignore
 	public void testFindMethod_noMethodFound() throws Exception {
 		try {
 			Whitebox.findMethodOrThrowException(
