@@ -24,8 +24,6 @@ import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
 
 import java.lang.reflect.Constructor;
-import java.rmi.AccessException;
-import java.security.AccessControlException;
 
 import org.easymock.classextension.ConstructorArgs;
 import org.junit.Test;
