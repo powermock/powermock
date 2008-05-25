@@ -77,8 +77,7 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 
 	public boolean shouldExecuteTestForMethod(Method potentialTestMethod) {
 		return (potentialTestMethod.getName().startsWith("test") && Modifier.isPublic(potentialTestMethod.getModifiers())
-				&& potentialTestMethod.getReturnType().equals(Void.TYPE) || potentialTestMethod.isAnnotationPresent(Test.class))
-				&& !potentialTestMethod.isAnnotationPresent(Ignore.class);
+				&& potentialTestMethod.getReturnType().equals(Void.TYPE) || potentialTestMethod.isAnnotationPresent(Test.class));
 	}
 
 	@Override
