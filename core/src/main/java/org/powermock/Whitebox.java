@@ -237,8 +237,10 @@ public class Whitebox {
 	/**
 	 * Invoke a private or inner class method. This might be useful to test
 	 * private methods.
+	 * 
+	 * @throws Throwable
 	 */
-	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Object... arguments) {
+	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Object... arguments) throws Exception {
 		return doInvokeMethod(tested, null, methodToExecute, arguments);
 	}
 
@@ -247,19 +249,18 @@ public class Whitebox {
 	 * automatically determine the type of the parameters, for example when
 	 * mixing primitive types and wrapper types in the same method. For most
 	 * situations use {@link #invokeMethod(Class, String, Object...)} instead.
+	 * 
+	 * @throws Exception
+	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?>[] argumentTypes, Object... arguments) {
+	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?>[] argumentTypes, Object... arguments)
+			throws Exception {
 		final Class<?> unmockedType = getUnmockedType(tested.getClass());
 		Method method = getMethod(unmockedType, methodToExecute, argumentTypes);
 		if (method == null) {
 			throwExceptionIfMethodWasNotFound(unmockedType, methodToExecute, null, arguments);
 		}
-		method.setAccessible(true);
-		try {
-			return method.invoke(tested, arguments);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		return performMethodInvocation(tested, method, arguments);
 	}
 
 	/**
@@ -268,49 +269,48 @@ public class Whitebox {
 	 * determine the type of the parameters, for example when mixing primitive
 	 * types and wrapper types in the same method. For most situations use
 	 * {@link #invokeMethod(Class, String, Object...)} instead.
+	 * 
+	 * @throws Exception
+	 *             Exception that may occur when invoking this method.
 	 */
 	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?> definedIn, Class<?>[] argumentTypes,
-			Object... arguments) {
+			Object... arguments) throws Exception {
 		Method method = getMethod(definedIn, methodToExecute, argumentTypes);
 		if (method == null) {
 			throwExceptionIfMethodWasNotFound(definedIn, methodToExecute, null, arguments);
 		}
-		method.setAccessible(true);
-		try {
-			return method.invoke(tested, arguments);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		return performMethodInvocation(tested, method, arguments);
 	}
 
 	/**
 	 * Invoke a private or inner class method in that is located in a subclass
 	 * of tested. This might be useful to test private methods.
+	 * 
+	 * @throws Exception
+	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments) {
+	public static synchronized Object invokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments)
+			throws Exception {
 		return doInvokeMethod(tested, declaringClass, methodToExecute, arguments);
 	}
 
 	/**
 	 * Invoke a private or inner class method. This might be useful to test
 	 * private methods.
+	 * 
+	 * @throws Throwable
 	 */
-	public static synchronized Object invokeMethod(Class<?> clazz, String methodToExecute, Object... arguments) {
+	public static synchronized Object invokeMethod(Class<?> clazz, String methodToExecute, Object... arguments) throws Exception {
 		return doInvokeMethod(clazz, null, methodToExecute, arguments);
 	}
 
-	private static Object doInvokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments) {
+	private static Object doInvokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments) throws Exception {
 		Method methodToInvoke = findMethodOrThrowException(tested, declaringClass, methodToExecute, arguments);
 
 		methodToInvoke.setAccessible(true);
 
 		// Invoke test
-		try {
-			return methodToInvoke.invoke(tested, arguments);
-		} catch (Exception e) {
-			throw new RuntimeException("Failed to invoke method " + methodToExecute + " on object " + tested + ". Reason was \"" + e.getMessage()
-					+ "\".", e);
-		}
+		return performMethodInvocation(tested, methodToInvoke, arguments);
 	}
 
 	/**
@@ -769,5 +769,22 @@ public class Whitebox {
 
 		final Method[] methodArray = methodsToMock.toArray(new Method[0]);
 		return methodArray;
+	}
+
+	private static Object performMethodInvocation(Object tested, Method methodToInvoke, Object... arguments) throws Exception {
+		methodToInvoke.setAccessible(true);
+		try {
+			return methodToInvoke.invoke(tested, arguments);
+		} catch (InvocationTargetException e) {
+			Throwable cause = e.getCause();
+			if (cause instanceof Exception) {
+				throw (Exception) cause;
+			} else {
+				throw new RuntimeException(cause);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to invoke method " + methodToInvoke.getName() + " on object " + tested + ". Reason was \""
+					+ e.getMessage() + "\".", e);
+		}
 	}
 }
