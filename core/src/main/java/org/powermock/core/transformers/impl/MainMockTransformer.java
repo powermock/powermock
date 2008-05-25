@@ -22,11 +22,8 @@ import javassist.CtMethod;
 import javassist.CtNewConstructor;
 import javassist.Modifier;
 import javassist.NotFoundException;
-import javassist.bytecode.BadBytecode;
-import javassist.bytecode.CodeIterator;
 import javassist.expr.ConstructorCall;
 import javassist.expr.ExprEditor;
-import javassist.expr.MethodCall;
 import javassist.expr.NewExpr;
 
 import org.powermock.core.MockGateway;
@@ -132,12 +129,9 @@ public class MainMockTransformer implements MockTransformer {
 				final StringBuilder code = new StringBuilder();
 				code.append("Object instance =").append(MockGateway.class.getName()).append(".newInstanceCall($type,$args,$sig);");
 				code.append("if(instance != ").append(MockGateway.class.getName()).append(".PROCEED) {");
-				// code.append("System.out.println(\"instance = \"+instance);");
 				code.append("	$_ = ($r) instance;");
 				code.append("} else {");
-				// code.append("System.out.println(\"proceeding\");");
 				code.append("	$_ = $proceed($$);");
-				// code.append("System.out.println(\"after proceeding\");");
 				code.append("}");
 				e.replace(code.toString());
 			}
@@ -194,104 +188,9 @@ public class MainMockTransformer implements MockTransformer {
 			classOrInstance = "$class";
 		}
 
-		String code = "Object value = " + MockGateway.class.getName() + ".methodCall(" + classOrInstance + ", \"" + method.getName() + "\", $args, $sig, \""
-				+ returnTypeAsString + "\");" + "if (value != " + MockGateway.class.getName() + ".PROCEED) " + "return " + returnValue + "; ";
+		String code = "Object value = " + MockGateway.class.getName() + ".methodCall(" + classOrInstance + ", \"" + method.getName()
+				+ "\", $args, $sig, \"" + returnTypeAsString + "\");" + "if (value != " + MockGateway.class.getName() + ".PROCEED) " + "return "
+				+ returnValue + "; ";
 		method.insertBefore("{" + code + "}");
 	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	public void oldmodifyMethod(CtClass type, final CtMethod method) throws NotFoundException, CannotCompileException {
-
-		// Lookup the method return type
-		String returnTypeAsString = null;
-		final CtClass returnTypeAsCtClass = method.getReturnType();
-		if (!returnTypeAsCtClass.equals(CtClass.voidType)) {
-			returnTypeAsString = returnTypeAsCtClass.getName();
-		}
-
-		if (Modifier.isNative(method.getModifiers())) {
-			String methodName = method.getName();
-			String returnValue = "($r)value";
-
-			if (returnTypeAsCtClass.equals(CtClass.voidType)) {
-				returnValue = "";
-			}
-
-			String classOrInstance = "this";
-			if (Modifier.isStatic(method.getModifiers())) {
-				classOrInstance = "$class";
-			}
-			method.setModifiers(method.getModifiers() - Modifier.NATIVE);
-			String code = "Object value = " + MockGateway.class.getName() + ".methodCall(" + classOrInstance + ", \"" + method.getName()
-					+ "\", $args, $sig, \"" + returnTypeAsString + "\");" + "if (value != " + MockGateway.class.getName() + ".PROCEED) " + "return "
-					+ returnValue + "; " + "throw new java.lang.UnsupportedOperationException(\"" + methodName + " is native\");";
-			method.setBody("{" + code + "}");
-			return;
-		}
-
-		if (type.isFrozen()) {
-			type.defrost();
-		}
-		String methodName = method.getName();
-		final byte[] byteCode = method.getMethodInfo().getCodeAttribute().getCode();
-		CtMethod newMethod = new CtMethod(returnTypeAsCtClass, methodName, method.getParameterTypes(), type);
-		newMethod.setName(METHOD_PREFIX + methodName);
-		newMethod.setModifiers(method.getModifiers());
-		type.addMethod(newMethod);
-		String returnValue = "($r)value";
-		String methodReturn = "value = ";
-		if (returnTypeAsCtClass.equals(CtClass.voidType)) {
-			returnValue = "";
-			methodReturn = "";
-		}
-
-		String classOrInstance = "this";
-		if (Modifier.isStatic(method.getModifiers())) {
-			classOrInstance = "$class";
-		}
-
-		String code = "Object value = " + MockGateway.class.getName() + ".methodCall(" + classOrInstance + ", \"" + method.getName() + "\", $args, $sig, \""
-				+ returnTypeAsString + "\");" + "if (value != " + MockGateway.class.getName() + ".PROCEED) " + "return " + returnValue + "; " + methodReturn
-				+ newMethod.getName() + "($$);" + "return " + returnValue + "; ";
-		method.setBody("{" + code + "}");
-		type.removeMethod(newMethod);
-		method.instrument(new ExprEditor() {
-			public void edit(MethodCall m) throws CannotCompileException {
-				if (m.getMethodName().startsWith(METHOD_PREFIX)) {
-					int offset = m.indexOfBytecode();
-					CodeIterator iterator = method.getMethodInfo().getCodeAttribute().iterator();
-					iterator.move(offset);
-					try {
-						iterator.insert(byteCode);
-					} catch (BadBytecode e) {
-						throw new CannotCompileException(e);
-					}
-				}
-			}
-		});
-	}
-
 }
