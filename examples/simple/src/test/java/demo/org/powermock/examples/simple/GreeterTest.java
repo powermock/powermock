@@ -3,6 +3,7 @@ package demo.org.powermock.examples.simple;
 import static junit.framework.Assert.assertEquals;
 import static org.easymock.EasyMock.expect;
 import static org.powermock.PowerMock.expectLastCall;
+import static org.powermock.PowerMock.expectNew;
 import static org.powermock.PowerMock.mockConstruction;
 import static org.powermock.PowerMock.mockStatic;
 import static org.powermock.PowerMock.replay;
@@ -21,7 +22,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 public class GreeterTest {
 
 	@Test
-	public void testGetMessage() {
+	public void testGetMessage() throws Exception {
 		mockStatic(SimpleConfig.class);
 		expect(SimpleConfig.getGreeting()).andReturn("Hi");
 		expect(SimpleConfig.getTarget()).andReturn("All");
@@ -33,7 +34,7 @@ public class GreeterTest {
 	}
 
 	@Test
-	public void testRun() {
+	public void testRun() throws Exception {
 		Logger logger = mockConstruction(Logger.class);
 		logger.log("Hello");
 		expectLastCall().times(10);
@@ -42,6 +43,16 @@ public class GreeterTest {
 		invokeMethod(new Greeter(), "run", 10, "Hello");
 
 		verify(logger);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testRunWhenLoggerThrowsUnexpectedRuntimeExeception() throws Exception {
+		expectNew(Logger.class).andThrow(new IllegalArgumentException("Unexpected exeception"));
+		replay(Logger.class);
+
+		invokeMethod(new Greeter(), "run", 10, "Hello");
+
+		verify(Logger.class);
 	}
 
 }
