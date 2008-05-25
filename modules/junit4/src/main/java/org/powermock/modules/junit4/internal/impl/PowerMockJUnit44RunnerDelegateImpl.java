@@ -75,7 +75,11 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 		if (methodsToRun == null) {
 			// The getTestMethods of TestClass is not visible so we need to look
 			// it invoke it using reflection.
-			return (List<Method>) Whitebox.invokeMethod(testClass, "getTestMethods");
+			try {
+				return (List<Method>) Whitebox.invokeMethod(testClass, "getTestMethods");
+			} catch (Throwable e) {
+				throw new RuntimeException(e);
+			}
 		} else {
 			List<Method> foundMethods = new LinkedList<Method>();
 			Method[] methods = klass.getMethods();
