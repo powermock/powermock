@@ -9,5 +9,4 @@ Change log 0.6
 * Fixed mayor classloading and byte-code manipulation issues. Code coverage tools such as EMMA now works.
 * Fixed so that it's now possible to invoke private methods using non-primitive and/or non-wrapper values.
 * Whitebox now throws the correct exceptions to the client and not a wrapped RuntimeException. This means for example that expectNew(..).andThrow(..) works as expected.
-
-
+* Fixed a bug in the PowerMock JUnit 4.4 and legacy runner that reported back the wrong number of tests being executed when @Ignore was used. 
