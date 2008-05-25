@@ -72,7 +72,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 
 	@SuppressWarnings("unchecked")
 	protected List<Method> getTestMethods(Class<?> klass, String[] methodsToRun) {
-		if (methodsToRun == null) {
+		if (methodsToRun == null || methodsToRun.length == 0) {
 			// The getTestMethods of TestClass is not visible so we need to look
 			// it invoke it using reflection.
 			try {
