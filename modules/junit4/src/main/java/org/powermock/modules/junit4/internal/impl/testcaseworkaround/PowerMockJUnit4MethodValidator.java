@@ -19,8 +19,8 @@ import org.powermock.Whitebox;
  * A custom {@link MethodValidator} that makes sure that test methods not
  * annotated by the Test annotation works in JUnit 4.4 with the custom
  * JUnit-runner when the test class is extending {@link TestCase}. This is
- * actually a workaround for a possible bug in JUnit 4.4 when the test case
- * extends from the <code>TestCase</code> class.
+ * actually a workaround for JUnit 4.4 when the test case extends from the
+ * <code>TestCase</code> class.
  */
 public class PowerMockJUnit4MethodValidator extends MethodValidator {
 
