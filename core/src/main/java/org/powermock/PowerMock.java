@@ -844,6 +844,7 @@ public class PowerMock {
 	 * final String expected = &quot;Hello altered World&quot;;
 	 * expect(myClassMock.getMessage()).andReturn(expected);
 	 * replay(myClassMock);
+	 * ..
 	 * </pre>
 	 * 
 	 * @param type
