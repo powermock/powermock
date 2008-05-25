@@ -14,7 +14,7 @@ import org.powermock.Whitebox;
  * This class is needed because the test method runner creates a new instance of
  * a {@link TestIntrospector} in its constructor. The TestIntrospector needs to
  * be changed in order to support methods not annotated with Test to avoid
- * NPE's. This is really a bug in JUnit when using custom runners.
+ * NPE's. This is really a work-around for JUnit when using custom runners.
  */
 public class PowerMockJUnit4LegacyTestMethodRunner extends TestMethodRunner {
 
