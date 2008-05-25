@@ -49,6 +49,8 @@ public class PowerMockJUnit4LegacyTestMethodRunner extends TestMethodRunner {
 				Whitebox.invokeMethod(this, TestMethodRunner.class, "runWithTimeout", timeout);
 			else
 				Whitebox.invokeMethod(this, TestMethodRunner.class, "runMethod");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		} finally {
 			notifier.fireTestFinished(description);
 		}
