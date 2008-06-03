@@ -47,9 +47,9 @@
       </developer>
    </developers>
    <scm>
-      <connection>scm:svn:https://powermock.svn.sourceforge.net/svnroot/powermock/tags/powermock-0.5</connection>
-      <developerConnection>scm:svn:https://powermock.svn.sourceforge.net/svnroot/powermock/tags/powermock-0.5</developerConnection>
-      <url>http://powermock.svn.sourceforge.net/viewcvs.cgi/powermock/tags/powermock-0.5</url>
+      <connection>scm:svn:https://powermock.svn.sourceforge.net/svnroot/powermock/trunk</connection>
+      <developerConnection>scm:svn:https://powermock.svn.sourceforge.net/svnroot/powermock/trunk</developerConnection>
+      <url>http://powermock.svn.sourceforge.net/viewcvs.cgi/powermock/trunk</url>
    </scm>
    <distributionManagement>
       <!--
@@ -78,8 +78,15 @@
    </modules>
    <build>
       <plugins>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+             <descriptors>
+                  <descriptor>release/src/assembly/bin.xml</descriptor>
+               </descriptors>
+            </configuration>
+         </plugin>
+         <plugin>            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
                <verbose>true</verbose>
