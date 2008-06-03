@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.powermock</groupId>
         <artifactId>powermock</artifactId>
-        <version>0.5-SNAPSHOT</version>
+        <version>0.6-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -19,7 +19,7 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-core</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.6-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -32,9 +32,9 @@
                     <descriptors>
                         <descriptor>src/assembly/bin.xml</descriptor>
                         <descriptor>src/assembly/bin-with-dependencies.xml</descriptor>
-		<!--
+      <!--
                         <descriptor>src/assembly/buildable.xml</descriptor>
-		-->
+      -->
                     </descriptors>
                 </configuration>
                 <executions>
