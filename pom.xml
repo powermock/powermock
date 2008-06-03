@@ -19,7 +19,7 @@
    </description>
    <inceptionYear>2007</inceptionYear>
    <properties>
-      <powermock.version>0.6-SNAPSHOT</powermock.version>
+      <powermock.version>0.7-SNAPSHOT</powermock.version>
    </properties>
    <licenses>
       <license>
