@@ -3,18 +3,22 @@
   <formats>
     <format>zip</format>
   </formats>
-  <componentDescriptors>
-    <componentDescriptor>src/assembly/javadoc.xml</componentDescriptor>
-    <componentDescriptor>src/assembly/src-jar.xml</componentDescriptor>
-  </componentDescriptors>
-  <includeBaseDirectory>true</includeBaseDirectory>
-  <dependencySets>
-    <dependencySet>
-      <outputDirectory></outputDirectory>
-      <unpack>false</unpack>
+<!--  <componentDescriptors>
+    <componentDescriptor>release/src/assembly/javadoc.xml</componentDescriptor>
+    <componentDescriptor>release/src/assembly/src-jar.xml</componentDescriptor>
+  </componentDescriptors>-->
+  <moduleSets>
+    <moduleSet>
       <includes>
         <include>org.powermock:powermock-core</include>
-      </includes>
-    </dependencySet>
-  </dependencySets>
+        <include>org.powermock.modules:powermock-module-junit3</include>
+        <include>org.powermock.modules:powermock-module-junit4</include>
+        <include>org.powermock.modules:powermock-module-junit4-legacy</include>
+      </includes>                            
+      <binaries>
+        <outputDirectory></outputDirectory>
+        <unpack>false</unpack>
+      </binaries>
+    </moduleSet>
+  </moduleSets>
 </assembly>
