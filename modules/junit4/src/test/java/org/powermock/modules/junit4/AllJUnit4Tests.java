@@ -31,6 +31,7 @@ import org.powermock.modules.junit4.privateandfinal.StupidPrivateFinalTest;
 import org.powermock.modules.junit4.privatefield.MockSelfPrivateFieldServiceClassTest;
 import org.powermock.modules.junit4.privatefield.SimplePrivateFieldServiceClassTest;
 import org.powermock.modules.junit4.privatemocking.PrivateMethodDemoTest;
+import org.powermock.modules.junit4.simplereturn.SimpleReturnExampleUserTest;
 import org.powermock.modules.junit4.singleton.StupidSingletonTest;
 import org.powermock.modules.junit4.staticandinstance.StaticAndInstanceDemoTest;
 import org.powermock.modules.junit4.staticinitializer.StaticInitializerExampleTest;
@@ -45,6 +46,6 @@ import org.powermock.modules.junit4.suppressmethod.SuppressMethodTest;
 		StupidPrivateFinalTest.class, MockSelfPrivateFieldServiceClassTest.class, SimplePrivateFieldServiceClassTest.class,
 		PrivateMethodDemoTest.class, StupidSingletonTest.class, StaticAndInstanceDemoTest.class, SuppressMethodTest.class,
 		SuppressConstructorDemoTest.class, SuppressConstructorHierarchyDemoTest.class, SuppressSpecificConstructorDemoTest.class,
-		ConstructorArgsDemoTest.class, NoAnnotationUsageTest.class })
+		ConstructorArgsDemoTest.class, NoAnnotationUsageTest.class, SimpleReturnExampleUserTest.class })
 public class AllJUnit4Tests {
 }
