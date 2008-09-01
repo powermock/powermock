@@ -25,5 +25,9 @@ public class SuppressSpecificConstructorDemo {
 	public SuppressSpecificConstructorDemo(String message) {
 		throw new IllegalStateException(message);
 	}
+	
+	public String getHello() {
+		return "Hello";
+	}
 
 }

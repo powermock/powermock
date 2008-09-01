@@ -4,6 +4,7 @@ Change log 0.7
 * Added ugly hack for cglib classloading issue with maven
 * Fixed problems with mocking methods in superclass and modifying multiple classes with same parent
 * Strict mocking with interface work as expected
+* Added niceReplayAndVerify
 
 Change log 0.6
 --------------

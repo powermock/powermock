@@ -18,9 +18,12 @@ package org.powermock;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import net.sf.cglib.proxy.Enhancer;
 
 import org.easymock.EasyMock;
 import org.easymock.IExpectationSetters;
@@ -42,6 +45,7 @@ import org.powermock.core.invocationcontrol.newinstance.NewInvocationControl;
  * PowerMock instead of EasyMock where applicable.
  */
 public class PowerMock {
+	private static boolean replayAndVerifyIsNice;
 
 	/**
 	 * Creates a mock object that supports mocking of final and native methods.
@@ -765,7 +769,22 @@ public class PowerMock {
 	public static synchronized IExpectationSetters<Object> expectLastCall() {
 		return org.easymock.classextension.EasyMock.expectLastCall();
 	}
+	
+	/**
+	 * Sometimes it is useful to allow replay and verify on non-mocks.
+	 * For example when using partial mocking in some tests and no mocking in other test-methods, but using the same setUp and tearDown.
+	 */
+	public static synchronized void niceReplayAndVerify() {
+		replayAndVerifyIsNice = true;
+	}
 
+	/**
+	 * Test if a object is a mock created by EasyMock or not.
+	 */
+	private static boolean isEasyMocked(Object mock) {
+		return Enhancer.isEnhanced(mock.getClass()) || Proxy.isProxyClass(mock.getClass());
+	}
+	
 	/**
 	 * Switches the mocks or classes to replay mode. Note that you must use this
 	 * method when using PowerMock!
@@ -775,18 +794,22 @@ public class PowerMock {
 	 */
 	public static synchronized void replay(Object... mocks) {
 		try {
-			for (Object tested : mocks) {
-				if (tested instanceof Class) {
-					replay((Class<?>) tested);
+			for (Object mock : mocks) {
+			 	if (mock instanceof Class) {
+					replay((Class<?>) mock);
 				} else {
-					MockInvocationHandler instanceInvocationHandler = getInstanceInvocationHandler(tested);
+					MockInvocationHandler instanceInvocationHandler = getInstanceInvocationHandler(mock);
 					if (instanceInvocationHandler != null) {
 						instanceInvocationHandler.getControl().replay();
 					} else {
-						// Delegate to easy mock class extension if we have no
-						// handler
-						// registered for this object.
-						org.easymock.classextension.EasyMock.replay(tested);
+						if (replayAndVerifyIsNice && !isEasyMocked(mock)) {
+							// ignore non-mock
+						} else {
+							// Delegate to easy mock class extension if we have no
+							// handler
+							// registered for this object.
+							org.easymock.classextension.EasyMock.replay(mock);
+						}
 					}
 				}
 			}
@@ -805,18 +828,22 @@ public class PowerMock {
 	 */
 	public static synchronized void verify(Object... objects) {
 		try {
-			for (Object tested : objects) {
-				if (tested instanceof Class) {
-					verifyClass((Class<?>) tested);
+			for (Object mock : objects) {
+			 	if (mock instanceof Class) {
+					verifyClass((Class<?>) mock);
 				} else {
-					MockInvocationHandler instanceInvocationHandler = getInstanceInvocationHandler(tested);
+					MockInvocationHandler instanceInvocationHandler = getInstanceInvocationHandler(mock);
 					if (instanceInvocationHandler != null) {
 						instanceInvocationHandler.getControl().verify();
 					} else {
-						// Delegate to easy mock class extension if we have no
-						// handler
-						// registered for this object.
-						org.easymock.classextension.EasyMock.verify(tested);
+						if (replayAndVerifyIsNice && !isEasyMocked(mock)) {
+							// ignore non-mock
+						} else {
+							// Delegate to easy mock class extension if we have no
+							// handler
+							// registered for this object.
+							org.easymock.classextension.EasyMock.verify(mock);
+						}
 					}
 				}
 			}
@@ -1098,7 +1125,7 @@ public class PowerMock {
 		}
 		return lastControl;
 	}
-
+	
 	private static synchronized void replay(Class<?>... types) {
 		try {
 			for (Class<?> type : types) {
@@ -1142,6 +1169,7 @@ public class PowerMock {
 	private static void clearState() {
 		MockRepository.clear();
 		MockGateway.clear();
+		replayAndVerifyIsNice = false;
 	}
 
 	private static MockInvocationHandler getClassInvocationHandler(Class<?> type) {
