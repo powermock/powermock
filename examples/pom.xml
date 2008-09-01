@@ -13,9 +13,8 @@
     <module>dom4j</module>
     <module>simple</module>
     <module>AbstractFactory</module>
-	<module>tutorial</module>
-  </modules>
-   <dependencyManagement>
+    <module>tutorial</module>
+  </modules>   <dependencyManagement>
       <dependencies>
          <dependency>
             <groupId>org.powermock</groupId>

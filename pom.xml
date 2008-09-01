@@ -68,8 +68,7 @@
    </distributionManagement>
    <issueManagement>
       <system>Jira</system>
-      <url>https://springldap.waygroup.se/jira</url>
-   </issueManagement>
+      <url>https://springldap.waygroup.se/jira</url>   </issueManagement>
      <modules>
       <module>core</module>
       <module>examples</module>
