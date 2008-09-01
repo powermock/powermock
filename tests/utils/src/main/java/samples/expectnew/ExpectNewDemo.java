@@ -18,6 +18,30 @@ package samples.expectnew;
 import samples.newmocking.MyClass;
 
 public class ExpectNewDemo {
+	
+	private int dummyField;
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + dummyField;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final ExpectNewDemo other = (ExpectNewDemo) obj;
+		if (dummyField != other.dummyField)
+			return false;
+		return true;
+	}
 
 	public String getMessage() {
 		MyClass myClass = new MyClass();
