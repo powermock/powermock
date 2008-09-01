@@ -55,6 +55,9 @@ public class MockGateway {
 	private static Object doMethodCall(Object object, String methodName,
 			Object[] args, Class<?>[] sig, String returnTypeAsString)
 			throws Throwable, NoSuchMethodException {
+		if ((methodName.equals("hashCode") && sig.length == 0) || (methodName.equals("equals") && sig.length == 1)) {
+			return PROCEED;
+		}
 		Object returnValue = null;
 
 		MethodInvocationControl methodInvocationControl = null;

@@ -16,6 +16,30 @@
 package samples.mockself;
 
 public class MockSelfDemo {
+	
+	private int hello;
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + hello;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final MockSelfDemo other = (MockSelfDemo) obj;
+		if (hello != other.hello)
+			return false;
+		return true;
+	}
 
 	public String aMethod() {
 		aMethod2();
