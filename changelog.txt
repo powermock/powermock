@@ -1,3 +1,9 @@
+Change log 0.7
+------------
+* Do not mock hashCode and equals
+* Added ugly hack for cglib classloading issue with maven
+* Fixed problems with mocking methods in superclass and modifying multiple classes with same parent
+
 Change log 0.6
 --------------
 * Updated to EasyMock 2.3 and classextension 2.3

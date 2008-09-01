@@ -86,8 +86,8 @@ public class MockGateway {
 
 			final InvocationHandler handler = methodInvocationControl
 					.getInvocationHandler();
-			returnValue = handler.invoke(objectType, objectType
-					.getDeclaredMethod(methodName, sig), args);
+			returnValue = handler.invoke(objectType, Whitebox.getMethod(objectType,
+					methodName, sig), args);
 		} else {
 			final boolean shouldSuppressMethodCode = suppressMethod
 					.contains(Whitebox.getMethod(objectType, methodName, sig));

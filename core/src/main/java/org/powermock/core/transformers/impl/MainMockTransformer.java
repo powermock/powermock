@@ -114,6 +114,7 @@ public class MainMockTransformer implements MockTransformer {
 					try {
 						CtConstructor declaredConstructor = superClass.getDeclaredConstructor(new CtClass[] {});
 						if (!superClass.getName().equals(Object.class.getName())) {
+							superClass.defrost();
 							declaredConstructor.setBody("{super();}");
 						}
 						tempClass = superClass;
