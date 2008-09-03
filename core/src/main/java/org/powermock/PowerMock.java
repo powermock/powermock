@@ -1038,7 +1038,7 @@ public class PowerMock {
 		}
 		T mock = null;
 		if (type.isInterface()) {
-			control = (MocksControl) (isStrict ? EasyMock.createControl() : EasyMock.createStrictControl());
+			control = (MocksControl) (isStrict ? EasyMock.createStrictControl() : EasyMock.createControl());
 			mock = control.createMock(type);
 		} else {
 			control = (MocksControl) (isStrict ? org.easymock.classextension.EasyMock.createStrictControl() : org.easymock.classextension.EasyMock
