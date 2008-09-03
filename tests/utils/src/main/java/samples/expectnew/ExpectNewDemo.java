@@ -15,6 +15,8 @@
  */
 package samples.expectnew;
 
+import java.util.Date;
+
 import samples.newmocking.MyClass;
 
 public class ExpectNewDemo {
@@ -83,5 +85,9 @@ public class ExpectNewDemo {
 
 	public void simpleSingleNew() {
 		new MyClass();
+	}
+	
+	public Date makeDate() {
+		return new Date();
 	}
 }

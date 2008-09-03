@@ -1059,10 +1059,10 @@ public class PowerMock {
 	}
 
 	private static <T> T doMock(Class<T> type, boolean isStatic, boolean isStrict, ConstructorArgs constructorArgs, Method... methods) {
-		MocksControl control = null;
 		if (methods == null) {
 			methods = new Method[] {};
 		}
+		MocksControl control = null;
 		T mock = null;
 		if (type.isInterface()) {
 			control = (MocksControl) (isStrict ? EasyMock.createStrictControl() : EasyMock.createControl());
@@ -1072,12 +1072,20 @@ public class PowerMock {
 					.createControl());
 			MocksClassControl mocksClassControl = ((MocksClassControl) control);
 			if (constructorArgs == null) {
-				mock = mocksClassControl.createMock(type, methods);
+				// what is the difference between methods == null and methods == []
+				if (isStatic == false && (methods == null || methods.length == 0)) {
+					mock = mocksClassControl.createMock(type);
+				} else {
+					mock = mocksClassControl.createMock(type, methods);
+				}
 			} else {
-				mock = mocksClassControl.createMock(type, constructorArgs, methods);
+				if (isStatic == false && (methods == null || methods.length == 0)) {
+					mock = mocksClassControl.createMock(type, constructorArgs);
+				} else {
+					mock = mocksClassControl.createMock(type, constructorArgs, methods);
+				}
 			}
 		}
-
 		MockInvocationHandler h = new MockInvocationHandler(control);
 		if (isStatic) {
 			MockRepository.putClassMethodInvocationControl(type, h, methods);

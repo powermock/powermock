@@ -146,6 +146,24 @@
          </plugin>
       </plugins>
    </reporting>
+	<profiles>
+		<profile>
+			<id>defects</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<includes>
+								<include>**/*Defect.java</include>
+							</includes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
    <dependencyManagement>
       <dependencies>
          <dependency>

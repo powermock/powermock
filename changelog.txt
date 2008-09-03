@@ -6,6 +6,7 @@ Change log 0.7
 * Strict mocking with interface work as expected
 * Added niceReplayAndVerify
 * Added logo and improved documentation structure
+* Follow EasyMock semantics for partial mocking
 
 Change log 0.6
 --------------
