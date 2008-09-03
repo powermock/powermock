@@ -243,6 +243,47 @@ public class Whitebox {
 	}
 
 	/**
+	 * Invoke a private or inner class method in cases where power mock cannot
+	 * automatically determine the type of the parameters, for example when
+	 * mixing primitive types and wrapper types in the same method. For most
+	 * situations use {@link #invokeMethod(Class, String, Object...)} instead.
+	 */
+	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?>[] argumentTypes, Object... arguments) {
+		final Class<?> unmockedType = getUnmockedType(tested.getClass());
+		Method method = getMethod(unmockedType, methodToExecute, argumentTypes);
+		if (method == null) {
+			throwExceptionIfMethodWasNotFound(unmockedType, methodToExecute, null, arguments);
+		}
+		method.setAccessible(true);
+		try {
+			return method.invoke(tested, arguments);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Invoke a private or inner class method in a subclass (defined by
+	 * <code>definedIn</code>) in cases where power mock cannot automatically
+	 * determine the type of the parameters, for example when mixing primitive
+	 * types and wrapper types in the same method. For most situations use
+	 * {@link #invokeMethod(Class, String, Object...)} instead.
+	 */
+	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?> definedIn, Class<?>[] argumentTypes,
+			Object... arguments) {
+		Method method = getMethod(definedIn, methodToExecute, argumentTypes);
+		if (method == null) {
+			throwExceptionIfMethodWasNotFound(definedIn, methodToExecute, null, arguments);
+		}
+		method.setAccessible(true);
+		try {
+			return method.invoke(tested, arguments);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
 	 * Invoke a private or inner class method in that is located in a subclass
 	 * of tested. This might be useful to test private methods.
 	 */
@@ -321,12 +362,7 @@ public class Whitebox {
 						}
 					}
 
-					for (int i = 0; i < paramTypes.length; i++) {
-						if (!paramTypes[i].equals(PrimitiveWrapper.getPrimitiveFromWrapperType(arguments[i].getClass()))) {
-							primitiveMethodFound = false;
-							break;
-						}
-					}
+					primitiveMethodFound = findPrimitiveMethodOrConstructor(paramTypes, arguments);
 
 					if (wrappedMethodFound || primitiveMethodFound) {
 						if (potentialMethodToInvoke == null) {
@@ -350,6 +386,20 @@ public class Whitebox {
 
 		Whitebox.throwExceptionIfMethodWasNotFound(tested.getClass(), methodToExecute, potentialMethodToInvoke, arguments);
 		return potentialMethodToInvoke;
+	}
+
+	private static boolean findPrimitiveMethodOrConstructor(Class<?>[] paramTypes, Object... arguments) {
+		boolean primitiveMethodFound = true;
+		for (int i = 0; i < paramTypes.length; i++) {
+			Class<?> primitiveWrapperType = PrimitiveWrapper.getPrimitiveFromWrapperType(arguments[i].getClass());
+			if (primitiveWrapperType == null) {
+				continue;
+			} else if (!paramTypes[i].equals(primitiveWrapperType)) {
+				primitiveMethodFound = false;
+				break;
+			}
+		}
+		return primitiveMethodFound;
 	}
 
 	/**
@@ -386,12 +436,7 @@ public class Whitebox {
 					}
 				}
 
-				for (int i = 0; i < paramTypes.length; i++) {
-					if (!paramTypes[i].equals(PrimitiveWrapper.getPrimitiveFromWrapperType(arguments[i].getClass()))) {
-						primitiveConstructorFound = false;
-						break;
-					}
-				}
+				primitiveConstructorFound = findPrimitiveMethodOrConstructor(paramTypes, arguments);
 
 				if (wrappedConstructorFound || primitiveConstructorFound) {
 					if (potentialConstructor == null) {
