@@ -5,6 +5,7 @@ Change log 0.7
 * Fixed problems with mocking methods in superclass and modifying multiple classes with same parent
 * Strict mocking with interface work as expected
 * Added niceReplayAndVerify
+* Added logo and improved documentation structure
 
 Change log 0.6
 --------------

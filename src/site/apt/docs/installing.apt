@@ -1,0 +1,24 @@
+                                             ------------------------------
+                                             Installing
+                                             ------------------------------
+
+Binary release
+
+ Not yet available...
+
+Installing from the trunk
+
++----------------------------------------------------------------------------------+
+svn checkout https://powermock.svn.sourceforge.net/svnroot/powermock/trunk powermock
+cd powermock
+mvn install
++----------------------------------------------------------------------------------+
+
+Installing a specific version
+
++----------------------------------------------------------------------------------------------------------------+
+svn checkout https://powermock.svn.sourceforge.net/svnroot/powermock/tags/powermock-${version} powermock-${version}
+cd powermock-${version}
+mvn install
++----------------------------------------------------------------------------------------------------------------+
+ Note: Replace ${version} with the version number, such as 0.5. 

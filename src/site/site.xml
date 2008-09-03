@@ -3,7 +3,7 @@
    <publishDate position="left" format="yyyy-MM-dd" />
    <bannerLeft>
       <name>PowerMock</name>
-      <src>http://powermock.sourceforge.net/files/mockme_logo.gif</src>
+      <src>images/logos/powermock.png</src>
       <href>http://powermock.org/</href>
    </bannerLeft>
    <bannerRight>
@@ -18,27 +18,26 @@
 
       <menu name="Overview">
          <item name="Home" href="/" />
-         <item name="Sourceforge" href="http://sourceforge.net/projects/powermock/" />
+         <item name="Google code" href="http://code.google.com/p/powermock/" />
          <item name="Downloads" href="http://sourceforge.net/project/showfiles.php?group_id=224812" />
       </menu>
 
       <menu name="Documentation">
          <item name="Gettng started" href="docs/gettingStarted.html" />
+         <item name="Installing" href="docs/installing.html" />
+         <item name="Motivation" href="docs/motivation.html" />
          <item name="API" href="apidocs/index.html" />      </menu>
 
       <menu ref="reports" name="Reports" />
    </body>
 
    <poweredBy>
-      <logo name="Hosted on SourceForge.net"
-         href="http://sourceforge.net"
-         img="http://sourceforge.net/sflogo.php?group_id=73357&amp;type=1" />
 <!--      <logo name="Built by Bamboo"
          href="http://www.atlassian.com/software/bamboo/"
          img="images/logos/bamboo.png" />-->
       <logo name="Build with Maven 2" href="http://maven.apache.org"
          img="images/logos/maven-feather.png" />
-      <logo name="Sponsored by Jayway" href="http://www.jayway.se"
+      <logo name="Sponsored by Jayway" href="http://www.jayway.com"
          img="images/logos/jayway.png" />
    </poweredBy>
 
