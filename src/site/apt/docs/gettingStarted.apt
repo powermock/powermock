@@ -2,13 +2,21 @@
                                              Getting started with PowerMock
                                              ------------------------------
 
-Installing
+Installing from the trunk
 
 +----------------------------------------------------------------------------------+
 svn checkout https://powermock.svn.sourceforge.net/svnroot/powermock/trunk powermock
 cd powermock
 mvn install
 +----------------------------------------------------------------------------------+
+
+Installing a specific version
++----------------------------------------------------------------------------------------------------------------+
+svn checkout https://powermock.svn.sourceforge.net/svnroot/powermock/tags/powermock-${version} powermock-${version}
+cd powermock-${version}
+mvn install
++----------------------------------------------------------------------------------------------------------------+
+	Note: Replace ${version} with the version number, such as 0.5. 
 
 Usage
 
@@ -45,9 +53,122 @@ public class YourTestCase {
 }
 +--------------------------------------------------------------------+
 
- Please refer to the example projects for JUnit 3 samples.
+Please refer to the example projects for JUnit 3 samples.
 
+Motivation and example
+	PowerMock is a Java mock framework that can be used to solve testing problems that is normally concidered difficult or even impossible to test. For instance it is possible to mock static methods, remove static initializers, allow mocking without dependency injection and more. PowerMock can do all of these tricks by modifying the byte-code at run-time when the tests are being exececuted. PowerMock also contains some utilities that gives you easier access to an objects internal state.
+	
+	For PowerMock to know which classes to manipulate to allow for improved testability, you need to specify this using an annotation called @PrepareForTest. The test must also be executed using one of PowerMock's JUnit runners. 
+	
+	A pretty common use-case of when to use PowerMock is when your code is calling a static method, for example to get an instance from a factory. For example:
 
- NOTE! If you are using JUnit4 and extending TestCase you must use the @Test annotation on your test methods, otherwise PowerMock will cause an error. We are looking in to this issue.
+	public class MyServiceUser {
+	
+	   public int getNumberOfPersons() {
+		  MyService myService = DependencyManager.getInstance().getMyService();
+		  Set<Person> allPersons = myService.getAllPersons();
+		  return allPersons.size();
+	   }
+	   
+	   ..	   
+	}
+	
+	The problem with this code is that without byte-code manipulation the DependencyManager.getInstance() (which is a static method) cannot be mocked. There are of course numerous ways to get around this, 
+	for example you could refactor the code and use dependency injection of the MyService instance. But why should you have to refactor your existing code ONLY for the sake of testability?
+	PowerMock will provide you with the choice of deciding yourself. In several projects a common approach to make the previous code testable is to wrap the call to the static method to an instance method like this:
+	
+	public class MyServiceUser {
+	
+	   public int getNumberOfPersons() {
+		  MyService myService = getDependencyManagerInstance().getMyService();
+		  Set<Person> allPersons = myService.getAllPersons();
+		  return allPersons.size();
+	   }
+	   
+	   protected DependencyManager getDependencyManagerInstance() {
+		  return DependencyManager.getInstance();
+	   }	   
+	   ..	 
+	}
+	
+	Doing so will allow for partial mocking, i.e. the call to getDependencyManagerInstance() can be mocked in the test class itself and return a mock implementation of the DependencyManager instead of ever calling the static getInstance() method. An example test for this method may look like this using standard EasyMock (PowerMock has some utility methods that makes it easier to take advantage of partial mocking but those are not shown here):
+	
+	public class MyServiceUserTest {
+	
+		@Test
+		public void testGetNumberOfPersons() {	
+			// We extract the method using reflection
+			Method getDependencyManagerInstanceMethod = MyServiceUser.class.getMethod("getDependencyManagerInstance");
+			
+			DependencyManager dependencyManagerMock = createMock(DependencyManager.class);
+			MyService myServiceMock = createMock(MyService.class);
+		
+			// Create a partial mock object for the MyServiceUser, in this case only mock the getDependencyManagerInstance method.
+			MyServiceUser tested = createMock(MyServiceUser.class, new Method[] { getDependencyManagerInstanceMethod } );
+			
+			expect(tested.getDependencyManagerInstance()).andReturn(dependencyManagerMock);
+			expect(dependencyManagerMock.getMyService()).andReturn(myServiceMock);
+			
+			Set<Person> personSetMock = new HashSet<String>();
+			personSetMock.put(new Person());
+			
+			final int expectedNUmberOfPersons = 1;
+			
+			replay(dependencyManagerMock, myServiceMock, tested);
+			
+			// perform the actual test
+			int actualNumberOfPersons = tested.getNumberOfPersons();
 
+			verify(dependencyManagerMock, myServiceMock, tested);			
+			
+			assertEquals(expectedNUmberOfPersons, actualNumberOfPersons);						
+		}
+	}
+	
+	But extracting the call to the static method to an instance method just for the sake of testability is a bad thing. Why should we write worse production code just to make it unit testable? By using PowerMock we can now test the original code without making any changes to it what so ever. Here's the code for doing so using JUnit 4:
+	
+	@RunWith(PowerMockRunner.class)
+	@PrepareForTest(DependencyManager.class)
+	public class MyServiceUserTest {
+	
+		@Test
+		public void testGetNumberOfPersons() {	
+			// Notice how we just instansiate the MyServiceUser class without any tricks
+			MyServiceUser tested = new MyServiceUser();
+			
+			// Create the other mocks as usual
+			DependencyManager dependencyManagerMock = createMock(DependencyManager.class);			
+			MyService myServiceMock = createMock(MyService.class);
+			
+			// This is how to tell PowerMock to mock all static methods of the DependencyManager class
+			mockStatic(DependencyManager.class);
+						
+			// This is how to setup the expectation for the static method call to DependencyManager.getInstance()
+			expect(DependencyManager.getInstance()).andReturn(dependencyManagerMock);
+			
+			expect(dependencyManagerMock.getMyService()).andReturn(myServiceMock);
+			
+			Set<Person> personSetMock = new HashSet<String>();
+			personSetMock.put(new Person());
+			
+			final int expectedNUmberOfPersons = 1;
+			
+			// Notice that also DependencyManager.class is replayed.
+			replay(dependencyManagerMock, myServiceMock, DependencyManager.class);
+			
+			// perform the actual test
+			int actualNumberOfPersons = tested.getNumberOfPersons();
 
+			// Notice that also DependencyManager.class is verified.
+			verify(dependencyManagerMock, myServiceMock, DependencyManager.class);			
+			
+			assertEquals(expectedNUmberOfPersons, actualNumberOfPersons);						
+		}
+	}
+	
+	Voila! Without changing our production code at all we were now able unit test the code. A few things may need to be explained. First of all the @PrepareForTest annotation should necessarily (but can and should in cases when using partial mocking) 
+	point to the class being tested. Instead the @PrepareForTest annotation contains the class(es) that encapsulates the logic that is normally not testable. In this case the DependencyManager.getInstance() is a static method which is called in code that 
+	we want to test and thus we must add this class to the annotation. You can also supply several classes using @PrepareForTest(classes={ Class1.class, Class2.class, .., ClassN.class }). You can also supply the fully-qualified names of a class instead of the class type. 
+	This is needed when suppressing static initializers but that is beyond the basics and will not be described here.
+	
+	PowerMock contains tests for all its functionality. The best way to learn how to use PowerMock and what use cases it deals with is to look in the junit4 project (if you're using JUnit 4.4) or junit4-legacy (for JUnit 4.0 to 4.3) or junit3 (for JUnit 3.x). There you'' find a  bunch of trivial examples that lets you explore the PowerMock API and features. The example code that we went through above is also available from subversion under the AbstractFactory project.
