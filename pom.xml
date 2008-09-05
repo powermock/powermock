@@ -47,9 +47,9 @@
       </developer>
    </developers>
    <scm>
-      <connection>scm:svn:https://powermock.svn.sourceforge.net/svnroot/powermock/trunk</connection>
-      <developerConnection>scm:svn:https://powermock.svn.sourceforge.net/svnroot/powermock/trunk</developerConnection>
-      <url>http://powermock.svn.sourceforge.net/viewcvs.cgi/powermock/trunk</url>
+      <connection>scm:svn:https://powermock.googlecode.com/svn/trunk/</connection>
+      <developerConnection>scm:svn:https://powermock.googlecode.com/svn/trunk/</developerConnection>
+      <url>http://code.google.com/p/powermock/source/browse/</url>
    </scm>
    <distributionManagement>
       <!--
@@ -57,7 +57,6 @@
          described in:
          
          http://maven.apache.org/maven-settings/settings.html
-      -->
       <site>
          <id>powermock-website</id>
          <name>SourceForge Site</name>
@@ -65,10 +64,12 @@
             scp://shell.sourceforge.net/home/groups/p/po/powermock/htdocs/
          </url>
       </site>
+      -->
    </distributionManagement>
    <issueManagement>
-      <system>Jira</system>
-      <url>https://springldap.waygroup.se/jira</url>   </issueManagement>
+      <system>Google Code</system>
+      <url>http://code.google.com/p/powermock/issues/list</url>
+   </issueManagement>
      <modules>
       <module>core</module>
       <module>examples</module>
@@ -77,15 +78,8 @@
    </modules>
    <build>
       <plugins>
-          <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <configuration>
-             <descriptors>
-                  <descriptor>release/src/assembly/bin.xml</descriptor>
-               </descriptors>
-            </configuration>
-         </plugin>
-         <plugin>            <groupId>org.apache.maven.plugins</groupId>
+         <plugin>            
+		    <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
                <verbose>true</verbose>
