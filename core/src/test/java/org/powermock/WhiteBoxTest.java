@@ -143,4 +143,26 @@ public class WhiteBoxTest {
 		assertEquals(17, Whitebox.invokeMethod(new ClassWithPrivateMethods(), "methodWithPrimitiveAndWrappedInt", new Class[] { int.class,
 				Integer.class }, 9, new Integer(8)));
 	}
+	
+	@Test
+	public void testStaticState() {
+		int expected = 123;
+		Whitebox.setInternalState(ClassWithInternalState.class, "staticState", expected);
+		assertEquals(expected, ClassWithInternalState.getStaticState());
+		assertEquals(expected, Whitebox.getInternalState(ClassWithInternalState.class, "staticState"));
+	}
+
+	@Test(expected=RuntimeException.class)
+	public void testStaticFinalState() {
+		Whitebox.setInternalState(ClassWithInternalState.class, "staticFinalState", 123);
+		fail("Static final is not possible to change");
+	}
+	
+	public void testFinalState() {
+		ClassWithInternalState state = new ClassWithInternalState();
+		String expected = "changed";
+		Whitebox.setInternalState(state, "finalString", expected);
+		assertEquals(expected, state.getFinalString());
+		assertEquals(expected, Whitebox.getInternalState(state, "finalString"));
+	}
 }

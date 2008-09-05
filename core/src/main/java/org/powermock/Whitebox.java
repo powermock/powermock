@@ -142,11 +142,16 @@ public class Whitebox {
 			throw new IllegalArgumentException("object, field name, and \"where\" must not be empty or null.");
 		}
 
-		Class<?> tempClass = object.getClass();
-		while (!tempClass.equals(where)) {
-			tempClass = tempClass.getSuperclass();
-			if (tempClass.equals(Object.class)) {
-				throw new IllegalArgumentException("The field " + fieldName + " was not found in the class heirachy for " + object.getClass());
+		Class<?> tempClass;
+		if (object instanceof Class) {
+			tempClass = (Class<?>) object;
+		} else {
+			tempClass = object.getClass();
+			while (!tempClass.equals(where)) {
+				tempClass = tempClass.getSuperclass();
+				if (tempClass.equals(Object.class)) {
+					throw new IllegalArgumentException("The field " + fieldName + " was not found in the class heirachy for " + object.getClass());
+				}
 			}
 		}
 		return tempClass;

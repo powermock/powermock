@@ -16,10 +16,20 @@
 package org.powermock;
 
 public class ClassWithInternalState {
+	
+	private static int staticState=5;
+
+	private static final int staticFinalState=15;
 
 	private int internalState = 0;
 
 	private int anotherInternalState = -1;
+	
+	private final String finalString = "hello";
+
+	public String getFinalString() {
+		return finalString;
+	}
 
 	public void increaseInteralState() {
 		internalState++;
@@ -31,5 +41,13 @@ public class ClassWithInternalState {
 
 	public int getAnotherInternalState() {
 		return anotherInternalState;
+	}
+	
+	public static int getStaticState() {
+		return staticState;
+	}
+
+	public static int getStaticFinalState() {
+		return staticFinalState;
 	}
 }

@@ -7,6 +7,7 @@ Change log 0.7
 * Added niceReplayAndVerify
 * Added logo and improved documentation structure
 * Follow EasyMock semantics for partial mocking
+* WhiteBox internalstate support for static fields as expected
 
 Change log 0.6
 --------------
