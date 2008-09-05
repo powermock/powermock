@@ -66,9 +66,9 @@
                 <configuration>
                   <finalName>powermock-${version}</finalName>
 					<descriptors>
-						<descriptor>src/assemble/full.xml</descriptor>
-						<descriptor>src/assemble/src.xml</descriptor>
-						<descriptor>src/assemble/with-dependencies.xml</descriptor>
+						<descriptor>src/assembly/full.xml</descriptor>
+						<descriptor>src/assembly/src.xml</descriptor>
+						<descriptor>src/assembly/with-dependencies.xml</descriptor>
 					</descriptors>
                 </configuration>
                 <executions>
