@@ -13,7 +13,7 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-release</artifactId>
     <packaging>pom</packaging>
-    <name>powermock release assembly</name>
+    <name>powermock-release</name>
 
     <dependencies>
         <dependency>

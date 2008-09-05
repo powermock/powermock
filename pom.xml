@@ -75,6 +75,7 @@
       <module>examples</module>
       <module>modules</module>
       <module>tests</module>
+	  <module>release</module>
    </modules>
    <build>
       <plugins>
