@@ -1,0 +1,14 @@
+<assembly>
+  <id>with-dependencies</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <includeBaseDirectory>true</includeBaseDirectory>
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory></outputDirectory>
+      <unpack>false</unpack>
+	  <scope>compile</scope>
+    </dependencySet>
+  </dependencySets>
+</assembly>

@@ -8,6 +8,7 @@ Change log 0.7
 * Added logo and improved documentation structure
 * Follow EasyMock semantics for partial mocking
 * WhiteBox internalstate support for static fields as expected
+* Updated assembly and create sources jar files
 
 Change log 0.6
 --------------
