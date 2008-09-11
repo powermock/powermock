@@ -18,12 +18,17 @@ package org.powermock.modules.junit4.expectnew;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.powermock.PowerMock.createMock;
 import static org.powermock.PowerMock.expectNew;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
+
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.InputStream;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +43,7 @@ import samples.newmocking.MyClass;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest( { MyClass.class, ExpectNewDemo.class })
+@PrepareForTest( { MyClass.class, ExpectNewDemo.class, DataInputStream.class })
 public class ExpectNewDemoTest {
 
 	@Test
@@ -339,5 +344,23 @@ public class ExpectNewDemoTest {
 			assertEquals("\nExpectation failure on verify:\nExpected a new instance call on "
 					+ "class samples.newmocking.MyClass between 5 and 7 times but was actually 3 times.", e.getMessage());
 		}
+	}
+	
+	@Test
+	public void testAlternativeFlow() throws Exception {
+		ExpectNewDemo tested = new ExpectNewDemo();
+		expectNew(DataInputStream.class)
+				.andThrow(new RuntimeException("error"));
+
+		replay(ExpectNewDemo.class, DataInputStream.class);
+
+		InputStream stream = tested.alternativePath();
+
+		verify(ExpectNewDemo.class, DataInputStream.class);
+
+		assertNotNull("The returned inputstream should not be null.", stream);
+		assertTrue(
+				"The returned inputstream should be an instance of ByteArrayInputStream.",
+				stream instanceof ByteArrayInputStream);
 	}
 }
