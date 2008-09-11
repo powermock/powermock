@@ -15,12 +15,19 @@
  */
 package samples.expectnew;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Date;
+import java.util.zip.ZipInputStream;
+
+import javax.sound.sampled.AudioInputStream;
 
 import samples.newmocking.MyClass;
 
 public class ExpectNewDemo {
-	
+
 	private int dummyField;
 
 	@Override
@@ -86,8 +93,16 @@ public class ExpectNewDemo {
 	public void simpleSingleNew() {
 		new MyClass();
 	}
-	
+
 	public Date makeDate() {
 		return new Date();
+	}
+
+	public InputStream alternativePath() {
+		try {
+			return new DataInputStream(null);
+		} catch (RuntimeException e) {
+			return new ByteArrayInputStream(new byte[0]);
+		}
 	}
 }
