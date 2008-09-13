@@ -1,15 +1,15 @@
-Change log 0.8
---------------
+Change log 0.8 (under development)
+----------------------------------
 * The junit4 test module now work with JUnit 4.5 (although using the old, now deprecated, approach of JUnit 4.4).
 * Verified that PowerMock works with EasyMock 2.4 but since we don't use any features from 2.4 we have a range dependency [2.3, 2.4] in the maven pom.xml.
 * Upgraded to JavaAssist 3.8.0.GA
-* Fixed the error message when a constructor is not found is wrong when using mocked values when using mockMethod.
+* Fixed the error message that was thrown when a constructor was not found when using mocks as arguments with mockMethod.
 * WhiteBox invoke method and invoke constructor methods now throws an IllegalArgumentException if the first argument is null.
 * Replay/verify works as expected when mixing classes and instance mocks.
 * Better error message when expectNew fails due to too many calls to new when a method was invoked using reflection.
                              
-Change log 0.7
---------------
+Change log 0.7 (released)
+-------------------------
 * Do not mock hashCode and equals
 * Added ugly hack for cglib classloading issue with maven
 * Fixed problems with mocking methods in superclass and modifying multiple classes with same parent
@@ -20,8 +20,8 @@ Change log 0.7
 * WhiteBox internalstate support for static fields as expected
 * Updated assembly and create sources jar files
 
-Change log 0.6
---------------
+Change log 0.6 (released)
+-------------------------
 * Updated to EasyMock 2.3 and classextension 2.3
 * Implemented support for ConstructorArgs
 * Implemented support for StrictMock
