@@ -28,8 +28,9 @@ import org.powermock.core.invocationcontrol.method.MethodInvocationControl;
 import org.powermock.core.invocationcontrol.newinstance.NewInvocationControl;
 
 /**
- * All mock invocations are routed through this gateway. This includes method calls, construction of new instances and more.
- * Do not use this class directly, but always go through the PowerMock facade.
+ * All mock invocations are routed through this gateway. This includes method
+ * calls, construction of new instances and more. Do not use this class
+ * directly, but always go through the PowerMock facade.
  */
 public class MockGateway {
 
@@ -55,7 +56,8 @@ public class MockGateway {
 	private static Object doMethodCall(Object object, String methodName,
 			Object[] args, Class<?>[] sig, String returnTypeAsString)
 			throws Throwable, NoSuchMethodException {
-		if ((methodName.equals("hashCode") && sig.length == 0) || (methodName.equals("equals") && sig.length == 1)) {
+		if ((methodName.equals("hashCode") && sig.length == 0)
+				|| (methodName.equals("equals") && sig.length == 1)) {
 			return PROCEED;
 		}
 		Object returnValue = null;
@@ -86,8 +88,8 @@ public class MockGateway {
 
 			final InvocationHandler handler = methodInvocationControl
 					.getInvocationHandler();
-			returnValue = handler.invoke(objectType, Whitebox.getMethod(objectType,
-					methodName, sig), args);
+			returnValue = handler.invoke(objectType, Whitebox.getMethod(
+					objectType, methodName, sig), args);
 		} else {
 			final boolean shouldSuppressMethodCode = suppressMethod
 					.contains(Whitebox.getMethod(objectType, methodName, sig));
@@ -114,10 +116,15 @@ public class MockGateway {
 		final NewInvocationControl<?> newInvocationControl = MockRepository
 				.getNewInstanceSubstitute(type);
 		if (newInvocationControl != null) {
-			return newInvocationControl.createInstance();
+			try {
+				return newInvocationControl.createInstance();
+			} catch (AssertionError e) {
+				PowerMockUtils.throwAssertionErrorForNewSubstitutionFailure(e,
+						type);
+			}
 		}
-		Object mockConstructionReplacement = MockRepository.getMockConstructionMock(type
-				.getName());
+		Object mockConstructionReplacement = MockRepository
+				.getMockConstructionMock(type.getName());
 		if (mockConstructionReplacement == null) {
 			// Check if we should suppress the constructor code
 			if (suppressConstructor

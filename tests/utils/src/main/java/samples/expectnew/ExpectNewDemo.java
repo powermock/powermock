@@ -90,6 +90,13 @@ public class ExpectNewDemo {
 		new MyClass();
 	}
 
+	@SuppressWarnings("unused")
+	private void simpleMultipleNewPrivate() {
+		new MyClass();
+		new MyClass();
+		new MyClass();
+	}
+
 	public void simpleSingleNew() {
 		new MyClass();
 	}

@@ -32,6 +32,7 @@ import java.io.InputStream;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -51,7 +52,8 @@ public class ExpectNewDemoTest {
 		ExpectNewDemo tested = new ExpectNewDemo();
 
 		final String expectedFailMessage = "testing checked exception";
-		expectNew(MyClass.class).andThrow(new RuntimeException(expectedFailMessage));
+		expectNew(MyClass.class).andThrow(
+				new RuntimeException(expectedFailMessage));
 
 		replay(MyClass.class);
 
@@ -122,7 +124,8 @@ public class ExpectNewDemoTest {
 		ExpectNewDemo tested = new ExpectNewDemo();
 
 		final String expectedFailMessage = "testing";
-		expectNew(MyClass.class).andThrow(new RuntimeException(expectedFailMessage));
+		expectNew(MyClass.class).andThrow(
+				new RuntimeException(expectedFailMessage));
 
 		replay(MyClass.class);
 
@@ -200,8 +203,10 @@ public class ExpectNewDemoTest {
 			verify(myClassMock1, MyClass.class);
 			fail("Should throw AssertionError.");
 		} catch (AssertionError e) {
-			assertEquals("\nExpectation failure on verify:\nExpected a new instance call on "
-					+ "class samples.newmocking.MyClass 4 times but was actually 3 times.", e.getMessage());
+			assertEquals(
+					"\nExpectation failure on verify:\nExpected a new instance call on "
+							+ "class samples.newmocking.MyClass 4 times but was actually 3 times.",
+					e.getMessage());
 		}
 	}
 
@@ -218,8 +223,48 @@ public class ExpectNewDemoTest {
 			tested.simpleMultipleNew();
 			fail("Should throw AssertionError.");
 		} catch (AssertionError e) {
-			assertTrue(e.getMessage().contains("Unexpected"));
+			assertTrue(e.getMessage().contains(
+					"Expected a new instance call on class "
+							+ MyClass.class.getName()
+							+ " 2 times but was actually 2 (+1) times."));
 		}
+	}
+
+	/**
+	 * Verifies that the issue
+	 * http://code.google.com/p/powermock/issues/detail?id=10 is solved.
+	 */
+	@Test
+	public void testSimpleMultipleNewPrivate_tooFewTimesExpected()
+			throws Exception {
+		ExpectNewDemo tested = new ExpectNewDemo();
+
+		MyClass myClassMock1 = createMock(MyClass.class);
+
+		expectNew(MyClass.class).andReturn(myClassMock1).times(2);
+
+		replay(myClassMock1, MyClass.class);
+		try {
+			Whitebox.invokeMethod(tested, "simpleMultipleNewPrivate");
+			fail("Should throw RuntimeException.");
+		} catch (RuntimeException e) {
+			assertTrue(e.getMessage().contains(
+					"Expected a new instance call on class "
+							+ MyClass.class.getName()
+							+ " 2 times but was actually 2 (+1) times."));
+		}
+	}
+
+	@Test
+	public void testSimpleMultipleNewPrivate_ok() throws Exception {
+		ExpectNewDemo tested = new ExpectNewDemo();
+
+		MyClass myClassMock1 = createMock(MyClass.class);
+
+		expectNew(MyClass.class).andReturn(myClassMock1).times(3);
+
+		replay(myClassMock1, MyClass.class);
+		Whitebox.invokeMethod(tested, "simpleMultipleNewPrivate");
 	}
 
 	@Test
@@ -262,7 +307,8 @@ public class ExpectNewDemoTest {
 	}
 
 	@Test
-	public void testSimpleMultipleNew_withRange_lowerBoundLessThan0() throws Exception {
+	public void testSimpleMultipleNew_withRange_lowerBoundLessThan0()
+			throws Exception {
 		MyClass myClassMock1 = createMock(MyClass.class);
 
 		try {
@@ -275,7 +321,8 @@ public class ExpectNewDemoTest {
 	}
 
 	@Test
-	public void testSimpleMultipleNew_withRange_upperBoundLessThan0() throws Exception {
+	public void testSimpleMultipleNew_withRange_upperBoundLessThan0()
+			throws Exception {
 
 		MyClass myClassMock1 = createMock(MyClass.class);
 		try {
@@ -287,7 +334,8 @@ public class ExpectNewDemoTest {
 	}
 
 	@Test
-	public void testSimpleMultipleNew_withRange_upperBoundLessThanLowerBound() throws Exception {
+	public void testSimpleMultipleNew_withRange_upperBoundLessThanLowerBound()
+			throws Exception {
 
 		MyClass myClassMock1 = createMock(MyClass.class);
 		try {
@@ -327,7 +375,8 @@ public class ExpectNewDemoTest {
 	}
 
 	@Test
-	public void testSimpleMultipleNew_withRange_notWithinRange() throws Exception {
+	public void testSimpleMultipleNew_withRange_notWithinRange()
+			throws Exception {
 		ExpectNewDemo tested = new ExpectNewDemo();
 		MyClass myClassMock1 = createMock(MyClass.class);
 
@@ -341,11 +390,13 @@ public class ExpectNewDemoTest {
 			verify(myClassMock1, MyClass.class);
 			fail("Should throw AssertionError.");
 		} catch (AssertionError e) {
-			assertEquals("\nExpectation failure on verify:\nExpected a new instance call on "
-					+ "class samples.newmocking.MyClass between 5 and 7 times but was actually 3 times.", e.getMessage());
+			assertEquals(
+					"\nExpectation failure on verify:\nExpected a new instance call on "
+							+ "class samples.newmocking.MyClass between 5 and 7 times but was actually 3 times.",
+					e.getMessage());
 		}
 	}
-	
+
 	@Test
 	public void testAlternativeFlow() throws Exception {
 		ExpectNewDemo tested = new ExpectNewDemo();
