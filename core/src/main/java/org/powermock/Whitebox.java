@@ -345,8 +345,6 @@ public class Whitebox {
 		Method methodToInvoke = findMethodOrThrowException(tested,
 				declaringClass, methodToExecute, arguments);
 
-		methodToInvoke.setAccessible(true);
-
 		// Invoke test
 		return performMethodInvocation(tested, methodToInvoke, arguments);
 	}
