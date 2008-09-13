@@ -21,8 +21,6 @@ import static org.powermock.PowerMock.createMock;
 import static org.powermock.PowerMock.expectNew;
 import static org.powermock.PowerMock.replay;
 
-import java.io.DataInputStream;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.Whitebox;
