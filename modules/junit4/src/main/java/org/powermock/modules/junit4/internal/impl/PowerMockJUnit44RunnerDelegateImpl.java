@@ -38,6 +38,7 @@ import org.junit.runner.manipulation.Filterable;
 import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
+import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.powermock.Whitebox;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
@@ -56,17 +57,20 @@ import org.powermock.modules.junit4.internal.impl.testcaseworkaround.PowerMockJU
  * @author Johan Haleby
  * 
  */
-public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filterable, Sortable, PowerMockJUnitRunnerDelegate {
+public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements
+		Filterable, Sortable, PowerMockJUnitRunnerDelegate {
 	private final List<Method> testMethods;
 	private TestClass testClass;
 
-	public PowerMockJUnit44RunnerDelegateImpl(Class<?> klass, String[] methodsToRun) throws InitializationError {
+	public PowerMockJUnit44RunnerDelegateImpl(Class<?> klass,
+			String[] methodsToRun) throws InitializationError {
 		testClass = new TestClass(klass);
 		testMethods = getTestMethods(klass, methodsToRun);
 		validate();
 	}
 
-	public PowerMockJUnit44RunnerDelegateImpl(Class<?> klass) throws InitializationError {
+	public PowerMockJUnit44RunnerDelegateImpl(Class<?> klass)
+			throws InitializationError {
 		this(klass, null);
 	}
 
@@ -76,7 +80,8 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 			// The getTestMethods of TestClass is not visible so we need to look
 			// it invoke it using reflection.
 			try {
-				return (List<Method>) Whitebox.invokeMethod(testClass, "getTestMethods");
+				return (List<Method>) Whitebox.invokeMethod(testClass,
+						"getTestMethods");
 			} catch (Throwable e) {
 				throw new RuntimeException(e);
 			}
@@ -95,7 +100,8 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 	}
 
 	protected void validate() throws InitializationError {
-		MethodValidator methodValidator = new PowerMockJUnit4MethodValidator(testClass);
+		MethodValidator methodValidator = new PowerMockJUnit4MethodValidator(
+				testClass);
 		methodValidator.validateMethodsForDefaultRunner();
 		methodValidator.assertValid();
 	}
@@ -127,7 +133,8 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 	 */
 	@Override
 	public Description getDescription() {
-		Description spec = Description.createSuiteDescription(getName(), classAnnotations());
+		Description spec = Description.createSuiteDescription(getName(),
+				classAnnotations());
 		List<Method> testMethods = this.testMethods;
 		for (Method method : testMethods)
 			spec.addChild(methodDescription(method));
@@ -152,14 +159,21 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 		try {
 			test = createTest();
 		} catch (InvocationTargetException e) {
-			notifier.testAborted(description, e.getCause());
+			testAborted(notifier, description, e.getCause());
 			return;
 		} catch (Exception e) {
-			notifier.testAborted(description, e);
+			testAborted(notifier, description, e);
 			return;
 		}
 		TestMethod testMethod = wrapMethod(method);
 		new MethodRoadie(test, testMethod, notifier, description).run();
+	}
+
+	private void testAborted(RunNotifier notifier, Description description,
+			Throwable e) {
+		notifier.fireTestStarted(description);
+		notifier.fireTestFailure(new Failure(description, e));
+		notifier.fireTestFinished(description);
 	}
 
 	protected TestMethod wrapMethod(Method method) {
@@ -171,7 +185,8 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 	}
 
 	protected Description methodDescription(Method method) {
-		return Description.createTestDescription(getTestClass().getJavaClass(), testName(method), testAnnotations(method));
+		return Description.createTestDescription(getTestClass().getJavaClass(),
+				testName(method), testAnnotations(method));
 	}
 
 	protected Annotation[] testAnnotations(Method method) {
@@ -191,7 +206,8 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 	public void sort(final Sorter sorter) {
 		Collections.sort(testMethods, new Comparator<Method>() {
 			public int compare(Method o1, Method o2) {
-				return sorter.compare(methodDescription(o1), methodDescription(o2));
+				return sorter.compare(methodDescription(o1),
+						methodDescription(o2));
 			}
 		});
 	}
