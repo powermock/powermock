@@ -19,18 +19,17 @@
       <dependency>
          <groupId>org.easymock</groupId>
          <artifactId>easymock</artifactId>
-         <version>2.3</version>
       </dependency>
       <dependency>
          <groupId>org.easymock</groupId>
          <artifactId>easymockclassextension</artifactId>
       </dependency>
       <dependency>
-         <groupId>jboss</groupId>
-         <artifactId>javassist</artifactId>
-         <version>3.6.ga</version>
-         <scope>compile</scope>
-      </dependency>
+         <groupId>javassist</groupId>
+          <artifactId>javassist</artifactId>
+          <version>3.8.0.GA</version>
+          <scope>compile</scope>
+      </dependency>        
    </dependencies>
      <build>
          <plugins>
