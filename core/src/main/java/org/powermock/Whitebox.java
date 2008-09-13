@@ -367,6 +367,12 @@ public class Whitebox {
 	static Method findMethodOrThrowException(Object tested,
 			Class<?> declaringClass, String methodToExecute,
 			Object... arguments) {
+
+		if (tested == null) {
+			throw new IllegalArgumentException(
+					"The to perform the operation on cannot be null.");
+		}
+
 		/*
 		 * Get methods from the type if it's not mocked or from the super type
 		 * if the tested object is mocked.
@@ -611,6 +617,12 @@ public class Whitebox {
 	 */
 	public static <T> T invokeConstructor(
 			Class<T> classThatContainsTheConstructorToTest, Object... arguments) {
+
+		if (classThatContainsTheConstructorToTest == null) {
+			throw new IllegalArgumentException(
+					"The class should contain the constructor cannot be null.");
+		}
+
 		Class<?>[] argumentTypes = new Class<?>[arguments.length];
 		for (int i = 0; i < arguments.length; i++) {
 			argumentTypes[i] = arguments[i].getClass();
@@ -655,6 +667,9 @@ public class Whitebox {
 
 	private static <T> T createInstance(Constructor<T> constructor,
 			Object... arguments) {
+		if (constructor == null) {
+			throw new IllegalArgumentException("Constructor cannot be null");
+		}
 		constructor.setAccessible(true);
 
 		T createdObject = null;
