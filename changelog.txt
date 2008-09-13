@@ -2,6 +2,7 @@ Change log 0.8
 * The junit4 test module now work with JUnit 4.5 (although using the old, now deprecated, approach of JUnit 4.4).
 * Verified that PowerMock works with EasyMock 2.4 but since we don't use any features from 2.4 we have a range dependency [2.3, 2.4] in the maven pom.xml.
 * Upgraded to JavaAssist 3.8.0.GA
+* Fixed the error message when a constructor is not found is wrong when using mocked values when using mockMethod.
                              
 Change log 0.7
 --------------
