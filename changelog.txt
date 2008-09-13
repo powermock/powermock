@@ -5,6 +5,7 @@ Change log 0.8
 * Upgraded to JavaAssist 3.8.0.GA
 * Fixed the error message when a constructor is not found is wrong when using mocked values when using mockMethod.
 * WhiteBox invoke method and invoke constructor methods now throws an IllegalArgumentException if the first argument is null.
+* Replay/verify works as expected when mixing classes and instance mocks.
                              
 Change log 0.7
 --------------

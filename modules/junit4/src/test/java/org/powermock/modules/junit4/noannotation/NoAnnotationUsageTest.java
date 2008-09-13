@@ -39,12 +39,12 @@ import samples.staticandinstance.StaticAndInstanceDemo;
 public class NoAnnotationUsageTest extends TestCase {
 
 	public void testGetMessage() throws Exception {
-		mockStaticMethod(StaticAndInstanceDemo.class, "getPublicMessage");
+		mockStaticMethod(StaticAndInstanceDemo.class, "getStaticMessage");
 
 		StaticAndInstanceDemo tested = mockMethod(StaticAndInstanceDemo.class, "getPrivateMessage");
 
 		final String staticExpected = "a static message";
-		expect(StaticAndInstanceDemo.getPublicMessage()).andReturn(staticExpected);
+		expect(StaticAndInstanceDemo.getStaticMessage()).andReturn(staticExpected);
 		final String privateExpected = "A private message ";
 		expectPrivate(tested, "getPrivateMessage").andReturn(privateExpected);
 
@@ -60,12 +60,12 @@ public class NoAnnotationUsageTest extends TestCase {
 	}
 
 	public void testGetMessage2() throws Exception {
-		mockStaticMethod(StaticAndInstanceDemo.class, "getPublicMessage");
+		mockStaticMethod(StaticAndInstanceDemo.class, "getStaticMessage");
 
 		StaticAndInstanceDemo tested = mockMethod(StaticAndInstanceDemo.class, "getPrivateMessage");
 
 		final String staticExpected = "a static message";
-		expect(StaticAndInstanceDemo.getPublicMessage()).andReturn(staticExpected);
+		expect(StaticAndInstanceDemo.getStaticMessage()).andReturn(staticExpected);
 		final String privateExpected = "A private message ";
 		expectPrivate(tested, "getPrivateMessage").andReturn(privateExpected);
 

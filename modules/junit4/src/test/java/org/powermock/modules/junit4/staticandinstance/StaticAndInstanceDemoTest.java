@@ -37,13 +37,13 @@ public class StaticAndInstanceDemoTest {
 
 	@Test
 	public void testGetMessage() throws Exception {
-		mockStaticMethod(StaticAndInstanceDemo.class, "getPublicMessage");
+		mockStaticMethod(StaticAndInstanceDemo.class, "getStaticMessage");
 
 		StaticAndInstanceDemo tested = mockMethod(StaticAndInstanceDemo.class,
 				"getPrivateMessage");
 
 		final String staticExpected = "a static message";
-		expect(StaticAndInstanceDemo.getPublicMessage()).andReturn(
+		expect(StaticAndInstanceDemo.getStaticMessage()).andReturn(
 				staticExpected);
 		final String privateExpected = "A private message ";
 		expectPrivate(tested, "getPrivateMessage").andReturn(privateExpected);
@@ -80,10 +80,10 @@ public class StaticAndInstanceDemoTest {
 	public void testGetMessage_onlyMockStatic() throws Exception {
 		StaticAndInstanceDemo tested = new StaticAndInstanceDemo();
 
-		mockStaticMethod(StaticAndInstanceDemo.class, "getPublicMessage");
+		mockStaticMethod(StaticAndInstanceDemo.class, "getStaticMessage");
 
 		final String staticExpected = "static message";
-		expect(StaticAndInstanceDemo.getPublicMessage()).andReturn(
+		expect(StaticAndInstanceDemo.getStaticMessage()).andReturn(
 				staticExpected);
 
 		replay(StaticAndInstanceDemo.class);

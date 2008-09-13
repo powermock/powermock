@@ -16,21 +16,21 @@
 package samples.staticandinstance;
 
 /**
- * Demonstrates how to mock both instance and static methods in the same test
+ * The purpose of this class is to be used to verify that the
+ * http://code.google.com/p/powermock/issues/detail?id=4 is fixed.
  * 
- * @author Johan Haleby
  */
-public class StaticAndInstanceDemo {
+public class StaticAndInstanceWithConstructorCodeDemo {
+
+	private final StaticAndInstanceDemo staticAndInstanceDemo;
+
+	public StaticAndInstanceWithConstructorCodeDemo(
+			StaticAndInstanceDemo staticAndInstanceDemo) {
+		this.staticAndInstanceDemo = staticAndInstanceDemo;
+	}
 
 	public String getMessage() {
-		return getPrivateMessage() + StaticAndInstanceDemo.getStaticMessage();
-	}
-
-	private String getPrivateMessage() {
-		return "Private ";
-	}
-
-	public static final String getStaticMessage() {
-		return "hello world!";
+		return StaticAndInstanceDemo.getStaticMessage()
+				+ staticAndInstanceDemo.getMessage();
 	}
 }
