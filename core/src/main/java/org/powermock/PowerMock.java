@@ -499,7 +499,7 @@ public class PowerMock {
 	 * @param additionalArgumentTypes
 	 *            Optional additional argument types.
 	 */
-	public static synchronized void mockNiceMethodStrict(Class<?> clazz,
+	public static synchronized void mockStaticMethodNice(Class<?> clazz,
 			String methodNameToMock, Class<?> firstArgumentType,
 			Class<?>... additionalArgumentTypes) {
 		doMockSpecific(clazz, new NiceMockStrategy(),
@@ -577,7 +577,7 @@ public class PowerMock {
 	 *            with the second parameter as <code>null</code> (i.e. all
 	 *            methods in that class will be mocked).
 	 */
-	public static synchronized void mockNiceMethodStrict(Class<?> clazz,
+	public static synchronized void mockMethodNice(Class<?> clazz,
 			String... methodNames) {
 		mockStaticNice(clazz, Whitebox.getMethods(clazz, methodNames));
 	}
@@ -593,7 +593,13 @@ public class PowerMock {
 
 		final Method[] methodArray = methods.toArray(new Method[0]);
 		if (allMethodsStatic(methodArray)) {
-			mockStatic(type, methodArray);
+			if (mockStrategy instanceof DefaultMockStrategy) {
+				mockStatic(type, methodArray);
+			} else if (mockStrategy instanceof StrictMockStrategy) {
+				mockStaticStrict(type, methodArray);
+			} else {
+				mockStaticNice(type, methodArray);
+			}
 			return null;
 		}
 
