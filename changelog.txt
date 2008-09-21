@@ -7,6 +7,7 @@ Change log 0.8 (under development)
 * WhiteBox invoke method and invoke constructor methods now throws an IllegalArgumentException if the first argument is null.
 * Replay/verify works as expected when mixing classes and instance mocks.
 * Better error message when expectNew fails due to too few calls to new when a method was invoked using reflection.
+* Implemented support for nice mocks.
                              
 Change log 0.7 (released)
 -------------------------
