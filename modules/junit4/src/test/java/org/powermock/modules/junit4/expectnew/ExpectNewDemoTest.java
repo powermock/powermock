@@ -414,4 +414,24 @@ public class ExpectNewDemoTest {
 				"The returned inputstream should be an instance of ByteArrayInputStream.",
 				stream instanceof ByteArrayInputStream);
 	}
+
+	@Test
+	public void testSimpleMultipleNewPrivate_tooManyTimesExpected()
+			throws Exception {
+		ExpectNewDemo tested = new ExpectNewDemo();
+
+		MyClass myClassMock1 = createMock(MyClass.class);
+
+		expectNew(MyClass.class).andReturn(myClassMock1).times(4);
+
+		replay(myClassMock1, MyClass.class);
+		try {
+			Whitebox.invokeMethod(tested, "simpleMultipleNewPrivate");
+			verify(myClassMock1, MyClass.class);
+			fail("Should throw an exception!.");
+		} catch (AssertionError e) {
+			assertTrue(e.getMessage().contains(
+					"4 times but was actually 3 times"));
+		}
+	}
 }
