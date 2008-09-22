@@ -541,7 +541,7 @@ public class Whitebox {
 
 	private static String getArgumentsAsString(Object... arguments) {
 		StringBuilder argumentsAsString = new StringBuilder();
-		if (arguments != null || arguments.length != 0) {
+		if (arguments != null && arguments.length != 0) {
 			for (int i = 0; i < arguments.length; i++) {
 				String argumentName = null;
 				Object argument = arguments[i];

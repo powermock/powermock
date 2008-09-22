@@ -17,12 +17,8 @@ package samples.expectnew;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Date;
-import java.util.zip.ZipInputStream;
-
-import javax.sound.sampled.AudioInputStream;
 
 import samples.newmocking.MyClass;
 

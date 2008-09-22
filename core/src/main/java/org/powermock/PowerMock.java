@@ -30,13 +30,11 @@ import org.easymock.IExpectationSetters;
 import org.easymock.IMocksControl;
 import org.easymock.classextension.ConstructorArgs;
 import org.easymock.classextension.internal.MocksClassControl;
-import org.easymock.internal.LastControl;
 import org.easymock.internal.MockInvocationHandler;
 import org.easymock.internal.MocksControl;
 import org.powermock.core.MockGateway;
 import org.powermock.core.MockRepository;
 import org.powermock.core.PowerMockUtils;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.invocationcontrol.method.MethodInvocationControl;
 import org.powermock.core.invocationcontrol.newinstance.NewInvocationControl;
 import org.powermock.core.mockstrategy.MockStrategy;
@@ -1084,60 +1082,15 @@ public class PowerMock {
 	public static synchronized <T> IExpectationSetters<T> expectPrivate(
 			Object instance, String methodName, Object... arguments) {
 
-		Method methodToExpect = Whitebox.findMethodOrThrowException(instance,
-				null, methodName, arguments);
+		Method[] methods = Whitebox.getMethods(instance.getClass(), methodName);
+		Method methodToExpect;
+		if (methods.length == 1) {
+			methodToExpect = methods[0];
+		} else {
+			methodToExpect = Whitebox.findMethodOrThrowException(instance,
+					null, methodName, arguments);
+		}
 		return doExpectPrivate(instance, methodToExpect, arguments);
-	}
-
-	/**
-	 * Used to specify expectations on private methods without return value.
-	 */
-	public static synchronized IExpectationSetters<Object> expectVoid(
-			Object instance, String methodName, Object... arguments) {
-		Method methodToExpect = Whitebox.findMethodOrThrowException(instance,
-				null, methodName, arguments);
-		doInvokeMethod(instance, methodToExpect, arguments);
-		return org.easymock.classextension.EasyMock.expectLastCall();
-	}
-
-	/**
-	 * Used to specify expectations on private static methods without return
-	 * value.
-	 */
-	public static synchronized IExpectationSetters<Object> expectVoid(
-			Class<?> clazz, String methodName, Object... arguments) {
-		Method methodToExpect = Whitebox.findMethodOrThrowException(clazz,
-				null, methodName, arguments);
-		doInvokeMethod(clazz, methodToExpect, arguments);
-		return org.easymock.classextension.EasyMock.expectLastCall();
-	}
-
-	/**
-	 * Used to specify expectations on private methods without return value.
-	 */
-	@SuppressWarnings("all")
-	public static synchronized IExpectationSetters<Object> expectVoid(
-			Object instance, String methodName, Class<?>[] parameterTypes,
-			Object... arguments) {
-
-		if (arguments == null) {
-			arguments = new Object[0];
-		}
-
-		if (instance == null) {
-			throw new IllegalArgumentException("instance cannot be null.");
-		} else if (arguments.length != parameterTypes.length) {
-			throw new IllegalArgumentException(
-					"The length of the arguments must be equal to the number of parameter types.");
-		}
-
-		Method foundMethod = Whitebox.getMethod(instance.getClass(),
-				methodName, parameterTypes);
-
-		Whitebox.throwExceptionIfMethodWasNotFound(instance.getClass(),
-				methodName, foundMethod, parameterTypes);
-
-		return org.easymock.classextension.EasyMock.expectLastCall();
 	}
 
 	/**
@@ -1515,7 +1468,7 @@ public class PowerMock {
 	private static <T> IExpectationSetters<T> doExpectPrivate(Object instance,
 			Method methodToExpect, Object... arguments) {
 		doInvokeMethod(instance, methodToExpect, arguments);
-		return (IExpectationSetters<T>) getLastControl(methodToExpect.getName());
+		return (IExpectationSetters<T>) org.easymock.classextension.EasyMock.expectLastCall();
 	}
 
 	private static void doInvokeMethod(Object instance, Method methodToExpect,
@@ -1533,20 +1486,6 @@ public class PowerMock {
 					+ methodToExpect.getName() + "'. Reason was: '"
 					+ e.getMessage() + "'.", e);
 		}
-	}
-
-	private static MocksControl getLastControl(String methodName) {
-		final MocksControl lastControl = LastControl.lastControl();
-		if (lastControl == null) {
-			throw new RuntimeException(
-					"Failed to expect method "
-							+ methodName
-							+ ". Perhaps you have forgot to prepare the mock for testing using the @"
-							+ PrepareForTest.class.getSimpleName()
-							+ " annotation? If you're using JUnit 3, make sure you've created a "
-							+ "PowerMock suite and added the test class to that suite.");
-		}
-		return lastControl;
 	}
 
 	private static synchronized void replay(Class<?>... types) {

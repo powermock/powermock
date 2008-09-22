@@ -1,10 +1,10 @@
 package org.powermock.modules.junit4.strict;
 
-import static org.powermock.PowerMock.expectVoid;
 import static org.powermock.PowerMock.mockMethod;
 import static org.powermock.PowerMock.mockMethodStrict;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
+import static org.powermock.PowerMock.expectPrivate;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,8 +25,8 @@ public class StrictDemoTest {
 	@Test
 	public void testCallB_notStrict() throws Exception {
 		StrictDemo tested = mockMethod(StrictDemo.class, "A", "B");
-		expectVoid(tested, "B").times(1);
-		expectVoid(tested, "A").times(1);
+		expectPrivate(tested, "B").times(1);
+		expectPrivate(tested, "A").times(1);
 
 		replay(tested);
 
@@ -38,8 +38,8 @@ public class StrictDemoTest {
 	@Test(expected = AssertionError.class)
 	public void testCallB_strict_failure() throws Exception {
 		StrictDemo tested = mockMethodStrict(StrictDemo.class, "A", "B");
-		expectVoid(tested, "B").times(1);
-		expectVoid(tested, "A").times(1);
+		expectPrivate(tested, "B").times(1);
+		expectPrivate(tested, "A").times(1);
 
 		replay(tested);
 
@@ -51,8 +51,8 @@ public class StrictDemoTest {
 	@Test
 	public void testCallB_strict_ok() throws Exception {
 		StrictDemo tested = mockMethodStrict(StrictDemo.class, "A", "B");
-		expectVoid(tested, "A").times(1);
-		expectVoid(tested, "B").times(1);
+		expectPrivate(tested, "A").times(1);
+		expectPrivate(tested, "B").times(1);
 
 		replay(tested);
 

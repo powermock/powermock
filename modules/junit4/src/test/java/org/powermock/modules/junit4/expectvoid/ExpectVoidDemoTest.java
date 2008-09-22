@@ -16,7 +16,7 @@
 package org.powermock.modules.junit4.expectvoid;
 
 import static org.powermock.PowerMock.expectLastCall;
-import static org.powermock.PowerMock.expectVoid;
+import static org.powermock.PowerMock.expectPrivate;
 import static org.powermock.PowerMock.mockMethod;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
@@ -41,7 +41,7 @@ public class ExpectVoidDemoTest {
 
 		final int expected = 112;
 
-		expectVoid(tested, methodToMock, expected).times(1);
+		expectPrivate(tested, methodToMock, expected).times(1);
 
 		replay(tested);
 

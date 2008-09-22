@@ -49,5 +49,18 @@ public class PrivateMethodDemo {
 	private Integer aTestMethod(Integer aValue) {
 		return aValue;
 	}
+	
+	public void doArrayStuff(String v) {
+		doArrayInternal(new String[] {v});
+	}
 
+	private void doArrayInternal(String[] strings) {
+	}
+
+	public void doObjectStuff(Object o) {
+		doObjectInternal(o);
+	}
+
+	private void doObjectInternal(Object o) {
+	}
 }

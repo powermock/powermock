@@ -26,6 +26,8 @@ import java.lang.reflect.Method;
 import org.powermock.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.easymock.EasyMock;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -132,6 +134,37 @@ public class PrivateMethodDemoTest {
 		verify(tested);
 
 		assertEquals("Expected and actual did not match", expected, actual);
+	}
+
+	@Test
+	@Ignore
+	public void testExpectPrivateWithArrayMatcher()
+			throws Exception {
+		PrivateMethodDemo tested = mockMethod(PrivateMethodDemo.class,
+				"doArrayInternal");
+
+		expectPrivate(tested, "doArrayInternal", EasyMock.aryEq(new String[] {"hello"}));
+
+		replay(tested);
+
+		tested.doArrayStuff("hello");
+
+		verify(tested);
+	}
+
+	@Test
+	public void testExpectPrivateWithObjectMatcher()
+			throws Exception {
+		PrivateMethodDemo tested = mockMethod(PrivateMethodDemo.class,
+				"doObjectInternal");
+
+		expectPrivate(tested, "doObjectInternal", EasyMock.isA(CharSequence.class));
+
+		replay(tested);
+
+		tested.doObjectStuff("hello");
+
+		verify(tested);
 	}
 
 }
