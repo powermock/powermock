@@ -8,6 +8,7 @@ Change log 0.8 (under development)
 * Replay/verify works as expected when mixing classes and instance mocks.
 * Better error message when expectNew fails due to too few calls to new when a method was invoked using reflection.
 * Implemented support for nice mocks.
+* Added more documentation
                              
 Change log 0.7 (released)
 -------------------------

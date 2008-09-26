@@ -91,7 +91,8 @@ public class MyServiceUserTest {
 		 * Expectations are performed the same for static methods as for
 		 * instance methods.
 		 */
-		expect(DependencyManager.getInstance()).andReturn(dependencyManagerMock);
+		expect(DependencyManager.getInstance())
+				.andReturn(dependencyManagerMock);
 
 		expect(dependencyManagerMock.getMyService()).andReturn(myServiceMock);
 

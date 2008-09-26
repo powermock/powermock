@@ -1,4 +1,4 @@
-package demo.org.powermock.examples.tutorial.staticmocking.impl;
+package powermock.examples.staticmocking;
 
 /**
  * The purpose of the IdGenerator is to generate ID's based on the system time.
