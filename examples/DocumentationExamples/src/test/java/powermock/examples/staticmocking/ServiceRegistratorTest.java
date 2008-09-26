@@ -30,7 +30,10 @@ public class ServiceRegistratorTest {
 		// given class
 		mockStatic(IdGenerator.class);
 
-		// The method call to IdGenerator.generateNewId() expectation.
+		/*
+		 * The static method call to IdGenerator.generateNewId() expectation.
+		 * This is why we need PowerMock.
+		 */
 		expect(IdGenerator.generateNewId()).andReturn(expectedId);
 
 		// Note how we replay the class, not the instance!
