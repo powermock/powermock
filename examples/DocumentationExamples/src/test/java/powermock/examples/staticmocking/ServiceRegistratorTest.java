@@ -24,7 +24,7 @@ public class ServiceRegistratorTest {
 		long expectedId = 42;
 
 		// We create a new instance of test class under test as usually.
-		ServiceRegistartor tested = new ServiceRegistartor();
+		ServiceRegistrator tested = new ServiceRegistrator();
 
 		// This is the way to tell PowerMock to mock all static methods of a
 		// given class

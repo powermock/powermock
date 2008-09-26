@@ -3,7 +3,7 @@ package powermock.examples.staticmocking;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ServiceRegistartor {
+public class ServiceRegistrator {
 
 	/**
 	 * Holds all services registrations that has been registered by this service
