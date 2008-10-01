@@ -1241,7 +1241,7 @@ public class PowerMock {
 	 */
 	@SuppressWarnings("unchecked")
 	public static synchronized <T> IExpectationSetters<T> expectNew(
-			Class<T> type) {
+			Class<T> type) throws Exception {
 		if (type == null) {
 			throw new IllegalArgumentException("type cannot be null");
 		}
@@ -1468,7 +1468,8 @@ public class PowerMock {
 	private static <T> IExpectationSetters<T> doExpectPrivate(Object instance,
 			Method methodToExpect, Object... arguments) {
 		doInvokeMethod(instance, methodToExpect, arguments);
-		return (IExpectationSetters<T>) org.easymock.classextension.EasyMock.expectLastCall();
+		return (IExpectationSetters<T>) org.easymock.classextension.EasyMock
+				.expectLastCall();
 	}
 
 	private static void doInvokeMethod(Object instance, Method methodToExpect,

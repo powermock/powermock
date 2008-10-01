@@ -9,6 +9,7 @@ Change log 0.8 (under development)
 * Better error message when expectNew fails due to too few calls to new when a method was invoked using reflection.
 * Implemented support for nice mocks.
 * Added more documentation
+* expectNew(..).andThrow(..) now works with checked exceptions
                              
 Change log 0.7 (released)
 -------------------------

@@ -22,9 +22,8 @@ package org.powermock.core.invocationcontrol.newinstance;
  * is associated with an entire object) and the Methods for this object that
  * should be mocked.
  * 
- * @author Johan Haleby
  */
 public interface NewInvocationControl<T> {
 
-	public T createInstance();
+	public T createInstance() throws Exception;
 }

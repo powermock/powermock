@@ -71,6 +71,18 @@ public class ExpectNewDemo {
 		new MyClass();
 	}
 
+	/**
+	 * The purpose of the method is to demonstrate that a test case can mock the
+	 * new instance call and throw an exception upon instantiation.
+	 */
+	public void throwExceptionAndWrapInRunTimeWhenInvoction() {
+		try {
+			new MyClass();
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage(), e);
+		}
+	}
+
 	public String multipleNew() {
 		MyClass myClass1 = new MyClass();
 		MyClass myClass2 = new MyClass();

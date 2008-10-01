@@ -28,6 +28,7 @@ import static org.powermock.PowerMock.verify;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.Test;
@@ -52,15 +53,15 @@ public class ExpectNewDemoTest {
 		ExpectNewDemo tested = new ExpectNewDemo();
 
 		final String expectedFailMessage = "testing checked exception";
-		expectNew(MyClass.class).andThrow(
-				new RuntimeException(expectedFailMessage));
+		expectNew(MyClass.class).andThrow(new IOException(expectedFailMessage));
 
 		replay(MyClass.class);
 
 		try {
-			tested.throwExceptionWhenInvoction();
+			tested.throwExceptionAndWrapInRunTimeWhenInvoction();
 			fail("Should throw a checked Exception!");
 		} catch (RuntimeException e) {
+			assertTrue(e.getCause() instanceof IOException);
 			assertEquals(expectedFailMessage, e.getMessage());
 		}
 

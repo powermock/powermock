@@ -30,9 +30,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import samples.expectnew.ExpectNewDemo;
 
-
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ ExpectNewDemo.class })
+@PrepareForTest( { ExpectNewDemo.class })
 public class MockDateTest {
 
 	@Test
@@ -40,51 +39,54 @@ public class MockDateTest {
 		Date someDate = new Date();
 		Date date = PowerMock.createMock(Date.class);
 		EasyMock.expect(date.after(someDate)).andReturn(false);
-		
+
 		PowerMock.replay(date);
-		
+
 		date.after(someDate);
-		
+
 		PowerMock.verify(date);
 	}
 
 	@Test
 	public void testMockDateWithEasyMock() {
 		Date someDate = new Date();
-		MocksClassControl c = (MocksClassControl)org.easymock.classextension.EasyMock.createControl();
+		MocksClassControl c = (MocksClassControl) org.easymock.classextension.EasyMock
+				.createControl();
 		Date date = c.createMock(Date.class);
 		EasyMock.expect(date.after(someDate)).andReturn(false);
-		
+
 		PowerMock.replay(date);
-		
+
 		date.after(someDate);
-		
+
 		PowerMock.verify(date);
 	}
 
 	@Test
 	public void testMockDateWithEasyMockFails() {
 		Date someDate = new Date();
-		MocksClassControl c = (MocksClassControl)org.easymock.classextension.EasyMock.createControl();
+		MocksClassControl c = (MocksClassControl) org.easymock.classextension.EasyMock
+				.createControl();
 		Date date = c.createMock(Date.class, new Method[0]);
 		try {
 			EasyMock.expect(date.after(someDate)).andReturn(false);
-			Assert.fail("EasyMock with no methods mocked should not be possible to mock");
+			Assert
+					.fail("EasyMock with no methods mocked should not be possible to mock");
 		} catch (IllegalStateException e) {
 			// ok
 		}
 	}
 
 	@Test
-	public void testExpectNewDate() {
+	public void testExpectNewDate() throws Exception {
 		Date someDate = new Date();
 		long time = someDate.getTime();
 		PowerMock.expectNew(Date.class).andReturn(someDate);
-		
+
 		PowerMock.replay(Date.class);
 
 		Assert.assertEquals(time, new ExpectNewDemo().makeDate().getTime());
-		
+
 		PowerMock.verify(Date.class);
 	}
 }
