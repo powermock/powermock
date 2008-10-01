@@ -12,23 +12,12 @@
   <url>http://maven.apache.org</url>
   <build>
   <plugins>
-  <plugin>
+     <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <systemProperties>
-            <property>
-              <name>cobertura.use.java.nio</name>
-              <value>true</value>
-            </property>
-          </systemProperties>
-		  <forkMode>pertest</forkMode> 
+            <forkMode>pertest</forkMode> 
         </configuration>
-      </plugin> 
-	   <plugin>  
-             <groupId>org.codehaus.mojo</groupId>  
-             <artifactId>cobertura-maven-plugin</artifactId>  
-             <version>2.2</version>  
-		</plugin>
+      </plugin>
      </plugins>
   </build>
   <reporting>
