@@ -10,6 +10,14 @@
   <name>DocumentationExamples</name>
   <version>0.8-SNAPSHOT</version>
   <url>http://maven.apache.org</url>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cobertura-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </reporting>
   <dependencies>
      <dependency>
          <groupId>org.easymock</groupId>
