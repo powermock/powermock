@@ -10,6 +10,27 @@
   <name>DocumentationExamples</name>
   <version>0.8-SNAPSHOT</version>
   <url>http://maven.apache.org</url>
+  <build>
+  <plugins>
+  <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <systemProperties>
+            <property>
+              <name>cobertura.use.java.nio</name>
+              <value>true</value>
+            </property>
+          </systemProperties>
+		  <forkMode>pertest</forkMode> 
+        </configuration>
+      </plugin> 
+	   <plugin>  
+             <groupId>org.codehaus.mojo</groupId>  
+             <artifactId>cobertura-maven-plugin</artifactId>  
+             <version>2.2</version>  
+		</plugin>
+     </plugins>
+  </build>
   <reporting>
     <plugins>
       <plugin>
@@ -36,4 +57,14 @@
          <scope>test</scope>
       </dependency>
    </dependencies>
+   <repositories>
+      <repository>
+         <id>Maven repository</id>
+         <name>The Maven Repository</name>
+         <url>http://repo1.maven.org/maven2</url>
+         <snapshots>
+            <enabled>true</enabled>
+         </snapshots>
+      </repository>
+   </repositories>
 </project>
