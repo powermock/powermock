@@ -29,6 +29,8 @@ import net.sf.cglib.proxy.Enhancer;
 
 import org.powermock.core.PrimitiveWrapper;
 
+import sun.reflect.ReflectionFactory;
+
 /**
  * Various utilities for accessing internals of a class. Basically a simplified
  * reflection utility intended for tests.
@@ -67,6 +69,34 @@ public class Whitebox {
 			}
 		} catch (Exception e) {
 			throw new IllegalArgumentException("Failed to lookup method.", e);
+		}
+	}
+
+	/**
+	 * Create a new instance of a class without invoking its constructor.
+	 * <p>
+	 * No byte-code manipulation is needed to perform this operation and thus
+	 * it's not necessary use the <code>PowerMockRunner</code> or
+	 * <code>PrepareForTest</code> annotation to use this functionality.
+	 * Instead it depends on java serialization behavior to create the instance.
+	 * Note that this only works on Sun JVM's.
+	 * 
+	 * @param <T>
+	 *            The type of the instance to create.
+	 * @param classToInstantiate
+	 *            The type of the instance to create.
+	 * @return A new instance of type T, created without invoking the
+	 *         constructor.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T newInstance(Class<T> classToInstantiate) {
+		try {
+			return (T) ReflectionFactory.getReflectionFactory()
+					.newConstructorForSerialization(classToInstantiate,
+							Object.class.getDeclaredConstructor())
+					.newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 

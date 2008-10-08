@@ -20,6 +20,8 @@ package powermock.examples.privatemocking;
  * methods invocations.
  */
 public class DataService {
+	
+	
 
 	public boolean replaceData(final String dataId, final byte[] binaryData) {
 		return modifyData(dataId, binaryData);

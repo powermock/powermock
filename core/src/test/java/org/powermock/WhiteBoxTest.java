@@ -24,8 +24,7 @@ import java.lang.reflect.Method;
 import org.junit.Test;
 
 /**
- * TODO Should be a functional or integration test.
- * 
+ * Tests the WhiteBox's functionality.
  */
 public class WhiteBoxTest {
 
