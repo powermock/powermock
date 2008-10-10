@@ -17,7 +17,7 @@ package powermock.examples.privatemocking;
 
 import static org.junit.Assert.assertTrue;
 import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.mockMethod;
+import static org.powermock.PowerMock.createPartialMock;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
 
@@ -42,7 +42,7 @@ public class DataServiceTest {
 		final String expectedDataId = "id";
 
 		// Mock only the modifyData method
-		DataService tested = mockMethod(DataService.class, modifyDataMethodName);
+		DataService tested = createPartialMock(DataService.class, modifyDataMethodName);
 
 		/*
 		 * This is the simplest way to expect a non-void method call to a
@@ -68,7 +68,7 @@ public class DataServiceTest {
 		final String expectedDataId = "id";
 
 		// Mock only the modifyData method
-		DataService tested = mockMethod(DataService.class, modifyDataMethodName);
+		DataService tested = createPartialMock(DataService.class, modifyDataMethodName);
 
 		/*
 		 * This is the simplest way to expect a non-void method call to a

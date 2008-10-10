@@ -17,7 +17,7 @@ package org.powermock.modules.junit4.expectvoid;
 
 import static org.powermock.PowerMock.expectLastCall;
 import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.mockMethod;
+import static org.powermock.PowerMock.createPartialMock;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
 
@@ -37,7 +37,7 @@ public class ExpectVoidDemoTest {
 	@Test
 	public void testInvokeAPrivateVoidMethod() throws Exception {
 		final String methodToMock = "privateInvoke";
-		ExpectVoidDemo tested = mockMethod(ExpectVoidDemo.class, methodToMock);
+		ExpectVoidDemo tested = createPartialMock(ExpectVoidDemo.class, methodToMock);
 
 		final int expected = 112;
 
@@ -54,7 +54,7 @@ public class ExpectVoidDemoTest {
 	public void testInvokeAPrivateVoidMethod_usingPowerMockExpectLastCall()
 			throws Exception {
 		final String methodToMock = "privateInvoke";
-		ExpectVoidDemo tested = mockMethod(ExpectVoidDemo.class, methodToMock);
+		ExpectVoidDemo tested = createPartialMock(ExpectVoidDemo.class, methodToMock);
 
 		final int expected = 112;
 
@@ -72,7 +72,7 @@ public class ExpectVoidDemoTest {
 	public void testInvokeAPrivateVoidMethod_usingEasyMockExpectLastCall()
 			throws Exception {
 		final String methodToMock = "privateInvoke";
-		ExpectVoidDemo tested = mockMethod(ExpectVoidDemo.class, methodToMock);
+		ExpectVoidDemo tested = createPartialMock(ExpectVoidDemo.class, methodToMock);
 
 		final int expected = 112;
 

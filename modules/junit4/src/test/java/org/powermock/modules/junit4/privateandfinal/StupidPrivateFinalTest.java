@@ -18,7 +18,7 @@ package org.powermock.modules.junit4.privateandfinal;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.mockMethod;
+import static org.powermock.PowerMock.createPartialMock;
 import static org.junit.Assert.assertEquals;
 
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -41,7 +41,7 @@ public class StupidPrivateFinalTest {
 	@Test
 	public void testSay() throws Exception {
 
-		StupidPrivateFinal tested = mockMethod(StupidPrivateFinal.class,
+		StupidPrivateFinal tested = createPartialMock(StupidPrivateFinal.class,
 				"sayIt");
 		String expected = "Hello altered World";
 		expectPrivate(tested, "sayIt", "name").andReturn(expected);
@@ -55,12 +55,12 @@ public class StupidPrivateFinalTest {
 
 	@Test
 	public void testMultiMock() throws Exception {
-		StupidPrivateFinal tested1 = mockMethod(StupidPrivateFinal.class,
+		StupidPrivateFinal tested1 = createPartialMock(StupidPrivateFinal.class,
 				"sayIt");
 		String expected1 = "Hello altered World";
 		expectPrivate(tested1, "sayIt", "name").andReturn(expected1);
 		replay(tested1);
-		StupidPrivateFinal tested2 = mockMethod(StupidPrivateFinal.class,
+		StupidPrivateFinal tested2 = createPartialMock(StupidPrivateFinal.class,
 				"sayIt");
 		String expected2 = "Hello qweqweqwe";
 		expectPrivate(tested2, "sayIt", "name").andReturn(expected2);

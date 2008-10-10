@@ -17,7 +17,7 @@ package org.powermock.modules.junit4.mockself;
 
 import static org.easymock.EasyMock.expect;
 import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.mockMethod;
+import static org.powermock.PowerMock.createPartialMock;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
 import static org.junit.Assert.assertEquals;
@@ -35,7 +35,7 @@ public class MockSelfDemoWithSubClassTest {
 
 	@Test
 	public void testGetMessage() throws Exception {
-		MockSelfDemoWithSubClass tested = mockMethod(
+		MockSelfDemoWithSubClass tested = createPartialMock(
 				MockSelfDemoWithSubClass.class, "getAMessage",
 				"getInternalMessage");
 

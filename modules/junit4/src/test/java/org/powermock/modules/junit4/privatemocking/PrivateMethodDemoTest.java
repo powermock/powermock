@@ -16,7 +16,7 @@
 package org.powermock.modules.junit4.privatemocking;
 
 import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.mockMethod;
+import static org.powermock.PowerMock.createPartialMock;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
 import static org.junit.Assert.assertEquals;
@@ -45,7 +45,7 @@ public class PrivateMethodDemoTest {
 
 	@Test
 	public void testSay() throws Exception {
-		PrivateMethodDemo tested = mockMethod(PrivateMethodDemo.class,
+		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class,
 				"sayIt", String.class);
 		String expected = "Hello altered World";
 		expectPrivate(tested, "sayIt", "name").andReturn(expected);
@@ -81,7 +81,7 @@ public class PrivateMethodDemoTest {
 
 	@Test
 	public void testMethodCallingPrimitiveTestMethod() throws Exception {
-		PrivateMethodDemo tested = mockMethod(PrivateMethodDemo.class,
+		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class,
 				"aTestMethod", int.class);
 
 		final int expected = 42;
@@ -99,7 +99,7 @@ public class PrivateMethodDemoTest {
 
 	@Test
 	public void testMethodCallingWrappedTestMethod() throws Exception {
-		PrivateMethodDemo tested = mockMethod(PrivateMethodDemo.class,
+		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class,
 				"aTestMethod", Integer.class);
 
 		final int expected = 42;
@@ -118,7 +118,7 @@ public class PrivateMethodDemoTest {
 	@Test
 	public void testMethodCallingWrappedTestMethod_reflectiveMethodLookup()
 			throws Exception {
-		PrivateMethodDemo tested = mockMethod(PrivateMethodDemo.class,
+		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class,
 				"aTestMethod", Integer.class);
 
 		final Method methodToExpect = PrivateMethodDemo.class
@@ -140,7 +140,7 @@ public class PrivateMethodDemoTest {
 	@Ignore
 	public void testExpectPrivateWithArrayMatcher()
 			throws Exception {
-		PrivateMethodDemo tested = mockMethod(PrivateMethodDemo.class,
+		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class,
 				"doArrayInternal");
 
 		expectPrivate(tested, "doArrayInternal", EasyMock.aryEq(new String[] {"hello"}));
@@ -155,7 +155,7 @@ public class PrivateMethodDemoTest {
 	@Test
 	public void testExpectPrivateWithObjectMatcher()
 			throws Exception {
-		PrivateMethodDemo tested = mockMethod(PrivateMethodDemo.class,
+		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class,
 				"doObjectInternal");
 
 		expectPrivate(tested, "doObjectInternal", EasyMock.isA(CharSequence.class));

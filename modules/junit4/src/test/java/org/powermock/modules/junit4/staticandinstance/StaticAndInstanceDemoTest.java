@@ -17,7 +17,7 @@ package org.powermock.modules.junit4.staticandinstance;
 
 import static org.easymock.EasyMock.expect;
 import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.mockMethod;
+import static org.powermock.PowerMock.createPartialMock;
 import static org.powermock.PowerMock.mockStaticMethod;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
@@ -39,7 +39,7 @@ public class StaticAndInstanceDemoTest {
 	public void testGetMessage() throws Exception {
 		mockStaticMethod(StaticAndInstanceDemo.class, "getStaticMessage");
 
-		StaticAndInstanceDemo tested = mockMethod(StaticAndInstanceDemo.class,
+		StaticAndInstanceDemo tested = createPartialMock(StaticAndInstanceDemo.class,
 				"getPrivateMessage");
 
 		final String staticExpected = "a static message";
@@ -61,7 +61,7 @@ public class StaticAndInstanceDemoTest {
 
 	@Test
 	public void testGetMessage_onlyMockPrivate() throws Exception {
-		StaticAndInstanceDemo tested = mockMethod(StaticAndInstanceDemo.class,
+		StaticAndInstanceDemo tested = createPartialMock(StaticAndInstanceDemo.class,
 				"getPrivateMessage");
 
 		final String privateExpected = "A private message ";

@@ -19,7 +19,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.powermock.PowerMock.expectPrivate;
 import static org.powermock.PowerMock.mockAllExcept;
-import static org.powermock.PowerMock.mockMethod;
+import static org.powermock.PowerMock.createPartialMock;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
 import static org.junit.Assert.assertEquals;
@@ -40,7 +40,7 @@ public class MockSelfDemoTest {
 
 	@Test
 	public void testMockMultiple_ok() throws Exception {
-		tested = mockMethod(MockSelfDemo.class, "aMethod2", "getString");
+		tested = createPartialMock(MockSelfDemo.class, "aMethod2", "getString");
 
 		tested.aMethod2();
 		expectLastCall().times(1);
@@ -60,7 +60,7 @@ public class MockSelfDemoTest {
 
 	@Test
 	public void testMockMultiple_sameName() throws Exception {
-		tested = mockMethod(MockSelfDemo.class, "getString");
+		tested = createPartialMock(MockSelfDemo.class, "getString");
 
 		final String firstString = "A message: ";
 		expectPrivate(tested, "getString").andReturn(firstString);
@@ -81,7 +81,7 @@ public class MockSelfDemoTest {
 
 	@Test
 	public void testMockSingleMethod() throws Exception {
-		tested = mockMethod(MockSelfDemo.class, "timesTwo", int.class);
+		tested = createPartialMock(MockSelfDemo.class, "timesTwo", int.class);
 
 		final int expectedInt = 2;
 		final int expectedInteger = 8;

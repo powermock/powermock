@@ -18,7 +18,7 @@ package org.powermock.modules.junit4.privatefield;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.mockMethod;
+import static org.powermock.PowerMock.createPartialMock;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
 import static org.powermock.Whitebox.setInternalState;
@@ -46,7 +46,7 @@ public class MockSelfPrivateFieldServiceClassTest {
 
 	@Test
 	public void testGetCompositeMessage() {
-		MockSelfPrivateFieldServiceClass tested = mockMethod(
+		MockSelfPrivateFieldServiceClass tested = createPartialMock(
 				MockSelfPrivateFieldServiceClass.class, "getOwnMessage");
 
 		Service serviceMock = createMock(Service.class);

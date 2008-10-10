@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.powermock.PowerMock.createMock;
 import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.mockMethod;
+import static org.powermock.PowerMock.createPartialMock;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
 
@@ -66,7 +66,7 @@ public class ConstructorArgsDemoTest {
 	@Test
 	public void testGetTheSecret_stringConstructorAndMockedPrivateSecret() throws Exception {
 		final String originalSecret = "my own secret";
-		ConstructorArgsDemo tested = mockMethod(ConstructorArgsDemo.class, new String[] { "theSecretIsPrivate" }, originalSecret);
+		ConstructorArgsDemo tested = createPartialMock(ConstructorArgsDemo.class, new String[] { "theSecretIsPrivate" }, originalSecret);
 		assertEquals(originalSecret, Whitebox.getInternalState(tested, "secret", ConstructorArgsDemo.class));
 
 		final String myNewSecret = "my new secret";

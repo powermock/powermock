@@ -8,7 +8,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.powermock.PowerMock.createMock;
 import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.mockMethod;
+import static org.powermock.PowerMock.createPartialMock;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
 import static org.powermock.Whitebox.invokeMethod;
@@ -56,7 +56,7 @@ public class ProviderServiceImplTest {
 		final Set<ServiceProducer> expectedServiceProducers = new HashSet<ServiceProducer>();
 		expectedServiceProducers.add(new ServiceProducer(1, "mock name"));
 
-		tested = mockMethod(ProviderServiceImpl.class, methodNameToMock);
+		tested = createPartialMock(ProviderServiceImpl.class, methodNameToMock);
 
 		expectPrivate(tested, methodNameToMock).andReturn(expectedServiceProducers);
 
@@ -74,7 +74,7 @@ public class ProviderServiceImplTest {
 		final String methodNameToMock = "getAllServiceProducers";
 		final Set<ServiceProducer> expectedServiceProducers = new HashSet<ServiceProducer>();
 
-		tested = mockMethod(ProviderServiceImpl.class, methodNameToMock);
+		tested = createPartialMock(ProviderServiceImpl.class, methodNameToMock);
 
 		expectPrivate(tested, methodNameToMock).andReturn(null);
 
@@ -97,7 +97,7 @@ public class ProviderServiceImplTest {
 		final Set<ServiceProducer> serviceProducers = new HashSet<ServiceProducer>();
 		serviceProducers.add(expected);
 
-		tested = mockMethod(ProviderServiceImpl.class, methodNameToMock);
+		tested = createPartialMock(ProviderServiceImpl.class, methodNameToMock);
 
 		expectPrivate(tested, methodNameToMock).andReturn(serviceProducers);
 
@@ -115,7 +115,7 @@ public class ProviderServiceImplTest {
 		final String methodNameToMock = "getAllServiceProducers";
 		final int expectedServiceProducerId = 1;
 
-		tested = mockMethod(ProviderServiceImpl.class, methodNameToMock);
+		tested = createPartialMock(ProviderServiceImpl.class, methodNameToMock);
 
 		expectPrivate(tested, methodNameToMock).andReturn(new HashSet<ServiceProducer>());
 

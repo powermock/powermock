@@ -387,7 +387,7 @@ public class PowerMock {
 	 *            that this is only needed to separate overloaded methods.
 	 * @return A mock object of type <T>.
 	 */
-	public static synchronized <T> T mockMethod(Class<T> type,
+	public static synchronized <T> T createPartialMock(Class<T> type,
 			String methodNameToMock, Class<?> firstArgumentType,
 			Class<?>... additionalArgumentTypes) {
 		return doMockSpecific(type, new DefaultMockStrategy(),
@@ -412,7 +412,7 @@ public class PowerMock {
 	 *            that this is only needed to separate overloaded methods.
 	 * @return A mock object of type <T>.
 	 */
-	public static synchronized <T> T mockMethodStrict(Class<T> type,
+	public static synchronized <T> T createPartialMockStrict(Class<T> type,
 			String methodNameToMock, Class<?> firstArgumentType,
 			Class<?>... additionalArgumentTypes) {
 		return doMockSpecific(type, new StrictMockStrategy(),
@@ -437,7 +437,7 @@ public class PowerMock {
 	 *            that this is only needed to separate overloaded methods.
 	 * @return A mock object of type <T>.
 	 */
-	public static synchronized <T> T mockMethodNice(Class<T> type,
+	public static synchronized <T> T createPartialMockNice(Class<T> type,
 			String methodNameToMock, Class<?> firstArgumentType,
 			Class<?>... additionalArgumentTypes) {
 		return doMockSpecific(type, new NiceMockStrategy(),
@@ -575,7 +575,7 @@ public class PowerMock {
 	 *            with the second parameter as <code>null</code> (i.e. all
 	 *            methods in that class will be mocked).
 	 */
-	public static synchronized void mockMethodNice(Class<?> clazz,
+	public static synchronized void createPartialMockNice(Class<?> clazz,
 			String... methodNames) {
 		mockStaticNice(clazz, Whitebox.getMethods(clazz, methodNames));
 	}
@@ -644,7 +644,7 @@ public class PowerMock {
 	 *            methods in that class will be mocked).
 	 * @return A mock object of type <T>.
 	 */
-	public static synchronized <T> T mockMethod(Class<T> type,
+	public static synchronized <T> T createPartialMock(Class<T> type,
 			String... methodNames) {
 		return createMock(type, Whitebox.getMethods(type, methodNames));
 	}
@@ -671,7 +671,7 @@ public class PowerMock {
 	 *            methods in that class will be mocked).
 	 * @return A mock object of type <T>.
 	 */
-	public static synchronized <T> T mockMethodStrict(Class<T> type,
+	public static synchronized <T> T createPartialMockStrict(Class<T> type,
 			String... methodNames) {
 		return createStrictMock(type, Whitebox.getMethods(type, methodNames));
 	}
@@ -698,7 +698,7 @@ public class PowerMock {
 	 *            methods in that class will be mocked).
 	 * @return A mock object of type <T>.
 	 */
-	public static synchronized <T> T mockMethodNice(Class<T> type,
+	public static synchronized <T> T createPartialMockNice(Class<T> type,
 			String... methodNames) {
 		return createNiceMock(type, Whitebox.getMethods(type, methodNames));
 	}
@@ -724,7 +724,7 @@ public class PowerMock {
 	 *            certain constructor. (optional)
 	 * @return the mock object.
 	 */
-	public static <T> T mockMethod(Class<T> type, String[] methodNames,
+	public static <T> T createPartialMock(Class<T> type, String[] methodNames,
 			Object... constructorArguments) {
 		Constructor<?> constructor = Whitebox.findConstructorOrThrowException(
 				type, constructorArguments);
@@ -756,7 +756,7 @@ public class PowerMock {
 	 *            certain constructor. (optional)
 	 * @return the mock object.
 	 */
-	public static <T> T mockMethodStrict(Class<T> type, String[] methodNames,
+	public static <T> T createPartialMockStrict(Class<T> type, String[] methodNames,
 			Object... constructorArguments) {
 		Constructor<?> constructor = Whitebox.findConstructorOrThrowException(
 				type, constructorArguments);
@@ -788,7 +788,7 @@ public class PowerMock {
 	 *            certain constructor. (optional)
 	 * @return the mock object.
 	 */
-	public static <T> T mockMethodNice(Class<T> type, String[] methodNames,
+	public static <T> T createPartialMockNice(Class<T> type, String[] methodNames,
 			Object... constructorArguments) {
 		Constructor<?> constructor = Whitebox.findConstructorOrThrowException(
 				type, constructorArguments);
@@ -823,7 +823,7 @@ public class PowerMock {
 	 *            certain constructor. (optional)
 	 * @return the mock object.
 	 */
-	public static <T> T mockMethod(Class<T> type, String methodName,
+	public static <T> T createPartialMock(Class<T> type, String methodName,
 			Class<?>[] methodParameterTypes, Object... constructorArguments) {
 		Constructor<?> constructor = Whitebox.findConstructorOrThrowException(
 				type, constructorArguments);
@@ -859,7 +859,7 @@ public class PowerMock {
 	 *            certain constructor. (optional)
 	 * @return the mock object.
 	 */
-	public static <T> T mockMethodStrict(Class<T> type, String methodName,
+	public static <T> T createPartialMockStrict(Class<T> type, String methodName,
 			Class<?>[] methodParameterTypes, Object... constructorArguments) {
 		Constructor<?> constructor = Whitebox.findConstructorOrThrowException(
 				type, constructorArguments);
@@ -895,7 +895,7 @@ public class PowerMock {
 	 *            certain constructor. (optional)
 	 * @return the mock object.
 	 */
-	public static <T> T mockMethodNice(Class<T> type, String methodName,
+	public static <T> T createPartialMockNice(Class<T> type, String methodName,
 			Class<?>[] methodParameterTypes, Object... constructorArguments) {
 		Constructor<?> constructor = Whitebox.findConstructorOrThrowException(
 				type, constructorArguments);
@@ -935,7 +935,7 @@ public class PowerMock {
 	 *            constructors.
 	 * @return the mock object.
 	 */
-	public static <T> T mockMethod(Class<T> type, String methodName,
+	public static <T> T createPartialMock(Class<T> type, String methodName,
 			Class<?>[] methodParameterTypes, Object[] constructorArguments,
 			Class<?>[] constructorParameterTypes) {
 		ConstructorArgs constructorArgs = new ConstructorArgs(Whitebox
@@ -976,7 +976,7 @@ public class PowerMock {
 	 *            constructors.
 	 * @return the mock object.
 	 */
-	public static <T> T mockMethodStrict(Class<T> type, String methodName,
+	public static <T> T createPartialMockStrict(Class<T> type, String methodName,
 			Class<?>[] methodParameterTypes, Object[] constructorArguments,
 			Class<?>[] constructorParameterTypes) {
 		ConstructorArgs constructorArgs = new ConstructorArgs(Whitebox
@@ -1017,7 +1017,7 @@ public class PowerMock {
 	 *            constructors.
 	 * @return the mock object.
 	 */
-	public static <T> T mockMethodNice(Class<T> type, String methodName,
+	public static <T> T createPartialMockNice(Class<T> type, String methodName,
 			Class<?>[] methodParameterTypes, Object[] constructorArguments,
 			Class<?>[] constructorParameterTypes) {
 		ConstructorArgs constructorArgs = new ConstructorArgs(Whitebox

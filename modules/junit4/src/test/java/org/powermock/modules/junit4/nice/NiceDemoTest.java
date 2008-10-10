@@ -1,7 +1,7 @@
 package org.powermock.modules.junit4.nice;
 
 import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.mockMethodNice;
+import static org.powermock.PowerMock.createPartialMockNice;
 import static org.powermock.PowerMock.verify;
 
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class NiceDemoTest {
 
 	@Test
 	public void testCallAThenB_noExpectations() throws Exception {
-		NiceDemo tested = mockMethodNice(NiceDemo.class, "A", "B");
+		NiceDemo tested = createPartialMockNice(NiceDemo.class, "A", "B");
 
 		replay(tested);
 

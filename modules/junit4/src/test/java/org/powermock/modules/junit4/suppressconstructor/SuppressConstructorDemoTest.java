@@ -16,7 +16,7 @@
 package org.powermock.modules.junit4.suppressconstructor;
 
 import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.mockMethod;
+import static org.powermock.PowerMock.createPartialMock;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.suppressConstructorCode;
 import static org.powermock.PowerMock.verify;
@@ -88,7 +88,7 @@ public class SuppressConstructorDemoTest {
 	@Test
 	public void testGetMyOwnMessageAndGetMessage() throws Exception {
 		suppressConstructorCode(SuppressConstructorSubclassDemo.class);
-		final SuppressConstructorDemo tested = mockMethod(
+		final SuppressConstructorDemo tested = createPartialMock(
 				SuppressConstructorDemo.class, "returnAMessage");
 		final String expected = "Hello world!";
 		expectPrivate(tested, "returnAMessage").andReturn(expected);

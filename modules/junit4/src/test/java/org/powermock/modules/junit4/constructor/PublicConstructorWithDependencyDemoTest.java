@@ -19,7 +19,7 @@ import static org.easymock.EasyMock.createMock;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
-import static org.powermock.PowerMock.mockMethod;
+import static org.powermock.PowerMock.createPartialMock;
 
 import org.junit.After;
 import org.junit.Before;
@@ -54,7 +54,7 @@ public class PublicConstructorWithDependencyDemoTest {
 	 */
 	@Test
 	public void testConstructorFound() throws Exception {
-		PublicConstructorWithDependencyDemo tested = mockMethod(
+		PublicConstructorWithDependencyDemo tested = createPartialMock(
 				PublicConstructorWithDependencyDemo.class,
 				new String[] { "aMethod" }, serviceMock);
 
@@ -68,7 +68,7 @@ public class PublicConstructorWithDependencyDemoTest {
 	@Test
 	public void testConstructorNotFound() throws Exception {
 		try {
-			mockMethod(PublicConstructorWithDependencyDemo.class,
+			createPartialMock(PublicConstructorWithDependencyDemo.class,
 					new String[] { "aMethod" }, serviceMock, "bad argument");
 			fail("Should throw IllegalArgumentException.");
 		} catch (IllegalArgumentException e) {

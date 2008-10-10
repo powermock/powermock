@@ -21,7 +21,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.powermock.PowerMock.createMock;
-import static org.powermock.PowerMock.mockMethod;
+import static org.powermock.PowerMock.createPartialMock;
 import static org.powermock.PowerMock.mockStatic;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
@@ -121,7 +121,7 @@ public class AbstractXMLRequestCreatorBaseTest {
 	 */
 	@Test
 	public void testCreateRequest() throws Exception {
-		mTested = mockMethod(AbstractXMLRequestCreatorBase.class, "convertDocumentToByteArray", "createBody", "generateRandomId");
+		mTested = createPartialMock(AbstractXMLRequestCreatorBase.class, "convertDocumentToByteArray", "createBody", "generateRandomId");
 		mockStatic(DocumentHelper.class);
 		// Expectations
 		final String[] params = new String[] { "String1", "String2" };

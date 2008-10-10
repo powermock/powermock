@@ -17,7 +17,7 @@ package org.powermock.modules.junit4.noannotation;
 
 import static org.easymock.EasyMock.expect;
 import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.mockMethod;
+import static org.powermock.PowerMock.createPartialMock;
 import static org.powermock.PowerMock.mockStaticMethod;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
@@ -41,7 +41,7 @@ public class NoAnnotationUsageTest extends TestCase {
 	public void testGetMessage() throws Exception {
 		mockStaticMethod(StaticAndInstanceDemo.class, "getStaticMessage");
 
-		StaticAndInstanceDemo tested = mockMethod(StaticAndInstanceDemo.class, "getPrivateMessage");
+		StaticAndInstanceDemo tested = createPartialMock(StaticAndInstanceDemo.class, "getPrivateMessage");
 
 		final String staticExpected = "a static message";
 		expect(StaticAndInstanceDemo.getStaticMessage()).andReturn(staticExpected);
@@ -62,7 +62,7 @@ public class NoAnnotationUsageTest extends TestCase {
 	public void testGetMessage2() throws Exception {
 		mockStaticMethod(StaticAndInstanceDemo.class, "getStaticMessage");
 
-		StaticAndInstanceDemo tested = mockMethod(StaticAndInstanceDemo.class, "getPrivateMessage");
+		StaticAndInstanceDemo tested = createPartialMock(StaticAndInstanceDemo.class, "getPrivateMessage");
 
 		final String staticExpected = "a static message";
 		expect(StaticAndInstanceDemo.getStaticMessage()).andReturn(staticExpected);
