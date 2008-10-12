@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.modules.junit4.mockself;
+package org.powermock.modules.junit4.partialmocking;
 
 import static org.easymock.EasyMock.expect;
 import static org.powermock.PowerMock.expectPrivate;
@@ -27,14 +27,14 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import samples.mockself.MockSelfDemoWithSubClass;
+import samples.partialmocking.MockSelfDemoWithSubClass;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(MockSelfDemoWithSubClass.class)
 public class MockSelfDemoWithSubClassTest {
 
 	@Test
-	public void testGetMessage() throws Exception {
+	public void testMockPartialMethodInSuperClass() throws Exception {
 		MockSelfDemoWithSubClass tested = createPartialMock(
 				MockSelfDemoWithSubClass.class, "getAMessage",
 				"getInternalMessage");

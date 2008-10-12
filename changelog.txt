@@ -11,6 +11,8 @@ Change log 0.8 (under development)
 * Added more documentation
 * expectNew(..).andThrow(..) now works with checked exceptions
 * Added WhiteBox functionality to instantiate a class without invoking its constructor without using byte-code manipulation. Only works on Sun JVM's.
+* mockMethodX is renamed to createPartialMockX        
+* Suppress constructor code now works as expected
                              
 Change log 0.7 (released)
 -------------------------

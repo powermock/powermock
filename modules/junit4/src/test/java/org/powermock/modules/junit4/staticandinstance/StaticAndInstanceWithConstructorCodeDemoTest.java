@@ -41,7 +41,7 @@ import samples.staticandinstance.StaticAndInstanceWithConstructorCodeDemo;
 public class StaticAndInstanceWithConstructorCodeDemoTest {
 
 	@Test
-	public void testname() throws Exception {
+	public void testStaticAndInstanceWithConstructor() throws Exception {
 		StaticAndInstanceDemo staticAndInstanceDemoMock = createMock(StaticAndInstanceDemo.class);
 
 		StaticAndInstanceWithConstructorCodeDemo tested = new StaticAndInstanceWithConstructorCodeDemo(

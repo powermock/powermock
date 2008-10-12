@@ -15,21 +15,9 @@
  */
 package samples.suppressconstructor;
 
-public class SuppressConstructorHierarchyDemo extends
-		SuppressConstructorHeirarchySubclass {
+public class SuppressConstructorHeirarchyEvilGrandParent {
 
-	public SuppressConstructorHierarchyDemo(String message) {
-		super(message);
+	SuppressConstructorHeirarchyEvilGrandParent() {
+		throw new RuntimeException("This should be suppressed!!");
 	}
-
-	/**
-	 * This method is just here to check if it works to execute the several
-	 * tests with the same test suite class loader.
-	 * 
-	 * @return 42.
-	 */
-	public int getNumber() {
-		return 42;
-	}
-
 }

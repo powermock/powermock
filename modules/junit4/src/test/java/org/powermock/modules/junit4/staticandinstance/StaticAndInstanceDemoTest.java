@@ -36,7 +36,7 @@ import samples.staticandinstance.StaticAndInstanceDemo;
 public class StaticAndInstanceDemoTest {
 
 	@Test
-	public void testGetMessage() throws Exception {
+	public void testMockStaticMethodAndInstanceMethod() throws Exception {
 		mockStaticMethod(StaticAndInstanceDemo.class, "getStaticMessage");
 
 		StaticAndInstanceDemo tested = createPartialMock(StaticAndInstanceDemo.class,
@@ -60,7 +60,7 @@ public class StaticAndInstanceDemoTest {
 	}
 
 	@Test
-	public void testGetMessage_onlyMockPrivate() throws Exception {
+	public void testMockPrivateButNotStatic() throws Exception {
 		StaticAndInstanceDemo tested = createPartialMock(StaticAndInstanceDemo.class,
 				"getPrivateMessage");
 
@@ -77,7 +77,7 @@ public class StaticAndInstanceDemoTest {
 	}
 
 	@Test
-	public void testGetMessage_onlyMockStatic() throws Exception {
+	public void testMockStaticButNotInstance() throws Exception {
 		StaticAndInstanceDemo tested = new StaticAndInstanceDemo();
 
 		mockStaticMethod(StaticAndInstanceDemo.class, "getStaticMessage");

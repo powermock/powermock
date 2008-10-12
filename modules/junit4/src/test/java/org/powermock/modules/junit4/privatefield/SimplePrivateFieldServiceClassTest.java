@@ -37,7 +37,7 @@ import samples.privatefield.SimplePrivateFieldServiceClass;
 public class SimplePrivateFieldServiceClassTest {
 
 	@Test
-	public void testUseService() {
+	public void testSimplePrivateFieldServiceClass() {
 		SimplePrivateFieldServiceClass tested = new SimplePrivateFieldServiceClass();
 		Service serviceMock = createMock(Service.class);
 		setInternalState(tested, "service", serviceMock,

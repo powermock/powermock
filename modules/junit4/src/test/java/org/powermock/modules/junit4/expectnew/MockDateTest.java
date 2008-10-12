@@ -62,19 +62,15 @@ public class MockDateTest {
 		PowerMock.verify(date);
 	}
 
-	@Test
+	@Test(expected = IllegalStateException.class)
 	public void testMockDateWithEasyMockFails() {
 		Date someDate = new Date();
 		MocksClassControl c = (MocksClassControl) org.easymock.classextension.EasyMock
 				.createControl();
 		Date date = c.createMock(Date.class, new Method[0]);
-		try {
-			EasyMock.expect(date.after(someDate)).andReturn(false);
-			Assert
-					.fail("EasyMock with no methods mocked should not be possible to mock");
-		} catch (IllegalStateException e) {
-			// ok
-		}
+		EasyMock.expect(date.after(someDate)).andReturn(false);
+		Assert
+				.fail("EasyMock with no methods mocked should not be possible to mock");
 	}
 
 	@Test

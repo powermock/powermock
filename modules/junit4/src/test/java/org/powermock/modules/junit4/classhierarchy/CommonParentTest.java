@@ -34,7 +34,7 @@ import samples.classhierarchy.Parent;
 public class CommonParentTest {
 
 	@Test
-	public void testMockA() {
+	public void testPossibleToMockTwoClassesWithSameParent() {
 		ChildA a = PowerMock.createMock(ChildA.class);
 		EasyMock.expect(a.getValue()).andReturn(5);
 		

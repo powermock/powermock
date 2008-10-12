@@ -13,20 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package samples.privateandfinal;
+package samples.suppressconstructor;
 
-/**
- * A class used to test the functionality to mock private methods that are also
- * final.
- * 
- * @author Johan Haleby
- */
-public class StupidPrivateFinal {
-	public String say(String name) {
-		return sayIt(name);
-	}
+public class InvokeConstructor {
 
-	private final String sayIt(String name) {
-		return "Hello " + name;
+	public String doStuff(String m) {
+		return new SuppressConstructorHierarchyChild(m).getMessage();
 	}
 }

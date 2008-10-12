@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.powermock.PowerMock;
+import org.powermock.Whitebox;
 
 import samples.suppressconstructor.SuppressConstructorDemo;
 import samples.suppressconstructor.SuppressSpecificConstructorDemo;
@@ -30,9 +31,9 @@ import samples.suppressconstructor.SuppressSpecificConstructorDemo;
 public class CreateUnmockedTest {
 
 	@Test
-	@Ignore("We need to change how to create unmocked")
-	public void testUnmockedWithNoConstructor() throws Exception {
-		SuppressSpecificConstructorDemo object = PowerMock.createMock(SuppressSpecificConstructorDemo.class, new Method[0]);
+	public void testUnmockedWithNoConstructorAndReplayVerify() throws Exception {
+		SuppressSpecificConstructorDemo object  = Whitebox.newInstance(SuppressSpecificConstructorDemo.class);
+		PowerMock.niceReplayAndVerify();
 		PowerMock.replay(object);
 		
 		assertEquals("Hello", object.getHello());

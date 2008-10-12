@@ -15,20 +15,21 @@
  */
 package samples.suppressconstructor;
 
-public class SuppressConstructorHeirarchySubclass extends
-		SuppressConstructorHeirarchySubclass2 {
+public class SuppressConstructorHierarchyChild extends
+		SuppressConstructorHierarchyParent {
 
-	private String message;
-
-	SuppressConstructorHeirarchySubclass() {
-		this.message = "Default message";
+	public SuppressConstructorHierarchyChild(String message) {
+		super(message);
 	}
 
-	SuppressConstructorHeirarchySubclass(String message) {
-		this.message = message;
+	/**
+	 * This method is just here to check if it works to execute the several
+	 * tests with the same test suite class loader.
+	 * 
+	 * @return 42.
+	 */
+	public int getNumber() {
+		return 42;
 	}
 
-	public String getMessage() {
-		return message;
-	}
 }

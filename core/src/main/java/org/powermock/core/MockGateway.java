@@ -47,17 +47,14 @@ public class MockGateway {
 	private static final Set<Method> suppressMethod = new HashSet<Method>();
 
 	// used for static methods
-	public static synchronized Object methodCall(Class<?> type,
-			String methodName, Object[] args, Class<?>[] sig,
-			String returnTypeAsString) throws Throwable {
+	public static synchronized Object methodCall(Class<?> type, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString)
+			throws Throwable {
 		return doMethodCall(type, methodName, args, sig, returnTypeAsString);
 	}
 
-	private static Object doMethodCall(Object object, String methodName,
-			Object[] args, Class<?>[] sig, String returnTypeAsString)
-			throws Throwable, NoSuchMethodException {
-		if ((methodName.equals("hashCode") && sig.length == 0)
-				|| (methodName.equals("equals") && sig.length == 1)) {
+	private static Object doMethodCall(Object object, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString) throws Throwable,
+			NoSuchMethodException {
+		if ((methodName.equals("hashCode") && sig.length == 0) || (methodName.equals("equals") && sig.length == 1)) {
 			return PROCEED;
 		}
 		Object returnValue = null;
@@ -67,14 +64,11 @@ public class MockGateway {
 
 		if (object instanceof Class<?>) {
 			objectType = (Class<?>) object;
-			methodInvocationControl = MockRepository
-					.getClassMethodInvocationControl(objectType);
+			methodInvocationControl = MockRepository.getClassMethodInvocationControl(objectType);
 		} else {
 			final Class<? extends Object> type = object.getClass();
-			objectType = Enhancer.isEnhanced(type) ? type.getSuperclass()
-					: type;
-			methodInvocationControl = MockRepository
-					.getInstanceMethodInvocationControl(object);
+			objectType = Enhancer.isEnhanced(type) ? type.getSuperclass() : type;
+			methodInvocationControl = MockRepository.getInstanceMethodInvocationControl(object);
 		}
 
 		/*
@@ -82,17 +76,12 @@ public class MockGateway {
 		 * original method or suppress the method code otherwise invoke the
 		 * invocation handler.
 		 */
-		if (methodInvocationControl != null
-				&& methodInvocationControl.isMocked(Whitebox.getMethod(
-						objectType, methodName, sig))) {
+		if (methodInvocationControl != null && methodInvocationControl.isMocked(Whitebox.getMethod(objectType, methodName, sig))) {
 
-			final InvocationHandler handler = methodInvocationControl
-					.getInvocationHandler();
-			returnValue = handler.invoke(objectType, Whitebox.getMethod(
-					objectType, methodName, sig), args);
+			final InvocationHandler handler = methodInvocationControl.getInvocationHandler();
+			returnValue = handler.invoke(objectType, Whitebox.getMethod(objectType, methodName, sig), args);
 		} else {
-			final boolean shouldSuppressMethodCode = suppressMethod
-					.contains(Whitebox.getMethod(objectType, methodName, sig));
+			final boolean shouldSuppressMethodCode = suppressMethod.contains(Whitebox.getMethod(objectType, methodName, sig));
 			if (shouldSuppressMethodCode) {
 				returnValue = suppressMethodCode(returnTypeAsString);
 			} else {
@@ -103,42 +92,29 @@ public class MockGateway {
 	}
 
 	// used for instance methods
-	public static synchronized Object methodCall(Object instance,
-			String methodName, Object[] args, Class<?>[] sig,
-			String returnTypeAsString) throws Throwable {
+	public static synchronized Object methodCall(Object instance, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString)
+			throws Throwable {
 		return doMethodCall(instance, methodName, args, sig, returnTypeAsString);
 	}
 
-	public static synchronized Object newInstanceCall(Class<?> type,
-			Object[] args, Class<?>[] sig) throws Throwable {
-		Object returnValue = null;
-
-		final NewInvocationControl<?> newInvocationControl = MockRepository
-				.getNewInstanceSubstitute(type);
+	public static synchronized Object newInstanceCall(Class<?> type, Object[] args, Class<?>[] sig) throws Throwable {
+		final NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceSubstitute(type);
 		if (newInvocationControl != null) {
 			try {
-				return newInvocationControl.createInstance();
+				final Object result = newInvocationControl.createInstance();
+				if (result == null) {
+					throw new IllegalStateException("Must replay class " + type.getName() + " to get configured expectation.");
+				}
+				return result;
 			} catch (AssertionError e) {
-				PowerMockUtils.throwAssertionErrorForNewSubstitutionFailure(e,
-						type);
+				PowerMockUtils.throwAssertionErrorForNewSubstitutionFailure(e, type);
 			}
 		}
-		Object mockConstructionReplacement = MockRepository
-				.getMockConstructionMock(type.getName());
-		if (mockConstructionReplacement == null) {
-			// Check if we should suppress the constructor code
-			if (suppressConstructor
-					.contains(Whitebox.getConstructor(type, sig))) {
-				System.out.println("Should suppress");
-			}
-			return PROCEED;
-		} else if (mockConstructionReplacement != null) {
-			returnValue = mockConstructionReplacement;
-		} else {
-			throw new IllegalStateException(
-					"You cannot use mockConstruction and expectNew in the same test for the same type");
+		// Check if we should suppress the constructor code
+		if (suppressConstructor.contains(Whitebox.getConstructor(type, sig))) {
+			return Whitebox.getFirstParentConstructor(type.getSuperclass());
 		}
-		return returnValue;
+		return PROCEED;
 	}
 
 	public static void clear() {
@@ -177,11 +153,10 @@ public class MockGateway {
 		}
 	}
 
-	public static synchronized Object constructorCall(Class<?> type,
-			Object[] args, Class<?>[] sig) throws Throwable {
+	public static synchronized Object constructorCall(Class<?> type, Object[] args, Class<?>[] sig) throws Throwable {
 		final Constructor<?> constructor = Whitebox.getConstructor(type, sig);
 		if (suppressConstructor.contains(constructor)) {
-			return null; // Suppress constructor code.
+			return null;
 		}
 		return PROCEED;
 	}
@@ -190,8 +165,7 @@ public class MockGateway {
 		suppressMethod.add(method);
 	}
 
-	public static synchronized void addConstructorToSuppress(
-			Constructor<?> constructor) {
+	public static synchronized void addConstructorToSuppress(Constructor<?> constructor) {
 		suppressConstructor.add(constructor);
 	}
 }

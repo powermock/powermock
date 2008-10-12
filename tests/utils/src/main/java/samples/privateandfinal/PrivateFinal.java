@@ -13,15 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package samples.singleton;
+package samples.privateandfinal;
 
-public class StupidSingletonHelper {
-
-	public static void sayHelloHelper() {
-		System.out.println("hello");
+/**
+ * A class used to test the functionality to mock private methods that are also
+ * final.
+ * 
+ * @author Johan Haleby
+ */
+public class PrivateFinal {
+	public String say(String name) {
+		return sayIt(name);
 	}
 
-	public static void sayHelloAgain() {
-		System.out.println("hello");
+	private final String sayIt(String name) {
+		return "Hello " + name;
 	}
 }

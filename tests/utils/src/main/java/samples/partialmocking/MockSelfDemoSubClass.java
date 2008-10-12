@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package samples.suppressconstructor;
+package samples.partialmocking;
 
-public class SuppressConstructorHeirarchySubclass2 {
+public class MockSelfDemoSubClass {
 
-	SuppressConstructorHeirarchySubclass2() {
-		throw new RuntimeException("This should be suppressed!!");
+	public String getAMessage() {
+		return "A message";
 	}
+
 }

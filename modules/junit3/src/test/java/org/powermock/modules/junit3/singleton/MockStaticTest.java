@@ -29,19 +29,19 @@ import org.powermock.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit3.PowerMockSuite;
 
-import samples.singleton.StupidSingleton;
-import samples.singleton.StupidSingletonHelper;
+import samples.singleton.StaticService;
+import samples.singleton.StaticHelper;
 
-@PrepareForTest(StupidSingleton.class)
-public class StupidSingletonTest extends TestCase {
+@PrepareForTest({StaticService.class, StaticHelper.class})
+public class MockStaticTest extends TestCase {
 
 	@SuppressWarnings("unchecked")
 	public static TestSuite suite() throws Exception {
 		// This is not the best way to add a test suite, but we do this here
 		// for testing purposes.
 		PowerMockSuite powerMockJunit3Suite = new PowerMockSuite(
-				"Unit tests for " + StupidSingletonTest.class.getSimpleName());
-		final StupidSingletonTest stupidSingletonTest = new StupidSingletonTest();
+				"Unit tests for " + MockStaticTest.class.getSimpleName());
+		final MockStaticTest stupidSingletonTest = new MockStaticTest();
 		stupidSingletonTest.setName("testSay");
 		TestSuite suite = new TestSuite();
 		suite.addTest(stupidSingletonTest);
@@ -50,136 +50,136 @@ public class StupidSingletonTest extends TestCase {
 	}
 
 	public void testSay() throws Exception {
-		mockStatic(StupidSingleton.class);
+		mockStatic(StaticService.class);
 		String expected = "Hello altered World";
-		expect(StupidSingleton.say("hello")).andReturn("Hello altered World");
-		replay(StupidSingleton.class);
+		expect(StaticService.say("hello")).andReturn("Hello altered World");
+		replay(StaticService.class);
 
-		String actual = StupidSingleton.say("hello");
+		String actual = StaticService.say("hello");
 
-		verify(StupidSingleton.class);
+		verify(StaticService.class);
 		assertEquals("Expected and actual did not match", expected, actual);
 
 		// Singleton should no longer be mocked by now.
-		String actual2 = StupidSingleton.say("world");
+		String actual2 = StaticService.say("world");
 		assertEquals("Hello world", actual2);
 	}
 
 	public void testSayFinal() throws Exception {
-		mockStatic(StupidSingleton.class);
+		mockStatic(StaticService.class);
 		String expected = "Hello altered World";
-		expect(StupidSingleton.sayFinal("hello")).andReturn(
+		expect(StaticService.sayFinal("hello")).andReturn(
 				"Hello altered World");
-		replay(StupidSingleton.class);
+		replay(StaticService.class);
 
-		String actual = StupidSingleton.sayFinal("hello");
+		String actual = StaticService.sayFinal("hello");
 
-		verify(StupidSingleton.class);
+		verify(StaticService.class);
 		assertEquals("Expected and actual did not match", expected, actual);
 
 		// Singleton should no longer be mocked by now.
-		String actual2 = StupidSingleton.sayFinal("world");
+		String actual2 = StaticService.sayFinal("world");
 		assertEquals("Hello world", actual2);
 	}
 
 	public void testSayNative() throws Exception {
-		mockStatic(StupidSingleton.class);
+		mockStatic(StaticService.class);
 		String expected = "Hello altered World";
-		expect(StupidSingleton.sayNative("hello")).andReturn(
+		expect(StaticService.sayNative("hello")).andReturn(
 				"Hello altered World");
-		replay(StupidSingleton.class);
+		replay(StaticService.class);
 
-		String actual = StupidSingleton.sayNative("hello");
+		String actual = StaticService.sayNative("hello");
 
-		verify(StupidSingleton.class);
+		verify(StaticService.class);
 		assertEquals("Expected and actual did not match", expected, actual);
 	}
 
 	public void testSayFinalNative() throws Exception {
-		mockStatic(StupidSingleton.class);
+		mockStatic(StaticService.class);
 		String expected = "Hello altered World";
-		expect(StupidSingleton.sayFinalNative("hello")).andReturn(
+		expect(StaticService.sayFinalNative("hello")).andReturn(
 				"Hello altered World");
-		replay(StupidSingleton.class);
+		replay(StaticService.class);
 
-		String actual = StupidSingleton.sayFinalNative("hello");
+		String actual = StaticService.sayFinalNative("hello");
 
-		verify(StupidSingleton.class);
+		verify(StaticService.class);
 		assertEquals("Expected and actual did not match", expected, actual);
 	}
 
 	public void testMockAStaticMethod() throws Exception {
-		mockStatic(StupidSingleton.class);
+		mockStatic(StaticService.class);
 		String expected = "qwe";
-		expect(StupidSingleton.doStatic(5)).andReturn(expected);
-		replay(StupidSingleton.class);
+		expect(StaticService.doStatic(5)).andReturn(expected);
+		replay(StaticService.class);
 
-		String actual = StupidSingleton.doStatic(5);
+		String actual = StaticService.doStatic(5);
 		assertEquals(expected, actual);
-		verify(StupidSingleton.class);
+		verify(StaticService.class);
 	}
 
 	public void testMockSayHello() throws Exception {
-		mockStatic(StupidSingletonHelper.class);
-		StupidSingletonHelper.sayHelloHelper();
+		mockStatic(StaticHelper.class);
+		StaticHelper.sayHelloHelper();
 		expectLastCall().times(2);
-		replay(StupidSingletonHelper.class);
+		replay(StaticHelper.class);
 
-		StupidSingleton.sayHello();
+		StaticService.sayHello();
 
-		verify(StupidSingletonHelper.class);
+		verify(StaticHelper.class);
 	}
 
 	public void testMockSayHelloAgain() throws Exception {
-		mockStatic(StupidSingletonHelper.class);
-		StupidSingletonHelper.sayHelloAgain();
+		mockStatic(StaticHelper.class);
+		StaticHelper.sayHelloAgain();
 		expectLastCall().times(2);
-		replay(StupidSingletonHelper.class);
+		replay(StaticHelper.class);
 
-		StupidSingleton.sayHelloAgain();
+		StaticService.sayHelloAgain();
 
-		verify(StupidSingletonHelper.class);
+		verify(StaticHelper.class);
 	}
 
 	public void testSayPrivateStatic() throws Exception {
-		mockStaticMethod(StupidSingleton.class, "sayPrivateStatic",
+		mockStaticMethod(StaticService.class, "sayPrivateStatic",
 				String.class);
 
 		final String expected = "Hello world";
-		expectPrivate(StupidSingleton.class, "sayPrivateStatic", "name")
+		expectPrivate(StaticService.class, "sayPrivateStatic", "name")
 				.andReturn(expected);
 
-		replay(StupidSingleton.class);
+		replay(StaticService.class);
 
-		String actual = (String) Whitebox.invokeMethod(StupidSingleton.class,
+		String actual = (String) Whitebox.invokeMethod(StaticService.class,
 				"sayPrivateStatic", "name");
 
-		verify(StupidSingleton.class);
+		verify(StaticService.class);
 		assertEquals(expected, actual);
 	}
 
 	public void testSayPrivateFinalStatic() throws Exception {
-		mockStaticMethod(StupidSingleton.class, "sayPrivateFinalStatic",
+		mockStaticMethod(StaticService.class, "sayPrivateFinalStatic",
 				String.class);
 
 		final String expected = "Hello world";
-		expectPrivate(StupidSingleton.class, "sayPrivateFinalStatic", "name")
+		expectPrivate(StaticService.class, "sayPrivateFinalStatic", "name")
 				.andReturn(expected);
 
-		replay(StupidSingleton.class);
+		replay(StaticService.class);
 
-		String actual = (String) Whitebox.invokeMethod(StupidSingleton.class,
+		String actual = (String) Whitebox.invokeMethod(StaticService.class,
 				"sayPrivateFinalStatic", "name");
 
-		verify(StupidSingleton.class);
+		verify(StaticService.class);
 		assertEquals(expected, actual);
 	}
 
 	public void testInnerClassesWork() throws Exception {
-		assertEquals(17, StupidSingleton.getNumberFromInner());
+		assertEquals(17, StaticService.getNumberFromInner());
 	}
 
 	public void testInnerInstanceClassesWork() throws Exception {
-		assertEquals(23, StupidSingleton.getNumberFromInnerInstance());
+		assertEquals(23, StaticService.getNumberFromInnerInstance());
 	}
 }

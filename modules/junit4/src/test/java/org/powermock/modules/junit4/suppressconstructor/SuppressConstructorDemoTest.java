@@ -72,7 +72,7 @@ public class SuppressConstructorDemoTest {
 	 * called.
 	 */
 	@Test
-	public void testGetMessage() throws Exception {
+	public void testSuppressParentConstructor() throws Exception {
 		suppressConstructorCode(SuppressConstructorSubclassDemo.class);
 		final SuppressConstructorDemo tested = new SuppressConstructorDemo(
 				"a message");
@@ -86,7 +86,7 @@ public class SuppressConstructorDemoTest {
 	 * class under test at the same time as skipping constructor execution.
 	 */
 	@Test
-	public void testGetMyOwnMessageAndGetMessage() throws Exception {
+	public void testPartialMockingAndSuppressParentConstructor() throws Exception {
 		suppressConstructorCode(SuppressConstructorSubclassDemo.class);
 		final SuppressConstructorDemo tested = createPartialMock(
 				SuppressConstructorDemo.class, "returnAMessage");

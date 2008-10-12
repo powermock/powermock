@@ -2,9 +2,9 @@ package demo.org.powermock.examples.simple;
 
 import static junit.framework.Assert.assertEquals;
 import static org.easymock.EasyMock.expect;
+import static org.powermock.PowerMock.createMock;
 import static org.powermock.PowerMock.expectLastCall;
 import static org.powermock.PowerMock.expectNew;
-import static org.powermock.PowerMock.mockConstruction;
 import static org.powermock.PowerMock.mockStatic;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
@@ -35,14 +35,16 @@ public class GreeterTest {
 
 	@Test
 	public void testRun() throws Exception {
-		Logger logger = mockConstruction(Logger.class);
+		Logger logger = createMock(Logger.class);
+		
+		expectNew(Logger.class).andReturn(logger);
 		logger.log("Hello");
 		expectLastCall().times(10);
-		replay(logger);
+		replay(logger, Logger.class);
 
 		invokeMethod(new Greeter(), "run", 10, "Hello");
 
-		verify(logger);
+		verify(logger, Logger.class);
 	}
 
 	@Test(expected = IllegalArgumentException.class)

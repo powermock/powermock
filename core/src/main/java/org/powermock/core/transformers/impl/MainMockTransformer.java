@@ -16,17 +16,20 @@
 package org.powermock.core.transformers.impl;
 
 import javassist.CannotCompileException;
+import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtMethod;
 import javassist.CtNewConstructor;
 import javassist.Modifier;
 import javassist.NotFoundException;
+import javassist.bytecode.DuplicateMemberException;
 import javassist.expr.ConstructorCall;
 import javassist.expr.ExprEditor;
 import javassist.expr.NewExpr;
 
 import org.powermock.core.MockGateway;
+import org.powermock.core.classloader.annotations.internal.IndicateReloadClass;
 import org.powermock.core.transformers.MockTransformer;
 
 public class MainMockTransformer implements MockTransformer {
@@ -73,8 +76,7 @@ public class MainMockTransformer implements MockTransformer {
 					 * know at this moment of time) the parent class must have a
 					 * default constructor that we can delegate to.
 					 */
-					addDefaultConstructorInSuperClass(clazz);
-
+					addNewDeferConstructor(clazz);
 					final StringBuilder code = new StringBuilder();
 					code.append("{Object value =").append(MockGateway.class.getName()).append(".constructorCall($class, $args, $sig);");
 					code.append("if (value != ").append(MockGateway.class.getName()).append(".PROCEED){");
@@ -82,7 +84,7 @@ public class MainMockTransformer implements MockTransformer {
 					 * TODO Suppress and lazy inject field (when this feature is
 					 * ready).
 					 */
-					code.append("super();");
+					code.append("super((" + IndicateReloadClass.class.getName() + ") null);");
 					code.append("} else {");
 					code.append("$proceed($$);");
 					code.append("}}");
@@ -91,36 +93,50 @@ public class MainMockTransformer implements MockTransformer {
 			}
 
 			/**
-			 * Create a default constructor in the super class if it doesn't
-			 * exist.
+			 * Create a defer constructor in the class which will be called when
+			 * the constructor is suppressed.
 			 * 
 			 * @param clazz
-			 *            The class whose super constructor will get a new
-			 *            default constructor if it doesn't already have one.
+			 *            The class whose super constructor will get a new defer
+			 *            constructor if it doesn't already have one.
 			 * @throws CannotCompileException
 			 *             If an unexpected compilation error occurs.
 			 */
-			private void addDefaultConstructorInSuperClass(final CtClass clazz) throws CannotCompileException {
-				CtClass tempClass = clazz;
-				while (!tempClass.getName().equals(Object.class.getName())) {
-					CtClass superClass = null;
-					try {
-						superClass = tempClass.getSuperclass();
-					} catch (NotFoundException e1) {
-						throw new IllegalArgumentException("Internal error: Failed to get superclass for " + tempClass.getName()
-								+ " when about to create a new default constructor.");
-					}
+			private void addNewDeferConstructor(final CtClass clazz) throws CannotCompileException {
+				CtClass superClass = null;
+				try {
+					superClass = clazz.getSuperclass();
+				} catch (NotFoundException e1) {
+					throw new IllegalArgumentException("Internal error: Failed to get superclass for " + clazz.getName()
+							+ " when about to create a new default constructor.");
+				}
 
+				ClassPool classPool = clazz.getClassPool();
+				/*
+				 * To make a unique defer constructor we create a new
+				 * constructor with one argument (IndicateReloadClass). So we
+				 * get this class a Javassist class below.
+				 */
+				CtClass constructorType = null;
+				try {
+					constructorType = classPool.get(IndicateReloadClass.class.getName());
+				} catch (NotFoundException e) {
+					throw new IllegalArgumentException("Internal error: failed to get the " + IndicateReloadClass.class.getName()
+							+ " when added defer constructor.");
+				}
+				clazz.defrost();
+				if (superClass.getName().equals(Object.class.getName())) {
 					try {
-						CtConstructor declaredConstructor = superClass.getDeclaredConstructor(new CtClass[] {});
-						if (!superClass.getName().equals(Object.class.getName())) {
-							superClass.defrost();
-							declaredConstructor.setBody("{super();}");
-						}
-						tempClass = superClass;
-					} catch (NotFoundException e) {
-						superClass.addConstructor(CtNewConstructor.skeleton(new CtClass[0], new CtClass[0], superClass));
-						break;
+						clazz.addConstructor(CtNewConstructor.make(new CtClass[] { constructorType }, new CtClass[0], "{super();}", clazz));
+					} catch (DuplicateMemberException e) {
+						// OK, the constructor has already been added.
+					}
+				} else {
+					addNewDeferConstructor(superClass);
+					try {
+						clazz.addConstructor(CtNewConstructor.make(new CtClass[] { constructorType }, new CtClass[0], "{super($$);}", clazz));
+					} catch (DuplicateMemberException e) {
+						// OK, the constructor has already been added.
 					}
 				}
 			}
@@ -130,7 +146,12 @@ public class MainMockTransformer implements MockTransformer {
 				final StringBuilder code = new StringBuilder();
 				code.append("Object instance =").append(MockGateway.class.getName()).append(".newInstanceCall($type,$args,$sig);");
 				code.append("if(instance != ").append(MockGateway.class.getName()).append(".PROCEED) {");
-				code.append("	$_ = ($r) instance;");
+				code.append("	if(instance instanceof java.lang.reflect.Constructor) {");
+				code
+						.append("		$_ = ($r) sun.reflect.ReflectionFactory.getReflectionFactory().newConstructorForSerialization($type, java.lang.Object.class.getDeclaredConstructor(null)).newInstance(null);");
+				code.append("	} else {");
+				code.append("		$_ = ($r) instance;");
+				code.append("	}");
 				code.append("} else {");
 				code.append("	$_ = $proceed($$);");
 				code.append("}");

@@ -26,22 +26,20 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import samples.privateandfinal.StupidPrivateFinal;
+import samples.privateandfinal.PrivateFinal;
 
 
 /**
  * Test class to demonstrate private+final method mocking.
- * 
- * @author Johan Haleby
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(StupidPrivateFinal.class)
-public class StupidPrivateFinalTest {
+@PrepareForTest(PrivateFinal.class)
+public class PrivateFinalTest {
 
 	@Test
-	public void testSay() throws Exception {
+	public void testMockPrivatAndFinal() throws Exception {
 
-		StupidPrivateFinal tested = createPartialMock(StupidPrivateFinal.class,
+		PrivateFinal tested = createPartialMock(PrivateFinal.class,
 				"sayIt");
 		String expected = "Hello altered World";
 		expectPrivate(tested, "sayIt", "name").andReturn(expected);
@@ -54,13 +52,13 @@ public class StupidPrivateFinalTest {
 	}
 
 	@Test
-	public void testMultiMock() throws Exception {
-		StupidPrivateFinal tested1 = createPartialMock(StupidPrivateFinal.class,
+	public void testMultiplePartialMocksOfSameType() throws Exception {
+		PrivateFinal tested1 = createPartialMock(PrivateFinal.class,
 				"sayIt");
 		String expected1 = "Hello altered World";
 		expectPrivate(tested1, "sayIt", "name").andReturn(expected1);
 		replay(tested1);
-		StupidPrivateFinal tested2 = createPartialMock(StupidPrivateFinal.class,
+		PrivateFinal tested2 = createPartialMock(PrivateFinal.class,
 				"sayIt");
 		String expected2 = "Hello qweqweqwe";
 		expectPrivate(tested2, "sayIt", "name").andReturn(expected2);

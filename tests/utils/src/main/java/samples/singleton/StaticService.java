@@ -24,7 +24,7 @@ import java.util.concurrent.Callable;
  * @author Johan Haleby
  * @author Jan Kronquist
  */
-public class StupidSingleton {
+public class StaticService {
 
 	private static int number = 17;
 	@SuppressWarnings("unused")
@@ -39,7 +39,7 @@ public class StupidSingleton {
 	}
 
 	public static int getNumberFromInnerInstance() {
-		return new StupidSingleton().internalGetNumberFromInnerInstance();
+		return new StaticService().internalGetNumberFromInnerInstance();
 	}
 
 	public int internalGetNumberFromInnerInstance() {
@@ -55,13 +55,13 @@ public class StupidSingleton {
 	}
 
 	public static void sayHello() {
-		StupidSingletonHelper.sayHelloHelper();
-		StupidSingletonHelper.sayHelloHelper();
+		StaticHelper.sayHelloHelper();
+		StaticHelper.sayHelloHelper();
 	}
 
 	public static void sayHelloAgain() {
-		StupidSingletonHelper.sayHelloAgain();
-		StupidSingletonHelper.sayHelloAgain();
+		StaticHelper.sayHelloAgain();
+		StaticHelper.sayHelloAgain();
 	}
 
 	public static String say(String string) {
@@ -89,4 +89,7 @@ public class StupidSingleton {
 	private static String sayPrivateFinalStatic(String string) {
 		return "Hello private static " + string;
 	}
+
+	@SuppressWarnings("unused")
+	private static final native String sayPrivateNativeFinalStatic(String string);
 }

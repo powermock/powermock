@@ -19,7 +19,7 @@ import samples.simplereturn.SimpleReturnExampleUser;
 public class SimpleReturnExampleUserTest {
 
 	@Test
-	public void testMyMethod() throws Exception {
+	public void testCreateMockDelegatedToEasyMock() throws Exception {
 		SimpleReturnExample mock = createMock(SimpleReturnExample.class);
 		expect(mock.mySimpleMethod()).andReturn(2);
 

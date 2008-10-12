@@ -44,7 +44,7 @@ import samples.privatemocking.PrivateMethodDemo;
 public class PrivateMethodDemoTest {
 
 	@Test
-	public void testSay() throws Exception {
+	public void testMockPrivateMethod() throws Exception {
 		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class,
 				"sayIt", String.class);
 		String expected = "Hello altered World";
@@ -58,7 +58,7 @@ public class PrivateMethodDemoTest {
 	}
 
 	@Test
-	public void testSayIt_name() throws Exception {
+	public void testMockPrivateMethod_withArgument() throws Exception {
 		PrivateMethodDemo tested = new PrivateMethodDemo();
 		String expected = "Hello altered World";
 
@@ -69,7 +69,7 @@ public class PrivateMethodDemoTest {
 	}
 
 	@Test
-	public void testSayIt() throws Exception {
+	public void testInvokePrivateMethod() throws Exception {
 
 		PrivateMethodDemo tested = new PrivateMethodDemo();
 		String expected = "Hello world";

@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.modules.junit4.legacy;
+package samples.singleton;
 
-import org.powermock.modules.junit4.legacy.noannotation.NoAnnotationUsageTest;
-import org.powermock.modules.junit4.legacy.singleton.MockStaticTest;
-import org.powermock.modules.junit4.legacy.suppressconstructor.SuppressConstructorHierarchyDemoTest;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+public class StaticHelper {
 
-@RunWith(Suite.class)
-@SuiteClasses( { MockStaticTest.class, SuppressConstructorHierarchyDemoTest.class, NoAnnotationUsageTest.class })
-public class AllJUnit4LegacyTests {
+	public static void sayHelloHelper() {
+		System.out.println("hello");
+	}
+
+	public static void sayHelloAgain() {
+		System.out.println("hello");
+	}
 }

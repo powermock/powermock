@@ -16,7 +16,6 @@
 package org.powermock.modules.junit4.staticinitializer;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
@@ -29,8 +28,7 @@ import samples.staticinitializer.StaticInitializerExample;
 public class StaticInitializerExampleTest {
 
 	@Test
-	@Ignore("Because problems with maven???")
-	public void testname() throws Exception {
+	public void testSupressStaticInitializer() throws Exception {
 		Assert
 				.assertNull(
 						"Should be null because the static initializer should be suppressed",

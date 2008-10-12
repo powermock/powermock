@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.modules.junit4.mockself;
+package org.powermock.modules.junit4.partialmocking;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.mockAllExcept;
+import static org.powermock.PowerMock.createPartialMockForAllMethodsExcept;
 import static org.powermock.PowerMock.createPartialMock;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
@@ -29,7 +29,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import samples.mockself.MockSelfDemo;
+import samples.partialmocking.MockSelfDemo;
 
 
 @RunWith(PowerMockRunner.class)
@@ -100,7 +100,7 @@ public class MockSelfDemoTest {
 
 	@Test
 	public void testMockAllExcept_parametersDefined() throws Exception {
-		tested = mockAllExcept(MockSelfDemo.class, "getString2", String.class);
+		tested = createPartialMockForAllMethodsExcept(MockSelfDemo.class, "getString2", String.class);
 
 		final String expected = "Hello altered world";
 		expect(tested.getString2()).andReturn(expected);
@@ -113,7 +113,7 @@ public class MockSelfDemoTest {
 
 	@Test
 	public void testMockAllExcept_single() throws Exception {
-		tested = mockAllExcept(MockSelfDemo.class, "aMethod");
+		tested = createPartialMockForAllMethodsExcept(MockSelfDemo.class, "aMethod");
 		tested.aMethod2();
 		expectLastCall().times(1);
 
@@ -132,7 +132,7 @@ public class MockSelfDemoTest {
 
 	@Test
 	public void testMockAllExcept_multiple() throws Exception {
-		tested = mockAllExcept(MockSelfDemo.class, "timesTwo", "timesThree");
+		tested = createPartialMockForAllMethodsExcept(MockSelfDemo.class, "timesTwo", "timesThree");
 
 		final String expected = "A new value";
 		expect(tested.getString2()).andReturn(expected);

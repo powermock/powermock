@@ -23,16 +23,16 @@ import org.powermock.modules.junit4.constructorargs.ConstructorArgsDemoTest;
 import org.powermock.modules.junit4.expectnew.ExpectNewDemoTest;
 import org.powermock.modules.junit4.expectvoid.ExpectVoidDemoTest;
 import org.powermock.modules.junit4.finalmocking.FinalDemoTest;
-import org.powermock.modules.junit4.mockself.MockSelfDemoTest;
-import org.powermock.modules.junit4.mockself.MockSelfDemoWithSubClassTest;
 import org.powermock.modules.junit4.newmocking.StupidNewTest;
 import org.powermock.modules.junit4.noannotation.NoAnnotationUsageTest;
-import org.powermock.modules.junit4.privateandfinal.StupidPrivateFinalTest;
+import org.powermock.modules.junit4.partialmocking.MockSelfDemoTest;
+import org.powermock.modules.junit4.partialmocking.MockSelfDemoWithSubClassTest;
+import org.powermock.modules.junit4.privateandfinal.PrivateFinalTest;
 import org.powermock.modules.junit4.privatefield.MockSelfPrivateFieldServiceClassTest;
 import org.powermock.modules.junit4.privatefield.SimplePrivateFieldServiceClassTest;
 import org.powermock.modules.junit4.privatemocking.PrivateMethodDemoTest;
 import org.powermock.modules.junit4.simplereturn.SimpleReturnExampleUserTest;
-import org.powermock.modules.junit4.singleton.StupidSingletonTest;
+import org.powermock.modules.junit4.singleton.MockStaticTest;
 import org.powermock.modules.junit4.staticandinstance.StaticAndInstanceDemoTest;
 import org.powermock.modules.junit4.staticinitializer.StaticInitializerExampleTest;
 import org.powermock.modules.junit4.suppressconstructor.SuppressConstructorDemoTest;
@@ -43,8 +43,8 @@ import org.powermock.modules.junit4.suppressmethod.SuppressMethodTest;
 @RunWith(Suite.class)
 @SuiteClasses( { StaticInitializerExampleTest.class, PrivateConstructorInstantiationDemoTest.class, ExpectNewDemoTest.class,
 		ExpectVoidDemoTest.class, FinalDemoTest.class, MockSelfDemoTest.class, MockSelfDemoWithSubClassTest.class, StupidNewTest.class,
-		StupidPrivateFinalTest.class, MockSelfPrivateFieldServiceClassTest.class, SimplePrivateFieldServiceClassTest.class,
-		PrivateMethodDemoTest.class, StupidSingletonTest.class, StaticAndInstanceDemoTest.class, SuppressMethodTest.class,
+		PrivateFinalTest.class, MockSelfPrivateFieldServiceClassTest.class, SimplePrivateFieldServiceClassTest.class,
+		PrivateMethodDemoTest.class, MockStaticTest.class, StaticAndInstanceDemoTest.class, SuppressMethodTest.class,
 		SuppressConstructorDemoTest.class, SuppressConstructorHierarchyDemoTest.class, SuppressSpecificConstructorDemoTest.class,
 		ConstructorArgsDemoTest.class, NoAnnotationUsageTest.class, SimpleReturnExampleUserTest.class })
 public class AllJUnit4Tests {

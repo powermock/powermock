@@ -17,9 +17,7 @@ package org.powermock;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -295,25 +293,14 @@ public class PowerMock {
 	 *            methods in that class will be mocked).
 	 * @return A mock object of type <T>.
 	 */
-	public static synchronized <T> T mockAllExcept(Class<T> type,
+	public static synchronized <T> T createPartialMockForAllMethodsExcept(Class<T> type,
 			String... methodNames) {
 
 		if (methodNames.length == 0) {
 			return createMock(type);
 		}
 
-		List<Method> methodsToMock = new LinkedList<Method>();
-		Method[] methods = type.getDeclaredMethods();
-		iterateMethods: for (Method method : methods) {
-			for (String methodName : methodNames) {
-				if (method.getName().equals(methodName)) {
-					continue iterateMethods;
-				}
-			}
-			methodsToMock.add(method);
-		}
-
-		return createMock(type, methodsToMock.toArray(new Method[0]));
+		return createMock(type, Whitebox.getAllMethodExcept(type, methodNames));
 	}
 
 	/**
@@ -333,7 +320,7 @@ public class PowerMock {
 	 *            that this is only needed to separate overloaded methods.
 	 * @return A mock object of type <T>.
 	 */
-	public static synchronized <T> T mockAllExcept(Class<T> type,
+	public static synchronized <T> T createPartialMockForAllMethodsExcept(Class<T> type,
 			String methodNameToExclude, Class<?> firstArgumentType,
 			Class<?>... moreTypes) {
 		/*
@@ -344,31 +331,8 @@ public class PowerMock {
 		Class<?>[] argumentTypes = mergeArgumentTypes(firstArgumentType,
 				moreTypes);
 
-		Method[] methods = type.getDeclaredMethods();
-		List<Method> methodList = new ArrayList<Method>();
-		outer: for (Method method : methods) {
-			if (method.getName().equals(methodNameToExclude)) {
-				if (argumentTypes != null && argumentTypes.length > 0) {
-					final Class<?>[] args = method.getParameterTypes();
-					if (args != null && args.length == argumentTypes.length) {
-						for (int i = 0; i < args.length; i++) {
-							if (args[i].equals(argumentTypes[i])) {
-								/*
-								 * Method was not found thus it should not be
-								 * mocked. Continue to investigate the next
-								 * method.
-								 */
-								continue outer;
-							}
-						}
-					}
-				} else {
-					continue;
-				}
-			}
-			methodList.add(method);
-		}
-		return createMock(type, methodList.toArray(new Method[0]));
+		return createMock(type, Whitebox.getAllMetodsExcept(type,
+				methodNameToExclude, argumentTypes));
 	}
 
 	/**
@@ -590,7 +554,7 @@ public class PowerMock {
 		}
 
 		final Method[] methodArray = methods.toArray(new Method[0]);
-		if (allMethodsStatic(methodArray)) {
+		if (Whitebox.areAllMethodsStatic(methodArray)) {
 			if (mockStrategy instanceof DefaultMockStrategy) {
 				mockStatic(type, methodArray);
 			} else if (mockStrategy instanceof StrictMockStrategy) {
@@ -611,15 +575,6 @@ public class PowerMock {
 		}
 
 		return mock;
-	}
-
-	private static boolean allMethodsStatic(Method... methods) {
-		for (Method method : methods) {
-			if (!Modifier.isStatic(method.getModifiers())) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	/**
@@ -756,8 +711,8 @@ public class PowerMock {
 	 *            certain constructor. (optional)
 	 * @return the mock object.
 	 */
-	public static <T> T createPartialMockStrict(Class<T> type, String[] methodNames,
-			Object... constructorArguments) {
+	public static <T> T createPartialMockStrict(Class<T> type,
+			String[] methodNames, Object... constructorArguments) {
 		Constructor<?> constructor = Whitebox.findConstructorOrThrowException(
 				type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor,
@@ -788,8 +743,8 @@ public class PowerMock {
 	 *            certain constructor. (optional)
 	 * @return the mock object.
 	 */
-	public static <T> T createPartialMockNice(Class<T> type, String[] methodNames,
-			Object... constructorArguments) {
+	public static <T> T createPartialMockNice(Class<T> type,
+			String[] methodNames, Object... constructorArguments) {
 		Constructor<?> constructor = Whitebox.findConstructorOrThrowException(
 				type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor,
@@ -859,8 +814,9 @@ public class PowerMock {
 	 *            certain constructor. (optional)
 	 * @return the mock object.
 	 */
-	public static <T> T createPartialMockStrict(Class<T> type, String methodName,
-			Class<?>[] methodParameterTypes, Object... constructorArguments) {
+	public static <T> T createPartialMockStrict(Class<T> type,
+			String methodName, Class<?>[] methodParameterTypes,
+			Object... constructorArguments) {
 		Constructor<?> constructor = Whitebox.findConstructorOrThrowException(
 				type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor,
@@ -976,9 +932,9 @@ public class PowerMock {
 	 *            constructors.
 	 * @return the mock object.
 	 */
-	public static <T> T createPartialMockStrict(Class<T> type, String methodName,
-			Class<?>[] methodParameterTypes, Object[] constructorArguments,
-			Class<?>[] constructorParameterTypes) {
+	public static <T> T createPartialMockStrict(Class<T> type,
+			String methodName, Class<?>[] methodParameterTypes,
+			Object[] constructorArguments, Class<?>[] constructorParameterTypes) {
 		ConstructorArgs constructorArgs = new ConstructorArgs(Whitebox
 				.getConstructor(type, constructorParameterTypes),
 				constructorArguments);
@@ -1192,53 +1148,28 @@ public class PowerMock {
 	}
 
 	/**
-	 * Mock construction of a Class. For example, let's say you have a method
-	 * like:
-	 * 
-	 * <pre>
-	 * public final String getMessage() {
-	 * 	MyClass myClass = new MyClass();
-	 * 	return myClass.getMessage();
-	 * }
-	 * </pre>
-	 * 
-	 * In this case you'd like to mock the construction of MyClass so that you
-	 * can expect the call to getMessage(). To achieve this you can write:
-	 * 
-	 * <pre>
-	 * MyClass myClassMock = mockConstruction(MyClass.class);
-	 * final String expected = &quot;Hello altered World&quot;;
-	 * expect(myClassMock.getMessage()).andReturn(expected);
-	 * replay(myClassMock);
-	 * ..
-	 * </pre>
+	 * Convenience method for createMock followed by expectNew.
 	 * 
 	 * @param type
 	 *            The class that should be mocked.
 	 * @return A mock object of the same type as the mock.
+	 * @throws Exception 
 	 */
-	public static synchronized <T> T mockConstruction(Class<T> type) {
-		T replacementMock = org.easymock.classextension.EasyMock
-				.createMock(type);
-		/*
-		 * If the class in an inner/member class we need to add the prefix. This
-		 * is necessary since the NewAndPrivateMockTransformer requires a
-		 * distinction between normal classes and anonymous inner classes.
-		 */
-		final String mockRepositoryKey = MockRepository
-				.getMockRepositoryClassKey(type);
-
-		MockRepository.putMockConstructionMock(mockRepositoryKey,
-				replacementMock);
-		return replacementMock;
+	public static synchronized <T> T createMockAndExpectNew(Class<T> type) throws Exception {
+		T mock = org.easymock.classextension.EasyMock.createMock(type);
+		expectNew(type).andReturn(mock);
+		return mock;
 	}
-
+	
 	/**
 	 * More powerful version of mockConstruction which allows specifying
 	 * expectations on new invocations. For example you might want to throw an
 	 * exception. Note that you must replay the class when using this method
 	 * since this behavior is part of the class mock.
 	 */
+	// TODO: investigate if we can check arguments to the constructor
+	// TODO: investigate if we can use mocked interface with ducktyping for concrete class?
+	// i.e. expectNew(Log.class).andReturn(myILogMock);
 	@SuppressWarnings("unchecked")
 	public static synchronized <T> IExpectationSetters<T> expectNew(
 			Class<T> type) throws Exception {
@@ -1395,6 +1326,21 @@ public class PowerMock {
 			MockGateway.addMethodToSuppress(method);
 		}
 	}
+
+	// /**
+	// * Suppress a specific method call. Use this for overloaded methods.
+	// */
+	// public static synchronized void suppressMethodCode(Class<?> clazz,
+	// String... methodName) {
+	// Method method = null;
+	// if (parameterTypes.length > 0) {
+	// method = Whitebox.getMethod(clazz, methodName, parameterTypes);
+	// } else {
+	// method = Whitebox.findMethodOrThrowException(clazz, methodName,
+	// parameterTypes);
+	// }
+	// MockGateway.addMethodToSuppress(method);
+	// }
 
 	/**
 	 * Suppress a specific method call. Use this for overloaded methods.

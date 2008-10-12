@@ -17,7 +17,7 @@ package org.powermock.modules.junit4.newmocking;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
-import static org.powermock.PowerMock.mockConstruction;
+import static org.powermock.PowerMock.createMockAndExpectNew;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
 import static org.junit.Assert.assertEquals;
@@ -43,15 +43,15 @@ public class StupidNewTest {
 	public void testGetMessage() throws Exception {
 		StupidNew tested = new StupidNew();
 
-		MyClass myClassMock = mockConstruction(MyClass.class);
+		MyClass myClassMock = createMockAndExpectNew(MyClass.class);
 
 		String expected = "Hello altered World";
 		expect(myClassMock.getMessage()).andReturn("Hello altered World");
-		replay(myClassMock);
+		replay(myClassMock, MyClass.class);
 
 		String actual = tested.getMessage();
 
-		verify(myClassMock);
+		verify(myClassMock, MyClass.class);
 		assertEquals("Expected and actual did not match", expected, actual);
 	}
 
@@ -59,15 +59,15 @@ public class StupidNewTest {
 	public void testGetMessageWithArgument() throws Exception {
 		StupidNew tested = new StupidNew();
 
-		MyClass myClassMock = mockConstruction(MyClass.class);
+		MyClass myClassMock = createMockAndExpectNew(MyClass.class);
 
 		String expected = "Hello altered World";
 		expect(myClassMock.getMessage("test")).andReturn("Hello altered World");
-		replay(myClassMock);
+		replay(myClassMock, MyClass.class);
 
 		String actual = tested.getMessageWithArgument();
 
-		verify(myClassMock);
+		verify(myClassMock, MyClass.class);
 		assertEquals("Expected and actual did not match", expected, actual);
 	}
 
@@ -75,14 +75,14 @@ public class StupidNewTest {
 	public void testInvokeVoidMethod() throws Exception {
 		StupidNew tested = new StupidNew();
 
-		MyClass myClassMock = mockConstruction(MyClass.class);
+		MyClass myClassMock = createMockAndExpectNew(MyClass.class);
 		myClassMock.voidMethod();
 		expectLastCall().times(1);
 
-		replay(myClassMock);
+		replay(myClassMock, MyClass.class);
 
 		tested.invokeVoidMethod();
 
-		verify(myClassMock);
+		verify(myClassMock, MyClass.class);
 	}
 }

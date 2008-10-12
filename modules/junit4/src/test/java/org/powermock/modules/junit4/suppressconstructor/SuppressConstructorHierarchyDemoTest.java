@@ -15,39 +15,50 @@
  */
 package org.powermock.modules.junit4.suppressconstructor;
 
-import static org.powermock.PowerMock.suppressConstructorCodeHierarchy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
+import static org.powermock.PowerMock.suppressConstructorCodeHierarchy;
 
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-import samples.suppressconstructor.SuppressConstructorHierarchyDemo;
+import samples.suppressconstructor.InvokeConstructor;
+import samples.suppressconstructor.SuppressConstructorHeirarchyEvilGrandParent;
+import samples.suppressconstructor.SuppressConstructorHierarchyParent;
+import samples.suppressconstructor.SuppressConstructorHierarchyChild;
 
-@PrepareForTest( { SuppressConstructorHierarchyDemo.class })
+@PrepareForTest( { SuppressConstructorHierarchyChild.class, SuppressConstructorHierarchyParent.class,
+		SuppressConstructorHeirarchyEvilGrandParent.class })
 @RunWith(PowerMockRunner.class)
 public class SuppressConstructorHierarchyDemoTest {
 
 	@Test
-	public void testSuppressConstructor() throws Exception {
-		suppressConstructorCodeHierarchy(SuppressConstructorHierarchyDemo.class);
-		SuppressConstructorHierarchyDemo tested = new SuppressConstructorHierarchyDemo(
-				"message");
-
-		final String message = tested.getMessage();
-		assertNull(
-				"Message should have been null since we're skipping the execution of the constructor code. Message was \""
-						+ message + "\".", message);
+	public void testSuppressConstructorHierarchy() throws Exception {
+		suppressConstructorCodeHierarchy(SuppressConstructorHierarchyChild.class);
+		final String message = new InvokeConstructor().doStuff("qwe");
+		assertNull("Message should have been null since we're skipping the execution of the constructor code. Message was \"" + message + "\".",
+				message);
 	}
 
 	@Test
 	@PrepareForTest
-	public void testNotSuppressConstructor() throws Exception {
+	public void testNotSuppressConstructorWithoutByteCodeManipulation() throws Exception {
 		try {
-			new SuppressConstructorHierarchyDemo("message");
+			new SuppressConstructorHierarchyChild("message");
+			fail("Should throw RuntimeException since we're running this test with a new class loader!");
+		} catch (RuntimeException e) {
+			assertEquals("This should be suppressed!!", e.getMessage());
+		}
+	}
+
+	@Test
+	// @Ignore("Remove addDefaultConstructorInSuperClass")
+	public void testNotSuppressConstructorWithByteCodeManipulation() throws Exception {
+		try {
+			new SuppressConstructorHierarchyChild("message");
 			fail("Should throw RuntimeException since we're running this test with a new class loader!");
 		} catch (RuntimeException e) {
 			assertEquals("This should be suppressed!!", e.getMessage());
@@ -61,10 +72,9 @@ public class SuppressConstructorHierarchyDemoTest {
 	 * class).
 	 */
 	@Test
-	public void testGetNumber() throws Exception {
-		suppressConstructorCodeHierarchy(SuppressConstructorHierarchyDemo.class);
-		SuppressConstructorHierarchyDemo tested = new SuppressConstructorHierarchyDemo(
-				"message");
+	public void testSuppressConstructorHierarchyAgain() throws Exception {
+		suppressConstructorCodeHierarchy(SuppressConstructorHierarchyChild.class);
+		SuppressConstructorHierarchyChild tested = new SuppressConstructorHierarchyChild("message");
 		assertEquals(42, tested.getNumber());
 	}
 }

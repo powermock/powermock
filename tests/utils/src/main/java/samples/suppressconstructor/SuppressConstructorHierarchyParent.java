@@ -13,12 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package samples.mockself;
+package samples.suppressconstructor;
 
-public class MockSelfDemoSubClass {
+public class SuppressConstructorHierarchyParent extends
+		SuppressConstructorHeirarchyEvilGrandParent {
 
-	public String getAMessage() {
-		return "A message";
+	private String message;
+
+	SuppressConstructorHierarchyParent() {
+		System.out.println("Parent constructor");
+		this.message = "Default message";
 	}
 
+	SuppressConstructorHierarchyParent(String message) {
+		System.out.println("Parent constructor with message");
+		this.message = message;
+	}
+
+	public String getMessage() {
+		return message;
+	}
 }

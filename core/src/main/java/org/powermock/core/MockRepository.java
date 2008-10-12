@@ -54,35 +54,11 @@ public class MockRepository {
 	private static Set<String> suppressStaticInitializers = Collections
 			.synchronizedSet(new HashSet<String>());
 
-	/**
-	 * Hash map that maps between a fully qualified class name and the mock
-	 * object for that class.
-	 */
-	private static final Map<String, Object> mockConstructionMocks = new HashMap<String, Object>();
-
-	public synchronized static Object putMockConstructionMock(String fullyQualifiedClassName,
-			Object mock) {
-		return mockConstructionMocks.put(fullyQualifiedClassName, mock);
-	}
-
-	public synchronized static Object getMockConstructionMock(String fullyQualifiedClassName) {
-		return mockConstructionMocks.get(fullyQualifiedClassName);
-	}
-
 	public synchronized static void clear() {
-		mockConstructionMocks.clear();
 		classMocks.clear();
 		instanceMocks.clear();
 		newSubstitutions.clear();
 		suppressStaticInitializers.clear();
-	}
-
-	public static String getMockRepositoryClassKey(Class<?> type) {
-		final String typeName = type.getName();
-		final String mockRepositoryKey = type.isMemberClass() ? MockGateway.INNER_CLASS_PREFIX
-				+ typeName
-				: typeName;
-		return mockRepositoryKey;
 	}
 
 	public static synchronized MethodInvocationControl getClassMethodInvocationControl(

@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static org.powermock.PowerMock.createMock;
 import static org.powermock.PowerMock.expectLastCall;
 import static org.powermock.PowerMock.expectNew;
-import static org.powermock.PowerMock.mockConstruction;
+import static org.powermock.PowerMock.createMockAndExpectNew;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
 
@@ -49,30 +49,30 @@ public class SampleServiceImplTest {
 	@Test
 	public void testCreatePerson() throws Exception {
 		// Mock the creation of person
-		Person personMock = mockConstruction(Person.class);
+		Person personMock = createMockAndExpectNew(Person.class);
 
 		// Mock the creation of BusinessMessages
-		BusinessMessages businessMessagesMock = mockConstruction(BusinessMessages.class);
+		BusinessMessages businessMessagesMock = createMockAndExpectNew(BusinessMessages.class);
 
 		personServiceMock.create(personMock, businessMessagesMock);
 		expectLastCall().times(1);
 
 		expect(businessMessagesMock.hasErrors()).andReturn(false);
 
-		replayAll(personMock, businessMessagesMock);
+		replayAll(personMock, businessMessagesMock, Person.class, BusinessMessages.class);
 
 		assertTrue(tested.createPerson("firstName", "lastName"));
 
-		verifyAll(personMock, businessMessagesMock);
+		verifyAll(personMock, businessMessagesMock, Person.class, BusinessMessages.class);
 	}
 
 	@Test
 	public void testCreatePerson_error() throws Exception {
 		// Mock the creation of person
-		Person personMock = mockConstruction(Person.class);
+		Person personMock = createMockAndExpectNew(Person.class);
 
 		// Mock the creation of BusinessMessages
-		BusinessMessages businessMessagesMock = mockConstruction(BusinessMessages.class);
+		BusinessMessages businessMessagesMock = createMockAndExpectNew(BusinessMessages.class);
 
 		personServiceMock.create(personMock, businessMessagesMock);
 		expectLastCall().times(1);
@@ -82,11 +82,11 @@ public class SampleServiceImplTest {
 		eventService.sendErrorEvent(personMock, businessMessagesMock);
 		expectLastCall().times(1);
 
-		replayAll(personMock, businessMessagesMock);
+		replayAll(personMock, businessMessagesMock, Person.class, BusinessMessages.class);
 
 		assertFalse(tested.createPerson("firstName", "lastName"));
 
-		verifyAll(personMock, businessMessagesMock);
+		verifyAll(personMock, businessMessagesMock, Person.class, BusinessMessages.class);
 	}
 
 	@Test(expected = SampleServiceException.class)

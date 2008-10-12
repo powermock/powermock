@@ -141,7 +141,7 @@ public class ExpectNewDemoTest {
 	}
 
 	@Test
-	public void testEasyMock() throws Exception {
+	public void testPreviousProblemsWithByteCodeManipulation() throws Exception {
 		MyClass myClassMock1 = createMock(MyClass.class);
 		expect(myClassMock1.getMessage()).andReturn("Hello");
 		expect(myClassMock1.getMessage()).andReturn("World");
