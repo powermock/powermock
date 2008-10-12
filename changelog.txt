@@ -13,6 +13,8 @@ Change log 0.8 (under development)
 * Added WhiteBox functionality to instantiate a class without invoking its constructor without using byte-code manipulation. Only works on Sun JVM's.
 * mockMethodX is renamed to createPartialMockX        
 * Suppress constructor code now works as expected
+* mockConstruction(..) was removed. You should always use expectNew(..) instead. There's a utility method in PowerMock called createMockAndExpectNew can be used as a substitute for mockConstruction(..). 
+* Better error message when a class is not replayed when doing expectNew.
                              
 Change log 0.7 (released)
 -------------------------
