@@ -10,7 +10,7 @@ Change log 0.8 (under development)
 * Implemented support for nice mocks.
 * Added more documentation
 * expectNew(..).andThrow(..) now works with checked exceptions
-* Added WhiteBox functionality to instantiate a class without invoking its constructor without using byte-code manipulation. Only works on Sun JVM's.
+* Added WhiteBox functionality to instantiate a class without invoking its constructor without using byte-code manipulation.
 * mockMethodX is renamed to createPartialMockX        
 * Suppress constructor code now works as expected
 * mockConstruction(..) was removed. You should always use expectNew(..) instead. There's a utility method in PowerMock called createMockAndExpectNew can be used as a substitute for mockConstruction(..). 

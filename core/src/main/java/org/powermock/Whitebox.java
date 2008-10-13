@@ -29,9 +29,10 @@ import java.util.Set;
 
 import net.sf.cglib.proxy.Enhancer;
 
+import org.easymock.classextension.internal.objenesis.Objenesis;
+import org.easymock.classextension.internal.objenesis.ObjenesisStd;
+import org.easymock.classextension.internal.objenesis.instantiator.ObjectInstantiator;
 import org.powermock.core.PrimitiveWrapper;
-
-import sun.reflect.ReflectionFactory;
 
 /**
  * Various utilities for accessing internals of a class. Basically a simplified
@@ -78,8 +79,6 @@ public class Whitebox {
 	 * No byte-code manipulation is needed to perform this operation and thus
 	 * it's not necessary use the <code>PowerMockRunner</code> or
 	 * <code>PrepareForTest</code> annotation to use this functionality.
-	 * Instead it depends on java serialization behavior to create the instance.
-	 * Note that this only works on Sun JVM's.
 	 * 
 	 * @param <T>
 	 *            The type of the instance to create.
@@ -90,12 +89,9 @@ public class Whitebox {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T newInstance(Class<T> classToInstantiate) {
-		try {
-			return (T) ReflectionFactory.getReflectionFactory().newConstructorForSerialization(classToInstantiate,
-					Object.class.getDeclaredConstructor()).newInstance();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		Objenesis objenesis = new ObjenesisStd();
+		ObjectInstantiator thingyInstantiator = objenesis.getInstantiatorOf(classToInstantiate);
+		return (T) thingyInstantiator.newInstance();
 	}
 
 	/**
