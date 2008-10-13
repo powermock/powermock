@@ -26,12 +26,9 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import samples.suppressconstructor.InvokeConstructor;
-import samples.suppressconstructor.SuppressConstructorHeirarchyEvilGrandParent;
-import samples.suppressconstructor.SuppressConstructorHierarchyParent;
 import samples.suppressconstructor.SuppressConstructorHierarchyChild;
 
-@PrepareForTest( { SuppressConstructorHierarchyChild.class, SuppressConstructorHierarchyParent.class,
-		SuppressConstructorHeirarchyEvilGrandParent.class })
+@PrepareForTest(SuppressConstructorHierarchyChild.class)
 @RunWith(PowerMockRunner.class)
 public class SuppressConstructorHierarchyDemoTest {
 
