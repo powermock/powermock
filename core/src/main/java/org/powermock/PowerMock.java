@@ -499,7 +499,7 @@ public class PowerMock {
 	 *            with the second parameter as <code>null</code> (i.e. all
 	 *            methods in that class will be mocked).
 	 */
-	public static synchronized void createPartialMockNice(Class<?> clazz, String... methodNames) {
+	public static synchronized void mockStaticNice(Class<?> clazz, String... methodNames) {
 		mockStaticNice(clazz, Whitebox.getMethods(clazz, methodNames));
 	}
 
