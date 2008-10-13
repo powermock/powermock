@@ -58,7 +58,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 				"javax.swing.", "sun.", "org.junit.", "junit.",
 				"org.powermock.modules.junit4.internal.",
 				"org.powermock.modules.junit4.legacy.internal.",
-				"org.powermock.modules.junit4.common.internal",
+				"org.powermock.modules.junit4.common.internal.",
 				"org.powermock.modules.junit3.internal." });
 
 		addClassesToModify(classesToMock);
