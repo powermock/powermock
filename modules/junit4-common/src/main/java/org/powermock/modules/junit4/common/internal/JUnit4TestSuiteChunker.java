@@ -17,9 +17,11 @@ package org.powermock.modules.junit4.common.internal;
 
 import org.powermock.tests.utils.TestSuiteChunker;
 import org.junit.runner.Description;
+import org.junit.runner.manipulation.Filterable;
+import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.notification.RunNotifier;
 
-public interface JUnit4TestSuiteChunker extends TestSuiteChunker {
+public interface JUnit4TestSuiteChunker extends TestSuiteChunker, Filterable, Sortable {
 
 	public Description getDescription();
 

@@ -27,13 +27,19 @@ import java.util.Map.Entry;
 
 import org.junit.Test;
 import org.junit.runner.Description;
+import org.junit.runner.manipulation.Filter;
+import org.junit.runner.manipulation.Filterable;
+import org.junit.runner.manipulation.NoTestsRemainException;
+import org.junit.runner.manipulation.Sortable;
+import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.modules.junit4.common.internal.JUnit4TestSuiteChunker;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.powermock.tests.utils.impl.AbstractTestSuiteChunkerImpl;
 
-public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<PowerMockJUnitRunnerDelegate> implements JUnit4TestSuiteChunker {
+public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<PowerMockJUnitRunnerDelegate> implements JUnit4TestSuiteChunker,
+		Filterable, Sortable {
 
 	private Description description;
 	private final Class<? extends PowerMockJUnitRunnerDelegate> runnerDelegateImplementationType;
@@ -130,5 +136,21 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 			}
 		}
 		return description;
+	}
+
+	public void filter(Filter filter) throws NoTestsRemainException {
+		for (Object delegate : delegates) {
+			if (delegate instanceof Filterable) {
+				((Filterable) delegate).filter(filter);
+			}
+		}
+	}
+
+	public void sort(Sorter sorter) {
+		for (Object delegate : delegates) {
+			if (delegate instanceof Sortable) {
+				((Sortable) delegate).sort(sorter);
+			}
+		}
 	}
 }

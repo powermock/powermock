@@ -15,22 +15,23 @@
  */
 package org.powermock.modules.junit4.common.internal.impl;
 
-import org.powermock.modules.junit4.common.internal.JUnit4TestSuiteChunker;
-import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
+import org.junit.runner.manipulation.Filter;
+import org.junit.runner.manipulation.Filterable;
+import org.junit.runner.manipulation.NoTestsRemainException;
+import org.junit.runner.manipulation.Sortable;
+import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
+import org.powermock.modules.junit4.common.internal.JUnit4TestSuiteChunker;
+import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 
-public class AbstractCommonPowerMockRunner extends Runner {
+public class AbstractCommonPowerMockRunner extends Runner implements Filterable, Sortable {
 
 	private JUnit4TestSuiteChunker suiteChunker;
 
-	public AbstractCommonPowerMockRunner(
-			Class<?> klass,
-			Class<? extends PowerMockJUnitRunnerDelegate> runnerDelegateImplClass)
-			throws Exception {
-		suiteChunker = new JUnit4TestSuiteChunkerImpl(klass,
-				runnerDelegateImplClass);
+	public AbstractCommonPowerMockRunner(Class<?> klass, Class<? extends PowerMockJUnitRunnerDelegate> runnerDelegateImplClass) throws Exception {
+		suiteChunker = new JUnit4TestSuiteChunkerImpl(klass, runnerDelegateImplClass);
 	}
 
 	@Override
@@ -46,5 +47,13 @@ public class AbstractCommonPowerMockRunner extends Runner {
 	@Override
 	public synchronized int testCount() {
 		return suiteChunker.getTestCount();
+	}
+
+	public void filter(Filter filter) throws NoTestsRemainException {
+		suiteChunker.filter(filter);
+	}
+
+	public void sort(Sorter sorter) {
+		suiteChunker.sort(sorter);
 	}
 }

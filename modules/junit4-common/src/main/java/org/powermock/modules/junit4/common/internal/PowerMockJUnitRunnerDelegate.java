@@ -25,5 +25,4 @@ public interface PowerMockJUnitRunnerDelegate {
 	public abstract Description getDescription();
 
 	public abstract int getTestCount();
-
 }
