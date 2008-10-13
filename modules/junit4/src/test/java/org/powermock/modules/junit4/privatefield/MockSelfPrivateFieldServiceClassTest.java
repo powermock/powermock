@@ -45,13 +45,11 @@ import samples.privatefield.MockSelfPrivateFieldServiceClass;
 public class MockSelfPrivateFieldServiceClassTest {
 
 	@Test
-	public void testGetCompositeMessage() {
-		MockSelfPrivateFieldServiceClass tested = createPartialMock(
-				MockSelfPrivateFieldServiceClass.class, "getOwnMessage");
+	public void testGetCompositeMessage() throws Exception {
+		MockSelfPrivateFieldServiceClass tested = createPartialMock(MockSelfPrivateFieldServiceClass.class, "getOwnMessage");
 
 		Service serviceMock = createMock(Service.class);
-		setInternalState(tested, "service", serviceMock,
-				MockSelfPrivateFieldServiceClass.class);
+		setInternalState(tested, "service", serviceMock, MockSelfPrivateFieldServiceClass.class);
 
 		final String expected = "Hello world";
 		expectPrivate(tested, "getOwnMessage").andReturn("Hello");
