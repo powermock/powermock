@@ -1,20 +1,10 @@
 package org.powermock.core.mockstrategy.impl;
 
-import org.easymock.EasyMock;
-import org.easymock.IMocksControl;
-import org.powermock.core.mockstrategy.MockStrategy;
+import org.easymock.internal.MocksControl.MockType;
 
-public class StrictMockStrategy implements MockStrategy {
+public class StrictMockStrategy extends AbstractMockStrategyBase {
 
-	public IMocksControl createMockControl(Class<?> type) {
-		IMocksControl control = null;
-		if (type.isInterface()) {
-			control = EasyMock.createStrictControl();
-		} else {
-			control = org.easymock.classextension.EasyMock
-					.createStrictControl();
-		}
-		return control;
+	public StrictMockStrategy() {
+		super(MockType.STRICT);
 	}
-
 }
