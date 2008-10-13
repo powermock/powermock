@@ -16,6 +16,7 @@
 package org.powermock;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.LinkedList;
@@ -898,7 +899,7 @@ public class PowerMock {
 	 * Used to specify expectations on private static methods. If possible use
 	 * variant with only method name.
 	 */
-	public static synchronized <T> IExpectationSetters<T> expectPrivate(Class<?> clazz, Method method, Object... arguments) {
+	public static synchronized <T> IExpectationSetters<T> expectPrivate(Class<?> clazz, Method method, Object... arguments) throws Exception {
 		return doExpectPrivate(clazz, method, arguments);
 	}
 
@@ -906,7 +907,7 @@ public class PowerMock {
 	 * Used to specify expectations on private methods. If possible use variant
 	 * with only method name.
 	 */
-	public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, Method method, Object... arguments) {
+	public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, Method method, Object... arguments) throws Exception {
 		return doExpectPrivate(instance, method, arguments);
 	}
 
@@ -916,7 +917,7 @@ public class PowerMock {
 	 */
 	@SuppressWarnings("all")
 	public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, String methodName, Class<?>[] parameterTypes,
-			Object... arguments) {
+			Object... arguments) throws Exception {
 
 		if (arguments == null) {
 			arguments = new Object[0];
@@ -939,7 +940,7 @@ public class PowerMock {
 	 * Used to specify expectations on private methods using methodName.
 	 */
 	@SuppressWarnings("unchecked")
-	public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, String methodName, Object... arguments) {
+	public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, String methodName, Object... arguments) throws Exception {
 
 		Method[] methods = Whitebox.getMethods(instance.getClass(), methodName);
 		Method methodToExpect;
@@ -1206,11 +1207,12 @@ public class PowerMock {
 	 * @param methodNames
 	 *            The names of the methods that'll be suppressed.
 	 */
-	 public static synchronized void suppressMethodCode(Class<?> clazz, String... methodNames) {
+	public static synchronized void suppressMethodCode(Class<?> clazz, String... methodNames) {
 		for (Method method : Whitebox.getMethods(clazz, methodNames)) {
 			MockGateway.addMethodToSuppress(method);
 		}
 	}
+
 	/**
 	 * Suppress all methods for this class.
 	 * 
@@ -1292,12 +1294,12 @@ public class PowerMock {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T> IExpectationSetters<T> doExpectPrivate(Object instance, Method methodToExpect, Object... arguments) {
+	private static <T> IExpectationSetters<T> doExpectPrivate(Object instance, Method methodToExpect, Object... arguments) throws Exception {
 		doInvokeMethod(instance, methodToExpect, arguments);
 		return (IExpectationSetters<T>) org.easymock.classextension.EasyMock.expectLastCall();
 	}
 
-	private static void doInvokeMethod(Object instance, Method methodToExpect, Object... arguments) {
+	private static void doInvokeMethod(Object instance, Method methodToExpect, Object... arguments) throws Exception {
 		if (methodToExpect == null) {
 			throw new IllegalArgumentException("Method cannot be null");
 		}
@@ -1306,6 +1308,13 @@ public class PowerMock {
 
 		try {
 			methodToExpect.invoke(instance, arguments);
+		} catch (InvocationTargetException e) {
+			final Throwable cause = e.getCause();
+			if (cause instanceof Exception) {
+				throw (Exception) cause;
+			} else {
+				throw new RuntimeException(cause);
+			}
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to invoke method '" + methodToExpect.getName() + "'. Reason was: '" + e.getMessage() + "'.", e);
 		}
