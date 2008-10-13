@@ -1064,15 +1064,11 @@ public class PowerMock {
 	}
 
 	/**
-	 * More powerful version of mockConstruction which allows specifying
-	 * expectations on new invocations. For example you might want to throw an
-	 * exception. Note that you must replay the class when using this method
-	 * since this behavior is part of the class mock.
+	 * Allows specifying expectations on new invocations. For example you might
+	 * want to throw an exception or return a mock. Note that you must replay
+	 * the class when using this method since this behavior is part of the class
+	 * mock.
 	 */
-	// TODO: investigate if we can check arguments to the constructor
-	// TODO: investigate if we can use mocked interface with ducktyping for
-	// concrete class?
-	// i.e. expectNew(Log.class).andReturn(myILogMock);
 	@SuppressWarnings("unchecked")
 	public static synchronized <T> IExpectationSetters<T> expectNew(Class<T> type) throws Exception {
 		if (type == null) {
