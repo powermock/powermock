@@ -27,7 +27,6 @@ import org.junit.runner.RunWith;
 
 import samples.suppressmethod.SuppressMethod;
 
-
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(SuppressMethod.class)
 public class SuppressMethodTest {
@@ -37,18 +36,23 @@ public class SuppressMethodTest {
 		suppressMethodCode(SuppressMethod.class, "getObject");
 
 		SuppressMethod tested = new SuppressMethod();
-		assertNull(
-				"A method returning Object should return null after suppressing method code.",
-				tested.getObject());
+		assertNull("A method returning Object should return null after suppressing method code.", tested.getObject());
+	}
+
+	@Test
+	public void testSuppressMultipleMethods() throws Exception {
+		suppressMethodCode(SuppressMethod.class, "getObject", "getShort");
+
+		SuppressMethod tested = new SuppressMethod();
+		assertNull("A method returning Object should return null after suppressing method code.", tested.getObject());
+		assertEquals("A method returning a short should return 0 after suppressing method code.", 0, tested.getShort());
 	}
 
 	@Test
 	public void testGetObjectStatic() throws Exception {
 		suppressMethodCode(SuppressMethod.class, "getObjectStatic");
 
-		assertNull(
-				"A method returning Object should return null after suppressing method code.",
-				SuppressMethod.getObjectStatic());
+		assertNull("A method returning Object should return null after suppressing method code.", SuppressMethod.getObjectStatic());
 	}
 
 	@Test
@@ -56,9 +60,7 @@ public class SuppressMethodTest {
 		suppressMethodCode(SuppressMethod.class, "getByte");
 
 		SuppressMethod tested = new SuppressMethod();
-		assertEquals(
-				"A method returning a byte should return 0 after suppressing method code.",
-				0, tested.getByte());
+		assertEquals("A method returning a byte should return 0 after suppressing method code.", 0, tested.getByte());
 	}
 
 	@Test
@@ -66,9 +68,7 @@ public class SuppressMethodTest {
 		suppressMethodCode(SuppressMethod.class, "getShort");
 
 		SuppressMethod tested = new SuppressMethod();
-		assertEquals(
-				"A method returning a short should return 0 after suppressing method code.",
-				0, tested.getShort());
+		assertEquals("A method returning a short should return 0 after suppressing method code.", 0, tested.getShort());
 	}
 
 	@Test
@@ -76,9 +76,7 @@ public class SuppressMethodTest {
 		suppressMethodCode(SuppressMethod.class, "getInt");
 
 		SuppressMethod tested = new SuppressMethod();
-		assertEquals(
-				"A method returning an int should return 0 after suppressing method code.",
-				0, tested.getInt());
+		assertEquals("A method returning an int should return 0 after suppressing method code.", 0, tested.getInt());
 	}
 
 	@Test
@@ -86,9 +84,7 @@ public class SuppressMethodTest {
 		suppressMethodCode(SuppressMethod.class, "getLong");
 
 		SuppressMethod tested = new SuppressMethod();
-		assertEquals(
-				"A method returning a long should return 0 after suppressing method code.",
-				0, tested.getLong());
+		assertEquals("A method returning a long should return 0 after suppressing method code.", 0, tested.getLong());
 	}
 
 	@Test
@@ -96,9 +92,7 @@ public class SuppressMethodTest {
 		suppressMethodCode(SuppressMethod.class, "getBoolean");
 
 		SuppressMethod tested = new SuppressMethod();
-		assertFalse(
-				"A method returning a boolean should return false after suppressing method code.",
-				tested.getBoolean());
+		assertFalse("A method returning a boolean should return false after suppressing method code.", tested.getBoolean());
 	}
 
 	@Test
@@ -106,9 +100,7 @@ public class SuppressMethodTest {
 		suppressMethodCode(SuppressMethod.class, "getFloat");
 
 		SuppressMethod tested = new SuppressMethod();
-		assertEquals(
-				"A method returning a float should return 0.0f after suppressing method code.",
-				0.0f, tested.getFloat(), 0);
+		assertEquals("A method returning a float should return 0.0f after suppressing method code.", 0.0f, tested.getFloat(), 0);
 	}
 
 	@Test
@@ -116,25 +108,20 @@ public class SuppressMethodTest {
 		suppressMethodCode(SuppressMethod.class, "getDouble");
 
 		SuppressMethod tested = new SuppressMethod();
-		assertEquals(
-				"A method returning a double should return 0.0d after suppressing method code.",
-				0.0d, tested.getDouble(), 0);
+		assertEquals("A method returning a double should return 0.0d after suppressing method code.", 0.0d, tested.getDouble(), 0);
 	}
 
 	@Test
 	public void testGetDouble_parameter() throws Exception {
-		suppressMethodCode(SuppressMethod.class, "getDouble", double.class);
+		suppressMethodCode(SuppressMethod.class, "getDouble", new Class<?>[] { double.class });
 
 		SuppressMethod tested = new SuppressMethod();
-		assertEquals(
-				"A method returning a double should return 0.0d after suppressing method code.",
-				0.0d, tested.getDouble(8.7d), 0);
+		assertEquals("A method returning a double should return 0.0d after suppressing method code.", 0.0d, tested.getDouble(8.7d), 0);
 	}
 
 	@Test
 	public void testInvokeVoid() throws Exception {
-		suppressMethodCode(SuppressMethod.class, "invokeVoid",
-				StringBuilder.class);
+		suppressMethodCode(SuppressMethod.class, "invokeVoid", new Class<?>[] { StringBuilder.class });
 
 		SuppressMethod tested = new SuppressMethod();
 		// Should not cause an NPE when suppressing code.

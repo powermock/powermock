@@ -15,6 +15,7 @@ Change log 0.8 (under development)
 * Suppress constructor code now works as expected
 * mockConstruction(..) was removed. You should always use expectNew(..) instead. There's a utility method in PowerMock called createMockAndExpectNew can be used as a substitute for mockConstruction(..). 
 * Better error message when a class is not replayed when doing expectNew.
+* Added support to easy suppress several methods in the same class.
                              
 Change log 0.7 (released)
 -------------------------
