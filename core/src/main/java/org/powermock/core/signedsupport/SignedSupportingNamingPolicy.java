@@ -38,6 +38,9 @@ public final class SignedSupportingNamingPolicy extends DefaultNamingPolicy {
 	}
 
 	public String getClassName(String prefix, String source, Object key, Predicate names) {
+		if (prefix.startsWith("org.powermock")) {
+			return super.getClassName(prefix, source, key, names);
+		}
 		return super.getClassName(PREFIX + prefix, source, key, names);
 	}
 }

@@ -26,8 +26,7 @@ public abstract class AbstractMockStrategyBase implements MockStrategy {
 		if (type.isInterface()) {
 			control = new MocksControl(mockType);
 		} else {
-//			control = new MocksClassControl(mockType);
-			 control = new SignedSupportingMocksClassControl(mockType);
+			control = new SignedSupportingMocksClassControl(mockType);
 		}
 		return control;
 	}

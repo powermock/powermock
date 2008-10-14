@@ -19,6 +19,7 @@ Change log 0.8 (under development)
 * doInvokeMethod in PowerMock now catches and deals correctly with InvocationTargetExceptions.
 * It's now possible to run a single test case in junit4
 * Test delegates now implements Sortable
+* Added support for mocking classes in signed jar files
                              
 Change log 0.7 (released)
 -------------------------

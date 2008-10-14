@@ -16,6 +16,7 @@
     <module>AbstractFactory</module>
     <module>tutorial</module>
     <module>DocumentationExamples</module>
+    <module>SignedMocking</module>
   </modules>   <dependencyManagement>
       <dependencies>
          <dependency>
