@@ -137,7 +137,6 @@ public class PrivateMethodDemoTest {
 	}
 
 	@Test
-	@Ignore
 	public void testExpectPrivateWithArrayMatcher()
 			throws Exception {
 		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class,

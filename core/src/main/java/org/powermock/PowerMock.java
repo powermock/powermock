@@ -1303,7 +1303,7 @@ public class PowerMock {
 		methodToExpect.setAccessible(true);
 
 		try {
-			methodToExpect.invoke(instance, arguments);
+			methodToExpect.invoke(instance, arguments == null ? new Object[] { arguments } : arguments);
 		} catch (InvocationTargetException e) {
 			final Throwable cause = e.getCause();
 			if (cause instanceof Exception) {

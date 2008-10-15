@@ -1,7 +1,7 @@
 Change log 0.8 (under development)
 ----------------------------------
 * The junit4 test module now work with JUnit 4.5 (although using the old, now deprecated, approach of JUnit 4.4).
-* Verified that PowerMock works with EasyMock 2.4 but since we don't use any features from 2.4 we have a range dependency [2.3, 2.4] in the maven pom.xml.
+* Upgraded to EasyMock 2.4
 * Upgraded to JavaAssist 3.8.0.GA
 * Fixed the error message that was thrown when a constructor was not found when using mocks as arguments with mockMethod.
 * WhiteBox invoke method and invoke constructor methods now throws an IllegalArgumentException if the first argument is null.
@@ -10,7 +10,7 @@ Change log 0.8 (under development)
 * Implemented support for nice mocks.
 * Added more documentation
 * expectNew(..).andThrow(..) now works with checked exceptions
-* Added WhiteBox functionality to instantiate a class without invoking its constructor without using byte-code manipulation.
+* Added WhiteBox functionality to instantiate a class without invoking its constructor without using byte-code manipulation. Works in multiple JVM's.
 * mockMethodX is renamed to createPartialMockX        
 * Suppress constructor code now works as expected
 * mockConstruction(..) was removed. You should always use expectNew(..) instead. There's a utility method in PowerMock called createMockAndExpectNew can be used as a substitute for mockConstruction(..). 
@@ -20,6 +20,7 @@ Change log 0.8 (under development)
 * It's now possible to run a single test case in junit4
 * Test delegates now implements Sortable
 * Added support for mocking classes in signed jar files
+* EasyMock matchers now works in combination with PowerMock's expectPrivate(..)
                              
 Change log 0.7 (released)
 -------------------------
