@@ -41,7 +41,7 @@ import org.powermock.tests.utils.TestSuiteChunker;
  * 
  * @author Johan Haleby
  */
-public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunker{
+public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunker {
 	protected static final int NOT_INITIALIZED = -1;
 
 	private static final int INTERNAL_INDEX_NOT_FOUND = NOT_INITIALIZED;
@@ -70,7 +70,6 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 	/*
 	 * Maps between a specific class and a map of test methods loaded by a
 	 * specific mock class loader.
-	 * 
 	 */
 	private final Map<Class<?>, Map<MockClassLoader, List<Method>>> internalSuites;
 
@@ -97,14 +96,25 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 		suites.put(defaultMockLoader, currentClassloaderMethods);
 		internalSuites.put(testClass, suites);
 		initEntries(testClass, currentClassloaderMethods, internalSuites);
+		/*
+		 * If we don't have any test that should be executed by the default
+		 * class loader remove it to avoid duplicate test print outs.
+		 */
+		if (currentClassloaderMethods.isEmpty()) {
+			internalSuites.get(testClass).remove(defaultMockLoader);
+		}
 	}
 
 	private MockClassLoader createNewMockClassloader(final String[] prepareForTestClasses, final String[] suppressStaticClasses) {
+		MockClassLoader defaultMockLoader = createNewMockClassloader(getClassesToBeModified(prepareForTestClasses, suppressStaticClasses));
+		return defaultMockLoader;
+	}
+
+	private String[] getClassesToBeModified(final String[] prepareForTestClasses, final String[] suppressStaticClasses) {
 		String[] classesToLoadedByMockClassLoader = new String[prepareForTestClasses.length + suppressStaticClasses.length];
 		System.arraycopy(prepareForTestClasses, 0, classesToLoadedByMockClassLoader, 0, prepareForTestClasses.length);
 		System.arraycopy(suppressStaticClasses, 0, classesToLoadedByMockClassLoader, prepareForTestClasses.length, suppressStaticClasses.length);
-		MockClassLoader defaultMockLoader = createNewMockClassloader(classesToLoadedByMockClassLoader);
-		return defaultMockLoader;
+		return classesToLoadedByMockClassLoader;
 	}
 
 	public MockClassLoader createNewMockClassloader(String[] classes) {
@@ -248,8 +258,8 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 
 	/**
 	 * Get the junit runner delegate that handles the test at index
-	 * <code>testIndex</code>. Throws a {@link RuntimeException} if a
-	 * delegator is not found for the specific test index.
+	 * <code>testIndex</code>. Throws a {@link RuntimeException} if a delegator
+	 * is not found for the specific test index.
 	 * 
 	 * @param testIndex
 	 *            The test index that a delegator should hold.
@@ -280,6 +290,5 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 		final Map<MockClassLoader, List<Method>> map = internalSuites.get(testClass);
 		return map.entrySet();
 	}
-	
-	
+
 }
