@@ -34,4 +34,16 @@ public class ClassWithPrivateMethods {
 	private int methodWithPrimitiveAndWrappedInt(int myInt, Integer myInt2) {
 		return myInt + myInt2;
 	}
+
+	private int varArgsMethod(int... ints) {
+		int sum = 0;
+		for (int i : ints) {
+			sum += i;
+		}
+		return sum;
+	}
+
+	private int varArgsMethod(int value) {
+		return value * 2;
+	}
 }

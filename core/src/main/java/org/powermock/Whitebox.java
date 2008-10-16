@@ -15,6 +15,7 @@
  */
 package org.powermock;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -246,7 +247,7 @@ public class Whitebox {
 			field = tempClass.getDeclaredField(fieldName);
 			field.setAccessible(true);
 			// ParameterizedType t = new
-			// TODO Ta reda på typen och kolla så att returnvärdet är av
+			// TODO Ta reda pï¿½ typen och kolla sï¿½ att returnvï¿½rdet ï¿½r av
 			// samma typ. Annars kasta exception.
 			final Object fieldValue = field.get(object);
 			// if (!fieldValue.getClass().isAssignableFrom(
@@ -346,7 +347,8 @@ public class Whitebox {
 	/**
 	 * Finds and returns a certain method. If the method couldn't be found this
 	 * method delegates to
-	 * {@link Whitebox#throwExceptionIfMethodWasNotFound(Object, String, Method, Object...)}.
+	 * {@link Whitebox#throwExceptionIfMethodWasNotFound(Object, String, Method, Object...)}
+	 * .
 	 * 
 	 * @param tested
 	 * @param declaringClass
@@ -413,6 +415,9 @@ public class Whitebox {
 							throwExceptionWhenMultipleMethodMatchesFound(new Method[] { potentialMethodToInvoke, method });
 						}
 					}
+				} else if (method.isVarArgs() && areArgumentsOfSameType(arguments)) {
+					potentialMethodToInvoke = method;
+					break;
 				} else if (arguments != null && (paramTypes.length != arguments.length)) {
 					continue;
 				}
@@ -437,7 +442,7 @@ public class Whitebox {
 		return primitiveMethodFound;
 	}
 
-	/**
+/**
 	 * Finds and returns a certain constructor. If the constructor couldn't be
 	 * found this method delegates to
 	 * {@link Whitebox#throwExceptionIfConstructorWasNotFound(Class, Object...).
@@ -608,17 +613,40 @@ public class Whitebox {
 			// Do nothing
 		}
 
-		if (potentialContstructorPrimitive == null || potentialContstructorWrapped != null) {
+		if (potentialContstructorPrimitive == null && potentialContstructorWrapped == null) {
+			// Check if we can find a matching var args constructor.
+			constructor = getPotentialVarArgsConstructor(classThatContainsTheConstructorToTest, arguments);
+			if (constructor == null) {
+				throw new RuntimeException("Failed to find a constructor with argument types: [" + getArgumentsAsString(arguments) + "]");
+			}
+		} else if (potentialContstructorPrimitive == null && potentialContstructorWrapped != null) {
 			constructor = potentialContstructorWrapped;
 		} else if (potentialContstructorPrimitive != null && potentialContstructorWrapped == null) {
 			constructor = potentialContstructorPrimitive;
-		} else if (potentialContstructorPrimitive == null && potentialContstructorWrapped == null) {
-			throw new RuntimeException("Could not lookup the constructor");
+		} else if (arguments == null || arguments.length == 0 && potentialContstructorPrimitive != null) {
+			constructor = potentialContstructorPrimitive;
 		} else {
 			throw new RuntimeException("Could not determine which constructor to execute. Please specify the parameter types by hand.");
 		}
 
 		return createInstance(constructor, arguments);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> Constructor<T> getPotentialVarArgsConstructor(Class<T> classThatContainsTheConstructorToTest, Object... arguments) {
+		if (areArgumentsOfSameType(arguments)) {
+			Constructor<T>[] declaredConstructors = (Constructor<T>[]) classThatContainsTheConstructorToTest.getDeclaredConstructors();
+			for (Constructor<T> possibleVarArgsConstructor : declaredConstructors) {
+				if (possibleVarArgsConstructor.isVarArgs()) {
+					if (arguments == null || arguments.length == 0) {
+						return possibleVarArgsConstructor;
+					} else if (getUnmockedType(arguments[0].getClass()).equals(possibleVarArgsConstructor.getParameterTypes()[0].getComponentType())) {
+						return possibleVarArgsConstructor;
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	private static <T> T createInstance(Constructor<T> constructor, Object... arguments) {
@@ -629,13 +657,27 @@ public class Whitebox {
 
 		T createdObject = null;
 		try {
-			createdObject = constructor.newInstance(arguments);
+			if (constructor.isVarArgs()) {
+				Class<?> varArgsType = constructor.getParameterTypes()[0].getComponentType();
+				Object arrayInstance = createAndPopulateArray(varArgsType, arguments);
+				createdObject = constructor.newInstance(new Object[] { arrayInstance });
+			} else {
+				createdObject = constructor.newInstance(arguments);
+			}
 		} catch (InvocationTargetException e) {
 			throw new RuntimeException("An exception was caught when executing the constructor", e);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 		return createdObject;
+	}
+
+	private static Object createAndPopulateArray(Class<?> varArgsType, Object... arguments) {
+		Object arrayInstance = Array.newInstance(varArgsType, arguments.length);
+		for (int i = 0; i < arguments.length; i++) {
+			Array.set(arrayInstance, i, arguments[i]);
+		}
+		return arrayInstance;
 	}
 
 	/**
@@ -671,7 +713,8 @@ public class Whitebox {
 	 * <code>klass</code>.
 	 * 
 	 * @param klass
-	 *            The class where the constructor is located. <code>null</code>).
+	 *            The class where the constructor is located. <code>null</code>
+	 *            ).
 	 * @return A <code>java.lang.reflect.Constructor</code>.
 	 */
 	public static Constructor<?> getFirstParentConstructor(Class<?> klass) {
@@ -685,9 +728,9 @@ public class Whitebox {
 
 	/**
 	 * Finds and returns a method based on the input parameters. If no
-	 * <code>parameterTypes</code> are present the method will return the
-	 * first method with name <code>methodNameToMock</code>. If no method was
-	 * found, <code>null</code> will be returned.
+	 * <code>parameterTypes</code> are present the method will return the first
+	 * method with name <code>methodNameToMock</code>. If no method was found,
+	 * <code>null</code> will be returned.
 	 * 
 	 * @param <T>
 	 * @param type
@@ -814,8 +857,8 @@ public class Whitebox {
 	}
 
 	/**
-	 * Get an array of {@link Method}'s that matches the supplied list of
-	 * method names.
+	 * Get an array of {@link Method}'s that matches the supplied list of method
+	 * names.
 	 * 
 	 * @param clazz
 	 *            The class that should contain the methods.
@@ -842,7 +885,13 @@ public class Whitebox {
 	private static Object performMethodInvocation(Object tested, Method methodToInvoke, Object... arguments) throws Exception {
 		methodToInvoke.setAccessible(true);
 		try {
-			return methodToInvoke.invoke(tested, arguments);
+			if (methodToInvoke.isVarArgs()) {
+				Class<?> arrayType = methodToInvoke.getParameterTypes()[0].getComponentType();
+				Object arrayInstance = createAndPopulateArray(arrayType, arguments);
+				return methodToInvoke.invoke(tested, new Object[] { arrayInstance });
+			} else {
+				return methodToInvoke.invoke(tested, arguments);
+			}
 		} catch (InvocationTargetException e) {
 			Throwable cause = e.getCause();
 			if (cause instanceof Exception) {
@@ -904,6 +953,24 @@ public class Whitebox {
 				return false;
 			}
 		}
+		return true;
+	}
+
+	/**
+	 * Check if all arguments are of the same type.
+	 */
+	static boolean areArgumentsOfSameType(Object[] arguments) {
+		if (arguments == null || arguments.length <= 1) {
+			return true;
+		}
+
+		final Class<?> firstArgumentType = getUnmockedType(arguments[0].getClass());
+		for (int i = 1; i < arguments.length; i++) {
+			if (!getUnmockedType(arguments[i].getClass()).equals(firstArgumentType)) {
+				return false;
+			}
+		}
+
 		return true;
 	}
 }

@@ -101,7 +101,9 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 		 * class loader remove it to avoid duplicate test print outs.
 		 */
 		if (currentClassloaderMethods.isEmpty()) {
-			internalSuites.get(testClass).remove(defaultMockLoader);
+			// We ignore this since other tests fails because of this, we need
+			// to find a better solution.
+			// internalSuites.get(testClass).remove(defaultMockLoader);
 		}
 	}
 

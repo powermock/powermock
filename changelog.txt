@@ -21,7 +21,7 @@ Change log 0.8 (under development)
 * Test delegates now implements Sortable
 * Added support for mocking classes in signed jar files
 * EasyMock matchers now works in combination with PowerMock's expectPrivate(..)
-* Fixed a bug in the PowerMock JUnit runner which printed out duplicate test methods in some cases.
+* Added support for invoking var args constructors and methods using Whitebox
                              
 Change log 0.7 (released)
 -------------------------
