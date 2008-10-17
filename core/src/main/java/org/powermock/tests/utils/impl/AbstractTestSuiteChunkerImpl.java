@@ -232,7 +232,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 	/**
 	 * Get the internal test index for a junit runner delegate based on the
 	 * "real" original test index. For example, the test may need to run a
-	 * single test, for example the test with index 3. However since JTestRack
+	 * single test, for example the test with index 3. However since PowerMock
 	 * may have chunked the test suite to use many classloaders and junit
 	 * delegators the index (3) must be mapped to an internal representation for
 	 * the specific junit runner delegate. This is what this method does. I.e.
@@ -260,8 +260,8 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 
 	/**
 	 * Get the junit runner delegate that handles the test at index
-	 * <code>testIndex</code>. Throws a {@link RuntimeException} if a delegator
-	 * is not found for the specific test index.
+	 * <code>testIndex</code>. Throws a {@link RuntimeException} if a
+	 * delegator is not found for the specific test index.
 	 * 
 	 * @param testIndex
 	 *            The test index that a delegator should hold.
