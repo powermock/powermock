@@ -49,9 +49,9 @@ public class PrivateMethodDemo {
 	private Integer aTestMethod(Integer aValue) {
 		return aValue;
 	}
-	
+
 	public void doArrayStuff(String v) {
-		doArrayInternal(new String[] {v});
+		doArrayInternal(new String[] { v });
 	}
 
 	private void doArrayInternal(String[] strings) {
@@ -63,4 +63,17 @@ public class PrivateMethodDemo {
 
 	private void doObjectInternal(Object o) {
 	}
+
+	public int invokeVarArgsMethod(int a, int b) {
+		return varArgsMethod(a, b);
+	}
+
+	private int varArgsMethod(int... ints) {
+		int sum = 0;
+		for (int i : ints) {
+			sum += i;
+		}
+		return sum;
+	}
+
 }

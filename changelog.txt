@@ -22,6 +22,7 @@ Change log 0.8 (under development)
 * Added support for mocking classes in signed jar files
 * EasyMock matchers now works in combination with PowerMock's expectPrivate(..)
 * Added support for invoking var args constructors and methods using Whitebox
+* Added support for expecting private methods with var args parameter
                              
 Change log 0.7 (released)
 -------------------------

@@ -16,7 +16,6 @@
 package org.powermock;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.LinkedList;
@@ -1291,29 +1290,8 @@ public class PowerMock {
 
 	@SuppressWarnings("unchecked")
 	private static <T> IExpectationSetters<T> doExpectPrivate(Object instance, Method methodToExpect, Object... arguments) throws Exception {
-		doInvokeMethod(instance, methodToExpect, arguments);
+		Whitebox.performMethodInvocation(instance, methodToExpect, arguments);
 		return (IExpectationSetters<T>) org.easymock.classextension.EasyMock.expectLastCall();
-	}
-
-	private static void doInvokeMethod(Object instance, Method methodToExpect, Object... arguments) throws Exception {
-		if (methodToExpect == null) {
-			throw new IllegalArgumentException("Method cannot be null");
-		}
-
-		methodToExpect.setAccessible(true);
-
-		try {
-			methodToExpect.invoke(instance, arguments == null ? new Object[] { arguments } : arguments);
-		} catch (InvocationTargetException e) {
-			final Throwable cause = e.getCause();
-			if (cause instanceof Exception) {
-				throw (Exception) cause;
-			} else {
-				throw new RuntimeException(cause);
-			}
-		} catch (Exception e) {
-			throw new RuntimeException("Failed to invoke method '" + methodToExpect.getName() + "'. Reason was: '" + e.getMessage() + "'.", e);
-		}
 	}
 
 	private static synchronized void replay(Class<?>... types) {

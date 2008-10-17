@@ -347,8 +347,7 @@ public class Whitebox {
 	/**
 	 * Finds and returns a certain method. If the method couldn't be found this
 	 * method delegates to
-	 * {@link Whitebox#throwExceptionIfMethodWasNotFound(Object, String, Method, Object...)}
-	 * .
+	 * {@link Whitebox#throwExceptionIfMethodWasNotFound(Object, String, Method, Object...)} .
 	 * 
 	 * @param tested
 	 * @param declaringClass
@@ -442,7 +441,7 @@ public class Whitebox {
 		return primitiveMethodFound;
 	}
 
-/**
+	/**
 	 * Finds and returns a certain constructor. If the constructor couldn't be
 	 * found this method delegates to
 	 * {@link Whitebox#throwExceptionIfConstructorWasNotFound(Class, Object...).
@@ -713,8 +712,7 @@ public class Whitebox {
 	 * <code>klass</code>.
 	 * 
 	 * @param klass
-	 *            The class where the constructor is located. <code>null</code>
-	 *            ).
+	 *            The class where the constructor is located. <code>null</code> ).
 	 * @return A <code>java.lang.reflect.Constructor</code>.
 	 */
 	public static Constructor<?> getFirstParentConstructor(Class<?> klass) {
@@ -728,9 +726,9 @@ public class Whitebox {
 
 	/**
 	 * Finds and returns a method based on the input parameters. If no
-	 * <code>parameterTypes</code> are present the method will return the first
-	 * method with name <code>methodNameToMock</code>. If no method was found,
-	 * <code>null</code> will be returned.
+	 * <code>parameterTypes</code> are present the method will return the
+	 * first method with name <code>methodNameToMock</code>. If no method was
+	 * found, <code>null</code> will be returned.
 	 * 
 	 * @param <T>
 	 * @param type
@@ -857,8 +855,8 @@ public class Whitebox {
 	}
 
 	/**
-	 * Get an array of {@link Method}'s that matches the supplied list of method
-	 * names.
+	 * Get an array of {@link Method}'s that matches the supplied list of
+	 * method names.
 	 * 
 	 * @param clazz
 	 *            The class that should contain the methods.
@@ -882,7 +880,7 @@ public class Whitebox {
 		return methodArray;
 	}
 
-	private static Object performMethodInvocation(Object tested, Method methodToInvoke, Object... arguments) throws Exception {
+	static Object performMethodInvocation(Object tested, Method methodToInvoke, Object... arguments) throws Exception {
 		methodToInvoke.setAccessible(true);
 		try {
 			if (methodToInvoke.isVarArgs()) {
@@ -890,7 +888,7 @@ public class Whitebox {
 				Object arrayInstance = createAndPopulateArray(arrayType, arguments);
 				return methodToInvoke.invoke(tested, new Object[] { arrayInstance });
 			} else {
-				return methodToInvoke.invoke(tested, arguments);
+				return methodToInvoke.invoke(tested, arguments == null ? new Object[] { arguments } : arguments);
 			}
 		} catch (InvocationTargetException e) {
 			Throwable cause = e.getCause();

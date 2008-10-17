@@ -33,7 +33,6 @@ import org.junit.runner.RunWith;
 
 import samples.privatemocking.PrivateMethodDemo;
 
-
 /**
  * Test class to demonstrate private method mocking.
  * 
@@ -45,8 +44,7 @@ public class PrivateMethodDemoTest {
 
 	@Test
 	public void testMockPrivateMethod() throws Exception {
-		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class,
-				"sayIt", String.class);
+		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class, "sayIt", String.class);
 		String expected = "Hello altered World";
 		expectPrivate(tested, "sayIt", "name").andReturn(expected);
 		replay(tested);
@@ -62,8 +60,7 @@ public class PrivateMethodDemoTest {
 		PrivateMethodDemo tested = new PrivateMethodDemo();
 		String expected = "Hello altered World";
 
-		String actual = (String) Whitebox.invokeMethod(tested, "sayIt",
-				"altered World");
+		String actual = (String) Whitebox.invokeMethod(tested, "sayIt", "altered World");
 
 		assertEquals("Expected and actual did not match", expected, actual);
 	}
@@ -81,12 +78,10 @@ public class PrivateMethodDemoTest {
 
 	@Test
 	public void testMethodCallingPrimitiveTestMethod() throws Exception {
-		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class,
-				"aTestMethod", int.class);
+		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class, "aTestMethod", int.class);
 
 		final int expected = 42;
-		expectPrivate(tested, "aTestMethod", new Class<?>[] { int.class }, 10)
-				.andReturn(expected);
+		expectPrivate(tested, "aTestMethod", new Class<?>[] { int.class }, 10).andReturn(expected);
 
 		replay(tested);
 
@@ -99,12 +94,10 @@ public class PrivateMethodDemoTest {
 
 	@Test
 	public void testMethodCallingWrappedTestMethod() throws Exception {
-		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class,
-				"aTestMethod", Integer.class);
+		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class, "aTestMethod", Integer.class);
 
 		final int expected = 42;
-		expectPrivate(tested, "aTestMethod", new Class<?>[] { Integer.class },
-				new Integer(15)).andReturn(expected);
+		expectPrivate(tested, "aTestMethod", new Class<?>[] { Integer.class }, new Integer(15)).andReturn(expected);
 
 		replay(tested);
 
@@ -116,13 +109,10 @@ public class PrivateMethodDemoTest {
 	}
 
 	@Test
-	public void testMethodCallingWrappedTestMethod_reflectiveMethodLookup()
-			throws Exception {
-		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class,
-				"aTestMethod", Integer.class);
+	public void testMethodCallingWrappedTestMethod_reflectiveMethodLookup() throws Exception {
+		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class, "aTestMethod", Integer.class);
 
-		final Method methodToExpect = PrivateMethodDemo.class
-				.getDeclaredMethod("aTestMethod", Integer.class);
+		final Method methodToExpect = PrivateMethodDemo.class.getDeclaredMethod("aTestMethod", Integer.class);
 
 		final int expected = 42;
 		expectPrivate(tested, methodToExpect, 15).andReturn(expected);
@@ -137,12 +127,10 @@ public class PrivateMethodDemoTest {
 	}
 
 	@Test
-	public void testExpectPrivateWithArrayMatcher()
-			throws Exception {
-		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class,
-				"doArrayInternal");
+	public void testExpectPrivateWithArrayMatcher() throws Exception {
+		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class, "doArrayInternal");
 
-		expectPrivate(tested, "doArrayInternal", EasyMock.aryEq(new String[] {"hello"}));
+		expectPrivate(tested, "doArrayInternal", EasyMock.aryEq(new String[] { "hello" }));
 
 		replay(tested);
 
@@ -152,16 +140,31 @@ public class PrivateMethodDemoTest {
 	}
 
 	@Test
-	public void testExpectPrivateWithObjectMatcher()
-			throws Exception {
-		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class,
-				"doObjectInternal");
+	public void testExpectPrivateWithObjectMatcher() throws Exception {
+		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class, "doObjectInternal");
 
 		expectPrivate(tested, "doObjectInternal", EasyMock.isA(CharSequence.class));
 
 		replay(tested);
 
 		tested.doObjectStuff("hello");
+
+		verify(tested);
+	}
+
+	@Test
+	public void testExpectPrivateMethodWithVarArgsParameters() throws Exception {
+		final String methodToExpect = "varArgsMethod";
+		final int expected = 7;
+		final int valueA = 2;
+		final int valueB = 3;
+		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class, methodToExpect);
+
+		expectPrivate(tested, methodToExpect, valueA, valueB).andReturn(expected);
+
+		replay(tested);
+
+		assertEquals(expected, tested.invokeVarArgsMethod(valueA, valueB));
 
 		verify(tested);
 	}
