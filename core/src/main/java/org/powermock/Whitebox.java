@@ -234,7 +234,7 @@ public class Whitebox {
 	 *            the expected type of the field
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T getInternalState(Object object, String fieldName, Class<?> where, T type) {
+	public static <T> T getInternalState(Object object, String fieldName, Class<?> where, Class<T> type) {
 
 		if (type == null) {
 			throw new IllegalArgumentException("type cannot be null.");

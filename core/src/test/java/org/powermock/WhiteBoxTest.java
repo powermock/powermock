@@ -71,7 +71,7 @@ public class WhiteBoxTest {
 	public void testGetInternalState_parmaterizedType() throws Exception {
 		ClassWithInternalState tested = new ClassWithInternalState();
 		tested.increaseInteralState();
-		int internalState = Whitebox.getInternalState(tested, "internalState", tested.getClass(), 0);
+		int internalState = Whitebox.getInternalState(tested, "internalState", tested.getClass(), int.class);
 		assertEquals(1, internalState);
 	}
 
@@ -101,7 +101,7 @@ public class WhiteBoxTest {
 	@Test
 	public void testGetInternalState_superClass_parameterized() throws Exception {
 		ClassWithSubclassThatHasInternalState tested = new ClassWithSubclassThatHasInternalState();
-		int internalState = Whitebox.getInternalState(tested, "internalState", ClassWithInternalState.class, 100);
+		int internalState = Whitebox.getInternalState(tested, "internalState", ClassWithInternalState.class, int.class);
 		assertEquals(0, internalState);
 	}
 

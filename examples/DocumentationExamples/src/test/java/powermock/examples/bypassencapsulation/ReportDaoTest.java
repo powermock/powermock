@@ -28,7 +28,7 @@ import org.powermock.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import powermock.examples.bypassencapsulation.nontest.DistributedCache;
+import powermock.examples.bypassencapsulation.nontest.Cache;
 import powermock.examples.bypassencapsulation.nontest.Report;
 
 /**
@@ -47,11 +47,10 @@ public class ReportDaoTest {
 		final Report report = new Report(reportName);
 
 		// Mock only the modifyData method
-		ReportDao tested = createPartialMock(ReportDao.class,
-				getReportFromTargetNameMethodName);
+		ReportDao tested = createPartialMock(ReportDao.class, getReportFromTargetNameMethodName);
 
 		// Create a mock of the distributed cache.
-		DistributedCache distributedCacheMock = createMock(DistributedCache.class);
+		Cache cacheMock = createMock(Cache.class);
 
 		/*
 		 * Now that we have a mock of the distributed cache we need to set this
@@ -68,24 +67,22 @@ public class ReportDaoTest {
 		 * for the cache field in the CGLib generated proxy where it'll
 		 * obviously not find it.
 		 */
-		Whitebox.setInternalState(tested, "cache", distributedCacheMock,
-				ReportDao.class);
+		Whitebox.setInternalState(tested, "cache", cacheMock, ReportDao.class);
 
 		/*
 		 * Create an expectation for the private method
 		 * "getReportFromTargetName".
 		 */
-		expectPrivate(tested, getReportFromTargetNameMethodName, reportName)
-				.andReturn(report);
+		expectPrivate(tested, getReportFromTargetNameMethodName, reportName).andReturn(report);
 
 		// Expect the call to invalidate cache.
-		distributedCacheMock.invalidateCache(report);
+		cacheMock.invalidateCache(report);
 		expectLastCall().once();
 
-		replay(tested, distributedCacheMock);
+		replay(tested, cacheMock);
 
 		tested.deleteReport(reportName);
 
-		verify(tested, distributedCacheMock);
+		verify(tested, cacheMock);
 	}
 }

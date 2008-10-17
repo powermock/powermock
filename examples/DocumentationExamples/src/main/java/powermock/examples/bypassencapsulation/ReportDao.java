@@ -15,7 +15,7 @@
  */
 package powermock.examples.bypassencapsulation;
 
-import powermock.examples.bypassencapsulation.nontest.DistributedCache;
+import powermock.examples.bypassencapsulation.nontest.Cache;
 import powermock.examples.bypassencapsulation.nontest.Injectable;
 import powermock.examples.bypassencapsulation.nontest.Report;
 
@@ -26,7 +26,7 @@ import powermock.examples.bypassencapsulation.nontest.Report;
 public class ReportDao {
 
 	@Injectable
-	private DistributedCache cache;
+	private Cache cache;
 
 	public void deleteReport(final String reportName) {
 		Report report = getReportFromTargetName(reportName);
@@ -35,7 +35,7 @@ public class ReportDao {
 	}
 
 	private Report getReportFromTargetName(final String reportName) {
-		/* Imagine that this method does something that may methods share */
+		/* Imagine that this method does something that many methods share */
 		return null;
 	}
 }
