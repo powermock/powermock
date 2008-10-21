@@ -42,11 +42,10 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 
 	private List<MockTransformer> mockTransformerChain;
 
-	private Set<String> modify = Collections
-			.synchronizedSet(new HashSet<String>());
+	private Set<String> modify = Collections.synchronizedSet(new HashSet<String>());
 
-	final private String[] ignore = new String[] { "org.junit.", "junit.",
-			"org.easymock.", "org.powermock.", "net.sf.cglib.", "javassist." };
+	final private String[] ignore = new String[] { "org.hamcrest.", "org.junit.", "junit.", "org.easymock.", "org.powermock.", "net.sf.cglib.",
+			"javassist." };
 
 	// TODO Why is this needed!? We need to find a better solution.
 	final private String ignoredClass = "net.sf.cglib.proxy.Enhancer$EnhancerKey$$KeyFactoryByCGLIB$$";
@@ -54,12 +53,9 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 	private ClassPool classPool = new ClassPool();
 
 	public MockClassLoader(String... classesToMock) {
-		super(MockClassLoader.class.getClassLoader(), new String[] { "java.",
-				"javax.swing.", "sun.", "org.junit.", "junit.",
-				"org.powermock.modules.junit4.internal.",
-				"org.powermock.modules.junit4.legacy.internal.",
-				"org.powermock.modules.junit4.common.internal.",
-				"org.powermock.modules.junit3.internal." });
+		super(MockClassLoader.class.getClassLoader(), new String[] { "org.hamcrest.", "java.", "javax.swing.", "sun.", "org.junit.", "junit.",
+				"org.powermock.modules.junit4.internal.", "org.powermock.modules.junit4.legacy.internal.",
+				"org.powermock.modules.junit4.common.internal.", "org.powermock.modules.junit3.internal." });
 
 		addClassesToModify(classesToMock);
 		classPool.appendClassPath(new ClassClassPath(this.getClass()));
@@ -80,8 +76,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 		}
 	}
 
-	protected Class<?> loadModifiedClass(String s) throws ClassFormatError,
-			ClassNotFoundException {
+	protected Class<?> loadModifiedClass(String s) throws ClassFormatError, ClassNotFoundException {
 		Class<?> loadedClass = null;
 		// findSystemClass(s);
 		deferTo.loadClass(s);
@@ -93,8 +88,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 		return loadedClass;
 	}
 
-	private Class<?> loadUnmockedClass(String name) throws ClassFormatError,
-			ClassNotFoundException {
+	private Class<?> loadUnmockedClass(String name) throws ClassFormatError, ClassNotFoundException {
 		byte bytes[] = null;
 		try {
 			/*
@@ -144,16 +138,13 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 				clazz = type.toBytecode();
 			}
 		} catch (Exception e) {
-			throw new IllegalStateException(
-					"Failed to transform class with name " + name
-							+ ". Reason: " + e.getMessage(), e);
+			throw new IllegalStateException("Failed to transform class with name " + name + ". Reason: " + e.getMessage(), e);
 		}
 
 		return defineClass(name, clazz, 0, clazz.length);
 	}
 
-	public void setMockTransformerChain(
-			List<MockTransformer> mockTransformerChain) {
+	public void setMockTransformerChain(List<MockTransformer> mockTransformerChain) {
 		this.mockTransformerChain = mockTransformerChain;
 	}
 }

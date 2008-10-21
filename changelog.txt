@@ -3,7 +3,6 @@ Change log 0.8 (under development)
 * The junit4 test module now work with JUnit 4.5 (although using the old, now deprecated, approach of JUnit 4.4).
 * Upgraded to EasyMock 2.4
 * Upgraded to JavaAssist 3.8.0.GA
-* Fixed the error message that was thrown when a constructor was not found when using mocks as arguments with mockMethod.
 * WhiteBox invoke method and invoke constructor methods now throws an IllegalArgumentException if the first argument is null.
 * Replay/verify works as expected when mixing classes and instance mocks.
 * Better error message when expectNew fails due to too few calls to new when a method was invoked using reflection.
@@ -12,8 +11,9 @@ Change log 0.8 (under development)
 * expectNew(..).andThrow(..) now works with checked exceptions
 * Added WhiteBox functionality to instantiate a class without invoking its constructor without using byte-code manipulation. Works in multiple JVM's.
 * mockMethodX is renamed to createPartialMockX        
+* Fixed the error message that was thrown when a constructor was not found when using mocks as arguments with createPartialMock.
 * Suppress constructor code now works as expected
-* mockConstruction(..) was removed. You should always use expectNew(..) instead. There's a utility method in PowerMock called createMockAndExpectNew can be used as a substitute for mockConstruction(..). 
+* mockConstruction(..) was removed. You should always use expectNew(..) instead. There's a utility method in PowerMock called createMockAndExpectNew that can be used as a substitute for mockConstruction(..). 
 * Better error message when a class is not replayed when doing expectNew.
 * Added support to easy suppress several methods in the same class.
 * doInvokeMethod in PowerMock now catches and deals correctly with InvocationTargetExceptions.
@@ -23,6 +23,7 @@ Change log 0.8 (under development)
 * EasyMock matchers now works in combination with PowerMock's expectPrivate(..)
 * Added support for invoking var args constructors and methods using Whitebox
 * Added support for expecting private methods with var args parameter
+* PowerMock now supports Hamcrest matchers
                              
 Change log 0.7 (released)
 -------------------------
