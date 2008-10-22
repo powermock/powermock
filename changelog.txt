@@ -24,7 +24,7 @@ Change log 0.8 (under development)
 * Added support for invoking var args constructors and methods using Whitebox
 * Added support for expecting private methods with var args parameter
 * PowerMock now supports Hamcrest matchers
-* Exceptions are no propagated correctly from the junit runners.
+* Exceptions are now propagated correctly from the junit runners.
                              
 Change log 0.7 (released)
 -------------------------
