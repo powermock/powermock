@@ -1,5 +1,8 @@
-Change log 0.8 (under development)
+Change log 0.9 (under development)
 ----------------------------------
+
+Change log 0.8 (released 2008-10-22)
+-----------------------------------
 * The junit4 test module now work with JUnit 4.5 (although using the old, now deprecated, approach of JUnit 4.4).
 * Upgraded to EasyMock 2.4
 * Upgraded to JavaAssist 3.8.0.GA
