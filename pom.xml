@@ -49,6 +49,18 @@
       <url>http://code.google.com/p/powermock/source/browse/</url>
    </scm>
    <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>file</id>
+      <name>Local file Repository</name>
+      <url>file://target/repo</url>
+      <layout>default</layout>
+    </repository>
+    <site>
+       <id>powermock-local</id>
+       <name>Local Site</name>
+       <url>target/site</url>
+      </site>
       <!--
          Provide username and such in your local settings.xml, as
          described in:
