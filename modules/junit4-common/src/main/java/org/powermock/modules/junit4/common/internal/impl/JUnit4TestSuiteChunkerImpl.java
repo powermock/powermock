@@ -16,6 +16,7 @@
 package org.powermock.modules.junit4.common.internal.impl;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -44,7 +45,8 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	private Description description;
 	private final Class<? extends PowerMockJUnitRunnerDelegate> runnerDelegateImplementationType;
 
-	public JUnit4TestSuiteChunkerImpl(Class<?> testClass, Class<? extends PowerMockJUnitRunnerDelegate> runnerDelegateImplementationType) {
+	public JUnit4TestSuiteChunkerImpl(Class<?> testClass, Class<? extends PowerMockJUnitRunnerDelegate> runnerDelegateImplementationType)
+			throws Exception {
 		super(testClass);
 		if (testClass == null) {
 			throw new IllegalArgumentException("You must supply a test class");
@@ -58,9 +60,13 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 
 		try {
 			createTestDelegators(testClass, getChunkEntries(testClass));
-			// createTestChunks(testClass, getAllChunkEntries());
-		} catch (Exception e) {
-			throw new RuntimeException("Internal error: Failed to chunk the test suite.", e);
+		} catch (InvocationTargetException e) {
+			final Throwable cause = e.getCause();
+			if (cause instanceof Exception) {
+				throw (Exception) cause;
+			} else {
+				throw new RuntimeException(cause);
+			}
 		}
 	}
 

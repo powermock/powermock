@@ -35,25 +35,27 @@ import org.powermock.modules.junit3.internal.JUnit3TestSuiteChunker;
 import org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate;
 import org.powermock.tests.utils.impl.AbstractTestSuiteChunkerImpl;
 
-public class JUnit3TestSuiteChunkerImpl extends
-		AbstractTestSuiteChunkerImpl<PowerMockJUnit3RunnerDelegate> implements
-		JUnit3TestSuiteChunker {
+public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<PowerMockJUnit3RunnerDelegate> implements JUnit3TestSuiteChunker {
 
 	private String name;
 
-	public JUnit3TestSuiteChunkerImpl(Class<? extends TestCase>... testClasses) {
+	public JUnit3TestSuiteChunkerImpl(Class<? extends TestCase>... testClasses) throws Exception {
 		super(testClasses);
 		try {
 			for (Class<? extends TestCase> testClass : testClasses) {
 				createTestDelegators(testClass, getChunkEntries(testClass));
 			}
 		} catch (Exception e) {
-			throw new RuntimeException("Failed to chunk the test suite.", e);
+			final Throwable cause = e.getCause();
+			if (cause instanceof Exception) {
+				throw (Exception) cause;
+			} else {
+				throw new RuntimeException(cause);
+			}
 		}
 	}
 
-	public JUnit3TestSuiteChunkerImpl(String name,
-			Class<? extends TestCase>... testClasses) {
+	public JUnit3TestSuiteChunkerImpl(String name, Class<? extends TestCase>... testClasses) throws Exception {
 		this(testClasses);
 		this.name = name;
 	}
@@ -62,19 +64,14 @@ public class JUnit3TestSuiteChunkerImpl extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected PowerMockJUnit3RunnerDelegate createDelegatorFromClassloader(
-			MockClassLoader classLoader, Class<?> testClass,
+	protected PowerMockJUnit3RunnerDelegate createDelegatorFromClassloader(MockClassLoader classLoader, Class<?> testClass,
 			final List<Method> methodsToTest) throws Exception {
 
-		final Class<?> testClassLoadedByMockedClassLoader = classLoader
-				.loadClass(testClass.getName());
-		Class<?> delegateClass = classLoader
-				.loadClass(PowerMockJUnit3RunnerDelegateImpl.class.getName());
-		Constructor<?> con = delegateClass.getConstructor(new Class[] {
-				Class.class, Method[].class });
-		final PowerMockJUnit3RunnerDelegate newDelegate = (PowerMockJUnit3RunnerDelegate) con
-				.newInstance(new Object[] { testClassLoadedByMockedClassLoader,
-						methodsToTest.toArray(new Method[0]) });
+		final Class<?> testClassLoadedByMockedClassLoader = classLoader.loadClass(testClass.getName());
+		Class<?> delegateClass = classLoader.loadClass(PowerMockJUnit3RunnerDelegateImpl.class.getName());
+		Constructor<?> con = delegateClass.getConstructor(new Class[] { Class.class, Method[].class });
+		final PowerMockJUnit3RunnerDelegate newDelegate = (PowerMockJUnit3RunnerDelegate) con.newInstance(new Object[] {
+				testClassLoadedByMockedClassLoader, methodsToTest.toArray(new Method[0]) });
 		newDelegate.setName(name);
 		return newDelegate;
 	}
@@ -82,8 +79,7 @@ public class JUnit3TestSuiteChunkerImpl extends
 	@Override
 	protected void chunkClass(Class<?> testClass) {
 		if (!TestCase.class.isAssignableFrom(testClass)) {
-			throw new IllegalArgumentException(testClass.getName()
-					+ " must be a subtype of " + TestCase.class.getName());
+			throw new IllegalArgumentException(testClass.getName() + " must be a subtype of " + TestCase.class.getName());
 		}
 		super.chunkClass(testClass);
 	}
@@ -105,8 +101,7 @@ public class JUnit3TestSuiteChunkerImpl extends
 	 * {@inheritDoc}
 	 */
 	public boolean shouldExecuteTestForMethod(Method potentialTestMethod) {
-		return potentialTestMethod.getName().startsWith("test")
-				&& Modifier.isPublic(potentialTestMethod.getModifiers())
+		return potentialTestMethod.getName().startsWith("test") && Modifier.isPublic(potentialTestMethod.getModifiers())
 				&& potentialTestMethod.getReturnType().equals(Void.TYPE);
 	}
 
@@ -127,10 +122,8 @@ public class JUnit3TestSuiteChunkerImpl extends
 				addTest((Test) tests.nextElement());
 			}
 		} else {
-			throw new IllegalArgumentException("The test type "
-					+ test.getClass().getName() + " is not supported. Only "
-					+ TestCase.class.getName() + " and "
-					+ TestSuite.class.getName() + " are supported.");
+			throw new IllegalArgumentException("The test type " + test.getClass().getName() + " is not supported. Only " + TestCase.class.getName()
+					+ " and " + TestSuite.class.getName() + " are supported.");
 		}
 	}
 
@@ -178,12 +171,10 @@ public class JUnit3TestSuiteChunkerImpl extends
 
 	private Iterator<Entry<MockClassLoader, List<Method>>> getChunkIterator() {
 		Set<Entry<MockClassLoader, List<Method>>> entrySet = getAllChunkEntries();
-		Iterator<Entry<MockClassLoader, List<Method>>> iterator = entrySet
-				.iterator();
+		Iterator<Entry<MockClassLoader, List<Method>>> iterator = entrySet.iterator();
 
 		if (delegates.size() != getChunkSize()) {
-			throw new IllegalStateException(
-					"Internal error: There must be an equal number of suites and delegates.");
+			throw new IllegalStateException("Internal error: There must be an equal number of suites and delegates.");
 		}
 		return iterator;
 	}
@@ -192,8 +183,7 @@ public class JUnit3TestSuiteChunkerImpl extends
 	 * {@inheritDoc}
 	 */
 	public Test testAt(int index) {
-		return delegates.get(getDelegatorIndex(index)).testAt(
-				getInternalTestIndex(index));
+		return delegates.get(getDelegatorIndex(index)).testAt(getInternalTestIndex(index));
 	}
 
 	/**
