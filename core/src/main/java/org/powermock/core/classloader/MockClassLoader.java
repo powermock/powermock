@@ -20,11 +20,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.powermock.core.transformers.MockTransformer;
-
 import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
+
+import org.powermock.core.transformers.MockTransformer;
 
 /**
  * Mock all classes except system classes.
@@ -108,8 +108,11 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 			if (name.startsWith(ignoredClass) || name.startsWith(ignoredClass2)) {
 				// ignore
 			} else {
-				bytes = classPool.get(name).toBytecode();
-				// bytes = ClassPool.getDefault().get(name).toBytecode();
+				final CtClass ctClass = classPool.get(name);
+				if (ctClass.isFrozen()) {
+					ctClass.defrost();
+				}
+				bytes = ctClass.toBytecode();
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
