@@ -19,6 +19,7 @@ import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;
+import javassist.CtField;
 import javassist.CtMethod;
 import javassist.CtNewConstructor;
 import javassist.Modifier;
@@ -65,6 +66,14 @@ public class MainMockTransformer implements MockTransformer {
 		// Convert all constructors to public
 		for (CtConstructor c : clazz.getDeclaredConstructors()) {
 			c.setModifiers(Modifier.PUBLIC);
+		}
+
+		// Remove final from all static final fields
+		for (CtField f : clazz.getDeclaredFields()) {
+			final int modifiers = f.getModifiers();
+			if (Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers)) {
+				f.setModifiers(modifiers ^ Modifier.FINAL);
+			}
 		}
 
 		clazz.instrument(new ExprEditor() {

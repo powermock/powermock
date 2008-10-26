@@ -15,10 +15,15 @@
  */
 package org.powermock.modules.junit4.staticinitializer;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+
+import java.util.HashSet;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.Whitebox;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -31,9 +36,15 @@ public class StaticInitializerExampleTest {
 	@Test
 	@Ignore("Does not work in maven on Mac")
 	public void testSupressStaticInitializer() throws Exception {
-		Assert
-				.assertNull(
-						"Should be null because the static initializer should be suppressed",
-						StaticInitializerExample.getMySet());
+		assertNull("Should be null because the static initializer should be suppressed", StaticInitializerExample.getMySet());
+	}
+
+	@Test
+	@Ignore("Does not work in maven on Mac")
+	public void testSupressStaticInitializerAndSetFinalField() throws Exception {
+		assertNull("Should be null because the static initializer should be suppressed", StaticInitializerExample.getMySet());
+		final HashSet<String> hashSet = new HashSet<String>();
+		Whitebox.setInternalState(StaticInitializerExample.class, "mySet", hashSet);
+		assertSame(hashSet, Whitebox.getInternalState(StaticInitializerExample.class, "mySet"));
 	}
 }
