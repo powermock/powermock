@@ -15,21 +15,20 @@
  */
 package org.powermock.modules.junit4.privatemocking;
 
-import static org.powermock.PowerMock.expectPrivate;
+import static org.junit.Assert.assertEquals;
 import static org.powermock.PowerMock.createPartialMock;
+import static org.powermock.PowerMock.expectPrivate;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
-import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.Method;
 
+import org.easymock.EasyMock;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.powermock.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.easymock.EasyMock;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import samples.privatemocking.PrivateMethodDemo;
 
