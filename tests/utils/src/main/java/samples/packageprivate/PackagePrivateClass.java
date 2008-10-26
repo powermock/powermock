@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package samples.nice;
+package samples.packageprivate;
 
-public class NiceDemo {
+/**
+ * This class demonstrates the ability for PowerMock to mock package private
+ * classes. This is normally not an issue but since we've changed the CgLib
+ * naming policy to allow for signed mocking PowerMock needs to byte-code
+ * manipulate this class.
+ */
+class PackagePrivateClass {
 
-	public void callAThenB() {
-		A("String");
-		B("String 2");
+	public int getValue() {
+		return returnAValue();
 	}
 
-	void A(String aString) {
-		// Does nothing
-	}
-
-	void B(String aString) {
-		// Does nothing
+	private int returnAValue() {
+		return 82;
 	}
 }

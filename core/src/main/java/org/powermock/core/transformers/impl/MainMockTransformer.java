@@ -41,6 +41,13 @@ public class MainMockTransformer implements MockTransformer {
 			clazz.defrost();
 		}
 
+		/*
+		 * Set class to modifier to public to allow for mocking for package
+		 * private classes. This is needed because we've changed to CgLib naming
+		 * policy to allow for mocking of signed classes.
+		 */
+		clazz.setModifiers(clazz.getModifiers() | Modifier.PUBLIC);
+
 		if (MockGateway.staticConstructorCall(clazz.getName()) != MockGateway.PROCEED) {
 			CtConstructor classInitializer = clazz.makeClassInitializer();
 			classInitializer.setBody("{}");
