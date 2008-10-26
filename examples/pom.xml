@@ -18,6 +18,7 @@
     <module>DocumentationExamples</module>
     <module>SignedMocking</module>
     <module>hamcrestexample</module>
+    <module>ApacheCLIExample</module>
   </modules>   <dependencyManagement>
       <dependencies>
          <dependency>

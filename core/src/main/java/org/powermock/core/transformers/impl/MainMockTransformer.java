@@ -89,7 +89,13 @@ public class MainMockTransformer implements MockTransformer {
 				 * "suppressConstructorCode" both here and in NewExpr.
 				 */
 				if (!c.getClassName().startsWith("java.lang")) {
-
+					CtClass superclass = null;
+					try {
+						superclass = c.getEnclosingClass().getSuperclass();
+					} catch (NotFoundException e) {
+						throw new RuntimeException(e);
+					}
+					
 					/*
 					 * Create a default constructor in the super class if it
 					 * doesn't exist. This is needed because if the code in the
@@ -101,13 +107,18 @@ public class MainMockTransformer implements MockTransformer {
 					final StringBuilder code = new StringBuilder();
 					code.append("{Object value =").append(MockGateway.class.getName()).append(".constructorCall($class, $args, $sig);");
 					code.append("if (value != ").append(MockGateway.class.getName()).append(".PROCEED){");
+
 					/*
 					 * TODO Suppress and lazy inject field (when this feature is
 					 * ready).
 					 */
-					code.append("super((" + IndicateReloadClass.class.getName() + ") null);");
+					if (superclass.getName().equals(Object.class.getName())) {
+						code.append(" super();");
+					} else {
+						code.append(" super((" + IndicateReloadClass.class.getName() + ") null);");
+					}
 					code.append("} else {");
-					code.append("$proceed($$);");
+					code.append("   $proceed($$);");
 					code.append("}}");
 					c.replace(code.toString());
 				}

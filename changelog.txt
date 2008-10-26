@@ -2,9 +2,10 @@ Change log 0.8.1 (under development)
 ----------------------------------
 * Added PowerMock API method "createPartialMockAndInvokeDefaultConstructor" that invokes a default constructor after mock creation (even if it's private).
 * createPartialMock now works as expected
-* Fixed so that for it works to mock package private classes (even if they're signed)
+* Fixed so that it works to mock package private classes (even if they're signed)
 * It now works to set a static final field after the static initializes have been suppressed.
-
+* Fixed a serious bug that caused classes extending to java.lang.Object to be non-mockable.
+                                                                                           
 Change log 0.8 (released 2008-10-22)
 -----------------------------------
 * The junit4 test module now work with JUnit 4.5 (although using the old, now deprecated, approach of JUnit 4.4).
