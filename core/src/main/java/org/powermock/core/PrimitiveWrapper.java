@@ -73,7 +73,7 @@ public class PrimitiveWrapper {
 	 * 
 	 * @param wrapperType
 	 *            The wrapper type to convert to its primitive counter part.
-	 * @return The primitive counter part of <code>null</code> if the class
+	 * @return The primitive counter part or <code>null</code> if the class
 	 *         did not have a primitive counter part.
 	 * 
 	 */

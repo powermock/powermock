@@ -16,8 +16,21 @@
 package samples.partialmocking;
 
 public class MockSelfDemo {
-	
+
 	private int hello;
+
+	@SuppressWarnings("unused")
+	private MockSelfDemo() {
+		hello = 42;
+	}
+
+	public MockSelfDemo(int hello) {
+		this.hello = hello;
+	}
+
+	public MockSelfDemo(Object string) {
+		this.hello = 4;
+	}
 
 	@Override
 	public int hashCode() {

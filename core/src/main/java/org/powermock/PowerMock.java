@@ -612,6 +612,30 @@ public class PowerMock {
 	}
 
 	/**
+	 * A utility method that may be used to mock several methods in an easy way
+	 * (by just passing in the method names of the method you wish to mock). The
+	 * mock object created will support mocking of final and native methods and
+	 * invokes the default constructor (even if it's private).
+	 * 
+	 * @param <T>
+	 *            the type of the mock object
+	 * @param type
+	 *            the type of the mock object
+	 * @param methodNames
+	 *            The names of the methods that should be mocked. If
+	 *            <code>null</code>, then this method will have the same
+	 *            effect as just calling {@link #createMock(Class, Method...)}
+	 *            with the second parameter as <code>null</code> (i.e. all
+	 *            methods in that class will be mocked).
+	 * @return the mock object.
+	 */
+	public static <T> T createPartialMockAndInvokeDefaultConstructor(Class<T> type, String... methodNames) throws Exception {
+		final Constructor<T> declaredConstructor = type.getDeclaredConstructor();
+		declaredConstructor.setAccessible(true);
+		return createMock(type, new ConstructorArgs(declaredConstructor), Whitebox.getMethods(type, methodNames));
+	}
+
+	/**
 	 * * A utility method that may be used to mock several methods in an easy
 	 * way (by just passing in the method names of the method you wish to mock).
 	 * The mock object created will support mocking of final and native methods

@@ -55,6 +55,11 @@ public class MainMockTransformer implements MockTransformer {
 			modifyMethod(clazz, m);
 		}
 
+		// Convert all constructors to public
+		for (CtConstructor c : clazz.getDeclaredConstructors()) {
+			c.setModifiers(Modifier.PUBLIC);
+		}
+
 		clazz.instrument(new ExprEditor() {
 			@Override
 			public void edit(ConstructorCall c) throws CannotCompileException {

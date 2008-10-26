@@ -17,20 +17,20 @@ package org.powermock.modules.junit4.partialmocking;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
-import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.createPartialMockForAllMethodsExcept;
+import static org.junit.Assert.assertEquals;
 import static org.powermock.PowerMock.createPartialMock;
+import static org.powermock.PowerMock.createPartialMockAndInvokeDefaultConstructor;
+import static org.powermock.PowerMock.createPartialMockForAllMethodsExcept;
+import static org.powermock.PowerMock.expectPrivate;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
-import static org.junit.Assert.assertEquals;
 
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import samples.partialmocking.MockSelfDemo;
-
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(MockSelfDemo.class)
@@ -54,8 +54,7 @@ public class MockSelfDemoTest {
 
 		verify(tested);
 
-		assertEquals("Result ought to be \"Hello altered world\".", expected,
-				actual);
+		assertEquals("Result ought to be \"Hello altered world\".", expected, actual);
 	}
 
 	@Test
@@ -75,8 +74,7 @@ public class MockSelfDemoTest {
 
 		verify(tested);
 
-		assertEquals("Result ought to be \"A message:Hello altered world\".",
-				expected, actual);
+		assertEquals("Result ought to be \"A message:Hello altered world\".", expected, actual);
 	}
 
 	@Test
@@ -126,8 +124,7 @@ public class MockSelfDemoTest {
 
 		verify(tested);
 
-		assertEquals("Result ought to be \"Hello altered world\".", expected,
-				actual);
+		assertEquals("Result ought to be \"Hello altered world\".", expected, actual);
 	}
 
 	@Test
@@ -145,6 +142,43 @@ public class MockSelfDemoTest {
 		assertEquals(expected, tested.getString2());
 
 		verify(tested);
+	}
 
+	@Test
+	public void testCreatePartialMockAndInvokeObjectConstructor() throws Exception {
+		tested = createPartialMock(MockSelfDemo.class, new String[] { "aMethod2", "getString" }, new Object());
+
+		tested.aMethod2();
+		expectLastCall().times(1);
+
+		final String expected = "Hello altered world";
+		expect(tested.getString("world")).andReturn(expected);
+
+		replay(tested);
+
+		String actual = tested.aMethod();
+
+		verify(tested);
+
+		assertEquals("Result ought to be \"Hello altered world\".", expected, actual);
+	}
+
+	@Test
+	public void testCreatePartialMockAndInvokeDefaultConstructor() throws Exception {
+		tested = createPartialMockAndInvokeDefaultConstructor(MockSelfDemo.class, "aMethod2", "getString");
+
+		tested.aMethod2();
+		expectLastCall().times(1);
+
+		final String expected = "Hello altered world";
+		expect(tested.getString("world")).andReturn(expected);
+
+		replay(tested);
+
+		String actual = tested.aMethod();
+
+		verify(tested);
+
+		assertEquals("Result ought to be \"Hello altered world\".", expected, actual);
 	}
 }

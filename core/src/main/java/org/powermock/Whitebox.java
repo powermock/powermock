@@ -391,14 +391,13 @@ public class Whitebox {
 					}
 					boolean wrappedMethodFound = true;
 					boolean primitiveMethodFound = true;
-					for (int i = 0; i < paramTypes.length; i++) {
-						if (!paramTypes[i].equals(arguments[i].getClass())) {
-							wrappedMethodFound = false;
-							break;
-						}
+					if (!checkIfTypesAreSame(paramTypes, arguments)) {
+						wrappedMethodFound = false;
 					}
 
-					primitiveMethodFound = findPrimitiveMethodOrConstructor(paramTypes, arguments);
+					if (!checkIfTypesAreSame(paramTypes, convertArgumentTypesToPrimitive(paramTypes, arguments))) {
+						primitiveMethodFound = false;
+					}
 
 					if (wrappedMethodFound || primitiveMethodFound) {
 						if (potentialMethodToInvoke == null) {
@@ -414,7 +413,7 @@ public class Whitebox {
 							throwExceptionWhenMultipleMethodMatchesFound(new Method[] { potentialMethodToInvoke, method });
 						}
 					}
-				} else if (method.isVarArgs() && areArgumentsOfSameType(arguments)) {
+				} else if (method.isVarArgs() && areAllArgumentsOfSameType(arguments)) {
 					potentialMethodToInvoke = method;
 					break;
 				} else if (arguments != null && (paramTypes.length != arguments.length)) {
@@ -425,20 +424,6 @@ public class Whitebox {
 
 		Whitebox.throwExceptionIfMethodWasNotFound(tested.getClass(), methodToExecute, potentialMethodToInvoke, arguments);
 		return potentialMethodToInvoke;
-	}
-
-	private static boolean findPrimitiveMethodOrConstructor(Class<?>[] paramTypes, Object... arguments) {
-		boolean primitiveMethodFound = true;
-		for (int i = 0; i < paramTypes.length; i++) {
-			Class<?> primitiveWrapperType = PrimitiveWrapper.getPrimitiveFromWrapperType(arguments[i].getClass());
-			if (primitiveWrapperType == null) {
-				continue;
-			} else if (!paramTypes[i].equals(primitiveWrapperType)) {
-				primitiveMethodFound = false;
-				break;
-			}
-		}
-		return primitiveMethodFound;
 	}
 
 	/**
@@ -468,14 +453,13 @@ public class Whitebox {
 				}
 				boolean wrappedConstructorFound = true;
 				boolean primitiveConstructorFound = true;
-				for (int i = 0; i < paramTypes.length; i++) {
-					if (!paramTypes[i].equals(arguments[i].getClass())) {
-						wrappedConstructorFound = false;
-						break;
-					}
+				if (!checkIfTypesAreSame(paramTypes, arguments)) {
+					wrappedConstructorFound = false;
 				}
 
-				primitiveConstructorFound = findPrimitiveMethodOrConstructor(paramTypes, arguments);
+				if (!checkIfTypesAreSame(paramTypes, convertArgumentTypesToPrimitive(paramTypes, arguments))) {
+					primitiveConstructorFound = false;
+				}
 
 				if (wrappedConstructorFound || primitiveConstructorFound) {
 					if (potentialConstructor == null) {
@@ -484,9 +468,9 @@ public class Whitebox {
 						/*
 						 * We've already found a constructor match before, this
 						 * means that PowerMock cannot determine which method to
-						 * expect since there are two methods with the same name
-						 * and the same number of arguments but one is using
-						 * wrapper types.
+						 * expect since+ there are two methods with the same
+						 * name and the same number of arguments but one is
+						 * using wrapper types.
 						 */
 						throwExceptionWhenMultipleConstructorMatchesFound(new Constructor<?>[] { potentialConstructor, constructor });
 					}
@@ -498,6 +482,25 @@ public class Whitebox {
 
 		Whitebox.throwExceptionIfConstructorWasNotFound(type, potentialConstructor, arguments);
 		return potentialConstructor;
+	}
+
+	private static Class<?>[] convertArgumentTypesToPrimitive(Class<?>[] paramTypes, Object[] arguments) {
+		Class<?>[] types = new Class<?>[arguments.length];
+		for (int i = 0; i < arguments.length; i++) {
+			Class<?> argumentType = null;
+			if (arguments[i] == null) {
+				argumentType = paramTypes[i];
+			} else {
+				argumentType = getUnmockedType(arguments[i].getClass());
+			}
+			Class<?> primitiveWrapperType = PrimitiveWrapper.getPrimitiveFromWrapperType(argumentType);
+			if (primitiveWrapperType == null) {
+				types[i] = argumentType;
+			} else {
+				types[i] = primitiveWrapperType;
+			}
+		}
+		return types;
 	}
 
 	static void throwExceptionIfMethodWasNotFound(Class<?> type, String methodName, Method methodToMock, Object... arguments) {
@@ -633,7 +636,7 @@ public class Whitebox {
 
 	@SuppressWarnings("unchecked")
 	private static <T> Constructor<T> getPotentialVarArgsConstructor(Class<T> classThatContainsTheConstructorToTest, Object... arguments) {
-		if (areArgumentsOfSameType(arguments)) {
+		if (areAllArgumentsOfSameType(arguments)) {
 			Constructor<T>[] declaredConstructors = (Constructor<T>[]) classThatContainsTheConstructorToTest.getDeclaredConstructors();
 			for (Constructor<T> possibleVarArgsConstructor : declaredConstructors) {
 				if (possibleVarArgsConstructor.isVarArgs()) {
@@ -957,7 +960,7 @@ public class Whitebox {
 	/**
 	 * Check if all arguments are of the same type.
 	 */
-	static boolean areArgumentsOfSameType(Object[] arguments) {
+	static boolean areAllArgumentsOfSameType(Object[] arguments) {
 		if (arguments == null || arguments.length <= 1) {
 			return true;
 		}
@@ -969,6 +972,28 @@ public class Whitebox {
 			}
 		}
 
+		return true;
+	}
+
+	private static boolean checkIfTypesAreSame(Class<?>[] parameterTypes, Object[] arguments) {
+		for (int i = 0; i < parameterTypes.length; i++) {
+			if (arguments[i] == null) {
+				continue;
+			} else {
+				if (!parameterTypes[i].equals(getUnmockedType(arguments[i].getClass()))) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	private static boolean checkIfTypesAreSame(Class<?>[] expectedParameterTypes, Class<?>[] actualParameterTypes) {
+		for (int i = 0; i < expectedParameterTypes.length; i++) {
+			if (!expectedParameterTypes[i].equals(getUnmockedType(actualParameterTypes[i]))) {
+				return false;
+			}
+		}
 		return true;
 	}
 }

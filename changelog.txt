@@ -1,5 +1,7 @@
-Change log 0.9 (under development)
+Change log 0.8.1 (under development)
 ----------------------------------
+* Added PowerMock API method "createPartialMockAndInvokeDefaultConstructor" that invokes a default constructor after mock creation (even if it's private).
+* createPartialMock now works as expected
 
 Change log 0.8 (released 2008-10-22)
 -----------------------------------
