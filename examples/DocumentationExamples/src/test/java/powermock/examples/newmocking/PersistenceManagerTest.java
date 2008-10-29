@@ -40,20 +40,20 @@ public class PersistenceManagerTest {
 	@Test
 	public void testCreateDirectoryStructure_ok() throws Exception {
 		final String path = "directoryPath";
-		File mFileMock = createMock(File.class);
+		File fileMock = createMock(File.class);
 
 		PersistenceManager tested = new PersistenceManager();
 
-		expectNew(File.class).andReturn(mFileMock);
+		expectNew(File.class).andReturn(fileMock);
 
-		expect(mFileMock.exists()).andReturn(false);
-		expect(mFileMock.mkdirs()).andReturn(true);
+		expect(fileMock.exists()).andReturn(false);
+		expect(fileMock.mkdirs()).andReturn(true);
 
-		replay(mFileMock, File.class);
+		replay(fileMock, File.class);
 
 		assertTrue(tested.createDirectoryStructure(path));
 
-		verify(mFileMock, File.class);
+		verify(fileMock, File.class);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
