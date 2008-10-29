@@ -69,7 +69,7 @@ public class PersistenceManagerTest {
 
 		replay(mFileMock, File.class);
 
-		assertTrue(tested.createDirectoryStructure(path));
+		tested.createDirectoryStructure(path);
 
 		verify(mFileMock, File.class);
 	}
