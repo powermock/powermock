@@ -54,7 +54,6 @@ public class PersistenceManagerTest {
 		assertTrue(tested.createDirectoryStructure(path));
 
 		verify(mFileMock, File.class);
-
 	}
 
 	@Test(expected = IllegalArgumentException.class)
