@@ -34,4 +34,24 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <profiles>
+    <profile>
+      <id>tutorial</id>
+	  <properties>
+		<testcode>tutorial</testcode>
+	  </properties>
+    </profile>
+	<profile>
+      <id>solution</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+	  <properties>
+		<testcode>solution</testcode>
+	  </properties>
+	</profile>
+  </profiles>
+  <build>
+    <testSourceDirectory>src/${testcode}/java</testSourceDirectory>
+  </build>
 </project>
