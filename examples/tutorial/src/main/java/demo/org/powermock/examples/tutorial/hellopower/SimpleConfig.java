@@ -7,21 +7,26 @@ import java.util.Properties;
  */
 public class SimpleConfig {
 
-    private static Properties PROPERTIES = new Properties();
+    private static Properties PROPERTIES;
 
-    static {
-        try {
-            PROPERTIES.load(SimpleConfig.class.getClassLoader().getResourceAsStream("simpleConfig.properties"));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    private static synchronized void initialize() {
+    	if (PROPERTIES == null) {
+	        PROPERTIES = new Properties();
+		    try {
+	            PROPERTIES.load(SimpleConfig.class.getClassLoader().getResourceAsStream("simpleConfig.properties"));
+	        } catch (Exception e) {
+	            throw new RuntimeException(e);
+	        }
+    	}
     }
     
     public static String getGreeting() {
+    	initialize();
         return PROPERTIES.getProperty("greeting");
     }
 
     public static String getTarget() {
+    	initialize();
         return PROPERTIES.getProperty("target");
     }
 }
