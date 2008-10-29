@@ -58,7 +58,6 @@ public class PowerMockSuite extends TestSuite {
 	/**
 	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void addTest(Test test) {
 		testChunker.addTest(test);

@@ -79,7 +79,6 @@ public class ServiceRegistratorTest {
 	 *             If an error occurs.
 	 */
 	@Test
-	@SuppressWarnings("unchecked")
 	public void testRegisterService() throws Exception {
 		final String name = "a name";
 		final Object object = new Object();

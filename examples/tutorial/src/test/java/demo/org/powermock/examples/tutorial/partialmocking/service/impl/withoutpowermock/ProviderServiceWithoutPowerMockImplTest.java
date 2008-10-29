@@ -120,7 +120,6 @@ public class ProviderServiceWithoutPowerMockImplTest {
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
 	public void getAllServiceProducers() throws Exception {
 		final String expectedName = "mock name";
 		final int expectedId = 1;
@@ -141,7 +140,6 @@ public class ProviderServiceWithoutPowerMockImplTest {
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
 	public void getAllServiceProducers_empty() throws Exception {
 		expect(providerDaoMock.getAllServiceProducers()).andReturn(new HashSet<ServiceArtifact>());
 

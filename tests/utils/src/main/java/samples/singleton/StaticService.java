@@ -27,7 +27,6 @@ import java.util.concurrent.Callable;
 public class StaticService {
 
 	private static int number = 17;
-	@SuppressWarnings("unused")
 	private int secret = 23;
 
 	public static int getNumberFromInner() {

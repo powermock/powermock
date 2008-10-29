@@ -1,5 +1,9 @@
 Change log 0.9 (under development)
 ----------------------------------
+* Fixed so that it's now possible to mock abstract methods
+* WhiteBox.getMethod(..) now also returns protected and package-private methods.
+* Whitebox.invokeMethod can now execute methods in a super class.
+* Whitebox.invokeMethod no longer throws NullPointerException when an argument is null when the method cannot be found
 
 Change log 0.8.1 (released 2008-10-26)
 --------------------------------------
@@ -7,7 +11,7 @@ Change log 0.8.1 (released 2008-10-26)
 * createPartialMock now works as expected
 * Fixed so that it works to mock package private classes (even if they're signed)
 * It now works to set a static final field after the static initializes have been suppressed.
-* Fixed a serious bug that caused classes extending to java.lang.Object to be non-mockable.
+* Fixed a serious bug that caused classes extending java.lang.Object to be non-mockable.
                                                                                            
 Change log 0.8 (released 2008-10-22)
 -----------------------------------

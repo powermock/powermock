@@ -35,7 +35,6 @@ import samples.singleton.StaticHelper;
 @PrepareForTest({StaticService.class, StaticHelper.class})
 public class MockStaticTest extends TestCase {
 
-	@SuppressWarnings("unchecked")
 	public static TestSuite suite() throws Exception {
 		// This is not the best way to add a test suite, but we do this here
 		// for testing purposes.

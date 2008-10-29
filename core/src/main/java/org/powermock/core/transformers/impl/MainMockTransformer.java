@@ -95,7 +95,7 @@ public class MainMockTransformer implements MockTransformer {
 					} catch (NotFoundException e) {
 						throw new RuntimeException(e);
 					}
-					
+
 					/*
 					 * Create a default constructor in the super class if it
 					 * doesn't exist. This is needed because if the code in the
@@ -105,8 +105,11 @@ public class MainMockTransformer implements MockTransformer {
 					 */
 					addNewDeferConstructor(clazz);
 					final StringBuilder code = new StringBuilder();
-					code.append("{Object value =").append(MockGateway.class.getName()).append(".constructorCall($class, $args, $sig);");
-					code.append("if (value != ").append(MockGateway.class.getName()).append(".PROCEED){");
+					code.append("{Object value =").append(
+							MockGateway.class.getName()).append(
+							".constructorCall($class, $args, $sig);");
+					code.append("if (value != ").append(
+							MockGateway.class.getName()).append(".PROCEED){");
 
 					/*
 					 * TODO Suppress and lazy inject field (when this feature is
@@ -115,7 +118,9 @@ public class MainMockTransformer implements MockTransformer {
 					if (superclass.getName().equals(Object.class.getName())) {
 						code.append(" super();");
 					} else {
-						code.append(" super((" + IndicateReloadClass.class.getName() + ") null);");
+						code.append(" super(("
+								+ IndicateReloadClass.class.getName()
+								+ ") null);");
 					}
 					code.append("} else {");
 					code.append("   $proceed($$);");
@@ -134,13 +139,16 @@ public class MainMockTransformer implements MockTransformer {
 			 * @throws CannotCompileException
 			 *             If an unexpected compilation error occurs.
 			 */
-			private void addNewDeferConstructor(final CtClass clazz) throws CannotCompileException {
+			private void addNewDeferConstructor(final CtClass clazz)
+					throws CannotCompileException {
 				CtClass superClass = null;
 				try {
 					superClass = clazz.getSuperclass();
 				} catch (NotFoundException e1) {
-					throw new IllegalArgumentException("Internal error: Failed to get superclass for " + clazz.getName()
-							+ " when about to create a new default constructor.");
+					throw new IllegalArgumentException(
+							"Internal error: Failed to get superclass for "
+									+ clazz.getName()
+									+ " when about to create a new default constructor.");
 				}
 
 				ClassPool classPool = clazz.getClassPool();
@@ -151,22 +159,29 @@ public class MainMockTransformer implements MockTransformer {
 				 */
 				CtClass constructorType = null;
 				try {
-					constructorType = classPool.get(IndicateReloadClass.class.getName());
+					constructorType = classPool.get(IndicateReloadClass.class
+							.getName());
 				} catch (NotFoundException e) {
-					throw new IllegalArgumentException("Internal error: failed to get the " + IndicateReloadClass.class.getName()
-							+ " when added defer constructor.");
+					throw new IllegalArgumentException(
+							"Internal error: failed to get the "
+									+ IndicateReloadClass.class.getName()
+									+ " when added defer constructor.");
 				}
 				clazz.defrost();
 				if (superClass.getName().equals(Object.class.getName())) {
 					try {
-						clazz.addConstructor(CtNewConstructor.make(new CtClass[] { constructorType }, new CtClass[0], "{super();}", clazz));
+						clazz.addConstructor(CtNewConstructor.make(
+								new CtClass[] { constructorType },
+								new CtClass[0], "{super();}", clazz));
 					} catch (DuplicateMemberException e) {
 						// OK, the constructor has already been added.
 					}
 				} else {
 					addNewDeferConstructor(superClass);
 					try {
-						clazz.addConstructor(CtNewConstructor.make(new CtClass[] { constructorType }, new CtClass[0], "{super($$);}", clazz));
+						clazz.addConstructor(CtNewConstructor.make(
+								new CtClass[] { constructorType },
+								new CtClass[0], "{super($$);}", clazz));
 					} catch (DuplicateMemberException e) {
 						// OK, the constructor has already been added.
 					}
@@ -176,9 +191,13 @@ public class MainMockTransformer implements MockTransformer {
 			@Override
 			public void edit(NewExpr e) throws CannotCompileException {
 				final StringBuilder code = new StringBuilder();
-				code.append("Object instance =").append(MockGateway.class.getName()).append(".newInstanceCall($type,$args,$sig);");
-				code.append("if(instance != ").append(MockGateway.class.getName()).append(".PROCEED) {");
-				code.append("	if(instance instanceof java.lang.reflect.Constructor) {");
+				code.append("Object instance =").append(
+						MockGateway.class.getName()).append(
+						".newInstanceCall($type,$args,$sig);");
+				code.append("if(instance != ").append(
+						MockGateway.class.getName()).append(".PROCEED) {");
+				code
+						.append("	if(instance instanceof java.lang.reflect.Constructor) {");
 				code
 						.append("		$_ = ($r) sun.reflect.ReflectionFactory.getReflectionFactory().newConstructorForSerialization($type, java.lang.Object.class.getDeclaredConstructor(null)).newInstance(null);");
 				code.append("	} else {");
@@ -193,58 +212,79 @@ public class MainMockTransformer implements MockTransformer {
 		return clazz;
 	}
 
-	public void modifyMethod(CtClass type, final CtMethod method) throws NotFoundException, CannotCompileException {
+	public void modifyMethod(CtClass type, final CtMethod method)
+			throws NotFoundException, CannotCompileException {
+		if (!Modifier.isAbstract(method.getModifiers())) {
+			// Lookup the method return type
+			String returnTypeAsString = null;
+			final CtClass returnTypeAsCtClass = method.getReturnType();
+			if (!returnTypeAsCtClass.equals(CtClass.voidType)) {
+				returnTypeAsString = returnTypeAsCtClass.getName();
+			}
 
-		// Lookup the method return type
-		String returnTypeAsString = null;
-		final CtClass returnTypeAsCtClass = method.getReturnType();
-		if (!returnTypeAsCtClass.equals(CtClass.voidType)) {
-			returnTypeAsString = returnTypeAsCtClass.getName();
-		}
+			if (Modifier.isNative(method.getModifiers())) {
+				String methodName = method.getName();
+				String returnValue = "($r)value";
 
-		if (Modifier.isNative(method.getModifiers())) {
-			String methodName = method.getName();
+				if (returnTypeAsCtClass.equals(CtClass.voidType)) {
+					returnValue = "";
+				}
+
+				String classOrInstance = "this";
+				if (Modifier.isStatic(method.getModifiers())) {
+					classOrInstance = "$class";
+				}
+				method.setModifiers(method.getModifiers() - Modifier.NATIVE);
+				String code = "Object value = "
+						+ MockGateway.class.getName()
+						+ ".methodCall("
+						+ classOrInstance
+						+ ", \""
+						+ method.getName()
+						+ "\", $args, $sig, \""
+						+ returnTypeAsString
+						+ "\");"
+						+ "if (value != "
+						+ MockGateway.class.getName()
+						+ ".PROCEED) "
+						+ "return "
+						+ returnValue
+						+ "; "
+						+ "throw new java.lang.UnsupportedOperationException(\""
+						+ methodName + " is native\");";
+				method.setBody("{" + code + "}");
+				return;
+			}
+
 			String returnValue = "($r)value";
-
 			if (returnTypeAsCtClass.equals(CtClass.voidType)) {
 				returnValue = "";
+			} else if (returnTypeAsCtClass.isPrimitive()) {
+				if (returnTypeAsString.equals("char")) {
+					returnValue = "((java.lang.Character)value).charValue()";
+				} else if (returnTypeAsString.equals("boolean")) {
+					returnValue = "((java.lang.Boolean)value).booleanValue()";
+				} else {
+					returnValue = "((java.lang.Number)value)."
+							+ returnTypeAsString + "Value()";
+				}
+			} else {
+				returnValue = "(" + returnTypeAsString + ")value";
 			}
 
 			String classOrInstance = "this";
 			if (Modifier.isStatic(method.getModifiers())) {
 				classOrInstance = "$class";
 			}
-			method.setModifiers(method.getModifiers() - Modifier.NATIVE);
-			String code = "Object value = " + MockGateway.class.getName() + ".methodCall(" + classOrInstance + ", \"" + method.getName()
-					+ "\", $args, $sig, \"" + returnTypeAsString + "\");" + "if (value != " + MockGateway.class.getName() + ".PROCEED) " + "return "
-					+ returnValue + "; " + "throw new java.lang.UnsupportedOperationException(\"" + methodName + " is native\");";
-			method.setBody("{" + code + "}");
-			return;
-		}
 
-		String returnValue = "($r)value";
-		if (returnTypeAsCtClass.equals(CtClass.voidType)) {
-			returnValue = "";
-		} else if (returnTypeAsCtClass.isPrimitive()) {
-			if (returnTypeAsString.equals("char")) {
-				returnValue = "((java.lang.Character)value).charValue()";
-			} else if (returnTypeAsString.equals("boolean")) {
-				returnValue = "((java.lang.Boolean)value).booleanValue()";
-			} else {
-				returnValue = "((java.lang.Number)value)." + returnTypeAsString + "Value()";
-			}
-		} else {
-			returnValue = "(" + returnTypeAsString + ")value";
-		}
+			String code = "Object value = " + MockGateway.class.getName()
+					+ ".methodCall(" + classOrInstance + ", \""
+					+ method.getName() + "\", $args, $sig, \""
+					+ returnTypeAsString + "\");" + "if (value != "
+					+ MockGateway.class.getName() + ".PROCEED) " + "return "
+					+ returnValue + "; ";
 
-		String classOrInstance = "this";
-		if (Modifier.isStatic(method.getModifiers())) {
-			classOrInstance = "$class";
+			method.insertBefore("{" + code + "}");
 		}
-
-		String code = "Object value = " + MockGateway.class.getName() + ".methodCall(" + classOrInstance + ", \"" + method.getName()
-				+ "\", $args, $sig, \"" + returnTypeAsString + "\");" + "if (value != " + MockGateway.class.getName() + ".PROCEED) " + "return "
-				+ returnValue + "; ";
-		method.insertBefore("{" + code + "}");
 	}
 }
