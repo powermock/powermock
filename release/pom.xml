@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.powermock</groupId>
         <artifactId>powermock</artifactId>
-        <version>0.8.5</version>
+        <version>0.9-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
