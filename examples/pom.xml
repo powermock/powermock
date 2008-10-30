@@ -16,7 +16,7 @@
     <module>tutorial</module>
     <module>DocumentationExamples</module>
     <module>SignedMocking</module>
-    <module>hamcrestexample</module>
+    <module>HamcrestExample</module>
     <module>ApacheCLIExample</module>
   </modules>   <dependencyManagement>
       <dependencies>
