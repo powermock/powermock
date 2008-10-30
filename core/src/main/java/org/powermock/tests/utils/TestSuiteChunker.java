@@ -34,9 +34,7 @@ public interface TestSuiteChunker {
 	/**
 	 * Create the test delegators needed for a whole class.
 	 */
-	public void createTestDelegators(Class<?> testClass,
-			Set<Entry<MockClassLoader, List<Method>>> entrySet)
-			throws Exception;
+	public void createTestDelegators(Class<?> testClass, Set<Entry<MockClassLoader, List<Method>>> entrySet) throws Exception;
 
 	/**
 	 * Get the number of chunks defined in this suite.
@@ -63,12 +61,13 @@ public interface TestSuiteChunker {
 	 *         the chunk for the specific test class and the class loader that
 	 *         loaded these methods.
 	 */
-	public Set<Entry<MockClassLoader, List<Method>>> getChunkEntries(
-			Class<?> testClass);
+	public Set<Entry<MockClassLoader, List<Method>>> getChunkEntries(Class<?> testClass);
 
 	/**
 	 * Should reflect whether or not this method is eligible for testing.
-	 * @param testClass TODO
+	 * 
+	 * @param testClass
+	 *            The class that defines the method.
 	 * @param potentialTestMethod
 	 *            The method to inspect whether it should be executed in the
 	 *            test suite or not.
@@ -81,8 +80,8 @@ public interface TestSuiteChunker {
 
 	/**
 	 * Add a class to the test suite. Methods in this class will be checked
-	 * according to {@link #shouldExecuteTestForMethod(Class, Method)} to see if it
-	 * should be executed.
+	 * according to {@link #shouldExecuteTestForMethod(Class, Method)} to see if
+	 * it should be executed.
 	 * 
 	 * @param clazz
 	 *            The class that should contain test cases.
