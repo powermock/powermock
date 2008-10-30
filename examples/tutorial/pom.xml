@@ -3,7 +3,7 @@
   <parent>
       <artifactId>powermock-examples</artifactId>
       <groupId>org.powermock.examples</groupId>
-      <version>0.9</version>
+      <version>0.9-SNAPSHOT</version>
    </parent>
   <groupId>org.powermock.examples.tutorial</groupId>
   <artifactId>powermock-examples-tutorial</artifactId>
@@ -37,19 +37,19 @@
   <profiles>
     <profile>
       <id>tutorial</id>
-	  <properties>
-		<testcode>tutorial</testcode>
-	  </properties>
+     <properties>
+      <testcode>tutorial</testcode>
+     </properties>
     </profile>
-	<profile>
+   <profile>
       <id>solution</id>
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
-	  <properties>
-		<testcode>solution</testcode>
-	  </properties>
-	</profile>
+     <properties>
+      <testcode>solution</testcode>
+     </properties>
+   </profile>
   </profiles>
   <build>
     <testSourceDirectory>src/${testcode}/java</testSourceDirectory>

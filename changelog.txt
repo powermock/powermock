@@ -1,8 +1,8 @@
 Change log 0.9 (under development)
 ----------------------------------
 
-Change log 0.8.5 (under development)
-------------------------------------
+Change log 0.8.5 (2008-10-30)
+-----------------------------
 * Fixed so that it's now possible to mock abstract methods
 * WhiteBox.getMethod(..) now also returns protected and package-private methods.
 * Whitebox.invokeMethod can now execute methods in a super class.
