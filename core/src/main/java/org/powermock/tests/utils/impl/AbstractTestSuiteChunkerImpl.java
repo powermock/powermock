@@ -147,7 +147,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 	private void initEntries(Class<?> testClass, List<Method> currentClassloaderMethods, Map<Class<?>, Map<MockClassLoader, List<Method>>> testSuites) {
 		Method[] allMethods = testClass.getMethods();
 		for (Method method : allMethods) {
-			if (shouldExecuteTestForMethod(method)) {
+			if (shouldExecuteTestForMethod(testClass, method)) {
 				currentTestIndex++;
 				if (method.isAnnotationPresent(PrepareForTest.class) || method.isAnnotationPresent(SuppressStaticInitializationFor.class)) {
 					LinkedList<Method> suiteMethods = new LinkedList<Method>();

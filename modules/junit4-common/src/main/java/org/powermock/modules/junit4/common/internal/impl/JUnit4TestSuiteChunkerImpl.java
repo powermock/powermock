@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import junit.framework.TestCase;
+
 import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
@@ -86,9 +88,10 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		}
 	}
 
-	public boolean shouldExecuteTestForMethod(Method potentialTestMethod) {
+	public boolean shouldExecuteTestForMethod(Class<?> testClass, Method potentialTestMethod) {
 		return (potentialTestMethod.getName().startsWith("test") && Modifier.isPublic(potentialTestMethod.getModifiers())
-				&& potentialTestMethod.getReturnType().equals(Void.TYPE) || potentialTestMethod.isAnnotationPresent(Test.class));
+				&& potentialTestMethod.getReturnType().equals(Void.TYPE) && TestCase.class.isAssignableFrom(testClass) || potentialTestMethod
+				.isAnnotationPresent(Test.class));
 	}
 
 	@Override

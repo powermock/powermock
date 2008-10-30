@@ -100,7 +100,7 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean shouldExecuteTestForMethod(Method potentialTestMethod) {
+	public boolean shouldExecuteTestForMethod(Class<?> testClass, Method potentialTestMethod) {
 		return potentialTestMethod.getName().startsWith("test") && Modifier.isPublic(potentialTestMethod.getModifiers())
 				&& potentialTestMethod.getReturnType().equals(Void.TYPE);
 	}

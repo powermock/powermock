@@ -68,19 +68,20 @@ public interface TestSuiteChunker {
 
 	/**
 	 * Should reflect whether or not this method is eligible for testing.
-	 * 
+	 * @param testClass TODO
 	 * @param potentialTestMethod
 	 *            The method to inspect whether it should be executed in the
 	 *            test suite or not.
+	 * 
 	 * @return <code>true</code> if the method is a test method and should be
 	 *         executed, <code>false</code> otherwise.
 	 * 
 	 */
-	public boolean shouldExecuteTestForMethod(Method potentialTestMethod);
+	public boolean shouldExecuteTestForMethod(Class<?> testClass, Method potentialTestMethod);
 
 	/**
 	 * Add a class to the test suite. Methods in this class will be checked
-	 * according to {@link #shouldExecuteTestForMethod(Method)} to see if it
+	 * according to {@link #shouldExecuteTestForMethod(Class, Method)} to see if it
 	 * should be executed.
 	 * 
 	 * @param clazz
