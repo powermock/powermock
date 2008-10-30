@@ -15,7 +15,7 @@
  */
 package org.powermock;
 
-public class ClassWithSubclassThatHasInternalState extends
+public class ClassWithChildThatHasInternalState extends
 		ClassWithInternalState {
 
 }

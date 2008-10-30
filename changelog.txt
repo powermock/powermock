@@ -4,6 +4,7 @@ Change log 0.9 (under development)
 * WhiteBox.getMethod(..) now also returns protected and package-private methods.
 * Whitebox.invokeMethod can now execute methods in a super class.
 * Whitebox.invokeMethod no longer throws NullPointerException when an argument is null when the method cannot be found
+* It's is now possible to use sub-types of method parameters when using Whitebox.invokeMethod.
 
 Change log 0.8.1 (released 2008-10-26)
 --------------------------------------

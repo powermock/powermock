@@ -43,6 +43,14 @@ public class ClassWithPrivateMethods {
 		return sum;
 	}
 
+	private ClassWithInternalState methodWithObjectArgument(ClassWithInternalState c) {
+		return c;
+	}
+
+	private Class<? super ClassWithInternalState> methodWithClassArgument(Class<? super ClassWithInternalState> c) {
+		return c;
+	}
+
 	private int varArgsMethod(int value) {
 		return value * 2;
 	}

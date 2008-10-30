@@ -15,6 +15,7 @@
  */
 package org.powermock;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -31,7 +32,8 @@ public class WhiteBoxTest {
 	@Test
 	public void testFindMethod_classContainingMethodWithNoParameters() throws Exception {
 		Method expected = ClassWithSeveralMethodsWithSameNameOneWithoutParameters.class.getMethod("getDouble");
-		Method actual = Whitebox.findMethodOrThrowException(ClassWithSeveralMethodsWithSameNameOneWithoutParameters.class, "getDouble");
+		Method actual = Whitebox.findMethodOrThrowException(
+				ClassWithSeveralMethodsWithSameNameOneWithoutParameters.class, "getDouble");
 		assertEquals(expected, actual);
 	}
 
@@ -52,9 +54,10 @@ public class WhiteBoxTest {
 			Whitebox.findMethodOrThrowException(ClassWithSeveralMethodsWithSameName.class, "getDouble2");
 			fail("Should throw runtime exception!");
 		} catch (RuntimeException e) {
-			assertEquals("Error message did not match",
-					"No method found with name 'getDouble2' with argument types: [ ] in class org.powermock.ClassWithSeveralMethodsWithSameName", e
-							.getMessage());
+			assertEquals(
+					"Error message did not match",
+					"No method found with name 'getDouble2' with argument types: [ ] in class org.powermock.ClassWithSeveralMethodsWithSameName",
+					e.getMessage());
 		}
 	}
 
@@ -85,7 +88,7 @@ public class WhiteBoxTest {
 
 	@Test
 	public void testSetInternalState_superClass() throws Exception {
-		ClassWithSubclassThatHasInternalState tested = new ClassWithSubclassThatHasInternalState();
+		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
 		tested.increaseInteralState();
 		Whitebox.setInternalState(tested, "anotherInternalState", 2, ClassWithInternalState.class);
 		assertEquals(2, tested.getAnotherInternalState());
@@ -93,14 +96,14 @@ public class WhiteBoxTest {
 
 	@Test
 	public void testGetInternalState_superClass_object() throws Exception {
-		ClassWithSubclassThatHasInternalState tested = new ClassWithSubclassThatHasInternalState();
+		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
 		Object internalState = Whitebox.getInternalState(tested, "internalState", ClassWithInternalState.class);
 		assertEquals(0, internalState);
 	}
 
 	@Test
 	public void testGetInternalState_superClass_parameterized() throws Exception {
-		ClassWithSubclassThatHasInternalState tested = new ClassWithSubclassThatHasInternalState();
+		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
 		int internalState = Whitebox.getInternalState(tested, "internalState", ClassWithInternalState.class, int.class);
 		assertEquals(0, internalState);
 	}
@@ -127,20 +130,20 @@ public class WhiteBoxTest {
 
 	@Test
 	public void testMethodWithPrimitiveIntAndString_primitive() throws Exception {
-		assertEquals("My int value is: " + 8, (String) Whitebox.invokeMethod(new ClassWithPrivateMethods(), "methodWithPrimitiveIntAndString", 8,
-				"My int value is: "));
+		assertEquals("My int value is: " + 8, (String) Whitebox.invokeMethod(new ClassWithPrivateMethods(),
+				"methodWithPrimitiveIntAndString", 8, "My int value is: "));
 	}
 
 	@Test
 	public void testMethodWithPrimitiveIntAndString_Wrapped() throws Exception {
-		assertEquals("My int value is: " + 8, (String) Whitebox.invokeMethod(new ClassWithPrivateMethods(), "methodWithPrimitiveIntAndString",
-				new Integer(8), "My int value is: "));
+		assertEquals("My int value is: " + 8, (String) Whitebox.invokeMethod(new ClassWithPrivateMethods(),
+				"methodWithPrimitiveIntAndString", new Integer(8), "My int value is: "));
 	}
 
 	@Test
 	public void testMethodWithPrimitiveAndWrappedInt_primtive_wrapped() throws Exception {
-		assertEquals(17, Whitebox.invokeMethod(new ClassWithPrivateMethods(), "methodWithPrimitiveAndWrappedInt", new Class[] { int.class,
-				Integer.class }, 9, new Integer(8)));
+		assertEquals(17, Whitebox.invokeMethod(new ClassWithPrivateMethods(), "methodWithPrimitiveAndWrappedInt",
+				new Class[] { int.class, Integer.class }, 9, new Integer(8)));
 	}
 
 	@Test
@@ -186,7 +189,8 @@ public class WhiteBoxTest {
 	public void testInstantiateVarArgsConstructor() throws Exception {
 		final String argument1 = "argument1";
 		final String argument2 = "argument2";
-		ClassWithVarArgsConstructor instance = Whitebox.invokeConstructor(ClassWithVarArgsConstructor.class, argument1, argument2);
+		ClassWithVarArgsConstructor instance = Whitebox.invokeConstructor(ClassWithVarArgsConstructor.class, argument1,
+				argument2);
 		String[] strings = instance.getStrings();
 		assertEquals(2, strings.length);
 		assertEquals(argument1, strings[0]);
@@ -222,6 +226,20 @@ public class WhiteBoxTest {
 	public void testInvokeVarArgsMethod_invokeVarArgsWithOneArgument() throws Exception {
 		ClassWithPrivateMethods tested = new ClassWithPrivateMethods();
 		assertEquals(1, Whitebox.invokeMethod(tested, "varArgsMethod", new Class<?>[] { int[].class }, 1));
+	}
+
+	@Test
+	public void testInvokePrivateMethodWithASubTypeOfTheArgumentType() throws Exception {
+		ClassWithPrivateMethods tested = new ClassWithPrivateMethods();
+		ClassWithChildThatHasInternalState argument = new ClassWithChildThatHasInternalState();
+		assertSame(argument, Whitebox.invokeMethod(tested, "methodWithObjectArgument", argument));
+	}
+
+	@Test
+	public void testInvokePrivateMethodWithAClassArgument() throws Exception {
+		ClassWithPrivateMethods tested = new ClassWithPrivateMethods();
+		assertEquals(ClassWithChildThatHasInternalState.class, Whitebox.invokeMethod(tested, "methodWithClassArgument",
+				ClassWithChildThatHasInternalState.class));
 	}
 
 	public void testFinalState() {
