@@ -950,7 +950,7 @@ public class Whitebox {
 
 	static <T> Method[] getAllMethodExcept(Class<T> type, String... methodNames) {
 		List<Method> methodsToMock = new LinkedList<Method>();
-		Method[] methods = type.getDeclaredMethods();
+		Method[] methods = getAllMethods(type);
 		iterateMethods: for (Method method : methods) {
 			for (String methodName : methodNames) {
 				if (method.getName().equals(methodName)) {
@@ -971,7 +971,7 @@ public class Whitebox {
 					final Class<?>[] args = method.getParameterTypes();
 					if (args != null && args.length == argumentTypes.length) {
 						for (int i = 0; i < args.length; i++) {
-							if (args[i].equals(argumentTypes[i])) {
+							if (args[i].isAssignableFrom(getUnmockedType(argumentTypes[i]))) {
 								/*
 								 * Method was not found thus it should not be
 								 * mocked. Continue to investigate the next
