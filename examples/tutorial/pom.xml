@@ -3,7 +3,7 @@
   <parent>
       <artifactId>powermock-examples</artifactId>
       <groupId>org.powermock.examples</groupId>
-      <version>0.9-SNAPSHOT</version>
+      <version>0.8.5</version>
    </parent>
   <groupId>org.powermock.examples.tutorial</groupId>
   <artifactId>powermock-examples-tutorial</artifactId>
