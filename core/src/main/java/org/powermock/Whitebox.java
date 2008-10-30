@@ -403,7 +403,7 @@ public class Whitebox {
 		 * if the tested object is mocked.
 		 */
 		Class<?> testedType = null;
-		if (tested instanceof Class<?>) {
+		if (isClass(tested)) {
 			testedType = (Class<?>) tested;
 		} else {
 			testedType = tested.getClass();
@@ -1037,7 +1037,7 @@ public class Whitebox {
 	 */
 	private static Class<?> getArgumentType(Object argument) {
 		Class<?> argumentType = null;
-		if (argument instanceof Class<?>) {
+		if (isClass(argument)) {
 			argumentType = (Class<?>) argument;
 		} else {
 			argumentType = argument.getClass();
