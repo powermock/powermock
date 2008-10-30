@@ -9,7 +9,8 @@ Change log 0.8.5 (under development)
 * Whitebox.invokeMethod no longer throws NullPointerException when an argument is null when the method cannot be found
 * It's is now possible to use sub-types of method parameters when using Whitebox.invokeMethod.
 * Tests methods starting with "test" are now executed only if the method is annotated with @Test or if the test class extends from TestCase.
-
+* Tests are now executed in the order that they are defined in the test case.
+                                                                            
 Change log 0.8.1 (released 2008-10-26)
 --------------------------------------
 * Added PowerMock API method "createPartialMockAndInvokeDefaultConstructor" that invokes a default constructor after mock creation (even if it's private).

@@ -57,20 +57,17 @@ import org.powermock.modules.junit4.internal.impl.testcaseworkaround.PowerMockJU
  * @author Johan Haleby
  * 
  */
-public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements
-		Filterable, Sortable, PowerMockJUnitRunnerDelegate {
+public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filterable, Sortable, PowerMockJUnitRunnerDelegate {
 	private final List<Method> testMethods;
 	private TestClass testClass;
 
-	public PowerMockJUnit44RunnerDelegateImpl(Class<?> klass,
-			String[] methodsToRun) throws InitializationError {
+	public PowerMockJUnit44RunnerDelegateImpl(Class<?> klass, String[] methodsToRun) throws InitializationError {
 		testClass = new TestClass(klass);
 		testMethods = getTestMethods(klass, methodsToRun);
 		validate();
 	}
 
-	public PowerMockJUnit44RunnerDelegateImpl(Class<?> klass)
-			throws InitializationError {
+	public PowerMockJUnit44RunnerDelegateImpl(Class<?> klass) throws InitializationError {
 		this(klass, null);
 	}
 
@@ -80,16 +77,15 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements
 			// The getTestMethods of TestClass is not visible so we need to look
 			// it invoke it using reflection.
 			try {
-				return (List<Method>) Whitebox.invokeMethod(testClass,
-						"getTestMethods");
+				return (List<Method>) Whitebox.invokeMethod(testClass, "getTestMethods");
 			} catch (Throwable e) {
 				throw new RuntimeException(e);
 			}
 		} else {
 			List<Method> foundMethods = new LinkedList<Method>();
 			Method[] methods = klass.getMethods();
-			for (String methodName : methodsToRun) {
-				for (Method method : methods) {
+			for (Method method : methods) {
+				for (String methodName : methodsToRun) {
 					if (method.getName().equals(methodName)) {
 						foundMethods.add(method);
 					}
@@ -100,8 +96,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements
 	}
 
 	protected void validate() throws InitializationError {
-		MethodValidator methodValidator = new PowerMockJUnit4MethodValidator(
-				testClass);
+		MethodValidator methodValidator = new PowerMockJUnit4MethodValidator(testClass);
 		methodValidator.validateMethodsForDefaultRunner();
 		methodValidator.assertValid();
 	}
@@ -133,8 +128,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements
 	 */
 	@Override
 	public Description getDescription() {
-		Description spec = Description.createSuiteDescription(getName(),
-				classAnnotations());
+		Description spec = Description.createSuiteDescription(getName(), classAnnotations());
 		List<Method> testMethods = this.testMethods;
 		for (Method method : testMethods)
 			spec.addChild(methodDescription(method));
@@ -169,8 +163,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements
 		new MethodRoadie(test, testMethod, notifier, description).run();
 	}
 
-	private void testAborted(RunNotifier notifier, Description description,
-			Throwable e) {
+	private void testAborted(RunNotifier notifier, Description description, Throwable e) {
 		notifier.fireTestStarted(description);
 		notifier.fireTestFailure(new Failure(description, e));
 		notifier.fireTestFinished(description);
@@ -185,8 +178,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements
 	}
 
 	protected Description methodDescription(Method method) {
-		return Description.createTestDescription(getTestClass().getJavaClass(),
-				testName(method), testAnnotations(method));
+		return Description.createTestDescription(getTestClass().getJavaClass(), testName(method), testAnnotations(method));
 	}
 
 	protected Annotation[] testAnnotations(Method method) {
@@ -206,8 +198,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements
 	public void sort(final Sorter sorter) {
 		Collections.sort(testMethods, new Comparator<Method>() {
 			public int compare(Method o1, Method o2) {
-				return sorter.compare(methodDescription(o1),
-						methodDescription(o2));
+				return sorter.compare(methodDescription(o1), methodDescription(o2));
 			}
 		});
 	}
