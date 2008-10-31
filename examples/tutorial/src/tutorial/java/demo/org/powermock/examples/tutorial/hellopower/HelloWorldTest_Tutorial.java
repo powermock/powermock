@@ -18,16 +18,6 @@ public class HelloWorldTest_Tutorial {
 	@Test
 	public void testGreeting() {
 		// TODO: mock the static methods of SimpleConfig
-		mockStatic(SimpleConfig.class);
-		
-		expect(SimpleConfig.getGreeting()).andReturn("Hello");
-		expect(SimpleConfig.getTarget()).andReturn("world");
-		
-		replay(SimpleConfig.class);
-		
 		// TODO: make this assertion work
-		assertEquals("Hello world", new HelloWorld().greet());
-
-		verify(SimpleConfig.class);
 	}
 }
