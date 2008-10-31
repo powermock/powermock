@@ -19,8 +19,8 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.powermock.core.IndicateReloadClass;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.core.classloader.annotations.internal.IndicateReloadClass;
 import org.powermock.tests.utils.TestClassesExtractor;
 
 /**

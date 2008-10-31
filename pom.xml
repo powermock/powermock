@@ -148,6 +148,14 @@
                maven-project-info-reports-plugin
             </artifactId>
          </plugin>
+         <plugin>
+           <groupId>org.codehaus.mojo</groupId>
+           <artifactId>findbugs-maven-plugin</artifactId>
+          <!-- <version>2.0-SNAPSHOT</version>-->
+           <configuration>
+		     <onlyAnalyze>org.powermock.*</onlyAnalyze>
+           </configuration>
+         </plugin>
       </plugins>
    </reporting>
    <profiles>

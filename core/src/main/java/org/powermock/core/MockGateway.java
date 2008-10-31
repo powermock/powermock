@@ -23,7 +23,6 @@ import java.util.Set;
 
 import net.sf.cglib.proxy.Enhancer;
 
-import org.powermock.Whitebox;
 import org.powermock.core.invocationcontrol.method.MethodInvocationControl;
 import org.powermock.core.invocationcontrol.newinstance.NewInvocationControl;
 
@@ -76,12 +75,12 @@ public class MockGateway {
 		 * original method or suppress the method code otherwise invoke the
 		 * invocation handler.
 		 */
-		if (methodInvocationControl != null && methodInvocationControl.isMocked(Whitebox.getMethod(objectType, methodName, sig))) {
+		if (methodInvocationControl != null && methodInvocationControl.isMocked(WhiteboxImpl.getMethod(objectType, methodName, sig))) {
 
 			final InvocationHandler handler = methodInvocationControl.getInvocationHandler();
-			returnValue = handler.invoke(objectType, Whitebox.getMethod(objectType, methodName, sig), args);
+			returnValue = handler.invoke(objectType, WhiteboxImpl.getMethod(objectType, methodName, sig), args);
 		} else {
-			final boolean shouldSuppressMethodCode = suppressMethod.contains(Whitebox.getMethod(objectType, methodName, sig));
+			final boolean shouldSuppressMethodCode = suppressMethod.contains(WhiteboxImpl.getMethod(objectType, methodName, sig));
 			if (shouldSuppressMethodCode) {
 				returnValue = suppressMethodCode(returnTypeAsString);
 			} else {
@@ -111,8 +110,8 @@ public class MockGateway {
 			}
 		}
 		// Check if we should suppress the constructor code
-		if (suppressConstructor.contains(Whitebox.getConstructor(type, sig))) {
-			return Whitebox.getFirstParentConstructor(type.getSuperclass());
+		if (suppressConstructor.contains(WhiteboxImpl.getConstructor(type, sig))) {
+			return WhiteboxImpl.getFirstParentConstructor(type.getSuperclass());
 		}
 		return PROCEED;
 	}
@@ -154,7 +153,7 @@ public class MockGateway {
 	}
 
 	public static synchronized Object constructorCall(Class<?> type, Object[] args, Class<?>[] sig) throws Throwable {
-		final Constructor<?> constructor = Whitebox.getConstructor(type, sig);
+		final Constructor<?> constructor = WhiteboxImpl.getConstructor(type, sig);
 		if (suppressConstructor.contains(constructor)) {
 			return null;
 		}

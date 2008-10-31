@@ -29,8 +29,8 @@ import javassist.expr.ConstructorCall;
 import javassist.expr.ExprEditor;
 import javassist.expr.NewExpr;
 
+import org.powermock.core.IndicateReloadClass;
 import org.powermock.core.MockGateway;
-import org.powermock.core.classloader.annotations.internal.IndicateReloadClass;
 import org.powermock.core.transformers.MockTransformer;
 
 public class MainMockTransformer implements MockTransformer {

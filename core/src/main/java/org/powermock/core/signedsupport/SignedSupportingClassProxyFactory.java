@@ -41,7 +41,7 @@ import org.easymock.classextension.internal.ClassInstantiatorFactory;
 import org.easymock.classextension.internal.ClassProxyFactory;
 import org.easymock.internal.IProxyFactory;
 import org.easymock.internal.ObjectMethodsFilter;
-import org.powermock.Whitebox;
+import org.powermock.core.WhiteboxImpl;
 
 /**
  * Essentially a rip-off of the {@link ClassProxyFactory} in EasyMock class
@@ -106,7 +106,7 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 					 */
 					Method superClassMethod = null;
 					try {
-						superClassMethod = Whitebox.getMethod(superclass,
+						superClassMethod = WhiteboxImpl.getMethod(superclass,
 								method.getName(), method.getParameterTypes());
 					} catch (IllegalArgumentException e) {
 						// OK

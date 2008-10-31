@@ -1,5 +1,6 @@
 Change log 0.9 (under development)
 ----------------------------------
+* Structural refactoring to remove structure 101 XS: moved WhiteBox implementation to separate class in core and moved IndicateReloadClass
 
 Change log 0.8.5 (2008-10-30)
 -----------------------------

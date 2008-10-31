@@ -22,7 +22,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.powermock.core.classloader.annotations.internal.IndicateReloadClass;
+import org.powermock.core.IndicateReloadClass;
 
 /**
  * This annotation tells PowerMock to prepare certain classes for testing.

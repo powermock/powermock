@@ -33,6 +33,7 @@ import org.easymock.internal.MocksControl;
 import org.powermock.core.MockGateway;
 import org.powermock.core.MockRepository;
 import org.powermock.core.PowerMockUtils;
+import org.powermock.core.WhiteboxImpl;
 import org.powermock.core.invocationcontrol.method.MethodInvocationControl;
 import org.powermock.core.invocationcontrol.newinstance.NewInvocationControl;
 import org.powermock.core.mockstrategy.MockStrategy;
@@ -100,7 +101,7 @@ public class PowerMock {
 	 */
 	public static <T> T createMock(Class<T> type,
 			Object... constructorArguments) {
-		Constructor<?> constructor = Whitebox.findConstructorOrThrowException(
+		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(
 				type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor,
 				constructorArguments);
@@ -200,7 +201,7 @@ public class PowerMock {
 	 */
 	public static <T> T createStrictMock(Class<T> type,
 			Object... constructorArguments) {
-		Constructor<?> constructor = Whitebox.findConstructorOrThrowException(
+		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(
 				type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor,
 				constructorArguments);
@@ -224,7 +225,7 @@ public class PowerMock {
 	 */
 	public static <T> T createNiceMock(Class<T> type,
 			Object... constructorArguments) {
-		Constructor<?> constructor = Whitebox.findConstructorOrThrowException(
+		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(
 				type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor,
 				constructorArguments);
@@ -300,7 +301,7 @@ public class PowerMock {
 			return createMock(type);
 		}
 
-		return createMock(type, Whitebox.getAllMethodExcept(type, methodNames));
+		return createMock(type, WhiteboxImpl.getAllMethodExcept(type, methodNames));
 	}
 
 	/**
@@ -331,7 +332,7 @@ public class PowerMock {
 		Class<?>[] argumentTypes = mergeArgumentTypes(firstArgumentType,
 				moreTypes);
 
-		return createMock(type, Whitebox.getAllMetodsExcept(type,
+		return createMock(type, WhiteboxImpl.getAllMetodsExcept(type,
 				methodNameToExclude, argumentTypes));
 	}
 
@@ -549,12 +550,12 @@ public class PowerMock {
 			Class<?>... argumentTypes) {
 		List<Method> methods = new LinkedList<Method>();
 		for (String methodName : methodNamesToMock) {
-			methods.add(Whitebox.findMethodOrThrowException(type, methodName,
+			methods.add(WhiteboxImpl.findMethodOrThrowException(type, methodName,
 					argumentTypes));
 		}
 
 		final Method[] methodArray = methods.toArray(new Method[0]);
-		if (Whitebox.areAllMethodsStatic(methodArray)) {
+		if (WhiteboxImpl.areAllMethodsStatic(methodArray)) {
 			if (mockStrategy instanceof DefaultMockStrategy) {
 				mockStatic(type, methodArray);
 			} else if (mockStrategy instanceof StrictMockStrategy) {
@@ -829,7 +830,7 @@ public class PowerMock {
 	 */
 	public static <T> T createPartialMock(Class<T> type, String[] methodNames,
 			Object... constructorArguments) {
-		Constructor<?> constructor = Whitebox.findConstructorOrThrowException(
+		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(
 				type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor,
 				constructorArguments);
@@ -861,7 +862,7 @@ public class PowerMock {
 	 */
 	public static <T> T createPartialMockStrict(Class<T> type,
 			String[] methodNames, Object... constructorArguments) {
-		Constructor<?> constructor = Whitebox.findConstructorOrThrowException(
+		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(
 				type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor,
 				constructorArguments);
@@ -893,7 +894,7 @@ public class PowerMock {
 	 */
 	public static <T> T createPartialMockNice(Class<T> type,
 			String[] methodNames, Object... constructorArguments) {
-		Constructor<?> constructor = Whitebox.findConstructorOrThrowException(
+		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(
 				type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor,
 				constructorArguments);
@@ -928,7 +929,7 @@ public class PowerMock {
 	 */
 	public static <T> T createPartialMock(Class<T> type, String methodName,
 			Class<?>[] methodParameterTypes, Object... constructorArguments) {
-		Constructor<?> constructor = Whitebox.findConstructorOrThrowException(
+		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(
 				type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor,
 				constructorArguments);
@@ -965,7 +966,7 @@ public class PowerMock {
 	public static <T> T createPartialMockStrict(Class<T> type,
 			String methodName, Class<?>[] methodParameterTypes,
 			Object... constructorArguments) {
-		Constructor<?> constructor = Whitebox.findConstructorOrThrowException(
+		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(
 				type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor,
 				constructorArguments);
@@ -1001,7 +1002,7 @@ public class PowerMock {
 	 */
 	public static <T> T createPartialMockNice(Class<T> type, String methodName,
 			Class<?>[] methodParameterTypes, Object... constructorArguments) {
-		Constructor<?> constructor = Whitebox.findConstructorOrThrowException(
+		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(
 				type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor,
 				constructorArguments);
@@ -1175,7 +1176,7 @@ public class PowerMock {
 		Method foundMethod = Whitebox.getMethod(instance.getClass(),
 				methodName, parameterTypes);
 
-		Whitebox.throwExceptionIfMethodWasNotFound(instance.getClass(),
+		WhiteboxImpl.throwExceptionIfMethodWasNotFound(instance.getClass(),
 				methodName, foundMethod, parameterTypes);
 
 		return doExpectPrivate(instance, foundMethod, arguments);
@@ -1224,7 +1225,7 @@ public class PowerMock {
 		if (methods.length == 1) {
 			methodToExpect = methods[0];
 		} else {
-			methodToExpect = Whitebox.findMethodOrThrowException(instance,
+			methodToExpect = WhiteboxImpl.findMethodOrThrowException(instance,
 					null, methodName, arguments);
 		}
 		return doExpectPrivate(instance, methodToExpect, arguments);
@@ -1368,7 +1369,7 @@ public class PowerMock {
 			throw new IllegalArgumentException("type cannot be null");
 		}
 
-		final Class<T> unmockedType = (Class<T>) Whitebox.getUnmockedType(type);
+		final Class<T> unmockedType = (Class<T>) WhiteboxImpl.getUnmockedType(type);
 
 		/*
 		 * Check if this object has been mocked before
@@ -1542,7 +1543,7 @@ public class PowerMock {
 		if (parameterTypes.length > 0) {
 			method = Whitebox.getMethod(clazz, methodName, parameterTypes);
 		} else {
-			method = Whitebox.findMethodOrThrowException(clazz, methodName,
+			method = WhiteboxImpl.findMethodOrThrowException(clazz, methodName,
 					parameterTypes);
 		}
 		MockGateway.addMethodToSuppress(method);
@@ -1604,7 +1605,7 @@ public class PowerMock {
 	@SuppressWarnings("unchecked")
 	private static <T> IExpectationSetters<T> doExpectPrivate(Object instance,
 			Method methodToExpect, Object... arguments) throws Exception {
-		Whitebox.performMethodInvocation(instance, methodToExpect, arguments);
+		WhiteboxImpl.performMethodInvocation(instance, methodToExpect, arguments);
 		return (IExpectationSetters<T>) org.easymock.classextension.EasyMock
 				.expectLastCall();
 	}

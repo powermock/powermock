@@ -23,6 +23,7 @@ import static org.junit.Assert.fail;
 import java.lang.reflect.Method;
 
 import org.junit.Test;
+import org.powermock.core.WhiteboxImpl;
 
 /**
  * Tests the WhiteBox's functionality.
@@ -32,7 +33,7 @@ public class WhiteBoxTest {
 	@Test
 	public void testFindMethod_classContainingMethodWithNoParameters() throws Exception {
 		Method expected = ClassWithSeveralMethodsWithSameNameOneWithoutParameters.class.getMethod("getDouble");
-		Method actual = Whitebox.findMethodOrThrowException(
+		Method actual = WhiteboxImpl.findMethodOrThrowException(
 				ClassWithSeveralMethodsWithSameNameOneWithoutParameters.class, "getDouble");
 		assertEquals(expected, actual);
 	}
@@ -40,7 +41,7 @@ public class WhiteBoxTest {
 	@Test
 	public void testFindMethod_classContainingOnlyMethodsWithParameters() throws Exception {
 		try {
-			Whitebox.findMethodOrThrowException(ClassWithSeveralMethodsWithSameName.class, "getDouble");
+			WhiteboxImpl.findMethodOrThrowException(ClassWithSeveralMethodsWithSameName.class, "getDouble");
 			fail("Should throw runtime exception!");
 		} catch (RuntimeException e) {
 			assertTrue("Error message did not match", e.getMessage().contains(
@@ -51,7 +52,7 @@ public class WhiteBoxTest {
 	@Test
 	public void testFindMethod_noMethodFound() throws Exception {
 		try {
-			Whitebox.findMethodOrThrowException(ClassWithSeveralMethodsWithSameName.class, "getDouble2");
+			WhiteboxImpl.findMethodOrThrowException(ClassWithSeveralMethodsWithSameName.class, "getDouble2");
 			fail("Should throw runtime exception!");
 		} catch (RuntimeException e) {
 			assertEquals(
