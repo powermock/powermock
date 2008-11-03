@@ -21,6 +21,10 @@ public class MockSelfDemoWithSubClass extends MockSelfDemoSubClass {
 		return getInternalMessage() + getAMessage();
 	}
 
+	public String getSecondMessage() {
+		return getAProtectedMessage();
+	}
+
 	private String getInternalMessage() {
 		return "Internal message";
 	}

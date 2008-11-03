@@ -56,16 +56,17 @@ import org.powermock.core.IndicateReloadClass;
  * 
  * if using junit3.
  * <p>
- * The difference between this annotation and the {@link PrepareOnlyThisForTest}
- * annotation is that this annotation modifies the specified classes and all its
- * super classes whereas the {@link PrepareOnlyThisForTest} annotation
- * manipulates <i>only</i> the specified classes.
+ * The difference between this annotation and the {@link PrepareForTest}
+ * annotation is that this annotation only modifies the specified classes
+ * whereas the {@link PrepareForTest} annotation manipulates the full class
+ * hierarchy. This annotation is recommend if you want full control over which
+ * classes that are byte-code manipulated.
  */
 @Target( { ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface PrepareForTest {
+public @interface PrepareOnlyThisForTest {
 	Class<?>[] value() default IndicateReloadClass.class;
 
 	String[] fullyQualifiedNames() default "";

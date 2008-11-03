@@ -13,7 +13,7 @@ import org.powermock.tests.utils.TestClassesExtractor;
  * should have their static initializers suppressed.
  * 
  */
-public class StaticConstructorSuppressImpl implements TestClassesExtractor {
+public class StaticConstructorSuppressImpl extends AbstractTestClassExtractor {
 
 	/**
 	 * {@inheritDoc}

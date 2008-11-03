@@ -118,7 +118,11 @@ public class Whitebox {
 	}
 
 	/**
-	 * Get the value of a field using reflection.
+	 * Get the value of a field using reflection. This method will iterate
+	 * through the entire class hierarchy and return the value of the first
+	 * field named <tt>fieldName</tt>. If you want to get a specific field
+	 * value at specific place in the class hierarchy please refer to
+	 * {@link #getInternalState(Object, String, Class)}.
 	 * 
 	 * @param object
 	 *            the object to modify
@@ -172,8 +176,7 @@ public class Whitebox {
 	 * 
 	 * @throws Throwable
 	 */
-	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Object... arguments)
-			throws Exception {
+	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Object... arguments) throws Exception {
 		return WhiteboxImpl.invokeMethod(tested, methodToExecute, arguments);
 	}
 
@@ -186,8 +189,8 @@ public class Whitebox {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?>[] argumentTypes,
-			Object... arguments) throws Exception {
+	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?>[] argumentTypes, Object... arguments)
+			throws Exception {
 		return WhiteboxImpl.invokeMethod(tested, methodToExecute, argumentTypes, arguments);
 	}
 
@@ -201,8 +204,8 @@ public class Whitebox {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?> definedIn,
-			Class<?>[] argumentTypes, Object... arguments) throws Exception {
+	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?> definedIn, Class<?>[] argumentTypes,
+			Object... arguments) throws Exception {
 		return WhiteboxImpl.invokeMethod(tested, methodToExecute, definedIn, argumentTypes, arguments);
 	}
 
@@ -213,8 +216,8 @@ public class Whitebox {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object tested, Class<?> declaringClass, String methodToExecute,
-			Object... arguments) throws Exception {
+	public static synchronized Object invokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments)
+			throws Exception {
 		return WhiteboxImpl.invokeMethod(tested, declaringClass, methodToExecute, arguments);
 	}
 
@@ -227,8 +230,8 @@ public class Whitebox {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object object, Class<?> declaringClass, String methodToExecute,
-			Class<?>[] parameterTypes, Object... arguments) throws Exception {
+	public static synchronized Object invokeMethod(Object object, Class<?> declaringClass, String methodToExecute, Class<?>[] parameterTypes,
+			Object... arguments) throws Exception {
 		return WhiteboxImpl.invokeMethod(object, declaringClass, methodToExecute, parameterTypes, arguments);
 	}
 
@@ -237,8 +240,7 @@ public class Whitebox {
 	 * private methods.
 	 * 
 	 */
-	public static synchronized Object invokeMethod(Class<?> clazz, String methodToExecute, Object... arguments)
-			throws Exception {
+	public static synchronized Object invokeMethod(Class<?> clazz, String methodToExecute, Object... arguments) throws Exception {
 		return WhiteboxImpl.invokeMethod(clazz, methodToExecute, arguments);
 	}
 
@@ -266,8 +268,7 @@ public class Whitebox {
 	 * 
 	 * @return The object created after the constructor has been invoked.
 	 */
-	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Class<?>[] parameterTypes,
-			Object[] arguments) {
+	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Class<?>[] parameterTypes, Object[] arguments) {
 		return WhiteboxImpl.invokeConstructor(classThatContainsTheConstructorToTest, parameterTypes, arguments);
 	}
 
@@ -287,8 +288,7 @@ public class Whitebox {
 	 * <code>klass</code>.
 	 * 
 	 * @param klass
-	 *            The class where the constructor is located. <code>null</code>
-	 *            ).
+	 *            The class where the constructor is located. <code>null</code> ).
 	 * @return A <code>java.lang.reflect.Constructor</code>.
 	 */
 	public static Constructor<?> getFirstParentConstructor(Class<?> klass) {
@@ -296,8 +296,8 @@ public class Whitebox {
 	}
 
 	/**
-	 * Get an array of {@link Method}'s that matches the supplied list of method
-	 * names.
+	 * Get an array of {@link Method}'s that matches the supplied list of
+	 * method names.
 	 * 
 	 * @param clazz
 	 *            The class that should contain the methods.

@@ -21,4 +21,8 @@ public class MockSelfDemoSubClass {
 		return "A message";
 	}
 
+	protected String getAProtectedMessage() {
+		return "protected";
+	}
+
 }

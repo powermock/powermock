@@ -18,5 +18,7 @@ package org.powermock.tests.utils;
 import java.lang.reflect.AnnotatedElement;
 
 public interface TestClassesExtractor {
-	public String[] getTestClasses(AnnotatedElement element);
+	String[] getTestClasses(AnnotatedElement element);
+
+	boolean isPrepared(AnnotatedElement element, String fullyQualifiedClassName);
 }

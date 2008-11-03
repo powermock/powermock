@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.MainMockTransformer;
@@ -149,7 +150,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 		for (Method method : allMethods) {
 			if (shouldExecuteTestForMethod(testClass, method)) {
 				currentTestIndex++;
-				if (method.isAnnotationPresent(PrepareForTest.class) || method.isAnnotationPresent(SuppressStaticInitializationFor.class)) {
+				if (hasChunkAnnotation(method)) {
 					LinkedList<Method> suiteMethods = new LinkedList<Method>();
 					suiteMethods.add(method);
 					final Map<MockClassLoader, List<Method>> suitesForTestClass = testSuites.get(testClass);
@@ -178,6 +179,11 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 				}
 			}
 		}
+	}
+
+	private boolean hasChunkAnnotation(Method method) {
+		return method.isAnnotationPresent(PrepareForTest.class) || method.isAnnotationPresent(SuppressStaticInitializationFor.class)
+				|| method.isAnnotationPresent(PrepareOnlyThisForTest.class);
 	}
 
 	private String[] getStaticSuppressionClasses(Class<?> testClass, Method method) {

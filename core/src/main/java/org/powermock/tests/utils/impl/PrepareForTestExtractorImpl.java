@@ -16,43 +16,80 @@
 package org.powermock.tests.utils.impl;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.powermock.core.IndicateReloadClass;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.tests.utils.TestClassesExtractor;
 
 /**
- * Default implementation of the {@link TestClassesExtractor} interface.
+ * Implementation of the {@link TestClassesExtractor} interface that extract
+ * classes from the {@link PrepareForTest} or {@link PrepareOnlyThisForTest}
+ * annotations.
  * 
- * @author Johan Haleby
  */
-public class PrepareForTestExtractorImpl implements TestClassesExtractor {
+public class PrepareForTestExtractorImpl extends AbstractTestClassExtractor {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public String[] getTestClasses(AnnotatedElement element) {
-		List<String> all = new LinkedList<String>();
+		Set<String> all = new LinkedHashSet<String>();
 
-		PrepareForTest prepareAnnotation = element.getAnnotation(PrepareForTest.class);
-		if (prepareAnnotation != null) {
-			final Class<?>[] classesToMock = prepareAnnotation.value();
+		PrepareForTest prepareForTestAnnotation = element.getAnnotation(PrepareForTest.class);
+		PrepareOnlyThisForTest prepareOnlyThisForTestAnnotation = element.getAnnotation(PrepareOnlyThisForTest.class);
+		final boolean prepareForTestAnnotationPresent = prepareForTestAnnotation != null;
+		final boolean prepareOnlyThisForTestAnnotationPresent = prepareOnlyThisForTestAnnotation != null;
+		if (prepareForTestAnnotationPresent) {
+			final Class<?>[] classesToMock = prepareForTestAnnotation.value();
+			for (Class<?> classToMock : classesToMock) {
+				if (!classToMock.equals(IndicateReloadClass.class)) {
+					addClassHierarchy(all, classToMock);
+				}
+			}
+
+			addFullyQualifiedNames(all, prepareForTestAnnotation);
+		}
+
+		if (prepareOnlyThisForTestAnnotationPresent) {
+			final Class<?>[] classesToMock = prepareOnlyThisForTestAnnotation.value();
 			for (Class<?> classToMock : classesToMock) {
 				if (!classToMock.equals(IndicateReloadClass.class)) {
 					all.add(classToMock.getName());
 				}
 			}
-			String[] fullyQualifiedNames = prepareAnnotation.fullyQualifiedNames();
-			for (String string : fullyQualifiedNames) {
-				if (!"".equals(string)) {
-					all.add(string);
-				}
-			}
+
+			addFullyQualifiedNames(all, prepareOnlyThisForTestAnnotation);
 		}
 
 		return all.toArray(new String[0]);
 
+	}
+
+	private void addFullyQualifiedNames(Set<String> all, PrepareForTest annotation) {
+		String[] fullyQualifiedNames = annotation.fullyQualifiedNames();
+		addFullyQualifiedNames(all, fullyQualifiedNames);
+	}
+
+	private void addFullyQualifiedNames(Set<String> all, PrepareOnlyThisForTest annotation) {
+		String[] fullyQualifiedNames = annotation.fullyQualifiedNames();
+		addFullyQualifiedNames(all, fullyQualifiedNames);
+	}
+
+	private void addFullyQualifiedNames(Set<String> all, String[] fullyQualifiedNames) {
+		for (String string : fullyQualifiedNames) {
+			if (!"".equals(string)) {
+				all.add(string);
+			}
+		}
+	}
+
+	private void addClassHierarchy(Set<String> all, Class<?> classToMock) {
+		while (!classToMock.equals(Object.class)) {
+			all.add(classToMock.getName());
+			classToMock = classToMock.getSuperclass();
+		}
 	}
 }

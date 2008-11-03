@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.junit.Assume.AssumptionViolatedException;
 import org.junit.internal.runners.ClassRoadie;
 import org.junit.internal.runners.InitializationError;
 import org.junit.internal.runners.JUnit4ClassRunner;
@@ -43,6 +44,7 @@ import org.junit.runner.notification.RunNotifier;
 import org.powermock.Whitebox;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.powermock.modules.junit4.internal.impl.testcaseworkaround.PowerMockJUnit4MethodValidator;
+import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
 
 /**
  * A JUnit4 test runner that only runs a specified set of test methods in a test
@@ -52,6 +54,9 @@ import org.powermock.modules.junit4.internal.impl.testcaseworkaround.PowerMockJU
  * Most parts of this class is essentially a rip off from
  * {@link JUnit4ClassRunner} used in JUnit 4.4. It does however not extend this
  * class because we cannot let it perform the stuff it does in its constructor.
+ * Another thing that different is that if an exception is thrown in the test we
+ * add a tip to error message asking the user if they've not forgot to add a
+ * class to test.
  * 
  * @see JUnit4ClassRunner
  * @author Johan Haleby
@@ -160,7 +165,49 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 			return;
 		}
 		TestMethod testMethod = wrapMethod(method);
-		new MethodRoadie(test, testMethod, notifier, description).run();
+		new MethodRoadie(test, testMethod, notifier, description) {
+
+			@SuppressWarnings("unchecked")
+			@Override
+			protected void runTestMethod() {
+				TestMethod fTestMethod = null;
+				try {
+					try {
+						fTestMethod = (TestMethod) Whitebox.getInternalState(this, "fTestMethod");
+						fTestMethod.invoke(Whitebox.getInternalState(this, "fTest"));
+						if ((Boolean) Whitebox.invokeMethod(fTestMethod, "expectsException")) {
+							addFailure(new AssertionError("Expected exception: " + getExpectedExceptionName(fTestMethod)));
+						}
+					} catch (InvocationTargetException e) {
+						Throwable actual = e.getTargetException();
+						if (actual instanceof AssumptionViolatedException) {
+							return;
+						} else if (!(Boolean) Whitebox.invokeMethod(fTestMethod, "expectsException")) {
+							final String className = actual.getStackTrace()[0].getClassName();
+							if (actual instanceof NullPointerException
+									&& !new PrepareForTestExtractorImpl().isPrepared(testClass.getJavaClass(), className)) {
+								Whitebox.setInternalState(actual, "detailMessage", "Perhaps the class " + className + " must be prepared for test?",
+										Throwable.class);
+							}
+							addFailure(actual);
+						} else if ((Boolean) Whitebox.invokeMethod(fTestMethod, "isUnexpected", actual)) {
+							String message = "Unexpected exception, expected<" + getExpectedExceptionName(fTestMethod) + "> but was<"
+									+ actual.getClass().getName() + ">";
+							addFailure(new Exception(message, actual));
+						}
+					} catch (Throwable e) {
+						addFailure(e);
+					}
+				} catch (Exception e) {
+					throw new RuntimeException("Internal error in PowerMock.", e);
+				}
+			}
+
+			@SuppressWarnings("unchecked")
+			private String getExpectedExceptionName(TestMethod fTestMethod) throws Exception {
+				return ((Class<? extends Throwable>) Whitebox.invokeMethod(fTestMethod, "getExpectedException")).getName();
+			}
+		}.run();
 	}
 
 	private void testAborted(RunNotifier notifier, Description description, Throwable e) {

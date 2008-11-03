@@ -34,7 +34,7 @@ import samples.partialmocking.MockSelfDemoWithSubClass;
 public class MockSelfDemoWithSubClassTest {
 
 	@Test
-	public void testMockPartialMethodInSuperClass() throws Exception {
+	public void testMockPartialMethodInChildClass() throws Exception {
 		MockSelfDemoWithSubClass tested = createPartialMock(
 				MockSelfDemoWithSubClass.class, "getAMessage",
 				"getInternalMessage");
