@@ -99,8 +99,16 @@ public class MockGateway {
 	public static synchronized Object newInstanceCall(Class<?> type, Object[] args, Class<?>[] sig) throws Throwable {
 		final NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceSubstitute(type);
 		if (newInvocationControl != null) {
+			Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(type, args);
+			if (constructor.isVarArgs()) {
+				/*
+				 * Get the first argument because this contains the actual
+				 * varargs arguments.
+				 */
+				args = (Object[]) args[0];
+			}
 			try {
-				final Object result = newInvocationControl.createInstance();
+				final Object result = newInvocationControl.createInstance(args);
 				if (result == null) {
 					throw new IllegalStateException("Must replay class " + type.getName() + " to get configured expectation.");
 				}

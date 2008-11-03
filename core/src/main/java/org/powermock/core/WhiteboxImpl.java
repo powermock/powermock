@@ -529,6 +529,9 @@ public class WhiteboxImpl {
 						throwExceptionWhenMultipleConstructorMatchesFound(new Constructor<?>[] { potentialConstructor, constructor });
 					}
 				}
+			} else if (constructor.isVarArgs() && areAllArgumentsOfSameType(arguments)) {
+				potentialConstructor = constructor;
+				break;
 			} else if (arguments != null && (paramTypes.length != arguments.length)) {
 				continue;
 			}
@@ -1012,9 +1015,21 @@ public class WhiteboxImpl {
 			return true;
 		}
 
-		final Class<?> firstArgumentType = getArgumentType(arguments[0]);
+		// Handle null values
+		int index = 0;
+		Object object = null;
+		while (object == null && index < arguments.length) {
+			object = arguments[index++];
+		}
+
+		if (object == null) {
+			return true;
+		}
+		// End of handling null values
+
+		final Class<?> firstArgumentType = getArgumentType(object);
 		for (int i = 1; i < arguments.length; i++) {
-			if (!getArgumentType(arguments[i]).equals(firstArgumentType)) {
+			if (!getArgumentType(arguments[i]).isAssignableFrom(firstArgumentType)) {
 				return false;
 			}
 		}
@@ -1022,7 +1037,16 @@ public class WhiteboxImpl {
 		return true;
 	}
 
+	/**
+	 * @return <code>true</code> if all actual parameter types are assignable
+	 *         from the expected arguments, <code>false</code> otherwise.
+	 */
 	private static boolean checkIfTypesAreSame(Class<?>[] parameterTypes, Object[] arguments) {
+		if (parameterTypes == null) {
+			throw new IllegalArgumentException("parameter types cannot be null");
+		} else if (parameterTypes.length != arguments.length) {
+			return false;
+		}
 		for (int i = 0; i < parameterTypes.length; i++) {
 			Object argument = arguments[i];
 			if (argument == null) {
@@ -1039,11 +1063,11 @@ public class WhiteboxImpl {
 	/**
 	 * @return The argument type of the of argument.
 	 */
-	private static Class<?> getArgumentType(Object argument) {
+	public static Class<?> getArgumentType(Object argument) {
 		Class<?> argumentType = null;
 		if (isClass(argument)) {
 			argumentType = (Class<?>) argument;
-		} else {
+		} else if (argument != null) {
 			argumentType = argument.getClass();
 		}
 		return getUnmockedType(argumentType);
@@ -1053,6 +1077,11 @@ public class WhiteboxImpl {
 		return argument instanceof Class<?>;
 	}
 
+	/**
+	 * @return <code>true</code> if all actual parameter types are assignable
+	 *         from the expected parameter types, <code>false</code>
+	 *         otherwise.
+	 */
 	private static boolean checkIfTypesAreSame(Class<?>[] expectedParameterTypes, Class<?>[] actualParameterTypes) {
 		if (expectedParameterTypes == null || actualParameterTypes == null) {
 			throw new IllegalArgumentException("parameter types cannot be null");

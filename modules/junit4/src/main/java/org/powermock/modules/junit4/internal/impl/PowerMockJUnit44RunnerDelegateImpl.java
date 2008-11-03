@@ -184,7 +184,8 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 							return;
 						} else if (!(Boolean) Whitebox.invokeMethod(fTestMethod, "expectsException")) {
 							final String className = actual.getStackTrace()[0].getClassName();
-							if (actual instanceof NullPointerException
+							if (actual instanceof NullPointerException && !className.startsWith("java.lang")
+									&& !className.startsWith("org.powermock") && !className.startsWith("org.junit")
 									&& !new PrepareForTestExtractorImpl().isPrepared(testClass.getJavaClass(), className)) {
 								Whitebox.setInternalState(actual, "detailMessage", "Perhaps the class " + className + " must be prepared for test?",
 										Throwable.class);

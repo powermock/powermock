@@ -20,6 +20,7 @@ import java.io.DataInputStream;
 import java.io.InputStream;
 import java.util.Date;
 
+import samples.Service;
 import samples.newmocking.MyClass;
 
 public class ExpectNewDemo {
@@ -119,5 +120,25 @@ public class ExpectNewDemo {
 		} catch (RuntimeException e) {
 			return new ByteArrayInputStream(new byte[0]);
 		}
+	}
+
+	public String newWithArguments(Service service, int times) {
+		return new ExpectNewServiceUser(service, times).useService();
+	}
+
+	public String[] newVarArgs(String... strings) {
+		return new VarArgsConstructorDemo(strings).getAllMessages();
+	}
+
+	public Service[] newVarArgs(Service... services) {
+		return new VarArgsConstructorDemo(services).getAllServices();
+	}
+
+	public byte[][] newVarArgs(byte[]... bytes) {
+		return new VarArgsConstructorDemo(bytes).getByteArrays();
+	}
+
+	public byte[][] newVarArgsWithMatchers() {
+		return new VarArgsConstructorDemo(new byte[] { 42 }, new byte[] { 17 }).getByteArrays();
 	}
 }

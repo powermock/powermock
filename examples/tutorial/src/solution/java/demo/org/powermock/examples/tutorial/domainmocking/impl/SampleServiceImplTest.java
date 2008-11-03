@@ -4,9 +4,9 @@ import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.powermock.PowerMock.createMock;
+import static org.powermock.PowerMock.createMockAndExpectNew;
 import static org.powermock.PowerMock.expectLastCall;
 import static org.powermock.PowerMock.expectNew;
-import static org.powermock.PowerMock.createMockAndExpectNew;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
 
@@ -49,7 +49,9 @@ public class SampleServiceImplTest {
 	@Test
 	public void testCreatePerson() throws Exception {
 		// Mock the creation of person
-		Person personMock = createMockAndExpectNew(Person.class);
+		final String firstName = "firstName";
+		final String lastName = "lastName";
+		Person personMock = createMockAndExpectNew(Person.class, firstName, lastName);
 
 		// Mock the creation of BusinessMessages
 		BusinessMessages businessMessagesMock = createMockAndExpectNew(BusinessMessages.class);
@@ -61,7 +63,7 @@ public class SampleServiceImplTest {
 
 		replayAll(personMock, businessMessagesMock, Person.class, BusinessMessages.class);
 
-		assertTrue(tested.createPerson("firstName", "lastName"));
+		assertTrue(tested.createPerson(firstName, lastName));
 
 		verifyAll(personMock, businessMessagesMock, Person.class, BusinessMessages.class);
 	}
@@ -69,7 +71,9 @@ public class SampleServiceImplTest {
 	@Test
 	public void testCreatePerson_error() throws Exception {
 		// Mock the creation of person
-		Person personMock = createMockAndExpectNew(Person.class);
+		final String firstName = "firstName";
+		final String lastName = "lastName";
+		Person personMock = createMockAndExpectNew(Person.class, firstName, lastName);
 
 		// Mock the creation of BusinessMessages
 		BusinessMessages businessMessagesMock = createMockAndExpectNew(BusinessMessages.class);
@@ -84,7 +88,7 @@ public class SampleServiceImplTest {
 
 		replayAll(personMock, businessMessagesMock, Person.class, BusinessMessages.class);
 
-		assertFalse(tested.createPerson("firstName", "lastName"));
+		assertFalse(tested.createPerson(firstName, lastName));
 
 		verifyAll(personMock, businessMessagesMock, Person.class, BusinessMessages.class);
 	}
@@ -92,11 +96,13 @@ public class SampleServiceImplTest {
 	@Test(expected = SampleServiceException.class)
 	public void testCreatePerson_illegalName() throws Exception {
 		// Mock the creation of person
-		expectNew(Person.class).andThrow(new IllegalArgumentException("Illegal name"));
+		final String firstName = "firstName";
+		final String lastName = "lastName";
+		expectNew(Person.class, firstName, lastName).andThrow(new IllegalArgumentException("Illegal name"));
 
 		replayAll(Person.class);
 
-		tested.createPerson("firstName", "lastName");
+		tested.createPerson(firstName, lastName);
 
 		verifyAll(Person.class);
 	}
@@ -106,7 +112,6 @@ public class SampleServiceImplTest {
 		if (additionalMocks != null) {
 			replay(additionalMocks);
 		}
-
 	}
 
 	protected void verifyAll(Object... additionalMocks) {

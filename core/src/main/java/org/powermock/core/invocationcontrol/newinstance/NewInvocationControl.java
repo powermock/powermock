@@ -15,7 +15,6 @@
  */
 package org.powermock.core.invocationcontrol.newinstance;
 
-
 /**
  * The purpose of an invocation control is to determine whether a certain method
  * is mocked or not. This is determined by pairing up an InvocationHandler (that
@@ -25,5 +24,5 @@ package org.powermock.core.invocationcontrol.newinstance;
  */
 public interface NewInvocationControl<T> {
 
-	public T createInstance() throws Exception;
+	public T createInstance(Object... arguments) throws Exception;
 }

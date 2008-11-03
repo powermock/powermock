@@ -16,8 +16,10 @@
 package org.powermock.modules.junit4.expectnew;
 
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.aryEq;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -37,7 +39,10 @@ import org.powermock.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import samples.Service;
 import samples.expectnew.ExpectNewDemo;
+import samples.expectnew.ExpectNewServiceUser;
+import samples.expectnew.VarArgsConstructorDemo;
 import samples.newmocking.MyClass;
 
 /**
@@ -125,8 +130,7 @@ public class ExpectNewDemoTest {
 		ExpectNewDemo tested = new ExpectNewDemo();
 
 		final String expectedFailMessage = "testing";
-		expectNew(MyClass.class).andThrow(
-				new RuntimeException(expectedFailMessage));
+		expectNew(MyClass.class).andThrow(new RuntimeException(expectedFailMessage));
 
 		replay(MyClass.class);
 
@@ -204,10 +208,8 @@ public class ExpectNewDemoTest {
 			verify(myClassMock1, MyClass.class);
 			fail("Should throw AssertionError.");
 		} catch (AssertionError e) {
-			assertEquals(
-					"\nExpectation failure on verify:\nExpected a new instance call on "
-							+ "class samples.newmocking.MyClass 4 times but was actually 3 times.",
-					e.getMessage());
+			assertEquals("\nExpectation failure on verify:\nExpected a new instance call on "
+					+ "class samples.newmocking.MyClass 4 times but was actually 3 times.", e.getMessage());
 		}
 	}
 
@@ -225,9 +227,7 @@ public class ExpectNewDemoTest {
 			fail("Should throw AssertionError.");
 		} catch (AssertionError e) {
 			assertTrue(e.getMessage().contains(
-					"Expected a new instance call on class "
-							+ MyClass.class.getName()
-							+ " 2 times but was actually 2 (+1) times."));
+					"Expected a new instance call on class " + MyClass.class.getName() + " 2 times but was actually 2 (+1) times."));
 		}
 	}
 
@@ -236,8 +236,7 @@ public class ExpectNewDemoTest {
 	 * http://code.google.com/p/powermock/issues/detail?id=10 is solved.
 	 */
 	@Test
-	public void testSimpleMultipleNewPrivate_tooFewTimesExpected()
-			throws Exception {
+	public void testSimpleMultipleNewPrivate_tooFewTimesExpected() throws Exception {
 		ExpectNewDemo tested = new ExpectNewDemo();
 
 		MyClass myClassMock1 = createMock(MyClass.class);
@@ -250,9 +249,7 @@ public class ExpectNewDemoTest {
 			fail("Should throw RuntimeException.");
 		} catch (RuntimeException e) {
 			assertTrue(e.getMessage().contains(
-					"Expected a new instance call on class "
-							+ MyClass.class.getName()
-							+ " 2 times but was actually 2 (+1) times."));
+					"Expected a new instance call on class " + MyClass.class.getName() + " 2 times but was actually 2 (+1) times."));
 		}
 	}
 
@@ -308,8 +305,7 @@ public class ExpectNewDemoTest {
 	}
 
 	@Test
-	public void testSimpleMultipleNew_withRange_lowerBoundLessThan0()
-			throws Exception {
+	public void testSimpleMultipleNew_withRange_lowerBoundLessThan0() throws Exception {
 		MyClass myClassMock1 = createMock(MyClass.class);
 
 		try {
@@ -322,8 +318,7 @@ public class ExpectNewDemoTest {
 	}
 
 	@Test
-	public void testSimpleMultipleNew_withRange_upperBoundLessThan0()
-			throws Exception {
+	public void testSimpleMultipleNew_withRange_upperBoundLessThan0() throws Exception {
 
 		MyClass myClassMock1 = createMock(MyClass.class);
 		try {
@@ -335,8 +330,7 @@ public class ExpectNewDemoTest {
 	}
 
 	@Test
-	public void testSimpleMultipleNew_withRange_upperBoundLessThanLowerBound()
-			throws Exception {
+	public void testSimpleMultipleNew_withRange_upperBoundLessThanLowerBound() throws Exception {
 
 		MyClass myClassMock1 = createMock(MyClass.class);
 		try {
@@ -376,8 +370,7 @@ public class ExpectNewDemoTest {
 	}
 
 	@Test
-	public void testSimpleMultipleNew_withRange_notWithinRange()
-			throws Exception {
+	public void testSimpleMultipleNew_withRange_notWithinRange() throws Exception {
 		ExpectNewDemo tested = new ExpectNewDemo();
 		MyClass myClassMock1 = createMock(MyClass.class);
 
@@ -391,18 +384,15 @@ public class ExpectNewDemoTest {
 			verify(myClassMock1, MyClass.class);
 			fail("Should throw AssertionError.");
 		} catch (AssertionError e) {
-			assertEquals(
-					"\nExpectation failure on verify:\nExpected a new instance call on "
-							+ "class samples.newmocking.MyClass between 5 and 7 times but was actually 3 times.",
-					e.getMessage());
+			assertEquals("\nExpectation failure on verify:\nExpected a new instance call on "
+					+ "class samples.newmocking.MyClass between 5 and 7 times but was actually 3 times.", e.getMessage());
 		}
 	}
 
 	@Test
 	public void testAlternativeFlow() throws Exception {
 		ExpectNewDemo tested = new ExpectNewDemo();
-		expectNew(DataInputStream.class)
-				.andThrow(new RuntimeException("error"));
+		expectNew(DataInputStream.class, new Object[] { null }).andThrow(new RuntimeException("error"));
 
 		replay(ExpectNewDemo.class, DataInputStream.class);
 
@@ -411,14 +401,11 @@ public class ExpectNewDemoTest {
 		verify(ExpectNewDemo.class, DataInputStream.class);
 
 		assertNotNull("The returned inputstream should not be null.", stream);
-		assertTrue(
-				"The returned inputstream should be an instance of ByteArrayInputStream.",
-				stream instanceof ByteArrayInputStream);
+		assertTrue("The returned inputstream should be an instance of ByteArrayInputStream.", stream instanceof ByteArrayInputStream);
 	}
 
 	@Test
-	public void testSimpleMultipleNewPrivate_tooManyTimesExpected()
-			throws Exception {
+	public void testSimpleMultipleNewPrivate_tooManyTimesExpected() throws Exception {
 		ExpectNewDemo tested = new ExpectNewDemo();
 
 		MyClass myClassMock1 = createMock(MyClass.class);
@@ -431,8 +418,122 @@ public class ExpectNewDemoTest {
 			verify(myClassMock1, MyClass.class);
 			fail("Should throw an exception!.");
 		} catch (AssertionError e) {
-			assertTrue(e.getMessage().contains(
-					"4 times but was actually 3 times"));
+			assertTrue(e.getMessage().contains("4 times but was actually 3 times"));
 		}
+	}
+
+	@Test
+	public void testNewWithArguments() throws Exception {
+		final int numberOfTimes = 2;
+		final String expected = "used";
+
+		ExpectNewDemo tested = new ExpectNewDemo();
+		ExpectNewServiceUser expectNewServiceImplMock = createMock(ExpectNewServiceUser.class);
+		Service serviceMock = createMock(Service.class);
+
+		expectNew(ExpectNewServiceUser.class, serviceMock, numberOfTimes).andReturn(expectNewServiceImplMock);
+		expect(expectNewServiceImplMock.useService()).andReturn(expected);
+
+		replay(expectNewServiceImplMock, serviceMock, ExpectNewServiceUser.class);
+
+		assertEquals(expected, tested.newWithArguments(serviceMock, numberOfTimes));
+
+		verify(expectNewServiceImplMock, serviceMock, ExpectNewServiceUser.class);
+	}
+
+	@Test
+	public void testNewWithVarArgs() throws Exception {
+		final String firstString = "hello";
+		final String secondString = "world";
+
+		ExpectNewDemo tested = new ExpectNewDemo();
+		VarArgsConstructorDemo varArgsConstructorDemoMock = createMock(VarArgsConstructorDemo.class);
+
+		expectNew(VarArgsConstructorDemo.class, firstString, secondString).andReturn(varArgsConstructorDemoMock);
+		expect(varArgsConstructorDemoMock.getAllMessages()).andReturn(new String[] { firstString, secondString });
+
+		replay(VarArgsConstructorDemo.class, varArgsConstructorDemoMock);
+
+		String[] varArgs = tested.newVarArgs(firstString, secondString);
+		assertEquals(2, varArgs.length);
+		assertEquals(firstString, varArgs[0]);
+		assertEquals(secondString, varArgs[1]);
+
+		verify(VarArgsConstructorDemo.class, varArgsConstructorDemoMock);
+	}
+
+	@Test
+	public void testNewWhenTheExpectedConstructorIsNotFound() throws Exception {
+		final Object object = new Object();
+		try {
+			expectNew(VarArgsConstructorDemo.class, object);
+			fail("Should throw IllegalArgumentException!");
+		} catch (IllegalArgumentException e) {
+			assertEquals("No constructor found in class '" + VarArgsConstructorDemo.class.getName() + "' with argument types: [ "
+					+ object.getClass().getName() + " ]", e.getMessage());
+		}
+	}
+
+	@Test
+	public void testNewWithVarArgsConstructorWhenOneArgumentIsOfASubType() throws Exception {
+		ExpectNewDemo tested = new ExpectNewDemo();
+		Service serviceMock = createMock(Service.class);
+		VarArgsConstructorDemo varArgsConstructorDemoMock = createMock(VarArgsConstructorDemo.class);
+
+		final Service serviceSubTypeInstance = new Service() {
+
+			public String getServiceMessage() {
+				return "message";
+			}
+		};
+
+		expectNew(VarArgsConstructorDemo.class, serviceSubTypeInstance, serviceMock).andReturn(varArgsConstructorDemoMock);
+		expect(varArgsConstructorDemoMock.getAllServices()).andReturn(new Service[] { serviceMock });
+
+		replay(serviceMock, VarArgsConstructorDemo.class, varArgsConstructorDemoMock);
+
+		Service[] varArgs = tested.newVarArgs(serviceSubTypeInstance, serviceMock);
+		assertEquals(1, varArgs.length);
+		assertSame(serviceMock, varArgs[0]);
+
+		verify(serviceMock, VarArgsConstructorDemo.class, varArgsConstructorDemoMock);
+	}
+
+	@Test
+	public void testNewWithArrayVarArgs() throws Exception {
+		ExpectNewDemo tested = new ExpectNewDemo();
+		VarArgsConstructorDemo varArgsConstructorDemoMock = createMock(VarArgsConstructorDemo.class);
+
+		final byte[] byteArrayOne = new byte[] { 42 };
+		final byte[] byteArrayTwo = new byte[] { 17 };
+		expectNew(VarArgsConstructorDemo.class, byteArrayOne, byteArrayTwo).andReturn(varArgsConstructorDemoMock);
+		expect(varArgsConstructorDemoMock.getByteArrays()).andReturn(new byte[][] { byteArrayOne });
+
+		replay(VarArgsConstructorDemo.class, varArgsConstructorDemoMock);
+
+		byte[][] varArgs = tested.newVarArgs(byteArrayOne, byteArrayTwo);
+		assertEquals(1, varArgs.length);
+		assertSame(byteArrayOne, varArgs[0]);
+
+		verify(VarArgsConstructorDemo.class, varArgsConstructorDemoMock);
+	}
+
+	@Test
+	public void testNewWithArrayVarArgsAndMatchers() throws Exception {
+		ExpectNewDemo tested = new ExpectNewDemo();
+		VarArgsConstructorDemo varArgsConstructorDemoMock = createMock(VarArgsConstructorDemo.class);
+
+		final byte[] byteArrayOne = new byte[] { 42 };
+		final byte[] byteArrayTwo = new byte[] { 17 };
+		expectNew(VarArgsConstructorDemo.class, aryEq(byteArrayOne), aryEq(byteArrayTwo)).andReturn(varArgsConstructorDemoMock);
+		expect(varArgsConstructorDemoMock.getByteArrays()).andReturn(new byte[][] { byteArrayOne });
+
+		replay(VarArgsConstructorDemo.class, varArgsConstructorDemoMock);
+
+		byte[][] varArgs = tested.newVarArgsWithMatchers();
+		assertEquals(1, varArgs.length);
+		assertSame(byteArrayOne, varArgs[0]);
+
+		verify(VarArgsConstructorDemo.class, varArgsConstructorDemoMock);
 	}
 }

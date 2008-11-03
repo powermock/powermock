@@ -45,7 +45,7 @@ public class PersistenceManagerTest {
 
 		PersistenceManager tested = new PersistenceManager();
 
-		expectNew(File.class).andReturn(fileMock);
+		expectNew(File.class, path).andReturn(fileMock);
 
 		expect(fileMock.exists()).andReturn(false);
 		expect(fileMock.mkdirs()).andReturn(true);
@@ -60,7 +60,7 @@ public class PersistenceManagerTest {
 	@Test
 	public void testCreateDirectoryStructure_usingCreateMockAndExpectNew() throws Exception {
 		final String path = "directoryPath";
-		File fileMock = createMockAndExpectNew(File.class);
+		File fileMock = createMockAndExpectNew(File.class, path);
 
 		PersistenceManager tested = new PersistenceManager();
 
