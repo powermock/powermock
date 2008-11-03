@@ -1259,7 +1259,7 @@ public class PowerMock {
 		WhiteboxImpl.findConstructorOrThrowException(type, arguments);
 
 		/*
-		 * Check if this object has been mocked before
+		 * Check if this type has been mocked before
 		 */
 		NewInvocationControl<T> newInvocationControl = (NewInvocationControl<T>) MockRepository.getNewInstanceSubstitute(unmockedType);
 		if (newInvocationControl == null) {

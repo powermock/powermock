@@ -208,8 +208,7 @@ public class ExpectNewDemoTest {
 			verify(myClassMock1, MyClass.class);
 			fail("Should throw AssertionError.");
 		} catch (AssertionError e) {
-			assertEquals("\nExpectation failure on verify:\nExpected a new instance call on "
-					+ "class samples.newmocking.MyClass 4 times but was actually 3 times.", e.getMessage());
+			assertEquals("\n  Expectation failure on verify:" + "\n    samples.newmocking.MyClass(): expected: 4, actual: 3", e.getMessage());
 		}
 	}
 
@@ -226,8 +225,8 @@ public class ExpectNewDemoTest {
 			tested.simpleMultipleNew();
 			fail("Should throw AssertionError.");
 		} catch (AssertionError e) {
-			assertTrue(e.getMessage().contains(
-					"Expected a new instance call on class " + MyClass.class.getName() + " 2 times but was actually 2 (+1) times."));
+			assertEquals("\n  Unexpected constructor call samples.newmocking.MyClass():"
+					+ "\n    samples.newmocking.MyClass(): expected: 2, actual: 2 (+1)", e.getMessage());
 		}
 	}
 
@@ -246,10 +245,10 @@ public class ExpectNewDemoTest {
 		replay(myClassMock1, MyClass.class);
 		try {
 			Whitebox.invokeMethod(tested, "simpleMultipleNewPrivate");
-			fail("Should throw RuntimeException.");
-		} catch (RuntimeException e) {
-			assertTrue(e.getMessage().contains(
-					"Expected a new instance call on class " + MyClass.class.getName() + " 2 times but was actually 2 (+1) times."));
+			fail("Should throw AssertionError.");
+		} catch (AssertionError e) {
+			assertEquals("\n  Unexpected constructor call samples.newmocking.MyClass():"
+					+ "\n    samples.newmocking.MyClass(): expected: 2, actual: 2 (+1)", e.getMessage());
 		}
 	}
 
@@ -384,8 +383,9 @@ public class ExpectNewDemoTest {
 			verify(myClassMock1, MyClass.class);
 			fail("Should throw AssertionError.");
 		} catch (AssertionError e) {
-			assertEquals("\nExpectation failure on verify:\nExpected a new instance call on "
-					+ "class samples.newmocking.MyClass between 5 and 7 times but was actually 3 times.", e.getMessage());
+
+			assertEquals("\n  Expectation failure on verify:" + "\n    samples.newmocking.MyClass(): expected: between 5 and 7, actual: 3", e
+					.getMessage());
 		}
 	}
 
@@ -418,7 +418,7 @@ public class ExpectNewDemoTest {
 			verify(myClassMock1, MyClass.class);
 			fail("Should throw an exception!.");
 		} catch (AssertionError e) {
-			assertTrue(e.getMessage().contains("4 times but was actually 3 times"));
+			assertEquals("\n  Expectation failure on verify:" + "\n    samples.newmocking.MyClass(): expected: 4, actual: 3", e.getMessage());
 		}
 	}
 
@@ -535,5 +535,48 @@ public class ExpectNewDemoTest {
 		assertSame(byteArrayOne, varArgs[0]);
 
 		verify(VarArgsConstructorDemo.class, varArgsConstructorDemoMock);
+	}
+
+	@Test
+	public void testNewWithWrongArgument() throws Exception {
+		final int numberOfTimes = 2;
+		final String expected = "used";
+
+		ExpectNewDemo tested = new ExpectNewDemo();
+		ExpectNewServiceUser expectNewServiceImplMock = createMock(ExpectNewServiceUser.class);
+		Service serviceMock = createMock(Service.class);
+
+		expectNew(ExpectNewServiceUser.class, serviceMock, numberOfTimes).andReturn(expectNewServiceImplMock);
+		expect(expectNewServiceImplMock.useService()).andReturn(expected);
+
+		replay(expectNewServiceImplMock, serviceMock, ExpectNewServiceUser.class);
+
+		try {
+			assertEquals(expected, tested.newWithWrongArguments(serviceMock, numberOfTimes));
+			verify(expectNewServiceImplMock, serviceMock, ExpectNewServiceUser.class);
+			fail("Should throw AssertionError!");
+		} catch (AssertionError e) {
+			assertEquals("\n  Unexpected constructor call samples.expectnew.ExpectNewServiceUser(EasyMock for interface samples.Service, 4):"
+					+ "\n    samples.expectnew.ExpectNewServiceUser(EasyMock for interface samples.Service, 2): expected: 1, actual: 0", e
+					.getMessage());
+		}
+	}
+
+	@Test
+	public void testExpectNewButNoNewCallWasMade() throws Exception {
+		ExpectNewDemo tested = new ExpectNewDemo();
+
+		MyClass myClassMock1 = createMock(MyClass.class);
+
+		expectNew(MyClass.class).andReturn(myClassMock1).once();
+
+		replay(myClassMock1, MyClass.class);
+		try {
+			tested.makeDate();
+			verify(myClassMock1, MyClass.class);
+			fail("Should throw AssertionError!");
+		} catch (AssertionError e) {
+			assertTrue(e.getMessage().contains(MyClass.class.getName() + "(): expected: 1, actual: 0"));
+		}
 	}
 }

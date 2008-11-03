@@ -126,6 +126,10 @@ public class ExpectNewDemo {
 		return new ExpectNewServiceUser(service, times).useService();
 	}
 
+	public String newWithWrongArguments(Service service, int times) {
+		return new ExpectNewServiceUser(service, times * 2).useService();
+	}
+
 	public String[] newVarArgs(String... strings) {
 		return new VarArgsConstructorDemo(strings).getAllMessages();
 	}

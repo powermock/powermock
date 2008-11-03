@@ -19,6 +19,8 @@ import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.powermock.core.invocationcontrol.newinstance.NewInvocationControl;
+
 public class PowerMockUtils {
 
 	/**
@@ -30,16 +32,14 @@ public class PowerMockUtils {
 	 * @throws IllegalAccessException
 	 */
 	@SuppressWarnings("unchecked")
-	public static Iterator<Class<?>> getClassIterator(ClassLoader classLoader)
-			throws NoSuchFieldException, IllegalAccessException {
+	public static Iterator<Class<?>> getClassIterator(ClassLoader classLoader) throws NoSuchFieldException, IllegalAccessException {
 		Class<?> classLoaderClass = classLoader.getClass();
 		while (classLoaderClass != ClassLoader.class) {
 			classLoaderClass = classLoaderClass.getSuperclass();
 		}
 		Field classesField = classLoaderClass.getDeclaredField("classes");
 		classesField.setAccessible(true);
-		Vector<Class<?>> classes = (Vector<Class<?>>) classesField
-				.get(classLoader);
+		Vector<Class<?>> classes = (Vector<Class<?>>) classesField.get(classLoader);
 		return classes.iterator();
 	}
 
@@ -49,13 +49,11 @@ public class PowerMockUtils {
 	 * @throws NoSuchFieldException
 	 * @throws IllegalAccessException
 	 */
-	public static void printClassesLoadedByClassloader(ClassLoader classLoader,
-			boolean includeParent) throws NoSuchFieldException,
+	public static void printClassesLoadedByClassloader(ClassLoader classLoader, boolean includeParent) throws NoSuchFieldException,
 			IllegalAccessException {
 		while (classLoader != null) {
 			System.out.println("ClassLoader: " + classLoader);
-			for (Iterator<?> iter = PowerMockUtils
-					.getClassIterator(classLoader); iter.hasNext();) {
+			for (Iterator<?> iter = PowerMockUtils.getClassIterator(classLoader); iter.hasNext();) {
 				System.out.println("\t" + iter.next());
 			}
 			if (includeParent) {
@@ -66,8 +64,7 @@ public class PowerMockUtils {
 		}
 	}
 
-	public static void throwAssertionErrorForNewSubstitutionFailure(
-			AssertionError oldError, Class<?> type) {
+	public static void throwAssertionErrorForNewSubstitutionFailure(AssertionError oldError, Class<?> type) {
 		/*
 		 * We failed to verify the new substitution mock. This happens when, for
 		 * example, the user has done something like
@@ -75,21 +72,10 @@ public class PowerMockUtils {
 		 * instance of MyClass has been created less or more times than 3.
 		 */
 		String message = oldError.getMessage();
-		final String expectedString = "expected:";
-		final String actualString = "actual:";
-		final int expectedTimesStartIndex = message.indexOf(expectedString)
-				+ expectedString.length() + 1;
-		final int indexOfActualString = message.indexOf(actualString);
-		String expectedTimes = message.substring(expectedTimesStartIndex,
-				indexOfActualString - 2);
-		String actualTimes = message.substring(indexOfActualString
-				+ actualString.length() + 1);
-		StringBuilder errorMessage = new StringBuilder();
-		errorMessage
-				.append("\nExpectation failure on verify:\nExpected a new instance call on ");
-		errorMessage.append(type.toString()).append(" ").append(expectedTimes)
-				.append(" times but was actually ").append(actualTimes).append(
-						" times.");
-		throw new AssertionError(errorMessage);
+		final String newSubsitutionMethodName = NewInvocationControl.class.getDeclaredMethods()[0].getName();
+		message = message.replaceAll(newSubsitutionMethodName, type.getName());
+		message = message.replaceAll("method", "constructor");
+
+		throw new AssertionError(message);
 	}
 }

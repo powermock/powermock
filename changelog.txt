@@ -9,6 +9,7 @@ Change log 0.9 (under development)
 * createMockAndExpectNew now takes expected arguments as the second parameter.
 * expectNew takes expected arguments as the second parameter.
 * Invocations of var arg methods, constructors and expectPrivate now works for sub-types of the declared parameter types.
+* More consistent error messages when expectNew fails. Error messages now allows takes the parameters into account.
 
 Change log 0.8.5 (2008-10-30)
 -----------------------------

@@ -947,6 +947,8 @@ public class WhiteboxImpl {
 			Throwable cause = e.getCause();
 			if (cause instanceof Exception) {
 				throw (Exception) cause;
+			} else if (cause instanceof Error) {
+				throw (Error) cause;
 			} else {
 				throw new RuntimeException(cause);
 			}
