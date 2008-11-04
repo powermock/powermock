@@ -19,7 +19,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.powermock.PowerMock.expectPrivate;
 import static org.powermock.PowerMock.mockStatic;
-import static org.powermock.PowerMock.mockStaticMethod;
+import static org.powermock.PowerMock.mockStaticPartial;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
 import static org.junit.Assert.assertEquals;
@@ -142,7 +142,7 @@ public class MockStaticTest {
 
 	@Test
 	public void testSayPrivateStatic() throws Exception {
-		mockStaticMethod(StaticService.class, "sayPrivateStatic", String.class);
+		mockStaticPartial(StaticService.class, "sayPrivateStatic", String.class);
 
 		final String expected = "Hello world";
 		expectPrivate(StaticService.class, "sayPrivateStatic", "name").andReturn(expected);
@@ -157,7 +157,7 @@ public class MockStaticTest {
 
 	@Test
 	public void testSayPrivateFinalStatic() throws Exception {
-		mockStaticMethod(StaticService.class, "sayPrivateFinalStatic", String.class);
+		mockStaticPartial(StaticService.class, "sayPrivateFinalStatic", String.class);
 
 		final String expected = "Hello world";
 		expectPrivate(StaticService.class, "sayPrivateFinalStatic", "name").andReturn(expected);

@@ -18,7 +18,7 @@ package org.powermock.modules.junit4.staticandinstance;
 import static org.easymock.EasyMock.expect;
 import static org.powermock.PowerMock.expectPrivate;
 import static org.powermock.PowerMock.createPartialMock;
-import static org.powermock.PowerMock.mockStaticMethod;
+import static org.powermock.PowerMock.mockStaticPartial;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
 import static org.junit.Assert.assertEquals;
@@ -37,7 +37,7 @@ public class StaticAndInstanceDemoTest {
 
 	@Test
 	public void testMockStaticMethodAndInstanceMethod() throws Exception {
-		mockStaticMethod(StaticAndInstanceDemo.class, "getStaticMessage");
+		mockStaticPartial(StaticAndInstanceDemo.class, "getStaticMessage");
 
 		StaticAndInstanceDemo tested = createPartialMock(StaticAndInstanceDemo.class,
 				"getPrivateMessage");
@@ -80,7 +80,7 @@ public class StaticAndInstanceDemoTest {
 	public void testMockStaticButNotInstance() throws Exception {
 		StaticAndInstanceDemo tested = new StaticAndInstanceDemo();
 
-		mockStaticMethod(StaticAndInstanceDemo.class, "getStaticMessage");
+		mockStaticPartial(StaticAndInstanceDemo.class, "getStaticMessage");
 
 		final String staticExpected = "static message";
 		expect(StaticAndInstanceDemo.getStaticMessage()).andReturn(

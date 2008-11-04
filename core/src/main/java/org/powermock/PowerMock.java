@@ -389,7 +389,7 @@ public class PowerMock {
 	 * @param additionalArgumentTypes
 	 *            Optional additional argument types.
 	 */
-	public static synchronized void mockStaticMethod(Class<?> clazz, String methodNameToMock, Class<?> firstArgumentType,
+	public static synchronized void mockStaticPartial(Class<?> clazz, String methodNameToMock, Class<?> firstArgumentType,
 			Class<?>... additionalArgumentTypes) {
 		doMockSpecific(clazz, new DefaultMockStrategy(), new String[] { methodNameToMock }, null, mergeArgumentTypes(firstArgumentType,
 				additionalArgumentTypes));
@@ -407,7 +407,7 @@ public class PowerMock {
 	 * @param additionalArgumentTypes
 	 *            Optional additional argument types.
 	 */
-	public static synchronized void mockStaticMethodStrict(Class<?> clazz, String methodNameToMock, Class<?> firstArgumentType,
+	public static synchronized void mockStaticPartialStrict(Class<?> clazz, String methodNameToMock, Class<?> firstArgumentType,
 			Class<?>... additionalArgumentTypes) {
 		doMockSpecific(clazz, new StrictMockStrategy(), new String[] { methodNameToMock }, null, mergeArgumentTypes(firstArgumentType,
 				additionalArgumentTypes));
@@ -425,7 +425,7 @@ public class PowerMock {
 	 * @param additionalArgumentTypes
 	 *            Optional additional argument types.
 	 */
-	public static synchronized void mockStaticMethodNice(Class<?> clazz, String methodNameToMock, Class<?> firstArgumentType,
+	public static synchronized void mockStaticPartialNice(Class<?> clazz, String methodNameToMock, Class<?> firstArgumentType,
 			Class<?>... additionalArgumentTypes) {
 		doMockSpecific(clazz, new NiceMockStrategy(), new String[] { methodNameToMock }, null, mergeArgumentTypes(firstArgumentType,
 				additionalArgumentTypes));
@@ -451,7 +451,7 @@ public class PowerMock {
 	 *            with the second parameter as <code>null</code> (i.e. all
 	 *            methods in that class will be mocked).
 	 */
-	public static synchronized void mockStaticMethod(Class<?> clazz, String... methodNames) {
+	public static synchronized void mockStaticPartial(Class<?> clazz, String... methodNames) {
 		mockStatic(clazz, Whitebox.getMethods(clazz, methodNames));
 	}
 
@@ -475,7 +475,7 @@ public class PowerMock {
 	 *            with the second parameter as <code>null</code> (i.e. all
 	 *            methods in that class will be mocked).
 	 */
-	public static synchronized void mockStaticMethodStrict(Class<?> clazz, String... methodNames) {
+	public static synchronized void mockStaticPartialStrict(Class<?> clazz, String... methodNames) {
 		mockStaticStrict(clazz, Whitebox.getMethods(clazz, methodNames));
 	}
 

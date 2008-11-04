@@ -18,7 +18,7 @@ package org.powermock.modules.junit4.legacy.noannotation;
 import static org.easymock.EasyMock.expect;
 import static org.powermock.PowerMock.expectPrivate;
 import static org.powermock.PowerMock.createPartialMock;
-import static org.powermock.PowerMock.mockStaticMethod;
+import static org.powermock.PowerMock.mockStaticPartial;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
 import junit.framework.TestCase;
@@ -40,7 +40,7 @@ import samples.staticandinstance.StaticAndInstanceDemo;
 public class NoAnnotationUsageTest extends TestCase {
 
 	public void testGetMessage() throws Exception {
-		mockStaticMethod(StaticAndInstanceDemo.class, "getStaticMessage");
+		mockStaticPartial(StaticAndInstanceDemo.class, "getStaticMessage");
 
 		StaticAndInstanceDemo tested = createPartialMock(StaticAndInstanceDemo.class, "getPrivateMessage");
 
@@ -61,7 +61,7 @@ public class NoAnnotationUsageTest extends TestCase {
 	}
 
 	public void testGetMessage2() throws Exception {
-		mockStaticMethod(StaticAndInstanceDemo.class, "getStaticMessage");
+		mockStaticPartial(StaticAndInstanceDemo.class, "getStaticMessage");
 
 		StaticAndInstanceDemo tested = createPartialMock(StaticAndInstanceDemo.class, "getPrivateMessage");
 
