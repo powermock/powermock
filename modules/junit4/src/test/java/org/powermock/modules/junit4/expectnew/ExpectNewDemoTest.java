@@ -15,12 +15,12 @@
  */
 package org.powermock.modules.junit4.expectnew;
 
-import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.aryEq;
+import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.powermock.PowerMock.createMock;
@@ -533,6 +533,83 @@ public class ExpectNewDemoTest {
 		byte[][] varArgs = tested.newVarArgsWithMatchers();
 		assertEquals(1, varArgs.length);
 		assertSame(byteArrayOne, varArgs[0]);
+
+		verify(VarArgsConstructorDemo.class, varArgsConstructorDemoMock);
+	}
+
+	@Test
+	public void testNewWithArrayVarArgsWhenFirstArgumentIsNullAndSubseqentArgumentsAreNotNull() throws Exception {
+		ExpectNewDemo tested = new ExpectNewDemo();
+		VarArgsConstructorDemo varArgsConstructorDemoMock = createMock(VarArgsConstructorDemo.class);
+
+		final byte[] byteArrayOne = null;
+		final byte[] byteArrayTwo = new byte[] { 17 };
+		expectNew(VarArgsConstructorDemo.class, byteArrayOne, byteArrayTwo).andReturn(varArgsConstructorDemoMock);
+		expect(varArgsConstructorDemoMock.getByteArrays()).andReturn(new byte[][] { byteArrayTwo });
+
+		replay(VarArgsConstructorDemo.class, varArgsConstructorDemoMock);
+
+		byte[][] varArgs = tested.newVarArgs(byteArrayOne, byteArrayTwo);
+		assertEquals(1, varArgs.length);
+		assertSame(byteArrayTwo, varArgs[0]);
+
+		verify(VarArgsConstructorDemo.class, varArgsConstructorDemoMock);
+	}
+
+	@Test
+	public void testNewWithArrayVarArgsWhenFirstArgumentIsNotNullButSubseqentArgumentsAreNull() throws Exception {
+		ExpectNewDemo tested = new ExpectNewDemo();
+		VarArgsConstructorDemo varArgsConstructorDemoMock = createMock(VarArgsConstructorDemo.class);
+
+		final byte[] byteArrayOne = new byte[] { 42 };
+		final byte[] byteArrayTwo = null;
+		expectNew(VarArgsConstructorDemo.class, byteArrayOne, byteArrayTwo).andReturn(varArgsConstructorDemoMock);
+		expect(varArgsConstructorDemoMock.getByteArrays()).andReturn(new byte[][] { byteArrayOne });
+
+		replay(VarArgsConstructorDemo.class, varArgsConstructorDemoMock);
+
+		byte[][] varArgs = tested.newVarArgs(byteArrayOne, byteArrayTwo);
+		assertEquals(1, varArgs.length);
+		assertSame(byteArrayOne, varArgs[0]);
+
+		verify(VarArgsConstructorDemo.class, varArgsConstructorDemoMock);
+	}
+
+	@Test
+	public void testNewWithArrayVarArgsWhenFirstArgumentIsNullSecondArgumentIsNotNullAndThirdArgumentIsNull() throws Exception {
+		ExpectNewDemo tested = new ExpectNewDemo();
+		VarArgsConstructorDemo varArgsConstructorDemoMock = createMock(VarArgsConstructorDemo.class);
+
+		final byte[] byteArrayOne = null;
+		final byte[] byteArrayTwo = new byte[] { 42 };
+		final byte[] byteArrayThree = null;
+		expectNew(VarArgsConstructorDemo.class, byteArrayOne, byteArrayTwo, byteArrayThree).andReturn(varArgsConstructorDemoMock);
+		expect(varArgsConstructorDemoMock.getByteArrays()).andReturn(new byte[][] { byteArrayTwo });
+
+		replay(VarArgsConstructorDemo.class, varArgsConstructorDemoMock);
+
+		byte[][] varArgs = tested.newVarArgs(byteArrayOne, byteArrayTwo, byteArrayThree);
+		assertEquals(1, varArgs.length);
+		assertSame(byteArrayTwo, varArgs[0]);
+
+		verify(VarArgsConstructorDemo.class, varArgsConstructorDemoMock);
+	}
+
+	@Test
+	public void testNewWithArrayVarArgsWhenAllArgumentsAreNull() throws Exception {
+		ExpectNewDemo tested = new ExpectNewDemo();
+		VarArgsConstructorDemo varArgsConstructorDemoMock = createMock(VarArgsConstructorDemo.class);
+
+		final byte[] byteArrayOne = null;
+		final byte[] byteArrayTwo = null;
+		expectNew(VarArgsConstructorDemo.class, byteArrayOne, byteArrayTwo).andReturn(varArgsConstructorDemoMock);
+		expect(varArgsConstructorDemoMock.getByteArrays()).andReturn(new byte[][] { byteArrayTwo });
+
+		replay(VarArgsConstructorDemo.class, varArgsConstructorDemoMock);
+
+		byte[][] varArgs = tested.newVarArgs(byteArrayOne, byteArrayTwo);
+		assertEquals(1, varArgs.length);
+		assertSame(byteArrayTwo, varArgs[0]);
 
 		verify(VarArgsConstructorDemo.class, varArgsConstructorDemoMock);
 	}
