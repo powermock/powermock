@@ -123,7 +123,9 @@ public class WhiteboxImpl {
 	}
 
 	/**
-	 * Set the value of a field using reflection.
+	 * Set the value of a field using reflection. This method will traverse the
+	 * super class hierarchy until a field with name <tt>fieldName</tt> is
+	 * found.
 	 * 
 	 * @param object
 	 *            the object to modify
@@ -133,18 +135,21 @@ public class WhiteboxImpl {
 	 *            the new value of the field
 	 */
 	public static void setInternalState(Object object, String fieldName, Object value) {
-
-		if (object == null) {
-			throw new IllegalArgumentException("The object parameter cannot be null in method invocation Whitebox.setInternalState(..).");
+		Field foundField = findFieldInHierarchy(object, fieldName);
+		try {
+			foundField.set(object, value);
+		} catch (IllegalArgumentException e) {
+			throw e;
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException("Internal error: Failed to get field in method getInternalState.", e);
 		}
-
-		setInternalState(object, fieldName, value, object.getClass());
 	}
 
 	/**
 	 * Set the value of a field using reflection. Use this method when you need
-	 * to specify in which class the field is declared. This might be useful
-	 * when you have mocked the instance you are trying to modify.
+	 * to specify in which class the field is declared. This is useful if you
+	 * have two fields in a class hierarchy that has the same name but you like
+	 * to modify the latter.
 	 * 
 	 * @param object
 	 *            the object to modify
@@ -171,26 +176,6 @@ public class WhiteboxImpl {
 		}
 	}
 
-	private static Class<?> findField(Object object, String fieldName, Class<?> where) {
-		if (object == null || fieldName == null || fieldName.equals("") || fieldName.startsWith(" ")) {
-			throw new IllegalArgumentException("object, field name, and \"where\" must not be empty or null.");
-		}
-
-		Class<?> tempClass;
-		if (object instanceof Class) {
-			tempClass = (Class<?>) object;
-		} else {
-			tempClass = object.getClass();
-			while (!tempClass.equals(where)) {
-				tempClass = tempClass.getSuperclass();
-				if (tempClass.equals(Object.class)) {
-					throw new IllegalArgumentException("The field " + fieldName + " was not found in the class heirachy for " + object.getClass());
-				}
-			}
-		}
-		return tempClass;
-	}
-
 	/**
 	 * Get the value of a field using reflection. This method will iterate
 	 * through the entire class hierarchy and return the value of the first
@@ -205,6 +190,15 @@ public class WhiteboxImpl {
 	 *            the name of the field
 	 */
 	public static Object getInternalState(Object object, String fieldName) {
+		Field foundField = findFieldInHierarchy(object, fieldName);
+		try {
+			return foundField.get(object);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException("Internal error: Failed to get field in method getInternalState.", e);
+		}
+	}
+
+	private static Field findFieldInHierarchy(Object object, String fieldName) {
 		if (object == null || fieldName == null || fieldName.equals("") || fieldName.startsWith(" ")) {
 			throw new IllegalArgumentException("object or field name cannot be null.");
 		}
@@ -228,11 +222,7 @@ public class WhiteboxImpl {
 		}
 
 		foundField.setAccessible(true);
-		try {
-			return foundField.get(object);
-		} catch (Exception e) {
-			throw new RuntimeException("Internal error: Failed to get field in method getInternalState.", e);
-		}
+		return foundField;
 	}
 
 	/**
@@ -1030,8 +1020,9 @@ public class WhiteboxImpl {
 		// End of handling null values
 
 		final Class<?> firstArgumentType = getArgumentType(object);
-		for (int i = 1; i < arguments.length; i++) {
-			if (!getArgumentType(arguments[i]).isAssignableFrom(firstArgumentType)) {
+		for (int i = index; i < arguments.length; i++) {
+			final Object argument = arguments[i];
+			if (argument != null && !getArgumentType(argument).isAssignableFrom(firstArgumentType)) {
 				return false;
 			}
 		}
@@ -1065,7 +1056,7 @@ public class WhiteboxImpl {
 	/**
 	 * @return The argument type of the of argument.
 	 */
-	public static Class<?> getArgumentType(Object argument) {
+	private static Class<?> getArgumentType(Object argument) {
 		Class<?> argumentType = null;
 		if (isClass(argument)) {
 			argumentType = (Class<?>) argument;
@@ -1098,5 +1089,25 @@ public class WhiteboxImpl {
 			}
 		}
 		return true;
+	}
+
+	private static Class<?> findField(Object object, String fieldName, Class<?> where) {
+		if (object == null || fieldName == null || fieldName.equals("") || fieldName.startsWith(" ")) {
+			throw new IllegalArgumentException("object, field name, and \"where\" must not be empty or null.");
+		}
+
+		Class<?> tempClass;
+		if (object instanceof Class) {
+			tempClass = (Class<?>) object;
+		} else {
+			tempClass = object.getClass();
+			while (!tempClass.equals(where)) {
+				tempClass = tempClass.getSuperclass();
+				if (tempClass.equals(Object.class)) {
+					throw new IllegalArgumentException("The field " + fieldName + " was not found in the class heirachy for " + object.getClass());
+				}
+			}
+		}
+		return tempClass;
 	}
 }

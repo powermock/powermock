@@ -15,7 +15,9 @@
  */
 package org.powermock;
 
-public class ClassWithChildThatHasInternalState extends
-		ClassWithInternalState {
+@SuppressWarnings("unused")
+public class ClassWithChildThatHasInternalState extends ClassWithInternalState {
+
+	private int anotherInternalState = 42;
 
 }
