@@ -153,7 +153,7 @@
            <artifactId>findbugs-maven-plugin</artifactId>
           <!-- <version>2.0-SNAPSHOT</version>-->
            <configuration>
-		     <onlyAnalyze>org.powermock.*</onlyAnalyze>
+           <onlyAnalyze>org.powermock.*</onlyAnalyze>
            </configuration>
          </plugin>
       </plugins>
@@ -189,8 +189,20 @@
                   <goal>jar</goal>
                 </goals>
               </execution>
-            </executions>
+            </executions>            
           </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+               </goals>
+             </execution>
+           </executions>
+         </plugin>
         </plugins>
       </build>
     </profile>
