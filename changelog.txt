@@ -12,6 +12,8 @@ Change log 0.9 (under development)
 * More consistent error messages when expectNew fails. Error messages now takes the parameters into account.
 * Renamed mockStaticMethodX to mockStaticPartialX
 * Added javadoc to the release phase
+* The JUnit4 legacy runner now throws NoTestsRemainException if no tests are found in the test case. 
+* All JUnit4 runners now executes the setUp method before each test and the tearDown method after each test if the test class extends from TestCase.
 
 Change log 0.8.5 (2008-10-30)
 -----------------------------

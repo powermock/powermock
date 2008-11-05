@@ -3,6 +3,8 @@ package org.powermock.modules.junit4.legacy.internal.impl.testcaseworkaround;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import junit.framework.TestCase;
+
 import org.junit.internal.runners.BeforeAndAfterRunner;
 import org.junit.internal.runners.TestIntrospector;
 import org.junit.internal.runners.TestMethodRunner;
@@ -14,7 +16,10 @@ import org.powermock.Whitebox;
  * This class is needed because the test method runner creates a new instance of
  * a {@link TestIntrospector} in its constructor. The TestIntrospector needs to
  * be changed in order to support methods not annotated with Test to avoid
- * NPE's. This is really a work-around for JUnit when using custom runners.
+ * NPE's.
+ * <p>
+ * This class also executes the setUp and tearDown methods if the test case
+ * extends TestCase.
  */
 public class PowerMockJUnit4LegacyTestMethodRunner extends TestMethodRunner {
 
@@ -43,16 +48,45 @@ public class PowerMockJUnit4LegacyTestMethodRunner extends TestMethodRunner {
 		notifier.fireTestStarted(description);
 		try {
 			long timeout = testIntrospector.getTimeout(method);
-			if (timeout > 0)
+
+			// Execute the the setUp method if needed
+			executeMethodInTestInstance("setUp");
+			if (timeout > 0) {
 				// The runWithTimeout method is private in the super class,
 				// invoke it using reflection.
 				Whitebox.invokeMethod(this, TestMethodRunner.class, "runWithTimeout", timeout);
-			else
+			} else {
 				Whitebox.invokeMethod(this, TestMethodRunner.class, "runMethod");
+			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
-			notifier.fireTestFinished(description);
+			try {
+				executeMethodInTestInstance("tearDown");
+			} finally {
+				notifier.fireTestFinished(description);
+			}
+		}
+	}
+
+	/**
+	 * This method takes care of executing a method in the test object <i>if</i>
+	 * this object extends from {@link TestCase}. It can be used to execute the
+	 * setUp and tearDown methods for example.
+	 */
+	private void executeMethodInTestInstance(String methodName) {
+		if (TestCase.class.isAssignableFrom(Whitebox.getInternalState(this, "fTest").getClass())) {
+			Object object = Whitebox.getInternalState(this, "fTest");
+			try {
+				if (object != null) {
+					Whitebox.invokeMethod(object, methodName);
+				}
+			} catch (Throwable e) {
+				if (e instanceof RuntimeException) {
+					throw (RuntimeException) e;
+				}
+				throw new RuntimeException(e);
+			}
 		}
 	}
 

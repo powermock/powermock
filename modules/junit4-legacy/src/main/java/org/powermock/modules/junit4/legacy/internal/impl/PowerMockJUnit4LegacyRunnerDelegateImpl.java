@@ -44,13 +44,9 @@ public class PowerMockJUnit4LegacyRunnerDelegateImpl extends TestClassRunner imp
 
 	private final int testCount;
 
-	public PowerMockJUnit4LegacyRunnerDelegateImpl(Class<?> klass, String[] methodsToRun) throws InitializationError {
+	public PowerMockJUnit4LegacyRunnerDelegateImpl(Class<?> klass, String[] methodsToRun) throws InitializationError, NoTestsRemainException {
 		super(klass, new PowerMockJUnit4LegacyTestClassMethodsRunner(klass));
-		try {
-			filter(new PowerMockJUnit4LegacyFilter(methodsToRun));
-		} catch (NoTestsRemainException e) {
-			throw new RuntimeException(e);
-		}
+		filter(new PowerMockJUnit4LegacyFilter(methodsToRun));
 
 		testCount = methodsToRun.length;
 	}
@@ -58,6 +54,7 @@ public class PowerMockJUnit4LegacyRunnerDelegateImpl extends TestClassRunner imp
 	@Override
 	public void run(final RunNotifier notifier) {
 		BeforeAndAfterRunner runner = new BeforeAndAfterRunner(getTestClass(), BeforeClass.class, AfterClass.class, null) {
+
 			@Override
 			protected void runUnprotected() {
 				fEnclosedRunner.run(notifier);

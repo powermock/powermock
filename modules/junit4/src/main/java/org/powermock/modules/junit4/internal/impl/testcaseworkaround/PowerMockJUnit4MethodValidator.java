@@ -63,10 +63,11 @@ public class PowerMockJUnit4MethodValidator extends MethodValidator {
 	private void validateTestMethods(Class<? extends Annotation> annotation, boolean isStatic) {
 		TestClass testClass = (TestClass) Whitebox.getInternalState(this, "fTestClass", MethodValidator.class);
 		Class<?> classUnderTest = (Class<?>) Whitebox.getInternalState(testClass, "fClass");
-		List<Method> methods = testClass.getAnnotatedMethods(annotation);
-
+		List<Method> methods = null;
 		if ((methods == null || methods.isEmpty()) && TestCase.class.equals(classUnderTest.getSuperclass()) && !isStatic) {
 			methods = getTestMethodsWithNoAnnotation(classUnderTest);
+		} else {
+			methods = testClass.getAnnotatedMethods(annotation);
 		}
 
 		List<Throwable> fErrors = (List<Throwable>) Whitebox.getInternalState(this, "fErrors", MethodValidator.class);
