@@ -18,9 +18,7 @@ package org.powermock.modules.junit4;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import org.powermock.modules.junit4.constructor.PrivateConstructorInstantiationDemoTest;
 import org.powermock.modules.junit4.constructorargs.ConstructorArgsDemoTest;
-import org.powermock.modules.junit4.expectnew.ExpectNewDemoTest;
 import org.powermock.modules.junit4.expectvoid.ExpectVoidDemoTest;
 import org.powermock.modules.junit4.finalmocking.FinalDemoTest;
 import org.powermock.modules.junit4.newmocking.StupidNewTest;
@@ -40,12 +38,13 @@ import org.powermock.modules.junit4.suppressconstructor.SuppressConstructorHiera
 import org.powermock.modules.junit4.suppressconstructor.SuppressSpecificConstructorDemoTest;
 import org.powermock.modules.junit4.suppressmethod.SuppressMethodTest;
 
+// This test verifies that the SuppressConstructorHierachyDemo works, issue http://code.google.com/p/powermock/issues/detail?id=43.
+
 @RunWith(Suite.class)
-@SuiteClasses( { PrivateConstructorInstantiationDemoTest.class, ExpectNewDemoTest.class,
-		ExpectVoidDemoTest.class, FinalDemoTest.class, MockSelfDemoTest.class, MockSelfDemoWithSubClassTest.class, StupidNewTest.class,
-		PrivateFinalTest.class, MockSelfPrivateFieldServiceClassTest.class, SimplePrivateFieldServiceClassTest.class,
-		PrivateMethodDemoTest.class, MockStaticTest.class, StaticAndInstanceDemoTest.class, SuppressMethodTest.class,
-		SuppressConstructorDemoTest.class, SuppressConstructorHierarchyDemoTest.class, SuppressSpecificConstructorDemoTest.class,
-		ConstructorArgsDemoTest.class, NoAnnotationUsageTest.class, SimpleReturnExampleUserTest.class, StaticInitializerExampleTest.class })
-public class AllJUnit4Tests {
+@SuiteClasses( { ExpectVoidDemoTest.class, FinalDemoTest.class, MockSelfDemoTest.class, MockSelfDemoWithSubClassTest.class, StupidNewTest.class,
+		PrivateFinalTest.class, MockSelfPrivateFieldServiceClassTest.class, SimplePrivateFieldServiceClassTest.class, PrivateMethodDemoTest.class,
+		MockStaticTest.class, StaticAndInstanceDemoTest.class, SuppressMethodTest.class, SuppressConstructorDemoTest.class,
+		SuppressConstructorHierarchyDemoTest.class, SuppressSpecificConstructorDemoTest.class, ConstructorArgsDemoTest.class,
+		NoAnnotationUsageTest.class, SimpleReturnExampleUserTest.class, StaticInitializerExampleTest.class })
+public class SomeJUnit4Tests {
 }

@@ -17,7 +17,7 @@ package org.powermock.tests.utils.impl;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +55,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 	 * The classes listed in this set has been chunked and its delegates has
 	 * been created.
 	 */
-	private final Set<Class<?>> delegatesCreatedForTheseClasses = new HashSet<Class<?>>();
+	private final Set<Class<?>> delegatesCreatedForTheseClasses = new LinkedHashSet<Class<?>>();
 
 	// A list of junit delegates.
 	protected final List<T> delegates = new LinkedList<T>();
@@ -225,7 +225,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 
 	public Set<Entry<MockClassLoader, List<Method>>> getAllChunkEntries() {
 		Set<Entry<Class<?>, Map<MockClassLoader, List<Method>>>> entrySet = internalSuites.entrySet();
-		Set<Entry<MockClassLoader, List<Method>>> set = new HashSet<Entry<MockClassLoader, List<Method>>>();
+		Set<Entry<MockClassLoader, List<Method>>> set = new LinkedHashSet<Entry<MockClassLoader, List<Method>>>();
 		for (Entry<Class<?>, Map<MockClassLoader, List<Method>>> entry : entrySet) {
 			Set<Entry<MockClassLoader, List<Method>>> entrySet2 = entry.getValue().entrySet();
 			for (Entry<MockClassLoader, List<Method>> entry2 : entrySet2) {
@@ -266,8 +266,8 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 
 	/**
 	 * Get the junit runner delegate that handles the test at index
-	 * <code>testIndex</code>. Throws a {@link RuntimeException} if a
-	 * delegator is not found for the specific test index.
+	 * <code>testIndex</code>. Throws a {@link RuntimeException} if a delegator
+	 * is not found for the specific test index.
 	 * 
 	 * @param testIndex
 	 *            The test index that a delegator should hold.
