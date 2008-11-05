@@ -179,8 +179,8 @@ public class WhiteboxImpl {
 	/**
 	 * Get the value of a field using reflection. This method will iterate
 	 * through the entire class hierarchy and return the value of the first
-	 * field named <tt>fieldName</tt>. If you want to get a specific field
-	 * value at specific place in the class hierarchy please refer to
+	 * field named <tt>fieldName</tt>. If you want to get a specific field value
+	 * at specific place in the class hierarchy please refer to
 	 * {@link #getInternalState(Object, String, Class)}.
 	 * 
 	 * 
@@ -391,7 +391,8 @@ public class WhiteboxImpl {
 	/**
 	 * Finds and returns a certain method. If the method couldn't be found this
 	 * method delegates to
-	 * {@link WhiteboxImpl#throwExceptionIfMethodWasNotFound(Object, String, Method, Object...)} .
+	 * {@link WhiteboxImpl#throwExceptionIfMethodWasNotFound(Object, String, Method, Object...)}
+	 * .
 	 * 
 	 * @param tested
 	 * @param declaringClass
@@ -470,7 +471,7 @@ public class WhiteboxImpl {
 		return potentialMethodToInvoke;
 	}
 
-	/**
+/**
 	 * Finds and returns a certain constructor. If the constructor couldn't be
 	 * found this method delegates to
 	 * {@link Whitebox#throwExceptionIfConstructorWasNotFound(Class, Object...).
@@ -613,7 +614,7 @@ public class WhiteboxImpl {
 	 * @return The object created after the constructor has been invoked.
 	 */
 	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Class<?>[] parameterTypes, Object[] arguments) {
-		if (parameterTypes != null || arguments != null) {
+		if (parameterTypes != null && arguments != null) {
 			if (parameterTypes.length != arguments.length) {
 				throw new IllegalArgumentException("parameterTypes and arguments must have the same length");
 			}
@@ -642,9 +643,14 @@ public class WhiteboxImpl {
 			throw new IllegalArgumentException("The class should contain the constructor cannot be null.");
 		}
 
-		Class<?>[] argumentTypes = new Class<?>[arguments.length];
-		for (int i = 0; i < arguments.length; i++) {
-			argumentTypes[i] = arguments[i].getClass();
+		Class<?>[] argumentTypes = null;
+		if (arguments == null) {
+			argumentTypes = new Class<?>[0];
+		} else {
+			argumentTypes = new Class<?>[arguments.length];
+			for (int i = 0; i < arguments.length; i++) {
+				argumentTypes[i] = getArgumentType(arguments[i]);
+			}
 		}
 
 		Constructor<T> constructor = null;
@@ -761,7 +767,8 @@ public class WhiteboxImpl {
 	 * <code>klass</code>.
 	 * 
 	 * @param klass
-	 *            The class where the constructor is located. <code>null</code> ).
+	 *            The class where the constructor is located. <code>null</code>
+	 *            ).
 	 * @return A <code>java.lang.reflect.Constructor</code>.
 	 */
 	public static Constructor<?> getFirstParentConstructor(Class<?> klass) {
@@ -775,9 +782,9 @@ public class WhiteboxImpl {
 
 	/**
 	 * Finds and returns a method based on the input parameters. If no
-	 * <code>parameterTypes</code> are present the method will return the
-	 * first method with name <code>methodNameToMock</code>. If no method was
-	 * found, <code>null</code> will be returned.
+	 * <code>parameterTypes</code> are present the method will return the first
+	 * method with name <code>methodNameToMock</code>. If no method was found,
+	 * <code>null</code> will be returned.
 	 * 
 	 * @param <T>
 	 * @param type
@@ -898,8 +905,8 @@ public class WhiteboxImpl {
 	}
 
 	/**
-	 * Get an array of {@link Method}'s that matches the supplied list of
-	 * method names.
+	 * Get an array of {@link Method}'s that matches the supplied list of method
+	 * names.
 	 * 
 	 * @param clazz
 	 *            The class that should contain the methods.
@@ -1072,8 +1079,7 @@ public class WhiteboxImpl {
 
 	/**
 	 * @return <code>true</code> if all actual parameter types are assignable
-	 *         from the expected parameter types, <code>false</code>
-	 *         otherwise.
+	 *         from the expected parameter types, <code>false</code> otherwise.
 	 */
 	private static boolean checkIfTypesAreSame(Class<?>[] expectedParameterTypes, Class<?>[] actualParameterTypes) {
 		if (expectedParameterTypes == null || actualParameterTypes == null) {

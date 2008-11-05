@@ -137,7 +137,7 @@ public class MockGateway {
 	}
 
 	private static Object suppressMethodCode(String returnTypeAsString) {
-		if (returnTypeAsString.equals(null)) { // Void
+		if (returnTypeAsString == null) { // Void
 			return "";
 		} else if (returnTypeAsString.equals(byte.class.getName())) {
 			return (byte) 0;

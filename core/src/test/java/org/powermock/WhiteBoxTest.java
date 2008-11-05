@@ -136,13 +136,13 @@ public class WhiteBoxTest {
 	@Test
 	public void testMethodWithPrimitiveIntAndString_Wrapped() throws Exception {
 		assertEquals("My int value is: " + 8, (String) Whitebox.invokeMethod(new ClassWithPrivateMethods(), "methodWithPrimitiveIntAndString",
-				new Integer(8), "My int value is: "));
+				Integer.valueOf(8), "My int value is: "));
 	}
 
 	@Test
 	public void testMethodWithPrimitiveAndWrappedInt_primtive_wrapped() throws Exception {
 		assertEquals(17, Whitebox.invokeMethod(new ClassWithPrivateMethods(), "methodWithPrimitiveAndWrappedInt", new Class[] { int.class,
-				Integer.class }, 9, new Integer(8)));
+				Integer.class }, 9, Integer.valueOf(8)));
 	}
 
 	@Test
