@@ -37,8 +37,9 @@ import org.powermock.modules.junit4.staticandinstance.StaticAndInstanceDemoTest;
 import org.powermock.modules.junit4.staticinitializer.StaticInitializerExampleTest;
 import org.powermock.modules.junit4.suppressconstructor.SuppressConstructorDemoTest;
 import org.powermock.modules.junit4.suppressconstructor.SuppressConstructorHierarchyDemoTest;
-import org.powermock.modules.junit4.suppressconstructor.SuppressSpecificConstructorDemoTest;
 import org.powermock.modules.junit4.suppressmethod.SuppressMethodTest;
+
+import samples.suppressconstructor.SuppressSpecificConstructorDemoTest;
 
 @RunWith(Suite.class)
 @SuiteClasses( { PrivateConstructorInstantiationDemoTest.class, ExpectNewDemoTest.class,

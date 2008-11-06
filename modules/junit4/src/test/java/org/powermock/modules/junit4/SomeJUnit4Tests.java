@@ -35,8 +35,9 @@ import org.powermock.modules.junit4.staticandinstance.StaticAndInstanceDemoTest;
 import org.powermock.modules.junit4.staticinitializer.StaticInitializerExampleTest;
 import org.powermock.modules.junit4.suppressconstructor.SuppressConstructorDemoTest;
 import org.powermock.modules.junit4.suppressconstructor.SuppressConstructorHierarchyDemoTest;
-import org.powermock.modules.junit4.suppressconstructor.SuppressSpecificConstructorDemoTest;
 import org.powermock.modules.junit4.suppressmethod.SuppressMethodTest;
+
+import samples.suppressconstructor.SuppressSpecificConstructorDemoTest;
 
 // This test verifies that the SuppressConstructorHierachyDemo works, issue http://code.google.com/p/powermock/issues/detail?id=43.
 

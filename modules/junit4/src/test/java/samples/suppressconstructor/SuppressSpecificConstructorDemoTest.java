@@ -13,28 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.modules.junit4.suppressconstructor;
+package samples.suppressconstructor;
 
 import static org.junit.Assert.fail;
 import static org.powermock.PowerMock.suppressSpecificConstructor;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import samples.suppressconstructor.SuppressSpecificConstructorDemo;
-
 @RunWith(PowerMockRunner.class)
-//@PrepareForTest( { SuppressSpecificConstructorDemo.class,
-// SuppressSpecificConstructorDemoTest.class })
+@PrepareForTest( { SuppressSpecificConstructorDemo.class, SuppressSpecificConstructorDemoTest.class })
 public class SuppressSpecificConstructorDemoTest {
 
 	@Test
-	@Ignore
 	public void testMockStringConstructor() throws Exception {
-		suppressSpecificConstructor(SuppressSpecificConstructorDemo.class,
-				String.class);
+		suppressSpecificConstructor(SuppressSpecificConstructorDemo.class, String.class);
 
 		// This should be fine
 		new SuppressSpecificConstructorDemo("This expection should not occur");

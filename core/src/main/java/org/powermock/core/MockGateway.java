@@ -119,7 +119,7 @@ public class MockGateway {
 		}
 		// Check if we should suppress the constructor code
 		if (suppressConstructor.contains(WhiteboxImpl.getConstructor(type, sig))) {
-			return WhiteboxImpl.getFirstParentConstructor(type.getSuperclass());
+			return WhiteboxImpl.getFirstParentConstructor(type);
 		}
 		return PROCEED;
 	}
