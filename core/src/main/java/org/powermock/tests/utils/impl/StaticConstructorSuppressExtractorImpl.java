@@ -13,7 +13,7 @@ import org.powermock.tests.utils.TestClassesExtractor;
  * should have their static initializers suppressed.
  * 
  */
-public class StaticConstructorSuppressImpl extends AbstractTestClassExtractor {
+public class StaticConstructorSuppressExtractorImpl extends AbstractTestClassExtractor {
 
 	/**
 	 * {@inheritDoc}
@@ -21,14 +21,17 @@ public class StaticConstructorSuppressImpl extends AbstractTestClassExtractor {
 	public String[] getTestClasses(AnnotatedElement element) {
 		List<String> all = new LinkedList<String>();
 
-		SuppressStaticInitializationFor annotation = element.getAnnotation(SuppressStaticInitializationFor.class);
-		if (annotation != null) {
-			final String[] value = annotation.value();
+		final SuppressStaticInitializationFor suppressAnnotation = element.getAnnotation(SuppressStaticInitializationFor.class);
+
+		if (suppressAnnotation == null) {
+			return null;
+		} else {
+			final String[] value = suppressAnnotation.value();
 			for (String classToSuppress : value) {
 				if (!"".equals(classToSuppress)) {
 					all.add(classToSuppress);
+					MockRepository.addSuppressStaticInitializer(classToSuppress);
 				}
-				MockRepository.addSuppressStaticInitializer(classToSuppress);
 			}
 		}
 

@@ -64,7 +64,7 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected PowerMockJUnit3RunnerDelegate createDelegatorFromClassloader(MockClassLoader classLoader, Class<?> testClass,
+	protected PowerMockJUnit3RunnerDelegate createDelegatorFromClassloader(ClassLoader classLoader, Class<?> testClass,
 			final List<Method> methodsToTest) throws Exception {
 
 		final Class<?> testClassLoadedByMockedClassLoader = classLoader.loadClass(testClass.getName());
@@ -77,7 +77,7 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	}
 
 	@Override
-	protected void chunkClass(Class<?> testClass) {
+	protected void chunkClass(Class<?> testClass) throws Exception {
 		if (!TestCase.class.isAssignableFrom(testClass)) {
 			throw new IllegalArgumentException(testClass.getName() + " must be a subtype of " + TestCase.class.getName());
 		}
@@ -108,7 +108,7 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addTest(Test test) {
+	public void addTest(Test test) throws Exception {
 		if (test == null) {
 			throw new IllegalArgumentException("test cannot be null");
 		}
@@ -130,7 +130,7 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addTestSuite(Class<? extends TestCase> testClass) {
+	public void addTestSuite(Class<? extends TestCase> testClass) throws Exception {
 		super.addTestClassToSuite(testClass);
 	}
 
@@ -149,9 +149,9 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	 * {@inheritDoc}
 	 */
 	public void run(TestResult result) {
-		final Iterator<Entry<MockClassLoader, List<Method>>> iterator = getChunkIterator();
+		final Iterator<Entry<ClassLoader, List<Method>>> iterator = getChunkIterator();
 		for (PowerMockJUnit3RunnerDelegate delegate : delegates) {
-			Entry<MockClassLoader, List<Method>> next = iterator.next();
+			Entry<ClassLoader, List<Method>> next = iterator.next();
 			result.addListener(new PowerMockJUnit3TestListener(next.getKey()));
 			delegate.run(result);
 		}
@@ -161,17 +161,17 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	 * {@inheritDoc}
 	 */
 	public void runTest(Test test, TestResult result) {
-		final Iterator<Entry<MockClassLoader, List<Method>>> iterator = getChunkIterator();
+		final Iterator<Entry<ClassLoader, List<Method>>> iterator = getChunkIterator();
 		for (PowerMockJUnit3RunnerDelegate delegate : delegates) {
-			Entry<MockClassLoader, List<Method>> next = iterator.next();
+			Entry<ClassLoader, List<Method>> next = iterator.next();
 			result.addListener(new PowerMockJUnit3TestListener(next.getKey()));
 			delegate.runTest(test, result);
 		}
 	}
 
-	private Iterator<Entry<MockClassLoader, List<Method>>> getChunkIterator() {
-		Set<Entry<MockClassLoader, List<Method>>> entrySet = getAllChunkEntries();
-		Iterator<Entry<MockClassLoader, List<Method>>> iterator = entrySet.iterator();
+	private Iterator<Entry<ClassLoader, List<Method>>> getChunkIterator() {
+		Set<Entry<ClassLoader, List<Method>>> entrySet = getAllChunkEntries();
+		Iterator<Entry<ClassLoader, List<Method>>> iterator = entrySet.iterator();
 
 		if (delegates.size() != getChunkSize()) {
 			throw new IllegalStateException("Internal error: There must be an equal number of suites and delegates.");

@@ -49,7 +49,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 
 	protected final TestClassesExtractor prepareForTestExtractor = new PrepareForTestExtractorImpl();
 
-	private final TestClassesExtractor suppressionExtractor = new StaticConstructorSuppressImpl();
+	protected final TestClassesExtractor suppressionExtractor = new StaticConstructorSuppressExtractorImpl();
 
 	/*
 	 * The classes listed in this set has been chunked and its delegates has
@@ -72,28 +72,28 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 	 * Maps between a specific class and a map of test methods loaded by a
 	 * specific mock class loader.
 	 */
-	private final Map<Class<?>, Map<MockClassLoader, List<Method>>> internalSuites;
+	private final Map<Class<?>, Map<ClassLoader, List<Method>>> internalSuites;
 
 	protected volatile int testCount = NOT_INITIALIZED;
 
-	protected AbstractTestSuiteChunkerImpl(Class<?> testClass) {
+	protected AbstractTestSuiteChunkerImpl(Class<?> testClass) throws Exception {
 		this(new Class[] { testClass });
 	}
 
-	protected AbstractTestSuiteChunkerImpl(Class<?>... testClasses) {
-		internalSuites = new ConcurrentHashMap<Class<?>, Map<MockClassLoader, List<Method>>>();
+	protected AbstractTestSuiteChunkerImpl(Class<?>... testClasses) throws Exception {
+		internalSuites = new ConcurrentHashMap<Class<?>, Map<ClassLoader, List<Method>>>();
 		for (Class<?> clazz : testClasses) {
 			chunkClass(clazz);
 		}
 	}
 
-	protected void chunkClass(Class<?> testClass) {
+	protected void chunkClass(Class<?> testClass) throws Exception {
 		final String[] prepareForTestClasses = prepareForTestExtractor.getTestClasses(testClass);
 		final String[] suppressStaticClasses = suppressionExtractor.getTestClasses(testClass);
-		MockClassLoader defaultMockLoader = createNewMockClassloader(prepareForTestClasses, suppressStaticClasses);
+		ClassLoader defaultMockLoader = createNewClassloader(prepareForTestClasses, suppressStaticClasses);
 		List<Method> currentClassloaderMethods = new LinkedList<Method>();
 		// Put the first suite in the map of internal suites.
-		Map<MockClassLoader, List<Method>> suites = new ConcurrentHashMap<MockClassLoader, List<Method>>();
+		Map<ClassLoader, List<Method>> suites = new ConcurrentHashMap<ClassLoader, List<Method>>();
 		suites.put(defaultMockLoader, currentClassloaderMethods);
 		internalSuites.put(testClass, suites);
 		initEntries(testClass, currentClassloaderMethods, internalSuites);
@@ -108,44 +108,62 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 		}
 	}
 
-	private MockClassLoader createNewMockClassloader(final String[] prepareForTestClasses, final String[] suppressStaticClasses) {
-		MockClassLoader defaultMockLoader = createNewMockClassloader(getClassesToBeModified(prepareForTestClasses, suppressStaticClasses));
-		return defaultMockLoader;
+	private ClassLoader createNewClassloader(final String[] prepareForTestClasses, final String[] suppressStaticClasses) {
+		return createNewClassloader(getClassesToBeModified(prepareForTestClasses, suppressStaticClasses));
 	}
 
-	private String[] getClassesToBeModified(final String[] prepareForTestClasses, final String[] suppressStaticClasses) {
-		String[] classesToLoadedByMockClassLoader = new String[prepareForTestClasses.length + suppressStaticClasses.length];
-		System.arraycopy(prepareForTestClasses, 0, classesToLoadedByMockClassLoader, 0, prepareForTestClasses.length);
-		System.arraycopy(suppressStaticClasses, 0, classesToLoadedByMockClassLoader, prepareForTestClasses.length, suppressStaticClasses.length);
+	private String[] getClassesToBeModified(String[] prepareForTestClasses, String[] suppressStaticClasses) {
+		if (prepareForTestClasses == null) {
+			prepareForTestClasses = new String[0];
+		}
+		if (suppressStaticClasses == null) {
+			suppressStaticClasses = new String[0];
+		}
+
+		final int prepareForTestLength = prepareForTestClasses.length;
+		final int suppressLength = suppressStaticClasses.length;
+		final int allClassesLength = prepareForTestLength + suppressLength;
+		String[] classesToLoadedByMockClassLoader = new String[allClassesLength];
+		if (allClassesLength > 0) {
+			System.arraycopy(prepareForTestClasses, 0, classesToLoadedByMockClassLoader, 0, prepareForTestLength);
+			System.arraycopy(suppressStaticClasses, 0, classesToLoadedByMockClassLoader, prepareForTestLength, suppressLength);
+		}
 		return classesToLoadedByMockClassLoader;
 	}
 
-	public MockClassLoader createNewMockClassloader(String[] classes) {
-		List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
-		mockTransformerChain.add(new MainMockTransformer());
+	public ClassLoader createNewClassloader(String[] classes) {
+		ClassLoader mockLoader = null;
+		if (classes == null || classes.length == 0) {
+			mockLoader = Thread.currentThread().getContextClassLoader();
+		} else {
+			List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
+			final MainMockTransformer mainMockTransformer = new MainMockTransformer();
+			mockTransformerChain.add(mainMockTransformer);
 
-		MockClassLoader mockLoader = new MockClassLoader(classes);
-		mockLoader.setMockTransformerChain(mockTransformerChain);
+			mockLoader = new MockClassLoader(classes);
+			((MockClassLoader) mockLoader).setMockTransformerChain(mockTransformerChain);
+		}
 		return mockLoader;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void createTestDelegators(Class<?> testClass, Set<Entry<MockClassLoader, List<Method>>> entrySet) throws Exception {
-		for (Entry<MockClassLoader, List<Method>> entry : entrySet) {
-			MockClassLoader mockClassLoader = entry.getKey();
+	public void createTestDelegators(Class<?> testClass, Set<Entry<ClassLoader, List<Method>>> entrySet) throws Exception {
+		for (Entry<ClassLoader, List<Method>> entry : entrySet) {
+			ClassLoader classLoader = entry.getKey();
 			List<Method> methodsToTest = entry.getValue();
-			T runnerDelegator = createDelegatorFromClassloader(mockClassLoader, testClass, methodsToTest);
+			T runnerDelegator = createDelegatorFromClassloader(classLoader, testClass, methodsToTest);
 			delegates.add(runnerDelegator);
 		}
 		delegatesCreatedForTheseClasses.add(testClass);
 	}
 
-	protected abstract T createDelegatorFromClassloader(MockClassLoader classLoader, Class<?> testClass, final List<Method> methodsToTest)
+	protected abstract T createDelegatorFromClassloader(ClassLoader classLoader, Class<?> testClass, final List<Method> methodsToTest)
 			throws Exception;
 
-	private void initEntries(Class<?> testClass, List<Method> currentClassloaderMethods, Map<Class<?>, Map<MockClassLoader, List<Method>>> testSuites) {
+	private void initEntries(Class<?> testClass, List<Method> currentClassloaderMethods, Map<Class<?>, Map<ClassLoader, List<Method>>> testSuites)
+			throws Exception {
 		Method[] allMethods = testClass.getMethods();
 		for (Method method : allMethods) {
 			if (shouldExecuteTestForMethod(testClass, method)) {
@@ -153,11 +171,11 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 				if (hasChunkAnnotation(method)) {
 					LinkedList<Method> suiteMethods = new LinkedList<Method>();
 					suiteMethods.add(method);
-					final Map<MockClassLoader, List<Method>> suitesForTestClass = testSuites.get(testClass);
-					final MockClassLoader mockClassloader = createNewMockClassloader(prepareForTestExtractor.getTestClasses(method),
-							getStaticSuppressionClasses(testClass, method));
+					final Map<ClassLoader, List<Method>> suitesForTestClass = testSuites.get(testClass);
+					final String[] staticSuppressionClasses = getStaticSuppressionClasses(testClass, method);
+					final ClassLoader mockClassloader = createNewClassloader(prepareForTestExtractor.getTestClasses(method), staticSuppressionClasses);
 					if (suitesForTestClass == null) {
-						final Map<MockClassLoader, List<Method>> newSuite = new ConcurrentHashMap<MockClassLoader, List<Method>>();
+						final Map<ClassLoader, List<Method>> newSuite = new ConcurrentHashMap<ClassLoader, List<Method>>();
 						addToTestSuite(testClass, testSuites, suiteMethods, mockClassloader, newSuite);
 					} else {
 						addToTestSuite(testClass, testSuites, suiteMethods, mockClassloader, suitesForTestClass);
@@ -196,9 +214,9 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 		return testClasses;
 	}
 
-	private void addToTestSuite(Class<?> testClass, Map<Class<?>, Map<MockClassLoader, List<Method>>> testSuites, LinkedList<Method> suiteMethods,
-			final MockClassLoader mockClassloader, final Map<MockClassLoader, List<Method>> suite) {
-		suite.put(mockClassloader, suiteMethods);
+	private void addToTestSuite(Class<?> testClass, Map<Class<?>, Map<ClassLoader, List<Method>>> testSuites, LinkedList<Method> suiteMethods,
+			final ClassLoader classLoader, final Map<ClassLoader, List<Method>> suite) {
+		suite.put(classLoader, suiteMethods);
 		testSuites.put(testClass, suite);
 		final List<Integer> testIndexesForThisClassloader = new LinkedList<Integer>();
 		testIndexesForThisClassloader.add(currentTestIndex);
@@ -208,7 +226,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addTestClassToSuite(Class<?> clazz) {
+	public void addTestClassToSuite(Class<?> clazz) throws Exception {
 		chunkClass(clazz);
 		if (!delegatesCreatedForTheseClasses.contains(clazz)) {
 			try {
@@ -223,12 +241,12 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 		return getAllChunkEntries().size();
 	}
 
-	public Set<Entry<MockClassLoader, List<Method>>> getAllChunkEntries() {
-		Set<Entry<Class<?>, Map<MockClassLoader, List<Method>>>> entrySet = internalSuites.entrySet();
-		Set<Entry<MockClassLoader, List<Method>>> set = new LinkedHashSet<Entry<MockClassLoader, List<Method>>>();
-		for (Entry<Class<?>, Map<MockClassLoader, List<Method>>> entry : entrySet) {
-			Set<Entry<MockClassLoader, List<Method>>> entrySet2 = entry.getValue().entrySet();
-			for (Entry<MockClassLoader, List<Method>> entry2 : entrySet2) {
+	public Set<Entry<ClassLoader, List<Method>>> getAllChunkEntries() {
+		Set<Entry<Class<?>, Map<ClassLoader, List<Method>>>> entrySet = internalSuites.entrySet();
+		Set<Entry<ClassLoader, List<Method>>> set = new LinkedHashSet<Entry<ClassLoader, List<Method>>>();
+		for (Entry<Class<?>, Map<ClassLoader, List<Method>>> entry : entrySet) {
+			Set<Entry<ClassLoader, List<Method>>> entrySet2 = entry.getValue().entrySet();
+			for (Entry<ClassLoader, List<Method>> entry2 : entrySet2) {
 				set.add(entry2);
 			}
 		}
@@ -294,9 +312,15 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 	/**
 	 * {@inheritDoc}
 	 */
-	public Set<Entry<MockClassLoader, List<Method>>> getChunkEntries(Class<?> testClass) {
-		final Map<MockClassLoader, List<Method>> map = internalSuites.get(testClass);
+	public Set<Entry<ClassLoader, List<Method>>> getChunkEntries(Class<?> testClass) {
+		final Map<ClassLoader, List<Method>> map = internalSuites.get(testClass);
 		return map.entrySet();
 	}
 
+	/**
+	 * Initialize test state.
+	 */
+	protected void initializeTestState() {
+		// getStaticSuppressionClasses(getClass());
+	}
 }

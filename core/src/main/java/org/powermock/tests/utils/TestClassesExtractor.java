@@ -18,6 +18,11 @@ package org.powermock.tests.utils;
 import java.lang.reflect.AnnotatedElement;
 
 public interface TestClassesExtractor {
+	/**
+	 * @return Returns <code>null</code> if the element was not annotated, an
+	 *         empty String[] if it is annotated but contains no classes, or a
+	 *         string-array of all class names if interest.
+	 */
 	String[] getTestClasses(AnnotatedElement element);
 
 	boolean isPrepared(AnnotatedElement element, String fullyQualifiedClassName);

@@ -454,7 +454,7 @@ public class WhiteboxImpl {
 			}
 		}
 
-		WhiteboxImpl.throwExceptionIfMethodWasNotFound(tested.getClass(), methodToExecute, potentialMethodToInvoke, arguments);
+		WhiteboxImpl.throwExceptionIfMethodWasNotFound(getArgumentType(tested), methodToExecute, potentialMethodToInvoke, arguments);
 		return potentialMethodToInvoke;
 	}
 

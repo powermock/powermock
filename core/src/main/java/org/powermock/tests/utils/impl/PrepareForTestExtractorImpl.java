@@ -42,6 +42,11 @@ public class PrepareForTestExtractorImpl extends AbstractTestClassExtractor {
 		PrepareOnlyThisForTest prepareOnlyThisForTestAnnotation = element.getAnnotation(PrepareOnlyThisForTest.class);
 		final boolean prepareForTestAnnotationPresent = prepareForTestAnnotation != null;
 		final boolean prepareOnlyThisForTestAnnotationPresent = prepareOnlyThisForTestAnnotation != null;
+
+		if (!prepareForTestAnnotationPresent && !prepareOnlyThisForTestAnnotationPresent) {
+			return null;
+		}
+
 		if (prepareForTestAnnotationPresent) {
 			final Class<?>[] classesToMock = prepareForTestAnnotation.value();
 			for (Class<?> classToMock : classesToMock) {

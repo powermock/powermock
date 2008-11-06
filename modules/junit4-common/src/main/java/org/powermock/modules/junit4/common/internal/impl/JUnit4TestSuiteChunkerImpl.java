@@ -66,6 +66,8 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 			final Throwable cause = e.getCause();
 			if (cause instanceof Exception) {
 				throw (Exception) cause;
+			} else if (cause instanceof Error) {
+				throw (Error) cause;
 			} else {
 				throw new RuntimeException(cause);
 			}
@@ -73,15 +75,15 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	}
 
 	public void run(RunNotifier notifier) {
-		Set<Entry<MockClassLoader, List<Method>>> entrySet = getAllChunkEntries();
-		Iterator<Entry<MockClassLoader, List<Method>>> iterator = entrySet.iterator();
+		Set<Entry<ClassLoader, List<Method>>> entrySet = getAllChunkEntries();
+		Iterator<Entry<ClassLoader, List<Method>>> iterator = entrySet.iterator();
 
 		if (delegates.size() != getChunkSize()) {
 			throw new IllegalStateException("Internal error: There must be an equal number of suites and delegates.");
 		}
 
 		for (PowerMockJUnitRunnerDelegate delegate : delegates) {
-			Entry<MockClassLoader, List<Method>> next = iterator.next();
+			Entry<ClassLoader, List<Method>> next = iterator.next();
 			PowerMockRunListener powerMockListener = new PowerMockRunListener(next.getKey());
 			notifier.addListener(powerMockListener);
 			delegate.run(notifier);
@@ -95,7 +97,7 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	}
 
 	@Override
-	protected PowerMockJUnitRunnerDelegate createDelegatorFromClassloader(MockClassLoader classLoader, Class<?> testClass,
+	protected PowerMockJUnitRunnerDelegate createDelegatorFromClassloader(ClassLoader classLoader, Class<?> testClass,
 			final List<Method> methodsToTest) throws Exception {
 
 		Set<String> methodNames = new HashSet<String>();

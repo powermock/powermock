@@ -11,6 +11,7 @@ import org.junit.internal.runners.TestMethodRunner;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.powermock.Whitebox;
+import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
 
 /**
  * This class is needed because the test method runner creates a new instance of

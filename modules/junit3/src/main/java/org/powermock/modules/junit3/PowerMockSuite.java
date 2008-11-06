@@ -34,16 +34,14 @@ public class PowerMockSuite extends TestSuite {
 
 	private JUnit3TestSuiteChunker testChunker;
 
-	public PowerMockSuite(String name, Class<? extends TestCase>... testCases)
-			throws Exception {
+	public PowerMockSuite(String name, Class<? extends TestCase>... testCases) throws Exception {
 		if (name != null) {
 			setName(name);
 		}
 		testChunker = new JUnit3TestSuiteChunkerImpl(testCases);
 	}
 
-	public PowerMockSuite(Class<? extends TestCase>... testCases)
-			throws Exception {
+	public PowerMockSuite(Class<? extends TestCase>... testCases) throws Exception {
 		this(null, testCases);
 	}
 
@@ -60,7 +58,11 @@ public class PowerMockSuite extends TestSuite {
 	 */
 	@Override
 	public void addTest(Test test) {
-		testChunker.addTest(test);
+		try {
+			testChunker.addTest(test);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -77,7 +79,11 @@ public class PowerMockSuite extends TestSuite {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void addTestSuite(Class testClass) {
-		testChunker.addTestSuite(testClass);
+		try {
+			testChunker.addTestSuite(testClass);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**

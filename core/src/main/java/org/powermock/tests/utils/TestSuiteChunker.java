@@ -20,8 +20,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import org.powermock.core.classloader.MockClassLoader;
-
 /**
  * An interface that should be implemented by classes that performs test suite
  * chunking. Test suite chunking may be performed because certain classes may
@@ -34,7 +32,7 @@ public interface TestSuiteChunker {
 	/**
 	 * Create the test delegators needed for a whole class.
 	 */
-	public void createTestDelegators(Class<?> testClass, Set<Entry<MockClassLoader, List<Method>>> entrySet) throws Exception;
+	public void createTestDelegators(Class<?> testClass, Set<Entry<ClassLoader, List<Method>>> entrySet) throws Exception;
 
 	/**
 	 * Get the number of chunks defined in this suite.
@@ -50,7 +48,7 @@ public interface TestSuiteChunker {
 	 * @return An set of entries that contains a list of methods contained in
 	 *         the chunk and the class loader that loaded these methods.
 	 */
-	public Set<Entry<MockClassLoader, List<Method>>> getAllChunkEntries();
+	public Set<Entry<ClassLoader, List<Method>>> getAllChunkEntries();
 
 	/**
 	 * Get all chunk entries for a specific class.
@@ -61,7 +59,7 @@ public interface TestSuiteChunker {
 	 *         the chunk for the specific test class and the class loader that
 	 *         loaded these methods.
 	 */
-	public Set<Entry<MockClassLoader, List<Method>>> getChunkEntries(Class<?> testClass);
+	public Set<Entry<ClassLoader, List<Method>>> getChunkEntries(Class<?> testClass);
 
 	/**
 	 * Should reflect whether or not this method is eligible for testing.
@@ -85,17 +83,19 @@ public interface TestSuiteChunker {
 	 * 
 	 * @param clazz
 	 *            The class that should contain test cases.
+	 * @throws Exception
+	 *             If something unexpected goes wrong.
 	 */
-	public void addTestClassToSuite(Class<?> clazz);
+	public void addTestClassToSuite(Class<?> clazz) throws Exception;
 
 	/**
-	 * Create a new mock class loader and load <code>classes</code> from this
+	 * Create a new class loader and load <code>classes</code> from this
 	 * classloader.
 	 * 
 	 * @param classes
 	 *            An array of the fully qualified name of the classes to modify.
 	 */
-	public MockClassLoader createNewMockClassloader(String[] classes);
+	public ClassLoader createNewClassloader(String[] classes);
 
 	/**
 	 * Get the number of total tests defined in the suite (the sum of all tests

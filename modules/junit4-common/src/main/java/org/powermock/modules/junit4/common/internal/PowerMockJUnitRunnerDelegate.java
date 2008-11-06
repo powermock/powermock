@@ -20,9 +20,11 @@ import org.junit.runner.notification.RunNotifier;
 
 public interface PowerMockJUnitRunnerDelegate {
 
-	public abstract void run(final RunNotifier notifier);
+	void run(final RunNotifier notifier);
 
-	public abstract Description getDescription();
+	Description getDescription();
 
-	public abstract int getTestCount();
+	int getTestCount();
+
+	Class<?> getTestClass();
 }

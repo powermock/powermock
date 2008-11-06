@@ -47,6 +47,7 @@ import org.powermock.Whitebox;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.powermock.modules.junit4.internal.impl.testcaseworkaround.PowerMockJUnit4MethodValidator;
 import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
+import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
 
 /**
  * A JUnit4 test runner that only runs a specified set of test methods in a test
@@ -125,7 +126,26 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 	}
 
 	protected void runMethods(final RunNotifier notifier) {
+		final StaticConstructorSuppressExtractorImpl staticConstructorSuppressExtractorImpl = new StaticConstructorSuppressExtractorImpl();
+		Class<?> testType = getTestClass();
+		final ClassLoader thisClassLoader = getClass().getClassLoader();
+		if (!thisClassLoader.equals(testType.getClassLoader())) {
+			/*
+			 * The test is loaded from another classloader, this means that we
+			 * cannot get the correct annotations if we don't load the class
+			 * from the correct class loader
+			 */
+			try {
+				testType = thisClassLoader.loadClass(testType.getName());
+			} catch (ClassNotFoundException e) {
+				// This should never happen
+				throw new RuntimeException("Internal error in PowerMock", e);
+			}
+		}
 		for (Method method : testMethods) {
+			if (staticConstructorSuppressExtractorImpl.getTestClasses(method) == null) {
+				staticConstructorSuppressExtractorImpl.getTestClasses(testType);
+			}
 			invokeTestMethod(method, notifier);
 		}
 	}
@@ -147,15 +167,15 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 	}
 
 	protected Annotation[] classAnnotations() {
-		return testClass.getJavaClass().getAnnotations();
+		return getTestClass().getAnnotations();
 	}
 
 	protected String getName() {
-		return getTestClass().getName();
+		return getTestWrappedClass().getName();
 	}
 
 	protected Object createTest() throws Exception {
-		return getTestClass().getConstructor().newInstance();
+		return getTestWrappedClass().getConstructor().newInstance();
 	}
 
 	protected void invokeTestMethod(Method method, RunNotifier notifier) {
@@ -244,7 +264,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 	}
 
 	protected Description methodDescription(Method method) {
-		return Description.createTestDescription(getTestClass().getJavaClass(), testName(method), testAnnotations(method));
+		return Description.createTestDescription(getTestWrappedClass().getJavaClass(), testName(method), testAnnotations(method));
 	}
 
 	protected Annotation[] testAnnotations(Method method) {
@@ -269,11 +289,15 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 		});
 	}
 
-	protected TestClass getTestClass() {
+	protected TestClass getTestWrappedClass() {
 		return testClass;
 	}
 
 	public int getTestCount() {
 		return testMethods.size();
+	}
+
+	public Class<?> getTestClass() {
+		return testClass.getJavaClass();
 	}
 }

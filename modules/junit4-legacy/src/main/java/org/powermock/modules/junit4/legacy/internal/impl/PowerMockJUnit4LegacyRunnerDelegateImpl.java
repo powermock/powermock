@@ -68,6 +68,7 @@ public class PowerMockJUnit4LegacyRunnerDelegateImpl extends TestClassRunner imp
 
 		Whitebox.setInternalState(runner, "fTestIntrospector", new PowerMockJUnit4LegacyTestIntrospector(getTestClass()), BeforeAndAfterRunner.class);
 
+
 		runner.runProtected();
 	}
 
@@ -76,5 +77,10 @@ public class PowerMockJUnit4LegacyRunnerDelegateImpl extends TestClassRunner imp
 	 */
 	public int getTestCount() {
 		return testCount;
+	}
+
+	@Override
+	public Class<?> getTestClass() {
+		return super.getTestClass();
 	}
 }

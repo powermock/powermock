@@ -13,6 +13,7 @@ import org.junit.internal.runners.TestClassMethodsRunner;
 import org.junit.internal.runners.TestMethodRunner;
 import org.junit.runner.notification.RunNotifier;
 import org.powermock.Whitebox;
+import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
 
 /**
  * Since {@link TestClassMethodsRunner} creates a new instance of
@@ -58,5 +59,36 @@ public class PowerMockJUnit4LegacyTestClassMethodsRunner extends TestClassMethod
 	@Override
 	protected TestMethodRunner createMethodRunner(Object test, Method method, RunNotifier notifier) {
 		return new PowerMockJUnit4LegacyTestMethodRunner(test, method, notifier, methodDescription(method));
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void run(RunNotifier notifier) {
+		final List<Method> methods = (List<Method>) Whitebox.getInternalState(this, "fTestMethods");
+		if (methods.isEmpty())
+			notifier.testAborted(getDescription(), new Exception("No runnable methods"));
+		for (Method method : methods) {
+			final StaticConstructorSuppressExtractorImpl staticConstructorSuppressExtractorImpl = new StaticConstructorSuppressExtractorImpl();
+			Class<?> testType = getTestClass();
+			final ClassLoader thisClassLoader = getClass().getClassLoader();
+			if (!thisClassLoader.equals(testType.getClassLoader())) {
+				/*
+				 * The test is loaded from another classloader, this means that
+				 * we cannot get the correct annotations if we don't load the
+				 * class from the correct class loader
+				 */
+				try {
+					testType = thisClassLoader.loadClass(testType.getName());
+				} catch (ClassNotFoundException e) {
+					// This should never happen
+					throw new RuntimeException("Internal error in PowerMock", e);
+				}
+			}
+			if (staticConstructorSuppressExtractorImpl.getTestClasses(method) == null) {
+				staticConstructorSuppressExtractorImpl.getTestClasses(testType);
+			}
+
+			invokeTestMethod(method, notifier);
+		}
 	}
 }

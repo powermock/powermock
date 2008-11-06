@@ -27,11 +27,11 @@ public interface JUnit3TestSuiteChunker extends TestSuiteChunker {
 
 	public void run(TestResult result);
 
-	public void addTest(Test test);
+	public void addTest(Test test) throws Exception;
 
 	public void runTest(Test test, TestResult result);
 
-	public void addTestSuite(Class<? extends TestCase> testClass);
+	public void addTestSuite(Class<? extends TestCase> testClass) throws Exception;
 
 	public Test testAt(int index);
 

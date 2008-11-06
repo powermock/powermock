@@ -130,6 +130,8 @@ public class MockGateway {
 	}
 
 	public static synchronized Object staticConstructorCall(String className) {
+		@SuppressWarnings("unused")
+		Class<?> ikk = MockRepository.class;
 		if (MockRepository.shouldSuppressStaticInitializerFor(className)) {
 			return "suppress";
 		}
