@@ -271,20 +271,7 @@ public class WhiteboxImpl {
 		try {
 			field = tempClass.getDeclaredField(fieldName);
 			field.setAccessible(true);
-			// ParameterizedType t = new
-			// TODO Ta reda p� typen och kolla s� att returnv�rdet �r av
-			// samma typ. Annars kasta exception.
-			final Object fieldValue = field.get(object);
-			// if (!fieldValue.getClass().isAssignableFrom(
-			// ((ParameterizedType) type.getClass()).getOwnerType()
-			// .getClass())) {
-			// StringBuilder sb = new StringBuilder();
-			// sb.append("The type of the field with name ").append(fieldName);
-			// sb.append(" (").append(fieldValue.getClass()).append(") ");
-			// sb.append("is not super class of ").append(type);
-			// throw new RuntimeException(sb.toString());
-			// }
-			return (T) fieldValue;
+			return (T) field.get(object);
 		} catch (NoSuchFieldException e) {
 			throw new RuntimeException("Field '" + fieldName + "' was not found in class " + object.getClass());
 		} catch (Exception e) {
