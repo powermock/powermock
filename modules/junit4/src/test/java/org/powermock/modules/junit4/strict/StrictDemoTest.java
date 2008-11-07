@@ -1,10 +1,10 @@
 package org.powermock.modules.junit4.strict;
 
 import static org.powermock.PowerMock.createPartialMock;
-import static org.powermock.PowerMock.createPartialMockStrict;
+import static org.powermock.PowerMock.createStrictPartialMock;
+import static org.powermock.PowerMock.expectPrivate;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
-import static org.powermock.PowerMock.expectPrivate;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +37,7 @@ public class StrictDemoTest {
 
 	@Test(expected = AssertionError.class)
 	public void testCallB_strict_failure() throws Exception {
-		StrictDemo tested = createPartialMockStrict(StrictDemo.class, "A", "B");
+		StrictDemo tested = createStrictPartialMock(StrictDemo.class, "A", "B");
 		expectPrivate(tested, "B").times(1);
 		expectPrivate(tested, "A").times(1);
 
@@ -50,7 +50,7 @@ public class StrictDemoTest {
 
 	@Test
 	public void testCallB_strict_ok() throws Exception {
-		StrictDemo tested = createPartialMockStrict(StrictDemo.class, "A", "B");
+		StrictDemo tested = createStrictPartialMock(StrictDemo.class, "A", "B");
 		expectPrivate(tested, "A").times(1);
 		expectPrivate(tested, "B").times(1);
 

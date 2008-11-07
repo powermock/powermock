@@ -72,7 +72,8 @@ public class Whitebox {
 	/**
 	 * Convenience method to get a (declared) constructor from a class type
 	 * without having to catch the checked exceptions otherwise required. These
-	 * exceptions are wrapped as runtime exceptions.
+	 * exceptions are wrapped as runtime exceptions. The constructor is also set
+	 * to accessible.
 	 * 
 	 * @param type
 	 *            The type of the class where the constructor is located.
@@ -120,8 +121,8 @@ public class Whitebox {
 	/**
 	 * Get the value of a field using reflection. This method will iterate
 	 * through the entire class hierarchy and return the value of the first
-	 * field named <tt>fieldName</tt>. If you want to get a specific field
-	 * value at specific place in the class hierarchy please refer to
+	 * field named <tt>fieldName</tt>. If you want to get a specific field value
+	 * at specific place in the class hierarchy please refer to
 	 * {@link #getInternalState(Object, String, Class)}.
 	 * 
 	 * @param object
@@ -173,8 +174,6 @@ public class Whitebox {
 	/**
 	 * Invoke a private or inner class method. This might be useful to test
 	 * private methods.
-	 * 
-	 * @throws Throwable
 	 */
 	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Object... arguments) throws Exception {
 		return WhiteboxImpl.invokeMethod(tested, methodToExecute, arguments);
@@ -288,7 +287,8 @@ public class Whitebox {
 	 * <code>klass</code>.
 	 * 
 	 * @param klass
-	 *            The class where the constructor is located. <code>null</code> ).
+	 *            The class where the constructor is located. <code>null</code>
+	 *            ).
 	 * @return A <code>java.lang.reflect.Constructor</code>.
 	 */
 	public static Constructor<?> getFirstParentConstructor(Class<?> klass) {
@@ -296,8 +296,8 @@ public class Whitebox {
 	}
 
 	/**
-	 * Get an array of {@link Method}'s that matches the supplied list of
-	 * method names.
+	 * Get an array of {@link Method}'s that matches the supplied list of method
+	 * names.
 	 * 
 	 * @param clazz
 	 *            The class that should contain the methods.

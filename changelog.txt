@@ -16,6 +16,8 @@ Change log 0.9 (under development)
 * All JUnit4 runners now executes the setUp method before each test and the tearDown method after each test if the test class extends from TestCase.
 * Fixed an issue in the getAllChunkEntries method of the AbstractTestSuiteChunkerImpl class that caused test methods to be executed in a different order when running in a test suite than running the test stand alone.
 * Fixed a serious issue when the suppress static constructor state disappeared between chunking sessions. Fixed this for all versions of JUnit 4. This means that chunking and suppression of static initializers now work as expected.
+* The PowerMock API methods with a syntax like createPartialMockX are renamed to createXPartialMock, e.g. createPartialMockNice is renamed to createNicePartialMock to be more consistent with the normal createMock methods.
+* Added createNicePartialMockAndInvokeDefaultConstructor and createStrictPartialMockAndInvokeDefaultConstructor to the PowerMock API.
 
 Change log 0.8.5 (2008-10-30)
 -----------------------------

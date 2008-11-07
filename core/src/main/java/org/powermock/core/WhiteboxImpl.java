@@ -104,7 +104,8 @@ public class WhiteboxImpl {
 	/**
 	 * Convenience method to get a (declared) constructor from a class type
 	 * without having to catch the checked exceptions otherwise required. These
-	 * exceptions are wrapped as runtime exceptions.
+	 * exceptions are wrapped as runtime exceptions. The constructor is also set
+	 * to accessible.
 	 * 
 	 * @param type
 	 *            The type of the class where the constructor is located.
@@ -114,9 +115,10 @@ public class WhiteboxImpl {
 	 * @return A <code>java.lang.reflect.Constructor</code>.
 	 */
 	public static Constructor<?> getConstructor(Class<?> type, Class<?>... parameterTypes) {
-
 		try {
-			return getUnmockedType(type).getDeclaredConstructor(parameterTypes);
+			final Constructor<?> constructor = getArgumentType(type).getDeclaredConstructor(parameterTypes);
+			constructor.setAccessible(true);
+			return constructor;
 		} catch (Exception e) {
 			throw new IllegalArgumentException("Failed to lookup constructor.", e);
 		}
