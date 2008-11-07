@@ -1386,7 +1386,7 @@ public class PowerMock {
 			MockRepository.putNewInstanceSubstitute(type, newInvocationControl);
 		}
 
-		MockRepository.addObjectsToAutomaticallyReplayAndVerify(type);
+		MockRepository.addObjectsToAutomaticallyReplayAndVerify(WhiteboxImpl.getUnmockedType(type));
 
 		return EasyMock.expect(newInvocationControl.createInstance(arguments));
 	}
