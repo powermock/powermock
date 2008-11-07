@@ -43,8 +43,6 @@ import org.powermock.core.mockstrategy.MockStrategy;
 import org.powermock.core.mockstrategy.impl.DefaultMockStrategy;
 import org.powermock.core.mockstrategy.impl.NiceMockStrategy;
 import org.powermock.core.mockstrategy.impl.StrictMockStrategy;
-import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
-import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
 
 /**
  * PowerMock extends EasyMock functionality with several new features such as
@@ -1232,7 +1230,7 @@ public class PowerMock {
 	 *            EasyMock class extensions.
 	 */
 	public static synchronized void replayAll(Object... additionalMocks) {
-		findAndAddClassesThatShouldBeAutomaticallyReplayedAndVerified(additionalMocks);
+		MockRepository.addObjectsToAutomaticallyReplayAndVerify(additionalMocks);
 
 		for (Object classToReplayOrVerify : MockRepository.getObjectsToAutomaticallyReplayAndVerify()) {
 			replay(classToReplayOrVerify);
@@ -1674,62 +1672,4 @@ public class PowerMock {
 		}
 		return ((MockInvocationHandler) invocationControl.getInvocationHandler());
 	}
-
-	private static void addClassesToAutomaticallyReplayAndVerify(final String[] preparedClassesForTestClass) {
-		if (preparedClassesForTestClass != null && preparedClassesForTestClass.length > 0) {
-			try {
-				for (String classToReplayOrVerify : preparedClassesForTestClass) {
-					MockRepository.addObjectsToAutomaticallyReplayAndVerify(Class.forName(classToReplayOrVerify));
-				}
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException("Internal error in PowerMock: Failed to find class!", e);
-			}
-		}
-	}
-
-	private static void findAndAddClassesThatShouldBeAutomaticallyReplayedAndVerified(Object[] additionalMocks) {
-		MockRepository.addObjectsToAutomaticallyReplayAndVerify(additionalMocks);
-		final StackTraceElement[] stackTraceElements = new Exception().getStackTrace();
-		/*
-		 * We want to find the method that invoked the method before this method
-		 * call, i.e. number 2 in the stack trace element chain.
-		 */
-		final StackTraceElement stackTraceElement = stackTraceElements[2];
-
-		Class<?> testClass = null;
-		final String testClassName = stackTraceElement.getClassName();
-		try {
-			testClass = Class.forName(testClassName);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException("Internal error in PowerMock: Failed to find class with name " + testClassName + ".", e);
-		}
-		final Method testMethod = Whitebox.getMethod(testClass, stackTraceElement.getMethodName());
-
-		final PrepareForTestExtractorImpl prepareForTestExtractor = new PrepareForTestExtractorImpl();
-		final StaticConstructorSuppressExtractorImpl staticConstructorSuppressExtractor = new StaticConstructorSuppressExtractorImpl();
-		final String[] preparedClassesForTestMethod = prepareForTestExtractor.getTestClasses(testMethod);
-		final String[] suppressedClassesForTestMethod = staticConstructorSuppressExtractor.getTestClasses(testMethod);
-
-		/*
-		 * If no PrepareForTest annotation is present for the method invoking
-		 * this method we should return the class level classes.
-		 */
-		if (preparedClassesForTestMethod == null) {
-			final String[] preparedClassesForTestClass = prepareForTestExtractor.getTestClasses(testClass);
-			addClassesToAutomaticallyReplayAndVerify(preparedClassesForTestClass);
-		} else {
-			addClassesToAutomaticallyReplayAndVerify(preparedClassesForTestMethod);
-		}
-		/*
-		 * If no SuppressStaticInitializerFor annotation is present for the
-		 * method invoking this method we should return the class level classes.
-		 */
-		if (suppressedClassesForTestMethod == null) {
-			final String[] suppressedClassesForTestClass = staticConstructorSuppressExtractor.getTestClasses(testClass);
-			addClassesToAutomaticallyReplayAndVerify(suppressedClassesForTestClass);
-		} else {
-			addClassesToAutomaticallyReplayAndVerify(suppressedClassesForTestMethod);
-		}
-	}
-
 }
