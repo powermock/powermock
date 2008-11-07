@@ -107,7 +107,7 @@ public class SampleServiceImplTest {
 		verifyAll(Person.class);
 	}
 
-	protected void replayAll(Object... additionalMocks) {
+	protected void replayAll(Object... additionalMocks) throws Exception {
 		replay(personServiceMock, eventService);
 		if (additionalMocks != null) {
 			replay(additionalMocks);

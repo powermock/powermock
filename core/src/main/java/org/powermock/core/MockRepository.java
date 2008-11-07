@@ -17,6 +17,7 @@ package org.powermock.core;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -33,6 +34,8 @@ import org.powermock.core.invocationcontrol.newinstance.NewInvocationControl;
  * and methods that are mocked.
  */
 public class MockRepository {
+
+	private static Set<Object> objectsToAutomaticallyReplayAndVerify = new HashSet<Object>();
 
 	private static Map<Class<?>, NewInvocationControl<?>> newSubstitutions = new HashMap<Class<?>, NewInvocationControl<?>>();
 
@@ -52,7 +55,18 @@ public class MockRepository {
 	 */
 	private static Set<String> suppressStaticInitializers = new HashSet<String>();
 
-	public synchronized static void clear() {
+	/**
+	 * Clear all state of the mock repository
+	 */
+	public synchronized static void clearAll() {
+		cleanUpAfterReplayOrVerify();
+		objectsToAutomaticallyReplayAndVerify.clear();
+	}
+
+	/**
+	 * Clear all state that should be cleared after replay and verify.
+	 */
+	public static void cleanUpAfterReplayOrVerify() {
 		classMocks.clear();
 		instanceMocks.clear();
 		newSubstitutions.clear();
@@ -144,5 +158,21 @@ public class MockRepository {
 	 */
 	public static synchronized boolean shouldSuppressStaticInitializerFor(String className) {
 		return suppressStaticInitializers.contains(className);
+	}
+
+	/**
+	 * @return All classes that should be automatically replayed or verified.
+	 */
+	public static synchronized Set<Object> getObjectsToAutomaticallyReplayAndVerify() {
+		return Collections.unmodifiableSet(objectsToAutomaticallyReplayAndVerify);
+	}
+
+	/**
+	 * Add classes that should be automatically replayed or verified.
+	 */
+	public static synchronized void addObjectsToAutomaticallyReplayAndVerify(Object... objects) {
+		for (Object mock : objects) {
+			objectsToAutomaticallyReplayAndVerify.add(mock);
+		}
 	}
 }

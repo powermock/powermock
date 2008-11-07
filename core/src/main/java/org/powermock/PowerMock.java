@@ -34,12 +34,17 @@ import org.powermock.core.MockGateway;
 import org.powermock.core.MockRepository;
 import org.powermock.core.PowerMockUtils;
 import org.powermock.core.WhiteboxImpl;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
+import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.core.invocationcontrol.method.MethodInvocationControl;
 import org.powermock.core.invocationcontrol.newinstance.NewInvocationControl;
 import org.powermock.core.mockstrategy.MockStrategy;
 import org.powermock.core.mockstrategy.impl.DefaultMockStrategy;
 import org.powermock.core.mockstrategy.impl.NiceMockStrategy;
 import org.powermock.core.mockstrategy.impl.StrictMockStrategy;
+import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
+import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
 
 /**
  * PowerMock extends EasyMock functionality with several new features such as
@@ -1201,13 +1206,78 @@ public class PowerMock {
 	}
 
 	/**
+	 * Replay all classes and mock objects known by PowerMock. This includes all
+	 * classes that are prepared for test using the {@link PrepareForTest} or
+	 * {@link PrepareOnlyThisForTest} annotations and all classes that have had
+	 * their static initializers removed by using the
+	 * {@link SuppressStaticInitializationFor} annotation. It also includes all
+	 * mock instances created by PowerMock such as those created or used by
+	 * {@link #createMock(Class, Method...)},
+	 * {@link #mockStatic(Class, Method...)},
+	 * {@link #expectNew(Class, Object...)},
+	 * {@link #createPartialMock(Class, String...)} etc.
+	 * <p>
+	 * To make it easy to pass in additional mocks <i>not</i> created by the
+	 * PowerMock API you can optionally specify them as <tt>additionalMocks</tt>
+	 * . These are typically those mock objects you have created using pure
+	 * EasyMock or EasyMock class extensions. No additional mocks needs to be
+	 * specified if you're only using PowerMock API methods.
+	 * <p>
+	 * Note that the <tt>additionalMocks</tt> are also automatically verified
+	 * when invoking the {@link #verifyAll()} method.
+	 * 
+	 * @param additionalMocks
+	 *            Mocks not created by the PowerMock API. These are typically
+	 *            those mock objects you have created using pure EasyMock or
+	 *            EasyMock class extensions.
+	 * @throws Exception
+	 *             If something unexpected goes wrong.
+	 */
+	public static synchronized void replayAll(Object... additionalMocks) throws Exception {
+		findAndAddClassesThatShouldBeAutomaticallyReplayedAndVerified(additionalMocks);
+
+		for (Object classToReplayOrVerify : MockRepository.getObjectsToAutomaticallyReplayAndVerify()) {
+			replay(classToReplayOrVerify);
+		}
+	}
+
+	/**
+	 * Verify all classes and mock objects known by PowerMock. This includes all
+	 * classes that are prepared for test using the {@link PrepareForTest} or
+	 * {@link PrepareOnlyThisForTest} annotations and all classes that have had
+	 * their static initializers removed by using the
+	 * {@link SuppressStaticInitializationFor} annotation. It also includes all
+	 * mock instances created by PowerMock such as those created or used by
+	 * {@link #createMock(Class, Method...)},
+	 * {@link #mockStatic(Class, Method...)},
+	 * {@link #expectNew(Class, Object...)},
+	 * {@link #createPartialMock(Class, String...)} etc.
+	 * <p>
+	 * Note that all <tt>additionalMocks</tt> passed to the
+	 * {@link #replayAll(Object...)} method are also verified here
+	 * automatically.
+	 * 
+	 */
+	public static synchronized void verifyAll() {
+		try {
+			for (Object classToReplayOrVerify : MockRepository.getObjectsToAutomaticallyReplayAndVerify()) {
+				verify(classToReplayOrVerify);
+			}
+		} finally {
+			cleanUpAfterVerify();
+		}
+	}
+
+	/**
 	 * Switches the mocks or classes to replay mode. Note that you must use this
 	 * method when using PowerMock!
 	 * 
 	 * @param mocks
 	 *            mock objects or classes loaded by PowerMock.
+	 * @throws Exception
+	 *             If something unexpected goes wrong.
 	 */
-	public static synchronized void replay(Object... mocks) {
+	public static synchronized void replay(Object... mocks) throws Exception {
 		try {
 			for (Object mock : mocks) {
 				if (mock instanceof Class) {
@@ -1224,13 +1294,22 @@ public class PowerMock {
 							 * Delegate to easy mock class extension if we have
 							 * no handler registered for this object.
 							 */
-							org.easymock.classextension.EasyMock.replay(mock);
+							try {
+								org.easymock.classextension.EasyMock.replay(mock);
+							} catch (RuntimeException e) {
+								throw new RuntimeException(mock + " is not a mock object", e);
+							}
 						}
 					}
 				}
 			}
 		} catch (Throwable t) {
-			clearState();
+			replayAndVerifyIsNice = false;
+			if (t instanceof Exception) {
+				throw (Exception) t;
+			} else if (t instanceof Error) {
+				throw (Error) t;
+			}
 			throw new RuntimeException(t);
 		}
 	}
@@ -1259,13 +1338,17 @@ public class PowerMock {
 							 * Delegate to easy mock class extension if we have
 							 * no handler registered for this object.
 							 */
-							org.easymock.classextension.EasyMock.verify(mock);
+							try {
+								org.easymock.classextension.EasyMock.verify(mock);
+							} catch (RuntimeException e) {
+								throw new RuntimeException(mock + " is not a mock object", e);
+							}
 						}
 					}
 				}
 			}
 		} finally {
-			clearState();
+			cleanUpAfterVerify();
 		}
 	}
 
@@ -1308,6 +1391,9 @@ public class PowerMock {
 			newInvocationControl = EasyMock.createMock(NewInvocationControl.class);
 			MockRepository.putNewInstanceSubstitute(type, newInvocationControl);
 		}
+
+		MockRepository.addObjectsToAutomaticallyReplayAndVerify(type);
+
 		return EasyMock.expect(newInvocationControl.createInstance(arguments));
 	}
 
@@ -1468,7 +1554,9 @@ public class PowerMock {
 	}
 
 	private static <T> T doMock(Class<T> type, boolean isStatic, MockStrategy mockStrategy, ConstructorArgs constructorArgs, Method... methods) {
-		if (methods == null) {
+		if (type == null) {
+			throw new IllegalArgumentException("The class to mock cannot be null");
+		} else if (methods == null) {
 			methods = new Method[] {};
 		}
 
@@ -1497,8 +1585,10 @@ public class PowerMock {
 		MockInvocationHandler h = new MockInvocationHandler((MocksControl) control);
 		if (isStatic) {
 			MockRepository.putClassMethodInvocationControl(type, h, methods);
+			MockRepository.addObjectsToAutomaticallyReplayAndVerify(type);
 		} else {
 			MockRepository.putInstanceMethodInvocationControl(mock, h, methods);
+			MockRepository.addObjectsToAutomaticallyReplayAndVerify(mock);
 		}
 		return mock;
 	}
@@ -1519,21 +1609,16 @@ public class PowerMock {
 	}
 
 	private static synchronized void replay(Class<?>... types) {
-		try {
-			for (Class<?> type : types) {
-				final MockInvocationHandler invocationHandler = getClassInvocationHandler(type);
-				if (invocationHandler != null) {
-					invocationHandler.getControl().replay();
-				}
-
-				NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceSubstitute(type);
-				if (newInvocationControl != null) {
-					EasyMock.replay(newInvocationControl);
-				}
+		for (Class<?> type : types) {
+			final MockInvocationHandler invocationHandler = getClassInvocationHandler(type);
+			if (invocationHandler != null) {
+				invocationHandler.getControl().replay();
 			}
-		} catch (Throwable t) {
-			clearState();
-			throw new RuntimeException(t);
+
+			NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceSubstitute(type);
+			if (newInvocationControl != null) {
+				EasyMock.replay(newInvocationControl);
+			}
 		}
 	}
 
@@ -1557,10 +1642,23 @@ public class PowerMock {
 		}
 	}
 
+	/**
+	 * This method IS indeed used so don't remove! It's called upon from the
+	 * JUnit runners by reflection (because we need to invoke it with the
+	 * correct class loader). The method should not be exposed therefore it's
+	 * private. We should refactor this method to an internal class and make it
+	 * public instead.
+	 */
+	@SuppressWarnings("unused")
 	private static void clearState() {
-		MockRepository.clear();
+		MockRepository.clearAll();
 		MockGateway.clear();
 		replayAndVerifyIsNice = false;
+	}
+
+	private static void cleanUpAfterVerify() {
+		replayAndVerifyIsNice = false;
+		MockRepository.cleanUpAfterReplayOrVerify();
 	}
 
 	private static MockInvocationHandler getClassInvocationHandler(Class<?> type) {
@@ -1580,4 +1678,62 @@ public class PowerMock {
 		}
 		return ((MockInvocationHandler) invocationControl.getInvocationHandler());
 	}
+
+	private static void addClassesToAutomaticallyReplayAndVerify(final String[] preparedClassesForTestClass) {
+		if (preparedClassesForTestClass != null && preparedClassesForTestClass.length > 0) {
+			try {
+				for (String classToReplayOrVerify : preparedClassesForTestClass) {
+					MockRepository.addObjectsToAutomaticallyReplayAndVerify(Class.forName(classToReplayOrVerify));
+				}
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException("Internal error in PowerMock: Failed to find class!", e);
+			}
+		}
+	}
+
+	private static void findAndAddClassesThatShouldBeAutomaticallyReplayedAndVerified(Object[] additionalMocks) {
+		MockRepository.addObjectsToAutomaticallyReplayAndVerify(additionalMocks);
+		final StackTraceElement[] stackTraceElements = new Exception().getStackTrace();
+		/*
+		 * We want to find the method that invoked the method before this method
+		 * call, i.e. number 2 in the stack trace element chain.
+		 */
+		final StackTraceElement stackTraceElement = stackTraceElements[2];
+
+		Class<?> testClass = null;
+		final String testClassName = stackTraceElement.getClassName();
+		try {
+			testClass = Class.forName(testClassName);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("Internal error in PowerMock: Failed to find class with name " + testClassName + ".", e);
+		}
+		final Method testMethod = Whitebox.getMethod(testClass, stackTraceElement.getMethodName());
+
+		final PrepareForTestExtractorImpl prepareForTestExtractor = new PrepareForTestExtractorImpl();
+		final StaticConstructorSuppressExtractorImpl staticConstructorSuppressExtractor = new StaticConstructorSuppressExtractorImpl();
+		final String[] preparedClassesForTestMethod = prepareForTestExtractor.getTestClasses(testMethod);
+		final String[] suppressedClassesForTestMethod = staticConstructorSuppressExtractor.getTestClasses(testMethod);
+
+		/*
+		 * If no PrepareForTest annotation is present for the method invoking
+		 * this method we should return the class level classes.
+		 */
+		if (preparedClassesForTestMethod == null) {
+			final String[] preparedClassesForTestClass = prepareForTestExtractor.getTestClasses(testClass);
+			addClassesToAutomaticallyReplayAndVerify(preparedClassesForTestClass);
+		} else {
+			addClassesToAutomaticallyReplayAndVerify(preparedClassesForTestMethod);
+		}
+		/*
+		 * If no SuppressStaticInitializerFor annotation is present for the
+		 * method invoking this method we should return the class level classes.
+		 */
+		if (suppressedClassesForTestMethod == null) {
+			final String[] suppressedClassesForTestClass = staticConstructorSuppressExtractor.getTestClasses(testClass);
+			addClassesToAutomaticallyReplayAndVerify(suppressedClassesForTestClass);
+		} else {
+			addClassesToAutomaticallyReplayAndVerify(suppressedClassesForTestMethod);
+		}
+	}
+
 }

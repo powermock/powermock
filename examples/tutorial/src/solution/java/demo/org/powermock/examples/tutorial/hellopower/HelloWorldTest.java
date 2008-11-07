@@ -16,13 +16,13 @@ import org.powermock.modules.junit4.PowerMockRunner;
 public class HelloWorldTest {
 
 	@Test
-	public void testGreeting() {
+	public void testGreeting() throws Exception {
 		mockStatic(SimpleConfig.class);
 		expect(SimpleConfig.getGreeting()).andReturn("Hello");
 		expect(SimpleConfig.getTarget()).andReturn("world");
-		
+
 		replay(SimpleConfig.class);
-		
+
 		assertEquals("Hello world", new HelloWorld().greet());
 
 		verify(SimpleConfig.class);

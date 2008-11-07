@@ -37,11 +37,10 @@ import samples.privatefield.SimplePrivateFieldServiceClass;
 public class SimplePrivateFieldServiceClassTest {
 
 	@Test
-	public void testSimplePrivateFieldServiceClass() {
+	public void testSimplePrivateFieldServiceClass() throws Exception {
 		SimplePrivateFieldServiceClass tested = new SimplePrivateFieldServiceClass();
 		Service serviceMock = createMock(Service.class);
-		setInternalState(tested, "service", serviceMock,
-				SimplePrivateFieldServiceClass.class);
+		setInternalState(tested, "service", serviceMock, SimplePrivateFieldServiceClass.class);
 
 		final String expected = "Hello world!";
 		expect(serviceMock.getServiceMessage()).andReturn(expected);

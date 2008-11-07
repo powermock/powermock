@@ -35,7 +35,7 @@ import samples.expectnew.ExpectNewDemo;
 public class MockDateTest {
 
 	@Test
-	public void testMockDate() {
+	public void testMockDate() throws Exception {
 		Date someDate = new Date();
 		Date date = PowerMock.createMock(Date.class);
 		EasyMock.expect(date.after(someDate)).andReturn(false);
@@ -48,10 +48,9 @@ public class MockDateTest {
 	}
 
 	@Test
-	public void testMockDateWithEasyMock() {
+	public void testMockDateWithEasyMock() throws Exception {
 		Date someDate = new Date();
-		MocksClassControl c = (MocksClassControl) org.easymock.classextension.EasyMock
-				.createControl();
+		MocksClassControl c = (MocksClassControl) org.easymock.classextension.EasyMock.createControl();
 		Date date = c.createMock(Date.class);
 		EasyMock.expect(date.after(someDate)).andReturn(false);
 
@@ -65,12 +64,10 @@ public class MockDateTest {
 	@Test(expected = IllegalStateException.class)
 	public void testMockDateWithEasyMockFails() {
 		Date someDate = new Date();
-		MocksClassControl c = (MocksClassControl) org.easymock.classextension.EasyMock
-				.createControl();
+		MocksClassControl c = (MocksClassControl) org.easymock.classextension.EasyMock.createControl();
 		Date date = c.createMock(Date.class, new Method[0]);
 		EasyMock.expect(date.after(someDate)).andReturn(false);
-		Assert
-				.fail("EasyMock with no methods mocked should not be possible to mock");
+		Assert.fail("EasyMock with no methods mocked should not be possible to mock");
 	}
 
 	@Test

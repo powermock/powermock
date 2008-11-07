@@ -65,7 +65,7 @@ public class MyServiceUserTest {
 		dependencyManagerMock = null;
 	}
 
-	public void replayAll() {
+	public void replayAll() throws Exception {
 		replay(DependencyManager.class, dependencyManagerMock, myServiceMock);
 	}
 
@@ -91,8 +91,7 @@ public class MyServiceUserTest {
 		 * Expectations are performed the same for static methods as for
 		 * instance methods.
 		 */
-		expect(DependencyManager.getInstance())
-				.andReturn(dependencyManagerMock);
+		expect(DependencyManager.getInstance()).andReturn(dependencyManagerMock);
 
 		expect(dependencyManagerMock.getMyService()).andReturn(myServiceMock);
 

@@ -62,7 +62,7 @@ public class ServiceRegistratorTest {
 	/**
 	 * Replay all mocks.
 	 */
-	protected void replayAll() {
+	protected void replayAll() throws Exception {
 		replay(bundleContextMock, serviceRegistrationMock);
 		replay(IdGenerator.class);
 	}

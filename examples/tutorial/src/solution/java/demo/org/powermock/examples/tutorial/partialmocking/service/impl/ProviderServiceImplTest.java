@@ -162,7 +162,7 @@ public class ProviderServiceImplTest {
 		assertTrue(actual.isEmpty());
 	}
 
-	protected void replayAll(Object... additionalMocks) {
+	protected void replayAll(Object... additionalMocks) throws Exception {
 		replay(providerDaoMock);
 		if (additionalMocks != null) {
 			replay(additionalMocks);
