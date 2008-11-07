@@ -25,8 +25,11 @@ import demo.org.powermock.examples.tutorial.domainmocking.domain.SampleServiceEx
 
 /**
  * The purpose of this test is to get 100% coverage of the
- * {@link SampleServiceImpl} class without any code changes to this class. To
+ * {@link SampleServiceImpl} class without any code changes to that class. To
  * achieve this you need learn how to mock instantiation of domain objects.
+ * <p>
+ * While doing this tutorial please refer to the documentation on how to mock
+ * construction of new objects at the PowerMock web site.
  */
 // TODO Specify the PowerMock runner
 // TODO Specify which classes that must be prepared for test
