@@ -28,6 +28,8 @@ import demo.org.powermock.examples.tutorial.domainmocking.domain.SampleServiceEx
  * {@link SampleServiceImpl} class without any code changes to this class. To
  * achieve this you need learn how to mock instantiation of domain objects.
  */
+// TODO Specify the PowerMock runner
+// TODO Specify which classes that must be prepared for test
 public class SampleServiceImplTest_Tutorial {
 
 	private SampleServiceImpl tested;
