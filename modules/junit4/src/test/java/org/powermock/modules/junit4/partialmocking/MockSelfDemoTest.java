@@ -18,6 +18,7 @@ package org.powermock.modules.junit4.partialmocking;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.powermock.PowerMock.createPartialMock;
 import static org.powermock.PowerMock.createPartialMockAndInvokeDefaultConstructor;
 import static org.powermock.PowerMock.createPartialMockForAllMethodsExcept;
@@ -31,6 +32,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import samples.partialmocking.MockSelfDemo;
+import samples.partialmocking.MockSelfWithNoDefaultConstructorDemo;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(MockSelfDemo.class)
@@ -180,5 +182,16 @@ public class MockSelfDemoTest {
 		verify(tested);
 
 		assertEquals("Result ought to be \"Hello altered world\".", expected, actual);
+	}
+
+	@PrepareForTest(MockSelfWithNoDefaultConstructorDemo.class)
+	@Test
+	public void testCreatePartialMockAndInvokeDefaultConstructor_noDefaultConstructorFound() throws Exception {
+		try {
+			createPartialMockAndInvokeDefaultConstructor(MockSelfWithNoDefaultConstructorDemo.class, "aMethod2");
+			fail("Should throw IllegalArgumentException!");
+		} catch (IllegalArgumentException e) {
+			assertEquals("Failed to lookup constructor.", e.getMessage());
+		}
 	}
 }
