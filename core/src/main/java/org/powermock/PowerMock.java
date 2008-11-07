@@ -1230,10 +1230,8 @@ public class PowerMock {
 	 *            Mocks not created by the PowerMock API. These are typically
 	 *            those mock objects you have created using pure EasyMock or
 	 *            EasyMock class extensions.
-	 * @throws Exception
-	 *             If something unexpected goes wrong.
 	 */
-	public static synchronized void replayAll(Object... additionalMocks) throws Exception {
+	public static synchronized void replayAll(Object... additionalMocks) {
 		findAndAddClassesThatShouldBeAutomaticallyReplayedAndVerified(additionalMocks);
 
 		for (Object classToReplayOrVerify : MockRepository.getObjectsToAutomaticallyReplayAndVerify()) {
@@ -1277,7 +1275,7 @@ public class PowerMock {
 	 * @throws Exception
 	 *             If something unexpected goes wrong.
 	 */
-	public static synchronized void replay(Object... mocks) throws Exception {
+	public static synchronized void replay(Object... mocks) {
 		try {
 			for (Object mock : mocks) {
 				if (mock instanceof Class) {
@@ -1305,10 +1303,8 @@ public class PowerMock {
 			}
 		} catch (Throwable t) {
 			replayAndVerifyIsNice = false;
-			if (t instanceof Exception) {
-				throw (Exception) t;
-			} else if (t instanceof Error) {
-				throw (Error) t;
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException) t;
 			}
 			throw new RuntimeException(t);
 		}
