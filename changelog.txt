@@ -20,7 +20,7 @@ Change log 0.9 (under development)
 * Added createNicePartialMockAndInvokeDefaultConstructor and createStrictPartialMockAndInvokeDefaultConstructor to the PowerMock API.
 * Updated the tutorial projects with TODO's. It should now be much easier to understand what shall be done.
 * Changed the clean-up mechanisms of PowerMock.replay(..) and PowerMock.verify(..). Should no longer clear unnecessary state.
-* Implemented two new PowerMock API methods: replayAll and verifyAll(). These can be used to replay and verify all classes and mocks created or used by the PowerMock API without having to explicitly specify each and everyone.
+* Implemented two new PowerMock API methods: replayAll and verifyAll(). These can be used to replay and verify all classes and mocks created by the PowerMock API without having to explicitly specify each and everyone.
 
 Change log 0.8.5 (2008-10-30)
 -----------------------------
