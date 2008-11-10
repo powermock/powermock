@@ -28,7 +28,6 @@ public class ExampleWithEvilConstructorTest {
 
 	@Test
 	public void testSuppressOwnConstructor() throws Exception {
-		final String message = "myMessage";
 		ExampleWithEvilConstructor tested = Whitebox.newInstance(ExampleWithEvilConstructor.class);
 		assertNull(tested.getMessage());
 	}
