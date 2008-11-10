@@ -30,7 +30,7 @@ public class ExampleWithEvilConstructorTest {
 	public void testSuppressOwnConstructor() throws Exception {
 		final String message = "myMessage";
 		ExampleWithEvilConstructor tested = Whitebox.newInstance(ExampleWithEvilConstructor.class);
-		assertNull(message, tested.getMessage());
+		assertNull(tested.getMessage());
 	}
 
 	@Test(expected = UnsatisfiedLinkError.class)
