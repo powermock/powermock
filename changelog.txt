@@ -1,5 +1,8 @@
-Change log 0.9 (under development)
+Change log 1.0 (under development)
 ----------------------------------
+
+Change log 0.9 (released 2008-11-10)
+------------------------------------
 * Structural refactoring to remove Structure 101 XS: moved WhiteBox implementation to separate class in core and moved IndicateReloadClass
 * By default Whitebox.getInternalState and Whitebox.setInternalState now traverses the class hierarchy when looking for a field.
 * Better error message if a NPE is caught in a subclass of a class being prepared for test.
@@ -22,8 +25,8 @@ Change log 0.9 (under development)
 * Changed the clean-up mechanisms of PowerMock.replay(..) and PowerMock.verify(..). Should no longer clear unnecessary state.
 * Implemented two new PowerMock API methods: replayAll and verifyAll(). These can be used to replay and verify all classes and mocks created by the PowerMock API without having to explicitly specify each and everyone.
 
-Change log 0.8.5 (2008-10-30)
------------------------------
+Change log 0.8.5 (releasd 2008-10-30)
+-------------------------------------
 * Fixed so that it's now possible to mock abstract methods
 * WhiteBox.getMethod(..) now also returns protected and package-private methods.
 * Whitebox.invokeMethod can now execute methods in a super class.
