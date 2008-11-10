@@ -6,17 +6,6 @@
   <version>1.0-SNAPSHOT</version>
   <name>tutorial</name>
   <url>http://maven.apache.org</url>
-  <plugins>
-         <plugin>            
-          <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-               <verbose>true</verbose>
-               <source>1.5</source>
-               <target>1.5</target>
-            </configuration>
-         </plugin>
-  </plugins>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -27,8 +16,7 @@
     <dependency>
       <groupId>org.powermock</groupId>
       <artifactId>powermock-core</artifactId>
-      <version>1.0-SNAPSHOT</version>
-      <scope>test</scope>
+      <version>1.0-SNAPSHOT</version>      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.powermock.modules</groupId>
@@ -67,6 +55,17 @@
    </profile>
   </profiles>
   <build>
+     <plugins>
+         <plugin>            
+          <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+               <verbose>true</verbose>
+               <source>1.5</source>
+               <target>1.5</target>
+            </configuration>
+     </plugin>
+   </plugins>   
     <testSourceDirectory>src/${testcode}/java</testSourceDirectory>
   </build>
 </project>
