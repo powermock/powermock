@@ -34,5 +34,4 @@ public class ExampleWithEvilStaticInitializer {
 	public String getMessage() {
 		return message;
 	}
-
 }
