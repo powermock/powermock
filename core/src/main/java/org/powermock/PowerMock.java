@@ -1357,7 +1357,39 @@ public class PowerMock {
 	 * @throws Exception
 	 */
 	public static synchronized <T> T createMockAndExpectNew(Class<T> type, Object... arguments) throws Exception {
-		T mock = org.easymock.classextension.EasyMock.createMock(type);
+		T mock = createMock(type);
+		expectNew(type, arguments).andReturn(mock);
+		return mock;
+	}
+
+	/**
+	 * Convenience method for createNiceMock followed by expectNew.
+	 * 
+	 * @param type
+	 *            The class that should be mocked.
+	 * @param arguments
+	 *            The constructor arguments.
+	 * @return A mock object of the same type as the mock.
+	 * @throws Exception
+	 */
+	public static synchronized <T> T createNiceMockAndExpectNew(Class<T> type, Object... arguments) throws Exception {
+		T mock = createNiceMock(type);
+		expectNew(type, arguments).andReturn(mock);
+		return mock;
+	}
+	
+	/**
+	 * Convenience method for createStrictMock followed by expectNew.
+	 * 
+	 * @param type
+	 *            The class that should be mocked.
+	 * @param arguments
+	 *            The constructor arguments.
+	 * @return A mock object of the same type as the mock.
+	 * @throws Exception
+	 */
+	public static synchronized <T> T createStrictMockAndExpectNew(Class<T> type, Object... arguments) throws Exception {
+		T mock = createStrictMock(type);
 		expectNew(type, arguments).andReturn(mock);
 		return mock;
 	}
