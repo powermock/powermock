@@ -1,5 +1,6 @@
 Change log 1.0 (under development)
 ----------------------------------
+* Changed the pom.xml for the tutorial project so that it's now a stand-alone project.
 
 Change log 0.9 (released 2008-11-10)
 ------------------------------------
