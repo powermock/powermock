@@ -32,6 +32,12 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <repositories>
+  <repository>
+      <id>powermock-repo</id>
+      <url>http://powermock.googlecode.com/svn/repo/</url>
+   </repository>
+  </repositories>
   <profiles>
     <profile>
       <id>tutorial</id>
