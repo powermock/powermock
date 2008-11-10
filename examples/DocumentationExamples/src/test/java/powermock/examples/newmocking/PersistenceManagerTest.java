@@ -81,7 +81,7 @@ public class PersistenceManagerTest {
 
 		PersistenceManager tested = new PersistenceManager();
 
-		expectNew(File.class).andReturn(mFileMock);
+		expectNew(File.class, path).andReturn(mFileMock);
 
 		expect(mFileMock.exists()).andReturn(true);
 
