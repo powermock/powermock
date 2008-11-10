@@ -35,7 +35,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
  * PowerMock's ability to mock new instance calls.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest( { PersistenceManager.class, File.class })
+@PrepareForTest(PersistenceManager.class)
 public class PersistenceManagerTest {
 
 	@Test
