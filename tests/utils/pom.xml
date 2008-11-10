@@ -2,7 +2,7 @@
    <parent>
       <artifactId>powermock-tests</artifactId>
       <groupId>org.powermock.tests</groupId>
-      <version>0.9</version>
+      <version>1.0-SNAPSHOT</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.powermock.tests</groupId>
