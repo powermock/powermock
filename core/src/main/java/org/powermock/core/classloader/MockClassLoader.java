@@ -40,6 +40,12 @@ import org.powermock.core.transformers.MockTransformer;
  */
 public final class MockClassLoader extends DeferSupportingClassLoader {
 
+	/**
+	 * Pass this string to the constructor to indicate that all classes should
+	 * be modified.
+	 */
+	public static final String MODIFY_ALL_CLASSES = "*";
+
 	private List<MockTransformer> mockTransformerChain;
 
 	private Set<String> modify = Collections.synchronizedSet(new HashSet<String>());
@@ -80,7 +86,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 		Class<?> loadedClass = null;
 		// findSystemClass(s);
 		deferTo.loadClass(s);
-		if (match(ignore, s) || !match(modify, s)) {
+		if (match(ignore, s) || !(match(modify, s) || (modify.size() == 1 && modify.iterator().next().equals(MODIFY_ALL_CLASSES)))) {
 			loadedClass = loadUnmockedClass(s);
 		} else {
 			loadedClass = loadMockClass(s);
@@ -95,15 +101,15 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 			 * TODO This if-statement is a VERY ugly hack to avoid the
 			 * java.lang.ExceptionInInitializerError caused by
 			 * "javassist.NotFoundException:
+			 * net.sf.cglib.proxy.Enhancer$EnhancerKey$$KeyFactoryByCGLIB$$7fb24d72
+			 * ". This happens after the
 			 * 
-			 * net.sf.cglib.proxy.Enhancer$EnhancerKey$$KeyFactoryByCGLIB$$7fb24d72".
-			 * This happens after the
-			 * 
-			 * se.jayway.examples.tests.privatefield.SimplePrivateFieldServiceClassTest#testUseService(..)
-			 * tests has been run and all other tests will fail if this class is
-			 * tried to be loaded. Atm I have found no solution other than this
-			 * ugly hack to make it work. We really need to investigate the real
-			 * cause of this behavior.
+			 * se.jayway.examples.tests.privatefield.
+			 * SimplePrivateFieldServiceClassTest#testUseService(..) tests has
+			 * been run and all other tests will fail if this class is tried to
+			 * be loaded. Atm I have found no solution other than this ugly hack
+			 * to make it work. We really need to investigate the real cause of
+			 * this behavior.
 			 */
 			if (name.startsWith(ignoredClass) || name.startsWith(ignoredClass2)) {
 				// ignore

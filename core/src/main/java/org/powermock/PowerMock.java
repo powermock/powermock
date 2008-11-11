@@ -1377,7 +1377,7 @@ public class PowerMock {
 		expectNew(type, arguments).andReturn(mock);
 		return mock;
 	}
-	
+
 	/**
 	 * Convenience method for createStrictMock followed by expectNew.
 	 * 

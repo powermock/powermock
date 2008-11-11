@@ -37,8 +37,7 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
 		return ignoredPackages;
 	}
 
-	public DeferSupportingClassLoader(ClassLoader classloader,
-			String ignoredPackages[]) {
+	public DeferSupportingClassLoader(ClassLoader classloader, String ignoredPackages[]) {
 		if (classloader == null) {
 			deferTo = ClassLoader.getSystemClassLoader();
 		} else {
@@ -48,8 +47,7 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
 		this.ignoredPackages = ignoredPackages;
 	}
 
-	protected Class<?> loadClass(String name, boolean resolve)
-			throws ClassNotFoundException {
+	protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
 
 		Class<?> clazz = null;
 		if ((clazz = (Class<?>) classes.get(name)) == null) {
@@ -77,15 +75,16 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
 	}
 
 	protected static boolean match(Iterable<String> packages, String name) {
-		for (String ignore : packages) {
-			if (name.startsWith(ignore) || name.endsWith(ignore)) {
-				return true;
+		synchronized (packages) {
+			for (String ignore : packages) {
+				if (name.startsWith(ignore) || name.endsWith(ignore)) {
+					return true;
+				}
 			}
 		}
 		return false;
 	}
 
-	protected abstract Class<?> loadModifiedClass(String s)
-			throws ClassFormatError, ClassNotFoundException;
+	protected abstract Class<?> loadModifiedClass(String s) throws ClassFormatError, ClassNotFoundException;
 
 }

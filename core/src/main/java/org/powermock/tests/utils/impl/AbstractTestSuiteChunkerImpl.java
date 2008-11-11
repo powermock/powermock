@@ -17,6 +17,7 @@ package org.powermock.tests.utils.impl;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.powermock.core.classloader.MockClassLoader;
+import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
@@ -64,7 +66,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 	 * Maps the list of test indexes that is assigned to a specific test suite
 	 * index.
 	 */
-	protected final Map<Integer, List<Integer>> testAtDelegateMapper = new ConcurrentHashMap<Integer, List<Integer>>();
+	protected final Map<Integer, List<Integer>> testAtDelegateMapper = new HashMap<Integer, List<Integer>>();
 
 	private int currentTestIndex = NOT_INITIALIZED;
 
@@ -88,9 +90,14 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 	}
 
 	protected void chunkClass(Class<?> testClass) throws Exception {
-		final String[] prepareForTestClasses = prepareForTestExtractor.getTestClasses(testClass);
-		final String[] suppressStaticClasses = suppressionExtractor.getTestClasses(testClass);
-		ClassLoader defaultMockLoader = createNewClassloader(prepareForTestClasses, suppressStaticClasses);
+		ClassLoader defaultMockLoader = null;
+		if (testClass.isAnnotationPresent(PrepareEverythingForTest.class)) {
+			defaultMockLoader = createNewClassloader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES });
+		} else {
+			final String[] prepareForTestClasses = prepareForTestExtractor.getTestClasses(testClass);
+			final String[] suppressStaticClasses = suppressionExtractor.getTestClasses(testClass);
+			defaultMockLoader = createNewClassloader(prepareForTestClasses, suppressStaticClasses);
+		}
 		List<Method> currentClassloaderMethods = new LinkedList<Method>();
 		// Put the first suite in the map of internal suites.
 		Map<ClassLoader, List<Method>> suites = new ConcurrentHashMap<ClassLoader, List<Method>>();
@@ -173,7 +180,12 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 					suiteMethods.add(method);
 					final Map<ClassLoader, List<Method>> suitesForTestClass = testSuites.get(testClass);
 					final String[] staticSuppressionClasses = getStaticSuppressionClasses(testClass, method);
-					final ClassLoader mockClassloader = createNewClassloader(prepareForTestExtractor.getTestClasses(method), staticSuppressionClasses);
+					ClassLoader mockClassloader = null;
+					if (method.isAnnotationPresent(PrepareEverythingForTest.class)) {
+						mockClassloader = createNewClassloader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES });
+					} else {
+						mockClassloader = createNewClassloader(prepareForTestExtractor.getTestClasses(method), staticSuppressionClasses);
+					}
 					if (suitesForTestClass == null) {
 						final Map<ClassLoader, List<Method>> newSuite = new ConcurrentHashMap<ClassLoader, List<Method>>();
 						addToTestSuite(testClass, testSuites, suiteMethods, mockClassloader, newSuite);
@@ -201,7 +213,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 
 	private boolean hasChunkAnnotation(Method method) {
 		return method.isAnnotationPresent(PrepareForTest.class) || method.isAnnotationPresent(SuppressStaticInitializationFor.class)
-				|| method.isAnnotationPresent(PrepareOnlyThisForTest.class);
+				|| method.isAnnotationPresent(PrepareOnlyThisForTest.class) || method.isAnnotationPresent(PrepareEverythingForTest.class);
 	}
 
 	private String[] getStaticSuppressionClasses(Class<?> testClass, Method method) {
