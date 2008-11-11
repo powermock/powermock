@@ -6,7 +6,7 @@ Change log 1.0 (under development)
 * Fixed so that suppressMethodCode returns an empty string for methods returning String. 
 * Fixed a bug in the byte-code manipulation of constructors, modifiers that doesn't need change are now preserved.
 * Added the PrepareEverythingForTestAnnotation, this annotation can be used to tell PowerMock to modify all classes.
-
+* MockGateway doMethodCall now also supports java proxy types.
 
 Change log 0.9 (released 2008-11-10)
 ------------------------------------

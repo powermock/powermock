@@ -66,7 +66,7 @@ public class MockGateway {
 			methodInvocationControl = MockRepository.getClassMethodInvocationControl(objectType);
 		} else {
 			final Class<? extends Object> type = object.getClass();
-			objectType = Enhancer.isEnhanced(type) ? type.getSuperclass() : type;
+			objectType = WhiteboxImpl.getUnmockedType(type);
 			methodInvocationControl = MockRepository.getInstanceMethodInvocationControl(object);
 		}
 
