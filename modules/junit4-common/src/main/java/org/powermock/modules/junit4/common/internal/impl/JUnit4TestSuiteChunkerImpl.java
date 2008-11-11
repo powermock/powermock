@@ -36,7 +36,6 @@ import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
-import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.modules.junit4.common.internal.JUnit4TestSuiteChunker;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.powermock.tests.utils.impl.AbstractTestSuiteChunkerImpl;
@@ -84,7 +83,8 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 
 		for (PowerMockJUnitRunnerDelegate delegate : delegates) {
 			Entry<ClassLoader, List<Method>> next = iterator.next();
-			PowerMockRunListener powerMockListener = new PowerMockRunListener(next.getKey());
+			final ClassLoader key = next.getKey();
+			PowerMockRunListener powerMockListener = new PowerMockRunListener(key);
 			notifier.addListener(powerMockListener);
 			delegate.run(notifier);
 		}

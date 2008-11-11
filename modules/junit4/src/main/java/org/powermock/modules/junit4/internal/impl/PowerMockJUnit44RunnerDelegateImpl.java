@@ -44,6 +44,7 @@ import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.powermock.Whitebox;
+import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.powermock.modules.junit4.internal.impl.testcaseworkaround.PowerMockJUnit4MethodValidator;
 import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
@@ -216,7 +217,8 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 							final String className = actual.getStackTrace()[0].getClassName();
 							if (actual instanceof NullPointerException && !className.startsWith("java.lang")
 									&& !className.startsWith("org.powermock") && !className.startsWith("org.junit")
-									&& !new PrepareForTestExtractorImpl().isPrepared(testClass.getJavaClass(), className)) {
+									&& !new PrepareForTestExtractorImpl().isPrepared(testClass.getJavaClass(), className)
+									&& !testClass.getJavaClass().isAnnotationPresent(PrepareEverythingForTest.class)) {
 								Whitebox.setInternalState(actual, "detailMessage", "Perhaps the class " + className + " must be prepared for test?",
 										Throwable.class);
 							}
