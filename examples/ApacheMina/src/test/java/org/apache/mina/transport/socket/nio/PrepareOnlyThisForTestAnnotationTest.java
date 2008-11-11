@@ -14,13 +14,12 @@ import org.apache.mina.core.session.AbstractIoSession;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.Whitebox;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
- * This test validates that the {@link PrepareForTest} annotation modifies the
- * class hierarchy and not only the specified classes.
+ * This test validates that the {@link PrepareOnlyThisForTest} annotation
+ * modifies the only the specified classes and not the full hierarchy.
  */
 @RunWith(PowerMockRunner.class)
 @PrepareOnlyThisForTest( { NioDatagramSession.class, NioProcessor.class })
