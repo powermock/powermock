@@ -119,6 +119,41 @@ public class Whitebox {
 	}
 
 	/**
+	 * Set the value of a field using reflection. This method will traverse the
+	 * super class hierarchy until the first field of type <tt>fieldType</tt> is
+	 * found. The <tt>value</tt> will then be assigned to this field.
+	 * 
+	 * @param object
+	 *            the object to modify
+	 * @param fieldType
+	 *            the type of the field
+	 * @param value
+	 *            the new value of the field
+	 */
+	public static void setInternalState(Object object, Class<?> fieldType, Object value) {
+		WhiteboxImpl.setInternalState(object, fieldType, value);
+	}
+
+	/**
+	 * Set the value of a field using reflection at a specific location (
+	 * <tt>where</tt>) in the class hierarchy. The <tt>value</tt> will then be
+	 * assigned to this field. The first field matching the <tt>fieldType</tt>
+	 * in the hierarchy will be set.
+	 * 
+	 * @param object
+	 *            the object to modify
+	 * @param fieldType
+	 *            the type of the field the should be set.
+	 * @param value
+	 *            the new value of the field
+	 * @param where
+	 *            which class in the hierarchy defining the field
+	 */
+	public static void setInternalState(Object object, Class<?> fieldType, Object value, Class<?> where) {
+		WhiteboxImpl.setInternalState(object, fieldType, value, where);
+	}
+
+	/**
 	 * Get the value of a field using reflection. This method will iterate
 	 * through the entire class hierarchy and return the value of the first
 	 * field named <tt>fieldName</tt>. If you want to get a specific field value
@@ -169,6 +204,41 @@ public class Whitebox {
 	 */
 	public static <T> T getInternalState(Object object, String fieldName, Class<?> where, Class<T> type) {
 		return WhiteboxImpl.getInternalState(object, fieldName, where, type);
+	}
+
+	/**
+	 * Get the value of a field using reflection based on the fields type. This
+	 * method will traverse the super class hierarchy until the first field of
+	 * type <tt>fieldType</tt> is found. The value of this field will be
+	 * returned.
+	 * 
+	 * @param object
+	 *            the object to modify
+	 * @param fieldType
+	 *            the type of the field
+	 */
+	public static <T> T getInternalState(Object object, Class<T> fieldType) {
+		return WhiteboxImpl.getInternalState(object, fieldType);
+
+	}
+
+	/**
+	 * Get the value of a field using reflection based on the field type. Use
+	 * this method when you need to specify in which class the field is
+	 * declared. The first field matching the <tt>fieldType</tt> in
+	 * <tt>where</tt> is the field whose value will be returned.
+	 * 
+	 * @param <T>
+	 *            the expected type of the field
+	 * @param object
+	 *            the object to modify
+	 * @param fieldType
+	 *            the type of the field
+	 * @param where
+	 *            which class the field is defined
+	 */
+	public static <T> T getInternalState(Object object, Class<T> fieldType, Class<?> where) {
+		return WhiteboxImpl.getInternalState(object, fieldType, where);
 	}
 
 	/**

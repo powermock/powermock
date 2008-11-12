@@ -281,6 +281,26 @@ public class WhiteBoxTest {
 		assertEquals(value, Whitebox.getInternalState(tested, fieldName));
 	}
 
+	@Test
+	public void testSetAndGetInternalStateBasedOnFieldType() throws Exception {
+		final int value = 22;
+		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
+		Whitebox.setInternalState(tested, int.class, value);
+		assertEquals(value, (int) Whitebox.getInternalState(tested, int.class));
+		assertEquals(value, Whitebox.getInternalState(tested, "anotherInternalState"));
+		assertEquals(value, Whitebox.getInternalState(tested, "anotherInternalState", ClassWithChildThatHasInternalState.class));
+	}
+
+	@Test
+	public void testSetAndGetInternalStateAtASpecificPlaceInTheHierarchyBasedOnFieldType() throws Exception {
+		final int value = 22;
+		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
+		Whitebox.setInternalState(tested, int.class, value, ClassWithInternalState.class);
+		assertEquals(42, (int) Whitebox.getInternalState(tested, int.class));
+		assertEquals(value, (int) Whitebox.getInternalState(tested, int.class, ClassWithInternalState.class));
+		assertEquals(value, Whitebox.getInternalState(tested, "staticState", ClassWithInternalState.class));
+	}
+
 	public void testFinalState() {
 		ClassWithInternalState state = new ClassWithInternalState();
 		String expected = "changed";

@@ -138,13 +138,45 @@ public class WhiteboxImpl {
 	 */
 	public static void setInternalState(Object object, String fieldName, Object value) {
 		Field foundField = findFieldInHierarchy(object, fieldName);
-		try {
-			foundField.set(object, value);
-		} catch (IllegalArgumentException e) {
-			throw e;
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException("Internal error: Failed to get field in method getInternalState.", e);
+		setField(object, value, foundField);
+	}
+
+	/**
+	 * Set the value of a field using reflection. This method will traverse the
+	 * super class hierarchy until the first field of type <tt>fieldType</tt> is
+	 * found. The <tt>value</tt> will then be assigned to this field.
+	 * 
+	 * @param object
+	 *            the object to modify
+	 * @param fieldType
+	 *            the type of the field
+	 * @param value
+	 *            the new value of the field
+	 */
+	public static void setInternalState(Object object, Class<?> fieldType, Object value) {
+		setField(object, value, findFieldInHierarchy(object, new FieldClassMatcherStrategy(fieldType)));
+	}
+
+	/**
+	 * Set the value of a field using reflection at a specific location (
+	 * <tt>where</tt>) in the class hierarchy. The <tt>value</tt> will then be
+	 * assigned to this field.
+	 * 
+	 * @param object
+	 *            the object to modify
+	 * @param fieldType
+	 *            the type of the field the should be set.
+	 * @param value
+	 *            the new value of the field
+	 * @param where
+	 *            which class in the hierarchy defining the field
+	 */
+	public static void setInternalState(Object object, Class<?> fieldType, Object value, Class<?> where) {
+		if (fieldType == null || where == null) {
+			throw new IllegalArgumentException("fieldType and where cannot be null");
 		}
+
+		setField(object, value, findFieldOrThrowException(fieldType, where));
 	}
 
 	/**
@@ -163,16 +195,13 @@ public class WhiteboxImpl {
 	 *            which class the field is defined
 	 */
 	public static void setInternalState(Object object, String fieldName, Object value, Class<?> where) {
+		if (object == null || fieldName == null || fieldName.equals("") || fieldName.startsWith(" ")) {
+			throw new IllegalArgumentException("object, field name, and \"where\" must not be empty or null.");
+		}
 
-		Class<?> tempClass = findField(object, fieldName, where);
-
-		Field field = null;
+		final Field field = getField(fieldName, where);
 		try {
-			field = tempClass.getDeclaredField(fieldName);
-			field.setAccessible(true);
 			field.set(object, value);
-		} catch (NoSuchFieldException e) {
-			throw new RuntimeException("Field '" + fieldName + "' was not found in class " + object.getClass());
 		} catch (Exception e) {
 			throw new RuntimeException("Internal Error: Failed to set field in method setInternalState.", e);
 		}
@@ -201,8 +230,12 @@ public class WhiteboxImpl {
 	}
 
 	private static Field findFieldInHierarchy(Object object, String fieldName) {
-		if (object == null || fieldName == null || fieldName.equals("") || fieldName.startsWith(" ")) {
-			throw new IllegalArgumentException("object or field name cannot be null.");
+		return findFieldInHierarchy(object, new FieldNameMatcherStrategy(fieldName));
+	}
+
+	private static Field findFieldInHierarchy(Object object, FieldMatcherStrategy strategy) {
+		if (object == null) {
+			throw new IllegalArgumentException("The object containing the field cannot be null");
 		}
 
 		Class<?> thisType = getArgumentType(object);
@@ -210,7 +243,7 @@ public class WhiteboxImpl {
 		outer: while (thisType != null) {
 			final Field[] declaredFields = thisType.getDeclaredFields();
 			for (Field field : declaredFields) {
-				if (fieldName.equals(field.getName())) {
+				if (strategy.matches(field)) {
 					foundField = field;
 					break outer;
 				}
@@ -219,8 +252,7 @@ public class WhiteboxImpl {
 		}
 
 		if (foundField == null) {
-			throw new IllegalArgumentException("No field named \"" + fieldName + "\" could be found in the class hierarchy of "
-					+ getArgumentType(object).getName() + ".");
+			strategy.notFound(object);
 		}
 
 		foundField.setAccessible(true);
@@ -244,6 +276,54 @@ public class WhiteboxImpl {
 	}
 
 	/**
+	 * Get the value of a field using reflection. This method will traverse the
+	 * super class hierarchy until the first field of type <tt>fieldType</tt> is
+	 * found. The value of this field will be returned.
+	 * 
+	 * @param object
+	 *            the object to modify
+	 * @param fieldType
+	 *            the type of the field
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T getInternalState(Object object, Class<T> fieldType) {
+		Field foundField = findFieldInHierarchy(object, new FieldClassMatcherStrategy(fieldType));
+		try {
+			return (T) foundField.get(object);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException("Internal error: Failed to get field in method getInternalState.", e);
+		}
+	}
+
+	/**
+	 * Get the value of a field using reflection. Use this method when you need
+	 * to specify in which class the field is declared. The first field matching
+	 * the <tt>fieldType</tt> in <tt>where</tt> will is the field whose value
+	 * will be returned.
+	 * 
+	 * @param <T>
+	 *            the expected type of the field
+	 * @param object
+	 *            the object to modify
+	 * @param fieldType
+	 *            the type of the field
+	 * @param where
+	 *            which class the field is defined
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T getInternalState(Object object, Class<T> fieldType, Class<?> where) {
+		if (object == null) {
+			throw new IllegalArgumentException("object and type are not allowed to be null");
+		}
+
+		try {
+			return (T) findFieldOrThrowException(fieldType, where).get(object);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException("Internal error: Failed to get field in method getInternalState.", e);
+		}
+	}
+
+	/**
 	 * Get the value of a field using reflection. Use this method when you need
 	 * to specify in which class the field is declared. This might be useful
 	 * when you have mocked the instance you are trying to access. Use this
@@ -262,20 +342,21 @@ public class WhiteboxImpl {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getInternalState(Object object, String fieldName, Class<?> where, Class<T> type) {
+		if (object == null || fieldName == null || fieldName.equals("") || fieldName.startsWith(" ")) {
+			throw new IllegalArgumentException("object, field name, and \"where\" must not be empty or null.");
+		}
 
 		if (type == null) {
 			throw new IllegalArgumentException("type cannot be null.");
 		}
 
-		Class<?> tempClass = findField(object, fieldName, where);
-
 		Field field = null;
 		try {
-			field = tempClass.getDeclaredField(fieldName);
+			field = where.getDeclaredField(fieldName);
 			field.setAccessible(true);
 			return (T) field.get(object);
 		} catch (NoSuchFieldException e) {
-			throw new RuntimeException("Field '" + fieldName + "' was not found in class " + object.getClass());
+			throw new RuntimeException("Field '" + fieldName + "' was not found in class " + where.getName() + ".");
 		} catch (Exception e) {
 			throw new RuntimeException("Internal error: Failed to get field in method getInternalState.", e);
 		}
@@ -1086,23 +1167,116 @@ public class WhiteboxImpl {
 		return true;
 	}
 
-	private static Class<?> findField(Object object, String fieldName, Class<?> where) {
-		if (object == null || fieldName == null || fieldName.equals("") || fieldName.startsWith(" ")) {
-			throw new IllegalArgumentException("object, field name, and \"where\" must not be empty or null.");
+	private static Field getField(String fieldName, Class<?> where) {
+		if (where == null) {
+			throw new IllegalArgumentException("where cannot be null");
 		}
 
-		Class<?> tempClass;
-		if (object instanceof Class) {
-			tempClass = (Class<?>) object;
-		} else {
-			tempClass = object.getClass();
-			while (!tempClass.equals(where)) {
-				tempClass = tempClass.getSuperclass();
-				if (tempClass.equals(Object.class)) {
-					throw new IllegalArgumentException("The field " + fieldName + " was not found in the class heirachy for " + object.getClass());
-				}
+		Field field = null;
+		try {
+			field = where.getDeclaredField(fieldName);
+			field.setAccessible(true);
+		} catch (NoSuchFieldException e) {
+			throw new RuntimeException("Field '" + fieldName + "' was not found in class " + where.getName() + ".");
+		}
+		return field;
+	}
+
+	private static Field findFieldOrThrowException(Class<?> fieldType, Class<?> where) {
+		if (fieldType == null || where == null) {
+			throw new IllegalArgumentException("fieldType and where cannot be null");
+		}
+		Field field = null;
+		for (Field currentField : where.getDeclaredFields()) {
+			currentField.setAccessible(true);
+			if (currentField.getType().equals(fieldType)) {
+				field = currentField;
+				break;
 			}
 		}
-		return tempClass;
+		if (field == null) {
+			throw new IllegalArgumentException("Cannot find a field of type " + fieldType + "in where.");
+		}
+		return field;
+	}
+
+	private static void setField(Object object, Object value, Field foundField) {
+		try {
+			foundField.set(object, value);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException("Internal error: Failed to set field in method setInternalState.", e);
+		}
+	}
+
+	/**
+	 * Class that should be implemented by field matching strategies.
+	 */
+	private static abstract class FieldMatcherStrategy {
+
+		/**
+		 * A field matcher that checks if a field matches a given criteria.
+		 * 
+		 * @param field
+		 *            The field to check whether it matches the strategy or not.
+		 * @return <code>true</code> if this field matches the strategy,
+		 *         <code>false</code> otherwise.
+		 * 
+		 */
+		public abstract boolean matches(Field field);
+
+		/**
+		 * Throws an {@link IllegalArgumentException} if the strategy criteria
+		 * could not be found.
+		 * 
+		 * @param object
+		 *            The object where the strategy criteria could not be found.
+		 */
+		public abstract void notFound(Object object) throws IllegalArgumentException;
+	}
+
+	private static class FieldNameMatcherStrategy extends FieldMatcherStrategy {
+
+		private final String fieldName;
+
+		public FieldNameMatcherStrategy(String fieldName) {
+			if (fieldName == null || fieldName.equals("") || fieldName.startsWith(" ")) {
+				throw new IllegalArgumentException("field name cannot be null.");
+			}
+			this.fieldName = fieldName;
+		}
+
+		@Override
+		public boolean matches(Field field) {
+			return fieldName.equals(field.getName());
+		}
+
+		@Override
+		public void notFound(Object object) throws IllegalArgumentException {
+			throw new IllegalArgumentException("No field named \"" + fieldName + "\" could be found in the class hierarchy of "
+					+ getArgumentType(object).getName() + ".");
+		}
+	}
+
+	private static class FieldClassMatcherStrategy extends FieldMatcherStrategy {
+
+		private final Class<?> fieldType;
+
+		public FieldClassMatcherStrategy(Class<?> fieldType) {
+			if (fieldType == null) {
+				throw new IllegalArgumentException("field type cannot be null.");
+			}
+			this.fieldType = fieldType;
+		}
+
+		@Override
+		public boolean matches(Field field) {
+			return fieldType.equals(field.getType());
+		}
+
+		@Override
+		public void notFound(Object object) throws IllegalArgumentException {
+			throw new IllegalArgumentException("No field of type \"" + fieldType + "\" could be found in the class hierarchy of "
+					+ getArgumentType(object).getName() + ".");
+		}
 	}
 }
