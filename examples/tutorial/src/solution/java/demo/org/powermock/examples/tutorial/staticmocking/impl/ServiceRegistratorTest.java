@@ -84,7 +84,7 @@ public class ServiceRegistratorTest {
 
 		verifyAll();
 
-		Map<Long, ServiceRegistration> map = (Map<Long, ServiceRegistration>) getInternalState(tested, Map.class);
+		Map<Long, ServiceRegistration> map = getInternalState(tested, Map.class);
 
 		assertEquals(1, map.size());
 		assertTrue("The id " + actualId + " was not found in the mServiceRegistrations map.", map.containsKey(actualId));
