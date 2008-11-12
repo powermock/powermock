@@ -8,8 +8,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.powermock.PowerMock.createMock;
 import static org.powermock.PowerMock.mockStatic;
-import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.verify;
+import static org.powermock.PowerMock.replayAll;
+import static org.powermock.PowerMock.verifyAll;
 import static org.powermock.Whitebox.getInternalState;
 import static org.powermock.Whitebox.setInternalState;
 
@@ -60,22 +60,6 @@ public class ServiceRegistratorTest {
 	}
 
 	/**
-	 * Replay all mocks.
-	 */
-	protected void replayAll() throws Exception {
-		replay(bundleContextMock, serviceRegistrationMock);
-		replay(IdGenerator.class);
-	}
-
-	/**
-	 * Verify all mocks.
-	 */
-	protected void verifyAll() {
-		verify(bundleContextMock, serviceRegistrationMock);
-		verify(IdGenerator.class);
-	}
-
-	/**
 	 * Test for the {@link ServiceRegistrator#registerService(String, Object)}
 	 * method.
 	 * 
@@ -89,7 +73,7 @@ public class ServiceRegistratorTest {
 		final Object object = new Object();
 		final long expectedId = 42;
 
-		setInternalState(tested, "bundleContext", bundleContextMock);
+		setInternalState(tested, bundleContextMock);
 
 		expect(bundleContextMock.registerService(name, object, null)).andReturn(serviceRegistrationMock);
 		expect(IdGenerator.generateNewId()).andReturn(expectedId);
@@ -100,7 +84,7 @@ public class ServiceRegistratorTest {
 
 		verifyAll();
 
-		Map<Long, ServiceRegistration> map = (Map<Long, ServiceRegistration>) getInternalState(tested, "serviceRegistrations");
+		Map<Long, ServiceRegistration> map = (Map<Long, ServiceRegistration>) getInternalState(tested, Map.class);
 
 		assertEquals(1, map.size());
 		assertTrue("The id " + actualId + " was not found in the mServiceRegistrations map.", map.containsKey(actualId));
@@ -121,7 +105,7 @@ public class ServiceRegistratorTest {
 		final long id = 1L;
 		map.put(id, serviceRegistrationMock);
 
-		setInternalState(tested, "serviceRegistrations", map);
+		setInternalState(tested, map);
 
 		serviceRegistrationMock.unregister();
 		expectLastCall().times(1);
@@ -148,7 +132,7 @@ public class ServiceRegistratorTest {
 		Map<Long, ServiceRegistration> map = new HashMap<Long, ServiceRegistration>();
 		final long id = 1L;
 
-		setInternalState(tested, "serviceRegistrations", map);
+		setInternalState(tested, map);
 
 		replayAll();
 

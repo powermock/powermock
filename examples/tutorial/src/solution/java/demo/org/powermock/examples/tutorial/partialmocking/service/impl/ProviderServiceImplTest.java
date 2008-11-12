@@ -9,8 +9,8 @@ import static org.junit.Assert.assertTrue;
 import static org.powermock.PowerMock.createMock;
 import static org.powermock.PowerMock.expectPrivate;
 import static org.powermock.PowerMock.createPartialMock;
-import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.verify;
+import static org.powermock.PowerMock.replayAll;
+import static org.powermock.PowerMock.verifyAll;
 import static org.powermock.Whitebox.invokeMethod;
 import static org.powermock.Whitebox.setInternalState;
 
@@ -40,8 +40,7 @@ public class ProviderServiceImplTest {
 		tested = new ProviderServiceImpl();
 		providerDaoMock = createMock(ProviderDao.class);
 
-		setInternalState(tested, "providerDao", providerDaoMock);
-
+		setInternalState(tested, providerDaoMock);
 	}
 
 	@After
@@ -60,11 +59,11 @@ public class ProviderServiceImplTest {
 
 		expectPrivate(tested, methodNameToMock).andReturn(expectedServiceProducers);
 
-		replayAll(tested);
+		replayAll();
 
 		Set<ServiceProducer> actualServiceProviders = tested.getAllServiceProviders();
 
-		verifyAll(tested);
+		verifyAll();
 
 		assertSame(expectedServiceProducers, actualServiceProviders);
 	}
@@ -78,11 +77,11 @@ public class ProviderServiceImplTest {
 
 		expectPrivate(tested, methodNameToMock).andReturn(null);
 
-		replayAll(tested);
+		replayAll();
 
 		Set<ServiceProducer> actualServiceProviders = tested.getAllServiceProviders();
 
-		verifyAll(tested);
+		verifyAll();
 
 		assertNotSame(expectedServiceProducers, actualServiceProviders);
 		assertEquals(expectedServiceProducers, actualServiceProviders);
@@ -101,11 +100,11 @@ public class ProviderServiceImplTest {
 
 		expectPrivate(tested, methodNameToMock).andReturn(serviceProducers);
 
-		replayAll(tested);
+		replayAll();
 
 		ServiceProducer actual = tested.getServiceProvider(expectedServiceProducerId);
 
-		verifyAll(tested);
+		verifyAll();
 
 		assertSame(expected, actual);
 	}
@@ -119,11 +118,11 @@ public class ProviderServiceImplTest {
 
 		expectPrivate(tested, methodNameToMock).andReturn(new HashSet<ServiceProducer>());
 
-		replayAll(tested);
+		replayAll();
 
 		assertNull(tested.getServiceProvider(expectedServiceProducerId));
 
-		verifyAll(tested);
+		verifyAll();
 
 	}
 
@@ -160,20 +159,5 @@ public class ProviderServiceImplTest {
 		verifyAll();
 
 		assertTrue(actual.isEmpty());
-	}
-
-	protected void replayAll(Object... additionalMocks) throws Exception {
-		replay(providerDaoMock);
-		if (additionalMocks != null) {
-			replay(additionalMocks);
-		}
-
-	}
-
-	protected void verifyAll(Object... additionalMocks) {
-		verify(providerDaoMock);
-		if (additionalMocks != null) {
-			verify(additionalMocks);
-		}
 	}
 }

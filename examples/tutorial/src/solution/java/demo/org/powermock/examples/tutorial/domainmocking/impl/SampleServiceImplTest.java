@@ -7,8 +7,8 @@ import static org.powermock.PowerMock.createMock;
 import static org.powermock.PowerMock.createMockAndExpectNew;
 import static org.powermock.PowerMock.expectLastCall;
 import static org.powermock.PowerMock.expectNew;
-import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.verify;
+import static org.powermock.PowerMock.replayAll;
+import static org.powermock.PowerMock.verifyAll;
 
 import org.junit.After;
 import org.junit.Before;
@@ -61,11 +61,11 @@ public class SampleServiceImplTest {
 
 		expect(businessMessagesMock.hasErrors()).andReturn(false);
 
-		replayAll(personMock, businessMessagesMock, Person.class, BusinessMessages.class);
+		replayAll();
 
 		assertTrue(tested.createPerson(firstName, lastName));
 
-		verifyAll(personMock, businessMessagesMock, Person.class, BusinessMessages.class);
+		verifyAll();
 	}
 
 	@Test
@@ -86,11 +86,11 @@ public class SampleServiceImplTest {
 		eventService.sendErrorEvent(personMock, businessMessagesMock);
 		expectLastCall().times(1);
 
-		replayAll(personMock, businessMessagesMock, Person.class, BusinessMessages.class);
+		replayAll();
 
 		assertFalse(tested.createPerson(firstName, lastName));
 
-		verifyAll(personMock, businessMessagesMock, Person.class, BusinessMessages.class);
+		verifyAll();
 	}
 
 	@Test(expected = SampleServiceException.class)
@@ -100,24 +100,10 @@ public class SampleServiceImplTest {
 		final String lastName = "lastName";
 		expectNew(Person.class, firstName, lastName).andThrow(new IllegalArgumentException("Illegal name"));
 
-		replayAll(Person.class);
+		replayAll();
 
 		tested.createPerson(firstName, lastName);
 
-		verifyAll(Person.class);
-	}
-
-	protected void replayAll(Object... additionalMocks) throws Exception {
-		replay(personServiceMock, eventService);
-		if (additionalMocks != null) {
-			replay(additionalMocks);
-		}
-	}
-
-	protected void verifyAll(Object... additionalMocks) {
-		verify(personServiceMock, eventService);
-		if (additionalMocks != null) {
-			verify(additionalMocks);
-		}
+		verifyAll();
 	}
 }

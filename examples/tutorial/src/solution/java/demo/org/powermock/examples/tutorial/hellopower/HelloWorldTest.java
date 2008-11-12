@@ -3,8 +3,8 @@ package demo.org.powermock.examples.tutorial.hellopower;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.powermock.PowerMock.mockStatic;
-import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.verify;
+import static org.powermock.PowerMock.replayAll;
+import static org.powermock.PowerMock.verifyAll;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,10 +21,10 @@ public class HelloWorldTest {
 		expect(SimpleConfig.getGreeting()).andReturn("Hello");
 		expect(SimpleConfig.getTarget()).andReturn("world");
 
-		replay(SimpleConfig.class);
+		replayAll();
 
 		assertEquals("Hello world", new HelloWorld().greet());
 
-		verify(SimpleConfig.class);
+		verifyAll();
 	}
 }

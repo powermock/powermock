@@ -101,6 +101,38 @@ public class Whitebox {
 	}
 
 	/**
+	 * Set the value of a field using reflection. This method will traverse the
+	 * super class hierarchy until the first field assignable to the
+	 * <tt>value</tt> type is found. The <tt>value</tt> will then be assigned to
+	 * this field.
+	 * 
+	 * @param object
+	 *            the object to modify
+	 * @param value
+	 *            the new value of the field
+	 */
+
+	public static void setInternalState(Object object, Object value) {
+		WhiteboxImpl.setInternalState(object, value);
+	}
+
+	/**
+	 * Set the value of a field using reflection at at specific place in the
+	 * class hierarchy (<tt>where</tt>). This first field assignable to
+	 * <tt>object</tt> will then be set to <tt>value</tt>.
+	 * 
+	 * @param object
+	 *            the object to modify
+	 * @param value
+	 *            the new value of the field
+	 * @param where
+	 *            the class in the hierarchy where the field is defined
+	 */
+	public static void setInternalState(Object object, Object value, Class<?> where) {
+		WhiteboxImpl.setInternalState(object, value, where);
+	}
+
+	/**
 	 * Set the value of a field using reflection. Use this method when you need
 	 * to specify in which class the field is declared. This might be useful
 	 * when you have mocked the instance you are trying to modify.
@@ -112,7 +144,7 @@ public class Whitebox {
 	 * @param value
 	 *            the new value of the field
 	 * @param where
-	 *            which class the field is defined
+	 *            the class in the hierarchy where the field is defined
 	 */
 	public static void setInternalState(Object object, String fieldName, Object value, Class<?> where) {
 		WhiteboxImpl.setInternalState(object, fieldName, value, where);

@@ -154,7 +154,58 @@ public class WhiteboxImpl {
 	 *            the new value of the field
 	 */
 	public static void setInternalState(Object object, Class<?> fieldType, Object value) {
-		setField(object, value, findFieldInHierarchy(object, new FieldClassMatcherStrategy(fieldType)));
+		setField(object, value, findFieldInHierarchy(object, new FieldTypeMatcherStrategy(fieldType)));
+	}
+
+	/**
+	 * Set the value of a field using reflection. This method will traverse the
+	 * super class hierarchy until the first field assignable to the
+	 * <tt>value</tt> type is found. The <tt>value</tt> will then be assigned to
+	 * this field.
+	 * 
+	 * @param object
+	 *            the object to modify
+	 * @param value
+	 *            the new value of the field
+	 */
+	public static void setInternalState(Object object, Object value) {
+		setField(object, value, findFieldInHierarchy(object, new AssignableToFieldTypeMatcherStrategy(getArgumentType(value))));
+	}
+
+	/**
+	 * Set the value of a field using reflection at at specific place in the
+	 * class hierarchy (<tt>where</tt>). This first field assignable to
+	 * <tt>object</tt> will then be set to <tt>value</tt>.
+	 * 
+	 * @param object
+	 *            the object to modify
+	 * @param value
+	 *            the new value of the field
+	 * @param where
+	 *            the class in the hierarchy where the field is defined
+	 */
+	public static void setInternalState(Object object, Object value, Class<?> where) {
+		if (object == null || value == null || where == null) {
+			throw new IllegalArgumentException("object, value and where cannot be null");
+		}
+
+		final Class<?> argumentType = getArgumentType(value);
+		final Class<?> primitiveType = PrimitiveWrapper.getPrimitiveFromWrapperType(argumentType);
+
+		Field foundField = null;
+		for (Field field : where.getDeclaredFields()) {
+			final Class<?> actualFieldType = field.getType();
+			if (actualFieldType.isAssignableFrom(argumentType) || (primitiveType != null && actualFieldType.isAssignableFrom(primitiveType))) {
+				foundField = field;
+				break;
+			}
+		}
+
+		if (foundField == null) {
+			throw new IllegalArgumentException("No field assignable to " + argumentType + " was found in class " + where.getName());
+		}
+
+		setField(object, value, foundField);
 	}
 
 	/**
@@ -287,7 +338,7 @@ public class WhiteboxImpl {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getInternalState(Object object, Class<T> fieldType) {
-		Field foundField = findFieldInHierarchy(object, new FieldClassMatcherStrategy(fieldType));
+		Field foundField = findFieldInHierarchy(object, new FieldTypeMatcherStrategy(fieldType));
 		try {
 			return (T) foundField.get(object);
 		} catch (IllegalAccessException e) {
@@ -1201,6 +1252,7 @@ public class WhiteboxImpl {
 	}
 
 	private static void setField(Object object, Object value, Field foundField) {
+		foundField.setAccessible(true);
 		try {
 			foundField.set(object, value);
 		} catch (IllegalAccessException e) {
@@ -1257,26 +1309,50 @@ public class WhiteboxImpl {
 		}
 	}
 
-	private static class FieldClassMatcherStrategy extends FieldMatcherStrategy {
+	private static class FieldTypeMatcherStrategy extends FieldMatcherStrategy {
 
-		private final Class<?> fieldType;
+		final Class<?> expectedFieldType;
 
-		public FieldClassMatcherStrategy(Class<?> fieldType) {
+		public FieldTypeMatcherStrategy(Class<?> fieldType) {
 			if (fieldType == null) {
 				throw new IllegalArgumentException("field type cannot be null.");
 			}
-			this.fieldType = fieldType;
+			this.expectedFieldType = fieldType;
 		}
 
 		@Override
 		public boolean matches(Field field) {
-			return fieldType.equals(field.getType());
+			return expectedFieldType.equals(field.getType());
 		}
 
 		@Override
 		public void notFound(Object object) throws IllegalArgumentException {
-			throw new IllegalArgumentException("No field of type \"" + fieldType + "\" could be found in the class hierarchy of "
+			throw new IllegalArgumentException("No field of type \"" + expectedFieldType.getName() + "\" could be found in the class hierarchy of "
 					+ getArgumentType(object).getName() + ".");
 		}
 	}
+
+	private static class AssignableToFieldTypeMatcherStrategy extends FieldTypeMatcherStrategy {
+
+		private final Class<?> primitiveCounterpart;
+
+		public AssignableToFieldTypeMatcherStrategy(Class<?> fieldType) {
+			super(fieldType);
+			primitiveCounterpart = PrimitiveWrapper.getPrimitiveFromWrapperType(expectedFieldType);
+		}
+
+		@Override
+		public boolean matches(Field field) {
+			final Class<?> actualFieldType = field.getType();
+			return actualFieldType.isAssignableFrom(expectedFieldType)
+					|| (primitiveCounterpart != null && actualFieldType.isAssignableFrom(primitiveCounterpart));
+		}
+
+		@Override
+		public void notFound(Object object) throws IllegalArgumentException {
+			throw new IllegalArgumentException("No field assignable to \"" + expectedFieldType.getName()
+					+ "\" could be found in the class hierarchy of " + getArgumentType(object).getName() + ".");
+		}
+	}
+
 }

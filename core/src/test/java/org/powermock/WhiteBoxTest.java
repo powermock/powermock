@@ -277,7 +277,7 @@ public class WhiteBoxTest {
 		final String fieldName = "internalState";
 		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState() {
 		};
-		Whitebox.setInternalState(tested, fieldName, null);
+		Whitebox.setInternalState(tested, fieldName, (Object) null);
 		assertEquals(value, Whitebox.getInternalState(tested, fieldName));
 	}
 
@@ -299,6 +299,58 @@ public class WhiteBoxTest {
 		assertEquals(42, (int) Whitebox.getInternalState(tested, int.class));
 		assertEquals(value, (int) Whitebox.getInternalState(tested, int.class, ClassWithInternalState.class));
 		assertEquals(value, Whitebox.getInternalState(tested, "staticState", ClassWithInternalState.class));
+	}
+
+	@Test
+	public void testSetInternalStateBasedOnObjectType() throws Exception {
+		final String value = "a string";
+		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
+		Whitebox.setInternalState(tested, value);
+		assertEquals(value, Whitebox.getInternalState(tested, String.class));
+	}
+
+	@Test
+	public void testSetInternalStateBasedOnObjectTypeWhenArgumentIsAPrimitiveType() throws Exception {
+		final int value = 21;
+		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
+		Whitebox.setInternalState(tested, value);
+		assertEquals((Integer) value, Whitebox.getInternalState(tested, "anotherInternalState", ClassWithChildThatHasInternalState.class,
+				Integer.class));
+	}
+
+	@Test
+	public void testSetInternalStateBasedOnObjectTypeAtASpecificPlaceInTheClassHierarchy() throws Exception {
+		final String value = "a string";
+		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
+		Whitebox.setInternalState(tested, (Object) value, ClassWithInternalState.class);
+		assertEquals(value, Whitebox.getInternalState(tested, "finalString"));
+	}
+
+	@Test
+	public void testSetInternalStateBasedOnObjectTypeAtASpecificPlaceInTheClassHierarchyForPrimitiveType() throws Exception {
+		final int value = 31;
+		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
+		Whitebox.setInternalState(tested, value, ClassWithInternalState.class);
+		assertEquals(value, Whitebox.getInternalState(tested, "staticState"));
+	}
+
+	@Test
+	public void testSetInternalStateBasedOnObjectSubClassTypeAtASpecificPlaceInTheClassHierarchy() throws Exception {
+		final ClassWithPrivateMethods value = new ClassWithPrivateMethods() {
+		};
+		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
+		Whitebox.setInternalState(tested, value, ClassWithInternalState.class);
+		assertSame(value, tested.getClassWithPrivateMethods());
+	}
+
+	@Test
+	public void testSetInternalStateBasedOnObjectSubClassType() throws Exception {
+		final ClassWithPrivateMethods value = new ClassWithPrivateMethods() {
+		};
+		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState() {
+		};
+		Whitebox.setInternalState(tested, value);
+		assertSame(value, tested.getClassWithPrivateMethods());
 	}
 
 	public void testFinalState() {
