@@ -37,13 +37,10 @@ public class ServiceHolderTest {
 
 		tested.addService(service);
 
-		Set<String> services = (Set<String>) getInternalState(tested,
-				"services");
+		Set<String> services = (Set<String>) getInternalState(tested, "services");
 
-		assertEquals("Size of the \"services\" Set should be 1", 1, services
-				.size());
-		assertSame("The services Set should didn't contain the expect service",
-				service, services.iterator().next());
+		assertEquals("Size of the \"services\" Set should be 1", 1, services.size());
+		assertSame("The services Set should didn't contain the expect service", service, services.iterator().next());
 	}
 
 	@Test
@@ -52,8 +49,21 @@ public class ServiceHolderTest {
 		final Object service = new Object();
 
 		// Get the hash set.
-		Set<Object> servicesSet = (Set<Object>) getInternalState(tested,
-				"services");
+		Set<Object> servicesSet = (Set<Object>) getInternalState(tested, "services");
+		servicesSet.add(service);
+
+		tested.removeService(service);
+
+		assertTrue("Set should be empty after removeal.", servicesSet.isEmpty());
+	}
+
+	@Test
+	public void testRemoveService_fieldTypeApproach() throws Exception {
+		ServiceHolder tested = new ServiceHolder();
+		final Object service = new Object();
+
+		// Get the hash set.
+		Set<Object> servicesSet = getInternalState(tested, Set.class);
 		servicesSet.add(service);
 
 		tested.removeService(service);
