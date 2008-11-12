@@ -20,7 +20,9 @@ import static org.powermock.PowerMock.expectLastCall;
 import static org.powermock.PowerMock.expectPrivate;
 import static org.powermock.PowerMock.createPartialMock;
 import static org.powermock.PowerMock.replay;
+import static org.powermock.PowerMock.replayAll;
 import static org.powermock.PowerMock.verify;
+import static org.powermock.PowerMock.verifyAll;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,21 +55,10 @@ public class ReportDaoTest {
 		Cache cacheMock = createMock(Cache.class);
 
 		/*
-		 * Now that we have a mock of the distributed cache we need to set this
-		 * instance in the class being tested. Notice that we use the four
-		 * parameter version of setInternalState to do this. The last parameter,
-		 * ReportDao.class, tells PowerMock to set the variable at a specific
-		 * point in the class hierarchy. Since we've created a partial mock of
-		 * the ReportDao class (since we'd wanted to mock the
-		 * getReportFromTargetName method) the class under test is now actually
-		 * a sub-class of ReportDao. This is because EasyMock creates a dynamic
-		 * CGLib proxy which extends the ReportDao at run-time. So if we don't
-		 * specify the ReportDao.class as the point in the class hierarchy where
-		 * the cache field is located PowerMock will end up trying to looking
-		 * for the cache field in the CGLib generated proxy where it'll
-		 * obviously not find it.
+		 * Now that we have a mock of the cache we need to set this instance in
+		 * the class being tested.
 		 */
-		Whitebox.setInternalState(tested, "cache", cacheMock, ReportDao.class);
+		Whitebox.setInternalState(tested, "cache", cacheMock);
 
 		/*
 		 * Create an expectation for the private method
@@ -84,5 +75,40 @@ public class ReportDaoTest {
 		tested.deleteReport(reportName);
 
 		verify(tested, cacheMock);
+	}
+
+	@Test
+	public void testDeleteReport_usingPowerMock1Features() throws Exception {
+		final String getReportFromTargetNameMethodName = "getReportFromTargetName";
+		final String reportName = "reportName";
+		final Report report = new Report(reportName);
+
+		// Mock only the modifyData method
+		ReportDao tested = createPartialMock(ReportDao.class, getReportFromTargetNameMethodName);
+
+		// Create a mock of the distributed cache.
+		Cache cacheMock = createMock(Cache.class);
+
+		/*
+		 * Now that we have a mock of the cache we need to set this instance in
+		 * the class being tested.
+		 */
+		Whitebox.setInternalState(tested, cacheMock);
+
+		/*
+		 * Create an expectation for the private method
+		 * "getReportFromTargetName".
+		 */
+		expectPrivate(tested, getReportFromTargetNameMethodName, reportName).andReturn(report);
+
+		// Expect the call to invalidate cache.
+		cacheMock.invalidateCache(report);
+		expectLastCall().once();
+
+		replayAll();
+
+		tested.deleteReport(reportName);
+
+		verifyAll();
 	}
 }

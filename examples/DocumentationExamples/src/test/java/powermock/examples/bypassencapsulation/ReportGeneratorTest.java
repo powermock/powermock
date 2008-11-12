@@ -39,12 +39,29 @@ public class ReportGeneratorTest {
 		ReportGenerator tested = new ReportGenerator();
 		ReportTemplateService reportTemplateServiceMock = createMock(ReportTemplateService.class);
 
-		Whitebox.setInternalState(tested, "reportTemplateService",
-				reportTemplateServiceMock);
+		Whitebox.setInternalState(tested, "reportTemplateService", reportTemplateServiceMock);
 
 		final String reportId = "id";
-		expect(reportTemplateServiceMock.getTemplateId(reportId)).andReturn(
-				"templateId");
+		expect(reportTemplateServiceMock.getTemplateId(reportId)).andReturn("templateId");
+
+		replay(reportTemplateServiceMock);
+
+		Report actualReport = tested.generateReport(reportId);
+
+		verify(reportTemplateServiceMock);
+
+		assertEquals(new Report("name"), actualReport);
+	}
+
+	@Test
+	public void testGenerateReport_usingFieldTypeAppraoch() throws Exception {
+		ReportGenerator tested = new ReportGenerator();
+		ReportTemplateService reportTemplateServiceMock = createMock(ReportTemplateService.class);
+
+		Whitebox.setInternalState(tested, reportTemplateServiceMock);
+
+		final String reportId = "id";
+		expect(reportTemplateServiceMock.getTemplateId(reportId)).andReturn("templateId");
 
 		replay(reportTemplateServiceMock);
 
