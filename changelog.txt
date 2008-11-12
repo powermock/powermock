@@ -7,6 +7,7 @@ Change log 1.0 (under development)
 * Fixed a bug in the byte-code manipulation of constructors, modifiers that doesn't need change are now preserved.
 * Added the PrepareEverythingForTestAnnotation, this annotation can be used to tell PowerMock to modify all classes.
 * MockGateway doMethodCall now also supports java proxy types.
+* Implemented the ability to set and get internal state based on field type. This means that you get refactor friendly code and in many cases you're still able to set or get internal state.
 
 Change log 0.9 (released 2008-11-10)
 ------------------------------------
