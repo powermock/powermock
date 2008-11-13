@@ -14,9 +14,11 @@ public abstract class AbstractTestClassExtractor implements TestClassesExtractor
 			throw new IllegalArgumentException("fullyQualifiedClassName cannot be null.");
 		}
 		final String[] testClasses = getTestClasses(element);
-		for (String className : testClasses) {
-			if (className.equals(fullyQualifiedClassName)) {
-				return true;
+		if (testClasses != null) {
+			for (String className : testClasses) {
+				if (className.equals(fullyQualifiedClassName)) {
+					return true;
+				}
 			}
 		}
 		return false;
