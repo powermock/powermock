@@ -11,7 +11,7 @@ Change log 1.0 (under development)
 * Implemented the ability to set internal state based on an object type, i.e. you can now do setInternalState(object, myServiceImpl) to set the first field in object which can be assignable to myServiceImpl. This means that you get refactor friendly code while still being able to set internal state.
 * Updated the tutorial projects to take advantage of the latest features in PowerMock.
 * Fixed a NPE bug in the AbstractTestClassExtractor.isPrepared(..) method.
-* The test class is no longer recommended for a PrepareForTest candidate if a NPE occurs inside the test class.
+* The test class is no longer recommended as a PrepareForTest candidate if a NPE occurs inside the test class.
 
 Change log 0.9 (released 2008-11-10)
 ------------------------------------
