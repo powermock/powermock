@@ -275,12 +275,73 @@ public class PowerMock {
 	 * @return A mock object of type <T>.
 	 */
 	public static synchronized <T> T createPartialMockForAllMethodsExcept(Class<T> type, String... methodNames) {
-
-		if (methodNames.length == 0) {
+		if (methodNames != null && methodNames.length == 0) {
 			return createMock(type);
 		}
 
 		return createMock(type, WhiteboxImpl.getAllMethodExcept(type, methodNames));
+	}
+
+	/**
+	 * A utility method that may be used to specify several methods that should
+	 * <i>not</i> be nicely mocked in an easy manner (by just passing in the
+	 * method names of the method you wish <i>not</i> to mock). Note that you
+	 * cannot uniquely specify a method to exclude using this method if there
+	 * are several methods with the same name in <code>type</code>. This method
+	 * will mock ALL methods that doesn't match the supplied name(s) regardless
+	 * of parameter types and signature. If this is not the case you should
+	 * fall-back on using the {@link #createMock(Class, Method...)} method
+	 * instead.
+	 * 
+	 * @param <T>
+	 *            The type of the mock.
+	 * @param type
+	 *            The type that'll be used to create a mock instance.
+	 * @param methodNames
+	 *            The names of the methods that should be mocked. If
+	 *            <code>null</code>, then this method will have the same effect
+	 *            as just calling {@link #createMock(Class, Method...)} with the
+	 *            second parameter as <code>null</code> (i.e. all methods in
+	 *            that class will be mocked).
+	 * @return A mock object of type <T>.
+	 */
+	public static synchronized <T> T createNicePartialMockForAllMethodsExcept(Class<T> type, String... methodNames) {
+		if (methodNames != null && methodNames.length == 0) {
+			return createNiceMock(type);
+		}
+
+		return createNiceMock(type, WhiteboxImpl.getAllMethodExcept(type, methodNames));
+	}
+
+	/**
+	 * A utility method that may be used to specify several methods that should
+	 * <i>not</i> be strictly mocked in an easy manner (by just passing in the
+	 * method names of the method you wish <i>not</i> to mock). Note that you
+	 * cannot uniquely specify a method to exclude using this method if there
+	 * are several methods with the same name in <code>type</code>. This method
+	 * will mock ALL methods that doesn't match the supplied name(s) regardless
+	 * of parameter types and signature. If this is not the case you should
+	 * fall-back on using the {@link #createMock(Class, Method...)} method
+	 * instead.
+	 * 
+	 * @param <T>
+	 *            The type of the mock.
+	 * @param type
+	 *            The type that'll be used to create a mock instance.
+	 * @param methodNames
+	 *            The names of the methods that should be mocked. If
+	 *            <code>null</code>, then this method will have the same effect
+	 *            as just calling {@link #createMock(Class, Method...)} with the
+	 *            second parameter as <code>null</code> (i.e. all methods in
+	 *            that class will be mocked).
+	 * @return A mock object of type <T>.
+	 */
+	public static synchronized <T> T createStrictPartialMockForAllMethodsExcept(Class<T> type, String... methodNames) {
+		if (methodNames != null && methodNames.length == 0) {
+			return createStrictMock(type);
+		}
+
+		return createStrictMock(type, WhiteboxImpl.getAllMethodExcept(type, methodNames));
 	}
 
 	/**
@@ -307,9 +368,67 @@ public class PowerMock {
 		 * because it should not intervene with the mockAllExcept(type,
 		 * String...methodNames) method.
 		 */
-		Class<?>[] argumentTypes = mergeArgumentTypes(firstArgumentType, moreTypes);
+		final Class<?>[] argumentTypes = mergeArgumentTypes(firstArgumentType, moreTypes);
 
 		return createMock(type, WhiteboxImpl.getAllMetodsExcept(type, methodNameToExclude, argumentTypes));
+	}
+
+	/**
+	 * Mock all methods of a class except for a specific one nicely. Use this
+	 * method only if you have several overloaded methods.
+	 * 
+	 * @param <T>
+	 *            The type of the mock.
+	 * @param type
+	 *            The type that'll be used to create a mock instance.
+	 * @param methodNameToExclude
+	 *            The name of the method not to mock.
+	 * @param firstArgumentType
+	 *            The type of the first parameter of the method not to mock
+	 * @param moreTypes
+	 *            Optionally more parameter types that defines the method. Note
+	 *            that this is only needed to separate overloaded methods.
+	 * @return A mock object of type <T>.
+	 */
+	public static synchronized <T> T createNicePartialMockForAllMethodsExcept(Class<T> type, String methodNameToExclude, Class<?> firstArgumentType,
+			Class<?>... moreTypes) {
+		/*
+		 * The reason why we've split the first and "additional types" is
+		 * because it should not intervene with the mockAllExcept(type,
+		 * String...methodNames) method.
+		 */
+		final Class<?>[] argumentTypes = mergeArgumentTypes(firstArgumentType, moreTypes);
+
+		return createNiceMock(type, WhiteboxImpl.getAllMetodsExcept(type, methodNameToExclude, argumentTypes));
+	}
+
+	/**
+	 * Mock all methods of a class except for a specific one strictly. Use this
+	 * method only if you have several overloaded methods.
+	 * 
+	 * @param <T>
+	 *            The type of the mock.
+	 * @param type
+	 *            The type that'll be used to create a mock instance.
+	 * @param methodNameToExclude
+	 *            The name of the method not to mock.
+	 * @param firstArgumentType
+	 *            The type of the first parameter of the method not to mock
+	 * @param moreTypes
+	 *            Optionally more parameter types that defines the method. Note
+	 *            that this is only needed to separate overloaded methods.
+	 * @return A mock object of type <T>.
+	 */
+	public static synchronized <T> T createStrictPartialMockForAllMethodsExcept(Class<T> type, String methodNameToExclude,
+			Class<?> firstArgumentType, Class<?>... moreTypes) {
+		/*
+		 * The reason why we've split the first and "additional types" is
+		 * because it should not intervene with the mockAllExcept(type,
+		 * String...methodNames) method.
+		 */
+		final Class<?>[] argumentTypes = mergeArgumentTypes(firstArgumentType, moreTypes);
+
+		return createStrictMock(type, WhiteboxImpl.getAllMetodsExcept(type, methodNameToExclude, argumentTypes));
 	}
 
 	/**
@@ -1620,7 +1739,12 @@ public class PowerMock {
 	}
 
 	private static Class<?>[] mergeArgumentTypes(Class<?> firstArgumentType, Class<?>... additionalArgumentTypes) {
-		Class<?>[] argumentTypes = new Class[additionalArgumentTypes.length + 1];
+		if (firstArgumentType == null) {
+			return additionalArgumentTypes == null ? new Class<?>[0] : additionalArgumentTypes;
+		} else if (additionalArgumentTypes == null) {
+			additionalArgumentTypes = new Class<?>[0];
+		}
+		final Class<?>[] argumentTypes = new Class[additionalArgumentTypes.length + 1];
 		argumentTypes[0] = firstArgumentType;
 		if (additionalArgumentTypes.length != 0) {
 			System.arraycopy(additionalArgumentTypes, 0, argumentTypes, 1, additionalArgumentTypes.length);

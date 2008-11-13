@@ -1091,7 +1091,7 @@ public class WhiteboxImpl {
 	}
 
 	public static <T> Method[] getAllMetodsExcept(Class<T> type, String methodNameToExclude, Class<?>[] argumentTypes) {
-		Method[] methods = type.getDeclaredMethods();
+		Method[] methods = getAllMethods(type);
 		List<Method> methodList = new ArrayList<Method>();
 		outer: for (Method method : methods) {
 			if (method.getName().equals(methodNameToExclude)) {

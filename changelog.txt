@@ -12,6 +12,8 @@ Change log 1.0 (under development)
 * Updated the tutorial projects to take advantage of the latest features in PowerMock.
 * Fixed a NPE bug in the AbstractTestClassExtractor.isPrepared(..) method.
 * The test class is no longer recommended as a PrepareForTest candidate if a NPE occurs inside the test class.
+* Added createStrictPartialMockForAllMethodsExcept and createNicePartialMockForAllMethodsExcept to the PowerMock API.
+* The Whitebox API method getAllMethodExcept now traverses the class hierarchy looking for methods.
 
 Change log 0.9 (released 2008-11-10)
 ------------------------------------
