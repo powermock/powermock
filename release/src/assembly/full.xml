@@ -10,7 +10,7 @@
       <outputFileNameMapping></outputFileNameMapping>
       <unpack>true</unpack>
       <scope>runtime</scope>
-	  <useTransitiveDependencies>false</useTransitiveDependencies>
+  <!--   <useTransitiveDependencies>false</useTransitiveDependencies> -->
     </dependencySet>
   </dependencySets>
   <fileSets>
