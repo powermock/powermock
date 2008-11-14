@@ -61,6 +61,7 @@ public class MockRepository {
 	public synchronized static void clearAll() {
 		cleanUpAfterReplayOrVerify();
 		objectsToAutomaticallyReplayAndVerify.clear();
+		suppressStaticInitializers.clear();
 	}
 
 	/**
@@ -70,7 +71,6 @@ public class MockRepository {
 		classMocks.clear();
 		instanceMocks.clear();
 		newSubstitutions.clear();
-		suppressStaticInitializers.clear();
 	}
 
 	public static synchronized MethodInvocationControl getClassMethodInvocationControl(Class<?> type) {

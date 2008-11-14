@@ -185,27 +185,7 @@ public class WhiteboxImpl {
 	 *            the class in the hierarchy where the field is defined
 	 */
 	public static void setInternalState(Object object, Object value, Class<?> where) {
-		if (object == null || value == null || where == null) {
-			throw new IllegalArgumentException("object, value and where cannot be null");
-		}
-
-		final Class<?> argumentType = getArgumentType(value);
-		final Class<?> primitiveType = PrimitiveWrapper.getPrimitiveFromWrapperType(argumentType);
-
-		Field foundField = null;
-		for (Field field : where.getDeclaredFields()) {
-			final Class<?> actualFieldType = field.getType();
-			if (actualFieldType.isAssignableFrom(argumentType) || (primitiveType != null && actualFieldType.isAssignableFrom(primitiveType))) {
-				foundField = field;
-				break;
-			}
-		}
-
-		if (foundField == null) {
-			throw new IllegalArgumentException("No field assignable to " + argumentType + " was found in class " + where.getName());
-		}
-
-		setField(object, value, foundField);
+		setField(object, value, findField(object, new AssignableToFieldTypeMatcherStrategy(getArgumentType(value)), where));
 	}
 
 	/**
@@ -285,29 +265,45 @@ public class WhiteboxImpl {
 	}
 
 	private static Field findFieldInHierarchy(Object object, FieldMatcherStrategy strategy) {
+		return findFieldUsingStrategy(strategy, object, true, getArgumentType(object));
+	}
+
+	private static Field findField(Object object, FieldMatcherStrategy strategy, Class<?> where) {
+		return findFieldUsingStrategy(strategy, object, false, where);
+	}
+
+	private static Field findFieldUsingStrategy(
+			FieldMatcherStrategy strategy, Object object, boolean checkHierarchy, Class<?> startClass) {
 		if (object == null) {
 			throw new IllegalArgumentException("The object containing the field cannot be null");
 		}
-
-		Class<?> thisType = getArgumentType(object);
-		Field foundField = null;
-		outer: while (thisType != null) {
-			final Field[] declaredFields = thisType.getDeclaredFields();
+		Field foundField=null;
+		while (startClass != null) {
+			final Field[] declaredFields = startClass.getDeclaredFields();
 			for (Field field : declaredFields) {
-				if (strategy.matches(field)) {
+				if (strategy.matches(field) && hasFieldProperModifier(object, field)) {
+					if (foundField != null) {
+						throw new IllegalArgumentException("Two or more fields matching " + strategy + ".");
+					}
 					foundField = field;
-					break outer;
 				}
 			}
-			thisType = thisType.getSuperclass();
+			if (foundField != null) {
+				break;
+			} else if (checkHierarchy == false) {
+				break;
+			}
+			startClass = startClass.getSuperclass();
 		}
-
 		if (foundField == null) {
 			strategy.notFound(object);
 		}
-
 		foundField.setAccessible(true);
 		return foundField;
+	}
+
+	private static boolean hasFieldProperModifier(Object object, Field field) {
+		return ((object instanceof Class && Modifier.isStatic(field.getModifiers())) || ((object instanceof Class == false && Modifier.isStatic(field.getModifiers())==false)));
 	}
 
 	/**
@@ -1307,6 +1303,11 @@ public class WhiteboxImpl {
 			throw new IllegalArgumentException("No field named \"" + fieldName + "\" could be found in the class hierarchy of "
 					+ getArgumentType(object).getName() + ".");
 		}
+		
+		@Override
+		public String toString() {
+			return "fieldName " + fieldName;
+		}
 	}
 
 	private static class FieldTypeMatcherStrategy extends FieldMatcherStrategy {
@@ -1330,6 +1331,11 @@ public class WhiteboxImpl {
 			throw new IllegalArgumentException("No field of type \"" + expectedFieldType.getName() + "\" could be found in the class hierarchy of "
 					+ getArgumentType(object).getName() + ".");
 		}
+
+		@Override
+		public String toString() {
+			return "type " + expectedFieldType.getName();
+		}
 	}
 
 	private static class AssignableToFieldTypeMatcherStrategy extends FieldTypeMatcherStrategy {
@@ -1352,6 +1358,11 @@ public class WhiteboxImpl {
 		public void notFound(Object object) throws IllegalArgumentException {
 			throw new IllegalArgumentException("No field assignable to \"" + expectedFieldType.getName()
 					+ "\" could be found in the class hierarchy of " + getArgumentType(object).getName() + ".");
+		}
+
+		@Override
+		public String toString() {
+			return "type " + primitiveCounterpart.getName();
 		}
 	}
 

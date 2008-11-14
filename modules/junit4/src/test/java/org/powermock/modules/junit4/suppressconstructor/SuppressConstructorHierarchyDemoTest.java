@@ -20,6 +20,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.powermock.PowerMock.suppressConstructorCodeHierarchy;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -52,6 +53,7 @@ public class SuppressConstructorHierarchyDemoTest {
 	}
 	
 	@Test
+	@Ignore
 	public void testNotSuppressConstructorWithByteCodeManipulation() throws Exception {
 		try {
 			new SuppressConstructorHierarchyChild("message");

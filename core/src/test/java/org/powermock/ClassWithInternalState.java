@@ -26,6 +26,8 @@ public class ClassWithInternalState {
 	private int anotherInternalState = -1;
 
 	private final String finalString = "hello";
+	
+	private long internalLongState=17;
 
 	private ClassWithPrivateMethods classWithPrivateMethods;
 
@@ -56,4 +58,9 @@ public class ClassWithInternalState {
 	public ClassWithPrivateMethods getClassWithPrivateMethods() {
 		return classWithPrivateMethods;
 	}
+
+	public long getInternalLongState() {
+		return internalLongState;
+	}
+
 }

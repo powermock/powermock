@@ -17,7 +17,11 @@ package samples.expectnew;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.Date;
 
 import samples.Service;
@@ -113,6 +117,10 @@ public class ExpectNewDemo {
 	public Date makeDate() {
 		return new Date();
 	}
+	
+	public boolean fileExists(String name) {
+		return new File(name).exists();
+	}
 
 	public InputStream alternativePath() {
 		try {
@@ -144,5 +152,13 @@ public class ExpectNewDemo {
 
 	public byte[][] newVarArgsWithMatchers() {
 		return new VarArgsConstructorDemo(new byte[] { 42 }, new byte[] { 17 }).getByteArrays();
+	}
+
+	public void fileWriter(String name, String msg) throws IOException {
+		new FileWriter(name).write(msg);
+	}
+
+	public void fileWriterPrint(String name, String msg) throws IOException {
+		new PrintWriter(new FileWriter(name)).write(msg);
 	}
 }

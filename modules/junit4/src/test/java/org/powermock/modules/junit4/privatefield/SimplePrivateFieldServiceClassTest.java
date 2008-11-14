@@ -52,4 +52,21 @@ public class SimplePrivateFieldServiceClassTest {
 
 		assertEquals(expected, actual);
 	}
+
+	@Test
+	public void testSimplePrivateFieldServiceClassTypeSafe() throws Exception {
+		SimplePrivateFieldServiceClass tested = new SimplePrivateFieldServiceClass();
+		Service serviceMock = createMock(Service.class);
+		setInternalState(tested, serviceMock);
+
+		final String expected = "Hello world!";
+		expect(serviceMock.getServiceMessage()).andReturn(expected);
+
+		replay(serviceMock);
+		final String actual = tested.useService();
+
+		verify(serviceMock);
+
+		assertEquals(expected, actual);
+	}
 }

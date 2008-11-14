@@ -328,10 +328,42 @@ public class WhiteBoxTest {
 
 	@Test
 	public void testSetInternalStateBasedOnObjectTypeAtASpecificPlaceInTheClassHierarchyForPrimitiveType() throws Exception {
-		final int value = 31;
+		final long value = 31;
 		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
 		Whitebox.setInternalState(tested, value, ClassWithInternalState.class);
-		assertEquals(value, Whitebox.getInternalState(tested, "staticState"));
+		assertEquals(value, tested.getInternalLongState());
+	}
+	
+	@Test
+	public void testSetInternalStateBasedOnObjectTypeAtANonSpecificPlaceInTheClassHierarchyForPrimitiveType() throws Exception {
+		final long value = 31;
+		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
+		Whitebox.setInternalState(tested, value);
+		assertEquals(value, tested.getInternalLongState());
+	}
+
+	@Test
+	public void testSetInternalMultipleOfSameTypeOnSpecificPlaceInHierarchy() throws Exception {
+		final int value = 31;
+		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
+		try {
+			Whitebox.setInternalState(tested, value, ClassWithInternalState.class);
+			fail("should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			assertEquals("Two or more fields matching type int.", e.getMessage());
+		}
+	}
+
+	@Test
+	public void testSetInternalMultipleOfSameType() throws Exception {
+		final int value = 31;
+		ClassWithInternalState tested = new ClassWithInternalState();
+		try {
+			Whitebox.setInternalState(tested, value);
+			fail("should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			assertEquals("Two or more fields matching type int.", e.getMessage());
+		}
 	}
 
 	@Test
