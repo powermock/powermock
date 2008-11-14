@@ -1376,7 +1376,7 @@ public class PowerMock {
 	public static synchronized void verifyAll() {
 		try {
 			for (Object classToReplayOrVerify : MockRepository.getObjectsToAutomaticallyReplayAndVerify()) {
-				verify(classToReplayOrVerify);
+				verifyWithoutClearingState(classToReplayOrVerify);
 			}
 		} finally {
 			cleanUpAfterVerify();
@@ -1436,30 +1436,7 @@ public class PowerMock {
 	 */
 	public static synchronized void verify(Object... objects) {
 		try {
-			for (Object mock : objects) {
-				if (mock instanceof Class) {
-					verifyClass((Class<?>) mock);
-				} else {
-					MockInvocationHandler instanceInvocationHandler = getInstanceInvocationHandler(mock);
-					if (instanceInvocationHandler != null) {
-						instanceInvocationHandler.getControl().verify();
-					} else {
-						if (replayAndVerifyIsNice && !isEasyMocked(mock)) {
-							// ignore non-mock
-						} else {
-							/*
-							 * Delegate to easy mock class extension if we have
-							 * no handler registered for this object.
-							 */
-							try {
-								org.easymock.classextension.EasyMock.verify(mock);
-							} catch (RuntimeException e) {
-								throw new RuntimeException(mock + " is not a mock object", e);
-							}
-						}
-					}
-				}
-			}
+			verifyWithoutClearingState(objects);
 		} finally {
 			cleanUpAfterVerify();
 		}
@@ -1828,4 +1805,38 @@ public class PowerMock {
 		}
 		return ((MockInvocationHandler) invocationControl.getInvocationHandler());
 	}
+
+	/**
+	 * Performs mock verification without clearing any repository state.
+	 * 
+	 * @param objects
+	 *            The mock objects to verify.
+	 */
+	private static void verifyWithoutClearingState(Object... objects) {
+		for (Object mock : objects) {
+			if (mock instanceof Class) {
+				verifyClass((Class<?>) mock);
+			} else {
+				MockInvocationHandler instanceInvocationHandler = getInstanceInvocationHandler(mock);
+				if (instanceInvocationHandler != null) {
+					instanceInvocationHandler.getControl().verify();
+				} else {
+					if (replayAndVerifyIsNice && !isEasyMocked(mock)) {
+						// ignore non-mock
+					} else {
+						/*
+						 * Delegate to easy mock class extension if we have no
+						 * handler registered for this object.
+						 */
+						try {
+							org.easymock.classextension.EasyMock.verify(mock);
+						} catch (RuntimeException e) {
+							throw new RuntimeException(mock + " is not a mock object", e);
+						}
+					}
+				}
+			}
+		}
+	}
+
 }

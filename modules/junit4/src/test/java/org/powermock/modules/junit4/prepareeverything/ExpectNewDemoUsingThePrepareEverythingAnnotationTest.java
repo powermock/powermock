@@ -33,7 +33,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.Whitebox;
@@ -53,7 +52,6 @@ import samples.newmocking.MyClass;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareEverythingForTest
-@Ignore
 public class ExpectNewDemoUsingThePrepareEverythingAnnotationTest {
 
 	@Test
@@ -76,8 +74,7 @@ public class ExpectNewDemoUsingThePrepareEverythingAnnotationTest {
 		verifyAll();
 	}
 
-	// @PrepareForTest
-//	@PrepareEverythingForTest
+	@PrepareEverythingForTest
 	@Test
 	public void testGetMessage() throws Exception {
 		ExpectNewDemo tested = new ExpectNewDemo();
@@ -205,17 +202,15 @@ public class ExpectNewDemoUsingThePrepareEverythingAnnotationTest {
 
 		expectNew(MyClass.class).andReturn(myClassMock1).times(4);
 
-		// PowerMock.replay(myClassMock1, MyClass.class);
 		replayAll();
 
 		tested.simpleMultipleNew();
 
 		try {
-			// PowerMock.verify(myClassMock1, MyClass.class);
 			verifyAll();
 			fail("Should throw AssertionError.");
 		} catch (AssertionError e) {
-			assertEquals("\n  Expectation failure on verify:" + "\n    samples.newmocking.MyClass(): expected: 4, actual: 3", e.getMessage());
+				assertEquals("\n  Expectation failure on verify:" + "\n    samples.newmocking.MyClass(): expected: 4, actual: 3", e.getMessage());
 		}
 	}
 
