@@ -15,9 +15,10 @@
  */
 package org.powermock.core.invocationcontrol.method;
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Set;
+
+import org.easymock.internal.MockInvocationHandler;
 
 /**
  * The purpose of an invocation control is to determine whether a certain method
@@ -43,7 +44,7 @@ public interface MethodInvocationControl {
 	 * 
 	 * @return The invocation handler.
 	 */
-	public InvocationHandler getInvocationHandler();
+	public MockInvocationHandler getInvocationHandler();
 
 	/**
 	 * Determine whether a certain method is mocked by this Invocation Control.

@@ -27,6 +27,7 @@ import org.easymock.internal.MockInvocationHandler;
 import org.powermock.core.invocationcontrol.method.MethodInvocationControl;
 import org.powermock.core.invocationcontrol.method.impl.MethodInvocationControlImpl;
 import org.powermock.core.invocationcontrol.newinstance.NewInvocationControl;
+import org.powermock.core.invocationcontrol.newinstance.NewInvocationSubstitute;
 
 /**
  * Hold mock objects that should be used instead of the concrete implementation.
@@ -124,12 +125,12 @@ public class MockRepository {
 		return set;
 	}
 
-	public static synchronized NewInvocationControl<?> getNewInstanceSubstitute(Class<?> type) {
+	public static synchronized NewInvocationControl<?> getNewInstanceControl(Class<?> type) {
 		return newSubstitutions.get(type);
 	}
 
-	public static synchronized NewInvocationControl<?> putNewInstanceSubstitute(Class<?> type, NewInvocationControl<?> fakeNewMock) {
-		return newSubstitutions.put(type, fakeNewMock);
+	public static synchronized NewInvocationControl<?> putNewInstanceControl(Class<?> type, NewInvocationControl<?> control) {
+		return newSubstitutions.put(type, control);
 	}
 
 	/**

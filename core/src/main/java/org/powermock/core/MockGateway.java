@@ -21,6 +21,8 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.easymock.classextension.EasyMock;
+import org.easymock.internal.MocksControl.MockType;
 import org.powermock.core.invocationcontrol.method.MethodInvocationControl;
 import org.powermock.core.invocationcontrol.newinstance.NewInvocationControl;
 
@@ -95,9 +97,9 @@ public class MockGateway {
 	}
 
 	public static synchronized Object newInstanceCall(Class<?> type, Object[] args, Class<?>[] sig) throws Throwable {
-		final NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceSubstitute(type);
+		final NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceControl(type);
 		if (newInvocationControl != null) {
-			Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(type, args);
+			Constructor<?> constructor = WhiteboxImpl.getConstructor(type, sig);
 			if (constructor.isVarArgs()) {
 				/*
 				 * Get the first argument because this contains the actual
@@ -106,9 +108,16 @@ public class MockGateway {
 				args = (Object[]) args[0];
 			}
 			try {
-				final Object result = newInvocationControl.createInstance(args);
+				final MockType mockType = WhiteboxImpl.getInternalState(MockRepository.getInstanceMethodInvocationControl(
+						newInvocationControl.getNewInvocationSubstitute()).getInvocationHandler().getControl(), MockType.class);
+				Object result = newInvocationControl.getNewInvocationSubstitute().createInstance(args);
+
 				if (result == null) {
-					throw new IllegalStateException("Must replay class " + type.getName() + " to get configured expectation.");
+					if (mockType == MockType.NICE) {
+						result = EasyMock.createNiceMock(newInvocationControl.getType());
+					} else {
+						throw new IllegalStateException("Must replay class " + type.getName() + " to get configured expectation.");
+					}
 				}
 				return result;
 			} catch (AssertionError e) {

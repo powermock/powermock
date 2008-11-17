@@ -19,7 +19,7 @@ import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.powermock.core.invocationcontrol.newinstance.NewInvocationControl;
+import org.powermock.core.invocationcontrol.newinstance.NewInvocationSubstitute;
 
 public class PowerMockUtils {
 
@@ -72,7 +72,7 @@ public class PowerMockUtils {
 		 * instance of MyClass has been created less or more times than 3.
 		 */
 		String message = oldError.getMessage();
-		final String newSubsitutionMethodName = NewInvocationControl.class.getDeclaredMethods()[0].getName();
+		final String newSubsitutionMethodName = NewInvocationSubstitute.class.getDeclaredMethods()[0].getName();
 		message = message.replaceAll(newSubsitutionMethodName, type.getName());
 		message = message.replaceAll("method", "constructor");
 

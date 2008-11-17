@@ -39,6 +39,8 @@ import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.core.invocationcontrol.method.MethodInvocationControl;
 import org.powermock.core.invocationcontrol.newinstance.NewInvocationControl;
+import org.powermock.core.invocationcontrol.newinstance.NewInvocationSubstitute;
+import org.powermock.core.invocationcontrol.newinstance.impl.NewInvocationControlImpl;
 import org.powermock.core.mockstrategy.MockStrategy;
 import org.powermock.core.mockstrategy.impl.DefaultMockStrategy;
 import org.powermock.core.mockstrategy.impl.NiceMockStrategy;
@@ -1478,6 +1480,28 @@ public class PowerMock {
 	}
 
 	/**
+	 * Convenience method for createMock followed by expectNew when PowerMock
+	 * cannot determine which constructor to use automatically. This happens
+	 * when you have one constructor taking a primitive type and another one
+	 * taking the wrapper type of the primitive. For example <code>int</code>
+	 * and <code>Integer</code>.
+	 * 
+	 * @param type
+	 *            The class that should be mocked.
+	 * @param parameterTypes
+	 *            The constructor parameter types.
+	 * @param arguments
+	 *            The constructor arguments.
+	 * @return A mock object of the same type as the mock.
+	 * @throws Exception
+	 */
+	public static synchronized <T> T createMockAndExpectNew(Class<T> type, Class<?>[] parameterTypes, Object... arguments) throws Exception {
+		T mock = createMock(type);
+		expectNew(type, parameterTypes, arguments).andReturn(mock);
+		return mock;
+	}
+
+	/**
 	 * Convenience method for createNiceMock followed by expectNew.
 	 * 
 	 * @param type
@@ -1489,7 +1513,35 @@ public class PowerMock {
 	 */
 	public static synchronized <T> T createNiceMockAndExpectNew(Class<T> type, Object... arguments) throws Exception {
 		T mock = createNiceMock(type);
-		expectNew(type, arguments).andReturn(mock);
+		IExpectationSetters<T> expectationSetters = expectNiceNew(type, arguments);
+		if (expectationSetters != null) {
+			expectationSetters.andReturn(mock);
+		}
+		return mock;
+	}
+
+	/**
+	 * Convenience method for createNiceMock followed by expectNew when
+	 * PowerMock cannot determine which constructor to use automatically. This
+	 * happens when you have one constructor taking a primitive type and another
+	 * one taking the wrapper type of the primitive. For example
+	 * <code>int</code> and <code>Integer</code>.
+	 * 
+	 * @param type
+	 *            The class that should be mocked.
+	 * @param parameterTypes
+	 *            The constructor parameter types.
+	 * @param arguments
+	 *            The constructor arguments.
+	 * @return A mock object of the same type as the mock.
+	 * @throws Exception
+	 */
+	public static synchronized <T> T createNiceMockAndExpectNew(Class<T> type, Class<?>[] parameterTypes, Object... arguments) throws Exception {
+		T mock = createNiceMock(type);
+		IExpectationSetters<T> expectationSetters = expectNiceNew(type, parameterTypes, arguments);
+		if (expectationSetters != null) {
+			expectationSetters.andReturn(mock);
+		}
 		return mock;
 	}
 
@@ -1505,7 +1557,29 @@ public class PowerMock {
 	 */
 	public static synchronized <T> T createStrictMockAndExpectNew(Class<T> type, Object... arguments) throws Exception {
 		T mock = createStrictMock(type);
-		expectNew(type, arguments).andReturn(mock);
+		expectStrictNew(type, arguments).andReturn(mock);
+		return mock;
+	}
+
+	/**
+	 * Convenience method for createStrictMock followed by expectNew when
+	 * PowerMock cannot determine which constructor to use automatically. This
+	 * happens when you have one constructor taking a primitive type and another
+	 * one taking the wrapper type of the primitive. For example
+	 * <code>int</code> and <code>Integer</code>.
+	 * 
+	 * @param type
+	 *            The class that should be mocked.
+	 * @param parameterTypes
+	 *            The constructor parameter types.
+	 * @param arguments
+	 *            The constructor arguments.
+	 * @return A mock object of the same type as the mock.
+	 * @throws Exception
+	 */
+	public static synchronized <T> T createStrictMockAndExpectNew(Class<T> type, Class<?>[] parameterTypes, Object... arguments) throws Exception {
+		T mock = createStrictMock(type);
+		expectStrictNew(type, parameterTypes, arguments).andReturn(mock);
 		return mock;
 	}
 
@@ -1514,28 +1588,125 @@ public class PowerMock {
 	 * want to throw an exception or return a mock. Note that you must replay
 	 * the class when using this method since this behavior is part of the class
 	 * mock.
+	 * <p>
+	 * Use this method when you need to specify parameter types for the
+	 * constructor when PowerMock cannot determine which constructor to use
+	 * automatically. In most cases you should use
+	 * {@link #expectNew(Class, Object...)} instead.
 	 */
+	public static synchronized <T> IExpectationSetters<T> expectNew(Class<T> type, Class<?>[] parameterTypes, Object... arguments) throws Exception {
+		return doExpectNew(type, new DefaultMockStrategy(), parameterTypes, arguments);
+	}
+
 	@SuppressWarnings("unchecked")
-	public static synchronized <T> IExpectationSetters<T> expectNew(Class<T> type, Object... arguments) throws Exception {
+	private static <T> IExpectationSetters<T> doExpectNew(Class<T> type, MockStrategy mockStrategy, Class<?>[] parameterTypes, Object... arguments)
+			throws Exception {
 		if (type == null) {
 			throw new IllegalArgumentException("type cannot be null");
+		} else if (mockStrategy == null) {
+			throw new IllegalArgumentException("Internal error: Mock strategy cannot be null");
 		}
 
+		final boolean isNiceMock = mockStrategy instanceof NiceMockStrategy;
+
 		final Class<T> unmockedType = (Class<T>) WhiteboxImpl.getUnmockedType(type);
-		WhiteboxImpl.findConstructorOrThrowException(type, arguments);
+		if (!isNiceMock) {
+			if (parameterTypes == null) {
+				WhiteboxImpl.findConstructorOrThrowException(type, arguments);
+			} else {
+				WhiteboxImpl.getConstructor(unmockedType, parameterTypes);
+			}
+		}
 
 		/*
 		 * Check if this type has been mocked before
 		 */
-		NewInvocationControl<T> newInvocationControl = (NewInvocationControl<T>) MockRepository.getNewInstanceSubstitute(unmockedType);
+		NewInvocationControl<T> newInvocationControl = (NewInvocationControl<T>) MockRepository.getNewInstanceControl(unmockedType);
 		if (newInvocationControl == null) {
-			newInvocationControl = EasyMock.createMock(NewInvocationControl.class);
-			MockRepository.putNewInstanceSubstitute(type, newInvocationControl);
+			NewInvocationSubstitute<T> mock = doMock(NewInvocationSubstitute.class, false, mockStrategy, null, new Method[0]);
+			newInvocationControl = new NewInvocationControlImpl<T>(mock, type);
+			MockRepository.putNewInstanceControl(type, newInvocationControl);
+			MockRepository.addObjectsToAutomaticallyReplayAndVerify(WhiteboxImpl.getUnmockedType(type));
 		}
 
-		MockRepository.addObjectsToAutomaticallyReplayAndVerify(WhiteboxImpl.getUnmockedType(type));
+		if (isNiceMock && (arguments == null || arguments.length == 0)) {
+			return null;
+		}
+		return newInvocationControl.invoke(arguments);
+	}
 
-		return EasyMock.expect(newInvocationControl.createInstance(arguments));
+	/**
+	 * Allows specifying expectations on new invocations. For example you might
+	 * want to throw an exception or return a mock. Note that you must replay
+	 * the class when using this method since this behavior is part of the class
+	 * mock.
+	 */
+	public static synchronized <T> IExpectationSetters<T> expectNew(Class<T> type, Object... arguments) throws Exception {
+		return doExpectNew(type, new DefaultMockStrategy(), null, arguments);
+	}
+
+	/**
+	 * Allows specifying expectations on new invocations. For example you might
+	 * want to throw an exception or return a mock.
+	 * <p>
+	 * This method checks the order of constructor invocations.
+	 * <p>
+	 * Note that you must replay the class when using this method since this
+	 * behavior is part of the class mock.
+	 */
+	public static synchronized <T> IExpectationSetters<T> expectStrictNew(Class<T> type, Object... arguments) throws Exception {
+		return doExpectNew(type, new StrictMockStrategy(), null, arguments);
+	}
+
+	/**
+	 * Allows specifying expectations on new invocations. For example you might
+	 * want to throw an exception or return a mock. Note that you must replay
+	 * the class when using this method since this behavior is part of the class
+	 * mock.
+	 * <p>
+	 * This method checks the order of constructor invocations.
+	 * <p>
+	 * Use this method when you need to specify parameter types for the
+	 * constructor when PowerMock cannot determine which constructor to use
+	 * automatically. In most cases you should use
+	 * {@link #expectNew(Class, Object...)} instead.
+	 */
+	public static synchronized <T> IExpectationSetters<T> expectStrictNew(Class<T> type, Class<?>[] parameterTypes, Object... arguments)
+			throws Exception {
+		return doExpectNew(type, new StrictMockStrategy(), parameterTypes, arguments);
+	}
+
+	/**
+	 * Allows specifying expectations on new invocations. For example you might
+	 * want to throw an exception or return a mock.
+	 * <p>
+	 * This method allows any number of calls to a new constructor without
+	 * throwing an exception.
+	 * <p>
+	 * Note that you must replay the class when using this method since this
+	 * behavior is part of the class mock.
+	 */
+	public static synchronized <T> IExpectationSetters<T> expectNiceNew(Class<T> type, Object... arguments) throws Exception {
+		return doExpectNew(type, new NiceMockStrategy(), null, arguments);
+	}
+
+	/**
+	 * Allows specifying expectations on new invocations. For example you might
+	 * want to throw an exception or return a mock. Note that you must replay
+	 * the class when using this method since this behavior is part of the class
+	 * mock.
+	 * <p>
+	 * This method allows any number of calls to a new constructor without
+	 * throwing an exception.
+	 * <p>
+	 * Use this method when you need to specify parameter types for the
+	 * constructor when PowerMock cannot determine which constructor to use
+	 * automatically. In most cases you should use
+	 * {@link #expectNew(Class, Object...)} instead.
+	 */
+	public static synchronized <T> IExpectationSetters<T> expectNiceNew(Class<T> type, Class<?>[] parameterTypes, Object... arguments)
+			throws Exception {
+		return doExpectNew(type, new NiceMockStrategy(), parameterTypes, arguments);
 	}
 
 	/**
@@ -1704,7 +1875,9 @@ public class PowerMock {
 			MockRepository.addObjectsToAutomaticallyReplayAndVerify(type);
 		} else {
 			MockRepository.putInstanceMethodInvocationControl(mock, h, methods);
-			MockRepository.addObjectsToAutomaticallyReplayAndVerify(mock);
+			if (mock instanceof NewInvocationSubstitute == false) {
+				MockRepository.addObjectsToAutomaticallyReplayAndVerify(mock);
+			}
 		}
 		return mock;
 	}
@@ -1736,9 +1909,9 @@ public class PowerMock {
 				invocationHandler.getControl().replay();
 			}
 
-			NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceSubstitute(type);
+			NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceControl(type);
 			if (newInvocationControl != null) {
-				EasyMock.replay(newInvocationControl);
+				EasyMock.replay(newInvocationControl.getNewInvocationSubstitute());
 			}
 		}
 	}
@@ -1752,10 +1925,10 @@ public class PowerMock {
 			if (invocationHandler != null) {
 				invocationHandler.getControl().verify();
 			}
-			NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceSubstitute(type);
+			NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceControl(type);
 			if (newInvocationControl != null) {
 				try {
-					EasyMock.verify(newInvocationControl);
+					EasyMock.verify(newInvocationControl.getNewInvocationSubstitute());
 				} catch (AssertionError e) {
 					PowerMockUtils.throwAssertionErrorForNewSubstitutionFailure(e, type);
 				}

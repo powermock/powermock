@@ -116,7 +116,7 @@ public class WhiteboxImpl {
 	 */
 	public static Constructor<?> getConstructor(Class<?> type, Class<?>... parameterTypes) {
 		try {
-			final Constructor<?> constructor = getArgumentType(type).getDeclaredConstructor(parameterTypes);
+			final Constructor<?> constructor = WhiteboxImpl.getUnmockedType(type).getDeclaredConstructor(parameterTypes);
 			constructor.setAccessible(true);
 			return constructor;
 		} catch (Exception e) {
@@ -272,12 +272,11 @@ public class WhiteboxImpl {
 		return findFieldUsingStrategy(strategy, object, false, where);
 	}
 
-	private static Field findFieldUsingStrategy(
-			FieldMatcherStrategy strategy, Object object, boolean checkHierarchy, Class<?> startClass) {
+	private static Field findFieldUsingStrategy(FieldMatcherStrategy strategy, Object object, boolean checkHierarchy, Class<?> startClass) {
 		if (object == null) {
 			throw new IllegalArgumentException("The object containing the field cannot be null");
 		}
-		Field foundField=null;
+		Field foundField = null;
 		while (startClass != null) {
 			final Field[] declaredFields = startClass.getDeclaredFields();
 			for (Field field : declaredFields) {
@@ -303,7 +302,8 @@ public class WhiteboxImpl {
 	}
 
 	private static boolean hasFieldProperModifier(Object object, Field field) {
-		return ((object instanceof Class && Modifier.isStatic(field.getModifiers())) || ((object instanceof Class == false && Modifier.isStatic(field.getModifiers())==false)));
+		return ((object instanceof Class && Modifier.isStatic(field.getModifiers())) || ((object instanceof Class == false && Modifier.isStatic(field
+				.getModifiers()) == false)));
 	}
 
 	/**
@@ -1011,7 +1011,7 @@ public class WhiteboxImpl {
 			}
 			sb.append(")\n");
 		}
-		throw new RuntimeException(sb.toString());
+		throw new IllegalArgumentException(sb.toString());
 	}
 
 	@SuppressWarnings("all")
@@ -1303,7 +1303,7 @@ public class WhiteboxImpl {
 			throw new IllegalArgumentException("No field named \"" + fieldName + "\" could be found in the class hierarchy of "
 					+ getArgumentType(object).getName() + ".");
 		}
-		
+
 		@Override
 		public String toString() {
 			return "fieldName " + fieldName;

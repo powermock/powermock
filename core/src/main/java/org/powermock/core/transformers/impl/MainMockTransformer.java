@@ -48,7 +48,7 @@ public class MainMockTransformer implements MockTransformer {
 		 * policy to allow for mocking of signed classes.
 		 */
 		final String name = clazz.getName();
-		if (!name.startsWith("java.") && !name.startsWith("javax.")) {
+		if (!name.startsWith("java.")) {
 			clazz.setModifiers(Modifier.setPublic(clazz.getModifiers()));
 		}
 

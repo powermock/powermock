@@ -15,11 +15,11 @@
  */
 package org.powermock.core.invocationcontrol.method.impl;
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.easymock.internal.MockInvocationHandler;
 import org.powermock.core.invocationcontrol.method.MethodInvocationControl;
 
 
@@ -30,7 +30,7 @@ import org.powermock.core.invocationcontrol.method.MethodInvocationControl;
  */
 public class MethodInvocationControlImpl implements MethodInvocationControl {
 
-	private InvocationHandler invocationHandler;
+	private MockInvocationHandler invocationHandler;
 
 	private Set<Method> mockedMethods;
 
@@ -45,7 +45,7 @@ public class MethodInvocationControlImpl implements MethodInvocationControl {
 	 *            the <code>invocationHandler</code> are considered to be
 	 *            mocked.
 	 */
-	public MethodInvocationControlImpl(InvocationHandler invocationHandler,
+	public MethodInvocationControlImpl(MockInvocationHandler invocationHandler,
 			Set<Method> methodsToMock) {
 		if (invocationHandler == null) {
 			throw new IllegalArgumentException(
@@ -63,7 +63,7 @@ public class MethodInvocationControlImpl implements MethodInvocationControl {
 	/**
 	 * {@inheritDoc}
 	 */
-	public InvocationHandler getInvocationHandler() {
+	public MockInvocationHandler getInvocationHandler() {
 		return invocationHandler;
 	}
 

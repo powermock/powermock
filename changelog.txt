@@ -21,6 +21,9 @@ Change log 1.0 (under development)
 * The suppressMethodCode method of the PowerMock API was renamed to suppressMethod. 
 * The suppressConstructorCodeHierarchy method of the PowerMock API was removed, suppressConstructor(..) automatically suppress the full hierarchy so use this method instead.
 * Added the PowerMockIgnore annotation that can be used to specify packages or classes that should not be loaded by PowerMock's classloader.
+* Fixed a bug in MockGateway that prevented wrapper/primitive constructors from being correctly executed.
+* Added support for specifying parameter types for expectNew and createMockAndExpectNew, createNiceMockAndExpectNew, createStrictMockAndExpectNew.
+* Added expectNiceNew and expectStrictNew, expectNiceNew can be used with no parameters.
 
 Change log 0.9 (released 2008-11-10)
 ------------------------------------
