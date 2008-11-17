@@ -1374,12 +1374,8 @@ public class PowerMock {
 	 * 
 	 */
 	public static synchronized void verifyAll() {
-		try {
-			for (Object classToReplayOrVerify : MockRepository.getObjectsToAutomaticallyReplayAndVerify()) {
-				verifyWithoutClearingState(classToReplayOrVerify);
-			}
-		} finally {
-			cleanUpAfterVerify();
+		for (Object classToReplayOrVerify : MockRepository.getObjectsToAutomaticallyReplayAndVerify()) {
+			verify(classToReplayOrVerify);
 		}
 	}
 
@@ -1435,10 +1431,33 @@ public class PowerMock {
 	 *            mock objects or classes loaded by PowerMock.
 	 */
 	public static synchronized void verify(Object... objects) {
-		try {
-			verifyWithoutClearingState(objects);
-		} finally {
-			cleanUpAfterVerify();
+		for (Object mock : objects) {
+			try {
+				if (mock instanceof Class) {
+					verifyClass((Class<?>) mock);
+				} else {
+					MockInvocationHandler instanceInvocationHandler = getInstanceInvocationHandler(mock);
+					if (instanceInvocationHandler != null) {
+						instanceInvocationHandler.getControl().verify();
+					} else {
+						if (replayAndVerifyIsNice && !isEasyMocked(mock)) {
+							// ignore non-mock
+						} else {
+							/*
+							 * Delegate to easy mock class extension if we have
+							 * no handler registered for this object.
+							 */
+							try {
+								org.easymock.classextension.EasyMock.verify(mock);
+							} catch (RuntimeException e) {
+								throw new RuntimeException(mock + " is not a mock object", e);
+							}
+						}
+					}
+				}
+			} finally {
+				MockRepository.remove(mock);
+			}
 		}
 	}
 
@@ -1771,21 +1790,16 @@ public class PowerMock {
 
 	/**
 	 * This method IS indeed used so don't remove! It's called upon from the
-	 * JUnit runners by reflection (because we need to invoke it with the
-	 * correct class loader). The method should not be exposed therefore it's
-	 * private. We should refactor this method to an internal class and make it
-	 * public instead.
+	 * PowerMock JUnit runners by reflection (because we need to invoke it with
+	 * the correct class loader). The method should not be exposed therefore
+	 * it's private. We should refactor this method to an internal class and
+	 * make it public instead.
 	 */
 	@SuppressWarnings("unused")
 	private static void clearState() {
 		MockRepository.clearAll();
 		MockGateway.clear();
 		replayAndVerifyIsNice = false;
-	}
-
-	private static void cleanUpAfterVerify() {
-		replayAndVerifyIsNice = false;
-		MockRepository.cleanUpAfterReplayOrVerify();
 	}
 
 	private static MockInvocationHandler getClassInvocationHandler(Class<?> type) {
@@ -1805,38 +1819,4 @@ public class PowerMock {
 		}
 		return ((MockInvocationHandler) invocationControl.getInvocationHandler());
 	}
-
-	/**
-	 * Performs mock verification without clearing any repository state.
-	 * 
-	 * @param objects
-	 *            The mock objects to verify.
-	 */
-	private static void verifyWithoutClearingState(Object... objects) {
-		for (Object mock : objects) {
-			if (mock instanceof Class) {
-				verifyClass((Class<?>) mock);
-			} else {
-				MockInvocationHandler instanceInvocationHandler = getInstanceInvocationHandler(mock);
-				if (instanceInvocationHandler != null) {
-					instanceInvocationHandler.getControl().verify();
-				} else {
-					if (replayAndVerifyIsNice && !isEasyMocked(mock)) {
-						// ignore non-mock
-					} else {
-						/*
-						 * Delegate to easy mock class extension if we have no
-						 * handler registered for this object.
-						 */
-						try {
-							org.easymock.classextension.EasyMock.verify(mock);
-						} catch (RuntimeException e) {
-							throw new RuntimeException(mock + " is not a mock object", e);
-						}
-					}
-				}
-			}
-		}
-	}
-
 }

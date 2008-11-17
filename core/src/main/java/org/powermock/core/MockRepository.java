@@ -59,18 +59,27 @@ public class MockRepository {
 	 * Clear all state of the mock repository
 	 */
 	public synchronized static void clearAll() {
-		cleanUpAfterReplayOrVerify();
+		newSubstitutions.clear();
+		classMocks.clear();
+		instanceMocks.clear();
 		objectsToAutomaticallyReplayAndVerify.clear();
 		suppressStaticInitializers.clear();
 	}
 
 	/**
-	 * Clear all state that should be cleared after replay and verify.
+	 * Removes an object from the MockRepository if it exists.
 	 */
-	public static void cleanUpAfterReplayOrVerify() {
-		classMocks.clear();
-		instanceMocks.clear();
-		newSubstitutions.clear();
+	public static void remove(Object mock) {
+		if (mock instanceof Class<?>) {
+			if (newSubstitutions.containsKey(mock)) {
+				newSubstitutions.remove(mock);
+			}
+			if (classMocks.containsKey(mock)) {
+				classMocks.remove(mock);
+			}
+		} else if (instanceMocks.containsKey(mock)) {
+			instanceMocks.remove(mock);
+		}
 	}
 
 	public static synchronized MethodInvocationControl getClassMethodInvocationControl(Class<?> type) {

@@ -19,22 +19,25 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.powermock.PowerMock;
 import org.powermock.Whitebox;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import samples.suppressconstructor.SuppressConstructorDemo;
 import samples.suppressconstructor.SuppressSpecificConstructorDemo;
 
+@RunWith(PowerMockRunner.class)
 public class CreateUnmockedTest {
 
 	@Test
 	public void testUnmockedWithNoConstructorAndReplayVerify() throws Exception {
-		SuppressSpecificConstructorDemo object  = Whitebox.newInstance(SuppressSpecificConstructorDemo.class);
+		SuppressSpecificConstructorDemo object = Whitebox.newInstance(SuppressSpecificConstructorDemo.class);
 		PowerMock.niceReplayAndVerify();
 		PowerMock.replay(object);
-		
+
 		assertEquals("Hello", object.getHello());
-		
+
 		PowerMock.verify(object);
 	}
 
@@ -43,9 +46,9 @@ public class CreateUnmockedTest {
 		PowerMock.niceReplayAndVerify();
 		SuppressConstructorDemo object = new SuppressConstructorDemo("Hello");
 		PowerMock.replay(object);
-		
+
 		assertEquals("Hello", object.getMessage());
-		
+
 		PowerMock.verify(object);
 	}
 

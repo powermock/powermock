@@ -53,6 +53,11 @@ public class StaticService {
 		throw new UnsupportedOperationException("method not implemented yet...");
 	}
 
+	public static void assertThatVerifyWorksForMultipleMocks() {
+		StaticService.sayHello();
+		StaticHelper.sayHelloHelper();
+	}
+
 	public static void sayHello() {
 		StaticHelper.sayHelloHelper();
 		StaticHelper.sayHelloHelper();
