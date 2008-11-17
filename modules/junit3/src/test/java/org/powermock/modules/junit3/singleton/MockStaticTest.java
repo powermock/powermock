@@ -29,8 +29,8 @@ import org.powermock.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit3.PowerMockSuite;
 
-import samples.singleton.StaticService;
 import samples.singleton.StaticHelper;
+import samples.singleton.StaticService;
 
 @PrepareForTest({StaticService.class, StaticHelper.class})
 public class MockStaticTest extends TestCase {

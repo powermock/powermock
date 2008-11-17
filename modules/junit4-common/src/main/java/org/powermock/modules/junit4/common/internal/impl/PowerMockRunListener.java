@@ -17,9 +17,9 @@ package org.powermock.modules.junit4.common.internal.impl;
 
 import java.lang.reflect.Method;
 
-import org.powermock.PowerMock;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunListener;
+import org.powermock.PowerMock;
 
 public class PowerMockRunListener extends RunListener {
 

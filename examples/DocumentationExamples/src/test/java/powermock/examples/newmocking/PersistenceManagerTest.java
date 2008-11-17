@@ -15,13 +15,13 @@
  */
 package powermock.examples.newmocking;
 
-import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.verify;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertTrue;
 import static org.powermock.PowerMock.createMock;
 import static org.powermock.PowerMock.createMockAndExpectNew;
 import static org.powermock.PowerMock.expectNew;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertTrue;
+import static org.powermock.PowerMock.replay;
+import static org.powermock.PowerMock.verify;
 
 import java.io.File;
 

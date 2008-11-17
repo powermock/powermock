@@ -16,8 +16,7 @@
 package powermock.examples.suppress.constructorhierarchy;
 
 import static org.junit.Assert.assertEquals;
-import static org.powermock.PowerMock.suppressConstructorCode;
-import static org.powermock.PowerMock.suppressConstructorCodeHierarchy;
+import static org.powermock.PowerMock.suppressConstructor;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -35,7 +34,7 @@ public class ExampleWithEvilChildAndEvilGrandChildTest {
 
 	@Test
 	public void testSuppressConstructorHierarchy() throws Exception {
-		suppressConstructorCodeHierarchy(EvilChild.class);
+		suppressConstructor(EvilChild.class);
 		final String message = "myMessage";
 		ExampleWithEvilChildAndEvilGrandChild tested = new ExampleWithEvilChildAndEvilGrandChild(message);
 		assertEquals(message, tested.getMessage());
@@ -44,7 +43,7 @@ public class ExampleWithEvilChildAndEvilGrandChildTest {
 	@Ignore("Should suppress constructor code really suppress the full hierarchy?")
 	@Test(expected = UnsatisfiedLinkError.class)
 	public void testSuppressConstructorOfEvilChild() throws Exception {
-		suppressConstructorCode(EvilChild.class);
+		suppressConstructor(EvilChild.class);
 		final String message = "myMessage";
 		new ExampleWithEvilChildAndEvilGrandChild(message);
 	}

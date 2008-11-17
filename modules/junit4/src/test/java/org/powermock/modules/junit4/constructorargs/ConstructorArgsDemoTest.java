@@ -18,8 +18,8 @@ package org.powermock.modules.junit4.constructorargs;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.powermock.PowerMock.createMock;
-import static org.powermock.PowerMock.expectPrivate;
 import static org.powermock.PowerMock.createPartialMock;
+import static org.powermock.PowerMock.expectPrivate;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
 

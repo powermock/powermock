@@ -17,6 +17,9 @@ Change log 1.0 (under development)
 * The Whitebox API method getAllMethodExcept now traverses the class hierarchy looking for methods.
 * Fixed a bug in the verifyAll method of the PowerMock API, the state is now properly disposed.
 * Verify now only clears state of the artifact being verified, this means that you use sequential verify statements again. However you must always use a PowerMockRunner in order to make sure that the full state is properly disposed.
+* The suppressConstructorCode method of the PowerMock API was renamed to suppressConstructor.
+* The suppressMethodCode method of the PowerMock API was renamed to suppressMethod. 
+* The suppressConstructorCodeHierarchy method of the PowerMock API was removed, suppressConstructor(..) automatically suppress the full hierarchy so use this method instead.
 
 Change log 0.9 (released 2008-11-10)
 ------------------------------------

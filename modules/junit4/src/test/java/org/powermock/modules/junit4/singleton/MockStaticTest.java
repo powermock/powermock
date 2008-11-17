@@ -17,21 +17,21 @@ package org.powermock.modules.junit4.singleton;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
+import static org.junit.Assert.assertEquals;
 import static org.powermock.PowerMock.expectPrivate;
 import static org.powermock.PowerMock.mockStatic;
 import static org.powermock.PowerMock.mockStaticPartial;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
-import static org.junit.Assert.assertEquals;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.powermock.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import samples.singleton.StaticService;
 import samples.singleton.StaticHelper;
+import samples.singleton.StaticService;
 
 /**
  * Test class to demonstrate static, static+final, static+native and

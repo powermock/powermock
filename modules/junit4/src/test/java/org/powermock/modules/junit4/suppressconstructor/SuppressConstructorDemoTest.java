@@ -15,19 +15,19 @@
  */
 package org.powermock.modules.junit4.suppressconstructor;
 
-import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.createPartialMock;
-import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.suppressConstructorCode;
-import static org.powermock.PowerMock.verify;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.powermock.PowerMock.createPartialMock;
+import static org.powermock.PowerMock.expectPrivate;
+import static org.powermock.PowerMock.replay;
+import static org.powermock.PowerMock.suppressConstructor;
+import static org.powermock.PowerMock.verify;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.powermock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import samples.suppressconstructor.SuppressConstructorDemo;
 import samples.suppressconstructor.SuppressConstructorSubclassDemo;
@@ -42,7 +42,7 @@ import samples.suppressconstructor.SuppressConstructorSubclassDemo;
  * or function test for the class instead (and thus the runtime environment is
  * available). This is not particularly good when it comes to testing method
  * logic. PowerMock solves these problems by letting you specify the
- * {@link PowerMock#suppressConstructorCode(Class...)} method
+ * {@link PowerMock#suppressConstructor(Class...)} method
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(SuppressConstructorDemo.class)
@@ -54,7 +54,7 @@ public class SuppressConstructorDemoTest {
 	 */
 	@Test
 	public void testSuppressParentConstructor() throws Exception {
-		suppressConstructorCode(SuppressConstructorSubclassDemo.class);
+		suppressConstructor(SuppressConstructorSubclassDemo.class);
 		final SuppressConstructorDemo tested = new SuppressConstructorDemo("a message");
 		assertNull("Message should have been null since we're skipping the execution of the constructor code.", tested.getMessage());
 	}
@@ -65,7 +65,7 @@ public class SuppressConstructorDemoTest {
 	 */
 	@Test
 	public void testPartialMockingAndSuppressParentConstructor() throws Exception {
-		suppressConstructorCode(SuppressConstructorSubclassDemo.class);
+		suppressConstructor(SuppressConstructorSubclassDemo.class);
 		final SuppressConstructorDemo tested = createPartialMock(SuppressConstructorDemo.class, "returnAMessage");
 		final String expected = "Hello world!";
 		expectPrivate(tested, "returnAMessage").andReturn(expected);

@@ -18,7 +18,7 @@ package org.powermock.modules.junit4.suppressconstructor;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
-import static org.powermock.PowerMock.suppressConstructorCodeHierarchy;
+import static org.powermock.PowerMock.suppressConstructor;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class SuppressConstructorHierarchyDemoTest {
 
 	@Test
 	public void testSuppressConstructorHierarchy() throws Exception {
-		suppressConstructorCodeHierarchy(SuppressConstructorHierarchyChild.class);
+		suppressConstructor(SuppressConstructorHierarchyChild.class);
 		final String message = new InvokeConstructor().doStuff("qwe");
 		assertNull("Message should have been null since we're skipping the execution of the constructor code. Message was \"" + message + "\".",
 				message);
@@ -51,7 +51,7 @@ public class SuppressConstructorHierarchyDemoTest {
 			assertEquals("This should be suppressed!!", e.getMessage());
 		}
 	}
-	
+
 	@Test
 	@Ignore
 	public void testNotSuppressConstructorWithByteCodeManipulation() throws Exception {
@@ -71,7 +71,7 @@ public class SuppressConstructorHierarchyDemoTest {
 	 */
 	@Test
 	public void testSuppressConstructorHierarchyAgain() throws Exception {
-		suppressConstructorCodeHierarchy(SuppressConstructorHierarchyChild.class);
+		suppressConstructor(SuppressConstructorHierarchyChild.class);
 		SuppressConstructorHierarchyChild tested = new SuppressConstructorHierarchyChild("message");
 		assertEquals(42, tested.getNumber());
 	}

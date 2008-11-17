@@ -16,8 +16,8 @@
 package org.powermock.modules.junit4.legacy.noannotation;
 
 import static org.easymock.EasyMock.expect;
-import static org.powermock.PowerMock.expectPrivate;
 import static org.powermock.PowerMock.createPartialMock;
+import static org.powermock.PowerMock.expectPrivate;
 import static org.powermock.PowerMock.mockStaticPartial;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;

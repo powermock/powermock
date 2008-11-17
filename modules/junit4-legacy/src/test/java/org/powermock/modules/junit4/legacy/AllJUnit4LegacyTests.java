@@ -15,12 +15,12 @@
  */
 package org.powermock.modules.junit4.legacy;
 
-import org.powermock.modules.junit4.legacy.noannotation.NoAnnotationUsageTest;
-import org.powermock.modules.junit4.legacy.singleton.MockStaticTest;
-import org.powermock.modules.junit4.legacy.suppressconstructor.SuppressConstructorHierarchyDemoTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+import org.powermock.modules.junit4.legacy.noannotation.NoAnnotationUsageTest;
+import org.powermock.modules.junit4.legacy.singleton.MockStaticTest;
+import org.powermock.modules.junit4.legacy.suppressconstructor.SuppressConstructorHierarchyDemoTest;
 
 @RunWith(Suite.class)
 @SuiteClasses( { MockStaticTest.class, SuppressConstructorHierarchyDemoTest.class, NoAnnotationUsageTest.class })

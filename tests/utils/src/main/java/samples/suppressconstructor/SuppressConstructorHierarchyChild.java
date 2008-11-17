@@ -15,16 +15,15 @@
  */
 package samples.suppressconstructor;
 
-public class SuppressConstructorHierarchyChild extends
-		SuppressConstructorHierarchyParent {
+public class SuppressConstructorHierarchyChild extends SuppressConstructorHierarchyParent {
 
 	public SuppressConstructorHierarchyChild(String message) {
 		super(message);
 	}
 
 	/**
-	 * This method is just here to check if it works to execute the several
-	 * tests with the same test suite class loader.
+	 * This method is just here to check if it works to execute several tests
+	 * with the same test suite class loader.
 	 * 
 	 * @return 42.
 	 */

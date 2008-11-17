@@ -15,7 +15,7 @@
  */
 package org.powermock.modules.junit4.classhierarchy;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.easymock.classextension.EasyMock;
 import org.junit.Test;

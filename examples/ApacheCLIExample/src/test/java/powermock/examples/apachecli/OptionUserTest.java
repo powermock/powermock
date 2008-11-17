@@ -30,8 +30,6 @@ import org.powermock.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import powermock.examples.apachecli.OptionUser;
-
 /**
  * Verifies that the http://code.google.com/p/powermock/issues/detail?id=38 is
  * fixed.

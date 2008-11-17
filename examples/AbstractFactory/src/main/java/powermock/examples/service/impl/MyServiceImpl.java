@@ -18,7 +18,6 @@ package powermock.examples.service.impl;
 import java.util.HashSet;
 import java.util.Set;
 
-
 import powermock.examples.domain.Person;
 import powermock.examples.service.MyService;
 

@@ -15,7 +15,7 @@
  */
 package org.powermock.modules.junit3.suppressconstructor;
 
-import static org.powermock.PowerMock.suppressConstructorCodeHierarchy;
+import static org.powermock.PowerMock.suppressConstructor;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
@@ -36,7 +36,7 @@ public class SuppressConstructorHierarchyDemoTest extends TestCase {
 	}
 
 	public void testSuppressConstructor() throws Exception {
-		suppressConstructorCodeHierarchy(SuppressConstructorHierarchyChild.class);
+		suppressConstructor(SuppressConstructorHierarchyChild.class);
 		SuppressConstructorHierarchyChild tested = new SuppressConstructorHierarchyChild("message");
 
 		final String message = tested.getMessage();
@@ -61,7 +61,7 @@ public class SuppressConstructorHierarchyDemoTest extends TestCase {
 	 * class).
 	 */
 	public void testGetNumber() throws Exception {
-		suppressConstructorCodeHierarchy(SuppressConstructorHierarchyChild.class);
+		suppressConstructor(SuppressConstructorHierarchyChild.class);
 		SuppressConstructorHierarchyChild tested = new SuppressConstructorHierarchyChild("message");
 		assertEquals(42, tested.getNumber());
 	}

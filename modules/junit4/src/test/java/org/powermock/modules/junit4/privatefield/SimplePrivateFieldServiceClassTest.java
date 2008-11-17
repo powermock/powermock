@@ -17,10 +17,10 @@ package org.powermock.modules.junit4.privatefield;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
+import static org.junit.Assert.assertEquals;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
 import static org.powermock.Whitebox.setInternalState;
-import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 

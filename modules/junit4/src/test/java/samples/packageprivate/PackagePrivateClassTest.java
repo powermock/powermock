@@ -15,11 +15,11 @@
  */
 package samples.packageprivate;
 
+import static org.junit.Assert.assertEquals;
 import static org.powermock.PowerMock.createPartialMock;
 import static org.powermock.PowerMock.expectPrivate;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.verify;
-import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

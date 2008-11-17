@@ -16,7 +16,7 @@
 package powermock.examples.suppress.method;
 
 import static org.junit.Assert.assertEquals;
-import static org.powermock.PowerMock.suppressMethodCode;
+import static org.powermock.PowerMock.suppressMethod;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +33,7 @@ public class ExampleWithEvilMethodTest {
 
 	@Test
 	public void testSuppressMethod() throws Exception {
-		suppressMethodCode(ExampleWithEvilMethod.class, "getEvilMessage");
+		suppressMethod(ExampleWithEvilMethod.class, "getEvilMessage");
 		final String message = "myMessage";
 		ExampleWithEvilMethod tested = new ExampleWithEvilMethod(message);
 		assertEquals(message, tested.getMessage());

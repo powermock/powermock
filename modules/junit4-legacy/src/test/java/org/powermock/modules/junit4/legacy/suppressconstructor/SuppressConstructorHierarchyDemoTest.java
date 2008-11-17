@@ -15,15 +15,15 @@
  */
 package org.powermock.modules.junit4.legacy.suppressconstructor;
 
-import static org.powermock.PowerMock.suppressConstructorCodeHierarchy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
+import static org.powermock.PowerMock.suppressConstructor;
 
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.legacy.PowerMockRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.legacy.PowerMockRunner;
 
 import samples.suppressconstructor.SuppressConstructorHeirarchyEvilGrandParent;
 import samples.suppressconstructor.SuppressConstructorHierarchyChild;
@@ -36,7 +36,7 @@ public class SuppressConstructorHierarchyDemoTest {
 
 	@Test
 	public void testSuppressConstructor() throws Exception {
-		suppressConstructorCodeHierarchy(SuppressConstructorHierarchyChild.class);
+		suppressConstructor(SuppressConstructorHierarchyChild.class);
 		SuppressConstructorHierarchyChild tested = new SuppressConstructorHierarchyChild("message");
 
 		final String message = tested.getMessage();
@@ -63,7 +63,7 @@ public class SuppressConstructorHierarchyDemoTest {
 	 */
 	@Test
 	public void testGetNumber() throws Exception {
-		suppressConstructorCodeHierarchy(SuppressConstructorHierarchyChild.class);
+		suppressConstructor(SuppressConstructorHierarchyChild.class);
 		SuppressConstructorHierarchyChild tested = new SuppressConstructorHierarchyChild("message");
 		assertEquals(42, tested.getNumber());
 	}

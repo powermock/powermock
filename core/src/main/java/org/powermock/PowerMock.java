@@ -1539,38 +1539,9 @@ public class PowerMock {
 	}
 
 	/**
-	 * Suppresses a whole hierarchy of constructor code. For example we have
-	 * class A that extends class B which extends Object, invoking this method
-	 * like:
-	 * 
-	 * <pre>
-	 * suppressConstructorCodeHierarchy(A.class);
-	 * </pre>
-	 * 
-	 * will suppress constructor code in both class A and class B. Java lang
-	 * classes are not suppressed at the moment since these classes has to be
-	 * statically modified since they are loaded by the system classloader. This
-	 * may be available in future versions of PowerMock.
-	 * 
-	 * @param classes
-	 *            The classes whose constructor code will be hierarchically
-	 *            suppressed.
-	 * 
-	 */
-	public static synchronized void suppressConstructorCodeHierarchy(Class<?>... classes) {
-		for (Class<?> clazz : classes) {
-			Class<?> tempClass = clazz;
-			while (tempClass != Object.class) {
-				suppressConstructorCode(tempClass);
-				tempClass = tempClass.getSuperclass();
-			}
-		}
-	}
-
-	/**
 	 * Suppress constructor calls on specific constructors only.
 	 */
-	public static synchronized void suppressConstructorCode(Constructor<?>... constructors) {
+	public static synchronized void suppressConstructor(Constructor<?>... constructors) {
 		for (Constructor<?> constructor : constructors) {
 			MockGateway.addConstructorToSuppress(constructor);
 		}
@@ -1589,14 +1560,18 @@ public class PowerMock {
 	}
 
 	/**
-	 * Suppress all constructors in the given class.
+	 * Suppress all constructors in the given class and it's super classes.
 	 * 
 	 * @param classes
 	 *            The classes whose constructors will be suppressed.
 	 */
-	public static synchronized void suppressConstructorCode(Class<?>... classes) {
+	public static synchronized void suppressConstructor(Class<?>... classes) {
 		for (Class<?> clazz : classes) {
-			suppressConstructorCode(clazz, false);
+			Class<?> tempClass = clazz;
+			while (tempClass != Object.class) {
+				suppressConstructor(tempClass, false);
+				tempClass = tempClass.getSuperclass();
+			}
 		}
 	}
 
@@ -1608,7 +1583,7 @@ public class PowerMock {
 	 * @param excludePrivateConstructors
 	 *            optionally keep code in private constructors
 	 */
-	public static synchronized void suppressConstructorCode(Class<?> clazz, boolean excludePrivateConstructors) {
+	public static synchronized void suppressConstructor(Class<?> clazz, boolean excludePrivateConstructors) {
 		Constructor<?>[] ctors = null;
 
 		if (excludePrivateConstructors) {
@@ -1627,21 +1602,21 @@ public class PowerMock {
 	 * works on both instance methods and static methods. Note that replay and
 	 * verify are not needed as this is not part of a mock behavior.
 	 */
-	public static synchronized void suppressMethodCode(Method... methods) {
+	public static synchronized void suppressMethod(Method... methods) {
 		for (Method method : methods) {
 			MockGateway.addMethodToSuppress(method);
 		}
 	}
 
 	/**
-	 * Suppress all methods for this class.
+	 * Suppress all methods for this classes.
 	 * 
 	 * @param classes
 	 *            The class which methods will be suppressed.
 	 */
-	public static synchronized void suppressMethodCode(Class<?>... classes) {
+	public static synchronized void suppressMethod(Class<?>... classes) {
 		for (Class<?> clazz : classes) {
-			suppressMethodCode(clazz, false);
+			suppressMethod(clazz, false);
 		}
 	}
 
@@ -1653,7 +1628,7 @@ public class PowerMock {
 	 * @param methodNames
 	 *            The names of the methods that'll be suppressed.
 	 */
-	public static synchronized void suppressMethodCode(Class<?> clazz, String... methodNames) {
+	public static synchronized void suppressMethod(Class<?> clazz, String... methodNames) {
 		for (Method method : Whitebox.getMethods(clazz, methodNames)) {
 			MockGateway.addMethodToSuppress(method);
 		}
@@ -1667,7 +1642,7 @@ public class PowerMock {
 	 * @param excludePrivateMethods
 	 *            optionally not suppress private methods
 	 */
-	public static synchronized void suppressMethodCode(Class<?> clazz, boolean excludePrivateMethods) {
+	public static synchronized void suppressMethod(Class<?> clazz, boolean excludePrivateMethods) {
 		Method[] methods = null;
 
 		if (excludePrivateMethods) {
@@ -1684,7 +1659,7 @@ public class PowerMock {
 	/**
 	 * Suppress a specific method call. Use this for overloaded methods.
 	 */
-	public static synchronized void suppressMethodCode(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
+	public static synchronized void suppressMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
 		Method method = null;
 		if (parameterTypes.length > 0) {
 			method = Whitebox.getMethod(clazz, methodName, parameterTypes);

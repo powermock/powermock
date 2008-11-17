@@ -15,16 +15,15 @@
  */
 package powermock.examples.bypassencapsulation;
 
-import org.junit.Test;
-import org.powermock.Whitebox;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
-
 import static org.junit.Assert.assertEquals;
 
-import powermock.examples.bypassencapsulation.ReportGenerator;
+import org.junit.Test;
+import org.powermock.Whitebox;
+
 import powermock.examples.bypassencapsulation.nontest.Report;
 import powermock.examples.bypassencapsulation.nontest.ReportTemplateService;
 

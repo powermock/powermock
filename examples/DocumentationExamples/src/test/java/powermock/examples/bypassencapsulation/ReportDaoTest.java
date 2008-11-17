@@ -16,9 +16,9 @@
 package powermock.examples.bypassencapsulation;
 
 import static org.powermock.PowerMock.createMock;
+import static org.powermock.PowerMock.createPartialMock;
 import static org.powermock.PowerMock.expectLastCall;
 import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.createPartialMock;
 import static org.powermock.PowerMock.replay;
 import static org.powermock.PowerMock.replayAll;
 import static org.powermock.PowerMock.verify;

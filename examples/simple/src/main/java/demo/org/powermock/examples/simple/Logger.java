@@ -1,6 +1,8 @@
 package demo.org.powermock.examples.simple;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JTextArea;
+import javax.swing.WindowConstants;
 
 public class Logger {
     private JTextArea textArea;

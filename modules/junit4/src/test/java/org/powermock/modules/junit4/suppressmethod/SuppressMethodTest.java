@@ -15,15 +15,15 @@
  */
 package org.powermock.modules.junit4.suppressmethod;
 
-import static org.powermock.PowerMock.suppressMethodCode;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.powermock.PowerMock.suppressMethod;
 
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import samples.suppressmethod.SuppressMethod;
 
@@ -33,7 +33,7 @@ public class SuppressMethodTest {
 
 	@Test
 	public void testGetObject() throws Exception {
-		suppressMethodCode(SuppressMethod.class, "getObject");
+		suppressMethod(SuppressMethod.class, "getObject");
 
 		SuppressMethod tested = new SuppressMethod();
 		assertNull("A method returning Object should return null after suppressing method code.", tested.getObject());
@@ -41,7 +41,7 @@ public class SuppressMethodTest {
 
 	@Test
 	public void testSuppressMultipleMethods() throws Exception {
-		suppressMethodCode(SuppressMethod.class, "getObject", "getShort");
+		suppressMethod(SuppressMethod.class, "getObject", "getShort");
 
 		SuppressMethod tested = new SuppressMethod();
 		assertNull("A method returning Object should return null after suppressing method code.", tested.getObject());
@@ -50,14 +50,14 @@ public class SuppressMethodTest {
 
 	@Test
 	public void testGetObjectStatic() throws Exception {
-		suppressMethodCode(SuppressMethod.class, "getObjectStatic");
+		suppressMethod(SuppressMethod.class, "getObjectStatic");
 
 		assertNull("A method returning Object should return null after suppressing method code.", SuppressMethod.getObjectStatic());
 	}
 
 	@Test
 	public void testGetByte() throws Exception {
-		suppressMethodCode(SuppressMethod.class, "getByte");
+		suppressMethod(SuppressMethod.class, "getByte");
 
 		SuppressMethod tested = new SuppressMethod();
 		assertEquals("A method returning a byte should return 0 after suppressing method code.", 0, tested.getByte());
@@ -65,7 +65,7 @@ public class SuppressMethodTest {
 
 	@Test
 	public void testGetShort() throws Exception {
-		suppressMethodCode(SuppressMethod.class, "getShort");
+		suppressMethod(SuppressMethod.class, "getShort");
 
 		SuppressMethod tested = new SuppressMethod();
 		assertEquals("A method returning a short should return 0 after suppressing method code.", 0, tested.getShort());
@@ -73,7 +73,7 @@ public class SuppressMethodTest {
 
 	@Test
 	public void testGetInt() throws Exception {
-		suppressMethodCode(SuppressMethod.class, "getInt");
+		suppressMethod(SuppressMethod.class, "getInt");
 
 		SuppressMethod tested = new SuppressMethod();
 		assertEquals("A method returning an int should return 0 after suppressing method code.", 0, tested.getInt());
@@ -81,7 +81,7 @@ public class SuppressMethodTest {
 
 	@Test
 	public void testGetLong() throws Exception {
-		suppressMethodCode(SuppressMethod.class, "getLong");
+		suppressMethod(SuppressMethod.class, "getLong");
 
 		SuppressMethod tested = new SuppressMethod();
 		assertEquals("A method returning a long should return 0 after suppressing method code.", 0, tested.getLong());
@@ -89,7 +89,7 @@ public class SuppressMethodTest {
 
 	@Test
 	public void testGetBoolean() throws Exception {
-		suppressMethodCode(SuppressMethod.class, "getBoolean");
+		suppressMethod(SuppressMethod.class, "getBoolean");
 
 		SuppressMethod tested = new SuppressMethod();
 		assertFalse("A method returning a boolean should return false after suppressing method code.", tested.getBoolean());
@@ -97,7 +97,7 @@ public class SuppressMethodTest {
 
 	@Test
 	public void testGetFloat() throws Exception {
-		suppressMethodCode(SuppressMethod.class, "getFloat");
+		suppressMethod(SuppressMethod.class, "getFloat");
 
 		SuppressMethod tested = new SuppressMethod();
 		assertEquals("A method returning a float should return 0.0f after suppressing method code.", 0.0f, tested.getFloat(), 0);
@@ -105,7 +105,7 @@ public class SuppressMethodTest {
 
 	@Test
 	public void testGetDouble() throws Exception {
-		suppressMethodCode(SuppressMethod.class, "getDouble");
+		suppressMethod(SuppressMethod.class, "getDouble");
 
 		SuppressMethod tested = new SuppressMethod();
 		assertEquals("A method returning a double should return 0.0d after suppressing method code.", 0.0d, tested.getDouble(), 0);
@@ -113,7 +113,7 @@ public class SuppressMethodTest {
 
 	@Test
 	public void testGetDouble_parameter() throws Exception {
-		suppressMethodCode(SuppressMethod.class, "getDouble", new Class<?>[] { double.class });
+		suppressMethod(SuppressMethod.class, "getDouble", new Class<?>[] { double.class });
 
 		SuppressMethod tested = new SuppressMethod();
 		assertEquals("A method returning a double should return 0.0d after suppressing method code.", 0.0d, tested.getDouble(8.7d), 0);
@@ -121,7 +121,7 @@ public class SuppressMethodTest {
 
 	@Test
 	public void testInvokeVoid() throws Exception {
-		suppressMethodCode(SuppressMethod.class, "invokeVoid", new Class<?>[] { StringBuilder.class });
+		suppressMethod(SuppressMethod.class, "invokeVoid", new Class<?>[] { StringBuilder.class });
 
 		SuppressMethod tested = new SuppressMethod();
 		// Should not cause an NPE when suppressing code.
@@ -130,7 +130,7 @@ public class SuppressMethodTest {
 
 	@Test
 	public void testInvokeVoid_noParameterTypeSupplied() throws Exception {
-		suppressMethodCode(SuppressMethod.class, "invokeVoid");
+		suppressMethod(SuppressMethod.class, "invokeVoid");
 
 		SuppressMethod tested = new SuppressMethod();
 		// Should not cause an NPE when suppressing code.

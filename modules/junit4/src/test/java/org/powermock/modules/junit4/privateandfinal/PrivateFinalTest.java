@@ -17,14 +17,14 @@ package org.powermock.modules.junit4.privateandfinal;
 
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
-import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.createPartialMock;
 import static org.junit.Assert.assertEquals;
+import static org.powermock.PowerMock.createPartialMock;
+import static org.powermock.PowerMock.expectPrivate;
 
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import samples.privateandfinal.PrivateFinal;
 
