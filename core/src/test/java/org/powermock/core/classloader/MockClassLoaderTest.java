@@ -15,16 +15,26 @@
  */
 package org.powermock.core.classloader;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
 import org.powermock.Whitebox;
+import org.powermock.core.transformers.MockTransformer;
+import org.powermock.core.transformers.impl.MainMockTransformer;
 
 public class MockClassLoaderTest {
 	@Test
 	public void test() throws Exception {
 		String name = this.getClass().getPackage().getName() + ".HardToTransform";
-		Class<?> c = new MockClassLoader(name).loadClass(name);
+		final MockClassLoader mockClassLoader = new MockClassLoader(new String[] { name });
+		List<MockTransformer> list = new LinkedList<MockTransformer>();
+		list.add(new MainMockTransformer());
+		mockClassLoader.setMockTransformerChain(list);
+		Class<?> c = mockClassLoader.loadClass(name);
+
 		Object object = c.newInstance();
 		Whitebox.invokeMethod(object, "run");
 		Assert.assertEquals(5, Whitebox.invokeMethod(object, "testInt"));

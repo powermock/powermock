@@ -48,10 +48,9 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
 	}
 
 	protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-
 		Class<?> clazz = null;
 		if ((clazz = (Class<?>) classes.get(name)) == null) {
-			if (match(ignoredPackages, name)) {
+			if (shouldIgnore(ignoredPackages, name)) {
 				clazz = deferTo.loadClass(name);
 			} else {
 				clazz = loadModifiedClass(name);
@@ -65,16 +64,23 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
 		return clazz;
 	}
 
-	protected static boolean match(String[] packages, String name) {
+	protected boolean shouldIgnore(String[] packages, String name) {
 		for (String ignore : packages) {
-			if (name.startsWith(ignore) || name.endsWith(ignore)) {
+			if(ignoreConditionMatches(name, ignore)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	protected static boolean match(Iterable<String> packages, String name) {
+	private boolean ignoreConditionMatches(String name, String ignore) {
+		if ((name.startsWith(ignore) || name.endsWith(ignore)) && !(name.startsWith(ignore) && shouldModifyClass(name))) {
+			return true;
+		}
+		return false;
+	}
+
+	protected boolean shouldIgnore(Iterable<String> packages, String name) {
 		synchronized (packages) {
 			for (String ignore : packages) {
 				if (name.startsWith(ignore) || name.endsWith(ignore)) {
@@ -86,5 +92,7 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
 	}
 
 	protected abstract Class<?> loadModifiedClass(String s) throws ClassFormatError, ClassNotFoundException;
+
+	protected abstract boolean shouldModifyClass(String s);
 
 }

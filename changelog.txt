@@ -20,6 +20,7 @@ Change log 1.0 (under development)
 * The suppressConstructorCode method of the PowerMock API was renamed to suppressConstructor.
 * The suppressMethodCode method of the PowerMock API was renamed to suppressMethod. 
 * The suppressConstructorCodeHierarchy method of the PowerMock API was removed, suppressConstructor(..) automatically suppress the full hierarchy so use this method instead.
+* Added the PowerMockIgnore annotation that can be used to specify packages or classes that should not be loaded by PowerMock's classloader.
 
 Change log 0.9 (released 2008-11-10)
 ------------------------------------

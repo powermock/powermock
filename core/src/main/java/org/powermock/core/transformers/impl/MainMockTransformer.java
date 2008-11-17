@@ -47,9 +47,12 @@ public class MainMockTransformer implements MockTransformer {
 		 * private classes. This is needed because we've changed to CgLib naming
 		 * policy to allow for mocking of signed classes.
 		 */
-		clazz.setModifiers(clazz.getModifiers() | Modifier.PUBLIC);
+		final String name = clazz.getName();
+		if (!name.startsWith("java.") && !name.startsWith("javax.")) {
+			clazz.setModifiers(Modifier.setPublic(clazz.getModifiers()));
+		}
 
-		if (MockGateway.staticConstructorCall(clazz.getName()) != MockGateway.PROCEED) {
+		if (MockGateway.staticConstructorCall(name) != MockGateway.PROCEED) {
 			CtConstructor classInitializer = clazz.makeClassInitializer();
 			classInitializer.setBody("{}");
 		}
@@ -182,6 +185,7 @@ public class MainMockTransformer implements MockTransformer {
 				code.append("Object instance =").append(MockGateway.class.getName()).append(".newInstanceCall($type,$args,$sig);");
 				code.append("if(instance != ").append(MockGateway.class.getName()).append(".PROCEED) {");
 				code.append("	if(instance instanceof java.lang.reflect.Constructor) {");
+				// TODO Change to objenisis instead
 				code
 						.append("		$_ = ($r) sun.reflect.ReflectionFactory.getReflectionFactory().newConstructorForSerialization($type, java.lang.Object.class.getDeclaredConstructor(null)).newInstance(null);");
 				code.append("	} else {");

@@ -67,14 +67,12 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 		// overloaded
 		// in the mocked class.
 		try {
-			updateMethod(handler, toMock.getMethod("equals",
-					new Class[] { Object.class }));
+			updateMethod(handler, toMock.getMethod("equals", new Class[] { Object.class }));
 			updateMethod(handler, toMock.getMethod("hashCode", new Class[0]));
 			updateMethod(handler, toMock.getMethod("toString", new Class[0]));
 		} catch (NoSuchMethodException e) {
 			// ///CLOVER:OFF
-			throw new InternalError(
-					"We strangly failed to retrieve methods that always exist on an object...");
+			throw new InternalError("We strangly failed to retrieve methods that always exist on an object...");
 			// ///CLOVER:ON
 		}
 
@@ -82,8 +80,7 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 
 			private Set<Method> mockedMethods;
 
-			public Object intercept(Object obj, Method method, Object[] args,
-					MethodProxy proxy) throws Throwable {
+			public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
 
 				// Bridges should be called so they can forward to the real
 				// method
@@ -97,8 +94,7 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 					return handler.invoke(obj, method, args);
 				}
 
-				Class<?> superclass = method.getDeclaringClass()
-						.getSuperclass();
+				Class<?> superclass = method.getDeclaringClass().getSuperclass();
 				if (mockedMethods != null && !mockedMethods.contains(method)) {
 					/*
 					 * Added the following if statement to allow partial mocking
@@ -106,15 +102,12 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 					 */
 					Method superClassMethod = null;
 					try {
-						superClassMethod = WhiteboxImpl.getMethod(superclass,
-								method.getName(), method.getParameterTypes());
+						superClassMethod = WhiteboxImpl.getMethod(superclass, method.getName(), method.getParameterTypes());
 					} catch (IllegalArgumentException e) {
 						// OK
 					}
 					boolean contains = mockedMethods.contains(superClassMethod);
-					if (superclass == null || superclass.equals(Object.class)
-							|| superClassMethod == null
-							|| !contains) {
+					if (superclass == null || superclass.equals(Object.class) || superClassMethod == null || !contains) {
 						return proxy.invokeSuper(obj, args);
 					} else {
 						return handler.invoke(obj, superClassMethod, args);
@@ -129,8 +122,7 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 			}
 
 			public void setMockedMethods(Method... mockedMethods) {
-				this.mockedMethods = new HashSet<Method>(Arrays
-						.asList(mockedMethods));
+				this.mockedMethods = new HashSet<Method>(Arrays.asList(mockedMethods));
 			}
 		};
 
@@ -142,8 +134,7 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 			 */
 			@Override
 			protected void filterConstructors(Class sc, List constructors) {
-				CollectionUtils.filter(constructors, new VisibilityPredicate(
-						sc, true));
+				CollectionUtils.filter(constructors, new VisibilityPredicate(sc, true));
 			}
 		};
 		enhancer.setNamingPolicy(SignedSupportingNamingPolicy.getInstance());
@@ -155,19 +146,16 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 
 		if (ClassExtensionHelper.getCurrentConstructorArgs() != null) {
 			// Really instantiate the class
-			ConstructorArgs args = ClassExtensionHelper
-					.getCurrentConstructorArgs();
+			ConstructorArgs args = ClassExtensionHelper.getCurrentConstructorArgs();
 			Constructor cstr;
 			try {
 				// Get the constructor with the same params
-				cstr = mockClass.getDeclaredConstructor(args.getConstructor()
-						.getParameterTypes());
+				cstr = mockClass.getDeclaredConstructor(args.getConstructor().getParameterTypes());
 			} catch (NoSuchMethodException e) {
 				// Shouldn't happen, constructor is checked when ConstructorArgs
 				// is instantiated
 				// ///CLOVER:OFF
-				throw new RuntimeException(
-						"Fail to find constructor for param types", e);
+				throw new RuntimeException("Fail to find constructor for param types", e);
 				// ///CLOVER:ON
 			}
 			T mock;
@@ -177,18 +165,14 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 				mock = (T) cstr.newInstance(args.getInitArgs());
 			} catch (InstantiationException e) {
 				// ///CLOVER:OFF
-				throw new RuntimeException(
-						"Failed to instantiate mock calling constructor", e);
+				throw new RuntimeException("Failed to instantiate mock calling constructor", e);
 				// ///CLOVER:ON
 			} catch (IllegalAccessException e) {
 				// ///CLOVER:OFF
-				throw new RuntimeException(
-						"Failed to instantiate mock calling constructor", e);
+				throw new RuntimeException("Failed to instantiate mock calling constructor", e);
 				// ///CLOVER:ON
 			} catch (InvocationTargetException e) {
-				throw new RuntimeException(
-						"Failed to instantiate mock calling constructor: Exception in constructor",
-						e);
+				throw new RuntimeException("Failed to instantiate mock calling constructor: Exception in constructor", e);
 			}
 			return mock;
 		} else {
@@ -196,13 +180,10 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 
 			Factory mock;
 			try {
-				mock = (Factory) ClassInstantiatorFactory.getInstantiator()
-						.newInstance(mockClass);
+				mock = (Factory) ClassInstantiatorFactory.getInstantiator().newInstance(mockClass);
 			} catch (InstantiationException e) {
 				// ///CLOVER:OFF
-				throw new RuntimeException("Fail to instantiate mock for "
-						+ toMock + " on " + ClassInstantiatorFactory.getJVM()
-						+ " JVM");
+				throw new RuntimeException("Fail to instantiate mock for " + toMock + " on " + ClassInstantiatorFactory.getJVM() + " JVM");
 				// ///CLOVER:ON
 			}
 
@@ -222,10 +203,8 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 		}
 	}
 
-	private void updateMethod(InvocationHandler objectMethodsFilter,
-			Method correctMethod) {
-		Field methodField = retrieveField(ObjectMethodsFilter.class,
-				correctMethod.getName() + "Method");
+	private void updateMethod(InvocationHandler objectMethodsFilter, Method correctMethod) {
+		Field methodField = retrieveField(ObjectMethodsFilter.class, correctMethod.getName() + "Method");
 		updateField(objectMethodsFilter, correctMethod, methodField);
 	}
 
@@ -234,9 +213,7 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 			return clazz.getDeclaredField(field);
 		} catch (NoSuchFieldException e) {
 			// ///CLOVER:OFF
-			throw new InternalError(
-					"There must be some refactoring because the " + field
-							+ " field was there...");
+			throw new InternalError("There must be some refactoring because the " + field + " field was there...");
 			// ///CLOVER:ON
 		}
 	}
@@ -248,8 +225,7 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 			field.set(instance, value);
 		} catch (IllegalAccessException e) {
 			// ///CLOVER:OFF
-			throw new InternalError(
-					"Should be accessible since we set it ourselves");
+			throw new InternalError("Should be accessible since we set it ourselves");
 			// ///CLOVER:ON
 		}
 		field.setAccessible(accessible);

@@ -27,6 +27,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.powermock.core.classloader.MockClassLoader;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
@@ -91,12 +92,13 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 
 	protected void chunkClass(Class<?> testClass) throws Exception {
 		ClassLoader defaultMockLoader = null;
+		final String[] ignorePackages = getIgnorePackages(testClass);
 		if (testClass.isAnnotationPresent(PrepareEverythingForTest.class)) {
-			defaultMockLoader = createNewClassloader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES });
+			defaultMockLoader = createNewClassloader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES }, ignorePackages);
 		} else {
 			final String[] prepareForTestClasses = prepareForTestExtractor.getTestClasses(testClass);
 			final String[] suppressStaticClasses = suppressionExtractor.getTestClasses(testClass);
-			defaultMockLoader = createNewClassloader(prepareForTestClasses, suppressStaticClasses);
+			defaultMockLoader = createNewClassloader(prepareForTestClasses, suppressStaticClasses, ignorePackages);
 		}
 		List<Method> currentClassloaderMethods = new LinkedList<Method>();
 		// Put the first suite in the map of internal suites.
@@ -115,8 +117,16 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 		}
 	}
 
-	private ClassLoader createNewClassloader(final String[] prepareForTestClasses, final String[] suppressStaticClasses) {
-		return createNewClassloader(getClassesToBeModified(prepareForTestClasses, suppressStaticClasses));
+	private String[] getIgnorePackages(Class<?> testClass) {
+		PowerMockIgnore annotation = testClass.getAnnotation(PowerMockIgnore.class);
+		if (annotation != null) {
+			return annotation.value();
+		}
+		return new String[0];
+	}
+
+	private ClassLoader createNewClassloader(final String[] prepareForTestClasses, final String[] suppressStaticClasses, final String[] ignorePackages) {
+		return createNewClassloader(getClassesToBeModified(prepareForTestClasses, suppressStaticClasses), ignorePackages);
 	}
 
 	private String[] getClassesToBeModified(String[] prepareForTestClasses, String[] suppressStaticClasses) {
@@ -138,7 +148,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 		return classesToLoadedByMockClassLoader;
 	}
 
-	public ClassLoader createNewClassloader(String[] classes) {
+	public ClassLoader createNewClassloader(final String[] classes, final String[] packagesToIgnore) {
 		ClassLoader mockLoader = null;
 		if (classes == null || classes.length == 0) {
 			mockLoader = Thread.currentThread().getContextClassLoader();
@@ -147,7 +157,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 			final MainMockTransformer mainMockTransformer = new MainMockTransformer();
 			mockTransformerChain.add(mainMockTransformer);
 
-			mockLoader = new MockClassLoader(classes);
+			mockLoader = new MockClassLoader(classes, packagesToIgnore);
 			((MockClassLoader) mockLoader).setMockTransformerChain(mockTransformerChain);
 		}
 		return mockLoader;
@@ -182,9 +192,10 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 					final String[] staticSuppressionClasses = getStaticSuppressionClasses(testClass, method);
 					ClassLoader mockClassloader = null;
 					if (method.isAnnotationPresent(PrepareEverythingForTest.class)) {
-						mockClassloader = createNewClassloader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES });
+						mockClassloader = createNewClassloader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES }, getIgnorePackages(testClass));
 					} else {
-						mockClassloader = createNewClassloader(prepareForTestExtractor.getTestClasses(method), staticSuppressionClasses);
+						mockClassloader = createNewClassloader(prepareForTestExtractor.getTestClasses(method), staticSuppressionClasses,
+								getIgnorePackages(testClass));
 					}
 					if (suitesForTestClass == null) {
 						final Map<ClassLoader, List<Method>> newSuite = new ConcurrentHashMap<ClassLoader, List<Method>>();

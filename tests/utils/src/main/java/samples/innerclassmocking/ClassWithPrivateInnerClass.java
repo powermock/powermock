@@ -18,12 +18,11 @@ package samples.innerclassmocking;
 /**
  * Used for demonstration of the ability to mock methods from a private inner
  * class. Due to limitations in Javassist (which doesn't seem to load inner
- * classes correctly) we cannot mock private methods in inner classes. It
+ * classes correctly??) we cannot mock private methods in inner classes. It
  * doesn't seem to have any effect when modifing the method modifier and setting
  * the method to public when loading the class by the mock class loader (but
  * why? Could be because the outer class has already been loaded?!).
  * 
- * @author Johan Haleby
  */
 public class ClassWithPrivateInnerClass {
 	public String getMessage() {

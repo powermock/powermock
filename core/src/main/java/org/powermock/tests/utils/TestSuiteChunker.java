@@ -94,8 +94,9 @@ public interface TestSuiteChunker {
 	 * 
 	 * @param classes
 	 *            An array of the fully qualified name of the classes to modify.
+	 * @param packagesToIgnore TODO
 	 */
-	public ClassLoader createNewClassloader(String[] classes);
+	public ClassLoader createNewClassloader(String[] classes, String[] packagesToIgnore);
 
 	/**
 	 * Get the number of total tests defined in the suite (the sum of all tests
