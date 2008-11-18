@@ -1,5 +1,8 @@
-Change log 1.0 (under development)
+Change log 1.1 (under development)
 ----------------------------------
+
+Change log 1.0 (released 2008-11-18)
+------------------------------------
 * Changed the pom.xml for the tutorial project so that it's now a stand-alone project.
 * Fixed so that replay all and verify all also works for createMockAndExpectNew.
 * Added method createStrictMockAndExpectNew and createNiceMockAndExpectNew
