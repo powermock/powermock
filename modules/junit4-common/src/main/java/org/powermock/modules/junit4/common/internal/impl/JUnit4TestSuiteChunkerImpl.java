@@ -39,6 +39,8 @@ import org.junit.runner.notification.RunNotifier;
 import org.powermock.modules.junit4.common.internal.JUnit4TestSuiteChunker;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.powermock.tests.utils.impl.AbstractTestSuiteChunkerImpl;
+import org.powermock.tests.utils.impl.TestCaseEntry;
+import org.powermock.tests.utils.impl.TestChunk;
 
 public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<PowerMockJUnitRunnerDelegate> implements JUnit4TestSuiteChunker,
 		Filterable, Sortable {
@@ -60,7 +62,7 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		this.runnerDelegateImplementationType = runnerDelegateImplementationType;
 
 		try {
-			createTestDelegators(testClass, getChunkEntries(testClass));
+			createTestDelegators(testClass, getTestChunksEntries(testClass));
 		} catch (InvocationTargetException e) {
 			final Throwable cause = e.getCause();
 			if (cause instanceof Exception) {
@@ -74,19 +76,20 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	}
 
 	public void run(RunNotifier notifier) {
-		Set<Entry<ClassLoader, List<Method>>> entrySet = getAllChunkEntries();
-		Iterator<Entry<ClassLoader, List<Method>>> iterator = entrySet.iterator();
+		List<TestChunk> chunkEntries = getAllChunkEntries();
+		Iterator<TestChunk> iterator = chunkEntries.iterator();
 
 		if (delegates.size() != getChunkSize()) {
 			throw new IllegalStateException("Internal error: There must be an equal number of suites and delegates.");
 		}
 
-		for (PowerMockJUnitRunnerDelegate delegate : delegates) {
-			Entry<ClassLoader, List<Method>> next = iterator.next();
-			final ClassLoader key = next.getKey();
+		for (int i = 0; i < delegates.size(); i++) {
+			TestChunk next = iterator.next();
+			final ClassLoader key = next.getClassLoader();
 			PowerMockRunListener powerMockListener = new PowerMockRunListener(key);
 			notifier.addListener(powerMockListener);
-			delegate.run(notifier);
+			delegates.get(i).run(notifier);
+			notifier.removeListener(powerMockListener);
 		}
 	}
 

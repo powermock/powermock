@@ -37,13 +37,11 @@ public class PowerMockRunListener extends RunListener {
 	 */
 	@Override
 	public void testFinished(Description description1) throws Exception {
-		Class<?> powerMockClass = mockClassLoader.loadClass(PowerMock.class
-				.getName());
+		Class<?> powerMockClass = mockClassLoader.loadClass(PowerMock.class.getName());
 
 		Method method = powerMockClass.getDeclaredMethod("clearState");
 		if (method == null) {
-			throw new IllegalStateException(
-					"Method clearState was not found in " + PowerMock.class);
+			throw new IllegalStateException("Method clearState was not found in " + PowerMock.class);
 		}
 		method.setAccessible(true);
 		method.invoke(powerMockClass);

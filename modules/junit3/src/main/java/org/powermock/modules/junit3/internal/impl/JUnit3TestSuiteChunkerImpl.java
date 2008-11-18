@@ -22,8 +22,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.Map.Entry;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -33,6 +31,7 @@ import junit.framework.TestSuite;
 import org.powermock.modules.junit3.internal.JUnit3TestSuiteChunker;
 import org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate;
 import org.powermock.tests.utils.impl.AbstractTestSuiteChunkerImpl;
+import org.powermock.tests.utils.impl.TestChunk;
 
 public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<PowerMockJUnit3RunnerDelegate> implements JUnit3TestSuiteChunker {
 
@@ -42,7 +41,7 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		super(testClasses);
 		try {
 			for (Class<? extends TestCase> testClass : testClasses) {
-				createTestDelegators(testClass, getChunkEntries(testClass));
+				createTestDelegators(testClass, getTestChunksEntries(testClass));
 			}
 		} catch (Exception e) {
 			final Throwable cause = e.getCause();
@@ -148,11 +147,13 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	 * {@inheritDoc}
 	 */
 	public void run(TestResult result) {
-		final Iterator<Entry<ClassLoader, List<Method>>> iterator = getChunkIterator();
+		final Iterator<TestChunk> iterator = getChunkIterator();
 		for (PowerMockJUnit3RunnerDelegate delegate : delegates) {
-			Entry<ClassLoader, List<Method>> next = iterator.next();
-			result.addListener(new PowerMockJUnit3TestListener(next.getKey()));
+			TestChunk next = iterator.next();
+			final PowerMockJUnit3TestListener listener = new PowerMockJUnit3TestListener(next.getClassLoader());
+			result.addListener(listener);
 			delegate.run(result);
+			result.removeListener(listener);
 		}
 	}
 
@@ -160,17 +161,19 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	 * {@inheritDoc}
 	 */
 	public void runTest(Test test, TestResult result) {
-		final Iterator<Entry<ClassLoader, List<Method>>> iterator = getChunkIterator();
+		final Iterator<TestChunk> iterator = getChunkIterator();
 		for (PowerMockJUnit3RunnerDelegate delegate : delegates) {
-			Entry<ClassLoader, List<Method>> next = iterator.next();
-			result.addListener(new PowerMockJUnit3TestListener(next.getKey()));
+			TestChunk next = iterator.next();
+			final PowerMockJUnit3TestListener listener = new PowerMockJUnit3TestListener(next.getClassLoader());
+			result.addListener(listener);
 			delegate.runTest(test, result);
+			result.removeListener(listener);
 		}
 	}
 
-	private Iterator<Entry<ClassLoader, List<Method>>> getChunkIterator() {
-		Set<Entry<ClassLoader, List<Method>>> entrySet = getAllChunkEntries();
-		Iterator<Entry<ClassLoader, List<Method>>> iterator = entrySet.iterator();
+	private Iterator<TestChunk> getChunkIterator() {
+		List<TestChunk> entrySet = getAllChunkEntries();
+		Iterator<TestChunk> iterator = entrySet.iterator();
 
 		if (delegates.size() != getChunkSize()) {
 			throw new IllegalStateException("Internal error: There must be an equal number of suites and delegates.");

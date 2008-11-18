@@ -24,6 +24,8 @@ Change log 1.0 (under development)
 * Fixed a bug in MockGateway that prevented wrapper/primitive constructors from being correctly executed.
 * Added support for specifying parameter types for expectNew and createMockAndExpectNew, createNiceMockAndExpectNew, createStrictMockAndExpectNew.
 * Added expectNiceNew and expectStrictNew, expectNiceNew can be used with no parameters.
+* Internal refactoring of the chunking mechanism
+* Fixed a bug in the chunking algorithm that made the test listener clear state for all class loaders even though it should only clear the state for the last one. Fixed this for JUnit4 and JUnit3.
 
 Change log 0.9 (released 2008-11-10)
 ------------------------------------
