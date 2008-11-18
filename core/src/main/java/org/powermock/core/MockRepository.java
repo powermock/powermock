@@ -27,7 +27,6 @@ import org.easymock.internal.MockInvocationHandler;
 import org.powermock.core.invocationcontrol.method.MethodInvocationControl;
 import org.powermock.core.invocationcontrol.method.impl.MethodInvocationControlImpl;
 import org.powermock.core.invocationcontrol.newinstance.NewInvocationControl;
-import org.powermock.core.invocationcontrol.newinstance.NewInvocationSubstitute;
 
 /**
  * Hold mock objects that should be used instead of the concrete implementation.

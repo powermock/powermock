@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import junit.framework.TestCase;
 
@@ -39,7 +38,6 @@ import org.junit.runner.notification.RunNotifier;
 import org.powermock.modules.junit4.common.internal.JUnit4TestSuiteChunker;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.powermock.tests.utils.impl.AbstractTestSuiteChunkerImpl;
-import org.powermock.tests.utils.impl.TestCaseEntry;
 import org.powermock.tests.utils.impl.TestChunk;
 
 public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<PowerMockJUnitRunnerDelegate> implements JUnit4TestSuiteChunker,
