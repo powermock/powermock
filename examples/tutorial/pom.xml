@@ -6,6 +6,20 @@
   <version>1.1-SNAPSHOT</version>
   <name>tutorial</name>
   <url>http://maven.apache.org</url>
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>file</id>
+      <name>Local file Repository</name>
+      <url>file://target/repo</url>
+      <layout>default</layout>
+    </repository>
+    <site>
+       <id>powermock-local</id>
+       <name>Local Site</name>
+       <url>target/site</url>
+      </site>
+   </distributionManagement>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
