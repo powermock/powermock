@@ -3,7 +3,7 @@
   <groupId>org.powermock.examples.tutorial</groupId>
   <artifactId>powermock-examples-tutorial</artifactId>
   <packaging>jar</packaging>
-  <version>1.0</version>
+  <version>1.0-SNAPSHOT</version>
   <name>tutorial</name>
   <url>http://maven.apache.org</url>
   <dependencies>
@@ -16,12 +16,12 @@
     <dependency>
       <groupId>org.powermock</groupId>
       <artifactId>powermock-core</artifactId>
-      <version>1.0</version>      <scope>test</scope>
+      <version>1.0-SNAPSHOT</version>      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.powermock.modules</groupId>
       <artifactId>powermock-module-junit4</artifactId>
-      <version>1.0</version>
+      <version>1.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     <dependency>
