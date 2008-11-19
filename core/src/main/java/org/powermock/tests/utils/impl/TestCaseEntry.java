@@ -3,8 +3,8 @@ package org.powermock.tests.utils.impl;
 import java.util.List;
 
 /**
- * A test case entry consists of a test class and a list of chunk entries for
- * this test class.
+ * A test case entry consists of a test class and a list of test chunks that
+ * should be executed work this class.
  */
 public class TestCaseEntry {
 

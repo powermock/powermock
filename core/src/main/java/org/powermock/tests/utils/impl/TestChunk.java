@@ -4,7 +4,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /**
- * A test chunk consists of a test class and a map
+ * A test chunk consists of a list of methods that should be executed by a
+ * particular classloader.
  */
 public class TestChunk {
 
