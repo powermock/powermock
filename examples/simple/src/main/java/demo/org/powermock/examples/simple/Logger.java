@@ -1,24 +1,22 @@
 package demo.org.powermock.examples.simple;
 
-import javax.swing.JFrame;
-import javax.swing.JTextArea;
-import javax.swing.WindowConstants;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class Logger {
-    private JTextArea textArea;
+	private PrintWriter writer;
 
     public Logger() {
         System.out.println("Initializing logger");
-        JFrame frame = new JFrame("logger");
-        textArea = new JTextArea();
-        frame.getContentPane().add(textArea);
-        frame.setSize(640, 480);
-        frame.setVisible(true);
-        textArea.setEditable(false);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        try {
+			writer = new PrintWriter(new FileWriter("logger.log"));
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		}
     }
 
     public void log(String message) {
-        textArea.setText(textArea.getText() + "\n" + message);
+    	writer.println(message);
     }
 }
