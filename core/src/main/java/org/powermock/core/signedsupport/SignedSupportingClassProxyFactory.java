@@ -137,7 +137,10 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 				CollectionUtils.filter(constructors, new VisibilityPredicate(sc, true));
 			}
 		};
-		enhancer.setNamingPolicy(SignedSupportingNamingPolicy.getInstance());
+
+		if (toMock.getSigners() != null) {
+			enhancer.setNamingPolicy(SignedSupportingNamingPolicy.getInstance());
+		}
 		enhancer.setSuperclass(toMock);
 		enhancer.setCallbackType(interceptor.getClass());
 
