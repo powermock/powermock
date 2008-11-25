@@ -11,7 +11,7 @@
   <packaging>pom</packaging>
   <name>powermock-api</name>
   <modules>
-    <module>powermock</module>
-    <module>powermockito</module>
+    <module>easymock</module>
+    <module>mockito</module>
   </modules>
 </project>
