@@ -6,13 +6,11 @@
     <version>1.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.powermock.modules.test</groupId>
-  <artifactId>powermock-modules-test</artifactId>
+  <groupId>org.powermock.modules.powermock.test</groupId>
+  <artifactId>powermock-modules-powermock-test</artifactId>
   <packaging>pom</packaging>
-  <name>powermock-modules-test</name>
+  <name>powermock-modules-powermock-test</name>
   <modules>              
-    <module>powermock</module>
-    <module>junit4-test</module>
-    <module>junit4-legacy-test</module>
+    <module>junit3-test</module>
   </modules>
 </project>
