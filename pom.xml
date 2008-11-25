@@ -81,6 +81,7 @@
    </issueManagement>
      <modules>
       <module>core</module>
+      <module>api</module>       
       <module>examples</module>
       <module>modules</module>
       <module>tests</module>
