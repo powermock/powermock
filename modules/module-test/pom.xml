@@ -13,6 +13,5 @@
   <modules>              
     <module>powermock</module>
     <module>junit4-test</module>
-    <module>junit4-legacy-test</module>
   </modules>
 </project>

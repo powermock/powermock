@@ -12,5 +12,6 @@
   <name>powermock-modules-powermock-test</name>
   <modules>              
     <module>junit3-test</module>
+    <module>junit4-legacy-test</module>
   </modules>
 </project>
