@@ -1,5 +1,10 @@
 package org.powermock.modules.junit4.swing;
 
+import static org.powermock.PowerMock.expectLastCall;
+import static org.powermock.PowerMock.mockStatic;
+import static org.powermock.PowerMock.replayAll;
+import static org.powermock.PowerMock.verifyAll;
+
 import javax.swing.JOptionPane;
 
 import org.junit.Test;
@@ -8,11 +13,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import samples.swing.ReallySimpleSwingDemo;
-
-import static org.powermock.PowerMock.mockStatic;
-import static org.powermock.PowerMock.expectLastCall;
-import static org.powermock.PowerMock.replayAll;
-import static org.powermock.PowerMock.verifyAll;
 
 /**
  * Unit test that makes sure that PowerMock works with Swing components.
