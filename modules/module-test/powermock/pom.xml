@@ -13,5 +13,6 @@
   <modules>              
     <module>junit3-test</module>
     <module>junit4-legacy-test</module>
+    <module>junit4-test</module>
   </modules>
 </project>
