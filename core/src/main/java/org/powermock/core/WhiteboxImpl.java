@@ -729,8 +729,11 @@ public class WhiteboxImpl {
 	 * 
 	 * 
 	 * @return The object created after the constructor has been invoked.
+	 * @throws Exception
+	 *             If an exception occur when invoking the constructor.
 	 */
-	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Class<?>[] parameterTypes, Object[] arguments) {
+	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Class<?>[] parameterTypes, Object[] arguments)
+			throws Exception {
 		if (parameterTypes != null && arguments != null) {
 			if (parameterTypes.length != arguments.length) {
 				throw new IllegalArgumentException("parameterTypes and arguments must have the same length");
@@ -753,8 +756,10 @@ public class WhiteboxImpl {
 	 * 
 	 * 
 	 * @return The object created after the constructor has been invoked.
+	 * @throws Exception
+	 *             If an exeption occur when invoking the constructor.
 	 */
-	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Object... arguments) {
+	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Object... arguments) throws Exception {
 
 		if (classThatContainsTheConstructorToTest == null) {
 			throw new IllegalArgumentException("The class should contain the constructor cannot be null.");
@@ -824,7 +829,7 @@ public class WhiteboxImpl {
 		return null;
 	}
 
-	private static <T> T createInstance(Constructor<T> constructor, Object... arguments) {
+	private static <T> T createInstance(Constructor<T> constructor, Object... arguments) throws Exception {
 		if (constructor == null) {
 			throw new IllegalArgumentException("Constructor cannot be null");
 		}
@@ -840,9 +845,12 @@ public class WhiteboxImpl {
 				createdObject = constructor.newInstance(arguments);
 			}
 		} catch (InvocationTargetException e) {
-			throw new RuntimeException("An exception was caught when executing the constructor", e);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+			Throwable cause = e.getCause();
+			if (cause instanceof Exception) {
+				throw (Exception) cause;
+			} else if (cause instanceof Error) {
+				throw (Error) cause;
+			}
 		}
 		return createdObject;
 	}

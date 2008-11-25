@@ -368,8 +368,11 @@ public class Whitebox {
 	 * 
 	 * 
 	 * @return The object created after the constructor has been invoked.
+	 * @throws Exception
+	 *             If an exception occur when invoking the constructor.
 	 */
-	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Class<?>[] parameterTypes, Object[] arguments) {
+	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Class<?>[] parameterTypes, Object[] arguments)
+			throws Exception {
 		return WhiteboxImpl.invokeConstructor(classThatContainsTheConstructorToTest, parameterTypes, arguments);
 	}
 
@@ -379,8 +382,10 @@ public class Whitebox {
 	 * 
 	 * 
 	 * @return The object created after the constructor has been invoked.
+	 * @throws Exception
+	 *             If an exception occur when invoking the constructor.
 	 */
-	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Object... arguments) {
+	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Object... arguments) throws Exception {
 		return WhiteboxImpl.invokeConstructor(classThatContainsTheConstructorToTest, arguments);
 	}
 
