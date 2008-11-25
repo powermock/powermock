@@ -8,9 +8,9 @@
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.powermock.modules.test.junit4
    </groupId>
-   <artifactId>powermock-modules-test-junit4
+   <artifactId>powermock-module-test-junit4
    </artifactId>
-   <name>powermock-modules-test-junit4</name>
+   <name>powermock-module-test-junit4</name>
    <version>1.1-SNAPSHOT</version>
    <url>http://maven.apache.org</url>
    <dependencies>
