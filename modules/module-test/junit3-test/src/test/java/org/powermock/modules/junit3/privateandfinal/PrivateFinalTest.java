@@ -29,9 +29,7 @@ import org.powermock.modules.junit3.singleton.MockStaticTest;
 import samples.privateandfinal.PrivateFinal;
 
 /**
- * Test class to demonstrate private+final method mocking. No suite is added in
- * this class to demonstrate that you can run the test from an external test
- * suite.
+ * Test class to demonstrate private+final method mocking.
  * 
  * @author Johan Haleby
  */
