@@ -12,6 +12,5 @@
   <name>powermock-modules-test</name>
   <modules>              
     <module>powermock</module>
-    <module>junit4-test</module>
   </modules>
 </project>
