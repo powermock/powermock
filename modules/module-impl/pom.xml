@@ -5,12 +5,14 @@
     <version>1.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.powermock.modules</groupId>
-  <artifactId>powermock-modules</artifactId>
+  <groupId>org.powermock.modules.impl</groupId>
+  <artifactId>powermock-modules-impl</artifactId>
   <packaging>pom</packaging>
-  <name>powermock-modules</name>
+  <name>powermock-modules-impl</name>
   <modules>
-    <module>module-impl</module>
-    <module>module-test</module>
+    <module>junit3</module>   
+    <module>junit4</module>
+    <module>junit4-common</module>
+    <module>junit4-legacy</module>
   </modules>
 </project>
