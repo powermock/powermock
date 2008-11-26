@@ -23,10 +23,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.powermock.PowerMock.createMock;
-import static org.powermock.PowerMock.expectNew;
-import static org.powermock.PowerMock.replayAll;
-import static org.powermock.PowerMock.verifyAll;
+import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.powermock.api.easymock.PowerMock.expectNew;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -35,9 +35,9 @@ import java.io.InputStream;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 import samples.Service;
 import samples.expectnew.ExpectNewDemo;

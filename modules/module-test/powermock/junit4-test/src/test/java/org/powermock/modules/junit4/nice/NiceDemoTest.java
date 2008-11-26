@@ -1,8 +1,8 @@
 package org.powermock.modules.junit4.nice;
 
-import static org.powermock.PowerMock.createNicePartialMock;
-import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.verify;
+import static org.powermock.api.easymock.PowerMock.createNicePartialMock;
+import static org.powermock.api.easymock.PowerMock.replay;
+import static org.powermock.api.easymock.PowerMock.verify;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

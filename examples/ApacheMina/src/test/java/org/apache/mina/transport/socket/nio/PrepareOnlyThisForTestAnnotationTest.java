@@ -2,20 +2,20 @@ package org.apache.mina.transport.socket.nio;
 
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertFalse;
-import static org.powermock.PowerMock.createMock;
-import static org.powermock.PowerMock.createPartialMock;
-import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.verify;
+import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.powermock.api.easymock.PowerMock.createPartialMock;
+import static org.powermock.api.easymock.PowerMock.expectPrivate;
+import static org.powermock.api.easymock.PowerMock.replay;
+import static org.powermock.api.easymock.PowerMock.verify;
 
 import java.util.concurrent.Executor;
 
 import org.apache.mina.core.session.AbstractIoSession;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 /**
  * This test validates that the {@link PrepareOnlyThisForTest} annotation

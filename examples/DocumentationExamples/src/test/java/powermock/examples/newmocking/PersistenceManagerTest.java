@@ -17,11 +17,11 @@ package powermock.examples.newmocking;
 
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertTrue;
-import static org.powermock.PowerMock.createMock;
-import static org.powermock.PowerMock.createMockAndExpectNew;
-import static org.powermock.PowerMock.expectNew;
-import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.verify;
+import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.powermock.api.easymock.PowerMock.createMockAndExpectNew;
+import static org.powermock.api.easymock.PowerMock.expectNew;
+import static org.powermock.api.easymock.PowerMock.replay;
+import static org.powermock.api.easymock.PowerMock.verify;
 
 import java.io.File;
 

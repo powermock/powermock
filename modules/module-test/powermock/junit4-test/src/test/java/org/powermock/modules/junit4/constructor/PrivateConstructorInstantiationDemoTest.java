@@ -16,7 +16,7 @@
 package org.powermock.modules.junit4.constructor;
 
 import static org.junit.Assert.assertEquals;
-import static org.powermock.Whitebox.invokeConstructor;
+import static org.powermock.reflect.Whitebox.invokeConstructor;
 
 import org.junit.Test;
 

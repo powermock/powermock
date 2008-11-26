@@ -1,10 +1,10 @@
 package org.powermock.modules.junit4.strict;
 
-import static org.powermock.PowerMock.createPartialMock;
-import static org.powermock.PowerMock.createStrictPartialMock;
-import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.verify;
+import static org.powermock.api.easymock.PowerMock.createPartialMock;
+import static org.powermock.api.easymock.PowerMock.createStrictPartialMock;
+import static org.powermock.api.easymock.PowerMock.expectPrivate;
+import static org.powermock.api.easymock.PowerMock.replay;
+import static org.powermock.api.easymock.PowerMock.verify;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

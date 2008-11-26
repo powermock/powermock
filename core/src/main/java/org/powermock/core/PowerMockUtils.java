@@ -19,7 +19,7 @@ import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.powermock.core.invocationcontrol.newinstance.NewInvocationSubstitute;
+import org.powermock.core.spi.support.NewInvocationSubstitute;
 
 public class PowerMockUtils {
 

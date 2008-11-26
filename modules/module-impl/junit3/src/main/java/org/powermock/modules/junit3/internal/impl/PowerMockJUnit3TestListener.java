@@ -22,11 +22,11 @@ import junit.framework.Test;
 import junit.framework.TestListener;
 import junit.runner.TestRunListener;
 
-import org.powermock.PowerMock;
+import org.powermock.core.MockRepository;
 
 /**
  * An implementation of the {@link TestRunListener} interface that performs
- * cleanup after each test so that no state is maintained in JTestRack between
+ * cleanup after each test so that no state is maintained in PowerMock between
  * test runs.
  * 
  * @author Johan Haleby
@@ -54,12 +54,10 @@ public class PowerMockJUnit3TestListener implements TestListener {
 
 	public void endTest(Test test) {
 		try {
-			Class<?> powerMockClass = mockClassLoader.loadClass(PowerMock.class
-					.getName());
-			Method method = powerMockClass.getDeclaredMethod("clearState");
+			Class<?> powerMockClass = mockClassLoader.loadClass(MockRepository.class.getName());
+			Method method = powerMockClass.getDeclaredMethod("clear");
 			if (method == null) {
-				throw new IllegalStateException(
-						"Method clearState was not found in " + PowerMock.class);
+				throw new IllegalStateException("Method clearState was not found in " + MockRepository.class);
 			}
 			method.setAccessible(true);
 			method.invoke(powerMockClass);

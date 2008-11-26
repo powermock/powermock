@@ -18,7 +18,7 @@ package org.powermock.modules.junit4.suppressmethod;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.powermock.PowerMock.suppressMethod;
+import static org.powermock.api.easymock.PowerMock.suppressMethod;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

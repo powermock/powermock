@@ -22,5 +22,10 @@
 			<artifactId>powermock-core</artifactId>
 			<version>${version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.powermock.reflect</groupId>
+			<artifactId>powermock-reflect</artifactId>
+			<version>${version}</version>
+		</dependency>
 	</dependencies>
 </project>

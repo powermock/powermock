@@ -2,9 +2,9 @@ package org.powermock.examples;
 
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertSame;
-import static org.powermock.PowerMock.createMock;
-import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.verify;
+import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.powermock.api.easymock.PowerMock.replay;
+import static org.powermock.api.easymock.PowerMock.verify;
 
 import org.acegisecurity.acl.basic.BasicAclEntry;
 import org.acegisecurity.acl.basic.cache.NullAclEntryCache;

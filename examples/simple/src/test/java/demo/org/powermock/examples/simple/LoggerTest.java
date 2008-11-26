@@ -1,10 +1,10 @@
 package demo.org.powermock.examples.simple;
 
-import static org.powermock.PowerMock.createMock;
-import static org.powermock.PowerMock.expectNew;
-import static org.powermock.PowerMock.replayAll;
-import static org.powermock.PowerMock.suppressConstructor;
-import static org.powermock.PowerMock.verifyAll;
+import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.powermock.api.easymock.PowerMock.expectNew;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.suppressConstructor;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,9 +14,9 @@ import java.io.Writer;
 import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 
 @RunWith(PowerMockRunner.class)

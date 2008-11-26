@@ -15,18 +15,16 @@
  */
 package org.powermock.core;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.easymock.internal.MockInvocationHandler;
-import org.powermock.core.invocationcontrol.method.MethodInvocationControl;
-import org.powermock.core.invocationcontrol.method.impl.MethodInvocationControlImpl;
-import org.powermock.core.invocationcontrol.newinstance.NewInvocationControl;
+import org.powermock.core.spi.MethodInvocationControl;
+import org.powermock.core.spi.NewInvocationControl;
 
 /**
  * Hold mock objects that should be used instead of the concrete implementation.
@@ -56,14 +54,33 @@ public class MockRepository {
 	private static Set<String> suppressStaticInitializers = new HashSet<String>();
 
 	/**
+	 * Sometimes mock frameworks needs to store additional state. They can to
+	 * this key/value based approach.
+	 */
+	private static Map<String, Object> additionalState = new HashMap<String, Object>();
+
+	/**
+	 * Set of constructors that should be suppressed.
+	 */
+	private static final Set<Constructor<?>> suppressConstructor = new HashSet<Constructor<?>>();
+
+	/**
+	 * Set of methods that should be suppressed.
+	 */
+	private static final Set<Method> suppressMethod = new HashSet<Method>();
+
+	/**
 	 * Clear all state of the mock repository
 	 */
-	public synchronized static void clearAll() {
+	public synchronized static void clear() {
 		newSubstitutions.clear();
 		classMocks.clear();
 		instanceMocks.clear();
 		objectsToAutomaticallyReplayAndVerify.clear();
 		suppressStaticInitializers.clear();
+		additionalState.clear();
+		suppressConstructor.clear();
+		suppressMethod.clear();
 	}
 
 	/**
@@ -82,17 +99,12 @@ public class MockRepository {
 		}
 	}
 
-	public static synchronized MethodInvocationControl getClassMethodInvocationControl(Class<?> type) {
+	public static synchronized MethodInvocationControl getStaticMethodInvocationControl(Class<?> type) {
 		return classMocks.get(type);
 	}
 
-	public static synchronized MethodInvocationControl putClassMethodInvocationControl(Class<?> type, MethodInvocationControl invocationControl) {
+	public static synchronized MethodInvocationControl putStaticMethodInvocationControl(Class<?> type, MethodInvocationControl invocationControl) {
 		return classMocks.put(type, invocationControl);
-	}
-
-	public static synchronized MethodInvocationControl putClassMethodInvocationControl(Class<?> type, MockInvocationHandler handler,
-			Method... methods) {
-		return putClassMethodInvocationControl(type, new MethodInvocationControlImpl(handler, toSet(methods)));
 	}
 
 	public static synchronized MethodInvocationControl removeClassMethodInvocationControl(Class<?> type) {
@@ -107,21 +119,8 @@ public class MockRepository {
 		return instanceMocks.put(instance, invocationControl);
 	}
 
-	public static synchronized MethodInvocationControl putInstanceMethodInvocationControl(Object instance, MockInvocationHandler handler,
-			Method... methods) {
-		return putInstanceMethodInvocationControl(instance, new MethodInvocationControlImpl(handler, toSet(methods)));
-	}
-
 	public static synchronized MethodInvocationControl removeInstanceMethodInvocationControl(Class<?> type) {
 		return classMocks.remove(type);
-	}
-
-	private static Set<Method> toSet(Method... methods) {
-		Set<Method> set = new HashSet<Method>();
-		if (methods.length > 0) {
-			set.addAll(Arrays.asList(methods));
-		}
-		return set;
 	}
 
 	public static synchronized NewInvocationControl<?> getNewInstanceControl(Class<?> type) {
@@ -184,4 +183,62 @@ public class MockRepository {
 			objectsToAutomaticallyReplayAndVerify.add(mock);
 		}
 	}
+
+	/**
+	 * When a mock framework API needs to store additional state not applicable
+	 * for the other methods, it may you this method to do so.
+	 * 
+	 * @param key
+	 *            The key under which the <tt>value</tt> is stored.
+	 * @param value
+	 *            The value to store under the specified <tt>key</tt>.
+	 * @return The previous object under the specified <tt>key</tt> or
+	 *         <code>null</code>.
+	 */
+	public static synchronized Object putAdditionalState(String key, Object value) {
+		return additionalState.put(key, value);
+	}
+
+	/**
+	 * Retrieve state based on the supplied key.
+	 */
+	public static synchronized Object getAdditionalState(String key) {
+		return additionalState.get(key);
+	}
+
+	/**
+	 * Add a method to suppress.
+	 * 
+	 * @param method
+	 *            The method to suppress.
+	 */
+	public static synchronized void addMethodToSuppress(Method method) {
+		suppressMethod.add(method);
+	}
+
+	/**
+	 * Add a constructor to suppress.
+	 * 
+	 * @param constructor
+	 *            The constructor to suppress.
+	 */
+	public static synchronized void addConstructorToSuppress(Constructor<?> constructor) {
+		suppressConstructor.add(constructor);
+	}
+
+	/**
+	 * @return <code>true</code> if the <tt>method</tt> should be suppressed.
+	 */
+	public static synchronized boolean shouldSuppressMethod(Method method) {
+		return suppressMethod.contains(method);
+	}
+
+	/**
+	 * @return <code>true</code> if the <tt>constructor</tt> should be
+	 *         suppressed.
+	 */
+	public static synchronized boolean shouldSuppressConstructor(Constructor<?> constructor) {
+		return suppressConstructor.contains(constructor);
+	}
+
 }

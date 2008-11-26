@@ -16,7 +16,7 @@
 package powermock.examples.suppress.method;
 
 import static org.junit.Assert.assertEquals;
-import static org.powermock.PowerMock.suppressMethod;
+import static org.powermock.api.easymock.PowerMock.suppressMethod;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -18,7 +18,7 @@ package powermock.examples.suppress.constructor;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
-import org.powermock.Whitebox;
+import org.powermock.reflect.Whitebox;
 
 /**
  * Example that demonstrates PowerMock's ability to suppress an objects own

@@ -23,10 +23,10 @@ import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
-import org.powermock.Whitebox;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.powermock.modules.junit4.legacy.internal.impl.testcaseworkaround.PowerMockJUnit4LegacyTestClassMethodsRunner;
 import org.powermock.modules.junit4.legacy.internal.impl.testcaseworkaround.PowerMockJUnit4LegacyTestIntrospector;
+import org.powermock.reflect.Whitebox;
 
 /**
  * A JUnit4 legacy (i.e. v4.0-4.3) test runner that only runs a specified set of

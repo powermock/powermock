@@ -16,7 +16,7 @@
 package samples.suppressconstructor;
 
 import static org.junit.Assert.fail;
-import static org.powermock.PowerMock.suppressSpecificConstructor;
+import static org.powermock.api.easymock.PowerMock.suppressSpecificConstructor;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

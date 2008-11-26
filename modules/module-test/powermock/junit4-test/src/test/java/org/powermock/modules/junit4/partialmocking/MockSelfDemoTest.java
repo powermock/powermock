@@ -19,12 +19,12 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.powermock.PowerMock.createPartialMock;
-import static org.powermock.PowerMock.createPartialMockAndInvokeDefaultConstructor;
-import static org.powermock.PowerMock.createPartialMockForAllMethodsExcept;
-import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.verify;
+import static org.powermock.api.easymock.PowerMock.createPartialMock;
+import static org.powermock.api.easymock.PowerMock.createPartialMockAndInvokeDefaultConstructor;
+import static org.powermock.api.easymock.PowerMock.createPartialMockForAllMethodsExcept;
+import static org.powermock.api.easymock.PowerMock.expectPrivate;
+import static org.powermock.api.easymock.PowerMock.replay;
+import static org.powermock.api.easymock.PowerMock.verify;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

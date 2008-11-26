@@ -17,17 +17,17 @@ package org.powermock.modules.junit3.singleton;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
-import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.mockStatic;
-import static org.powermock.PowerMock.mockStaticPartial;
-import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.verify;
+import static org.powermock.api.easymock.PowerMock.expectPrivate;
+import static org.powermock.api.easymock.PowerMock.mockStatic;
+import static org.powermock.api.easymock.PowerMock.mockStaticPartial;
+import static org.powermock.api.easymock.PowerMock.replay;
+import static org.powermock.api.easymock.PowerMock.verify;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.powermock.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit3.PowerMockSuite;
+import org.powermock.reflect.Whitebox;
 
 import samples.singleton.StaticHelper;
 import samples.singleton.StaticService;

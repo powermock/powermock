@@ -2,10 +2,10 @@ package org.powermock.modules.junit4.expectnew;
 
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
-import static org.powermock.PowerMock.createNiceMockAndExpectNew;
-import static org.powermock.PowerMock.createStrictMockAndExpectNew;
-import static org.powermock.PowerMock.replayAll;
-import static org.powermock.PowerMock.verifyAll;
+import static org.powermock.api.easymock.PowerMock.createNiceMockAndExpectNew;
+import static org.powermock.api.easymock.PowerMock.createStrictMockAndExpectNew;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

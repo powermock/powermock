@@ -21,9 +21,9 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.powermock.Whitebox;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.MainMockTransformer;
+import org.powermock.reflect.Whitebox;
 
 public class MockClassLoaderTest {
 	@Test

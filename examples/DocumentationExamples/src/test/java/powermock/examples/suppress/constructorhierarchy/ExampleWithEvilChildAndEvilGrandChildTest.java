@@ -16,7 +16,7 @@
 package powermock.examples.suppress.constructorhierarchy;
 
 import static org.junit.Assert.assertEquals;
-import static org.powermock.PowerMock.suppressConstructor;
+import static org.powermock.api.easymock.PowerMock.suppressConstructor;
 
 import org.junit.Ignore;
 import org.junit.Test;

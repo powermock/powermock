@@ -16,10 +16,10 @@
 package powermock.examples.privatemocking;
 
 import static org.junit.Assert.assertTrue;
-import static org.powermock.PowerMock.createPartialMock;
-import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.verify;
+import static org.powermock.api.easymock.PowerMock.createPartialMock;
+import static org.powermock.api.easymock.PowerMock.expectPrivate;
+import static org.powermock.api.easymock.PowerMock.replay;
+import static org.powermock.api.easymock.PowerMock.verify;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

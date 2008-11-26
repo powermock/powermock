@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.internal.runners.MethodValidator;
 import org.junit.internal.runners.TestClass;
-import org.powermock.Whitebox;
+import org.powermock.reflect.Whitebox;
 
 /**
  * A custom {@link MethodValidator} that makes sure that test methods not

@@ -16,11 +16,11 @@
 package org.powermock.modules.junit4.legacy.noannotation;
 
 import static org.easymock.EasyMock.expect;
-import static org.powermock.PowerMock.createPartialMock;
-import static org.powermock.PowerMock.expectPrivate;
-import static org.powermock.PowerMock.mockStaticPartial;
-import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.verify;
+import static org.powermock.api.easymock.PowerMock.createPartialMock;
+import static org.powermock.api.easymock.PowerMock.expectPrivate;
+import static org.powermock.api.easymock.PowerMock.mockStaticPartial;
+import static org.powermock.api.easymock.PowerMock.replay;
+import static org.powermock.api.easymock.PowerMock.verify;
 import junit.framework.TestCase;
 
 import org.junit.Test;

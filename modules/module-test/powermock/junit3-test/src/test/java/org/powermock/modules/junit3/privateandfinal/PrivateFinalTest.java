@@ -17,8 +17,8 @@ package org.powermock.modules.junit3.privateandfinal;
 
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
-import static org.powermock.PowerMock.createPartialMock;
-import static org.powermock.PowerMock.expectPrivate;
+import static org.powermock.api.easymock.PowerMock.createPartialMock;
+import static org.powermock.api.easymock.PowerMock.expectPrivate;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 

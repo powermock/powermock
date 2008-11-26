@@ -19,7 +19,7 @@ import static org.easymock.EasyMock.createMock;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
-import static org.powermock.PowerMock.createPartialMock;
+import static org.powermock.api.easymock.PowerMock.createPartialMock;
 
 import org.junit.After;
 import org.junit.Before;

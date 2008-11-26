@@ -15,7 +15,7 @@
  */
 package org.powermock.modules.junit3.suppressconstructor;
 
-import static org.powermock.PowerMock.suppressConstructor;
+import static org.powermock.api.easymock.PowerMock.suppressConstructor;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 

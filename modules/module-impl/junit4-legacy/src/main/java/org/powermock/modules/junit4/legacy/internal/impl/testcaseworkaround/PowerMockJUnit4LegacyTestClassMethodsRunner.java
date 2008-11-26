@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.junit.internal.runners.TestClassMethodsRunner;
 import org.junit.internal.runners.TestMethodRunner;
 import org.junit.runner.notification.RunNotifier;
-import org.powermock.Whitebox;
+import org.powermock.reflect.Whitebox;
 import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
 
 /**

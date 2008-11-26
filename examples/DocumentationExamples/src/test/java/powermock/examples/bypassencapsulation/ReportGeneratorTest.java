@@ -22,7 +22,7 @@ import static org.easymock.classextension.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.powermock.Whitebox;
+import org.powermock.reflect.Whitebox;
 
 import powermock.examples.bypassencapsulation.nontest.Report;
 import powermock.examples.bypassencapsulation.nontest.ReportTemplateService;

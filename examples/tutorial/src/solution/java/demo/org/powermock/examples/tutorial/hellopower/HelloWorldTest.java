@@ -2,9 +2,9 @@ package demo.org.powermock.examples.tutorial.hellopower;
 
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
-import static org.powermock.PowerMock.mockStatic;
-import static org.powermock.PowerMock.replayAll;
-import static org.powermock.PowerMock.verifyAll;
+import static org.powermock.api.easymock.PowerMock.mockStatic;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

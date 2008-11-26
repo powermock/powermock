@@ -2,13 +2,13 @@ package demo.org.powermock.examples.simple;
 
 import static junit.framework.Assert.assertEquals;
 import static org.easymock.EasyMock.expect;
-import static org.powermock.PowerMock.createMock;
-import static org.powermock.PowerMock.expectLastCall;
-import static org.powermock.PowerMock.expectNew;
-import static org.powermock.PowerMock.mockStatic;
-import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.verify;
-import static org.powermock.Whitebox.invokeMethod;
+import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.powermock.api.easymock.PowerMock.expectLastCall;
+import static org.powermock.api.easymock.PowerMock.expectNew;
+import static org.powermock.api.easymock.PowerMock.mockStatic;
+import static org.powermock.api.easymock.PowerMock.replay;
+import static org.powermock.api.easymock.PowerMock.verify;
+import static org.powermock.reflect.Whitebox.invokeMethod;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

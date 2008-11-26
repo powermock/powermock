@@ -18,9 +18,9 @@ package org.powermock.modules.junit4.privatefield;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.junit.Assert.assertEquals;
-import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.verify;
-import static org.powermock.Whitebox.setInternalState;
+import static org.powermock.api.easymock.PowerMock.replay;
+import static org.powermock.api.easymock.PowerMock.verify;
+import static org.powermock.reflect.Whitebox.setInternalState;
 
 import org.junit.Test;
 

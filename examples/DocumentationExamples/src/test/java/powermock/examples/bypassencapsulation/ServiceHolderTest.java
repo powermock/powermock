@@ -18,7 +18,7 @@ package powermock.examples.bypassencapsulation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.powermock.Whitebox.getInternalState;
+import static org.powermock.reflect.Whitebox.getInternalState;
 
 import java.util.Set;
 

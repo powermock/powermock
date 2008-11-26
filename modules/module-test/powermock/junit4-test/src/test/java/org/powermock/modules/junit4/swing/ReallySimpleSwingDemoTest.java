@@ -1,9 +1,9 @@
 package org.powermock.modules.junit4.swing;
 
-import static org.powermock.PowerMock.expectLastCall;
-import static org.powermock.PowerMock.mockStatic;
-import static org.powermock.PowerMock.replayAll;
-import static org.powermock.PowerMock.verifyAll;
+import static org.powermock.api.easymock.PowerMock.expectLastCall;
+import static org.powermock.api.easymock.PowerMock.mockStatic;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 import javax.swing.JOptionPane;
 

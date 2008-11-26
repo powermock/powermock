@@ -18,7 +18,7 @@ package org.powermock.modules.junit4.suppressconstructor;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.powermock.Whitebox;
+import org.powermock.reflect.Whitebox;
 
 import samples.suppressconstructor.SuppressNonParentConstructorDemo;
 

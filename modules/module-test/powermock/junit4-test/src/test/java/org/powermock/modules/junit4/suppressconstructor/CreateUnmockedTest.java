@@ -20,9 +20,9 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.PowerMock;
-import org.powermock.Whitebox;
+import org.powermock.api.easymock.PowerMock;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 import samples.suppressconstructor.SuppressConstructorDemo;
 import samples.suppressconstructor.SuppressSpecificConstructorDemo;
