@@ -10,7 +10,7 @@ public class Logger {
     public Logger() {
         System.out.println("Initializing logger");
         try {
-			writer = new PrintWriter(new FileWriter("logger.log"));
+			writer = new PrintWriter(new FileWriter("target/logger.log"));
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
 		}

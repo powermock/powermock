@@ -25,7 +25,7 @@ public class LoggerTest {
 	
 	@Test(expected=IllegalStateException.class)
 	public void testException() throws Exception {
-		expectNew(FileWriter.class, "logger.log").andThrow(new IOException());
+		expectNew(FileWriter.class, "target/logger.log").andThrow(new IOException());
 		
 		replayAll();
 		new Logger();
