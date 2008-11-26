@@ -25,13 +25,4 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
-	<!-- We should remove this when Mockito 1.6 is available at Ibiblio -->
-	<repositories>
-		<repository>
-			<id>powermock-repo</id>
-			<url>http://powermock.googlecode.com/svn/repo/
-			</url>
-		</repository>
-	</repositories>
 </project>
