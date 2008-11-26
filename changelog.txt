@@ -2,6 +2,9 @@ Change log 1.1 (under development)
 ----------------------------------
 * Only signed classes are loaded by the signed supporting CGLib naming policy.
 * Whitebox.invokeConstructor now propagates InvocationTargetExceptions correctly.
+* Restructured release assemblies to include just the correct things.
+* Set sources:jar and javadocs:jar to run on every build.
+* LoggerTest now creates its test log file in ./target/ directory instead of ./
 
 Change log 1.0 (released 2008-11-18)
 ------------------------------------
