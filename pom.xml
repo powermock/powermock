@@ -1,229 +1,223 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-   <modelVersion>4.0.0</modelVersion>
-   <groupId>org.powermock</groupId>
-   <artifactId>powermock</artifactId>
-   <packaging>pom</packaging>
-   <version>1.1-SNAPSHOT</version>
-   <name>powermock</name>
-   <url>http://www.powermock.org</url>
-   <description>
-      PowerMock allows you to unit test code normally regarded as untestable. 
-      For instance it is
-      possible to mock static methods, remove static initializers,
-      allow mocking without dependency injection and more. 
-      PowerMock works by bytecode manipulation.
-      PowerMock also contain some utilities that gives you easier access to 
-      an objects internal state.
-      PowerMock can be used to test otherwise untestable code and also to achieve
-      a cleaner separation between test and production code.
-   </description>
-   <inceptionYear>2007</inceptionYear>
-   <licenses>
-      <license>
-         <name>The Apache Software License, Version 2.0</name>
-         <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-         <distribution>repo</distribution>
-      </license>
-   </licenses>
-   <developers>
-      <developer>
-         <id>johanhaleby</id>
-         <name>Johan Haleby</name>
-         <organization>Jayway</organization>
-         <organizationUrl>http://www.jayway.se</organizationUrl>
-         <email>johan.haleby at jayway.se</email>
-         <timezone>+1</timezone>
-      </developer>
-      <developer>
-         <id>jakr</id>
-         <name>Jan Kronquist</name>
-         <organization>Jayway</organization>
-         <organizationUrl>http://www.jayway.se</organizationUrl>
-         <email>jan.kronquist at jayway.se</email>
-         <timezone>+1</timezone>
-      </developer>
-   </developers>
-   <scm>
-      <connection>scm:svn:https://powermock.googlecode.com/svn/trunk/</connection>
-      <developerConnection>scm:svn:https://powermock.googlecode.com/svn/trunk/</developerConnection>
-      <url>http://code.google.com/p/powermock/source/browse/</url>
-   </scm>
-   <distributionManagement>
-    <repository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>file</id>
-      <name>Local file Repository</name>
-      <url>file://target/repo</url>
-      <layout>default</layout>
-    </repository>
-    <site>
-       <id>powermock-local</id>
-       <name>Local Site</name>
-       <url>target/site</url>
-      </site>
-      <!--
-         Provide username and such in your local settings.xml, as
-         described in:
-         
-         http://maven.apache.org/maven-settings/settings.html
-      <site>
-         <id>powermock-website</id>
-         <name>SourceForge Site</name>
-         <url>
-            scp://shell.sourceforge.net/home/groups/p/po/powermock/htdocs/
-         </url>
-      </site>
-      -->
-   </distributionManagement>
-   <issueManagement>
-      <system>Google Code</system>
-      <url>http://code.google.com/p/powermock/issues/list</url>
-   </issueManagement>
-     <modules>
-      <module>core</module>
-      <module>api</module>       
-      <module>examples</module>
-      <module>modules</module>
-      <module>tests</module>
-      <module>release</module>
-      <module>reflect</module>
-  </modules>
-   <build>
-      <plugins>
-         <plugin>            
-          <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-               <verbose>true</verbose>
-               <source>1.5</source>
-               <target>1.5</target>
-            </configuration>
-         </plugin>
-         <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>rat-maven-plugin</artifactId>
-         </plugin>
-      </plugins>
-   </build>
-   <reporting>
-      <plugins>
-         <plugin>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <configuration>
-               <aggregate>true</aggregate>
-               <breakiterator>true</breakiterator>
-               <links>
-                  <link>
-                     http://java.sun.com/j2se/1.5.0/docs/api
-                  </link>
-               </links>
-               <excludePackageNames>samples*:org.powermock.tests*:org.powermock.examples*</excludePackageNames>
-            </configuration>
-         </plugin>
-         <plugin>
-            <artifactId>maven-surefire-report-plugin</artifactId>
-            <configuration>
-               <aggregate>true</aggregate>
-            </configuration>
-         </plugin>
-         <plugin>
-            <artifactId>maven-pmd-plugin</artifactId>
-            <configuration>
-               <targetJdk>1.5</targetJdk>
-               <rulesets>
-                  <ruleset>/rulesets/basic.xml</ruleset>
-               </rulesets>
-               <format>xml</format>
-               <linkXref>true</linkXref>
-               <sourceEncoding>utf-8</sourceEncoding>
-               <minimumTokens>100</minimumTokens>
-            </configuration>
-         </plugin>
-         <plugin>
-            <artifactId>maven-jxr-plugin</artifactId>
-            <configuration>
-               <aggregate>true</aggregate>
-            </configuration>
-         </plugin>
-         <plugin>
-            <artifactId>
-               maven-project-info-reports-plugin
-            </artifactId>
-         </plugin>
-         <plugin>
-           <groupId>org.codehaus.mojo</groupId>
-           <artifactId>findbugs-maven-plugin</artifactId>
-          <!-- <version>2.0-SNAPSHOT</version>-->
-           <configuration>
-           <onlyAnalyze>org.powermock.*</onlyAnalyze>
-           </configuration>
-         </plugin>
-      </plugins>
-   </reporting>
-   <profiles>
-      <profile>
-         <id>defects</id>
-         <build>
-            <plugins>
-               <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-surefire-plugin</artifactId>
-                  <configuration>
-                     <includes>
-                        <include>**/*Defect.java</include>
-                     </includes>
-                  </configuration>
-               </plugin>
-            </plugins>
-         </build>
-      </profile>
-    <profile>
-      <id>release</id>
-      <build>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.powermock</groupId>
+    <artifactId>powermock</artifactId>
+    <packaging>pom</packaging>
+    <version>1.1-SNAPSHOT</version>
+    <name>powermock</name>
+    <url>http://www.powermock.org</url>
+    <description>
+        PowerMock allows you to unit test code normally regarded as untestable.
+        For instance it is
+        possible to mock static methods, remove static initializers,
+        allow mocking without dependency injection and more.
+        PowerMock works by bytecode manipulation.
+        PowerMock also contain some utilities that gives you easier access to
+        an objects internal state.
+        PowerMock can be used to test otherwise untestable code and also to achieve
+        a cleaner separation between test and production code.
+    </description>
+    <inceptionYear>2007</inceptionYear>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>johanhaleby</id>
+            <name>Johan Haleby</name>
+            <organization>Jayway</organization>
+            <organizationUrl>http://www.jayway.se</organizationUrl>
+            <email>johan.haleby at jayway.se</email>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <id>jakr</id>
+            <name>Jan Kronquist</name>
+            <organization>Jayway</organization>
+            <organizationUrl>http://www.jayway.se</organizationUrl>
+            <email>jan.kronquist at jayway.se</email>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:svn:https://powermock.googlecode.com/svn/trunk/</connection>
+        <developerConnection>scm:svn:https://powermock.googlecode.com/svn/trunk/</developerConnection>
+        <url>http://code.google.com/p/powermock/source/browse/</url>
+    </scm>
+    <distributionManagement>
+        <repository>
+            <uniqueVersion>false</uniqueVersion>
+            <id>file</id>
+            <name>Local file Repository</name>
+            <url>file://target/repo</url>
+            <layout>default</layout>
+        </repository>
+        <site>
+            <id>powermock-local</id>
+            <name>Local Site</name>
+            <url>target/site</url>
+        </site>
+        <!--
+           Provide username and such in your local settings.xml, as
+           described in:
+
+           http://maven.apache.org/maven-settings/settings.html
+        <site>
+           <id>powermock-website</id>
+           <name>SourceForge Site</name>
+           <url>
+              scp://shell.sourceforge.net/home/groups/p/po/powermock/htdocs/
+           </url>
+        </site>
+        -->
+    </distributionManagement>
+    <issueManagement>
+        <system>Google Code</system>
+        <url>http://code.google.com/p/powermock/issues/list</url>
+    </issueManagement>
+    <modules>
+        <module>core</module>
+        <module>api</module>
+        <module>examples</module>
+        <module>modules</module>
+        <module>tests</module>
+        <module>release</module>
+        <module>reflect</module>
+    </modules>
+    <build>
         <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>attach-sources</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>            
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <goals>
-                  <goal>jar</goal>
-               </goals>
-             </execution>
-           </executions>
-         </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <verbose>true</verbose>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>rat-maven-plugin</artifactId>
+            </plugin>
         </plugins>
-      </build>
-    </profile>
-   </profiles>
-   <dependencyManagement>
-      <dependencies>
-         <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>2.4</version>
-            <scope>provided</scope>
-         </dependency>
-         <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymockclassextension</artifactId>
-            <version>2.4</version>
-            <scope>provided</scope>
-         </dependency>
-      </dependencies>
-   </dependencyManagement>
+    </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <aggregate>true</aggregate>
+                    <breakiterator>true</breakiterator>
+                    <links>
+                        <link>
+                            http://java.sun.com/j2se/1.5.0/docs/api
+                        </link>
+                    </links>
+                    <excludePackageNames>samples*:org.powermock.tests*:org.powermock.examples*</excludePackageNames>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <configuration>
+                    <aggregate>true</aggregate>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <configuration>
+                    <targetJdk>1.5</targetJdk>
+                    <rulesets>
+                        <ruleset>/rulesets/basic.xml</ruleset>
+                    </rulesets>
+                    <format>xml</format>
+                    <linkXref>true</linkXref>
+                    <sourceEncoding>utf-8</sourceEncoding>
+                    <minimumTokens>100</minimumTokens>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <configuration>
+                    <aggregate>true</aggregate>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>
+                    maven-project-info-reports-plugin
+                </artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <!-- <version>2.0-SNAPSHOT</version>-->
+                <configuration>
+                    <onlyAnalyze>org.powermock.*</onlyAnalyze>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+    <profiles>
+        <profile>
+            <id>defects</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>**/*Defect.java</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.easymock</groupId>
+                <artifactId>easymock</artifactId>
+                <version>2.4</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.easymock</groupId>
+                <artifactId>easymockclassextension</artifactId>
+                <version>2.4</version>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
