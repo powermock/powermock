@@ -8,7 +8,6 @@
         <dependencySet>
             <outputDirectory></outputDirectory>
             <unpack>false</unpack>
-            <scope>compile</scope>
         </dependencySet>
     </dependencySets>
 </assembly>

@@ -15,29 +15,11 @@
     <dependencies>
         <dependency>
             <groupId>org.powermock</groupId>
-            <artifactId>powermock-core</artifactId>
+            <artifactId>powermock-release-full</artifactId>
+            <type>pom</type>
             <version>${version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.powermock.modules</groupId>
-            <artifactId>powermock-module-junit4-common</artifactId>
-            <version>${version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock.modules</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>${version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock.modules</groupId>
-            <artifactId>powermock-module-junit4-legacy</artifactId>
-            <version>${version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock.modules</groupId>
-            <artifactId>powermock-module-junit3</artifactId>
-            <version>${version}</version>
-        </dependency>
+
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
@@ -46,12 +28,6 @@
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymockclassextension</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.4</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
