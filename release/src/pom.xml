@@ -8,50 +8,58 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock</groupId>
-    <artifactId>powermock-release-full</artifactId>
+    <artifactId>powermock-release-src</artifactId>
     <packaging>pom</packaging>
-    <name>powermock-release-full</name>
+    <name>powermock-release-src</name>
 
     <dependencies>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-core</artifactId>
             <version>${version}</version>
+            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.powermock.api</groupId>
             <artifactId>powermock-api-easymock</artifactId>
             <version>${version}</version>
+            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.powermock.api</groupId>
             <artifactId>powermock-api-mockito</artifactId>
             <version>${version}</version>
+            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.powermock.modules</groupId>
             <artifactId>powermock-module-junit4-common</artifactId>
             <version>${version}</version>
+            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.powermock.modules</groupId>
             <artifactId>powermock-module-junit4</artifactId>
             <version>${version}</version>
+            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.powermock.modules</groupId>
             <artifactId>powermock-module-junit4-legacy</artifactId>
             <version>${version}</version>
+            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.powermock.modules</groupId>
             <artifactId>powermock-module-junit3</artifactId>
             <version>${version}</version>
+            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.powermock.reflect</groupId>
             <artifactId>powermock-reflect</artifactId>
             <version>${version}</version>
+            <classifier>sources</classifier>
         </dependency>
     </dependencies>
 
@@ -62,7 +70,7 @@
                 <configuration>
                     <finalName>powermock-${version}</finalName>
                     <descriptors>
-                        <descriptor>src/assembly/full.xml</descriptor>
+                        <descriptor>src/assembly/src.xml</descriptor>
                     </descriptors>
                 </configuration>
                 <executions>
