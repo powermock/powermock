@@ -21,10 +21,10 @@ import java.lang.reflect.Method;
 import org.powermock.core.spi.support.ReplayVerifySupport;
 
 /**
- * The purpose of an invocation control is to determine whether a certain method
- * is mocked or not. This is determined by pairing up an InvocationHandler (that
- * is associated with an entire object) and the Methods for this object that
- * should be mocked.
+ * The purpose of a method invocation control is to invoke a proxy to simulate a
+ * method call. It also has functionality to replay and verify mocks (which may
+ * not be needed for certain invocation controls) and to check whether a certain
+ * method is mocked or not.
  * 
  */
 public interface MethodInvocationControl extends InvocationHandler, ReplayVerifySupport {

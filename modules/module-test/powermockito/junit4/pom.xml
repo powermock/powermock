@@ -1,0 +1,22 @@
+<?xml version="1.0"?><project>
+  <parent>
+    <artifactId>powermock-modules-test-powermockito</artifactId>
+    <groupId>org.powermock.modules.test.powermockito</groupId>
+    <version>1.1-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.powermock.modules.test.powermockito.junit4</groupId>
+  <artifactId>powermock-module-test-powermockito-junit4</artifactId>
+  <name>powermock-module-test-powermockito-junit4</name>
+  <version>1.1-SNAPSHOT</version>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+    <dependency>
+         <groupId>org.powermock.modules</groupId>
+         <artifactId>powermock-module-junit4
+         </artifactId>
+         <version>${version}</version>
+         <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

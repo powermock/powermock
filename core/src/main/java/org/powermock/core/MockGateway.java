@@ -29,6 +29,7 @@ import org.powermock.reflect.internal.WhiteboxImpl;
 public class MockGateway {
 
 	public static final Object PROCEED = new Object();
+	public static final Object SUPPRESS = new Object();
 
 	// used for static methods
 	public static synchronized Object methodCall(Class<?> type, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString)
@@ -61,7 +62,10 @@ public class MockGateway {
 		 * invocation handler.
 		 */
 		if (methodInvocationControl != null && methodInvocationControl.isMocked(WhiteboxImpl.getMethod(objectType, methodName, sig))) {
-			returnValue = methodInvocationControl.invoke(objectType, WhiteboxImpl.getMethod(objectType, methodName, sig), args);
+			returnValue = methodInvocationControl.invoke(object, WhiteboxImpl.getMethod(objectType, methodName, sig), args);
+			if (returnValue == SUPPRESS) {
+				returnValue = suppressMethodCode(returnTypeAsString);
+			}
 		} else {
 			final boolean shouldSuppressMethodCode = MockRepository.shouldSuppressMethod(WhiteboxImpl.getMethod(objectType, methodName, sig));
 			if (shouldSuppressMethodCode) {

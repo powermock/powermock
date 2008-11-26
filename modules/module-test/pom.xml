@@ -12,5 +12,6 @@
   <name>powermock-modules-test</name>
   <modules>              
     <module>powermock</module>
+    <module>powermockito</module>
   </modules>
 </project>
