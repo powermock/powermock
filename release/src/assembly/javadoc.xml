@@ -1,8 +1,0 @@
-<component>
-  <fileSets>
-    <fileSet>
-      <outputDirectory>doc/api</outputDirectory>
-      <directory>../target/site/apidocs</directory>
-    </fileSet>
-  </fileSets>
-</component>
