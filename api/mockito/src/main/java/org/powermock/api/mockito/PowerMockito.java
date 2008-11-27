@@ -1,5 +1,7 @@
 package org.powermock.api.mockito;
 
+import static org.mockito.Mockito.times;
+
 import java.lang.reflect.Method;
 
 import org.mockito.Mockito;
@@ -11,8 +13,9 @@ import org.mockito.internal.progress.MockingProgress;
 import org.powermock.api.mockito.internal.invocationcontrol.MockitoMethodInvocationControl;
 import org.powermock.api.mockito.internal.proxyframework.CgLibProxyFramework;
 import org.powermock.core.MockRepository;
+import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.core.spi.support.NewInvocationSubstitute;
-import org.powermock.reflect.internal.WhiteboxImpl;
+import org.powermock.reflect.Whitebox;
 
 /**
  * PowerMockito extends Mockito functionality with several new features such as
@@ -23,6 +26,18 @@ public class PowerMockito {
 
 	static {
 		CgLibProxyFramework.registerProxyFramework();
+	}
+
+	/**
+	 * Enable static mocking for a class.
+	 * 
+	 * @param type
+	 *            the class to enable static mocking
+	 * @param methods
+	 *            optionally what methods to mock
+	 */
+	public static synchronized void mockStatic(Class<?> type, Method... methods) {
+		doMock(type, true, methods);
 	}
 
 	/**
@@ -47,26 +62,51 @@ public class PowerMockito {
 			methods = new Method[] {};
 		}
 
+		T mock = null;
 		final String mockName = toInstanceName(type);
-
-		MockHandler<T> mockHandler = new MockHandler<T>(mockName, WhiteboxImpl.getInternalState(Mockito.class, MockingProgress.class),
-				new MatchersBinder());
-		MethodInterceptorFilter<MockHandler<T>> filter = new MethodInterceptorFilter<MockHandler<T>>(type, mockHandler);
-
-		T mock = (T) ClassImposterizer.INSTANCE.imposterise(filter, type);
-		filter.setInstance(mock);
-
-		final MockitoMethodInvocationControl<T> invocationControl = new MockitoMethodInvocationControl<T>(filter, methods);
 		if (isStatic) {
+			MockHandler<T> mockHandler = new MockHandler<T>(mockName, Whitebox.getInternalState(Mockito.class, MockingProgress.class),
+					new MatchersBinder());
+			MethodInterceptorFilter<MockHandler<T>> filter = new MethodInterceptorFilter<MockHandler<T>>(type, mockHandler);
+
+			mock = (T) ClassImposterizer.INSTANCE.imposterise(filter, type);
+			filter.setInstance(mock);
+
+			final MockitoMethodInvocationControl<T> invocationControl = new MockitoMethodInvocationControl<T>(filter, methods);
+
 			MockRepository.putStaticMethodInvocationControl(type, invocationControl);
 			MockRepository.addObjectsToAutomaticallyReplayAndVerify(type);
 		} else {
+			MockHandler<T> mockHandler = new MockHandler<T>(mockName, Whitebox.getInternalState(Mockito.class, MockingProgress.class),
+					new MatchersBinder());
+			MethodInterceptorFilter<MockHandler<T>> filter = new MethodInterceptorFilter<MockHandler<T>>(type, mockHandler);
+			mock = (T) ClassImposterizer.INSTANCE.imposterise(filter, type);
+
+			filter.setInstance(mock);
+
+			final MockitoMethodInvocationControl<T> invocationControl = new MockitoMethodInvocationControl<T>(filter, methods);
+
 			MockRepository.putInstanceMethodInvocationControl(mock, invocationControl);
 			if (mock instanceof NewInvocationSubstitute == false) {
 				MockRepository.addObjectsToAutomaticallyReplayAndVerify(mock);
 			}
 		}
 		return mock;
+	}
+
+	/**
+	 * Switches the class mocks to verify mode.
+	 * 
+	 * @param mock
+	 *            mocked classes loaded by PowerMock.
+	 */
+	public static synchronized void verifyStatic(Class<?> mock) {
+		MethodInvocationControl instanceInvocationHandler = MockRepository.getStaticMethodInvocationControl(mock);
+		if (instanceInvocationHandler != null) {
+			Whitebox.getInternalState(Mockito.class, MockingProgress.class).verificationStarted(times(1));
+		} else {
+			Whitebox.getInternalState(Mockito.class, MockingProgress.class).verificationStarted(times(1));
+		}
 	}
 
 	private static String toInstanceName(Class<?> clazz) {
