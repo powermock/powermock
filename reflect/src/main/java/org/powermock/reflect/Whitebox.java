@@ -416,4 +416,11 @@ public class Whitebox {
 	public static Method[] getMethods(Class<?> clazz, String... methodNames) {
 		return WhiteboxImpl.getMethods(clazz, methodNames);
 	}
+
+	/**
+	 * @return The type of the of an object.
+	 */
+	public static Class<?> getType(Object object) {
+		return WhiteboxImpl.getType(object);
+	}
 }

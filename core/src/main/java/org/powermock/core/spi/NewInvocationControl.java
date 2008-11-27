@@ -1,12 +1,12 @@
 package org.powermock.core.spi;
 
-import org.powermock.core.spi.support.NewInvocationSubstitute;
+import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.core.spi.support.ReplayVerifySupport;
 
 /**
- * A new invocation control pairs up a {@link NewInvocationSubstitute} with the
+ * A new invocation control pairs up a {@link InvocationSubstitute} with the
  * mock object created when invoking
- * {@link NewInvocationSubstitute#createInstance(Object...)} object.
+ * {@link InvocationSubstitute#performSubstitutionLogic(Object...)} object.
  * 
  */
 public interface NewInvocationControl<T> extends ReplayVerifySupport {

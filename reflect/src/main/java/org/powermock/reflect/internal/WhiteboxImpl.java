@@ -170,7 +170,7 @@ public class WhiteboxImpl {
 	 *            the new value of the field
 	 */
 	public static void setInternalState(Object object, Object value) {
-		setField(object, value, findFieldInHierarchy(object, new AssignableToFieldTypeMatcherStrategy(getArgumentType(value))));
+		setField(object, value, findFieldInHierarchy(object, new AssignableToFieldTypeMatcherStrategy(getType(value))));
 	}
 
 	/**
@@ -186,7 +186,7 @@ public class WhiteboxImpl {
 	 *            the class in the hierarchy where the field is defined
 	 */
 	public static void setInternalState(Object object, Object value, Class<?> where) {
-		setField(object, value, findField(object, new AssignableToFieldTypeMatcherStrategy(getArgumentType(value)), where));
+		setField(object, value, findField(object, new AssignableToFieldTypeMatcherStrategy(getType(value)), where));
 	}
 
 	/**
@@ -266,7 +266,7 @@ public class WhiteboxImpl {
 	}
 
 	private static Field findFieldInHierarchy(Object object, FieldMatcherStrategy strategy) {
-		return findFieldUsingStrategy(strategy, object, true, getArgumentType(object));
+		return findFieldUsingStrategy(strategy, object, true, getType(object));
 	}
 
 	private static Field findField(Object object, FieldMatcherStrategy strategy, Class<?> where) {
@@ -431,7 +431,7 @@ public class WhiteboxImpl {
 	 */
 	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?>[] argumentTypes, Object... arguments)
 			throws Exception {
-		final Class<?> unmockedType = getArgumentType(tested);
+		final Class<?> unmockedType = getType(tested);
 		Method method = getMethod(unmockedType, methodToExecute, argumentTypes);
 		if (method == null) {
 			throwExceptionIfMethodWasNotFound(unmockedType, methodToExecute, null, arguments);
@@ -585,7 +585,7 @@ public class WhiteboxImpl {
 			}
 		}
 
-		WhiteboxImpl.throwExceptionIfMethodWasNotFound(getArgumentType(tested), methodToExecute, potentialMethodToInvoke, arguments);
+		WhiteboxImpl.throwExceptionIfMethodWasNotFound(getType(tested), methodToExecute, potentialMethodToInvoke, arguments);
 		return potentialMethodToInvoke;
 	}
 
@@ -657,7 +657,7 @@ public class WhiteboxImpl {
 			if (arguments[i] == null) {
 				argumentType = paramTypes[i];
 			} else {
-				argumentType = getArgumentType(arguments[i]);
+				argumentType = getType(arguments[i]);
 			}
 			Class<?> primitiveWrapperType = PrimitiveWrapper.getPrimitiveFromWrapperType(argumentType);
 			if (primitiveWrapperType == null) {
@@ -695,7 +695,7 @@ public class WhiteboxImpl {
 				} else if (argument == null) {
 					argumentName = "null";
 				} else {
-					argumentName = getArgumentType(argument).getName();
+					argumentName = getType(argument).getName();
 				}
 
 				argumentsAsString.append(argumentName);
@@ -772,7 +772,7 @@ public class WhiteboxImpl {
 		} else {
 			argumentTypes = new Class<?>[arguments.length];
 			for (int i = 0; i < arguments.length; i++) {
-				argumentTypes[i] = getArgumentType(arguments[i]);
+				argumentTypes[i] = getType(arguments[i]);
 			}
 		}
 
@@ -821,7 +821,7 @@ public class WhiteboxImpl {
 				if (possibleVarArgsConstructor.isVarArgs()) {
 					if (arguments == null || arguments.length == 0) {
 						return possibleVarArgsConstructor;
-					} else if (possibleVarArgsConstructor.getParameterTypes()[0].getComponentType().isAssignableFrom(getArgumentType(arguments[0]))) {
+					} else if (possibleVarArgsConstructor.getParameterTypes()[0].getComponentType().isAssignableFrom(getType(arguments[0]))) {
 						return possibleVarArgsConstructor;
 					}
 				}
@@ -1152,10 +1152,10 @@ public class WhiteboxImpl {
 		}
 		// End of handling null values
 
-		final Class<?> firstArgumentType = getArgumentType(object);
+		final Class<?> firstArgumentType = getType(object);
 		for (int i = index; i < arguments.length; i++) {
 			final Object argument = arguments[i];
-			if (argument != null && !getArgumentType(argument).isAssignableFrom(firstArgumentType)) {
+			if (argument != null && !getType(argument).isAssignableFrom(firstArgumentType)) {
 				return false;
 			}
 		}
@@ -1178,7 +1178,7 @@ public class WhiteboxImpl {
 			if (argument == null) {
 				continue;
 			} else {
-				if (!parameterTypes[i].isAssignableFrom(getArgumentType(argument)) && !(parameterTypes[i].equals(Class.class) && isClass(argument))) {
+				if (!parameterTypes[i].isAssignableFrom(getType(argument)) && !(parameterTypes[i].equals(Class.class) && isClass(argument))) {
 					return false;
 				}
 			}
@@ -1187,16 +1187,16 @@ public class WhiteboxImpl {
 	}
 
 	/**
-	 * @return The argument type of the of argument.
+	 * @return The type of the of an object.
 	 */
-	private static Class<?> getArgumentType(Object argument) {
-		Class<?> argumentType = null;
-		if (isClass(argument)) {
-			argumentType = (Class<?>) argument;
-		} else if (argument != null) {
-			argumentType = argument.getClass();
+	public static Class<?> getType(Object object) {
+		Class<?> type = null;
+		if (isClass(object)) {
+			type = (Class<?>) object;
+		} else if (object != null) {
+			type = object.getClass();
 		}
-		return getUnmockedType(argumentType);
+		return getUnmockedType(type);
 	}
 
 	private static boolean isClass(Object argument) {
@@ -1214,8 +1214,7 @@ public class WhiteboxImpl {
 			return false;
 		} else {
 			for (int i = 0; i < expectedParameterTypes.length; i++) {
-				if (!expectedParameterTypes[i].isAssignableFrom(getArgumentType(actualParameterTypes[i]))
-						&& !expectedParameterTypes[i].equals(Class.class)) {
+				if (!expectedParameterTypes[i].isAssignableFrom(getType(actualParameterTypes[i])) && !expectedParameterTypes[i].equals(Class.class)) {
 					return false;
 				}
 			}
@@ -1310,7 +1309,7 @@ public class WhiteboxImpl {
 		@Override
 		public void notFound(Object object) throws IllegalArgumentException {
 			throw new IllegalArgumentException("No field named \"" + fieldName + "\" could be found in the class hierarchy of "
-					+ getArgumentType(object).getName() + ".");
+					+ getType(object).getName() + ".");
 		}
 
 		@Override
@@ -1338,7 +1337,7 @@ public class WhiteboxImpl {
 		@Override
 		public void notFound(Object object) throws IllegalArgumentException {
 			throw new IllegalArgumentException("No field of type \"" + expectedFieldType.getName() + "\" could be found in the class hierarchy of "
-					+ getArgumentType(object).getName() + ".");
+					+ getType(object).getName() + ".");
 		}
 
 		@Override
@@ -1366,7 +1365,7 @@ public class WhiteboxImpl {
 		@Override
 		public void notFound(Object object) throws IllegalArgumentException {
 			throw new IllegalArgumentException("No field assignable to \"" + expectedFieldType.getName()
-					+ "\" could be found in the class hierarchy of " + getArgumentType(object).getName() + ".");
+					+ "\" could be found in the class hierarchy of " + getType(object).getName() + ".");
 		}
 
 		@Override

@@ -46,7 +46,7 @@ import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.core.spi.NewInvocationControl;
-import org.powermock.core.spi.support.NewInvocationSubstitute;
+import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
@@ -1633,7 +1633,7 @@ public class PowerMock {
 		NewInvocationControl<IExpectationSetters<T>> newInvocationControl = (NewInvocationControl<IExpectationSetters<T>>) MockRepository
 				.getNewInstanceControl(unmockedType);
 		if (newInvocationControl == null) {
-			NewInvocationSubstitute<T> mock = doMock(NewInvocationSubstitute.class, false, mockStrategy, null, new Method[0]);
+			InvocationSubstitute<T> mock = doMock(InvocationSubstitute.class, false, mockStrategy, null, new Method[0]);
 			newInvocationControl = new NewInvocationControlImpl<T>(mock, type);
 			MockRepository.putNewInstanceControl(type, newInvocationControl);
 			MockRepository.addObjectsToAutomaticallyReplayAndVerify(WhiteboxImpl.getUnmockedType(type));
@@ -1885,7 +1885,7 @@ public class PowerMock {
 			MockRepository.addObjectsToAutomaticallyReplayAndVerify(type);
 		} else {
 			MockRepository.putInstanceMethodInvocationControl(mock, new EasyMockMethodInvocationControl(h, toSet(methods)));
-			if (mock instanceof NewInvocationSubstitute == false) {
+			if (mock instanceof InvocationSubstitute == false) {
 				MockRepository.addObjectsToAutomaticallyReplayAndVerify(mock);
 			}
 		}

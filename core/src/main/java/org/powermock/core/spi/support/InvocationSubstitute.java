@@ -16,10 +16,16 @@
 package org.powermock.core.spi.support;
 
 /**
- * This substitution mock will be invoked instead of a constructor.
+ * A class that can be used as a substitution instead of mocking a particular
+ * class. For example when mocking a new instance call you can fake the
+ * constructor invocation by creating a mock object (A) for this class and
+ * invoke the {@link #performSubstitutionLogic(Object...)} method instead with
+ * the constructor arguments. The interception process must take care of doing
+ * this. Also remember that behaviors such as replay and/or verify must be
+ * performed on (A).
  * 
  */
-public interface NewInvocationSubstitute<T> {
+public interface InvocationSubstitute<T> {
 
-	public T createInstance(Object... arguments) throws Exception;
+	public T performSubstitutionLogic(Object... arguments) throws Exception;
 }

@@ -21,6 +21,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.exceptions.verification.junit.ArgumentsAreDifferent;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -46,5 +47,15 @@ public class MockStaticTest {
 		// Verification is done in two steps using static methods.
 		verifyStatic(StaticService.class);
 		StaticService.say("hello");
+	}
+
+	@Test(expected = ArgumentsAreDifferent.class)
+	public void testMockStaticVerificationFails() throws Exception {
+		mockStatic(StaticService.class);
+		assertEquals("", StaticService.say("hello"));
+
+		// Verification is done in two steps using static methods.
+		verifyStatic(StaticService.class);
+		StaticService.say("Hello");
 	}
 }

@@ -16,6 +16,7 @@
 package org.powermock.api.mockito.internal.invocationcontrol;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +29,7 @@ import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.internal.verification.api.VerificationMode;
 import org.powermock.core.MockGateway;
 import org.powermock.core.spi.MethodInvocationControl;
+import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.reflect.Whitebox;
 
 /**
@@ -82,7 +84,17 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 	}
 
 	public Object invoke(Object obj, Method method, Object[] aobj) throws Throwable {
-		Object returnValue = invocationHandler.intercept(obj, method, aobj, null);
+		Object interceptionObject = obj;
+		// If the method is static we should get the substitution mock.
+		if (Modifier.isStatic(method.getModifiers())) {
+			final InvocationSubstitute<?> substituteObject = (InvocationSubstitute<?>) Whitebox.getInternalState(invocationHandler
+					.getDelegate(), "instance");
+			if (substituteObject != null) {
+				interceptionObject = substituteObject;
+			}
+		}
+
+		Object returnValue = invocationHandler.intercept(interceptionObject, method, aobj, null);
 		if (returnValue == null && isInVerificationMode()) {
 			return MockGateway.SUPPRESS;
 		}

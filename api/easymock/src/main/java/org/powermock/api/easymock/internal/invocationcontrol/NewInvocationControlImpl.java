@@ -8,14 +8,14 @@ import org.easymock.internal.MocksControl.MockType;
 import org.powermock.core.MockRepository;
 import org.powermock.core.PowerMockUtils;
 import org.powermock.core.spi.NewInvocationControl;
-import org.powermock.core.spi.support.NewInvocationSubstitute;
+import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
 public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpectationSetters<T>> {
-	private final NewInvocationSubstitute<T> substitute;
+	private final InvocationSubstitute<T> substitute;
 	private final Class<T> subsitutionType;
 
-	public NewInvocationControlImpl(NewInvocationSubstitute<T> substitute, Class<T> type) {
+	public NewInvocationControlImpl(InvocationSubstitute<T> substitute, Class<T> type) {
 		if (substitute == null) {
 			throw new IllegalArgumentException("Internal error: substitute cannot be null.");
 		}
@@ -34,7 +34,7 @@ public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpect
 		}
 		try {
 			final MockType mockType = ((EasyMockMethodInvocationControl) MockRepository.getInstanceMethodInvocationControl(substitute)).getMockType();
-			Object result = substitute.createInstance(args);
+			Object result = substitute.performSubstitutionLogic(args);
 
 			if (result == null) {
 				if (mockType == MockType.NICE) {
@@ -53,7 +53,7 @@ public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpect
 	}
 
 	public IExpectationSetters<T> performSubstitutionLogic(Object... arguments) throws Exception {
-		return EasyMock.expect(substitute.createInstance(arguments));
+		return EasyMock.expect(substitute.performSubstitutionLogic(arguments));
 	}
 
 	/**
