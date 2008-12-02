@@ -25,24 +25,20 @@ import junit.framework.TestSuite;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit3.PowerMockSuite;
 
-import samples.junit3.singleton.MockStaticTest;
 import samples.privateandfinal.PrivateFinal;
 
 /**
  * Test class to demonstrate private+final method mocking.
- * 
- * @author Johan Haleby
  */
 @PrepareForTest(PrivateFinal.class)
 public class PrivateFinalTest extends TestCase {
 
 	@SuppressWarnings("unchecked")
 	public static TestSuite suite() throws Exception {
-		return new PowerMockSuite("Unit tests for " + MockStaticTest.class.getSimpleName(), PrivateFinalTest.class);
+		return new PowerMockSuite("Unit tests for " + PrivateFinalTest.class.getSimpleName(), PrivateFinalTest.class);
 	}
 
 	public void testSay() throws Exception {
-
 		PrivateFinal tested = createPartialMock(PrivateFinal.class, "sayIt");
 		String expected = "Hello altered World";
 		expectPrivate(tested, "sayIt", "name").andReturn(expected);

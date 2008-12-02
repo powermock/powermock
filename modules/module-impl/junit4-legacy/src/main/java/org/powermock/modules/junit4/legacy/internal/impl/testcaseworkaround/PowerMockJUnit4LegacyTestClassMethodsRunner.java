@@ -12,7 +12,10 @@ import org.junit.Test;
 import org.junit.internal.runners.TestClassMethodsRunner;
 import org.junit.internal.runners.TestMethodRunner;
 import org.junit.runner.notification.RunNotifier;
+import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.reflect.Whitebox;
+import org.powermock.tests.utils.PowerMockTestNotifier;
+import org.powermock.tests.utils.impl.PowerMockTestNotifierImpl;
 import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
 
 /**
@@ -22,9 +25,12 @@ import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
  */
 public class PowerMockJUnit4LegacyTestClassMethodsRunner extends TestClassMethodsRunner {
 
+	private final PowerMockTestNotifier powerMockTestNotifier;
+
 	@SuppressWarnings("unchecked")
-	public PowerMockJUnit4LegacyTestClassMethodsRunner(Class<?> klass) {
+	public PowerMockJUnit4LegacyTestClassMethodsRunner(Class<?> klass, PowerMockTestListener[] powerMockTestListeners) {
 		super(klass);
+		this.powerMockTestNotifier = new PowerMockTestNotifierImpl(powerMockTestListeners);
 		List<Method> testMethods = (List<Method>) Whitebox.getInternalState(this, "fTestMethods", TestClassMethodsRunner.class);
 		testMethods.addAll(getAdditionalTestMethods(klass));
 	}
@@ -58,7 +64,7 @@ public class PowerMockJUnit4LegacyTestClassMethodsRunner extends TestClassMethod
 
 	@Override
 	protected TestMethodRunner createMethodRunner(Object test, Method method, RunNotifier notifier) {
-		return new PowerMockJUnit4LegacyTestMethodRunner(test, method, notifier, methodDescription(method));
+		return new PowerMockJUnit4LegacyTestMethodRunner(test, method, notifier, methodDescription(method), powerMockTestNotifier);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -91,4 +97,5 @@ public class PowerMockJUnit4LegacyTestClassMethodsRunner extends TestClassMethod
 			invokeTestMethod(method, notifier);
 		}
 	}
+
 }

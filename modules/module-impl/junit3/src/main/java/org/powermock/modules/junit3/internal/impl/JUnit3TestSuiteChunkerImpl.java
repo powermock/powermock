@@ -28,6 +28,7 @@ import junit.framework.TestCase;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
+import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.modules.junit3.internal.JUnit3TestSuiteChunker;
 import org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate;
 import org.powermock.tests.utils.impl.AbstractTestSuiteChunkerImpl;
@@ -65,10 +66,12 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	protected PowerMockJUnit3RunnerDelegate createDelegatorFromClassloader(ClassLoader classLoader, Class<?> testClass,
 			final List<Method> methodsToTest) throws Exception {
 		final Class<?> testClassLoadedByMockedClassLoader = Class.forName(testClass.getName(), false, classLoader);
+		final Class<?> powerMockTestListenerArrayType = Class.forName(PowerMockTestListener[].class.getName(), false, classLoader);
 		Class<?> delegateClass = Class.forName(PowerMockJUnit3RunnerDelegateImpl.class.getName(), false, classLoader);
-		Constructor<?> con = delegateClass.getConstructor(new Class[] { Class.class, Method[].class });
+		Constructor<?> con = delegateClass.getConstructor(new Class[] { Class.class, Method[].class, powerMockTestListenerArrayType });
 		final PowerMockJUnit3RunnerDelegate newDelegate = (PowerMockJUnit3RunnerDelegate) con.newInstance(new Object[] {
-				testClassLoadedByMockedClassLoader, methodsToTest.toArray(new Method[0]) });
+				testClassLoadedByMockedClassLoader, methodsToTest.toArray(new Method[0]),
+				getPowerMockTestListenersLoadedByASpecificClassLoader(testClass, classLoader) });
 		newDelegate.setName(name);
 		return newDelegate;
 	}

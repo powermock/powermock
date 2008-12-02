@@ -8,9 +8,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation can be placed on those fields in your test class should be
- * mocked. This eliminates the need to setup and tear-down mocks manually which
- * minimizes repetitive test code and makes the test case more readable. In
+ * This annotation can be placed on those fields in your test class that should
+ * be mocked. This eliminates the need to setup and tear-down mocks manually
+ * which minimizes repetitive test code and makes the test more readable. In
  * order for PowerMock to control the life-cycle of the mocks you must supply
  * the {@link PowerMockListener} annotation to the class-level of the test case.
  * For example when using the EasyMock API:

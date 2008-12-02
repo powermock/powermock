@@ -43,13 +43,13 @@ import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
-import org.powermock.core.MockRepository;
 import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
 import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.powermock.modules.junit4.internal.impl.testcaseworkaround.PowerMockJUnit4MethodValidator;
 import org.powermock.reflect.Whitebox;
-import org.powermock.tests.utils.Keys;
+import org.powermock.tests.utils.PowerMockTestNotifier;
+import org.powermock.tests.utils.impl.PowerMockTestNotifierImpl;
 import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
 import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
 
@@ -72,10 +72,10 @@ import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
 public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filterable, Sortable, PowerMockJUnitRunnerDelegate {
 	private final List<Method> testMethods;
 	private final TestClass testClass;
-	private final PowerMockTestListener[] listeners;
+	private final PowerMockTestNotifier powerMockTestNotifier;
 
 	public PowerMockJUnit44RunnerDelegateImpl(Class<?> klass, String[] methodsToRun, PowerMockTestListener[] listeners) throws InitializationError {
-		this.listeners = listeners == null ? new PowerMockTestListener[0] : listeners;
+		this.powerMockTestNotifier = new PowerMockTestNotifierImpl(listeners == null ? new PowerMockTestListener[0] : listeners);
 		testClass = new TestClass(klass);
 		testMethods = getTestMethods(klass, methodsToRun);
 		validate();
@@ -201,7 +201,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 		new MethodRoadie(test, testMethod, notifier, description) {
 			@Override
 			protected void runTestMethod() {
-				notifyListenersBeforeTestMethodStart(test, method);
+				powerMockTestNotifier.notifyBeforeTestMethod(test, method, new Object[0]);
 				try {
 					try {
 						if (extendsFromTestCase) {
@@ -245,19 +245,6 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 					}
 				} catch (Throwable e) {
 					throw new RuntimeException("Internal error in PowerMock.", e);
-				}
-			}
-
-			private void notifyListenersBeforeTestMethodStart(final Object test, final Method method) {
-				MockRepository.putAdditionalState(Keys.CURRENT_TEST_INSTANCE, test);
-				MockRepository.putAdditionalState(Keys.CURRENT_TEST_METHOD, method);
-				for (int i = 0; i < listeners.length; i++) {
-					final PowerMockTestListener testListener = listeners[i];
-					try {
-						testListener.beforeTestMethod(test, method, new Object[0]);
-					} catch (Exception e) {
-						throw new RuntimeException("Invoking the beforeTestMethod on PowerMock test listner " + testListener + " failed.", e);
-					}
 				}
 			}
 

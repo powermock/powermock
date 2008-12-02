@@ -43,12 +43,10 @@ import org.powermock.reflect.Whitebox;
 public class PowerMockJUnit4LegacyRunnerDelegateImpl extends TestClassRunner implements PowerMockJUnitRunnerDelegate {
 
 	private final int testCount;
-	private PowerMockTestListener[] listeners;
 
 	public PowerMockJUnit4LegacyRunnerDelegateImpl(Class<?> klass, String[] methodsToRun, PowerMockTestListener[] listeners)
 			throws InitializationError, NoTestsRemainException {
-		super(klass, new PowerMockJUnit4LegacyTestClassMethodsRunner(klass));
-		this.listeners = listeners == null ? new PowerMockTestListener[0] : listeners;
+		super(klass, new PowerMockJUnit4LegacyTestClassMethodsRunner(klass, listeners == null ? new PowerMockTestListener[0] : listeners));
 		filter(new PowerMockJUnit4LegacyFilter(methodsToRun));
 
 		testCount = methodsToRun.length;

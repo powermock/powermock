@@ -41,7 +41,9 @@ import org.powermock.modules.junit4.common.internal.JUnit4TestSuiteChunker;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.powermock.tests.result.TestSuiteResult;
 import org.powermock.tests.result.impl.TestSuiteResultImpl;
+import org.powermock.tests.utils.PowerMockTestNotifier;
 import org.powermock.tests.utils.impl.AbstractTestSuiteChunkerImpl;
+import org.powermock.tests.utils.impl.PowerMockTestNotifierImpl;
 import org.powermock.tests.utils.impl.TestChunk;
 
 public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<PowerMockJUnitRunnerDelegate> implements JUnit4TestSuiteChunker,
@@ -93,13 +95,9 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 			allMethods.addAll(testChunk.getTestMethodsToBeExecutedByThisClassloader());
 		}
 
-		for (PowerMockTestListener powerMockTestListener : powerMockTestListeners) {
-			try {
-				powerMockTestListener.beforeTestSuiteStarted(testClass, allMethods.toArray(new Method[0]));
-			} catch (Exception e) {
-				throw new RuntimeException("PowerMockListener " + powerMockTestListener + " throwed an exception.", e);
-			}
-		}
+		final Method[] allMethodsAsArray = allMethods.toArray(new Method[0]);
+		final PowerMockTestNotifier powerMockTestNotifier = new PowerMockTestNotifierImpl(powerMockTestListeners);
+		powerMockTestNotifier.notifyBeforeTestSuiteStarted(testClass, allMethodsAsArray);
 
 		int failureCount = 0;
 		int successCount = 0;
@@ -108,7 +106,7 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		for (int i = 0; i < delegates.size(); i++) {
 			TestChunk next = iterator.next();
 			final ClassLoader key = next.getClassLoader();
-			PowerMockJUnit4RunListener powerMockListener = new PowerMockJUnit4RunListener(key, powerMockTestListeners);
+			PowerMockJUnit4RunListener powerMockListener = new PowerMockJUnit4RunListener(key, powerMockTestNotifier);
 			notifier.addListener(powerMockListener);
 			final PowerMockJUnitRunnerDelegate delegate = delegates.get(i);
 			delegate.run(notifier);
@@ -121,14 +119,7 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		}
 
 		final TestSuiteResult testSuiteResult = new TestSuiteResultImpl(failureCount, successCount, getTestCount(), ignoreCount);
-		for (PowerMockTestListener powerMockTestListener : powerMockTestListeners) {
-			try {
-				powerMockTestListener.afterTestSuiteEnded(testClass, allMethods.toArray(new Method[0]), testSuiteResult);
-			} catch (Exception e) {
-				throw new RuntimeException("PowerMockListener " + powerMockTestListener + " throwed an exception.", e);
-			}
-		}
-
+		powerMockTestNotifier.notifyAfterTestSuiteEnded(testClass, allMethodsAsArray, testSuiteResult);
 	}
 
 	public boolean shouldExecuteTestForMethod(Class<?> testClass, Method potentialTestMethod) {
@@ -153,7 +144,6 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		 * See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6500212.
 		 */
 		final Class<?> powerMockTestListenerArrayType = Class.forName(PowerMockTestListener[].class.getName(), false, classLoader);
-
 		final Class<?> delegateClass = Class.forName(runnerDelegateImplementationType.getName(), false, classLoader);
 		Constructor<?> con = delegateClass.getConstructor(new Class[] { Class.class, String[].class, powerMockTestListenerArrayType });
 		final PowerMockJUnitRunnerDelegate newInstance = (PowerMockJUnitRunnerDelegate) con.newInstance(new Object[] {

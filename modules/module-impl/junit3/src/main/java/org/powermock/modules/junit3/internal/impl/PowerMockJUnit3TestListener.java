@@ -29,8 +29,6 @@ import org.powermock.core.MockRepository;
  * cleanup after each test so that no state is maintained in PowerMock between
  * test runs.
  * 
- * @author Johan Haleby
- * 
  */
 public class PowerMockJUnit3TestListener implements TestListener {
 	private ClassLoader mockClassLoader;
@@ -42,7 +40,6 @@ public class PowerMockJUnit3TestListener implements TestListener {
 	/**
 	 * Does nothing.
 	 */
-
 	public void addError(Test test, Throwable t) {
 	}
 
@@ -71,5 +68,4 @@ public class PowerMockJUnit3TestListener implements TestListener {
 	 */
 	public void startTest(Test test) {
 	}
-
 }

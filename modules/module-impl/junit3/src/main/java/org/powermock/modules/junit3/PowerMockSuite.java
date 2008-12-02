@@ -15,7 +15,6 @@
  */
 package org.powermock.modules.junit3;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
 
 import junit.framework.Test;

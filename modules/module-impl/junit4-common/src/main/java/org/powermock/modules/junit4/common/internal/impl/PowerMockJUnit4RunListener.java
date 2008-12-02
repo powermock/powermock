@@ -15,24 +15,16 @@
  */
 package org.powermock.modules.junit4.common.internal.impl;
 
-import java.lang.reflect.Method;
-
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import org.powermock.core.MockRepository;
-import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.reflect.Whitebox;
-import org.powermock.tests.result.Result;
-import org.powermock.tests.result.TestMethodResult;
-import org.powermock.tests.result.impl.TestMethodResultImpl;
-import org.powermock.tests.utils.Keys;
+import org.powermock.tests.utils.PowerMockTestNotifier;
 
 public class PowerMockJUnit4RunListener extends RunListener {
 
 	private final ClassLoader mockClassLoader;
-
-	private final PowerMockTestListener[] powerMockTestListeners;
 
 	private int failureCount;
 
@@ -40,9 +32,11 @@ public class PowerMockJUnit4RunListener extends RunListener {
 
 	private boolean currentTestSuccessful = true;
 
-	public PowerMockJUnit4RunListener(ClassLoader mockClassLoader, PowerMockTestListener[] powerMockTestListeners) {
+	private final PowerMockTestNotifier powerMockTestNotifier;
+
+	public PowerMockJUnit4RunListener(ClassLoader mockClassLoader, PowerMockTestNotifier powerMockTestNotifier) {
 		this.mockClassLoader = mockClassLoader;
-		this.powerMockTestListeners = powerMockTestListeners;
+		this.powerMockTestNotifier = powerMockTestNotifier;
 	}
 
 	/**
@@ -55,10 +49,7 @@ public class PowerMockJUnit4RunListener extends RunListener {
 	public void testFinished(Description description1) throws Exception {
 		Class<?> mockRepositoryClass = mockClassLoader.loadClass(MockRepository.class.getName());
 		try {
-			final Object test = Whitebox.invokeMethod(mockRepositoryClass, "getAdditionalState", Keys.CURRENT_TEST_INSTANCE);
-			final Method testMethod = (Method) Whitebox.invokeMethod(mockRepositoryClass, "getAdditionalState", Keys.CURRENT_TEST_METHOD);
-
-			notifyListenersOfTestResult(test, testMethod);
+			notifyListenersOfTestResult();
 		} finally {
 			// Clear state
 			Whitebox.invokeMethod(mockRepositoryClass, "clear");
@@ -90,13 +81,9 @@ public class PowerMockJUnit4RunListener extends RunListener {
 		ignoreCount++;
 	}
 
-	private void notifyListenersOfTestResult(Object test, Method testMethod) throws Exception {
+	private void notifyListenersOfTestResult() {
 		try {
-			final TestMethodResult testMethodResultImpl = new TestMethodResultImpl((currentTestSuccessful ? Result.SUCCESSFUL : Result.FAILED));
-
-			for (PowerMockTestListener testListener : powerMockTestListeners) {
-				testListener.afterTestMethod(test, testMethod, new Object[0], testMethodResultImpl);
-			}
+			powerMockTestNotifier.notifyAfterTestMethod(currentTestSuccessful);
 		} finally {
 			currentTestSuccessful = true;
 		}

@@ -23,17 +23,17 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate;
 
 @SuppressWarnings("unchecked")
-public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements
-		PowerMockJUnit3RunnerDelegate {
+public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements PowerMockJUnit3RunnerDelegate {
 
 	private final Method[] methodsToRun;
 
-	public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass,
-			Method[] methodsToRun, String name) {
-		this(theClass, methodsToRun);
+
+	public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass, Method[] methodsToRun, String name, PowerMockTestListener[] powerListeners) {
+		this(theClass, methodsToRun, powerListeners);
 		setName(name);
 	}
 
@@ -42,19 +42,19 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements
 	 * starting with "test" as test cases to the suite. Parts of this method was
 	 * cut'n'pasted on the train between Malmö and Stockholm.
 	 */
-	public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass,
-			Method[] methodsToRun) {
+	public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass, Method[] methodsToRun, PowerMockTestListener[] powerMockTestListeners) {
+		// this.powerMockTestNotifier = new
+		// PowerMockTestNotifierImpl(powerMockTestListeners == null ? new
+		// PowerMockTestListener[0]
+		// : powerMockTestListeners);
 		this.methodsToRun = methodsToRun;
-
 		setName(theClass.getName());
 
 		try {
 			getTestConstructor(theClass); // Avoid generating multiple error
 			// messages
 		} catch (NoSuchMethodException e) {
-			addTest(warning("Class "
-					+ theClass.getName()
-					+ " has no public constructor TestCase(String name) or TestCase()"));
+			addTest(warning("Class " + theClass.getName() + " has no public constructor TestCase(String name) or TestCase()"));
 			return;
 		}
 
@@ -79,8 +79,7 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements
 		}
 
 		if (addTestMethod == null) {
-			throw new RuntimeException(
-					"Internal error: Failed to get addTestMethod for JUnit3.");
+			throw new RuntimeException("Internal error: Failed to get addTestMethod for JUnit3.");
 		}
 
 		addTestMethod.setAccessible(true);
@@ -88,17 +87,16 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements
 		while (Test.class.isAssignableFrom(superClass)) {
 			for (int i = 0; i < methodsToRun.length; i++) {
 				try {
-					addTestMethod
-							.invoke(this, methodsToRun[i], names, theClass);
+					addTestMethod.invoke(this, methodsToRun[i], names, theClass);
 				} catch (Exception e) {
-					throw new RuntimeException(
-							"Internal error: Failed to execute addTestMethod for JUnit3.");
+					throw new RuntimeException("Internal error: Failed to execute addTestMethod for JUnit3.");
 				}
 			}
 			superClass = superClass.getSuperclass();
 		}
-		if (testCount() == 0)
+		if (testCount() == 0) {
 			addTest(warning("No tests found in " + theClass.getName()));
+		}
 	}
 
 	/**

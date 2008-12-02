@@ -11,6 +11,7 @@ import org.junit.internal.runners.TestMethodRunner;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.powermock.reflect.Whitebox;
+import org.powermock.tests.utils.PowerMockTestNotifier;
 
 /**
  * This class is needed because the test method runner creates a new instance of
@@ -19,7 +20,8 @@ import org.powermock.reflect.Whitebox;
  * NPE's.
  * <p>
  * This class also executes the setUp and tearDown methods if the test case
- * extends TestCase.
+ * extends TestCase. Another thing it does is to invoke all PowerMock test
+ * listeners for events.
  */
 public class PowerMockJUnit4LegacyTestMethodRunner extends TestMethodRunner {
 
@@ -29,11 +31,15 @@ public class PowerMockJUnit4LegacyTestMethodRunner extends TestMethodRunner {
 	private final Description description;
 	private final RunNotifier notifier;
 
-	public PowerMockJUnit4LegacyTestMethodRunner(Object test, Method method, RunNotifier notifier, Description description) {
+	private final PowerMockTestNotifier powerMockTestNotifier;
+
+	public PowerMockJUnit4LegacyTestMethodRunner(Object test, Method method, RunNotifier notifier, Description description,
+			PowerMockTestNotifier powerMockTestNotifier) {
 		super(test, method, notifier, description);
 		this.method = method;
 		this.description = description;
 		this.notifier = notifier;
+		this.powerMockTestNotifier = powerMockTestNotifier;
 		testIntrospector = new PowerMockJUnit4LegacyTestIntrospector(test.getClass());
 		Whitebox.setInternalState(this, "fTestIntrospector", testIntrospector, TestMethodRunner.class);
 		Whitebox.setInternalState(this, "fTestIntrospector", testIntrospector, BeforeAndAfterRunner.class);
@@ -47,6 +53,7 @@ public class PowerMockJUnit4LegacyTestMethodRunner extends TestMethodRunner {
 		}
 		notifier.fireTestStarted(description);
 		try {
+			powerMockTestNotifier.notifyBeforeTestMethod(Whitebox.getInternalState(this, "fTest"), method, new Object[0]);
 			long timeout = testIntrospector.getTimeout(method);
 
 			// Execute the the setUp method if needed
