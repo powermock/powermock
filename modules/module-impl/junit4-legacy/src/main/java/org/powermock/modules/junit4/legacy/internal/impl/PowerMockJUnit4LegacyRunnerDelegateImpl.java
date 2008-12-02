@@ -23,6 +23,7 @@ import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
+import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.powermock.modules.junit4.legacy.internal.impl.testcaseworkaround.PowerMockJUnit4LegacyTestClassMethodsRunner;
 import org.powermock.modules.junit4.legacy.internal.impl.testcaseworkaround.PowerMockJUnit4LegacyTestIntrospector;
@@ -37,18 +38,24 @@ import org.powermock.reflect.Whitebox;
  * {@link TestClassRunner} used in JUnit 4.3.
  * 
  * @see TestClassRunner
- * @author Johan Haleby
  * 
  */
 public class PowerMockJUnit4LegacyRunnerDelegateImpl extends TestClassRunner implements PowerMockJUnitRunnerDelegate {
 
 	private final int testCount;
+	private PowerMockTestListener[] listeners;
 
-	public PowerMockJUnit4LegacyRunnerDelegateImpl(Class<?> klass, String[] methodsToRun) throws InitializationError, NoTestsRemainException {
+	public PowerMockJUnit4LegacyRunnerDelegateImpl(Class<?> klass, String[] methodsToRun, PowerMockTestListener[] listeners)
+			throws InitializationError, NoTestsRemainException {
 		super(klass, new PowerMockJUnit4LegacyTestClassMethodsRunner(klass));
+		this.listeners = listeners == null ? new PowerMockTestListener[0] : listeners;
 		filter(new PowerMockJUnit4LegacyFilter(methodsToRun));
 
 		testCount = methodsToRun.length;
+	}
+
+	public PowerMockJUnit4LegacyRunnerDelegateImpl(Class<?> klass, String[] methodsToRun) throws InitializationError, NoTestsRemainException {
+		this(klass, methodsToRun, null);
 	}
 
 	@Override
@@ -67,7 +74,6 @@ public class PowerMockJUnit4LegacyRunnerDelegateImpl extends TestClassRunner imp
 		};
 
 		Whitebox.setInternalState(runner, "fTestIntrospector", new PowerMockJUnit4LegacyTestIntrospector(getTestClass()), BeforeAndAfterRunner.class);
-
 
 		runner.runProtected();
 	}

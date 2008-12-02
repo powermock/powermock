@@ -15,8 +15,11 @@
  */
 package org.powermock.reflect;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Set;
 
 import org.powermock.reflect.internal.WhiteboxImpl;
 
@@ -422,5 +425,26 @@ public class Whitebox {
 	 */
 	public static Class<?> getType(Object object) {
 		return WhiteboxImpl.getType(object);
+	}
+
+	/**
+	 * Get all fields annotated with a particular annotation. This method
+	 * traverses the class hierarchy when checking for the annotation.
+	 * 
+	 * @param object
+	 *            The object to look for annotations. Note that if're you're
+	 *            passing an object only instance fields are checked, passing a
+	 *            class will only check static fields.
+	 * @param annotation
+	 *            The annotation type to look for.
+	 * @param additionalAnnotations
+	 *            Optionally more annotations to look for. If any of the
+	 *            annotations are associated with a particular field it will be
+	 *            added to the resulting <code>Set</code>.
+	 * @return A set of all fields containing the particular annotation.
+	 */
+	public static Set<Field> getFieldsAnnotatedWith(Object object, Class<? extends Annotation> annotation,
+			Class<? extends Annotation>... additionalAnnotations) {
+		return WhiteboxImpl.getFieldsAnnotatedWith(object, annotation, additionalAnnotations);
 	}
 }

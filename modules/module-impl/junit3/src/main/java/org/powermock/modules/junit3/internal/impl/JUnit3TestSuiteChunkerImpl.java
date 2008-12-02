@@ -64,9 +64,8 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	@Override
 	protected PowerMockJUnit3RunnerDelegate createDelegatorFromClassloader(ClassLoader classLoader, Class<?> testClass,
 			final List<Method> methodsToTest) throws Exception {
-
-		final Class<?> testClassLoadedByMockedClassLoader = classLoader.loadClass(testClass.getName());
-		Class<?> delegateClass = classLoader.loadClass(PowerMockJUnit3RunnerDelegateImpl.class.getName());
+		final Class<?> testClassLoadedByMockedClassLoader = Class.forName(testClass.getName(), false, classLoader);
+		Class<?> delegateClass = Class.forName(PowerMockJUnit3RunnerDelegateImpl.class.getName(), false, classLoader);
 		Constructor<?> con = delegateClass.getConstructor(new Class[] { Class.class, Method[].class });
 		final PowerMockJUnit3RunnerDelegate newDelegate = (PowerMockJUnit3RunnerDelegate) con.newInstance(new Object[] {
 				testClassLoadedByMockedClassLoader, methodsToTest.toArray(new Method[0]) });
@@ -113,7 +112,7 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 
 		if (test instanceof TestCase) {
 			// testSuiteDelegator.addTest(prepareTestCase((TestCase) test));
-			super.addTestClassToSuite(test.getClass());
+			addTestClassToSuite(test.getClass());
 		} else if (test instanceof TestSuite) {
 			final Enumeration<?> tests = ((TestSuite) test).tests();
 			while (tests.hasMoreElements()) {
@@ -129,7 +128,7 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	 * {@inheritDoc}
 	 */
 	public void addTestSuite(Class<? extends TestCase> testClass) throws Exception {
-		super.addTestClassToSuite(testClass);
+		addTestClassToSuite(testClass);
 	}
 
 	/**
@@ -172,7 +171,7 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	}
 
 	private Iterator<TestChunk> getChunkIterator() {
-		List<TestChunk> entrySet = getAllChunkEntries();
+		List<TestChunk> entrySet = getTestChunks();
 		Iterator<TestChunk> iterator = entrySet.iterator();
 
 		if (delegates.size() != getChunkSize()) {
@@ -186,6 +185,20 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	 */
 	public Test testAt(int index) {
 		return delegates.get(getDelegatorIndex(index)).testAt(getInternalTestIndex(index));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void addTestClassToSuite(Class<?> clazz) throws Exception {
+		chunkClass(clazz);
+		if (!delegatesCreatedForTheseClasses.contains(clazz)) {
+			try {
+				createTestDelegators(clazz, getTestChunksEntries(clazz));
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
 	/**

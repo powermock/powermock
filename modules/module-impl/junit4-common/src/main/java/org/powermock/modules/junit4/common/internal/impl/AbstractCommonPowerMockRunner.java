@@ -26,7 +26,7 @@ import org.junit.runner.notification.RunNotifier;
 import org.powermock.modules.junit4.common.internal.JUnit4TestSuiteChunker;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 
-public class AbstractCommonPowerMockRunner extends Runner implements Filterable, Sortable {
+public abstract class AbstractCommonPowerMockRunner extends Runner implements Filterable, Sortable {
 
 	private JUnit4TestSuiteChunker suiteChunker;
 

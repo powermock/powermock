@@ -240,5 +240,4 @@ public class MockRepository {
 	public static synchronized boolean shouldSuppressConstructor(Constructor<?> constructor) {
 		return suppressConstructor.contains(constructor);
 	}
-
 }

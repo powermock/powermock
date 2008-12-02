@@ -15,6 +15,7 @@
  */
 package org.powermock.modules.junit3.internal;
 
+import java.lang.reflect.Method;
 import java.util.Enumeration;
 
 import junit.framework.Test;
@@ -24,6 +25,18 @@ import junit.framework.TestResult;
 import org.powermock.tests.utils.TestSuiteChunker;
 
 public interface JUnit3TestSuiteChunker extends TestSuiteChunker {
+	
+	/**
+	 * Add a class to the test suite. Methods in this class will be checked
+	 * according to {@link #shouldExecuteTestForMethod(Class, Method)} to see if
+	 * it should be executed.
+	 * 
+	 * @param clazz
+	 *            The class that should contain test cases.
+	 * @throws Exception
+	 *             If something unexpected goes wrong.
+	 */
+	public void addTestClassToSuite(Class<?> clazz) throws Exception;
 
 	public void run(TestResult result);
 

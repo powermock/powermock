@@ -143,7 +143,7 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 		}
 		enhancer.setSuperclass(toMock);
 		enhancer.setCallbackType(interceptor.getClass());
-
+		
 		Class mockClass = enhancer.createClass();
 		Enhancer.registerCallbacks(mockClass, new Callback[] { interceptor });
 

@@ -15,6 +15,7 @@
  */
 package org.powermock.tests.utils.impl;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -26,12 +27,15 @@ import java.util.Map.Entry;
 
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PowerMockListener;
 import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
+import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.MainMockTransformer;
+import org.powermock.reflect.Whitebox;
 import org.powermock.tests.utils.TestClassesExtractor;
 import org.powermock.tests.utils.TestSuiteChunker;
 
@@ -41,7 +45,6 @@ import org.powermock.tests.utils.TestSuiteChunker;
  * defined by the {@link PrepareForTest} annotation. This to make sure that you
  * can byte-code manipulate classes in tests without impacting on other tests.
  * 
- * @author Johan Haleby
  */
 public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunker {
 	protected static final int NOT_INITIALIZED = -1;
@@ -52,11 +55,13 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 
 	protected final TestClassesExtractor suppressionExtractor = new StaticConstructorSuppressExtractorImpl();
 
+	private final Class<?>[] testClasses;
+
 	/*
 	 * The classes listed in this set has been chunked and its delegates has
 	 * been created.
 	 */
-	private final Set<Class<?>> delegatesCreatedForTheseClasses = new LinkedHashSet<Class<?>>();
+	protected final Set<Class<?>> delegatesCreatedForTheseClasses = new LinkedHashSet<Class<?>>();
 
 	// A list of junit delegates.
 	protected final List<T> delegates = new LinkedList<T>();
@@ -82,13 +87,37 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 	}
 
 	protected AbstractTestSuiteChunkerImpl(Class<?>... testClasses) throws Exception {
+		this.testClasses = testClasses;
 		internalSuites = new LinkedList<TestCaseEntry>();
 		for (Class<?> clazz : testClasses) {
 			chunkClass(clazz);
 		}
 	}
 
-	protected void chunkClass(Class<?> testClass) throws Exception {
+	protected Object getPowerMockTestListenersLoadedByASpecificClassLoader(Class<?> clazz, ClassLoader classLoader) {
+		try {
+			final Class<?> powerMockTestListenerType = Class.forName(PowerMockTestListener.class.getName(), false, classLoader);
+			Object testListeners = null;
+			if (clazz.isAnnotationPresent(PowerMockListener.class)) {
+				PowerMockListener annotation = clazz.getAnnotation(PowerMockListener.class);
+				final Class<? extends PowerMockTestListener>[] powerMockTestListeners = annotation.value();
+				if (powerMockTestListeners.length > 0) {
+					testListeners = Array.newInstance(powerMockTestListenerType, powerMockTestListeners.length);
+					for (int i = 0; i < powerMockTestListeners.length; i++) {
+						final Class<?> listenerTypeLoadedByClassLoader = Class.forName(powerMockTestListeners[i].getName(), false, classLoader);
+						Array.set(testListeners, i, Whitebox.newInstance(listenerTypeLoadedByClassLoader));
+					}
+				}
+			} else {
+				testListeners = Array.newInstance(powerMockTestListenerType, 0);
+			}
+			return testListeners;
+		} catch (ClassNotFoundException e) {
+			throw new IllegalStateException("PowerMock internal error: Failed to load class.", e);
+		}
+	}
+
+	protected void chunkClass(final Class<?> testClass) throws Exception {
 		ClassLoader defaultMockLoader = null;
 		final String[] ignorePackages = getIgnorePackages(testClass);
 		if (testClass.isAnnotationPresent(PrepareEverythingForTest.class)) {
@@ -104,7 +133,6 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 		List<TestChunk> testChunks = new LinkedList<TestChunk>();
 		testChunks.add(defaultTestChunk);
 		internalSuites.add(new TestCaseEntry(testClass, testChunks));
-		// initEntries(testClass, currentClassloaderMethods, internalSuites);
 		initEntries(internalSuites);
 		/*
 		 * If we don't have any test that should be executed by the default
@@ -242,25 +270,11 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 		testAtDelegateMapper.put(internalSuites.size(), testIndexesForThisClassloader);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addTestClassToSuite(Class<?> clazz) throws Exception {
-		chunkClass(clazz);
-		if (!delegatesCreatedForTheseClasses.contains(clazz)) {
-			try {
-				createTestDelegators(clazz, getTestChunksEntries(clazz));
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
-
 	public int getChunkSize() {
-		return getAllChunkEntries().size();
+		return getTestChunks().size();
 	}
 
-	public List<TestChunk> getAllChunkEntries() {
+	public List<TestChunk> getTestChunks() {
 		List<TestChunk> allChunks = new LinkedList<TestChunk>();
 		for (TestCaseEntry entry : internalSuites) {
 			for (TestChunk chunk : entry.getTestChunks()) {
@@ -336,5 +350,9 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 			}
 		}
 		return null;
+	}
+
+	public Class<?>[] getTestClasses() {
+		return testClasses;
 	}
 }

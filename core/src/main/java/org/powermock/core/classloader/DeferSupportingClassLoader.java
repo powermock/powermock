@@ -27,30 +27,31 @@ import java.util.Map;
 public abstract class DeferSupportingClassLoader extends ClassLoader {
 	private Map<String, Class<?>> classes;
 
-	private String ignoredPackages[];
+	private String deferPackages[];
 
 	ClassLoader deferTo;
 
 	static int count;
 
 	public String[] getIgnoredPackages() {
-		return ignoredPackages;
+		return deferPackages;
 	}
 
-	public DeferSupportingClassLoader(ClassLoader classloader, String ignoredPackages[]) {
+	public DeferSupportingClassLoader(ClassLoader classloader, String deferPackages[]) {
 		if (classloader == null) {
 			deferTo = ClassLoader.getSystemClassLoader();
 		} else {
 			deferTo = classloader;
 		}
 		classes = new HashMap<String, Class<?>>();
-		this.ignoredPackages = ignoredPackages;
+		this.deferPackages = deferPackages;
 	}
 
 	protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
 		Class<?> clazz = null;
 		if ((clazz = (Class<?>) classes.get(name)) == null) {
-			if (shouldIgnore(ignoredPackages, name)) {
+			final boolean shouldDefer = shouldDefer(deferPackages, name);
+			if (shouldDefer) {
 				clazz = deferTo.loadClass(name);
 			} else {
 				clazz = loadModifiedClass(name);
@@ -64,17 +65,18 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
 		return clazz;
 	}
 
-	protected boolean shouldIgnore(String[] packages, String name) {
-		for (String ignore : packages) {
-			if(ignoreConditionMatches(name, ignore)) {
+	protected boolean shouldDefer(String[] packages, String name) {
+		for (String packageToCheck : packages) {
+			if (deferConditionMatches(name, packageToCheck)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private boolean ignoreConditionMatches(String name, String ignore) {
-		if ((name.startsWith(ignore) || name.endsWith(ignore)) && !(name.startsWith(ignore) && shouldModifyClass(name))) {
+	private boolean deferConditionMatches(String name, String packageName) {
+		if ((name.startsWith(packageName) || name.endsWith(packageName))
+				&& !(shouldLoadUnmodifiedClass(name) || name.startsWith(packageName) && shouldModifyClass(name))) {
 			return true;
 		}
 		return false;
@@ -95,4 +97,5 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
 
 	protected abstract boolean shouldModifyClass(String s);
 
+	protected abstract boolean shouldLoadUnmodifiedClass(String className);
 }

@@ -15,6 +15,7 @@
  */
 package org.powermock.modules.junit3;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
 
 import junit.framework.Test;
@@ -26,9 +27,8 @@ import org.powermock.modules.junit3.internal.JUnit3TestSuiteChunker;
 import org.powermock.modules.junit3.internal.impl.JUnit3TestSuiteChunkerImpl;
 
 /**
- * A custom JUnit 3 Suite that must be used to run JTestRack tests under JUnit3.
+ * A custom JUnit 3 Suite that must be used to run PowerMock tests under JUnit3.
  * 
- * @author Johan Haleby
  */
 public class PowerMockSuite extends TestSuite {
 
@@ -61,7 +61,11 @@ public class PowerMockSuite extends TestSuite {
 		try {
 			testChunker.addTest(test);
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			if (e instanceof RuntimeException) {
+				throw (RuntimeException) e;
+			} else {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 

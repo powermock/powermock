@@ -24,6 +24,7 @@ import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
 
+import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.core.transformers.MockTransformer;
 
 /**
@@ -51,24 +52,27 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 	private Set<String> modify = Collections.synchronizedSet(new HashSet<String>());
 
 	/*
-	 * Classes not defered but loaded by the mock class loader but they're not
+	 * Classes not deferred but loaded by the mock class loader but they're not
 	 * modified.
 	 */
-	private final String[] ignore = new String[] { "org.hamcrest.", "org.junit.", "junit.", "org.easymock.", "org.powermock.", "net.sf.cglib.",
-			"javassist." };
+	private final String[] packagesToLoadButNotModify = new String[] { "org.hamcrest.", "org.junit.", "junit.", "org.easymock.", "net.sf.cglib.",
+			"javassist.", "org.powermock.modules.junit4.internal.", "org.powermock.modules.junit4.legacy.internal.",
+			"org.powermock.modules.junit3.internal.", "org.powermock" };
+
+	private final String[] specificClassesToLoadButNotModify = new String[] { InvocationSubstitute.class.getName() };
 
 	/*
-	 * Classes that should always be defered regardless of what the user
+	 * Classes that should always be deferred regardless of what the user
 	 * specifies in annotations etc.
 	 */
-	private static final String[] packagesToBeDefered = new String[] { "org.hamcrest.", "java.", "javax.accessibility.", "sun.", "org.junit.",
-			"junit.", "org.powermock.modules.junit4.internal.", "org.powermock.modules.junit4.legacy.internal.",
-			"org.powermock.modules.junit4.common.internal.", "org.powermock.modules.junit3.internal." };
+	private static final String[] packagesToBeDeferred = new String[] { "org.hamcrest.", "java.", "javax.accessibility.", "sun.", "org.junit.",
+			"junit.", "org.powermock.modules.junit4.common.internal.", "org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate",
+			"org.powermock.core" };
 
 	// TODO Why is this needed!? We need to find a better solution.
 	final private String ignoredClass = "net.sf.cglib.proxy.Enhancer$EnhancerKey$$KeyFactoryByCGLIB$$";
 	final private String ignoredClass2 = "net.sf.cglib.core.MethodWrapper$MethodWrapperKey$$KeyFactoryByCGLIB";
-	
+
 	private ClassPool classPool = new ClassPool();
 
 	/**
@@ -77,28 +81,28 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 	 * 
 	 * @param classesToMock
 	 *            The classes that must be modified to prepare for testability.
-	 * @param packagesToIgnore
+	 * @param packagesToDefer
 	 *            Classes in these packages will be defered to the system
 	 *            class-loader.
 	 */
-	public MockClassLoader(String[] classesToMock, String[] packagesToIgnore) {
-		super(MockClassLoader.class.getClassLoader(), getPackagesToDefer(packagesToIgnore));
+	public MockClassLoader(String[] classesToMock, String[] packagesToDefer) {
+		super(MockClassLoader.class.getClassLoader(), getPackagesToDefer(packagesToDefer));
 
 		addClassesToModify(classesToMock);
 		classPool.appendClassPath(new ClassClassPath(this.getClass()));
 	}
 
-	private static String[] getPackagesToDefer(final String[] additionalIgnorePackages) {
-		final int additionalIgnorePackagesLength = additionalIgnorePackages == null ? 0 : additionalIgnorePackages.length;
-		final int defaultDeferPackagesLength = packagesToBeDefered.length;
+	private static String[] getPackagesToDefer(final String[] additionalDeferPackages) {
+		final int additionalIgnorePackagesLength = additionalDeferPackages == null ? 0 : additionalDeferPackages.length;
+		final int defaultDeferPackagesLength = packagesToBeDeferred.length;
 		final int allIgnoreLength = defaultDeferPackagesLength + additionalIgnorePackagesLength;
 		final String[] allPackagesToBeIgnored = new String[allIgnoreLength];
 		if (allIgnoreLength > defaultDeferPackagesLength) {
-			System.arraycopy(packagesToBeDefered, 0, allPackagesToBeIgnored, 0, defaultDeferPackagesLength);
-			System.arraycopy(additionalIgnorePackages, 0, allPackagesToBeIgnored, defaultDeferPackagesLength, additionalIgnorePackagesLength);
+			System.arraycopy(packagesToBeDeferred, 0, allPackagesToBeIgnored, 0, defaultDeferPackagesLength);
+			System.arraycopy(additionalDeferPackages, 0, allPackagesToBeIgnored, defaultDeferPackagesLength, additionalIgnorePackagesLength);
 			return allPackagesToBeIgnored;
 		}
-		return packagesToBeDefered;
+		return packagesToBeDeferred;
 	}
 
 	/**
@@ -115,7 +119,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 	/**
 	 * Add classes that will be loaded by the mock classloader, i.e. these
 	 * classes will be byte-code manipulated to allow for testing. Any classes
-	 * contained in the {@link #packagesToBeDefered} will be ignored.
+	 * contained in the {@link #packagesToBeDeferred} will be ignored.
 	 * 
 	 * @param classes
 	 *            The fully qualified name of the classes that will be appended
@@ -124,7 +128,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 	 */
 	public void addClassesToModify(String... classes) {
 		for (String clazz : classes) {
-			if (!shouldIgnore(packagesToBeDefered, clazz)) {
+			if (!shouldDefer(packagesToBeDeferred, clazz)) {
 				modify.add(clazz);
 			}
 		}
@@ -134,7 +138,8 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 		Class<?> loadedClass = null;
 		// findSystemClass(s);
 		deferTo.loadClass(s);
-		if (shouldIgnore(ignore, s) || !(shouldIgnore(modify, s) || (modify.size() == 1 && modify.iterator().next().equals(MODIFY_ALL_CLASSES)))) {
+		if (shouldDefer(packagesToLoadButNotModify, s)
+				|| !(shouldIgnore(modify, s) || (modify.size() == 1 && modify.iterator().next().equals(MODIFY_ALL_CLASSES)))) {
 			loadedClass = loadUnmockedClass(s);
 		} else {
 			loadedClass = loadMockClass(s);
@@ -183,7 +188,6 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 
 		ClassPool.doPruning = false;
 		try {
-			// type = ClassPool.getDefault().get(name);
 			type = classPool.get(name);
 			if (type.isInterface()) {
 				return deferTo.loadClass(name);
@@ -208,5 +212,15 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 	@Override
 	protected boolean shouldModifyClass(String s) {
 		return modify.contains(s);
+	}
+
+	@Override
+	protected boolean shouldLoadUnmodifiedClass(String className) {
+		for (String classNameToLoadButNotModify : specificClassesToLoadButNotModify) {
+			if (className.equals(classNameToLoadButNotModify)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

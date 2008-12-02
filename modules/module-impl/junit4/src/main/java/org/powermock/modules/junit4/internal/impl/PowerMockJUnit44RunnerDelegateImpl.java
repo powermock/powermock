@@ -43,10 +43,13 @@ import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
+import org.powermock.core.MockRepository;
 import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
+import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.powermock.modules.junit4.internal.impl.testcaseworkaround.PowerMockJUnit4MethodValidator;
 import org.powermock.reflect.Whitebox;
+import org.powermock.tests.utils.Keys;
 import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
 import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
 
@@ -55,25 +58,31 @@ import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
  * class.
  * 
  * <p>
- * Most parts of this class is essentially a rip off from
+ * Many parts of this class are essentially a rip off from
  * {@link JUnit4ClassRunner} used in JUnit 4.4. It does however not extend this
  * class because we cannot let it perform the stuff it does in its constructor.
  * Another thing that different is that if an exception is thrown in the test we
  * add a tip to error message asking the user if they've not forgot to add a
- * class to test.
+ * class to test. Yet another difference is that this runner notifies the
+ * PowerMock listeners of certain events.
  * 
  * @see JUnit4ClassRunner
- * @author Johan Haleby
  * 
  */
 public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filterable, Sortable, PowerMockJUnitRunnerDelegate {
 	private final List<Method> testMethods;
-	private TestClass testClass;
+	private final TestClass testClass;
+	private final PowerMockTestListener[] listeners;
 
-	public PowerMockJUnit44RunnerDelegateImpl(Class<?> klass, String[] methodsToRun) throws InitializationError {
+	public PowerMockJUnit44RunnerDelegateImpl(Class<?> klass, String[] methodsToRun, PowerMockTestListener[] listeners) throws InitializationError {
+		this.listeners = listeners == null ? new PowerMockTestListener[0] : listeners;
 		testClass = new TestClass(klass);
 		testMethods = getTestMethods(klass, methodsToRun);
 		validate();
+	}
+
+	public PowerMockJUnit44RunnerDelegateImpl(Class<?> klass, String[] methodsToRun) throws InitializationError {
+		this(klass, methodsToRun, null);
 	}
 
 	public PowerMockJUnit44RunnerDelegateImpl(Class<?> klass) throws InitializationError {
@@ -110,12 +119,8 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 		methodValidator.assertValid();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * se.jayway.powermock.junit.junit4.internal.impl.PowerMockJUnitRunnerDelegate
-	 * #run(org.junit.runner.notification.RunNotifier)
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void run(final RunNotifier notifier) {
@@ -151,12 +156,8 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * se.jayway.powermock.junit.junit4.internal.impl.PowerMockJUnitRunnerDelegate
-	 * #getDescription()
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Description getDescription() {
@@ -179,7 +180,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 		return getTestWrappedClass().getConstructor().newInstance();
 	}
 
-	protected void invokeTestMethod(Method method, RunNotifier notifier) {
+	protected void invokeTestMethod(final Method method, RunNotifier notifier) {
 		Description description = methodDescription(method);
 		final Object test;
 		try {
@@ -200,6 +201,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 		new MethodRoadie(test, testMethod, notifier, description) {
 			@Override
 			protected void runTestMethod() {
+				notifyListenersBeforeTestMethodStart(test, method);
 				try {
 					try {
 						if (extendsFromTestCase) {
@@ -243,6 +245,19 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 					}
 				} catch (Throwable e) {
 					throw new RuntimeException("Internal error in PowerMock.", e);
+				}
+			}
+
+			private void notifyListenersBeforeTestMethodStart(final Object test, final Method method) {
+				MockRepository.putAdditionalState(Keys.CURRENT_TEST_INSTANCE, test);
+				MockRepository.putAdditionalState(Keys.CURRENT_TEST_METHOD, method);
+				for (int i = 0; i < listeners.length; i++) {
+					final PowerMockTestListener testListener = listeners[i];
+					try {
+						testListener.beforeTestMethod(test, method, new Object[0]);
+					} catch (Exception e) {
+						throw new RuntimeException("Invoking the beforeTestMethod on PowerMock test listner " + testListener + " failed.", e);
+					}
 				}
 			}
 

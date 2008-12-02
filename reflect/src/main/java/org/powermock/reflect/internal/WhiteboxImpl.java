@@ -15,6 +15,7 @@
  */
 package org.powermock.reflect.internal;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -23,6 +24,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -266,14 +268,14 @@ public class WhiteboxImpl {
 	}
 
 	private static Field findFieldInHierarchy(Object object, FieldMatcherStrategy strategy) {
-		return findFieldUsingStrategy(strategy, object, true, getType(object));
+		return findSingleFieldUsingStrategy(strategy, object, true, getType(object));
 	}
 
 	private static Field findField(Object object, FieldMatcherStrategy strategy, Class<?> where) {
-		return findFieldUsingStrategy(strategy, object, false, where);
+		return findSingleFieldUsingStrategy(strategy, object, false, where);
 	}
 
-	private static Field findFieldUsingStrategy(FieldMatcherStrategy strategy, Object object, boolean checkHierarchy, Class<?> startClass) {
+	private static Field findSingleFieldUsingStrategy(FieldMatcherStrategy strategy, Object object, boolean checkHierarchy, Class<?> startClass) {
 		if (object == null) {
 			throw new IllegalArgumentException("The object containing the field cannot be null");
 		}
@@ -300,6 +302,28 @@ public class WhiteboxImpl {
 		}
 		foundField.setAccessible(true);
 		return foundField;
+	}
+
+	private static Set<Field> findAllFieldsUsingStrategy(FieldMatcherStrategy strategy, Object object, boolean checkHierarchy, Class<?> startClass) {
+		if (object == null) {
+			throw new IllegalArgumentException("The object containing the field cannot be null");
+		}
+		final Set<Field> foundFields = new LinkedHashSet<Field>();
+		while (startClass != null) {
+			final Field[] declaredFields = startClass.getDeclaredFields();
+			for (Field field : declaredFields) {
+				if (strategy.matches(field) && hasFieldProperModifier(object, field)) {
+					field.setAccessible(true);
+					foundFields.add(field);
+				}
+			}
+			if (!checkHierarchy) {
+				break;
+			}
+			startClass = startClass.getSuperclass();
+		}
+
+		return Collections.unmodifiableSet(foundFields);
 	}
 
 	private static boolean hasFieldProperModifier(Object object, Field field) {
@@ -1076,8 +1100,17 @@ public class WhiteboxImpl {
 				throw new RuntimeException(cause);
 			}
 		} catch (Exception e) {
-			throw new RuntimeException("Failed to invoke method " + methodToInvoke.getName() + " on object " + tested + ". Reason was \""
-					+ e.getMessage() + "\".", e);
+			if (e instanceof InvocationTargetException) {
+				Throwable cause = e.getCause();
+				if (cause instanceof Exception) {
+					throw (Exception) cause;
+				} else {
+					throw new RuntimeException("Failed to invoke method " + methodToInvoke.getName() + " on object " + tested + ". Reason was \""
+							+ e.getMessage() + "\".", e);
+				}
+			} else {
+				throw e;
+			}
 		}
 	}
 
@@ -1197,6 +1230,37 @@ public class WhiteboxImpl {
 			type = object.getClass();
 		}
 		return getUnmockedType(type);
+	}
+
+	/**
+	 * Get all fields annotated with a particular annotation. This method
+	 * traverses the class hierarchy when checking for the annotation.
+	 * 
+	 * @param object
+	 *            The object to look for annotations. Note that if're you're
+	 *            passing an object only instance fields are checked, passing a
+	 *            class will only check static fields.
+	 * @param annotation
+	 *            The annotation type to look for.
+	 * @param additionalAnnotations
+	 *            Optionally more annotations to look for. If any of the
+	 *            annotations are associated with a particular field it will be
+	 *            added to the resulting <code>Set</code>.
+	 * @return A set of all fields containing the particular annotation.
+	 */
+	@SuppressWarnings("unchecked")
+	public static Set<Field> getFieldsAnnotatedWith(Object object, Class<? extends Annotation> annotation,
+			Class<? extends Annotation>... additionalAnnotations) {
+		Class<? extends Annotation>[] annotations = null;
+		if (additionalAnnotations == null || additionalAnnotations.length == 0) {
+			annotations = (Class<? extends Annotation>[]) new Class<?>[] { annotation };
+		} else {
+			annotations = (Class<? extends Annotation>[]) new Class<?>[additionalAnnotations.length + 1];
+			annotations[0] = annotation;
+			System.arraycopy(additionalAnnotations, 0, annotations, 1, additionalAnnotations.length);
+		}
+
+		return findAllFieldsUsingStrategy(new FieldAnnotationMatcherStrategy(annotations), object, true, getType(object));
 	}
 
 	private static boolean isClass(Object argument) {
@@ -1343,6 +1407,50 @@ public class WhiteboxImpl {
 		@Override
 		public String toString() {
 			return "type " + expectedFieldType.getName();
+		}
+	}
+
+	private static class FieldAnnotationMatcherStrategy extends FieldMatcherStrategy {
+
+		final Class<? extends Annotation>[] annotations;
+
+		public FieldAnnotationMatcherStrategy(Class<? extends Annotation>[] annotations) {
+			if (annotations == null || annotations.length == 0) {
+				throw new IllegalArgumentException("You must specify atleast one annotation.");
+			}
+			this.annotations = annotations;
+		}
+
+		@Override
+		public boolean matches(Field field) {
+			for (Class<? extends Annotation> annotation : annotations) {
+				if (field.isAnnotationPresent(annotation)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		@Override
+		public void notFound(Object object) throws IllegalArgumentException {
+			throw new IllegalArgumentException("No field that has any of the annotation types \"" + getAnnotationNames()
+					+ "\" could be found in the class hierarchy of " + getType(object).getName() + ".");
+		}
+
+		@Override
+		public String toString() {
+			return "annotations " + getAnnotationNames();
+		}
+
+		private String getAnnotationNames() {
+			final StringBuilder builder = new StringBuilder();
+			for (int i = 0; i < annotations.length; i++) {
+				builder.append(annotations[i].getName());
+				if (i != annotations.length - 1) {
+					builder.append(", ");
+				}
+			}
+			return builder.toString();
 		}
 	}
 

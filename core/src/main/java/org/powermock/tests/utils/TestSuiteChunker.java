@@ -48,7 +48,7 @@ public interface TestSuiteChunker {
 	 * @return An set of entries that contains a list of methods contained in
 	 *         the chunk and the class loader that loaded these methods.
 	 */
-	public List<TestChunk> getAllChunkEntries();
+	public List<TestChunk> getTestChunks();
 
 	/**
 	 * Get all chunk entries for a specific class.
@@ -75,18 +75,6 @@ public interface TestSuiteChunker {
 	 * 
 	 */
 	public boolean shouldExecuteTestForMethod(Class<?> testClass, Method potentialTestMethod);
-
-	/**
-	 * Add a class to the test suite. Methods in this class will be checked
-	 * according to {@link #shouldExecuteTestForMethod(Class, Method)} to see if
-	 * it should be executed.
-	 * 
-	 * @param clazz
-	 *            The class that should contain test cases.
-	 * @throws Exception
-	 *             If something unexpected goes wrong.
-	 */
-	public void addTestClassToSuite(Class<?> clazz) throws Exception;
 
 	/**
 	 * Create a new class loader and load <code>classes</code> from this

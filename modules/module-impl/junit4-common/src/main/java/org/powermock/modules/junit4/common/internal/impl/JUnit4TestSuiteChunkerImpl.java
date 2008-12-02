@@ -22,6 +22,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,8 +36,11 @@ import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
+import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.modules.junit4.common.internal.JUnit4TestSuiteChunker;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
+import org.powermock.tests.result.TestSuiteResult;
+import org.powermock.tests.result.impl.TestSuiteResultImpl;
 import org.powermock.tests.utils.impl.AbstractTestSuiteChunkerImpl;
 import org.powermock.tests.utils.impl.TestChunk;
 
@@ -74,21 +78,57 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	}
 
 	public void run(RunNotifier notifier) {
-		List<TestChunk> chunkEntries = getAllChunkEntries();
+		List<TestChunk> chunkEntries = getTestChunks();
 		Iterator<TestChunk> iterator = chunkEntries.iterator();
 
 		if (delegates.size() != getChunkSize()) {
 			throw new IllegalStateException("Internal error: There must be an equal number of suites and delegates.");
 		}
 
+		final Class<?> testClass = getTestClasses()[0];
+		final PowerMockTestListener[] powerMockTestListeners = (PowerMockTestListener[]) getPowerMockTestListenersLoadedByASpecificClassLoader(
+				testClass, this.getClass().getClassLoader());
+		final Set<Method> allMethods = new LinkedHashSet<Method>();
+		for (TestChunk testChunk : getTestChunks()) {
+			allMethods.addAll(testChunk.getTestMethodsToBeExecutedByThisClassloader());
+		}
+
+		for (PowerMockTestListener powerMockTestListener : powerMockTestListeners) {
+			try {
+				powerMockTestListener.beforeTestSuiteStarted(testClass, allMethods.toArray(new Method[0]));
+			} catch (Exception e) {
+				throw new RuntimeException("PowerMockListener " + powerMockTestListener + " throwed an exception.", e);
+			}
+		}
+
+		int failureCount = 0;
+		int successCount = 0;
+		int ignoreCount = 0;
+
 		for (int i = 0; i < delegates.size(); i++) {
 			TestChunk next = iterator.next();
 			final ClassLoader key = next.getClassLoader();
-			PowerMockRunListener powerMockListener = new PowerMockRunListener(key);
+			PowerMockJUnit4RunListener powerMockListener = new PowerMockJUnit4RunListener(key, powerMockTestListeners);
 			notifier.addListener(powerMockListener);
-			delegates.get(i).run(notifier);
+			final PowerMockJUnitRunnerDelegate delegate = delegates.get(i);
+			delegate.run(notifier);
+			final int failureCountForThisPowerMockListener = powerMockListener.getFailureCount();
+			final int ignoreCountForThisPowerMockListener = powerMockListener.getIgnoreCount();
+			failureCount += failureCountForThisPowerMockListener;
+			ignoreCount += ignoreCountForThisPowerMockListener;
+			successCount += delegate.getTestCount() - failureCountForThisPowerMockListener - ignoreCountForThisPowerMockListener;
 			notifier.removeListener(powerMockListener);
 		}
+
+		final TestSuiteResult testSuiteResult = new TestSuiteResultImpl(failureCount, successCount, getTestCount(), ignoreCount);
+		for (PowerMockTestListener powerMockTestListener : powerMockTestListeners) {
+			try {
+				powerMockTestListener.afterTestSuiteEnded(testClass, allMethods.toArray(new Method[0]), testSuiteResult);
+			} catch (Exception e) {
+				throw new RuntimeException("PowerMockListener " + powerMockTestListener + " throwed an exception.", e);
+			}
+		}
+
 	}
 
 	public boolean shouldExecuteTestForMethod(Class<?> testClass, Method potentialTestMethod) {
@@ -106,11 +146,20 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 			methodNames.add(method.getName());
 		}
 
-		final Class<?> testClassLoadedByMockedClassLoader = classLoader.loadClass(testClass.getName());
-		Class<?> delegateClass = classLoader.loadClass(runnerDelegateImplementationType.getName());
-		Constructor<?> con = delegateClass.getConstructor(new Class[] { Class.class, String[].class });
-		return (PowerMockJUnitRunnerDelegate) con
-				.newInstance(new Object[] { testClassLoadedByMockedClassLoader, methodNames.toArray(new String[0]) });
+		final Class<?> testClassLoadedByMockedClassLoader = Class.forName(testClass.getName(), false, classLoader);
+
+		/*
+		 * Array classes cannot be loaded be classloader.loadClass(..) in JDK 6.
+		 * See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6500212.
+		 */
+		final Class<?> powerMockTestListenerArrayType = Class.forName(PowerMockTestListener[].class.getName(), false, classLoader);
+
+		final Class<?> delegateClass = Class.forName(runnerDelegateImplementationType.getName(), false, classLoader);
+		Constructor<?> con = delegateClass.getConstructor(new Class[] { Class.class, String[].class, powerMockTestListenerArrayType });
+		final PowerMockJUnitRunnerDelegate newInstance = (PowerMockJUnitRunnerDelegate) con.newInstance(new Object[] {
+				testClassLoadedByMockedClassLoader, methodNames.toArray(new String[0]),
+				getPowerMockTestListenersLoadedByASpecificClassLoader(testClass, classLoader) });
+		return newInstance;
 	}
 
 	public synchronized int getTestCount() {
