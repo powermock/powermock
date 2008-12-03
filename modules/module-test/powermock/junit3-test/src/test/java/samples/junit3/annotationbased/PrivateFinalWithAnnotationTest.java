@@ -19,13 +19,11 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.powermock.api.easymock.powermocklistener.AnnotationEnabler;
 import org.powermock.core.classloader.annotations.Mock;
 import org.powermock.core.classloader.annotations.PowerMockListener;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit3.PowerMockSuite;
 
 import samples.privateandfinal.PrivateFinal;
 

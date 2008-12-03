@@ -83,18 +83,18 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 		}
 	}
 
-	public Object invoke(Object obj, Method method, Object[] aobj) throws Throwable {
+	public Object invoke(Object obj, Method method, Object[] arguments) throws Throwable {
 		Object interceptionObject = obj;
 		// If the method is static we should get the substitution mock.
 		if (Modifier.isStatic(method.getModifiers())) {
-			final InvocationSubstitute<?> substituteObject = (InvocationSubstitute<?>) Whitebox.getInternalState(invocationHandler
-					.getDelegate(), "instance");
+			final InvocationSubstitute<?> substituteObject = (InvocationSubstitute<?>) Whitebox.getInternalState(invocationHandler.getDelegate(),
+					"instance");
 			if (substituteObject != null) {
 				interceptionObject = substituteObject;
 			}
 		}
 
-		Object returnValue = invocationHandler.intercept(interceptionObject, method, aobj, null);
+		Object returnValue = invocationHandler.intercept(interceptionObject, method, arguments, null);
 		if (returnValue == null && isInVerificationMode()) {
 			return MockGateway.SUPPRESS;
 		}

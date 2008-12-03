@@ -27,7 +27,7 @@ public class SimpleStaticInitializerExample {
 		return string;
 	}
 
-	public String getConcatenatedString(String concat) {
+	public final String getConcatenatedString(String concat) {
 		return concat + " " + string;
 	}
 }
