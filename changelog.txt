@@ -12,6 +12,8 @@ Change log 1.1 (under development)
 * Added a new Mock annotation which can be placed on fields to allow for a PowerMock listener to create and inject mock objects. Use the AnnotationEnabler listener from the EasyMock or Mockito API.
 * Exceptions are no longer wrapped in run-time exceptions when invoking a method using Whitebox.invokeMethod(..).
 * Major refactoring of the classloader structure and delegation.
+* Added two now methods to the Whitebox API, both called getAllFields. One takes an object as parameter and one takes a class. They return all instance/class fields of the object/class. 
+* Added a FieldDefaulter test listeners that set all instance field to their default value after each test method. This listener can be used to automatically set all instances to null after each test method instead of doing so manually in a tearDown method.
 
 Change log 1.0 (released 2008-11-18)
 ------------------------------------

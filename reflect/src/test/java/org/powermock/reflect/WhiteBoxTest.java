@@ -20,7 +20,9 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Set;
 
 import org.junit.Test;
 import org.powermock.reflect.internal.WhiteboxImpl;
@@ -43,6 +45,7 @@ public class WhiteBoxTest {
 			public Class<?> getUnproxiedType(Class<?> type) {
 				return type;
 			}
+
 			public boolean isProxy(Class<?> type) {
 				return false;
 			}
@@ -401,6 +404,24 @@ public class WhiteBoxTest {
 		};
 		Whitebox.setInternalState(tested, value);
 		assertSame(value, tested.getClassWithPrivateMethods());
+	}
+
+	@Test
+	public void testGetAllInstanceFields() throws Exception {
+		Set<Field> allFields = Whitebox.getAllFields(new ClassWithChildThatHasInternalState());
+		assertEquals(6, allFields.size());
+	}
+
+	@Test
+	public void testGetAllStaticFields_assertNoFieldsFromParent() throws Exception {
+		Set<Field> allFields = Whitebox.getAllFields(ClassWithChildThatHasInternalState.class);
+		assertEquals(0, allFields.size());
+	}
+
+	@Test
+	public void testGetAllStaticFields() throws Exception {
+		Set<Field> allFields = Whitebox.getAllFields(ClassWithInternalState.class);
+		assertEquals(2, allFields.size());
 	}
 
 	public void testFinalState() {

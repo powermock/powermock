@@ -447,4 +447,30 @@ public class Whitebox {
 			Class<? extends Annotation>... additionalAnnotations) {
 		return WhiteboxImpl.getFieldsAnnotatedWith(object, annotation, additionalAnnotations);
 	}
+
+	/**
+	 * Get all instance fields for a particular object. It returns all fields
+	 * regardless of the field modifier and regardless of where in the class
+	 * hierarchy a field is located.
+	 * 
+	 * @param object
+	 *            The object whose instance fields to get.
+	 * @return All instance fields in the hierarchy. All fields are set to
+	 *         accessible
+	 */
+	public static Set<Field> getAllFields(Object object) {
+		return WhiteboxImpl.getAllFields(object);
+	}
+
+	/**
+	 * Get all static fields for a particular type.
+	 * 
+	 * @param type
+	 *            The class whose static fields to get.
+	 * @return All static fields in <code>type</code>. All fields are set to
+	 *         accessible.
+	 */
+	public static Set<Field> getAllFields(Class<?> type) {
+		return WhiteboxImpl.getAllFields(type);
+	}
 }

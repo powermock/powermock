@@ -34,7 +34,6 @@ public class AnnotationEnabler extends AbstractPowerMockTestListenerBase {
 		Set<Field> fields = Whitebox.getFieldsAnnotatedWith(testInstance, org.mockito.Mock.class, Mock.class,
 				org.powermock.core.classloader.annotations.Mock.class);
 		for (Field field : fields) {
-			field.setAccessible(true);
 			final Class<?> type = field.getType();
 			Method[] methods = null;
 			if (field.isAnnotationPresent(org.powermock.core.classloader.annotations.Mock.class)) {
@@ -44,6 +43,5 @@ public class AnnotationEnabler extends AbstractPowerMockTestListenerBase {
 			}
 			field.set(testInstance, mock(type, methods));
 		}
-
 	}
 }

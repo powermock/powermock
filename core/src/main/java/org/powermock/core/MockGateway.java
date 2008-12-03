@@ -64,12 +64,12 @@ public class MockGateway {
 		if (methodInvocationControl != null && methodInvocationControl.isMocked(WhiteboxImpl.getMethod(objectType, methodName, sig))) {
 			returnValue = methodInvocationControl.invoke(object, WhiteboxImpl.getMethod(objectType, methodName, sig), args);
 			if (returnValue == SUPPRESS) {
-				returnValue = suppressMethodCode(returnTypeAsString);
+				returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
 			}
 		} else {
 			final boolean shouldSuppressMethodCode = MockRepository.shouldSuppressMethod(WhiteboxImpl.getMethod(objectType, methodName, sig));
 			if (shouldSuppressMethodCode) {
-				returnValue = suppressMethodCode(returnTypeAsString);
+				returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
 			} else {
 				returnValue = PROCEED;
 			}
@@ -100,32 +100,6 @@ public class MockGateway {
 			return "suppress";
 		}
 		return PROCEED;
-	}
-
-	private static Object suppressMethodCode(String returnTypeAsString) {
-		if (returnTypeAsString == null) { // Void
-			return "";
-		} else if (returnTypeAsString.equals(String.class.getName())) {
-			return "";
-		} else if (returnTypeAsString.equals(byte.class.getName())) {
-			return (byte) 0;
-		} else if (returnTypeAsString.equals(int.class.getName())) {
-			return 0;
-		} else if (returnTypeAsString.equals(short.class.getName())) {
-			return (short) 0;
-		} else if (returnTypeAsString.equals(long.class.getName())) {
-			return 0L;
-		} else if (returnTypeAsString.equals(float.class.getName())) {
-			return 0.0F;
-		} else if (returnTypeAsString.equals(double.class.getName())) {
-			return 0.0D;
-		} else if (returnTypeAsString.equals(boolean.class.getName())) {
-			return false;
-		} else if (returnTypeAsString.equals(char.class.getName())) {
-			return ' ';
-		} else {
-			return null;
-		}
 	}
 
 	public static synchronized Object constructorCall(Class<?> type, Object[] args, Class<?>[] sig) throws Throwable {

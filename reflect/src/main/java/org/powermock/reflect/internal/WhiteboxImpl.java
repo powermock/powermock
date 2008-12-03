@@ -1263,6 +1263,40 @@ public class WhiteboxImpl {
 		return findAllFieldsUsingStrategy(new FieldAnnotationMatcherStrategy(annotations), object, true, getType(object));
 	}
 
+	/**
+	 * Get all instance fields for a particular object. It returns all fields
+	 * regardless of the field modifier and regardless of where in the class
+	 * hierarchy a field is located.
+	 * 
+	 * @param object
+	 *            The object whose instance fields to get.
+	 * @return All instance fields in the hierarchy. All fields are set to
+	 *         accessible
+	 */
+	public static Set<Field> getAllFields(Object object) {
+		return findAllFieldsUsingStrategy(new AllFieldsMatcherStrategy(), object, true, getType(object));
+	}
+
+	/**
+	 * Get all static fields for a particular type.
+	 * 
+	 * @param type
+	 *            The class whose static fields to get.
+	 * @return All static fields in <code>type</code>. All fields are set to
+	 *         accessible.
+	 */
+	public static Set<Field> getAllFields(Class<?> type) {
+		final Set<Field> fields = new LinkedHashSet<Field>();
+		final Field[] declaredFields = type.getDeclaredFields();
+		for (Field field : declaredFields) {
+			if (Modifier.isStatic(field.getModifiers())) {
+				field.setAccessible(true);
+				fields.add(field);
+			}
+		}
+		return fields;
+	}
+
 	private static boolean isClass(Object argument) {
 		return argument instanceof Class<?>;
 	}
@@ -1407,6 +1441,19 @@ public class WhiteboxImpl {
 		@Override
 		public String toString() {
 			return "type " + expectedFieldType.getName();
+		}
+	}
+
+	private static class AllFieldsMatcherStrategy extends FieldMatcherStrategy {
+
+		@Override
+		public boolean matches(Field field) {
+			return true;
+		}
+
+		@Override
+		public void notFound(Object object) throws IllegalArgumentException {
+			throw new IllegalArgumentException("No fields were declared in " + getType(object).getName() + ".");
 		}
 	}
 

@@ -26,18 +26,24 @@ import org.powermock.api.easymock.powermocklistener.AnnotationEnabler;
 import org.powermock.core.classloader.annotations.Mock;
 import org.powermock.core.classloader.annotations.PowerMockListener;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.core.testlisteners.FieldDefaulter;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import samples.finalmocking.FinalDemo;
 
 /**
- * Test class to demonstrate non-static final mocking with one listeners.
+ * Test class to demonstrate non-static final mocking with multiple test
+ * listeners.
  * 
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(FinalDemo.class)
-@PowerMockListener(AnnotationEnabler.class)
-public class FinalDemoWithAnnotationInjectionTest {
+@PowerMockListener( { AnnotationEnabler.class, FieldDefaulter.class })
+public class FinalDemoWithAnnotationInjectionAndFieldDefaulterTest {
+
+	@SuppressWarnings("unused")
+	// Asserts that the FieldDefaulter handles primitive types.
+	private int intType = 6;
 
 	@Mock
 	private FinalDemo tested;
