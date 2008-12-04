@@ -88,4 +88,12 @@ public class EasyMockMethodInvocationControl implements MethodInvocationControl 
 		invocationHandler.getControl().verify();
 		return null;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Object reset(Object... mocks) {
+		invocationHandler.getControl().reset();
+		return null;
+	}
 }

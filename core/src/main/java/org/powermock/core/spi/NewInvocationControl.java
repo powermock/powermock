@@ -1,7 +1,7 @@
 package org.powermock.core.spi;
 
 import org.powermock.core.spi.support.InvocationSubstitute;
-import org.powermock.core.spi.support.ReplayVerifySupport;
+import org.powermock.core.spi.support.DefaultBehaviorSupport;
 
 /**
  * A new invocation control pairs up a {@link InvocationSubstitute} with the
@@ -9,7 +9,7 @@ import org.powermock.core.spi.support.ReplayVerifySupport;
  * {@link InvocationSubstitute#performSubstitutionLogic(Object...)} object.
  * 
  */
-public interface NewInvocationControl<T> extends ReplayVerifySupport {
+public interface NewInvocationControl<T> extends DefaultBehaviorSupport {
 
 	/**
 	 * Invoke the invocation control

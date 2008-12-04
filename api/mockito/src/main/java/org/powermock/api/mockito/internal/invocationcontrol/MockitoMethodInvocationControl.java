@@ -105,6 +105,10 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 		throw new IllegalStateException("Internal error: No such thing as replay exists in Mockito.");
 	}
 
+	public Object reset(Object... mocks) {
+		throw new IllegalStateException("Internal error: No such thing as reset exists in Mockito.");
+	}
+
 	public Object verify(Object... mocks) {
 		if (mocks == null || mocks.length != 1) {
 			throw new IllegalArgumentException("Must supply one mock to the verify method.");

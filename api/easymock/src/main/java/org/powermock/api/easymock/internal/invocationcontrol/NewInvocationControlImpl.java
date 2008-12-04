@@ -71,4 +71,12 @@ public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpect
 		EasyMock.verify(substitute);
 		return null;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Object reset(Object... mocks) {
+		EasyMock.reset(substitute);
+		return null;
+	}
 }

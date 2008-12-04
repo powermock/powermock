@@ -1368,6 +1368,95 @@ public class PowerMock {
 	}
 
 	/**
+	 * Reset all classes and mock objects known by PowerMock. This includes all
+	 * classes that are prepared for test using the {@link PrepareForTest} or
+	 * {@link PrepareOnlyThisForTest} annotations and all classes that have had
+	 * their static initializers removed by using the
+	 * {@link SuppressStaticInitializationFor} annotation. It also includes all
+	 * mock instances created by PowerMock such as those created or used by
+	 * {@link #createMock(Class, Method...)},
+	 * {@link #mockStatic(Class, Method...)},
+	 * {@link #expectNew(Class, Object...)},
+	 * {@link #createPartialMock(Class, String...)} etc.
+	 * <p>
+	 * To make it easy to pass in additional mocks <i>not</i> created by the
+	 * PowerMock API you can optionally specify them as <tt>additionalMocks</tt>
+	 * . These are typically those mock objects you have created using pure
+	 * EasyMock or EasyMock class extensions. No additional mocks needs to be
+	 * specified if you're only using PowerMock API methods.
+	 * 
+	 * @param additionalMocks
+	 *            Mocks not created by the PowerMock API. These are typically
+	 *            those mock objects you have created using pure EasyMock or
+	 *            EasyMock class extensions.
+	 */
+	public static synchronized void resetAll(Object... additionalMocks) {
+		MockRepository.addObjectsToAutomaticallyReplayAndVerify(additionalMocks);
+
+		for (Object classToReplayOrVerify : MockRepository.getObjectsToAutomaticallyReplayAndVerify()) {
+			reset(classToReplayOrVerify);
+		}
+	}
+
+	/**
+	 * Reset a list of class mocks.
+	 */
+	public static synchronized void reset(Class<?>... classMocks) {
+		for (Class<?> type : classMocks) {
+			final MethodInvocationControl invocationHandler = MockRepository.getStaticMethodInvocationControl(type);
+			if (invocationHandler != null) {
+				invocationHandler.reset();
+			}
+			NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceControl(type);
+			if (newInvocationControl != null) {
+				try {
+					newInvocationControl.reset();
+				} catch (AssertionError e) {
+					PowerMockUtils.throwAssertionErrorForNewSubstitutionFailure(e, type);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Reset a list of mock objects or classes.
+	 */
+	public static synchronized void reset(Object... mocks) {
+		try {
+			for (Object mock : mocks) {
+				if (mock instanceof Class) {
+					reset((Class<?>) mock);
+				} else {
+					MethodInvocationControl invocationControl = MockRepository.getInstanceMethodInvocationControl(mock);
+					if (invocationControl != null) {
+						invocationControl.reset();
+					} else {
+						if (isNiceReplayAndVerifyMode() && !isEasyMocked(mock)) {
+							// ignore non-mock
+						} else {
+							/*
+							 * Delegate to easy mock class extension if we have
+							 * no handler registered for this object.
+							 */
+							try {
+								org.easymock.classextension.EasyMock.reset(mock);
+							} catch (RuntimeException e) {
+								throw new RuntimeException(mock + " is not a mock object", e);
+							}
+						}
+					}
+				}
+			}
+		} catch (Throwable t) {
+			MockRepository.putAdditionalState(NICE_REPLAY_AND_VERIFY_KEY, false);
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException) t;
+			}
+			throw new RuntimeException(t);
+		}
+	}
+
+	/**
 	 * Verify all classes and mock objects known by PowerMock. This includes all
 	 * classes that are prepared for test using the {@link PrepareForTest} or
 	 * {@link PrepareOnlyThisForTest} annotations and all classes that have had
