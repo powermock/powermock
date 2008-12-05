@@ -26,8 +26,6 @@ public class TypeUtils {
 	public static Object getDefaultValue(String fullyQualifiedTypeName) {
 		if (fullyQualifiedTypeName == null) { // Void
 			return "";
-		} else if (fullyQualifiedTypeName.equals(String.class.getName())) {
-			return "";
 		} else if (fullyQualifiedTypeName.equals(byte.class.getName())) {
 			return (byte) 0;
 		} else if (fullyQualifiedTypeName.equals(int.class.getName())) {

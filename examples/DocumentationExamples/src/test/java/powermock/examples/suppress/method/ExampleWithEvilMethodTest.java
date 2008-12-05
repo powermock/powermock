@@ -36,6 +36,6 @@ public class ExampleWithEvilMethodTest {
 		suppressMethod(ExampleWithEvilMethod.class, "getEvilMessage");
 		final String message = "myMessage";
 		ExampleWithEvilMethod tested = new ExampleWithEvilMethod(message);
-		assertEquals(message, tested.getMessage());
+		assertEquals(message + "null", tested.getMessage());
 	}
 }

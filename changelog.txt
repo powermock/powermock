@@ -21,6 +21,7 @@ Change log 1.1 (under development)
 * Updated the tutorial projects to reflect the latest changes in PowerMock.
 * Errors are propagated correctly when invoking the PowerMock.replay(..) method (i.e. they are no longer wrapped in run-time exceptions).
 * Added a MockNice and MockStrict annotation which can be placed on fields to allow for the AnnotationEnabler of the EasyMock api to create and inject mock objects.
+* Changed so that the default suppression value for methods returning java.lang.String is null.
 
 Change log 1.0 (released 2008-11-18)
 ------------------------------------

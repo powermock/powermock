@@ -16,6 +16,7 @@
 package samples.powermockito.junit4.annotationbased;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
@@ -54,7 +55,7 @@ public class MockFinalUsingAnnotationsTest {
 	public void assertMockFinalWithMockitoMockAnnotationWorks() throws Exception {
 		final String argument = "hello";
 
-		assertEquals("", usingMockitoMockAnnotation.say(argument));
+		assertNull(usingMockitoMockAnnotation.say(argument));
 
 		verify(usingMockitoMockAnnotation).say(argument);
 	}
@@ -63,7 +64,7 @@ public class MockFinalUsingAnnotationsTest {
 	public void assertMockFinalWithDeprecatedMockitoMockAnnotationWorks() throws Exception {
 		final String argument = "hello";
 
-		assertEquals("", usingDeprecatedMockitoMockAnnotation.say(argument));
+		assertNull(usingDeprecatedMockitoMockAnnotation.say(argument));
 
 		verify(usingDeprecatedMockitoMockAnnotation).say(argument);
 	}
@@ -72,7 +73,7 @@ public class MockFinalUsingAnnotationsTest {
 	public void assertMockFinalWhenUsingPowerMockMockAnnotationWorks() throws Exception {
 		final String argument = "hello";
 
-		assertEquals("", usingPowerMockMockAnnotation.say(argument));
+		assertNull(usingPowerMockMockAnnotation.say(argument));
 
 		verify(usingPowerMockMockAnnotation).say(argument);
 	}
@@ -81,7 +82,7 @@ public class MockFinalUsingAnnotationsTest {
 	public void assertMockPartialWorksWhenUsingPowerMockMockAnnotation() throws Exception {
 		final String argument = " world";
 		assertEquals("Hello " + argument, usingPowerMockMockAnnotationForPartialMocking.say(argument));
-		assertEquals("", usingPowerMockMockAnnotationForPartialMocking.sayFinalNative(argument));
+		assertNull(usingPowerMockMockAnnotationForPartialMocking.sayFinalNative(argument));
 		verify(usingPowerMockMockAnnotationForPartialMocking).sayFinalNative(argument);
 	}
 }

@@ -48,7 +48,7 @@ public class ChunkingAndStaticInitializerRemovalTest {
 		final String argument = "hello";
 		final String string = tested.getString();
 		assertEquals(Whitebox.getInternalState(SimpleStaticInitializerExample.class, String.class), string);
-		assertEquals("", tested.getConcatenatedString(argument));
+		assertNull(tested.getConcatenatedString(argument));
 
 		verify(tested).getConcatenatedString(argument);
 	}
@@ -58,7 +58,7 @@ public class ChunkingAndStaticInitializerRemovalTest {
 	public void testPartialMockingWithChunking() throws Exception {
 		final String argument = "hello";
 		assertNull(tested.getString());
-		assertEquals("", tested.getConcatenatedString(argument));
+		assertNull(tested.getConcatenatedString(argument));
 
 		verify(tested).getConcatenatedString(argument);
 	}

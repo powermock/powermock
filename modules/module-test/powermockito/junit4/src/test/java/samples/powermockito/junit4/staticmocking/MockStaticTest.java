@@ -16,6 +16,7 @@
 package samples.powermockito.junit4.staticmocking;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -43,7 +44,7 @@ public class MockStaticTest {
 	@Test
 	public void testMockStaticNoExpectations() throws Exception {
 		mockStatic(StaticService.class);
-		assertEquals("", StaticService.say("hello"));
+		assertNull(StaticService.say("hello"));
 
 		// Verification is done in two steps using static methods.
 		verifyStatic(StaticService.class);
@@ -80,7 +81,7 @@ public class MockStaticTest {
 	@Test(expected = ArgumentsAreDifferent.class)
 	public void testMockStaticVerificationFails() throws Exception {
 		mockStatic(StaticService.class);
-		assertEquals("", StaticService.say("hello"));
+		assertNull(StaticService.say("hello"));
 
 		// Verification is done in two steps using static methods.
 		verifyStatic(StaticService.class);
@@ -90,8 +91,8 @@ public class MockStaticTest {
 	@Test
 	public void testMockStaticAtLeastOnce() throws Exception {
 		mockStatic(StaticService.class);
-		assertEquals("", StaticService.say("hello"));
-		assertEquals("", StaticService.say("hello"));
+		assertNull(StaticService.say("hello"));
+		assertNull(StaticService.say("hello"));
 
 		// Verification is done in two steps using static methods.
 		verifyStatic(StaticService.class, atLeastOnce());
@@ -101,8 +102,8 @@ public class MockStaticTest {
 	@Test
 	public void testMockStaticCorrectTimes() throws Exception {
 		mockStatic(StaticService.class);
-		assertEquals("", StaticService.say("hello"));
-		assertEquals("", StaticService.say("hello"));
+		assertNull(StaticService.say("hello"));
+		assertNull(StaticService.say("hello"));
 
 		// Verification is done in two steps using static methods.
 		verifyStatic(StaticService.class, times(2));
@@ -112,8 +113,8 @@ public class MockStaticTest {
 	@Test(expected = TooLittleActualInvocations.class)
 	public void testMockStaticIncorrectTimes() throws Exception {
 		mockStatic(StaticService.class);
-		assertEquals("", StaticService.say("hello"));
-		assertEquals("", StaticService.say("hello"));
+		assertNull(StaticService.say("hello"));
+		assertNull(StaticService.say("hello"));
 
 		// Verification is done in two steps using static methods.
 		verifyStatic(StaticService.class, times(3));
@@ -143,6 +144,6 @@ public class MockStaticTest {
 
 	@Test
 	public void testSpyOnStaticMethods() throws Exception {
-		
+
 	}
 }
