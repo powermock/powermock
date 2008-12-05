@@ -33,6 +33,9 @@ public class AnnotationEnabler extends AbstractPowerMockTestListenerBase {
 			final Class<?> type = field.getType();
 			org.powermock.core.classloader.annotations.Mock annotation = field.getAnnotation(org.powermock.core.classloader.annotations.Mock.class);
 			Method[] methods = Whitebox.getMethods(type, annotation.value());
+			if(methods.length == 0) {
+				methods = null;
+			}
 			field.set(testInstance, createMock(type, methods));
 		}
 	}

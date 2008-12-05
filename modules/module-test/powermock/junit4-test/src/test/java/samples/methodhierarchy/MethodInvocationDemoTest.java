@@ -38,12 +38,10 @@ import org.powermock.reflect.Whitebox;
 public class MethodInvocationDemoTest {
 
 	@Test
-	public void testCreatePartialMockForAProtectedMethodInASubclass()
-			throws Exception {
+	public void testCreatePartialMockForAProtectedMethodInASubclass() throws Exception {
 		final String value = "another string";
 		final String getTheStringMethodName = "getTheString";
-		MethodInvocationDemo tested = createPartialMock(
-				MethodInvocationDemo.class, getTheStringMethodName);
+		MethodInvocationDemo tested = createPartialMock(MethodInvocationDemo.class, getTheStringMethodName);
 
 		expect(tested.getTheString()).andReturn(value);
 
@@ -56,88 +54,69 @@ public class MethodInvocationDemoTest {
 
 	@Test
 	@Ignore("Mabey this is impossible to achieve")
-	public void testCreatePartialMockForAProtectedMethodInASpecificSubclass()
-			throws Exception {
+	public void testCreatePartialMockForAProtectedMethodInASpecificSubclass() throws Exception {
 		final String value = "another string";
 		final String getTheStringMethodName = "getTheString";
-		MethodInvocationDemo tested = createPartialMock(
-				MethodInvocationDemo.class,
-				MethodInvocationDemoGrandChild.class, getTheStringMethodName);
+		MethodInvocationDemo tested = createPartialMock(MethodInvocationDemo.class, MethodInvocationDemoGrandChild.class, getTheStringMethodName);
 
-		expectPrivate(tested, getTheStringMethodName,
-				MethodInvocationDemoGrandChild.class).andReturn(value);
+		expectPrivate(tested, getTheStringMethodName, MethodInvocationDemoGrandChild.class).andReturn(value);
 
 		replay(tested);
 
-		assertEquals("MethodInvocationDemoChild wrapped " + value, tested
-				.getTheString());
+		assertEquals("MethodInvocationDemoChild wrapped " + value, tested.getTheString());
 
 		verify(tested);
 	}
 
 	@Test
-	public void testWhenClassUnderTestIsAnAnonymousInnerClass()
-			throws Exception {
+	public void testWhenClassUnderTestIsAnAnonymousInnerClass() throws Exception {
 		MethodInvocationDemo tested = new MethodInvocationDemo() {
 
 		};
 
-		assertEquals(
-				"MethodInvocationDemoChild wrapped a string from MethodInvocationDemoGrandChild",
-				Whitebox.invokeMethod(tested, "getString"));
+		assertEquals("MethodInvocationDemoChild wrapped a string from MethodInvocationDemoGrandChild", Whitebox.invokeMethod(tested, "getString"));
 	}
 
 	@Test
-	public void testInvokePrivateMethodInSuperClassWhenClassUnderTestIsAnAnonymousInnerClass()
-			throws Exception {
+	public void testInvokePrivateMethodInSuperClassWhenClassUnderTestIsAnAnonymousInnerClass() throws Exception {
 		MethodInvocationDemo tested = new MethodInvocationDemo() {
 
 		};
 
-		assertEquals("MethodInvocationDemoChild", Whitebox.invokeMethod(tested,
-				MethodInvocationDemoChild.class, "getString"));
+		assertEquals("MethodInvocationDemoChild", Whitebox.invokeMethod(tested, MethodInvocationDemoChild.class, "getString"));
 	}
 
 	@Test
-	public void testInvokeProtectedMethodWhenClassUnderTestIsAnAnonymousInnerClass()
-			throws Exception {
+	public void testInvokeProtectedMethodWhenClassUnderTestIsAnAnonymousInnerClass() throws Exception {
 		MethodInvocationDemo tested = new MethodInvocationDemo() {
 
 		};
 
-		assertEquals(
-				"MethodInvocationDemoChild wrapped a string from MethodInvocationDemoGrandChild",
-				tested.getTheString());
+		assertEquals("MethodInvocationDemoChild wrapped a string from MethodInvocationDemoGrandChild", tested.getTheString());
 	}
 
 	@Test
-	public void testInvokeProtectedMethodWhenClassUnderTestIsAnAnonymousInnerClassUsingWithbox()
-			throws Exception {
+	public void testInvokeProtectedMethodWhenClassUnderTestIsAnAnonymousInnerClassUsingWithbox() throws Exception {
 		MethodInvocationDemo tested = new MethodInvocationDemo() {
 
 		};
 
-		assertEquals(
-				"MethodInvocationDemoChild wrapped a string from MethodInvocationDemoGrandChild",
-				Whitebox.invokeMethod(tested, "getTheString"));
+		assertEquals("MethodInvocationDemoChild wrapped a string from MethodInvocationDemoGrandChild", Whitebox.invokeMethod(tested, "getTheString"));
 	}
 
 	@Test
 	public void testInvokeSpecificMethodInHierarchy() throws Exception {
 		MethodInvocationDemo tested = new MethodInvocationDemo();
 
-		assertEquals("MethodInvocationDemoGrandChild", Whitebox.invokeMethod(
-				tested, MethodInvocationDemoGrandChild.class, "getString",
-				new Class<?>[0]));
+		assertEquals("MethodInvocationDemoGrandChild", Whitebox.invokeMethod(tested, MethodInvocationDemoGrandChild.class, "getString",
+				(Object[]) new Class<?>[0]));
 	}
 
 	@Test
-	public void testInvokeSpecificMethodInHierarchyWithArguments()
-			throws Exception {
+	public void testInvokeSpecificMethodInHierarchyWithArguments() throws Exception {
 		MethodInvocationDemo tested = new MethodInvocationDemo();
 
-		assertEquals("MethodInvocationDemoGrandChild: 2", Whitebox
-				.invokeMethod(tested, MethodInvocationDemoGrandChild.class,
-						"getString", new Class<?>[] { int.class }, 2));
+		assertEquals("MethodInvocationDemoGrandChild: 2", Whitebox.invokeMethod(tested, MethodInvocationDemoGrandChild.class, "getString",
+				new Class<?>[] { int.class }, 2));
 	}
 }

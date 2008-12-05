@@ -129,7 +129,7 @@ public class PrivateMethodDemoTest {
 	public void testExpectPrivateWithArrayMatcher() throws Exception {
 		PrivateMethodDemo tested = createPartialMock(PrivateMethodDemo.class, "doArrayInternal");
 
-		expectPrivate(tested, "doArrayInternal", EasyMock.aryEq(new String[] { "hello" }));
+		expectPrivate(tested, "doArrayInternal", EasyMock.aryEq((Object[]) new String[] { "hello" }));
 
 		replay(tested);
 

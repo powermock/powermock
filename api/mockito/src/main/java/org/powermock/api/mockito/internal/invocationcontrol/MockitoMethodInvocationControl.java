@@ -42,7 +42,7 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 	private final Set<Method> mockedMethods;
 
 	/**
-	 * Initializes internal state.
+	 * Creates a new instance.
 	 * 
 	 * @param invocationHandler
 	 *            The mock invocation handler to be associated with this
@@ -54,15 +54,33 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 	 *            mocked.
 	 */
 	public MockitoMethodInvocationControl(MethodInterceptorFilter<MockHandler<T>> invocationHandler, Method... methodsToMock) {
+		this(invocationHandler, null, methodsToMock);
+	}
+
+	/**
+	 * Creates a new instance with a delegator. This delegator may be
+	 * <code>null</code> (if it is then no calls will be forwarded to this
+	 * instance). If a delegator exists (i.e. not null) all non-mocked calls
+	 * will be delegated to that instance.
+	 * 
+	 * @param invocationHandler
+	 *            The mock invocation handler to be associated with this
+	 *            instance.
+	 * @param delegator
+	 *            If the user spies on an instance this instance must be
+	 *            injected here.
+	 * @param methodsToMock
+	 *            The methods that are mocked for this instance. If
+	 *            <code>methodsToMock</code> is null or empty, all methods for
+	 *            the <code>invocationHandler</code> are considered to be
+	 *            mocked.
+	 */
+	public MockitoMethodInvocationControl(MethodInterceptorFilter<MockHandler<T>> invocationHandler, T delegator, Method... methodsToMock) {
 		if (invocationHandler == null) {
 			throw new IllegalArgumentException("Invocation Handler cannot be null.");
 		}
 
-		if (methodsToMock == null) {
-			mockedMethods = new HashSet<Method>();
-		} else {
-			mockedMethods = toSet(methodsToMock);
-		}
+		mockedMethods = toSet(methodsToMock);
 
 		this.invocationHandler = invocationHandler;
 	}
@@ -71,7 +89,7 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 	 * {@inheritDoc}
 	 */
 	public boolean isMocked(Method method) {
-		return (mockedMethods.isEmpty() || mockedMethods.contains(method));
+		return mockedMethods == null || (mockedMethods != null && mockedMethods.contains(method));
 	}
 
 	private boolean isInVerificationMode() {
@@ -86,7 +104,7 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 	public Object invoke(Object obj, Method method, Object[] arguments) throws Throwable {
 		Object interceptionObject = obj;
 		// If the method is static we should get the substitution mock.
-		if (Modifier.isStatic(method.getModifiers())) {
+		if (Modifier.isStatic(method.getModifiers()) && isMocked(method)) {
 			final InvocationSubstitute<?> substituteObject = (InvocationSubstitute<?>) Whitebox.getInternalState(invocationHandler.getDelegate(),
 					"instance");
 			if (substituteObject != null) {
@@ -117,10 +135,6 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 	}
 
 	private Set<Method> toSet(Method... methods) {
-		Set<Method> set = new HashSet<Method>();
-		if (methods.length > 0) {
-			set.addAll(Arrays.asList(methods));
-		}
-		return set;
+		return methods == null ? null : new HashSet<Method>(Arrays.asList(methods));
 	}
 }

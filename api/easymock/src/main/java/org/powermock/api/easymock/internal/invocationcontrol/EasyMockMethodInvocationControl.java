@@ -16,7 +16,6 @@
 package org.powermock.api.easymock.internal.invocationcontrol;
 
 import java.lang.reflect.Method;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.easymock.internal.MockInvocationHandler;
@@ -27,11 +26,14 @@ import org.powermock.reflect.internal.WhiteboxImpl;
 /**
  * The default implementation of the {@link MethodInvocationControl} interface.
  */
-public class EasyMockMethodInvocationControl implements MethodInvocationControl {
+public class EasyMockMethodInvocationControl<T> implements MethodInvocationControl {
 
 	private MockInvocationHandler invocationHandler;
 
 	private Set<Method> mockedMethods;
+
+	@SuppressWarnings("unused")
+	private T mockInstance;
 
 	/**
 	 * Initializes internal state.
@@ -41,28 +43,50 @@ public class EasyMockMethodInvocationControl implements MethodInvocationControl 
 	 *            instance.
 	 * @param methodsToMock
 	 *            The methods that are mocked for this instance. If
-	 *            <code>methodsToMock</code> is null or empty, all methods for
-	 *            the <code>invocationHandler</code> are considered to be
-	 *            mocked.
+	 *            <code>methodsToMock</code> is null all methods for the
+	 *            <code>invocationHandler</code> are considered to be mocked.
+	 * @param mockInstance
+	 *            The actual mock instance. May be <code>null</code>. Even
+	 *            thought the mock instance may not be used it's needed to keep
+	 *            a reference to this object otherwise it may be garbage
+	 *            collected in some situations. For example when mocking static
+	 *            methods we don't return the mock object and thus it will be
+	 *            garbage collected (and thus the finalize method will be
+	 *            invoked which will be caught by the proxy and the test will
+	 *            fail because we haven't setup expectations for this method)
+	 *            because then that object has no reference. In order to avoid
+	 *            this we keep a reference to this instance here.
 	 */
-	public EasyMockMethodInvocationControl(MockInvocationHandler invocationHandler, Set<Method> methodsToMock) {
+	public EasyMockMethodInvocationControl(MockInvocationHandler invocationHandler, Set<Method> methodsToMock, T mockInstance) {
 		if (invocationHandler == null) {
 			throw new IllegalArgumentException("Invocation Handler cannot be null.");
 		}
 
-		if (methodsToMock == null) {
-			methodsToMock = new HashSet<Method>();
-		}
-
 		this.invocationHandler = invocationHandler;
 		this.mockedMethods = methodsToMock;
+		this.mockInstance = mockInstance;
+	}
+
+	/**
+	 * Initializes internal state.
+	 * 
+	 * @param invocationHandler
+	 *            The mock invocation handler to be associated with this
+	 *            instance.
+	 * @param methodsToMock
+	 *            The methods that are mocked for this instance. If
+	 *            <code>methodsToMock</code> is null all methods for the
+	 *            <code>invocationHandler</code> are considered to be mocked.
+	 */
+	public EasyMockMethodInvocationControl(MockInvocationHandler invocationHandler, Set<Method> methodsToMock) {
+		this(invocationHandler, methodsToMock, null);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public boolean isMocked(Method method) {
-		return mockedMethods.isEmpty() || mockedMethods.contains(method);
+		return mockedMethods == null || (mockedMethods != null && mockedMethods.contains(method));
 	}
 
 	public Object invoke(Object proxy, Method method, Object[] arguments) throws Throwable {

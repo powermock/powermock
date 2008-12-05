@@ -44,6 +44,16 @@ public class PowerMockito {
 	}
 
 	/**
+	 * Enable static mocking for all methods of a class.
+	 * 
+	 * @param type
+	 *            the class to enable static mocking
+	 */
+	public static synchronized void mockStatic(Class<?> type) {
+		doMock(type, true, (Method[]) null);
+	}
+
+	/**
 	 * Creates a mock object that supports mocking of final and native methods.
 	 * 
 	 * @param <T>
@@ -58,12 +68,23 @@ public class PowerMockito {
 		return doMock(type, false, methods);
 	}
 
+	/**
+	 * Creates a mock object that supports mocking of final and native methods.
+	 * 
+	 * @param <T>
+	 *            the type of the mock object
+	 * @param type
+	 *            the type of the mock object
+	 * @return the mock object.
+	 */
+	public static synchronized <T> T mock(Class<T> type) {
+		return doMock(type, false, (Method[]) null);
+	}
+
 	@SuppressWarnings("unchecked")
 	private static <T> T doMock(Class<T> type, boolean isStatic, Method... methods) {
 		if (type == null) {
 			throw new IllegalArgumentException("The class to mock cannot be null");
-		} else if (methods == null) {
-			methods = new Method[] {};
 		}
 
 		T mock = null;

@@ -33,7 +33,8 @@ public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpect
 			args = (Object[]) args[0];
 		}
 		try {
-			final MockType mockType = ((EasyMockMethodInvocationControl) MockRepository.getInstanceMethodInvocationControl(substitute)).getMockType();
+			final MockType mockType = ((EasyMockMethodInvocationControl<?>) MockRepository.getInstanceMethodInvocationControl(substitute))
+					.getMockType();
 			Object result = substitute.performSubstitutionLogic(args);
 
 			if (result == null) {

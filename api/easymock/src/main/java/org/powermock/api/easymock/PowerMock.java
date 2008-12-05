@@ -79,6 +79,19 @@ public class PowerMock {
 	}
 
 	/**
+	 * Creates a mock object that supports mocking of final and native methods.
+	 * 
+	 * @param <T>
+	 *            the type of the mock object
+	 * @param type
+	 *            the type of the mock object
+	 * @return the mock object.
+	 */
+	public static synchronized <T> T createMock(Class<T> type) {
+		return doMock(type, false, new DefaultMockStrategy(), null, (Method[]) null);
+	}
+
+	/**
 	 * Creates a mock object that supports mocking of final and native methods
 	 * and invokes a specific constructor.
 	 * 
@@ -133,6 +146,20 @@ public class PowerMock {
 	}
 
 	/**
+	 * Creates a strict mock object that supports mocking of final and native
+	 * methods.
+	 * 
+	 * @param <T>
+	 *            the type of the mock object
+	 * @param type
+	 *            the type of the mock object
+	 * @return the mock object.
+	 */
+	public static synchronized <T> T createStrictMock(Class<T> type) {
+		return doMock(type, false, new StrictMockStrategy(), null, (Method[]) null);
+	}
+
+	/**
 	 * Creates a nice mock object that supports mocking of final and native
 	 * methods.
 	 * 
@@ -146,6 +173,20 @@ public class PowerMock {
 	 */
 	public static synchronized <T> T createNiceMock(Class<T> type, Method... methods) {
 		return doMock(type, false, new NiceMockStrategy(), null, methods);
+	}
+
+	/**
+	 * Creates a nice mock object that supports mocking of final and native
+	 * methods.
+	 * 
+	 * @param <T>
+	 *            the type of the mock object
+	 * @param type
+	 *            the type of the mock object
+	 * @return the mock object.
+	 */
+	public static synchronized <T> T createNiceMock(Class<T> type) {
+		return doMock(type, false, new NiceMockStrategy(), null, (Method[]) null);
 	}
 
 	/**
@@ -239,6 +280,16 @@ public class PowerMock {
 	}
 
 	/**
+	 * Enable static mocking for a class.
+	 * 
+	 * @param type
+	 *            the class to enable static mocking
+	 */
+	public static synchronized void mockStatic(Class<?> type) {
+		doMock(type, true, new DefaultMockStrategy(), null, (Method[]) null);
+	}
+
+	/**
 	 * Enable strict static mocking for a class.
 	 * 
 	 * @param type
@@ -251,6 +302,16 @@ public class PowerMock {
 	}
 
 	/**
+	 * Enable strict static mocking for a class.
+	 * 
+	 * @param type
+	 *            the class to enable static mocking
+	 */
+	public static synchronized void mockStaticStrict(Class<?> type) {
+		doMock(type, true, new StrictMockStrategy(), null, (Method[]) null);
+	}
+
+	/**
 	 * Enable nice static mocking for a class.
 	 * 
 	 * @param type
@@ -260,6 +321,16 @@ public class PowerMock {
 	 */
 	public static synchronized void mockStaticNice(Class<?> type, Method... methods) {
 		doMock(type, true, new NiceMockStrategy(), null, methods);
+	}
+
+	/**
+	 * Enable nice static mocking for a class.
+	 * 
+	 * @param type
+	 *            the class to enable static mocking
+	 */
+	public static synchronized void mockStaticNice(Class<?> type) {
+		doMock(type, true, new NiceMockStrategy(), null, (Method[]) null);
 	}
 
 	/**
@@ -281,8 +352,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @return A mock object of type <T>.
 	 */
 	public static synchronized <T> T createPartialMockForAllMethodsExcept(Class<T> type, String... methodNames) {
@@ -312,8 +383,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @return A mock object of type <T>.
 	 */
 	public static synchronized <T> T createNicePartialMockForAllMethodsExcept(Class<T> type, String... methodNames) {
@@ -343,8 +414,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @return A mock object of type <T>.
 	 */
 	public static synchronized <T> T createStrictPartialMockForAllMethodsExcept(Class<T> type, String... methodNames) {
@@ -581,8 +652,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #mockStatic(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 */
 	public static synchronized void mockStaticPartial(Class<?> clazz, String... methodNames) {
 		mockStatic(clazz, Whitebox.getMethods(clazz, methodNames));
@@ -605,8 +676,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #mockStatic(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 */
 	public static synchronized void mockStaticPartialStrict(Class<?> clazz, String... methodNames) {
 		mockStaticStrict(clazz, Whitebox.getMethods(clazz, methodNames));
@@ -629,10 +700,10 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #mockStatic(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 */
-	public static synchronized void mockStaticNice(Class<?> clazz, String... methodNames) {
+	public static synchronized void mockStaticPartialNice(Class<?> clazz, String... methodNames) {
 		mockStaticNice(clazz, Whitebox.getMethods(clazz, methodNames));
 	}
 
@@ -685,8 +756,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @return A mock object of type <T>.
 	 */
 	public static synchronized <T> T createPartialMock(Class<T> type, String... methodNames) {
@@ -725,8 +796,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @return A mock object of type <T>.
 	 */
 	public static synchronized <T> T createPartialMock(Class<T> type, Class<? super T> where, String... methodNames) {
@@ -751,8 +822,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @return A mock object of type <T>.
 	 */
 	public static synchronized <T> T createStrictPartialMock(Class<T> type, String... methodNames) {
@@ -790,8 +861,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @return A mock object of type <T>.
 	 */
 	public static synchronized <T> T createStrictPartialMock(Class<T> type, Class<? super T> where, String... methodNames) {
@@ -816,8 +887,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @return A mock object of type <T>.
 	 */
 	public static synchronized <T> T createNicePartialMock(Class<T> type, String... methodNames) {
@@ -855,8 +926,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @return A mock object of type <T>.
 	 */
 	public static synchronized <T> T createNicePartialMock(Class<T> type, Class<? super T> where, String... methodNames) {
@@ -877,8 +948,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @return the mock object.
 	 */
 	public static <T> T createPartialMockAndInvokeDefaultConstructor(Class<T> type, String... methodNames) throws Exception {
@@ -899,8 +970,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @return the mock object.
 	 */
 	public static <T> T createNicePartialMockAndInvokeDefaultConstructor(Class<T> type, String... methodNames) throws Exception {
@@ -921,8 +992,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @return the mock object.
 	 */
 	public static <T> T createStrictPartialMockAndInvokeDefaultConstructor(Class<T> type, String... methodNames) throws Exception {
@@ -943,8 +1014,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @param constructorArguments
 	 *            The constructor arguments that will be used to invoke a
 	 *            certain constructor. (optional)
@@ -971,8 +1042,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @param constructorArguments
 	 *            The constructor arguments that will be used to invoke a
 	 *            certain constructor. (optional)
@@ -999,8 +1070,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @param constructorArguments
 	 *            The constructor arguments that will be used to invoke a
 	 *            certain constructor. (optional)
@@ -1027,8 +1098,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @param methodParameterTypes
 	 *            Parameter types that defines the method. Note that this is
 	 *            only needed to separate overloaded methods.
@@ -1058,8 +1129,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @param methodParameterTypes
 	 *            Parameter types that defines the method. Note that this is
 	 *            only needed to separate overloaded methods.
@@ -1089,8 +1160,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @param methodParameterTypes
 	 *            Parameter types that defines the method. Note that this is
 	 *            only needed to separate overloaded methods.
@@ -1120,8 +1191,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @param methodParameterTypes
 	 *            Parameter types that defines the method. Note that this is
 	 *            only needed to separate overloaded methods.
@@ -1156,8 +1227,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all methods in that
+	 *            class will be mocked).
 	 * @param methodParameterTypes
 	 *            Parameter types that defines the method. Note that this is
 	 *            only needed to separate overloaded methods.
@@ -1192,8 +1263,8 @@ public class PowerMock {
 	 *            The names of the methods that should be mocked. If
 	 *            <code>null</code>, then this method will have the same effect
 	 *            as just calling {@link #createMock(Class, Method...)} with the
-	 *            second parameter as <code>null</code> (i.e. all methods in
-	 *            that class will be mocked).
+	 *            second parameter as <code>new Method[0]</code> (i.e. all
+	 *            methods in that class will be mocked).
 	 * @param methodParameterTypes
 	 *            Parameter types that defines the method. Note that this is
 	 *            only needed to separate overloaded methods.
@@ -1942,8 +2013,6 @@ public class PowerMock {
 	private static <T> T doMock(Class<T> type, boolean isStatic, MockStrategy mockStrategy, ConstructorArgs constructorArgs, Method... methods) {
 		if (type == null) {
 			throw new IllegalArgumentException("The class to mock cannot be null");
-		} else if (methods == null) {
-			methods = new Method[] {};
 		}
 
 		final IMocksControl control = mockStrategy.createMockControl(type);
@@ -1953,15 +2022,13 @@ public class PowerMock {
 		} else {
 			MocksClassControl mocksClassControl = ((MocksClassControl) control);
 			if (constructorArgs == null) {
-				// what is the difference between methods == null and methods ==
-				// []
-				if (isStatic == false && (methods == null || methods.length == 0)) {
+				if (methods == null) {
 					mock = mocksClassControl.createMock(type);
 				} else {
 					mock = mocksClassControl.createMock(type, methods);
 				}
 			} else {
-				if (isStatic == false && (methods == null || methods.length == 0)) {
+				if (methods == null) {
 					mock = mocksClassControl.createMock(type, constructorArgs);
 				} else {
 					mock = mocksClassControl.createMock(type, constructorArgs, methods);
@@ -1969,11 +2036,12 @@ public class PowerMock {
 			}
 		}
 		MockInvocationHandler h = new MockInvocationHandler((MocksControl) control);
+		final Set<Method> methodsToMock = toSet(methods);
 		if (isStatic) {
-			MockRepository.putStaticMethodInvocationControl(type, new EasyMockMethodInvocationControl(h, toSet(methods)));
+			MockRepository.putStaticMethodInvocationControl(type, new EasyMockMethodInvocationControl<T>(h, methodsToMock, mock));
 			MockRepository.addObjectsToAutomaticallyReplayAndVerify(type);
 		} else {
-			MockRepository.putInstanceMethodInvocationControl(mock, new EasyMockMethodInvocationControl(h, toSet(methods)));
+			MockRepository.putInstanceMethodInvocationControl(mock, new EasyMockMethodInvocationControl<T>(h, methodsToMock));
 			if (mock instanceof InvocationSubstitute == false) {
 				MockRepository.addObjectsToAutomaticallyReplayAndVerify(mock);
 			}
@@ -1981,12 +2049,8 @@ public class PowerMock {
 		return mock;
 	}
 
-	private static Set<Method> toSet(Method... methods) {
-		Set<Method> set = new HashSet<Method>();
-		if (methods.length > 0) {
-			set.addAll(Arrays.asList(methods));
-		}
-		return set;
+	private static Set<Method> toSet(Method[] methods) {
+		return methods == null ? null : new HashSet<Method>(Arrays.asList(methods));
 	}
 
 	private static Class<?>[] mergeArgumentTypes(Class<?> firstArgumentType, Class<?>... additionalArgumentTypes) {
