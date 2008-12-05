@@ -17,7 +17,7 @@ Change log 1.1 (under development)
 * Added three new methods to the PowerMock API, reset(Object...mocks), reset(Class<?>...classMocks) and resetAll(). The methods can be used to reset instance mocks, class mocks or let PowerMock reset all mocks automatically.
 * mockStaticNice(Class<?> clazz, String... methodNames) was renamed to mockStaticPartialNice in the PowerMock API.
 * PowerMock and PowerMockito now _really_ follows the semantics of EasyMock for partial mocking (e.g. PowerMock.createMock(MyClass.class, null) now mocks all methods of a class whereas PowerMock.createMock(MyClass.class, new Method[0]) mocks no methods of a class).
-* The @PrepareForTest annotation now accepts interaces as types. This is useful in situations where you wan't to make sure that a certain interface is loaded by the same classloader as the reset of the mocks.
+* The @PrepareForTest annotation now accepts interfaces as types. This is useful in situations where you wan't to make sure that a certain interface is loaded by the same classloader as the reset of the mocks.
 
 Change log 1.0 (released 2008-11-18)
 ------------------------------------

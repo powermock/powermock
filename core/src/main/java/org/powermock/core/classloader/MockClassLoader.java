@@ -55,9 +55,9 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 	 * Classes not deferred but loaded by the mock class loader but they're not
 	 * modified.
 	 */
-	private final String[] packagesToLoadButNotModify = new String[] { "org.hamcrest.", "org.junit.", "junit.", "org.easymock.", "net.sf.cglib.",
-			"javassist.", "org.powermock.modules.junit4.internal.", "org.powermock.modules.junit4.legacy.internal.",
-			"org.powermock.modules.junit3.internal.", "org.powermock" };
+	private final String[] packagesToLoadButNotModify = new String[] { "org.junit.", "junit.", "org.easymock.", "net.sf.cglib.", "javassist.",
+			"org.powermock.modules.junit4.internal.", "org.powermock.modules.junit4.legacy.internal.", "org.powermock.modules.junit3.internal.",
+			"org.powermock" };
 
 	private final String[] specificClassesToLoadButNotModify = new String[] { InvocationSubstitute.class.getName() };
 
