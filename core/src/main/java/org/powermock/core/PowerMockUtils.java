@@ -64,6 +64,7 @@ public class PowerMockUtils {
 		}
 	}
 
+	// TODO EasyMock specific: Should be moved to the easymock api.
 	public static void throwAssertionErrorForNewSubstitutionFailure(AssertionError oldError, Class<?> type) {
 		/*
 		 * We failed to verify the new substitution mock. This happens when, for
