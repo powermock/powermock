@@ -92,7 +92,7 @@ public class PrepareForTestExtractorImpl extends AbstractTestClassExtractor {
 	}
 
 	private void addClassHierarchy(Set<String> all, Class<?> classToMock) {
-		while (!classToMock.equals(Object.class)) {
+		while (classToMock != null && !classToMock.equals(Object.class)) {
 			all.add(classToMock.getName());
 			classToMock = classToMock.getSuperclass();
 		}
