@@ -54,8 +54,8 @@ public class MockRepository {
 	private static Set<String> suppressStaticInitializers = new HashSet<String>();
 
 	/**
-	 * Sometimes mock frameworks needs to store additional state. They can to
-	 * this key/value based approach.
+	 * Sometimes mock frameworks needs to store additional state. They can do
+	 * this using this key/value based approach.
 	 */
 	private static Map<String, Object> additionalState = new HashMap<String, Object>();
 
