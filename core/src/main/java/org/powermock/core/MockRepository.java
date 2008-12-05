@@ -186,7 +186,7 @@ public class MockRepository {
 
 	/**
 	 * When a mock framework API needs to store additional state not applicable
-	 * for the other methods, it may you this method to do so.
+	 * for the other methods, it may use this method to do so.
 	 * 
 	 * @param key
 	 *            The key under which the <tt>value</tt> is stored.
