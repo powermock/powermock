@@ -6,12 +6,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.powermock.PowerMock.createMock;
-import static org.powermock.PowerMock.mockStatic;
-import static org.powermock.PowerMock.replay;
-import static org.powermock.PowerMock.verify;
-import static org.powermock.Whitebox.getInternalState;
-import static org.powermock.Whitebox.setInternalState;
+import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.powermock.api.easymock.PowerMock.mockStatic;
+import static org.powermock.api.easymock.PowerMock.replay;
+import static org.powermock.api.easymock.PowerMock.verify;
+import static org.powermock.reflect.Whitebox.getInternalState;
+import static org.powermock.reflect.Whitebox.setInternalState;
 
 import java.util.HashMap;
 import java.util.Map;
