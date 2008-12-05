@@ -19,6 +19,7 @@ Change log 1.1 (under development)
 * PowerMock and PowerMockito now _really_ follows the semantics of EasyMock for partial mocking (e.g. PowerMock.createMock(MyClass.class, null) now mocks all methods of a class whereas PowerMock.createMock(MyClass.class, new Method[0]) mocks no methods of a class).
 * The @PrepareForTest annotation now accepts interfaces as types. This is useful in situations where you wan't to make sure that a certain interface is loaded by the same classloader as the reset of the mocks.
 * Updated the tutorial projects to reflect the latest changes in PowerMock.
+* Errors are propagated correctly when invoking the PowerMock.replay(..) method (i.e. they are no longer wrapped in run-time exceptions).
 
 Change log 1.0 (released 2008-11-18)
 ------------------------------------
