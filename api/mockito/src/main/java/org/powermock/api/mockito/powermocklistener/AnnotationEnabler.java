@@ -25,6 +25,12 @@ import org.mockito.MockitoAnnotations.Mock;
 import org.powermock.core.spi.support.AbstractPowerMockTestListenerBase;
 import org.powermock.reflect.Whitebox;
 
+/**
+ * Before each test method all fields annotated with {@link Mock},
+ * {@link org.mockito.Mock} or {@link Mock} have mock objects created for them
+ * and injected to the fields.
+ * 
+ */
 @SuppressWarnings("deprecation")
 public class AnnotationEnabler extends AbstractPowerMockTestListenerBase {
 
