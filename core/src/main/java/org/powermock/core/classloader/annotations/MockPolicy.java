@@ -26,11 +26,10 @@ import org.powermock.core.spi.PowerMockPolicy;
 
 /**
  * A Mock Policy can be used to make it easier to unit test some code with
- * PowerMock in isolation from a certain frameworks. A mock policy
- * implementation can for example suppress some methods, suppress static
- * initializers or intercept method calls and change their return value (for
- * example to return a mock object) for certain framework or set of classes or
- * interfaces.
+ * PowerMock in isolation from a certain framework. A mock policy implementation
+ * can for example suppress some methods, suppress static initializers or
+ * intercept method calls and change their return value (for example to return a
+ * mock object) for certain framework or set of classes or interfaces.
  * <p>
  * A mock policy can for example be implemented to avoid writing repetitive
  * setup code for your tests. Say that you're using a framework X that in order
