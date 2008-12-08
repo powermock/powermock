@@ -1,7 +1,7 @@
 package demo.org.powermock.examples;
 
 
-public class Log4jUser extends Log4jUserChild{
+public class Log4jUser extends Log4jUserParent{
 
 	public final String getMessage() {
 		log.debug("getMessage!");

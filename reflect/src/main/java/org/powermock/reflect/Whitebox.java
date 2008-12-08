@@ -473,4 +473,20 @@ public class Whitebox {
 	public static Set<Field> getAllFields(Class<?> type) {
 		return WhiteboxImpl.getAllFields(type);
 	}
+	
+	/**
+	 * Get all fields assignable from a particular type. This method traverses
+	 * the class hierarchy when checking for the type.
+	 * 
+	 * @param object
+	 *            The object to look for type. Note that if're you're passing an
+	 *            object only instance fields are checked, passing a class will
+	 *            only check static fields.
+	 * @param type
+	 *            The type to look for.
+	 * @return A set of all fields of the particular type.
+	 */
+	public static Set<Field> getFieldsOfType(Object object, Class<?> type) {
+		return WhiteboxImpl.getFieldsOfType(object, type);
+	}
 }

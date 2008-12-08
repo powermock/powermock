@@ -9,6 +9,12 @@ import java.lang.annotation.Target;
 
 import org.powermock.core.spi.PowerMockTestListener;
 
+/**
+ * The PowerMock listener annotation can be used to tell PowerMock which
+ * listeners should be instantiated and invoked during a test. A listener is
+ * invoked according to the events specified in the
+ * {@link PowerMockTestListener} interface.
+ */
 @Target( { ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

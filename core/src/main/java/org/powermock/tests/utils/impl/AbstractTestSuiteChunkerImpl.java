@@ -16,6 +16,7 @@
 package org.powermock.tests.utils.impl;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -26,16 +27,19 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.powermock.core.classloader.MockClassLoader;
+import org.powermock.core.classloader.annotations.MockPolicy;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PowerMockListener;
 import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
+import org.powermock.core.spi.PowerMockPolicy;
 import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.MainMockTransformer;
 import org.powermock.reflect.Whitebox;
+import org.powermock.tests.utils.MockPolicyHandler;
 import org.powermock.tests.utils.TestClassesExtractor;
 import org.powermock.tests.utils.TestSuiteChunker;
 
@@ -121,12 +125,16 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 		ClassLoader defaultMockLoader = null;
 		final String[] ignorePackages = getIgnorePackages(testClass);
 		if (testClass.isAnnotationPresent(PrepareEverythingForTest.class)) {
-			defaultMockLoader = createNewClassloader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES }, ignorePackages);
+			defaultMockLoader = createNewClassloader(mergeStringArrays(getAndInitializeMockPolicyClasses(testClass),
+					new String[] { MockClassLoader.MODIFY_ALL_CLASSES }), ignorePackages);
 		} else {
+			final String[] policyClassesToLoad = getAndInitializeMockPolicyClasses(testClass);
 			final String[] prepareForTestClasses = prepareForTestExtractor.getTestClasses(testClass);
 			final String[] suppressStaticClasses = suppressionExtractor.getTestClasses(testClass);
-			defaultMockLoader = createNewClassloader(prepareForTestClasses, suppressStaticClasses, ignorePackages);
+			defaultMockLoader = createNewClassloader(mergeStringArrays(prepareForTestClasses, suppressStaticClasses, policyClassesToLoad),
+					ignorePackages);
 		}
+		executeClassLoaderDependentMockPolicyMethods(testClass, defaultMockLoader);
 		List<Method> currentClassloaderMethods = new LinkedList<Method>();
 		// Put the first suite in the map of internal suites.
 		TestChunk defaultTestChunk = new TestChunk(defaultMockLoader, currentClassloaderMethods);
@@ -151,29 +159,6 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 			return annotation.value();
 		}
 		return new String[0];
-	}
-
-	private ClassLoader createNewClassloader(final String[] prepareForTestClasses, final String[] suppressStaticClasses, final String[] ignorePackages) {
-		return createNewClassloader(getClassesToBeModified(prepareForTestClasses, suppressStaticClasses), ignorePackages);
-	}
-
-	private String[] getClassesToBeModified(String[] prepareForTestClasses, String[] suppressStaticClasses) {
-		if (prepareForTestClasses == null) {
-			prepareForTestClasses = new String[0];
-		}
-		if (suppressStaticClasses == null) {
-			suppressStaticClasses = new String[0];
-		}
-
-		final int prepareForTestLength = prepareForTestClasses.length;
-		final int suppressLength = suppressStaticClasses.length;
-		final int allClassesLength = prepareForTestLength + suppressLength;
-		String[] classesToLoadedByMockClassLoader = new String[allClassesLength];
-		if (allClassesLength > 0) {
-			System.arraycopy(prepareForTestClasses, 0, classesToLoadedByMockClassLoader, 0, prepareForTestLength);
-			System.arraycopy(suppressStaticClasses, 0, classesToLoadedByMockClassLoader, prepareForTestLength, suppressLength);
-		}
-		return classesToLoadedByMockClassLoader;
 	}
 
 	public ClassLoader createNewClassloader(final String[] classes, final String[] packagesToIgnore) {
@@ -222,9 +207,10 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 						if (method.isAnnotationPresent(PrepareEverythingForTest.class)) {
 							mockClassloader = createNewClassloader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES }, getIgnorePackages(testClass));
 						} else {
-							mockClassloader = createNewClassloader(prepareForTestExtractor.getTestClasses(method), staticSuppressionClasses,
-									getIgnorePackages(testClass));
+							mockClassloader = createNewClassloader(mergeStringArrays(prepareForTestExtractor.getTestClasses(method),
+									staticSuppressionClasses), getIgnorePackages(testClass));
 						}
+						executeClassLoaderDependentMockPolicyMethods(testClass, mockClassloader);
 						TestChunk chunk = new TestChunk(mockClassloader, methodsInThisChunk);
 						testCaseEntry.getTestChunks().add(chunk);
 						updatedIndexes();
@@ -354,5 +340,71 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 
 	public Class<?>[] getTestClasses() {
 		return testClasses;
+	}
+
+	private String[] mergeStringArrays(String[]... arraysToCopy) {
+		if (arraysToCopy == null || arraysToCopy.length == 0) {
+			return new String[0];
+		}
+
+		int size = 0;
+		for (String[] array : arraysToCopy) {
+			if (array != null) {
+				size += array.length;
+			}
+		}
+
+		final String[] finalStringArray = new String[size];
+
+		int lastIndex = 0;
+		for (int i = 0; i < arraysToCopy.length; i++) {
+			final String[] currentArray = arraysToCopy[i];
+			if (currentArray != null) {
+				final int currentArrayLength = currentArray.length;
+				System.arraycopy(currentArray, 0, finalStringArray, lastIndex, currentArrayLength);
+				lastIndex += currentArrayLength;
+			}
+		}
+
+		return finalStringArray;
+	}
+
+	private String[] getAndInitializeMockPolicyClasses(final Class<?> testClass) {
+		String[] mockPolicyClassesToBeLoadedByMockClassloader = null;
+		String[] mockPolicyClassesToBeSuppressed = null;
+		if (testClass.isAnnotationPresent(MockPolicy.class)) {
+			MockPolicy annotation = testClass.getAnnotation(MockPolicy.class);
+			MockPolicyHandler mockPolicyHandler = new MockPolicyHandlerImpl(annotation.value());
+			mockPolicyClassesToBeLoadedByMockClassloader = mockPolicyHandler.getClassesToBeLoadedByMockClassloader();
+			mockPolicyClassesToBeSuppressed = mockPolicyHandler.initStaticSuppression();
+		}
+
+		return mergeStringArrays(mockPolicyClassesToBeLoadedByMockClassloader, mockPolicyClassesToBeSuppressed);
+	}
+
+	/*
+	 * Some mock policy methods needs to be executed by a special class loader
+	 * in order to work. This is done here.
+	 */
+	protected void executeClassLoaderDependentMockPolicyMethods(final Class<?> testClass, final ClassLoader classLoader) {
+		if (testClass.isAnnotationPresent(MockPolicy.class)) {
+			try {
+				MockPolicy annotation = testClass.getAnnotation(MockPolicy.class);
+				final Class<? extends PowerMockPolicy>[] powerMockPolicies = annotation.value();
+				if (powerMockPolicies.length > 0) {
+					Object mockPolicies = Array.newInstance(Class.class, powerMockPolicies.length);
+					for (int i = 0; i < powerMockPolicies.length; i++) {
+						final Class<?> policyLoadedByClassLoader = Class.forName(powerMockPolicies[i].getName(), false, classLoader);
+						Array.set(mockPolicies, i, policyLoadedByClassLoader);
+					}
+					final Class<?> mockPolicyHandlerImplType = Class.forName(MockPolicyHandlerImpl.class.getName(), false, classLoader);
+					Constructor<?> constructor = mockPolicyHandlerImplType.getConstructor(Class[].class);
+					Object mockPolicyHandler = constructor.newInstance(mockPolicies);
+					Whitebox.invokeMethod(mockPolicyHandler, "initSubstituteReturnValues");
+				}
+			} catch (Exception e) {
+				throw new IllegalStateException("PowerMock internal error: Failed to load class.", e);
+			}
+		}
 	}
 }

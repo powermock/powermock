@@ -43,12 +43,14 @@ import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
+import org.powermock.core.classloader.annotations.MockPolicy;
 import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
 import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.powermock.modules.junit4.internal.impl.testcaseworkaround.PowerMockJUnit4MethodValidator;
 import org.powermock.reflect.Whitebox;
 import org.powermock.tests.utils.PowerMockTestNotifier;
+import org.powermock.tests.utils.impl.MockPolicyHandlerImpl;
 import org.powermock.tests.utils.impl.PowerMockTestNotifierImpl;
 import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
 import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
@@ -218,11 +220,15 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 						} else if (!(Boolean) Whitebox.invokeMethod(testMethod, "expectsException")) {
 							final String className = actual.getStackTrace()[0].getClassName();
 							final Class<?> testClassAsJavaClass = testClass.getJavaClass();
-							if (actual instanceof NullPointerException && !testClassAsJavaClass.getName().equals(className)
-									&& !className.startsWith("java.lang") && !className.startsWith("org.powermock")
+							if (actual instanceof NullPointerException
+									&& !testClassAsJavaClass.getName().equals(className)
+									&& !className.startsWith("java.lang")
+									&& !className.startsWith("org.powermock")
 									&& !className.startsWith("org.junit")
 									&& !new PrepareForTestExtractorImpl().isPrepared(testClassAsJavaClass, className)
-									&& !testClassAsJavaClass.isAnnotationPresent(PrepareEverythingForTest.class)) {
+									&& !testClassAsJavaClass.isAnnotationPresent(PrepareEverythingForTest.class)
+									&& !new MockPolicyHandlerImpl(testClassAsJavaClass.isAnnotationPresent(MockPolicy.class) ? testClassAsJavaClass
+											.getAnnotation(MockPolicy.class).value() : null).isPrepared(className)) {
 								Whitebox.setInternalState(actual, "detailMessage", "Perhaps the class " + className + " must be prepared for test?",
 										Throwable.class);
 							}

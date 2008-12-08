@@ -47,15 +47,15 @@ public class EasyMockMethodInvocationControl<T> implements MethodInvocationContr
 	 *            <code>invocationHandler</code> are considered to be mocked.
 	 * @param mockInstance
 	 *            The actual mock instance. May be <code>null</code>. Even
-	 *            thought the mock instance may not be used it's needed to keep
-	 *            a reference to this object otherwise it may be garbage
-	 *            collected in some situations. For example when mocking static
-	 *            methods we don't return the mock object and thus it will be
-	 *            garbage collected (and thus the finalize method will be
-	 *            invoked which will be caught by the proxy and the test will
-	 *            fail because we haven't setup expectations for this method)
-	 *            because then that object has no reference. In order to avoid
-	 *            this we keep a reference to this instance here.
+	 *            though the mock instance may not be used it's needed to keep a
+	 *            reference to this object otherwise it may be garbage collected
+	 *            in some situations. For example when mocking static methods we
+	 *            don't return the mock object and thus it will be garbage
+	 *            collected (and thus the finalize method will be invoked which
+	 *            will be caught by the proxy and the test will fail because we
+	 *            haven't setup expectations for this method) because then that
+	 *            object has no reference. In order to avoid this we keep a
+	 *            reference to this instance here.
 	 */
 	public EasyMockMethodInvocationControl(MockInvocationHandler invocationHandler, Set<Method> methodsToMock, T mockInstance) {
 		if (invocationHandler == null) {

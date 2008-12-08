@@ -48,6 +48,12 @@ public class MockRepository {
 	private static Map<Object, MethodInvocationControl> instanceMocks = new HashMap<Object, MethodInvocationControl>();
 
 	/**
+	 * Holds info about which methods that should return a substitute/another
+	 * instance instead of the default instance.
+	 */
+	private static Map<Method, Object> substituteReturnValues = new HashMap<Method, Object>();
+
+	/**
 	 * Holds info about which class that should have their static initializers
 	 * suppressed.
 	 */
@@ -81,6 +87,7 @@ public class MockRepository {
 		additionalState.clear();
 		suppressConstructor.clear();
 		suppressMethod.clear();
+		substituteReturnValues.clear();
 	}
 
 	/**
@@ -239,5 +246,31 @@ public class MockRepository {
 	 */
 	public static synchronized boolean shouldSuppressConstructor(Constructor<?> constructor) {
 		return suppressConstructor.contains(constructor);
+	}
+
+	/**
+	 * @return <code>true</code> if the <tt>method</tt> has a substitute return
+	 *         value.
+	 */
+	public static synchronized boolean hasSubstituteReturnValue(Method method) {
+		return substituteReturnValues.containsKey(method);
+	}
+
+	/**
+	 * @return The substitute return value for a particular method, may be
+	 *         <code>null</code>.
+	 */
+	public static synchronized Object getSubstituteReturnValue(Method method) {
+		return substituteReturnValues.get(method);
+	}
+
+	/**
+	 * Set a substitute return value for a method. Whenever this method will be
+	 * called the <code>value</code> will be returned instead.
+	 * 
+	 * @return The previous substitute value if any.
+	 */
+	public static synchronized Object putSubstituteReturnValue(Method method, Object value) {
+		return substituteReturnValues.put(method, value);
 	}
 }

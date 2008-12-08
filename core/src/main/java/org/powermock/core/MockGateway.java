@@ -16,6 +16,7 @@
 package org.powermock.core;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 
 import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.core.spi.NewInvocationControl;
@@ -61,18 +62,18 @@ public class MockGateway {
 		 * original method or suppress the method code otherwise invoke the
 		 * invocation handler.
 		 */
-		if (methodInvocationControl != null && methodInvocationControl.isMocked(WhiteboxImpl.getMethod(objectType, methodName, sig))) {
+		final Method method = WhiteboxImpl.getMethod(objectType, methodName, sig);
+		if (methodInvocationControl != null && methodInvocationControl.isMocked(method)) {
 			returnValue = methodInvocationControl.invoke(object, WhiteboxImpl.getMethod(objectType, methodName, sig), args);
 			if (returnValue == SUPPRESS) {
 				returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
 			}
+		} else if (MockRepository.shouldSuppressMethod(method)) {
+			returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
+		} else if (MockRepository.hasSubstituteReturnValue(method)) {
+			returnValue = MockRepository.getSubstituteReturnValue(method);
 		} else {
-			final boolean shouldSuppressMethodCode = MockRepository.shouldSuppressMethod(WhiteboxImpl.getMethod(objectType, methodName, sig));
-			if (shouldSuppressMethodCode) {
-				returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
-			} else {
-				returnValue = PROCEED;
-			}
+			returnValue = PROCEED;
 		}
 		return returnValue;
 	}

@@ -1264,6 +1264,22 @@ public class WhiteboxImpl {
 	}
 
 	/**
+	 * Get all fields assignable from a particular type. This method traverses
+	 * the class hierarchy when checking for the type.
+	 * 
+	 * @param object
+	 *            The object to look for type. Note that if're you're passing an
+	 *            object only instance fields are checked, passing a class will
+	 *            only check static fields.
+	 * @param type
+	 *            The type to look for.
+	 * @return A set of all fields of the particular type.
+	 */
+	public static Set<Field> getFieldsOfType(Object object, Class<?> type) {
+		return findAllFieldsUsingStrategy(new AssignableToFieldTypeMatcherStrategy(type), object, true, getType(object));
+	}
+
+	/**
 	 * Get all instance fields for a particular object. It returns all fields
 	 * regardless of the field modifier and regardless of where in the class
 	 * hierarchy a field is located.

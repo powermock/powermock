@@ -38,7 +38,7 @@ public interface PowerMockTestNotifier {
 	void notifyAfterTestMethod(Object testInstance, Method method, Object[] arguments, TestMethodResult testResult);
 
 	/**
-	 * Notifies all listeners with the "after test method ended" event. Stores
+	 * Notifies all listeners with the "after test method ended" event. Uses
 	 * some state-store to get the needed state. For this method to work
 	 * {@link #notifyBeforeTestMethod(Object, Method, Object[])} must have been
 	 * called before this method. Otherwise revert to using the
