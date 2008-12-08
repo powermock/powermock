@@ -33,6 +33,10 @@
                <artifactId>jmxri</artifactId>
             </exclusion>
             <exclusion>
+               <groupId>com.sun.jdmk</groupId>
+               <artifactId>jmxtools</artifactId>
+            </exclusion>
+            <exclusion>
                <groupId>javax.jms</groupId>
                <artifactId>jms</artifactId>
             </exclusion>
