@@ -73,6 +73,7 @@ public class WhiteboxImpl {
 			final Method[] declaredMethods = thisType.getDeclaredMethods();
 			for (Method method : declaredMethods) {
 				if (methodName.equals(method.getName()) && checkIfTypesAreSame(parameterTypes, method.getParameterTypes())) {
+					method.setAccessible(true);
 					return method;
 				}
 			}
@@ -1328,7 +1329,7 @@ public class WhiteboxImpl {
 			return false;
 		} else {
 			for (int i = 0; i < expectedParameterTypes.length; i++) {
-				if (!expectedParameterTypes[i].isAssignableFrom(getType(actualParameterTypes[i])) && !expectedParameterTypes[i].equals(Class.class)) {
+				if (!expectedParameterTypes[i].isAssignableFrom(getType(actualParameterTypes[i]))) {
 					return false;
 				}
 			}

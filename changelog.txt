@@ -23,7 +23,9 @@ Change log 1.1 (under development)
 * Added a MockNice and MockStrict annotation which can be placed on fields to allow for the AnnotationEnabler of the EasyMock api to create and inject mock objects.
 * Changed so that the default suppression value for methods returning java.lang.String is null to conform with EasyMock and Mockito.
 * Added Whitebox.getFieldsOfType(..) that can be used to retreive all fields of a particular type in a class hierarchy.
-* Added support for mock policies. A mock policy can be used to make it easier to unit test some code with PowerMock in isolation from a certain framework. Two mock policies are available in the EasyMock API, Slf4jMockPolicy and Log4jMockPolicy which helps with mocking log4j or slf4j in PowerMock. Use the @MockPolicy annotation at the class-level of the test case to use one of the mock policies.
+* Added support for mock policies. A mock policy can be used to make it easier to unit test some code with PowerMock in isolation from a certain framework. Three mock policies are available in the EasyMock API, JclMockPolicy, Slf4jMockPolicy and Log4jMockPolicy which helps with mocking java commons-lang, log4j or slf4j in PowerMock. Use the @MockPolicy annotation at the class-level of the test case to use one of the mock policies.
+* Whitebox.getMethod(..) sets the accessable flag to true if a method is found.
+* Fixed a bug in WhiteboxImpl.checkIfTypesAreSame(..) that prevented classes to be identified correctly.
 
 Change log 1.0 (released 2008-11-18)
 ------------------------------------
