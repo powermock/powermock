@@ -283,7 +283,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 	 * 
 	 * @param originalTestIndex
 	 *            The original test index as seen by the test runner.
-	 * @return The internal test index as seen by JTestRack or <code>-1</code>
+	 * @return The internal test index as seen by PowerMock or <code>-1</code>
 	 *         if no index was found.
 	 * 
 	 */
