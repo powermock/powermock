@@ -22,6 +22,7 @@
     <module>ApacheMina</module>
     <module>log4j</module>
     <module>slf4j</module>
+    <module>jcl</module>
   </modules>   
     <dependencyManagement>
       <dependencies>

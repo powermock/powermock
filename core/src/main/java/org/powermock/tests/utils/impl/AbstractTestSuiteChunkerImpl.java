@@ -402,6 +402,8 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 					Object mockPolicyHandler = constructor.newInstance(mockPolicies);
 					Whitebox.invokeMethod(mockPolicyHandler, "initSubstituteReturnValues");
 				}
+			} catch (RuntimeException e) {
+				throw e;
 			} catch (Exception e) {
 				throw new IllegalStateException("PowerMock internal error: Failed to load class.", e);
 			}

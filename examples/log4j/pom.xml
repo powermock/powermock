@@ -14,16 +14,10 @@
    <url>http://maven.apache.org</url>
    <dependencies>
       <dependency>
-         <groupId>org.slf4j</groupId>
-         <artifactId>slf4j-api</artifactId>
-         <version>1.5.5</version>
-      </dependency>
-      <dependency>
          <groupId>org.powermock.api</groupId>
          <artifactId>powermock-api-easymock</artifactId>
          <version>${version}</version>
-      </dependency>
-      <dependency>
+      </dependency>      <dependency>
          <groupId>log4j</groupId>
          <artifactId>log4j</artifactId>
          <version>1.2.15</version>

@@ -43,7 +43,7 @@ import org.powermock.reflect.Whitebox;
 public class Log4jMockPolicy implements PowerMockPolicy {
 
 	public String[] getFullyQualifiedNamesOfClassesToLoadByMockClassloader() {
-		return new String[] { "org.apache.log4j.Appender", "org.apache.log4j.Logger" };
+		return new String[] { "org.apache.log4j." };
 	}
 
 	public String[] getFieldTypesToSuppress() {
@@ -84,6 +84,8 @@ public class Log4jMockPolicy implements PowerMockPolicy {
 	private Method[] getLoggerMethods() {
 		try {
 			return Whitebox.getMethods(getLog4jType("org.apache.log4j.Logger"), "getLogger");
+		} catch (RuntimeException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
