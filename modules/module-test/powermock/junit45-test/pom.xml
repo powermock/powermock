@@ -7,7 +7,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.powermock.modules.test.junit45</groupId>
   <artifactId>powermock-module-test-junit45</artifactId>
-  <name>junit45-test</name>
+  <name>powermock-module-test-junit45</name>
   <version>1.1-SNAPSHOT</version>
   <url>http://maven.apache.org</url>
    <dependencies>
