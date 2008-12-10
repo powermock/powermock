@@ -40,7 +40,7 @@ import demo.org.powermock.modules.test.junit45.failure.MyUtils;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(MyUtils.class)
-public class AssertThatJUnit45FailuresWork {
+public class AssertThatJUnit45FailuresWorkTest {
 
 	@Test(expected = MyException.class)
 	public void testSum() throws MyException {
