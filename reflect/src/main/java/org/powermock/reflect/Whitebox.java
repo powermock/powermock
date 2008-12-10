@@ -55,6 +55,31 @@ public class Whitebox {
 	}
 
 	/**
+	 * Convenience method to get a method from a class type without having to
+	 * catch the checked exceptions otherwise required. These exceptions are
+	 * wrapped as runtime exceptions.
+	 * <p>
+	 * The method will first try to look for a declared method in the same
+	 * class. If the method is not declared in this class it will look for the
+	 * method in the super class. This will continue throughout the whole class
+	 * hierarchy. If the method is not found an {@link IllegalArgumentException}
+	 * is thrown. Since the method name is not specified an
+	 * {@link IllegalArgumentException} is thrown if two or more methods matches
+	 * the same parameter types in the same class.
+	 * 
+	 * @param type
+	 *            The type of the class where the method is located.
+	 * @param parameterTypes
+	 *            All parameter types of the method (may be <code>null</code>).
+	 * @return A <code>java.lang.reflect.Method</code>.
+	 * @throws IllegalArgumentException
+	 *             If a method cannot be found in the hierarchy.
+	 */
+	public static Method getMethod(Class<?> type, Class<?>... parameterTypes) {
+		return WhiteboxImpl.getMethod(type, parameterTypes);
+	}
+
+	/**
 	 * Create a new instance of a class without invoking its constructor.
 	 * <p>
 	 * No byte-code manipulation is needed to perform this operation and thus
@@ -473,7 +498,7 @@ public class Whitebox {
 	public static Set<Field> getAllFields(Class<?> type) {
 		return WhiteboxImpl.getAllFields(type);
 	}
-	
+
 	/**
 	 * Get all fields assignable from a particular type. This method traverses
 	 * the class hierarchy when checking for the type.

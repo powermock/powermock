@@ -21,9 +21,12 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import javassist.util.proxy.MethodFilter;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
+
 import org.mockito.Mockito;
-import org.mockito.cglib.proxy.Enhancer;
-import org.mockito.cglib.proxy.MethodInterceptor;
 import org.mockito.cglib.proxy.MethodProxy;
 import org.mockito.internal.MockHandler;
 import org.mockito.internal.creation.MethodInterceptorFilter;
@@ -72,7 +75,7 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 	 *            The mock invocation handler to be associated with this
 	 *            instance.
 	 * @param delegator
-	 *            If the user spies on an instance this instance must be
+	 *            If the user spies on an instance the original instance must be
 	 *            injected here.
 	 * @param methodsToMock
 	 *            The methods that are mocked for this instance. If
@@ -108,7 +111,7 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 		}
 	}
 
-	public Object invoke(Object obj, Method method, Object[] arguments) throws Throwable {
+	public Object invoke(final Object obj, final Method method, final Object[] arguments) throws Throwable {
 		Object interceptionObject = obj;
 		// If the method is static we should get the substitution mock.
 		if (Modifier.isStatic(method.getModifiers()) && isMocked(method)) {
@@ -118,21 +121,55 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 				interceptionObject = substituteObject;
 			}
 		}
-
-		MethodProxy methodProxy = null;
-		if (isMockitoSpy()) {
-			methodProxy = (MethodProxy) Enhancer.create(MethodProxy.class, new MethodInterceptor() {
-				public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
-					return method.invoke(delegator, args);
-				}
-			});
-		}
-
-		final Object returnValue = invocationHandler.intercept(interceptionObject, method, arguments, methodProxy);
+		final Object returnValue = invocationHandler.intercept(interceptionObject, method, arguments, getMethodProxy(method));
 		if (returnValue == null && isInVerificationMode()) {
 			return MockGateway.SUPPRESS;
 		}
 		return returnValue;
+	}
+
+	/**
+	 * Get a method proxy if needed. This is needed when this method invocation
+	 * control is in spy mode (i.e. the {@link #delegator} is set). What Mockito
+	 * does in its
+	 * {@link MockHandler#intercept(Object, Method, Object[], MethodProxy)}
+	 * method is to invoke a MethodProxy that in its turn invoke the original
+	 * method. Since we don't have access to this method proxy we create a
+	 * Javassist proxy for the MethodProxy class. When the invoke method is
+	 * called we simply invoke the method on the original delegator.
+	 * <p>
+	 * The reason why we're not using a CgLib proxy is because the
+	 * {@link MethodProxy} has a private constructor and CgLib cannot proxy
+	 * classes with a private constructor (but Javassist can). However I failed
+	 * to instantiate the generated Javaassist Proxy Class using reflection (got
+	 * a exception) so instead we're using {@link Whitebox#newInstance(Class)}
+	 * to create an instance of the class using Objenisis (i.e. the constructor
+	 * is never invoked which is actually good).
+	 */
+	@SuppressWarnings("unchecked")
+	private MethodProxy getMethodProxy(final Method method) {
+		if (isMockitoSpy()) {
+			ProxyFactory f = new ProxyFactory();
+			f.setSuperclass(MethodProxy.class);
+			MethodHandler mi = new MethodHandler() {
+				public Object invoke(Object self, Method m, Method proceed, Object[] args) throws Throwable {
+					final Object[] realArguments = (Object[]) args[1];
+					// execute the original method.
+					final Object invoke = method.invoke(delegator, realArguments);
+					return invoke;
+				}
+			};
+			f.setFilter(new MethodFilter() {
+				public boolean isHandled(Method m) {
+					return !m.getName().equals("finalize");
+				}
+			});
+			Class<MethodProxy> c = f.createClass();
+			final MethodProxy methodProxy = Whitebox.newInstance(c);
+			((ProxyObject) methodProxy).setHandler(mi);
+			return methodProxy;
+		}
+		return null;
 	}
 
 	public Object replay(Object... mocks) {

@@ -22,7 +22,6 @@ import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.spy;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -80,7 +79,6 @@ public class FinalDemoTest {
 	}
 
 	@Test
-	@Ignore("Functionality not ready yet")
 	public void assertSpyingOnFinalInstanceMethodWorks() throws Exception {
 		FinalDemo tested = new FinalDemo();
 		FinalDemo spy = spy(tested);
@@ -91,6 +89,5 @@ public class FinalDemoTest {
 		assertEquals("Hello " + argument, spy.say(argument));
 		when(spy.say(argument)).thenReturn(expected);
 		assertEquals(expected, spy.say(argument));
-
 	}
 }

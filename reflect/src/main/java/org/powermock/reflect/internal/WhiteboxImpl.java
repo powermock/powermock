@@ -52,6 +52,66 @@ public class WhiteboxImpl {
 	 * class. If the method is not declared in this class it will look for the
 	 * method in the super class. This will continue throughout the whole class
 	 * hierarchy. If the method is not found an {@link IllegalArgumentException}
+	 * is thrown. Since the method name is not specified an
+	 * {@link IllegalArgumentException} is thrown if two or more methods matches
+	 * the same parameter types in the same class.
+	 * 
+	 * @param type
+	 *            The type of the class where the method is located.
+	 * @param parameterTypes
+	 *            All parameter types of the method (may be <code>null</code>).
+	 * @return A <code>java.lang.reflect.Method</code>.
+	 * @throws IllegalArgumentException
+	 *             If a method cannot be found in the hierarchy.
+	 * @throws RuntimeException
+	 *             If several methods were found.
+	 */
+	public static Method getMethod(Class<?> type, Class<?>... parameterTypes) {
+		Class<?> thisType = type;
+		if (parameterTypes == null) {
+			parameterTypes = new Class<?>[0];
+		}
+
+		List<Method> foundMethods = new LinkedList<Method>();
+
+		while (thisType != null) {
+			final Method[] declaredMethods = thisType.getDeclaredMethods();
+			for (Method method : declaredMethods) {
+				if (checkIfTypesAreSame(parameterTypes, method.getParameterTypes())) {
+					foundMethods.add(method);
+					if (foundMethods.size() == 1) {
+						method.setAccessible(true);
+					}
+				}
+
+			}
+			if (foundMethods.size() == 1) {
+				return foundMethods.get(0);
+			} else if (foundMethods.size() > 1) {
+				break;
+			}
+			thisType = thisType.getSuperclass();
+		}
+
+		if (foundMethods.isEmpty()) {
+			throw new IllegalArgumentException("No method was found with argument types: [ " + getArgumentsAsString((Object[]) parameterTypes)
+					+ " ] in class " + getUnmockedType(type).getName());
+		} else {
+			throwExceptionWhenMultipleMethodMatchesFound("method name", foundMethods.toArray(new Method[foundMethods.size()]));
+		}
+		// Will never happen
+		return null;
+	}
+
+	/**
+	 * Convenience method to get a method from a class type without having to
+	 * catch the checked exceptions otherwise required. These exceptions are
+	 * wrapped as runtime exceptions.
+	 * <p>
+	 * The method will first try to look for a declared method in the same
+	 * class. If the method is not declared in this class it will look for the
+	 * method in the super class. This will continue throughout the whole class
+	 * hierarchy. If the method is not found an {@link IllegalArgumentException}
 	 * is thrown.
 	 * 
 	 * @param type
@@ -598,7 +658,7 @@ public class WhiteboxImpl {
 							 * the same name and the same number of arguments
 							 * but one is using wrapper types.
 							 */
-							throwExceptionWhenMultipleMethodMatchesFound(new Method[] { potentialMethodToInvoke, method });
+							throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", new Method[] { potentialMethodToInvoke, method });
 						}
 					}
 				} else if (method.isVarArgs() && areAllArgumentsOfSameType(arguments)) {
@@ -697,7 +757,7 @@ public class WhiteboxImpl {
 	public static void throwExceptionIfMethodWasNotFound(Class<?> type, String methodName, Method methodToMock, Object... arguments) {
 		if (methodToMock == null) {
 			throw new IllegalArgumentException("No method found with name '" + methodName + "' with argument types: [ "
-					+ getArgumentsAsString(arguments) + "] in class " + getUnmockedType(type).getName());
+					+ getArgumentsAsString(arguments) + " ] in class " + getUnmockedType(type).getName());
 		}
 	}
 
@@ -980,11 +1040,11 @@ public class WhiteboxImpl {
 				}
 
 				if (methodToMock == null) {
-					WhiteboxImpl.throwExceptionWhenMultipleMethodMatchesFound(matchingMethodsList.toArray(new Method[0]));
+					WhiteboxImpl.throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", matchingMethodsList.toArray(new Method[0]));
 				}
 			} else {
 				// We've found several matching methods.
-				WhiteboxImpl.throwExceptionWhenMultipleMethodMatchesFound(matchingMethodsList.toArray(new Method[0]));
+				WhiteboxImpl.throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", matchingMethodsList.toArray(new Method[0]));
 			}
 		}
 
@@ -1007,13 +1067,14 @@ public class WhiteboxImpl {
 		return unmockedType;
 	}
 
-	static void throwExceptionWhenMultipleMethodMatchesFound(Method[] methods) {
+	static void throwExceptionWhenMultipleMethodMatchesFound(String helpInfo, Method[] methods) {
 		if (methods == null || methods.length < 2) {
 			throw new IllegalArgumentException("Internal error: throwExceptionWhenMultipleMethodMatchesFound needs at least two methods.");
 		}
 		StringBuilder sb = new StringBuilder();
-		sb
-				.append("Several matching methods found, please specify the argument parameter types so that PowerMock can determine which method you're refering to.\n");
+		sb.append("Several matching methods found, please specify the ");
+		sb.append(helpInfo);
+		sb.append(" so that PowerMock can determine which method you're refering to.\n");
 		sb.append("Matching methods in class ").append(methods[0].getDeclaringClass().getName()).append(" were:\n");
 
 		for (Method method : methods) {

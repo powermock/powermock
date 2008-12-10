@@ -206,7 +206,7 @@ public class PowerMockito {
 		MethodInterceptorFilter<MockHandler<T>> filter = new MethodInterceptorFilter<MockHandler<T>>(type, mockHandler);
 		final T mock = (T) ClassImposterizer.INSTANCE.imposterise(filter, type);
 
-		filter.setInstance(mock);
+		filter.setInstance(optionalInstance == null ? mock : optionalInstance);
 
 		final MockitoMethodInvocationControl<T> invocationControl = new MockitoMethodInvocationControl<T>(filter, optionalInstance, methods);
 		return new MockData<T>(invocationControl, mock);

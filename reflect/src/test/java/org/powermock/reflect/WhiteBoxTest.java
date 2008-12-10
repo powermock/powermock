@@ -76,7 +76,7 @@ public class WhiteBoxTest {
 			WhiteboxImpl.findMethodOrThrowException(ClassWithSeveralMethodsWithSameName.class, "getDouble2");
 			fail("Should throw runtime exception!");
 		} catch (RuntimeException e) {
-			assertEquals("Error message did not match", "No method found with name 'getDouble2' with argument types: [ ] in class "
+			assertEquals("Error message did not match", "No method found with name 'getDouble2' with argument types: [  ] in class "
 					+ ClassWithSeveralMethodsWithSameName.class.getName(), e.getMessage());
 		}
 	}
@@ -422,6 +422,35 @@ public class WhiteBoxTest {
 	public void testGetAllStaticFields() throws Exception {
 		Set<Field> allFields = Whitebox.getAllFields(ClassWithInternalState.class);
 		assertEquals(2, allFields.size());
+	}
+
+	@Test
+	public void testMethodWithNoMethodName_noMethodFound() throws Exception {
+		try {
+			Whitebox.getMethod(ClassWithInternalState.class, String.class);
+			fail("Should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			assertEquals(
+					"No method was found with argument types: [ java.lang.String ] in class org.powermock.reflect.testclasses.ClassWithInternalState",
+					e.getMessage());
+		}
+	}
+
+	@Test
+	public void testMethodWithNoMethodName_tooManyMethodsFound() throws Exception {
+		try {
+			Whitebox.getMethod(ClassWithSeveralMethodsWithSameName.class);
+			fail("Should throw RuntimeException");
+		} catch (RuntimeException e) {
+			assertTrue(e.getMessage().contains(
+					"Several matching methods found, please specify the method name so that PowerMock can determine which method you're refering to"));
+		}
+	}
+
+	@Test
+	public void testMethodWithNoMethodName_ok() throws Exception {
+		final Method method = Whitebox.getMethod(ClassWithSeveralMethodsWithSameName.class, double.class);
+		assertEquals(method, ClassWithSeveralMethodsWithSameName.class.getDeclaredMethod("getDouble", double.class));
 	}
 
 	public void testFinalState() {
