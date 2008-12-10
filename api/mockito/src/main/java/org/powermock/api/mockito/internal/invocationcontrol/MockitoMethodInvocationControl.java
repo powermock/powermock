@@ -22,6 +22,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.mockito.Mockito;
+import org.mockito.cglib.proxy.Enhancer;
+import org.mockito.cglib.proxy.MethodInterceptor;
+import org.mockito.cglib.proxy.MethodProxy;
 import org.mockito.internal.MockHandler;
 import org.mockito.internal.creation.MethodInterceptorFilter;
 import org.mockito.internal.progress.MockingProgress;
@@ -40,6 +43,8 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 	private final MethodInterceptorFilter<MockHandler<T>> invocationHandler;
 
 	private final Set<Method> mockedMethods;
+
+	private final T delegator;
 
 	/**
 	 * Creates a new instance.
@@ -76,12 +81,14 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 	 *            mocked.
 	 */
 	public MockitoMethodInvocationControl(MethodInterceptorFilter<MockHandler<T>> invocationHandler, T delegator, Method... methodsToMock) {
+
 		if (invocationHandler == null) {
 			throw new IllegalArgumentException("Invocation Handler cannot be null.");
 		}
 
 		mockedMethods = toSet(methodsToMock);
 
+		this.delegator = delegator;
 		this.invocationHandler = invocationHandler;
 	}
 
@@ -112,7 +119,16 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 			}
 		}
 
-		Object returnValue = invocationHandler.intercept(interceptionObject, method, arguments, null);
+		MethodProxy methodProxy = null;
+		if (isMockitoSpy()) {
+			methodProxy = (MethodProxy) Enhancer.create(MethodProxy.class, new MethodInterceptor() {
+				public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+					return method.invoke(delegator, args);
+				}
+			});
+		}
+
+		final Object returnValue = invocationHandler.intercept(interceptionObject, method, arguments, methodProxy);
 		if (returnValue == null && isInVerificationMode()) {
 			return MockGateway.SUPPRESS;
 		}
@@ -136,5 +152,9 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 
 	private Set<Method> toSet(Method... methods) {
 		return methods == null ? null : new HashSet<Method>(Arrays.asList(methods));
+	}
+
+	private boolean isMockitoSpy() {
+		return delegator != null;
 	}
 }

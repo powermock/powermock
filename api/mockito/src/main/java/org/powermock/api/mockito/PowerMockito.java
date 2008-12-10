@@ -40,7 +40,7 @@ public class PowerMockito {
 	 *            optionally what methods to mock
 	 */
 	public static synchronized void mockStatic(Class<?> type, Method... methods) {
-		doMock(type, true, methods);
+		doMock(type, true, null, methods);
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class PowerMockito {
 	 *            the class to enable static mocking
 	 */
 	public static synchronized void mockStatic(Class<?> type) {
-		doMock(type, true, (Method[]) null);
+		doMock(type, true, null, (Method[]) null);
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class PowerMockito {
 	 * @return the mock object.
 	 */
 	public static synchronized <T> T mock(Class<T> type, Method... methods) {
-		return doMock(type, false, methods);
+		return doMock(type, false, null, methods);
 	}
 
 	/**
@@ -78,11 +78,28 @@ public class PowerMockito {
 	 * @return the mock object.
 	 */
 	public static synchronized <T> T mock(Class<T> type) {
-		return doMock(type, false, (Method[]) null);
+		return doMock(type, false, null, (Method[]) null);
+	}
+
+	/**
+	 * Spy on objects that are final or otherwise not &quot;spyable&quot; from
+	 * normal Mockito.
+	 * 
+	 * @see Mockito#spy(Object)
+	 * 
+	 * @param <T>
+	 *            the type of the mock object
+	 * @param type
+	 *            the type of the mock object
+	 * @return the spy object.
+	 */
+	@SuppressWarnings("unchecked")
+	public static synchronized <T> T spy(T object) {
+		return doMock((Class<T>) Whitebox.getType(object), false, object, (Method[]) null);
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T> T doMock(Class<T> type, boolean isStatic, Method... methods) {
+	private static <T> T doMock(Class<T> type, boolean isStatic, T optionalInstance, Method... methods) {
 		if (type == null) {
 			throw new IllegalArgumentException("The class to mock cannot be null");
 		}
@@ -100,11 +117,11 @@ public class PowerMockito {
 			 * verification mode if verification fails (it tries to get the name
 			 * of the mock) and we get an inappropriate exception.
 			 */
-			final MockData<InvocationSubstitute> mockData = createMethodInvocationControl(mockName, InvocationSubstitute.class, methods);
+			final MockData<InvocationSubstitute> mockData = createMethodInvocationControl(mockName, InvocationSubstitute.class, null, methods);
 			MockRepository.putStaticMethodInvocationControl(type, mockData.getMethodInvocationControl());
 			MockRepository.addObjectsToAutomaticallyReplayAndVerify(mockData.getMock());
 		} else {
-			MockData<T> mockData = createMethodInvocationControl(mockName, type, methods);
+			MockData<T> mockData = createMethodInvocationControl(mockName, type, optionalInstance, methods);
 
 			mock = mockData.getMock();
 			MockRepository.putInstanceMethodInvocationControl(mock, mockData.getMethodInvocationControl());
@@ -183,7 +200,7 @@ public class PowerMockito {
 		}
 	}
 
-	private static <T> MockData<T> createMethodInvocationControl(final String mockName, Class<T> type, Method[] methods) {
+	private static <T> MockData<T> createMethodInvocationControl(final String mockName, Class<T> type, T optionalInstance, Method[] methods) {
 		MockHandler<T> mockHandler = new MockHandler<T>(mockName, Whitebox.getInternalState(Mockito.class, MockingProgress.class),
 				new MatchersBinder());
 		MethodInterceptorFilter<MockHandler<T>> filter = new MethodInterceptorFilter<MockHandler<T>>(type, mockHandler);
@@ -191,7 +208,7 @@ public class PowerMockito {
 
 		filter.setInstance(mock);
 
-		final MockitoMethodInvocationControl<T> invocationControl = new MockitoMethodInvocationControl<T>(filter, methods);
+		final MockitoMethodInvocationControl<T> invocationControl = new MockitoMethodInvocationControl<T>(filter, optionalInstance, methods);
 		return new MockData<T>(invocationControl, mock);
 	}
 

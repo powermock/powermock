@@ -20,7 +20,9 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.spy;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -75,5 +77,20 @@ public class FinalDemoTest {
 
 		verify(tested).sayFinalNative(argument);
 		assertEquals("Expected and actual did not match", expected, actual);
+	}
+
+	@Test
+	@Ignore("Functionality not ready yet")
+	public void assertSpyingOnFinalInstanceMethodWorks() throws Exception {
+		FinalDemo tested = new FinalDemo();
+		FinalDemo spy = spy(tested);
+
+		final String argument = "PowerMock";
+		final String expected = "something";
+
+		assertEquals("Hello " + argument, spy.say(argument));
+		when(spy.say(argument)).thenReturn(expected);
+		assertEquals(expected, spy.say(argument));
+
 	}
 }

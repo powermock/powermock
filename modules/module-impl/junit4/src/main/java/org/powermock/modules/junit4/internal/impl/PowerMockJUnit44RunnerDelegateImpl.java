@@ -26,7 +26,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.junit.Assume.AssumptionViolatedException;
 import org.junit.internal.runners.ClassRoadie;
 import org.junit.internal.runners.InitializationError;
 import org.junit.internal.runners.JUnit4ClassRunner;
@@ -215,9 +214,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 						}
 					} catch (InvocationTargetException e) {
 						Throwable actual = e.getTargetException();
-						if (actual instanceof AssumptionViolatedException) {
-							return;
-						} else if (!(Boolean) Whitebox.invokeMethod(testMethod, "expectsException")) {
+						if (!(Boolean) Whitebox.invokeMethod(testMethod, "expectsException")) {
 							final String className = actual.getStackTrace()[0].getClassName();
 							final Class<?> testClassAsJavaClass = testClass.getJavaClass();
 							if (actual instanceof NullPointerException
@@ -237,6 +234,8 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 							String message = "Unexpected exception, expected<" + getExpectedExceptionName(testMethod) + "> but was<"
 									+ actual.getClass().getName() + ">";
 							addFailure(new Exception(message, actual));
+						} else {
+							return;
 						}
 					} catch (Throwable e) {
 						addFailure(e);

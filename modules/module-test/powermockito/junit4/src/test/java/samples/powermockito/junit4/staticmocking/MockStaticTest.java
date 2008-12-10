@@ -144,6 +144,6 @@ public class MockStaticTest {
 
 	@Test
 	public void testSpyOnStaticMethods() throws Exception {
-
+		
 	}
 }
