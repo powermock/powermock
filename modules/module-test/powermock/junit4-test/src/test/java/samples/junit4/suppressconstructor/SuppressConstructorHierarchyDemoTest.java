@@ -53,7 +53,6 @@ public class SuppressConstructorHierarchyDemoTest {
 	}
 
 	@Test
-	@Ignore
 	public void testNotSuppressConstructorWithByteCodeManipulation() throws Exception {
 		try {
 			new SuppressConstructorHierarchyChild("message");

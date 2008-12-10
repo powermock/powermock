@@ -39,7 +39,6 @@ public class StaticInitializerExampleTest {
 	}
 
 	@Test
-	@Ignore("Does not work in maven on Mac")
 	public void testSupressStaticInitializerAndSetFinalField() throws Exception {
 		assertNull("Should be null because the static initializer should be suppressed", StaticInitializerExample.getMySet());
 		final HashSet<String> hashSet = new HashSet<String>();
