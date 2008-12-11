@@ -26,10 +26,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl;
 
-import demo.org.powermock.modules.test.junit45.failure.MyClass;
-import demo.org.powermock.modules.test.junit45.failure.MyException;
-import demo.org.powermock.modules.test.junit45.failure.MyUtils;
-
 /**
  * This test asserts that JUnit 4.5 failures works as expected. Previously the
  * {@link PowerMockJUnit44RunnerDelegateImpl} got a {@link NoClassDefFoundError}
@@ -41,6 +37,11 @@ import demo.org.powermock.modules.test.junit45.failure.MyUtils;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(MyUtils.class)
 public class AssertThatJUnit45FailuresWorkTest {
+
+	@Test(expected = AssumptionViolatedException.class)
+	public void testAssumptionViolatedException() throws MyException {
+		throw new AssumptionViolatedException("Not true!");
+	}
 
 	@Test(expected = MyException.class)
 	public void testSum() throws MyException {
