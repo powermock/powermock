@@ -7,7 +7,7 @@ Change log 1.1 (under development)
 * LoggerTest now creates its test log file in ./target/ directory instead of ./
 * Major refactoring of project structure, it's now be possible to use PowerMock as a foundation for testability for other mock frameworks.
 * Fixed a serious issue with the classloading hierarchy of PowerMock's JUnit runners.
-* Implemented support for PowerMock test listener, to create a listener you need to implement the org.powermock.core.spi.PowerMockTestListener interface and pass the implementation class to the PowerMockListener annotation.
+* Implemented support for PowerMock test listeners, to create a listener you need to implement the org.powermock.core.spi.PowerMockTestListener interface and pass the implementation class to the PowerMockListener annotation.
 * Started Mockito integration. It supports final, static (non-void) and partial mocking using the PowerMock Mockito API. It also supports the Mockito annotations if using the @PowerMockListener(AnnotationEnabler.class) at the class-level of the test case.
 * Added a new Mock annotation which can be placed on fields to allow for a PowerMock listener to create and inject mock objects. Use the AnnotationEnabler listener from the EasyMock or Mockito API.
 * Exceptions are no longer wrapped in run-time exceptions when invoking a method using Whitebox.invokeMethod(..).
@@ -29,6 +29,7 @@ Change log 1.1 (under development)
 * Fixed a bug in WhiteboxImpl.checkIfTypesAreSame(..) that prevented classes to be identified correctly.
 * Fixed a bug in the PowerMockJUnit44RunnerDelegateImpl that caused a NoClassDefFoundError to be thrown when using JUnit 4.5 when a AssumptionViolatedException was thrown. The reason for this was that JUnit has changed to locatation of this exception.
 * Added spy functionality of final classes and methods to the Mockito API (experimental).
+* Fixed so that it works to place the PrepareForTest annotation at methods without specifying it at the class-level first.
 
 Change log 1.0 (released 2008-11-18)
 ------------------------------------

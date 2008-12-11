@@ -128,15 +128,11 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 		if (testClass.isAnnotationPresent(PrepareEverythingForTest.class)) {
 			defaultMockLoader = createNewClassloader(testClass, new String[] { MockClassLoader.MODIFY_ALL_CLASSES }, ignorePackages);
 		} else {
-			// final String[] policyClassesToLoad =
-			// getAndInitializeMockPolicyClasses(testClass);
 			final String[] prepareForTestClasses = prepareForTestExtractor.getTestClasses(testClass);
 			final String[] suppressStaticClasses = suppressionExtractor.getTestClasses(testClass);
 			defaultMockLoader = createNewClassloader(testClass, arrayMerger.mergeArrays(String.class, prepareForTestClasses, suppressStaticClasses),
 					ignorePackages);
 		}
-		// executeClassLoaderDependentMockPolicyMethods(testClass,
-		// defaultMockLoader);
 		List<Method> currentClassloaderMethods = new LinkedList<Method>();
 		// Put the first suite in the map of internal suites.
 		TestChunk defaultTestChunk = new TestChunk(defaultMockLoader, currentClassloaderMethods);
@@ -149,9 +145,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 		 * class loader remove it to avoid duplicate test print outs.
 		 */
 		if (currentClassloaderMethods.isEmpty()) {
-			// We ignore this since other tests fails because of this, we need
-			// to find a better solution.
-			// internalSuites.get(testClass).remove(defaultMockLoader);
+			internalSuites.get(0).getTestChunks().remove(0);
 		}
 	}
 
@@ -360,6 +354,11 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 		}
 	}
 
+	/**
+	 * @return <code>true</code> if there are some mock policies that
+	 *         contributes with classes that should be loaded by the mock
+	 *         classloader, <code>false</code> otherwise.
+	 */
 	protected boolean hasMockPolicyProvidedClasses(Class<?> testClass) {
 		boolean hasMockPolicyProvidedClasses = false;
 		if (testClass.isAnnotationPresent(MockPolicy.class)) {

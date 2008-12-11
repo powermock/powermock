@@ -21,7 +21,6 @@ import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.replay;
 import static org.powermock.api.easymock.PowerMock.verify;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -44,8 +43,7 @@ public class NoDuplicateTest {
 
 	@Test
 	@PrepareForTest(FinalDemo.class)
-	@Ignore("The current solution doesn't work because other tests fail because of it. We need to look into it more.")
-	public void testSay() throws Exception {
+	public void assertThatPrepareForTestAnnotationAtMethodLevelButNotClassLevelWorks() throws Exception {
 		FinalDemo tested = createMock(FinalDemo.class);
 		String expected = "Hello altered World";
 		expect(tested.say("hello")).andReturn("Hello altered World");
