@@ -93,6 +93,10 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
 		return false;
 	}
 
+	protected boolean shouldModify(Iterable<String> packages, String name) {
+		return !shouldIgnore(packages, name);
+	}
+
 	protected abstract Class<?> loadModifiedClass(String s) throws ClassFormatError, ClassNotFoundException;
 
 	protected abstract boolean shouldModifyClass(String s);

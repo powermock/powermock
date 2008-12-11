@@ -19,28 +19,35 @@ import static org.easymock.classextension.EasyMock.makeThreadSafe;
 import static org.powermock.api.easymock.PowerMock.createNiceMock;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.powermock.mockpolicies.AbstractLogPolicyBase;
+import org.powermock.core.spi.PowerMockPolicy;
+import org.powermock.mockpolicies.MockPolicyClassLoadingSettings;
+import org.powermock.mockpolicies.MockPolicyInterceptionSettings;
+import org.powermock.mockpolicies.support.LogPolicySupport;
 
 /**
  * A base class for EasyMock log policies.
  */
-public abstract class AbstractEasyMockLogPolicyBase extends AbstractLogPolicyBase {
+public abstract class AbstractEasyMockLogPolicyBase implements PowerMockPolicy {
 
 	/**
-	 * Get the substitute return values.
+	 * {@inheritDoc}
 	 */
-	public final Map<Method, Object> getSubtituteReturnValues() {
-		final Map<Method, Object> subtitutes = new HashMap<Method, Object>();
+	public void applyClassLoadingPolicy(MockPolicyClassLoadingSettings settings) {
+		settings.addFullyQualifiedNamesOfClassesToLoadByMockClassloader(getFullyQualifiedNamesOfClassesToLoadByMockClassloader());
+	}
 
-		Method[] loggerFactoryMethods = getLoggerMethods(getLoggerFactoryClassName(), getLoggerMethodName(), getLogFrameworkName());
+	/**
+	 * {@inheritDoc}
+	 */
+	public void applyInterceptionPolicy(MockPolicyInterceptionSettings settings) {
+		LogPolicySupport support = new LogPolicySupport();
+
+		Method[] loggerFactoryMethods = support.getLoggerMethods(getLoggerFactoryClassName(), getLoggerMethodName(), getLogFrameworkName());
 
 		Class<?> loggerType = null;
 		try {
-			loggerType = getType(getLoggerClassToMock(), getLogFrameworkName());
+			loggerType = support.getType(getLoggerClassToMock(), getLogFrameworkName());
 		} catch (RuntimeException e) {
 			throw e;
 		} catch (Exception e) {
@@ -52,10 +59,8 @@ public abstract class AbstractEasyMockLogPolicyBase extends AbstractLogPolicyBas
 		makeThreadSafe(loggerMock, true);
 
 		for (Method method : loggerFactoryMethods) {
-			subtitutes.put(method, loggerMock);
+			settings.addSubtituteReturnValue(method, loggerMock);
 		}
-
-		return Collections.unmodifiableMap(subtitutes);
 	}
 
 	/**
@@ -83,4 +88,10 @@ public abstract class AbstractEasyMockLogPolicyBase extends AbstractLogPolicyBas
 	 *         found in the classpath.
 	 */
 	protected abstract String getLogFrameworkName();
+
+	/**
+	 * @return The fully-qualified names of the classes that should be loaded by
+	 *         the mock classloader.
+	 */
+	protected abstract String[] getFullyQualifiedNamesOfClassesToLoadByMockClassloader();
 }

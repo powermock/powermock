@@ -24,6 +24,7 @@ import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
 
+import org.powermock.core.spi.PowerMockPolicy;
 import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.core.transformers.MockTransformer;
 
@@ -59,7 +60,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 			"org.powermock.modules.junit4.internal.", "org.powermock.modules.junit4.legacy.internal.", "org.powermock.modules.junit3.internal.",
 			"org.powermock" };
 
-	private final String[] specificClassesToLoadButNotModify = new String[] { InvocationSubstitute.class.getName() };
+	private final String[] specificClassesToLoadButNotModify = new String[] { InvocationSubstitute.class.getName(), PowerMockPolicy.class.getName() };
 
 	/*
 	 * Classes that should always be deferred regardless of what the user

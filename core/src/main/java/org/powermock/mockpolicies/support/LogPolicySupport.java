@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.mockpolicies;
+package org.powermock.mockpolicies.support;
 
 import java.lang.reflect.Method;
 
 import org.powermock.reflect.Whitebox;
 
 /**
- * A base class for logging-based mock policies.
+ * A support class for mock policies dealing with logging frameworks.
  */
-public abstract class AbstractLogPolicyBase extends AbstractEmptyPolicyBase {
+public class LogPolicySupport {
 	/**
 	 * Get the methods that should be mocked.
 	 * 
@@ -36,7 +36,7 @@ public abstract class AbstractLogPolicyBase extends AbstractEmptyPolicyBase {
 	 *            <code>fullyQualifiedClassName</code> cannot be found.
 	 * @return The {@link Method[]}'s that should be mocked.
 	 */
-	protected Method[] getLoggerMethods(String fullyQualifiedClassName, String methodName, String logFramework) {
+	public Method[] getLoggerMethods(String fullyQualifiedClassName, String methodName, String logFramework) {
 		try {
 			return Whitebox.getMethods(getType(fullyQualifiedClassName, logFramework), methodName);
 		} catch (RuntimeException e) {
@@ -59,7 +59,7 @@ public abstract class AbstractLogPolicyBase extends AbstractEmptyPolicyBase {
 	 *             If something unexpected goes wrong, for example if the class
 	 *             cannot be found.
 	 */
-	protected Class<?> getType(String name, String logFramework) throws Exception {
+	public Class<?> getType(String name, String logFramework) throws Exception {
 		Class<?> loggerType = null;
 		try {
 			loggerType = Class.forName(name);

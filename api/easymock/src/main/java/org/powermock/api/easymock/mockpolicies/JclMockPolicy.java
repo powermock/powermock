@@ -17,7 +17,6 @@ package org.powermock.api.easymock.mockpolicies;
 
 import org.powermock.api.easymock.internal.mockpolicies.AbstractEasyMockLogPolicyBase;
 
-
 /**
  * A Jakarta Commons-Logging (JCL) mock policy. This mock policy deals with
  * solving JCL related mocking issues. It takes care of loading all concerned
@@ -38,7 +37,7 @@ public class JclMockPolicy extends AbstractEasyMockLogPolicyBase {
 	/**
 	 * Loads all log4j classes with the mock classloader.
 	 */
-	public String[] getFullyQualifiedNamesOfClassesToLoadByMockClassloader() {
+	protected String[] getFullyQualifiedNamesOfClassesToLoadByMockClassloader() {
 		return new String[] { "org.apache.commons.logging.", "org.apache.log4j.Appender", "org.apache.log4j.xml.DOMConfigurator" };
 	}
 

@@ -79,13 +79,13 @@ public interface TestSuiteChunker {
 	/**
 	 * Create a new class loader and load <code>classes</code> from this
 	 * classloader.
-	 * 
-	 * @param classes
+	 * @param testClass TODO
+	 * @param classesToLoadByMockClassloader
 	 *            An array of the fully qualified name of the classes to modify.
 	 * @param packagesToIgnore
 	 *            Packages to ignore.
 	 */
-	public ClassLoader createNewClassloader(String[] classes, String[] packagesToIgnore);
+	public ClassLoader createNewClassloader(Class<?> testClass, String[] classesToLoadByMockClassloader, String[] packagesToIgnore);
 
 	/**
 	 * Get the number of total tests defined in the suite (the sum of all tests

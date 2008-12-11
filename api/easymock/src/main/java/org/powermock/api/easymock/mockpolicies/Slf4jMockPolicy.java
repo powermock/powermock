@@ -17,7 +17,6 @@ package org.powermock.api.easymock.mockpolicies;
 
 import org.powermock.api.easymock.internal.mockpolicies.AbstractEasyMockLogPolicyBase;
 
-
 /**
  * An slf4j mock policy. This mock policy deals with solving slf4j related
  * mocking issues. It takes care of loading all concerned slf4j and log4j
@@ -33,7 +32,7 @@ import org.powermock.api.easymock.internal.mockpolicies.AbstractEasyMockLogPolic
  */
 public class Slf4jMockPolicy extends AbstractEasyMockLogPolicyBase {
 
-	public String[] getFullyQualifiedNamesOfClassesToLoadByMockClassloader() {
+	protected String[] getFullyQualifiedNamesOfClassesToLoadByMockClassloader() {
 		return new String[] { "org.apache.log4j.Appender", "org.slf4j.LoggerFactory", "org.apache.log4j.xml.DOMConfigurator" };
 	}
 
