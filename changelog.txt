@@ -37,6 +37,7 @@ Change log 1.1 (released 2008-12-12)
 * Added Whitebox.getField(..) method to get a field somewhere in the hierarchy.
 * Added Whitebox.getFields(..) method to get fields in a class matching a specific name.
 * Added methods to the PowerMock API, PowerMock.suppressField(..), that allows to suppress specific fields of a class (no support for primitive final fields right now).
+* Deprecation: org.powermock.PowerMock and org.powermock.Whitebox have been deprecated, you should now use org.powermock.api.easymock.PowerMock and org.powermock.reflect.Whitebox instead.
 
 Change log 1.0 (released 2008-11-18)
 ------------------------------------
