@@ -1,11 +1,10 @@
-<?xml version="1.0"?>
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <parent>
       <artifactId>powermock-modules-test-powermockito
       </artifactId>
       <groupId>org.powermock.modules.test.powermockito
       </groupId>
-      <version>1.1-SNAPSHOT</version>
+      <version>1.1</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.powermock.modules.test.powermockito.junit4
@@ -14,7 +13,7 @@
    </artifactId>
    <name>powermock-module-test-powermockito-junit4
    </name>
-   <version>1.1-SNAPSHOT</version>
+   <version>1.1</version>
    <url>http://maven.apache.org</url>
    <dependencies>
       <dependency>
