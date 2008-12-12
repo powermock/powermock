@@ -145,6 +145,39 @@ public class WhiteboxImpl {
 	}
 
 	/**
+	 * Convenience method to get a field from a class type.
+	 * <p>
+	 * The method will first try to look for a declared field in the same class.
+	 * If the method is not declared in this class it will look for the field in
+	 * the super class. This will continue throughout the whole class hierarchy.
+	 * If the field is not found an {@link IllegalArgumentException} is thrown.
+	 * 
+	 * @param type
+	 *            The type of the class where the method is located.
+	 * @param fieldName
+	 *            The method names.
+	 * @return A <code>java.lang.reflect.Field</code>.
+	 * @throws IllegalArgumentException
+	 *             If a field cannot be found in the hierarchy.
+	 */
+	public static Field getField(Class<?> type, String fieldName) {
+		Class<?> thisType = type;
+		while (thisType != null) {
+			final Field[] declaredField = thisType.getDeclaredFields();
+			for (Field field : declaredField) {
+				if (fieldName.equals(field.getName())) {
+					field.setAccessible(true);
+					return field;
+				}
+			}
+			thisType = thisType.getSuperclass();
+		}
+
+		throwExceptionIfFieldWasNotFound(type, fieldName, null);
+		return null;
+	}
+
+	/**
 	 * Create a new instance of a class without invoking its constructor.
 	 * <p>
 	 * No byte-code manipulation is needed to perform this operation and thus
@@ -761,6 +794,12 @@ public class WhiteboxImpl {
 		}
 	}
 
+	public static void throwExceptionIfFieldWasNotFound(Class<?> type, String fieldName, Field field) {
+		if (field == null) {
+			throw new IllegalArgumentException("No field was found with name '" + fieldName + "' in class " + getUnmockedType(type).getName());
+		}
+	}
+
 	static void throwExceptionIfConstructorWasNotFound(Class<?> type, Constructor<?> potentialConstructor, Object... arguments) {
 		if (potentialConstructor == null) {
 			throw new IllegalArgumentException("No constructor found in class '" + getUnmockedType(type).getName() + "' with argument types: [ "
@@ -955,8 +994,7 @@ public class WhiteboxImpl {
 	 * 
 	 * @param clazz
 	 *            The class whose methods to get.
-	 * @return All methods declared in this class and all non-private members
-	 *         visible in its subclass.
+	 * @return All methods declared in this class hierarchy.
 	 */
 	private static Method[] getAllMethods(Class<?> clazz) {
 		Set<Method> methods = new LinkedHashSet<Method>();
@@ -966,11 +1004,36 @@ public class WhiteboxImpl {
 		while (thisType != null) {
 			final Method[] declaredMethods = thisType.getDeclaredMethods();
 			for (Method method : declaredMethods) {
+				method.setAccessible(true);
 				methods.add(method);
 			}
 			thisType = thisType.getSuperclass();
 		}
 		return methods.toArray(new Method[0]);
+	}
+
+	/**
+	 * Get all fields in a class hierarchy! Both declared an non-declared (no
+	 * duplicates).
+	 * 
+	 * @param clazz
+	 *            The class whose fields to get.
+	 * @return All fields declared in this class hierarchy.
+	 */
+	private static Field[] getAllFields(Class<?> clazz) {
+		Set<Field> fields = new LinkedHashSet<Field>();
+
+		Class<?> thisType = clazz;
+
+		while (thisType != null) {
+			final Field[] declaredFields = thisType.getDeclaredFields();
+			for (Field field : declaredFields) {
+				field.setAccessible(true);
+				fields.add(field);
+			}
+			thisType = thisType.getSuperclass();
+		}
+		return fields.toArray(new Field[fields.size()]);
 	}
 
 	/**
@@ -1118,12 +1181,12 @@ public class WhiteboxImpl {
 
 	/**
 	 * Get an array of {@link Method}'s that matches the supplied list of method
-	 * names.
+	 * names. Both instance and static methods are taken into account.
 	 * 
 	 * @param clazz
 	 *            The class that should contain the methods.
 	 * @param methodNames
-	 *            An array names of the methods that will be returned.
+	 *            Names of the methods that will be returned.
 	 * @return An array of Method's. May be of length 0 but not
 	 *         <code>null</code>.
 	 */
@@ -1133,6 +1196,7 @@ public class WhiteboxImpl {
 		for (Method method : getAllMethods(clazz)) {
 			for (String methodName : methodNames) {
 				if (method.getName().equals(methodName)) {
+					method.setAccessible(true);
 					methodsToMock.add(method);
 				}
 			}
@@ -1140,6 +1204,32 @@ public class WhiteboxImpl {
 
 		final Method[] methodArray = methodsToMock.toArray(new Method[0]);
 		return methodArray;
+	}
+
+	/**
+	 * Get an array of {@link Field}'s that matches the supplied list of field
+	 * names. Both instance and static fields are taken into account.
+	 * 
+	 * @param clazz
+	 *            The class that should contain the fields.
+	 * @param fieldNames
+	 *            Names of the fields that will be returned.
+	 * @return An array of Field's. May be of length 0 but not <code>null</code>
+	 *         .
+	 */
+	public static Field[] getFields(Class<?> clazz, String... fieldNames) {
+		final List<Field> fields = new LinkedList<Field>();
+
+		for (Field field : getAllFields(clazz)) {
+			for (String fieldName : fieldNames) {
+				if (field.getName().equals(fieldName)) {
+					fields.add(field);
+				}
+			}
+		}
+
+		final Field[] fieldArray = fields.toArray(new Field[fields.size()]);
+		return fieldArray;
 	}
 
 	public static Object performMethodInvocation(Object tested, Method methodToInvoke, Object... arguments) throws Exception {
@@ -1351,7 +1441,7 @@ public class WhiteboxImpl {
 	 * @return All instance fields in the hierarchy. All fields are set to
 	 *         accessible
 	 */
-	public static Set<Field> getAllFields(Object object) {
+	public static Set<Field> getAllInstanceFields(Object object) {
 		return findAllFieldsUsingStrategy(new AllFieldsMatcherStrategy(), object, true, getType(object));
 	}
 
@@ -1363,7 +1453,7 @@ public class WhiteboxImpl {
 	 * @return All static fields in <code>type</code>. All fields are set to
 	 *         accessible.
 	 */
-	public static Set<Field> getAllFields(Class<?> type) {
+	public static Set<Field> getAllStaticFields(Class<?> type) {
 		final Set<Field> fields = new LinkedHashSet<Field>();
 		final Field[] declaredFields = type.getDeclaredFields();
 		for (Field field : declaredFields) {

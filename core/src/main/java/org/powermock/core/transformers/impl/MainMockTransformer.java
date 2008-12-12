@@ -27,6 +27,7 @@ import javassist.NotFoundException;
 import javassist.bytecode.DuplicateMemberException;
 import javassist.expr.ConstructorCall;
 import javassist.expr.ExprEditor;
+import javassist.expr.FieldAccess;
 import javassist.expr.NewExpr;
 
 import org.powermock.core.IndicateReloadClass;
@@ -115,20 +116,7 @@ public class MainMockTransformer implements MockTransformer {
 				return;
 			}
 
-			String returnValue = "($r)value";
-			if (returnTypeAsCtClass.equals(CtClass.voidType)) {
-				returnValue = "";
-			} else if (returnTypeAsCtClass.isPrimitive()) {
-				if (returnTypeAsString.equals("char")) {
-					returnValue = "((java.lang.Character)value).charValue()";
-				} else if (returnTypeAsString.equals("boolean")) {
-					returnValue = "((java.lang.Boolean)value).booleanValue()";
-				} else {
-					returnValue = "((java.lang.Number)value)." + returnTypeAsString + "Value()";
-				}
-			} else {
-				returnValue = "(" + returnTypeAsString + ")value";
-			}
+			final String returnValue = getCorrectReturnValueType(returnTypeAsCtClass);
 
 			String classOrInstance = "this";
 			if (Modifier.isStatic(method.getModifiers())) {
@@ -143,11 +131,55 @@ public class MainMockTransformer implements MockTransformer {
 		}
 	}
 
+	/**
+	 * @return The correct return type, i.e. takes care of casting the a wrapper
+	 *         type to primitive type if needed.
+	 */
+	private String getCorrectReturnValueType(final CtClass returnTypeAsCtClass) {
+		final String returnTypeAsString = returnTypeAsCtClass.getName();
+		String returnValue = "($r)value";
+		if (returnTypeAsCtClass.equals(CtClass.voidType)) {
+			returnValue = "";
+		} else if (returnTypeAsCtClass.isPrimitive()) {
+			if (returnTypeAsString.equals("char")) {
+				returnValue = "((java.lang.Character)value).charValue()";
+			} else if (returnTypeAsString.equals("boolean")) {
+				returnValue = "((java.lang.Boolean)value).booleanValue()";
+			} else {
+				returnValue = "((java.lang.Number)value)." + returnTypeAsString + "Value()";
+			}
+		} else {
+			returnValue = "(" + returnTypeAsString + ")value";
+		}
+		return returnValue;
+	}
+
 	private final class PowerMockExpressionEditor extends ExprEditor {
 		private final CtClass clazz;
 
 		private PowerMockExpressionEditor(CtClass clazz) {
 			this.clazz = clazz;
+		}
+
+		@Override
+		public void edit(FieldAccess f) throws CannotCompileException {
+			if (f.isReader()) {
+				CtClass returnTypeAsCtClass;
+				try {
+					returnTypeAsCtClass = f.getField().getType();
+				} catch (NotFoundException e) {
+					throw new RuntimeException("PowerMock internal error when modifying field.", e);
+				}
+				StringBuilder code = new StringBuilder();
+				code.append("{Object value =  ").append(MockGateway.class.getName()).append(".fieldCall(").append("$0,$class,\"").append(
+						f.getFieldName()).append("\",$type);");
+				code.append("if(value == ").append(MockGateway.class.getName()).append(".PROCEED) {");
+				code.append("	$_ = $proceed($$);");
+				code.append("} else {");
+				code.append("	$_ = ").append(getCorrectReturnValueType(returnTypeAsCtClass)).append(";");
+				code.append("}}");
+				f.replace(code.toString());
+			}
 		}
 
 		@Override

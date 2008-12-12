@@ -30,6 +30,41 @@ import org.powermock.reflect.internal.WhiteboxImpl;
 public class Whitebox {
 
 	/**
+	 * Convenience method to get a field from a class type.
+	 * <p>
+	 * The method will first try to look for a declared field in the same class.
+	 * If the method is not declared in this class it will look for the field in
+	 * the super class. This will continue throughout the whole class hierarchy.
+	 * If the field is not found an {@link IllegalArgumentException} is thrown.
+	 * 
+	 * @param type
+	 *            The type of the class where the method is located.
+	 * @param fieldName
+	 *            The method names.
+	 * @return A <code>java.lang.reflect.Field</code>.
+	 * @throws IllegalArgumentException
+	 *             If a field cannot be found in the hierarchy.
+	 */
+	public static Field getField(Class<?> type, String fieldName) {
+		return WhiteboxImpl.getField(type, fieldName);
+	}
+
+	/**
+	 * Get an array of {@link Field}'s that matches the supplied list of field
+	 * names.
+	 * 
+	 * @param clazz
+	 *            The class that should contain the fields.
+	 * @param fieldNames
+	 *            The names of the fields that will be returned.
+	 * @return An array of Field's. May be of length 0 but not <code>null</code>
+	 * 
+	 */
+	public static Field[] getFields(Class<?> clazz, String... fieldNames) {
+		return WhiteboxImpl.getFields(clazz, fieldNames);
+	}
+
+	/**
 	 * Convenience method to get a method from a class type without having to
 	 * catch the checked exceptions otherwise required. These exceptions are
 	 * wrapped as runtime exceptions.
@@ -437,7 +472,7 @@ public class Whitebox {
 	 * @param clazz
 	 *            The class that should contain the methods.
 	 * @param methodNames
-	 *            An array names of the methods that will be returned.
+	 *            Names of the methods that will be returned.
 	 * @return An array of Method's. May be of length 0 but not
 	 *         <code>null</code>.
 	 */
@@ -483,8 +518,8 @@ public class Whitebox {
 	 * @return All instance fields in the hierarchy. All fields are set to
 	 *         accessible
 	 */
-	public static Set<Field> getAllFields(Object object) {
-		return WhiteboxImpl.getAllFields(object);
+	public static Set<Field> getAllInstanceFields(Object object) {
+		return WhiteboxImpl.getAllInstanceFields(object);
 	}
 
 	/**
@@ -495,8 +530,8 @@ public class Whitebox {
 	 * @return All static fields in <code>type</code>. All fields are set to
 	 *         accessible.
 	 */
-	public static Set<Field> getAllFields(Class<?> type) {
-		return WhiteboxImpl.getAllFields(type);
+	public static Set<Field> getAllStaticFields(Class<?> type) {
+		return WhiteboxImpl.getAllStaticFields(type);
 	}
 
 	/**

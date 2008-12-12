@@ -16,6 +16,7 @@
 package org.powermock.core;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
@@ -76,6 +77,17 @@ public class MockRepository {
 	private static final Set<Method> suppressMethod = new HashSet<Method>();
 
 	/**
+	 * Set of methods that should be suppressed.
+	 */
+	private static final Set<Field> suppressField = new HashSet<Field>();
+
+	/**
+	 * Set of field types that should always be suppressed regardless of
+	 * instance.
+	 */
+	private static final Set<String> suppressFieldTypes = new HashSet<String>();
+
+	/**
 	 * Clear all state of the mock repository
 	 */
 	public synchronized static void clear() {
@@ -88,6 +100,8 @@ public class MockRepository {
 		suppressConstructor.clear();
 		suppressMethod.clear();
 		substituteReturnValues.clear();
+		suppressField.clear();
+		suppressFieldTypes.clear();
 	}
 
 	/**
@@ -224,6 +238,27 @@ public class MockRepository {
 	}
 
 	/**
+	 * Add a field to suppress.
+	 * 
+	 * @param field
+	 *            The field to suppress.
+	 */
+	public static synchronized void addFieldToSuppress(Field field) {
+		suppressField.add(field);
+	}
+
+	/**
+	 * Add a field type to suppress. All fields of this type will be suppressed.
+	 * 
+	 * @param fieldType
+	 *            The fully-qualified name to a type. All fields of this type
+	 *            will be suppressed.
+	 */
+	public static synchronized void addFieldTypeToSuppress(String fieldType) {
+		suppressFieldTypes.add(fieldType);
+	}
+
+	/**
 	 * Add a constructor to suppress.
 	 * 
 	 * @param constructor
@@ -238,6 +273,13 @@ public class MockRepository {
 	 */
 	public static synchronized boolean shouldSuppressMethod(Method method) {
 		return suppressMethod.contains(method);
+	}
+
+	/**
+	 * @return <code>true</code> if the <tt>method</tt> should be suppressed.
+	 */
+	public static synchronized boolean shouldSuppressField(Field field) {
+		return suppressField.contains(field) || suppressFieldTypes.contains(field.getType().getName());
 	}
 
 	/**

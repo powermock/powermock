@@ -44,22 +44,6 @@ public interface MockPolicyClassLoadingSettings {
 	void addStaticInitializersToSuppress(String[] staticInitializersToSuppress);
 
 	/**
-	 * Set which field types that should be suppressed. Note that this overrides
-	 * all subsequent configurations.
-	 */
-	void setFieldTypesToSuppress(String[] fieldTypes);
-
-	/**
-	 * Add field types that should be suppressed.
-	 */
-	void addFieldTypesToSuppress(String firstType, String... additionalFieldTypes);
-
-	/**
-	 * Add field types that should be suppressed.
-	 */
-	void addFieldTypesToSuppress(String[] fieldTypes);
-
-	/**
 	 * Set which types that should be loaded (and possibly modified) by the mock
 	 * classloader. Note that this overrides all subsequent configurations.
 	 */
@@ -82,12 +66,6 @@ public interface MockPolicyClassLoadingSettings {
 	 *         initializers that should be suppressed.
 	 */
 	String[] getStaticInitializersToSuppress();
-
-	/**
-	 * @return The fully-qualified names to the fields that should be
-	 *         suppressed.
-	 */
-	String[] getFieldTypesToSuppress();
 
 	/**
 	 * @return The fully-qualified names to all types that should be loaded by

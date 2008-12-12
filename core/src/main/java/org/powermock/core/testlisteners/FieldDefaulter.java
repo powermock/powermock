@@ -33,7 +33,7 @@ public class FieldDefaulter extends AbstractPowerMockTestListenerBase {
 
 	@Override
 	public void afterTestMethod(Object testInstance, Method method, Object[] arguments, TestMethodResult testResult) throws Exception {
-		Set<Field> allFields = Whitebox.getAllFields(testInstance);
+		Set<Field> allFields = Whitebox.getAllInstanceFields(testInstance);
 		for (Field field : allFields) {
 			field.set(testInstance, TypeUtils.getDefaultValue(field.getType()));
 		}

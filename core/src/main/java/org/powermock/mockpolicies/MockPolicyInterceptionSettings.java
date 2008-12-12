@@ -80,6 +80,22 @@ public interface MockPolicyInterceptionSettings {
 	void addFieldToSuppress(Field[] fields);
 
 	/**
+	 * Set which field types that should be suppressed. Note that this overrides
+	 * all subsequent configurations.
+	 */
+	void setFieldTypesToSuppress(String[] fieldTypes);
+
+	/**
+	 * Add field types that should be suppressed.
+	 */
+	void addFieldTypesToSuppress(String firstType, String... additionalFieldTypes);
+
+	/**
+	 * Add field types that should be suppressed.
+	 */
+	void addFieldTypesToSuppress(String[] fieldTypes);
+
+	/**
 	 * @return Which methods that should be suppressed/stubbed (i.e. return a
 	 *         default value when invoked).
 	 */
@@ -96,4 +112,10 @@ public interface MockPolicyInterceptionSettings {
 	 *         <code>null</code> or other default values).
 	 */
 	Field[] getFieldsToSuppress();
+
+	/**
+	 * @return The fully-qualified names to the fields that should be
+	 *         suppressed.
+	 */
+	String[] getFieldTypesToSuppress();
 }

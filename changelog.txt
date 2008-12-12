@@ -12,7 +12,7 @@ Change log 1.1 (under development)
 * Added a new Mock annotation which can be placed on fields to allow for a PowerMock listener to create and inject mock objects. Use the AnnotationEnabler listener from the EasyMock or Mockito API.
 * Exceptions are no longer wrapped in run-time exceptions when invoking a method using Whitebox.invokeMethod(..).
 * Major refactoring of the classloader structure and delegation.
-* Added two now methods to the Whitebox API, both called getAllFields. One takes an object as parameter and one takes a class. They return all instance/class fields of the object/class. 
+* Added two now methods to the Whitebox API, getAllInstanceFields and getAllStaticFields. One takes an object as parameter and one takes a class. They return all instance/class fields of the object/class. 
 * Added a FieldDefaulter test listeners that set all instance field to their default value after each test method. This listener can be used to automatically set all instances to null after each test method instead of doing so manually in a tearDown method.
 * Added three new methods to the PowerMock API, reset(Object...mocks), reset(Class<?>...classMocks) and resetAll(). The methods can be used to reset instance mocks, class mocks or let PowerMock reset all mocks automatically.
 * mockStaticNice(Class<?> clazz, String... methodNames) was renamed to mockStaticPartialNice in the PowerMock API.
@@ -30,6 +30,9 @@ Change log 1.1 (under development)
 * Fixed a bug in the PowerMockJUnit44RunnerDelegateImpl that caused a NoClassDefFoundError to be thrown when using JUnit 4.5 when a AssumptionViolatedException was thrown. The reason for this was that JUnit has changed to locatation of this exception.
 * Added spy functionality of final classes and methods to the Mockito API (experimental).
 * Fixed so that it works to place the PrepareForTest annotation at methods without specifying it at the class-level first.
+* Added Whitebox.getField(..) method to get a field somewhere in the hierarchy.
+* Added Whitebox.getFields(..) method to get fields in a class matching a specific name.
+* Added methods to the PowerMock API, PowerMock.suppressField(..), that allows to suppress specific fields of a class (no support for primitive final fields right now).
 
 Change log 1.0 (released 2008-11-18)
 ------------------------------------

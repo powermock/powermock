@@ -16,6 +16,7 @@
 package org.powermock.api.easymock;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
@@ -1943,6 +1944,49 @@ public class PowerMock {
 	}
 
 	/**
+	 * Suppress specific fields. This works on both instance methods and static
+	 * methods. Note that replay and verify are not needed as this is not part
+	 * of a mock behavior.
+	 */
+	public static synchronized void suppressField(Field... fields) {
+		for (Field field : fields) {
+			MockRepository.addFieldToSuppress(field);
+		}
+	}
+
+	/**
+	 * Suppress all fields for these classes.
+	 */
+	public static synchronized void suppressField(Class<?>[] classes) {
+		if (classes == null || classes.length == 0) {
+			throw new IllegalArgumentException("You must supply at least one class.");
+		}
+		for (Class<?> clazz : classes) {
+			suppressField(clazz.getDeclaredFields());
+		}
+	}
+
+	/**
+	 * Suppress multiple methods for a class.
+	 * 
+	 * @param classes
+	 *            The class whose methods will be suppressed.
+	 * @param fieldNames
+	 *            The names of the methods that'll be suppressed. If field names
+	 *            are empty, <i>all</i> fields in the supplied class will be
+	 *            suppressed.
+	 */
+	public static synchronized void suppressField(Class<?> clazz, String... fieldNames) {
+		if (fieldNames == null || fieldNames.length == 0) {
+			suppressField(new Class<?>[] { clazz });
+		} else {
+			for (Field field : Whitebox.getFields(clazz, fieldNames)) {
+				MockRepository.addFieldToSuppress(field);
+			}
+		}
+	}
+
+	/**
 	 * Suppress specific method calls on all types containing this method. This
 	 * works on both instance methods and static methods. Note that replay and
 	 * verify are not needed as this is not part of a mock behavior.
@@ -1954,7 +1998,7 @@ public class PowerMock {
 	}
 
 	/**
-	 * Suppress all methods for this classes.
+	 * Suppress all methods for these classes.
 	 * 
 	 * @param classes
 	 *            The class which methods will be suppressed.

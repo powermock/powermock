@@ -408,19 +408,19 @@ public class WhiteBoxTest {
 
 	@Test
 	public void testGetAllInstanceFields() throws Exception {
-		Set<Field> allFields = Whitebox.getAllFields(new ClassWithChildThatHasInternalState());
+		Set<Field> allFields = Whitebox.getAllInstanceFields(new ClassWithChildThatHasInternalState());
 		assertEquals(6, allFields.size());
 	}
 
 	@Test
 	public void testGetAllStaticFields_assertNoFieldsFromParent() throws Exception {
-		Set<Field> allFields = Whitebox.getAllFields(ClassWithChildThatHasInternalState.class);
+		Set<Field> allFields = Whitebox.getAllStaticFields(ClassWithChildThatHasInternalState.class);
 		assertEquals(0, allFields.size());
 	}
 
 	@Test
 	public void testGetAllStaticFields() throws Exception {
-		Set<Field> allFields = Whitebox.getAllFields(ClassWithInternalState.class);
+		Set<Field> allFields = Whitebox.getAllStaticFields(ClassWithInternalState.class);
 		assertEquals(2, allFields.size());
 	}
 

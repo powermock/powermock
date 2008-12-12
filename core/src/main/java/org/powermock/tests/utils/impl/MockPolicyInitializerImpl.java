@@ -16,6 +16,7 @@
 package org.powermock.tests.utils.impl;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -144,6 +145,14 @@ public class MockPolicyInitializerImpl implements MockPolicyInitializer {
 			final Method method = entry.getKey();
 			final Object className = entry.getValue();
 			MockRepository.putSubstituteReturnValue(method, className);
+		}
+
+		for (Field field : interceptionSettings.getFieldsToSuppress()) {
+			MockRepository.addFieldToSuppress(field);
+		}
+
+		for (String type : interceptionSettings.getFieldTypesToSuppress()) {
+			MockRepository.addFieldTypeToSuppress(type);
 		}
 	}
 

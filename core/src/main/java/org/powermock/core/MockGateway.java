@@ -96,6 +96,14 @@ public class MockGateway {
 		return PROCEED;
 	}
 
+	public static synchronized Object fieldCall(Object instanceOrClassContainingTheField, Class<?> classDefiningField, String fieldName,
+			Class<?> fieldType) {
+		if (MockRepository.shouldSuppressField(WhiteboxImpl.getField(classDefiningField, fieldName))) {
+			return TypeUtils.getDefaultValue(fieldType);
+		}
+		return PROCEED;
+	}
+
 	public static synchronized Object staticConstructorCall(String className) {
 		if (MockRepository.shouldSuppressStaticInitializerFor(className)) {
 			return "suppress";

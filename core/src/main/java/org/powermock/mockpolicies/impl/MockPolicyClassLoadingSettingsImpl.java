@@ -27,16 +27,10 @@ import org.powermock.mockpolicies.MockPolicyClassLoadingSettings;
 public class MockPolicyClassLoadingSettingsImpl implements MockPolicyClassLoadingSettings {
 	private Set<String> fullyQualifiedNamesOfClassesToLoadByMockClassloader;
 	private Set<String> staticInitializersToSuppress;
-	private Set<String> fieldsTypesToSuppress;
 
 	public MockPolicyClassLoadingSettingsImpl() {
 		fullyQualifiedNamesOfClassesToLoadByMockClassloader = new LinkedHashSet<String>();
 		staticInitializersToSuppress = new LinkedHashSet<String>();
-		fieldsTypesToSuppress = new LinkedHashSet<String>();
-	}
-
-	public String[] getFieldTypesToSuppress() {
-		return fieldsTypesToSuppress.toArray(new String[fieldsTypesToSuppress.size()]);
 	}
 
 	public String[] getFullyQualifiedNamesOfClassesToLoadByMockClassloader() {
@@ -51,17 +45,6 @@ public class MockPolicyClassLoadingSettingsImpl implements MockPolicyClassLoadin
 			return new String[0];
 		}
 		return staticInitializersToSuppress.toArray(new String[staticInitializersToSuppress.size()]);
-	}
-
-	public void addFieldTypesToSuppress(String firstType, String... additionalFieldTypes) {
-		fieldsTypesToSuppress.add(firstType);
-		addFieldTypesToSuppress(additionalFieldTypes);
-	}
-
-	public void addFieldTypesToSuppress(String[] fieldTypes) {
-		for (String fieldType : fieldTypes) {
-			fieldsTypesToSuppress.add(fieldType);
-		}
 	}
 
 	public void addFullyQualifiedNamesOfClassesToLoadByMockClassloader(String firstClass, String... additionalClasses) {
@@ -84,11 +67,6 @@ public class MockPolicyClassLoadingSettingsImpl implements MockPolicyClassLoadin
 		for (String staticInitializerToSuppress : staticInitializersToSuppress) {
 			this.staticInitializersToSuppress.add(staticInitializerToSuppress);
 		}
-	}
-
-	public void setFieldTypesToSuppress(String[] fieldTypes) {
-		fieldsTypesToSuppress.clear();
-		addFieldTypesToSuppress(fieldTypes);
 	}
 
 	public void setFullyQualifiedNamesOfClassesToLoadByMockClassloader(String[] classes) {
