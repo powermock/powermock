@@ -9,7 +9,7 @@ Change log 1.1 (released 2008-12-12)
 * Restructured release assemblies to include just the correct things.
 * Set sources:jar and javadocs:jar to run on every build.
 * LoggerTest now creates its test log file in ./target/ directory instead of ./
-* Major refactoring of project structure, it's now be possible to use PowerMock as a foundation for testability for other mock frameworks.
+* Major refactoring of project structure, it's now be possible to use PowerMock as a foundation for testability for other mock frameworks. PowerMock core is no longer coupled to EasyMock.
 * Fixed a serious issue with the classloading hierarchy of PowerMock's JUnit runners.
 * Implemented support for PowerMock test listeners, to create a listener you need to implement the org.powermock.core.spi.PowerMockTestListener interface and pass the implementation class to the PowerMockListener annotation.
 * Started Mockito integration. It supports final, static (non-void) and partial mocking using the PowerMock Mockito API. It also supports the Mockito annotations if using the @PowerMockListener(AnnotationEnabler.class) at the class-level of the test case.
