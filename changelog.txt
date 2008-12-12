@@ -1,5 +1,8 @@
-Change log 1.1 (under development)
+Change log 1.2 (under development)
 ----------------------------------
+
+Change log 1.1 (released 2008-12-12)
+------------------------------------
 * Only signed classes are loaded by the signed supporting CGLib naming policy.
 * Whitebox.invokeConstructor now propagates InvocationTargetExceptions correctly.
 * Restructured release assemblies to include just the correct things.
