@@ -1,5 +1,6 @@
 Change log 1.2 (under development)
 ----------------------------------
+* Fixed maven version issues for the junit4-legacy module and junit3 module.
 
 Change log 1.1 (released 2008-12-12)
 ------------------------------------
