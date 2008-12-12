@@ -72,7 +72,7 @@ public interface MockPolicyInterceptionSettings {
 	/**
 	 * Add specific fields that should be suppressed upon invocation.
 	 */
-	void addFieldToSuppress(Field firstField, Field... fields);
+	void addFieldToSuppress(Field firstField, Field... additionalFields);
 
 	/**
 	 * Add specific fields that should be suppressed upon invocation.
