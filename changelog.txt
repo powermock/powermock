@@ -1,5 +1,6 @@
 Change log 1.2 (under development)
 ----------------------------------
+* Upgraded to Javassist 3.9
 
 Change log 1.1.1 (released 2008-12-15)
 --------------------------------------
