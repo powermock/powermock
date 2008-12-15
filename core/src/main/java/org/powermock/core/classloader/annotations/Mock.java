@@ -12,10 +12,10 @@ import java.lang.annotation.Target;
  * which minimizes repetitive test code and makes the test more readable. In
  * order for PowerMock to control the life-cycle of the mocks you must supply
  * the {@link PowerMockListener} annotation to the class-level of the test case.
- * For example when using the EasyMock API:
+ * For example:
  * 
  * <pre>
- * &#064;PowerMockListener(EasyMockAnnotationEnabler.class)
+ * &#064;PowerMockListener(AnnotationEnabler.class)
  * public class PersonServiceTest {
  * 
  * 	&#064;Mock
