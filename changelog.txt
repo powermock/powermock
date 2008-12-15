@@ -1,6 +1,11 @@
 Change log 1.2 (under development)
 ----------------------------------
+
+Change log 1.1.1 (released 2008-12-15)
+--------------------------------------
 * Fixed maven version issues for the junit4-legacy module and junit3 module.
+* Fixed a major issue with PowerMock test listeners. The PowerMockTestListener.beforeTestMethod(..) was invoked too late which could cause a NullPointerException when invoking setup methods.
+* Updated javadoc (some errors in the java doc text)
 
 Change log 1.1 (released 2008-12-12)
 ------------------------------------

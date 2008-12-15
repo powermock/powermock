@@ -31,7 +31,6 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements Powe
 
 	private final Method[] methodsToRun;
 
-
 	public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass, Method[] methodsToRun, String name, PowerMockTestListener[] powerListeners) {
 		this(theClass, methodsToRun, powerListeners);
 		setName(name);
@@ -43,10 +42,6 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements Powe
 	 * cut'n'pasted on the train between Malmö and Stockholm.
 	 */
 	public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass, Method[] methodsToRun, PowerMockTestListener[] powerMockTestListeners) {
-		// this.powerMockTestNotifier = new
-		// PowerMockTestNotifierImpl(powerMockTestListeners == null ? new
-		// PowerMockTestListener[0]
-		// : powerMockTestListeners);
 		this.methodsToRun = methodsToRun;
 		setName(theClass.getName());
 
