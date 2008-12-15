@@ -24,14 +24,14 @@ import java.util.Map;
  * in this object to intercept method calls and field calls etc and specify a
  * return value or suppression.
  * <p>
- * Since mock policies can be chained subsequent policies can override behavior
+ * Since mock policies can be chained previous policies can override behavior
  * of a previous policy. To avoid accidental overrides it's recommended
  * <i>add</i> behavior instead of <i>setting</i> behavior since the latter
  * overrides all previous configurations.
  */
 public interface MockPolicyInterceptionSettings {
 	/**
-	 * Set which methods to suppress. Note that this overrides all subsequent
+	 * Set which methods to suppress. Note that this overrides all previous
 	 * configurations.
 	 */
 	void setMethodsToSuppress(Method[] methods);
@@ -51,7 +51,7 @@ public interface MockPolicyInterceptionSettings {
 	 * key-value map where each key is a method that should be intercepted and
 	 * each value is the new return value for that method when it's intercepted.
 	 * <p>
-	 * Note that this overrides all subsequent configurations.
+	 * Note that this overrides all previous configurations.
 	 */
 	void setSubtituteReturnValues(Map<Method, Object> substituteReturnValues);
 
@@ -65,7 +65,7 @@ public interface MockPolicyInterceptionSettings {
 
 	/**
 	 * Set specific fields that should be suppressed upon invocation. Note that
-	 * this overrides all subsequent configurations.
+	 * this overrides all previous configurations.
 	 */
 	void setFieldsSuppress(Field[] fields);
 
@@ -81,7 +81,7 @@ public interface MockPolicyInterceptionSettings {
 
 	/**
 	 * Set which field types that should be suppressed. Note that this overrides
-	 * all subsequent configurations.
+	 * all previous configurations.
 	 */
 	void setFieldTypesToSuppress(String[] fieldTypes);
 
