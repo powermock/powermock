@@ -276,7 +276,7 @@ public class MockRepository {
 	}
 
 	/**
-	 * @return <code>true</code> if the <tt>method</tt> should be suppressed.
+	 * @return <code>true</code> if the <tt>field</tt> should be suppressed.
 	 */
 	public static synchronized boolean shouldSuppressField(Field field) {
 		return suppressField.contains(field) || suppressFieldTypes.contains(field.getType().getName());
