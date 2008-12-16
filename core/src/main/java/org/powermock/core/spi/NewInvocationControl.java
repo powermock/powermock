@@ -1,7 +1,6 @@
 package org.powermock.core.spi;
 
 import org.powermock.core.spi.support.InvocationSubstitute;
-import org.powermock.core.spi.support.DefaultBehaviorSupport;
 
 /**
  * A new invocation control pairs up a {@link InvocationSubstitute} with the
@@ -9,7 +8,7 @@ import org.powermock.core.spi.support.DefaultBehaviorSupport;
  * {@link InvocationSubstitute#performSubstitutionLogic(Object...)} object.
  * 
  */
-public interface NewInvocationControl<T> extends DefaultBehaviorSupport {
+public interface NewInvocationControl<T> extends DefaultBehavior {
 
 	/**
 	 * Invoke the invocation control

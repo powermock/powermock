@@ -18,7 +18,6 @@ package org.powermock.core.spi;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
-import org.powermock.core.spi.support.DefaultBehaviorSupport;
 
 /**
  * The purpose of a method invocation control is to invoke a proxy to simulate a
@@ -27,7 +26,7 @@ import org.powermock.core.spi.support.DefaultBehaviorSupport;
  * method is mocked or not.
  * 
  */
-public interface MethodInvocationControl extends InvocationHandler, DefaultBehaviorSupport {
+public interface MethodInvocationControl extends InvocationHandler, DefaultBehavior {
 
 	/**
 	 * Determine whether a certain method is mocked by this Invocation Control.

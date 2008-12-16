@@ -31,8 +31,8 @@ import junit.framework.TestSuite;
 import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.modules.junit3.internal.JUnit3TestSuiteChunker;
 import org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate;
+import org.powermock.tests.utils.TestChunk;
 import org.powermock.tests.utils.impl.AbstractTestSuiteChunkerImpl;
-import org.powermock.tests.utils.impl.TestChunk;
 
 public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<PowerMockJUnit3RunnerDelegate> implements JUnit3TestSuiteChunker {
 

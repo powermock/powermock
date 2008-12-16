@@ -219,31 +219,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 							addFailure(new AssertionError("Expected exception: " + getExpectedExceptionName(testMethod)));
 						}
 					} catch (InvocationTargetException e) {
-						Throwable actual = e.getTargetException();
-						if (!(Boolean) Whitebox.invokeMethod(testMethod, "expectsException")) {
-							final String className = actual.getStackTrace()[0].getClassName();
-							final Class<?> testClassAsJavaClass = testClass.getJavaClass();
-							if (actual instanceof NullPointerException
-									&& !testClassAsJavaClass.getName().equals(className)
-									&& !className.startsWith("java.lang")
-									&& !className.startsWith("org.powermock")
-									&& !className.startsWith("org.junit")
-									&& !new PrepareForTestExtractorImpl().isPrepared(testClassAsJavaClass, className)
-									&& !testClassAsJavaClass.isAnnotationPresent(PrepareEverythingForTest.class)
-									&& !new MockPolicyInitializerImpl(
-											testClassAsJavaClass.isAnnotationPresent(MockPolicy.class) ? testClassAsJavaClass.getAnnotation(
-													MockPolicy.class).value() : null).isPrepared(className)) {
-								Whitebox.setInternalState(actual, "detailMessage", "Perhaps the class " + className + " must be prepared for test?",
-										Throwable.class);
-							}
-							addFailure(actual);
-						} else if ((Boolean) Whitebox.invokeMethod(testMethod, "isUnexpected", actual)) {
-							String message = "Unexpected exception, expected<" + getExpectedExceptionName(testMethod) + "> but was<"
-									+ actual.getClass().getName() + ">";
-							addFailure(new Exception(message, actual));
-						} else {
-							return;
-						}
+						handleInvocationTargetException(testMethod, e);
 					} catch (Throwable e) {
 						addFailure(e);
 					} finally {
@@ -257,6 +233,31 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 					}
 				} catch (Throwable e) {
 					throw new RuntimeException("Internal error in PowerMock.", e);
+				}
+			}
+
+			private void handleInvocationTargetException(final TestMethod testMethod, InvocationTargetException e) throws Exception {
+				Throwable actual = e.getTargetException();
+				if (!(Boolean) Whitebox.invokeMethod(testMethod, "expectsException")) {
+					final String className = actual.getStackTrace()[0].getClassName();
+					final Class<?> testClassAsJavaClass = testClass.getJavaClass();
+					if (actual instanceof NullPointerException
+							&& !testClassAsJavaClass.getName().equals(className)
+							&& !className.startsWith("java.lang")
+							&& !className.startsWith("org.powermock")
+							&& !className.startsWith("org.junit")
+							&& !new PrepareForTestExtractorImpl().isPrepared(testClassAsJavaClass, className)
+							&& !testClassAsJavaClass.isAnnotationPresent(PrepareEverythingForTest.class)
+							&& !new MockPolicyInitializerImpl(testClassAsJavaClass.isAnnotationPresent(MockPolicy.class) ? testClassAsJavaClass
+									.getAnnotation(MockPolicy.class).value() : null).isPrepared(className)) {
+						Whitebox.setInternalState(actual, "detailMessage", "Perhaps the class " + className + " must be prepared for test?",
+								Throwable.class);
+					}
+					addFailure(actual);
+				} else if ((Boolean) Whitebox.invokeMethod(testMethod, "isUnexpected", actual)) {
+					String message = "Unexpected exception, expected<" + getExpectedExceptionName(testMethod) + "> but was<"
+							+ actual.getClass().getName() + ">";
+					addFailure(new Exception(message, actual));
 				}
 			}
 

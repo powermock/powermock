@@ -13,8 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.tests.result;
+package org.powermock.tests.utils;
 
-public enum Result {
-	SUCCESSFUL, FAILED, IGNORED;
+import java.lang.reflect.Method;
+import java.util.List;
+
+/**
+ * A test chunk consists of a list of methods that should be executed by a
+ * particular classloader.
+ * */
+public interface TestChunk {
+
+	ClassLoader getClassLoader();
+
+	List<Method> getTestMethodsToBeExecutedByThisClassloader();
+
 }

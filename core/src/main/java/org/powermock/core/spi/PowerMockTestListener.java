@@ -17,8 +17,8 @@ package org.powermock.core.spi;
 
 import java.lang.reflect.Method;
 
-import org.powermock.tests.result.TestMethodResult;
-import org.powermock.tests.result.TestSuiteResult;
+import org.powermock.core.spi.testresult.TestMethodResult;
+import org.powermock.core.spi.testresult.TestSuiteResult;
 
 /**
  * This interface should be implemented by all PowerMock test listeners. The

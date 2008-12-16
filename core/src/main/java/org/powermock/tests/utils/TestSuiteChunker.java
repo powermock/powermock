@@ -18,8 +18,6 @@ package org.powermock.tests.utils;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.powermock.tests.utils.impl.TestChunk;
-
 /**
  * An interface that should be implemented by classes that performs test suite
  * chunking. Test suite chunking may be performed because certain classes may

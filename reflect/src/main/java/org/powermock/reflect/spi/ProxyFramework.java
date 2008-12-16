@@ -1,4 +1,4 @@
-package org.powermock.reflect.proxyframework.spi;
+package org.powermock.reflect.spi;
 
 /**
  * The purpose of a the proxy framework implementation is to return the

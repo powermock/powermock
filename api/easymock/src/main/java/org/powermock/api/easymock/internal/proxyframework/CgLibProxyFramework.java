@@ -3,7 +3,7 @@ package org.powermock.api.easymock.internal.proxyframework;
 import net.sf.cglib.proxy.Enhancer;
 
 import org.powermock.reflect.proxyframework.RegisterProxyFramework;
-import org.powermock.reflect.proxyframework.spi.ProxyFramework;
+import org.powermock.reflect.spi.ProxyFramework;
 
 /**
  * CGLib proxy framework setup.

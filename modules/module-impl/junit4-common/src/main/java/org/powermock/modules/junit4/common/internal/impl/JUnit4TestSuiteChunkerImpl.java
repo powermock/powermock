@@ -37,14 +37,14 @@ import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
 import org.powermock.core.spi.PowerMockTestListener;
+import org.powermock.core.spi.testresult.TestSuiteResult;
+import org.powermock.core.spi.testresult.impl.TestSuiteResultImpl;
 import org.powermock.modules.junit4.common.internal.JUnit4TestSuiteChunker;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
-import org.powermock.tests.result.TestSuiteResult;
-import org.powermock.tests.result.impl.TestSuiteResultImpl;
 import org.powermock.tests.utils.PowerMockTestNotifier;
+import org.powermock.tests.utils.TestChunk;
 import org.powermock.tests.utils.impl.AbstractTestSuiteChunkerImpl;
 import org.powermock.tests.utils.impl.PowerMockTestNotifierImpl;
-import org.powermock.tests.utils.impl.TestChunk;
 
 public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<PowerMockJUnitRunnerDelegate> implements JUnit4TestSuiteChunker,
 		Filterable, Sortable {

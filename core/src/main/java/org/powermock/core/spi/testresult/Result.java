@@ -13,22 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.tests.result.impl;
+package org.powermock.core.spi.testresult;
 
-import org.powermock.tests.result.Result;
-import org.powermock.tests.result.TestMethodResult;
-
-public class TestMethodResultImpl implements TestMethodResult {
-
-	private final Result result;
-
-	public TestMethodResultImpl(Result result) {
-		super();
-		this.result = result;
-	}
-
-	public Result getResult() {
-		return result;
-	}
-
+public enum Result {
+	SUCCESSFUL, FAILED, IGNORED;
 }

@@ -19,10 +19,10 @@ import java.lang.reflect.Method;
 
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.PowerMockTestListener;
-import org.powermock.tests.result.Result;
-import org.powermock.tests.result.TestMethodResult;
-import org.powermock.tests.result.TestSuiteResult;
-import org.powermock.tests.result.impl.TestMethodResultImpl;
+import org.powermock.core.spi.testresult.Result;
+import org.powermock.core.spi.testresult.TestMethodResult;
+import org.powermock.core.spi.testresult.TestSuiteResult;
+import org.powermock.core.spi.testresult.impl.TestMethodResultImpl;
 import org.powermock.tests.utils.Keys;
 import org.powermock.tests.utils.PowerMockTestNotifier;
 

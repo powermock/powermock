@@ -16,7 +16,7 @@ import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.internal.WhiteboxImpl;
-import org.powermock.reflect.proxyframework.spi.ProxyFramework;
+import org.powermock.reflect.spi.ProxyFramework;
 
 @RunWith(PowerMockRunner.class)
 @PrepareOnlyThisForTest(Log4jUser.class)

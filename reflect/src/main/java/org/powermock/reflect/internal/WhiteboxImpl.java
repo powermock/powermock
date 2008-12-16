@@ -33,7 +33,13 @@ import java.util.Set;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 import org.objenesis.instantiator.ObjectInstantiator;
-import org.powermock.reflect.proxyframework.spi.ProxyFramework;
+import org.powermock.reflect.internal.matcherstrategy.AllFieldsMatcherStrategy;
+import org.powermock.reflect.internal.matcherstrategy.AssignableToFieldTypeMatcherStrategy;
+import org.powermock.reflect.internal.matcherstrategy.FieldAnnotationMatcherStrategy;
+import org.powermock.reflect.internal.matcherstrategy.FieldMatcherStrategy;
+import org.powermock.reflect.internal.matcherstrategy.FieldNameMatcherStrategy;
+import org.powermock.reflect.internal.matcherstrategy.FieldTypeMatcherStrategy;
+import org.powermock.reflect.spi.ProxyFramework;
 
 /**
  * Various utilities for accessing internals of a class. Basically a simplified
@@ -1528,173 +1534,6 @@ public class WhiteboxImpl {
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException("Internal error: Failed to set field in method setInternalState.", e);
 		}
-	}
-
-	/**
-	 * Class that should be implemented by field matching strategies.
-	 */
-	private static abstract class FieldMatcherStrategy {
-
-		/**
-		 * A field matcher that checks if a field matches a given criteria.
-		 * 
-		 * @param field
-		 *            The field to check whether it matches the strategy or not.
-		 * @return <code>true</code> if this field matches the strategy,
-		 *         <code>false</code> otherwise.
-		 * 
-		 */
-		public abstract boolean matches(Field field);
-
-		/**
-		 * Throws an {@link IllegalArgumentException} if the strategy criteria
-		 * could not be found.
-		 * 
-		 * @param object
-		 *            The object where the strategy criteria could not be found.
-		 */
-		public abstract void notFound(Object object) throws IllegalArgumentException;
-	}
-
-	private static class FieldNameMatcherStrategy extends FieldMatcherStrategy {
-
-		private final String fieldName;
-
-		public FieldNameMatcherStrategy(String fieldName) {
-			if (fieldName == null || fieldName.equals("") || fieldName.startsWith(" ")) {
-				throw new IllegalArgumentException("field name cannot be null.");
-			}
-			this.fieldName = fieldName;
-		}
-
-		@Override
-		public boolean matches(Field field) {
-			return fieldName.equals(field.getName());
-		}
-
-		@Override
-		public void notFound(Object object) throws IllegalArgumentException {
-			throw new IllegalArgumentException("No field named \"" + fieldName + "\" could be found in the class hierarchy of "
-					+ getType(object).getName() + ".");
-		}
-
-		@Override
-		public String toString() {
-			return "fieldName " + fieldName;
-		}
-	}
-
-	private static class FieldTypeMatcherStrategy extends FieldMatcherStrategy {
-
-		final Class<?> expectedFieldType;
-
-		public FieldTypeMatcherStrategy(Class<?> fieldType) {
-			if (fieldType == null) {
-				throw new IllegalArgumentException("field type cannot be null.");
-			}
-			this.expectedFieldType = fieldType;
-		}
-
-		@Override
-		public boolean matches(Field field) {
-			return expectedFieldType.equals(field.getType());
-		}
-
-		@Override
-		public void notFound(Object object) throws IllegalArgumentException {
-			throw new IllegalArgumentException("No field of type \"" + expectedFieldType.getName() + "\" could be found in the class hierarchy of "
-					+ getType(object).getName() + ".");
-		}
-
-		@Override
-		public String toString() {
-			return "type " + expectedFieldType.getName();
-		}
-	}
-
-	private static class AllFieldsMatcherStrategy extends FieldMatcherStrategy {
-
-		@Override
-		public boolean matches(Field field) {
-			return true;
-		}
-
-		@Override
-		public void notFound(Object object) throws IllegalArgumentException {
-			throw new IllegalArgumentException("No fields were declared in " + getType(object).getName() + ".");
-		}
-	}
-
-	private static class FieldAnnotationMatcherStrategy extends FieldMatcherStrategy {
-
-		final Class<? extends Annotation>[] annotations;
-
-		public FieldAnnotationMatcherStrategy(Class<? extends Annotation>[] annotations) {
-			if (annotations == null || annotations.length == 0) {
-				throw new IllegalArgumentException("You must specify atleast one annotation.");
-			}
-			this.annotations = annotations;
-		}
-
-		@Override
-		public boolean matches(Field field) {
-			for (Class<? extends Annotation> annotation : annotations) {
-				if (field.isAnnotationPresent(annotation)) {
-					return true;
-				}
-			}
-			return false;
-		}
-
-		@Override
-		public void notFound(Object object) throws IllegalArgumentException {
-			throw new IllegalArgumentException("No field that has any of the annotation types \"" + getAnnotationNames()
-					+ "\" could be found in the class hierarchy of " + getType(object).getName() + ".");
-		}
-
-		@Override
-		public String toString() {
-			return "annotations " + getAnnotationNames();
-		}
-
-		private String getAnnotationNames() {
-			final StringBuilder builder = new StringBuilder();
-			for (int i = 0; i < annotations.length; i++) {
-				builder.append(annotations[i].getName());
-				if (i != annotations.length - 1) {
-					builder.append(", ");
-				}
-			}
-			return builder.toString();
-		}
-	}
-
-	private static class AssignableToFieldTypeMatcherStrategy extends FieldTypeMatcherStrategy {
-
-		private final Class<?> primitiveCounterpart;
-
-		public AssignableToFieldTypeMatcherStrategy(Class<?> fieldType) {
-			super(fieldType);
-			primitiveCounterpart = PrimitiveWrapper.getPrimitiveFromWrapperType(expectedFieldType);
-		}
-
-		@Override
-		public boolean matches(Field field) {
-			final Class<?> actualFieldType = field.getType();
-			return actualFieldType.isAssignableFrom(expectedFieldType)
-					|| (primitiveCounterpart != null && actualFieldType.isAssignableFrom(primitiveCounterpart));
-		}
-
-		@Override
-		public void notFound(Object object) throws IllegalArgumentException {
-			throw new IllegalArgumentException("No field assignable to \"" + expectedFieldType.getName()
-					+ "\" could be found in the class hierarchy of " + getType(object).getName() + ".");
-		}
-
-		@Override
-		public String toString() {
-			return "type " + primitiveCounterpart.getName();
-		}
-	}
+	}	
 
 }

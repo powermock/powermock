@@ -21,8 +21,8 @@ import java.util.Set;
 
 import org.powermock.core.TypeUtils;
 import org.powermock.core.spi.support.AbstractPowerMockTestListenerBase;
+import org.powermock.core.spi.testresult.TestMethodResult;
 import org.powermock.reflect.Whitebox;
-import org.powermock.tests.result.TestMethodResult;
 
 /**
  * A test listener that automatically set all instance fields to their default

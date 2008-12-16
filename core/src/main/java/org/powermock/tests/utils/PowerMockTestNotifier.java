@@ -17,8 +17,8 @@ package org.powermock.tests.utils;
 
 import java.lang.reflect.Method;
 
-import org.powermock.tests.result.TestMethodResult;
-import org.powermock.tests.result.TestSuiteResult;
+import org.powermock.core.spi.testresult.TestMethodResult;
+import org.powermock.core.spi.testresult.TestSuiteResult;
 
 /**
  * Implementors of this interface that must provide the ability to notify

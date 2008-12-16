@@ -27,7 +27,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.powermock.reflect.internal.WhiteboxImpl;
 import org.powermock.reflect.proxyframework.RegisterProxyFramework;
-import org.powermock.reflect.proxyframework.spi.ProxyFramework;
+import org.powermock.reflect.spi.ProxyFramework;
 import org.powermock.reflect.testclasses.ClassWithChildThatHasInternalState;
 import org.powermock.reflect.testclasses.ClassWithInternalState;
 import org.powermock.reflect.testclasses.ClassWithPrivateMethods;

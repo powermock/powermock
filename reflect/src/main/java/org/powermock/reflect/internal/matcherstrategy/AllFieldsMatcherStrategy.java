@@ -13,31 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.tests.utils.impl;
+package org.powermock.reflect.internal.matcherstrategy;
 
-import java.util.List;
+import java.lang.reflect.Field;
 
-import org.powermock.tests.utils.TestChunk;
+import org.powermock.reflect.internal.WhiteboxImpl;
 
-/**
- * A test case entry consists of a test class and a list of test chunks that
- * should be executed work this class.
- */
-public class TestCaseEntry {
+public class AllFieldsMatcherStrategy extends FieldMatcherStrategy {
 
-	private final List<TestChunk> testChunks;
-	private final Class<?> testClass;
-
-	public TestCaseEntry(Class<?> testClass, List<TestChunk> chunks) {
-		this.testClass = testClass;
-		this.testChunks = chunks;
+	@Override
+	public boolean matches(Field field) {
+		return true;
 	}
 
-	public List<TestChunk> getTestChunks() {
-		return testChunks;
-	}
-
-	public Class<?> getTestClass() {
-		return testClass;
+	@Override
+	public void notFound(Object object) throws IllegalArgumentException {
+		throw new IllegalArgumentException("No fields were declared in " + WhiteboxImpl.getType(object).getName() + ".");
 	}
 }

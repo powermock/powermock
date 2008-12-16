@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.tests.result.impl;
+package org.powermock.core.spi.testresult.impl;
 
-import org.powermock.tests.result.Result;
-import org.powermock.tests.result.TestSuiteResult;
+import org.powermock.core.spi.testresult.Result;
+import org.powermock.core.spi.testresult.TestSuiteResult;
 
 public class TestSuiteResultImpl implements TestSuiteResult {
 

@@ -2,7 +2,7 @@ package org.powermock.api.mockito.internal.proxyframework;
 
 import org.mockito.cglib.proxy.Enhancer;
 import org.powermock.reflect.proxyframework.RegisterProxyFramework;
-import org.powermock.reflect.proxyframework.spi.ProxyFramework;
+import org.powermock.reflect.spi.ProxyFramework;
 
 /**
  * CGLib proxy framework setup.

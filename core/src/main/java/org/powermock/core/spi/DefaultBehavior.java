@@ -1,10 +1,10 @@
-package org.powermock.core.spi.support;
+package org.powermock.core.spi;
 
 /**
  * Interface that provides the replay, verify and reset behavior for mock
  * objects and classes.
  */
-public interface DefaultBehaviorSupport {
+public interface DefaultBehavior {
 
 	/**
 	 * Replay the given objects or classes. May throw exception if replay is not

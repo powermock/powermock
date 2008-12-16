@@ -18,8 +18,8 @@ package org.powermock.core.spi.support;
 import java.lang.reflect.Method;
 
 import org.powermock.core.spi.PowerMockTestListener;
-import org.powermock.tests.result.TestMethodResult;
-import org.powermock.tests.result.TestSuiteResult;
+import org.powermock.core.spi.testresult.TestMethodResult;
+import org.powermock.core.spi.testresult.TestSuiteResult;
 
 /**
  * An empty implementation of the {@link PowerMockTestListener} interface. May

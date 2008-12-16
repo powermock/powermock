@@ -1,7 +1,7 @@
 package org.powermock.reflect.proxyframework;
 
 import org.powermock.reflect.internal.WhiteboxImpl;
-import org.powermock.reflect.proxyframework.spi.ProxyFramework;
+import org.powermock.reflect.spi.ProxyFramework;
 
 /**
  * All API's must register a proxy framework using this class.

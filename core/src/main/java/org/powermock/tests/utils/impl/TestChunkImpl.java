@@ -18,24 +18,32 @@ package org.powermock.tests.utils.impl;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import org.powermock.tests.utils.TestChunk;
+
 /**
  * A test chunk consists of a list of methods that should be executed by a
  * particular classloader.
  */
-public class TestChunk {
+public class TestChunkImpl implements TestChunk {
 
 	private final ClassLoader classLoader;
 	private final List<Method> testMethodsToBeExecutedByThisClassloader;
 
-	public TestChunk(ClassLoader classLoader, List<Method> testMethodsToBeExecutedByThisClassloader) {
+	public TestChunkImpl(ClassLoader classLoader, List<Method> testMethodsToBeExecutedByThisClassloader) {
 		this.classLoader = classLoader;
 		this.testMethodsToBeExecutedByThisClassloader = testMethodsToBeExecutedByThisClassloader;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public ClassLoader getClassLoader() {
 		return classLoader;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public List<Method> getTestMethodsToBeExecutedByThisClassloader() {
 		return testMethodsToBeExecutedByThisClassloader;
 	}

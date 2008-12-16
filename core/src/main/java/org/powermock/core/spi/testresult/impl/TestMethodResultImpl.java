@@ -13,31 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.tests.utils.impl;
+package org.powermock.core.spi.testresult.impl;
 
-import java.util.List;
+import org.powermock.core.spi.testresult.Result;
+import org.powermock.core.spi.testresult.TestMethodResult;
 
-import org.powermock.tests.utils.TestChunk;
+public class TestMethodResultImpl implements TestMethodResult {
 
-/**
- * A test case entry consists of a test class and a list of test chunks that
- * should be executed work this class.
- */
-public class TestCaseEntry {
+	private final Result result;
 
-	private final List<TestChunk> testChunks;
-	private final Class<?> testClass;
-
-	public TestCaseEntry(Class<?> testClass, List<TestChunk> chunks) {
-		this.testClass = testClass;
-		this.testChunks = chunks;
+	public TestMethodResultImpl(Result result) {
+		super();
+		this.result = result;
 	}
 
-	public List<TestChunk> getTestChunks() {
-		return testChunks;
+	public Result getResult() {
+		return result;
 	}
 
-	public Class<?> getTestClass() {
-		return testClass;
-	}
 }

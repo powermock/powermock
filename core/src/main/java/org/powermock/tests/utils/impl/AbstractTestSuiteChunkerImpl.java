@@ -39,6 +39,7 @@ import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.MainMockTransformer;
 import org.powermock.reflect.Whitebox;
 import org.powermock.tests.utils.ArrayMerger;
+import org.powermock.tests.utils.TestChunk;
 import org.powermock.tests.utils.TestClassesExtractor;
 import org.powermock.tests.utils.TestSuiteChunker;
 
@@ -135,7 +136,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 		}
 		List<Method> currentClassloaderMethods = new LinkedList<Method>();
 		// Put the first suite in the map of internal suites.
-		TestChunk defaultTestChunk = new TestChunk(defaultMockLoader, currentClassloaderMethods);
+		TestChunk defaultTestChunk = new TestChunkImpl(defaultMockLoader, currentClassloaderMethods);
 		List<TestChunk> testChunks = new LinkedList<TestChunk>();
 		testChunks.add(defaultTestChunk);
 		internalSuites.add(new TestCaseEntry(testClass, testChunks));
@@ -210,7 +211,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 						}
 						// executeClassLoaderDependentMockPolicyMethods(testClass,
 						// mockClassloader);
-						TestChunk chunk = new TestChunk(mockClassloader, methodsInThisChunk);
+						TestChunkImpl chunk = new TestChunkImpl(mockClassloader, methodsInThisChunk);
 						testCaseEntry.getTestChunks().add(chunk);
 						updatedIndexes();
 					} else {
