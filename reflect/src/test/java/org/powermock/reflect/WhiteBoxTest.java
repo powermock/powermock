@@ -27,6 +27,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.powermock.reflect.exceptions.MethodNotFoundException;
 import org.powermock.reflect.exceptions.TooManyFieldsFoundException;
+import org.powermock.reflect.exceptions.TooManyMethodsFoundException;
 import org.powermock.reflect.internal.WhiteboxImpl;
 import org.powermock.reflect.proxyframework.RegisterProxyFramework;
 import org.powermock.reflect.spi.ProxyFramework;
@@ -442,8 +443,8 @@ public class WhiteBoxTest {
 	public void testMethodWithNoMethodName_tooManyMethodsFound() throws Exception {
 		try {
 			Whitebox.getMethod(ClassWithSeveralMethodsWithSameName.class);
-			fail("Should throw RuntimeException");
-		} catch (RuntimeException e) {
+			fail("Should throw TooManyMethodsFoundException");
+		} catch (TooManyMethodsFoundException e) {
 			assertTrue(e.getMessage().contains(
 					"Several matching methods found, please specify the method name so that PowerMock can determine which method you're refering to"));
 		}
@@ -453,6 +454,28 @@ public class WhiteBoxTest {
 	public void testMethodWithNoMethodName_ok() throws Exception {
 		final Method method = Whitebox.getMethod(ClassWithSeveralMethodsWithSameName.class, double.class);
 		assertEquals(method, ClassWithSeveralMethodsWithSameName.class.getDeclaredMethod("getDouble", double.class));
+	}
+
+	@Test
+	public void testGetTwoMethodsWhenNoneOfThemAreFound() throws Exception {
+		try {
+			Whitebox.getMethods(ClassWithSeveralMethodsWithSameName.class, "notFound1", "notFound2");
+		} catch (MethodNotFoundException e) {
+			assertEquals(
+					"No methods matching the name(s) notFound1 or notFound2 were found in the class hierachry of class org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameName.",
+					e.getMessage());
+		}
+	}
+
+	@Test
+	public void testGetThreeMethodsWhenNoneOfThemAreFound() throws Exception {
+		try {
+			Whitebox.getMethods(ClassWithSeveralMethodsWithSameName.class, "notFound1", "notFound2", "notFound3");
+		} catch (MethodNotFoundException e) {
+			assertEquals(
+					"No methods matching the name(s) notFound1, notFound2 or notFound3 were found in the class hierachry of class org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameName.",
+					e.getMessage());
+		}
 	}
 
 	public void testFinalState() {
