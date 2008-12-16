@@ -21,6 +21,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Set;
 
+import org.powermock.reflect.exceptions.ConstructorNotFoundException;
+import org.powermock.reflect.exceptions.FieldNotFoundException;
+import org.powermock.reflect.exceptions.MethodNotFoundException;
+import org.powermock.reflect.exceptions.TooManyMethodsFoundException;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
 /**
@@ -42,7 +46,7 @@ public class Whitebox {
 	 * @param fieldName
 	 *            The method names.
 	 * @return A <code>java.lang.reflect.Field</code>.
-	 * @throws IllegalArgumentException
+	 * @throws FieldNotFoundException
 	 *             If a field cannot be found in the hierarchy.
 	 */
 	public static Field getField(Class<?> type, String fieldName) {
@@ -82,7 +86,7 @@ public class Whitebox {
 	 * @param parameterTypes
 	 *            All parameter types of the method (may be <code>null</code>).
 	 * @return A <code>java.lang.reflect.Method</code>.
-	 * @throws IllegalArgumentException
+	 * @throws MethodNotFoundException
 	 *             If a method cannot be found in the hierarchy.
 	 */
 	public static Method getMethod(Class<?> type, String methodName, Class<?>... parameterTypes) {
@@ -107,8 +111,10 @@ public class Whitebox {
 	 * @param parameterTypes
 	 *            All parameter types of the method (may be <code>null</code>).
 	 * @return A <code>java.lang.reflect.Method</code>.
-	 * @throws IllegalArgumentException
+	 * @throws MethodNotFoundException
 	 *             If a method cannot be found in the hierarchy.
+	 * @throws TooManyMethodsFoundException
+	 *             If several methods were found.
 	 */
 	public static Method getMethod(Class<?> type, Class<?>... parameterTypes) {
 		return WhiteboxImpl.getMethod(type, parameterTypes);
@@ -144,6 +150,8 @@ public class Whitebox {
 	 *            All parameter types of the constructor (may be
 	 *            <code>null</code>).
 	 * @return A <code>java.lang.reflect.Constructor</code>.
+	 * @throws ConstructorNotFoundException
+	 *             if the constructor cannot be found.
 	 */
 	public static Constructor<?> getConstructor(Class<?> type, Class<?>... parameterTypes) {
 		return WhiteboxImpl.getConstructor(type, parameterTypes);
@@ -475,6 +483,8 @@ public class Whitebox {
 	 *            Names of the methods that will be returned.
 	 * @return An array of Method's. May be of length 0 but not
 	 *         <code>null</code>.
+	 * @throws MethodNotFoundException
+	 *             If no method was found.
 	 */
 	public static Method[] getMethods(Class<?> clazz, String... methodNames) {
 		return WhiteboxImpl.getMethods(clazz, methodNames);

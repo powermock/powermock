@@ -13,35 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.reflect.internal.matcherstrategy;
+package org.powermock.reflect.internal.matcherstrategies;
 
 import java.lang.reflect.Field;
 
+import org.powermock.reflect.internal.PrimitiveWrapper;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
-public class FieldNameMatcherStrategy extends FieldMatcherStrategy {
+public class AssignableToFieldTypeMatcherStrategy extends FieldTypeMatcherStrategy {
 
-	private final String fieldName;
+	private final Class<?> primitiveCounterpart;
 
-	public FieldNameMatcherStrategy(String fieldName) {
-		if (fieldName == null || fieldName.equals("") || fieldName.startsWith(" ")) {
-			throw new IllegalArgumentException("field name cannot be null.");
-		}
-		this.fieldName = fieldName;
+	public AssignableToFieldTypeMatcherStrategy(Class<?> fieldType) {
+		super(fieldType);
+		primitiveCounterpart = PrimitiveWrapper.getPrimitiveFromWrapperType(expectedFieldType);
 	}
 
 	@Override
 	public boolean matches(Field field) {
-		return fieldName.equals(field.getName());
+		final Class<?> actualFieldType = field.getType();
+		return actualFieldType.isAssignableFrom(expectedFieldType)
+				|| (primitiveCounterpart != null && actualFieldType.isAssignableFrom(primitiveCounterpart));
 	}
 
 	@Override
 	public void notFound(Object object) throws IllegalArgumentException {
-		throw new IllegalArgumentException("No field named \"" + fieldName + "\" could be found in the class hierarchy of "
+		throw new IllegalArgumentException("No field assignable to \"" + expectedFieldType.getName() + "\" could be found in the class hierarchy of "
 				+ WhiteboxImpl.getType(object).getName() + ".");
 	}
 
+	@Override
 	public String toString() {
-		return "fieldName " + fieldName;
+		return "type " + primitiveCounterpart.getName();
 	}
 }

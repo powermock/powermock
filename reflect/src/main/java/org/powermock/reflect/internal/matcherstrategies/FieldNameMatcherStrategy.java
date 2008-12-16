@@ -13,36 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.reflect.internal.matcherstrategy;
+package org.powermock.reflect.internal.matcherstrategies;
 
 import java.lang.reflect.Field;
 
 import org.powermock.reflect.internal.WhiteboxImpl;
 
-public class FieldTypeMatcherStrategy extends FieldMatcherStrategy {
+public class FieldNameMatcherStrategy extends FieldMatcherStrategy {
 
-	final Class<?> expectedFieldType;
+	private final String fieldName;
 
-	public FieldTypeMatcherStrategy(Class<?> fieldType) {
-		if (fieldType == null) {
-			throw new IllegalArgumentException("field type cannot be null.");
+	public FieldNameMatcherStrategy(String fieldName) {
+		if (fieldName == null || fieldName.equals("") || fieldName.startsWith(" ")) {
+			throw new IllegalArgumentException("field name cannot be null.");
 		}
-		this.expectedFieldType = fieldType;
+		this.fieldName = fieldName;
 	}
 
 	@Override
 	public boolean matches(Field field) {
-		return expectedFieldType.equals(field.getType());
+		return fieldName.equals(field.getName());
 	}
 
 	@Override
 	public void notFound(Object object) throws IllegalArgumentException {
-		throw new IllegalArgumentException("No field of type \"" + expectedFieldType.getName() + "\" could be found in the class hierarchy of "
+		throw new IllegalArgumentException("No field named \"" + fieldName + "\" could be found in the class hierarchy of "
 				+ WhiteboxImpl.getType(object).getName() + ".");
 	}
 
-	@Override
 	public String toString() {
-		return "type " + expectedFieldType.getName();
+		return "fieldName " + fieldName;
 	}
 }

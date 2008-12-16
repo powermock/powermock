@@ -38,6 +38,7 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
+import org.powermock.reflect.exceptions.ConstructorNotFoundException;
 
 import samples.Service;
 import samples.expectnew.ExpectNewDemo;
@@ -467,8 +468,8 @@ public class ExpectNewDemoTest {
 		final Object object = new Object();
 		try {
 			expectNew(VarArgsConstructorDemo.class, object);
-			fail("Should throw IllegalArgumentException!");
-		} catch (IllegalArgumentException e) {
+			fail("Should throw ConstructorNotFoundException!");
+		} catch (ConstructorNotFoundException e) {
 			assertEquals("No constructor found in class '" + VarArgsConstructorDemo.class.getName() + "' with argument types: [ "
 					+ object.getClass().getName() + " ]", e.getMessage());
 		}

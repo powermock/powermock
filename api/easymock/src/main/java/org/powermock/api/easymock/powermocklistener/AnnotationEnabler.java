@@ -82,9 +82,9 @@ public class AnnotationEnabler extends AbstractPowerMockTestListenerBase {
 				final Class<?> type = field.getType();
 				Annotation annotationInstance = field.getAnnotation(annotation);
 				final String[] value = (String[]) Whitebox.invokeMethod(annotationInstance, "value");
-				Method[] methods = Whitebox.getMethods(type, value);
-				if (methods.length == 0) {
-					methods = null;
+				Method[] methods = null;
+				if (value.length != 1 || !"".equals(value[0])) {
+					methods = Whitebox.getMethods(type, value);
 				}
 				final Object createMock = createMockInstance(type, methods);
 				field.set(testInstance, createMock);

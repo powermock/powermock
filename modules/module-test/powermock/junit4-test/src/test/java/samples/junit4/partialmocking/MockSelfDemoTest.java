@@ -30,6 +30,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.exceptions.ConstructorNotFoundException;
 
 import samples.partialmocking.MockSelfDemo;
 import samples.partialmocking.MockSelfWithNoDefaultConstructorDemo;
@@ -189,8 +190,8 @@ public class MockSelfDemoTest {
 	public void testCreatePartialMockAndInvokeDefaultConstructor_noDefaultConstructorFound() throws Exception {
 		try {
 			createPartialMockAndInvokeDefaultConstructor(MockSelfWithNoDefaultConstructorDemo.class, "aMethod2");
-			fail("Should throw IllegalArgumentException!");
-		} catch (IllegalArgumentException e) {
+			fail("Should throw ConstructorNotFoundException!");
+		} catch (ConstructorNotFoundException e) {
 			assertEquals("Failed to lookup constructor.", e.getMessage());
 		}
 	}

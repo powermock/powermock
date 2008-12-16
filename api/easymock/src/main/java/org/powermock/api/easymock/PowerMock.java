@@ -1334,7 +1334,7 @@ public class PowerMock {
 			throw new IllegalArgumentException("Instance or class cannot be null.");
 		}
 
-		return expectPrivate(instance, methodName, instance.getClass(), arguments);
+		return expectPrivate(instance, methodName, Whitebox.getType(instance), arguments);
 	}
 
 	/**

@@ -2,13 +2,15 @@ Change log 1.2 (under development)
 ----------------------------------
 * Upgraded to Javassist 3.9
 * The test result related artifacts were moved from package org.powermock.tests.result to org.powermock.core.spi.testresult.
-* Structural refactoring to remove Structure 101 XS: Moved org.powermock.api.easymock.internal.proxyframework.spi.ProxyFramework to org.powermock.reflect.spi.ProxyFramework
+* Structural refactoring to remove Structure 101 XS: Moved org.powermock.api.easymock.internal.proxyframework.spi.ProxyFramework to org.powermock.reflect.spi.ProxyFramework. 
+* Added PowerMock specific exceptions to the reflect project. Instead of getting RuntimeExceptions or IllegalArgument exceptions a more appropriate runtime excpetion is thrown. For example ConstructorNotFoundException or TooManyFieldsFoundException etc.
+* Whitebox.getMethods(..) and Whitebox.getFields(..) no throw an MethodNotFoundException if no method or field was found.
 
 Change log 1.1.1 (released 2008-12-15)
 --------------------------------------
 * Fixed maven version issues for the junit4-legacy module and junit3 module.
 * Fixed a major issue with PowerMock test listeners. The PowerMockTestListener.beforeTestMethod(..) was invoked too late which could cause a NullPointerException when invoking setup methods.
-* Updated javadoc (some errors in the java doc text)
+* Updated javadoc (some errors in the java doc text).
 
 Change log 1.1 (released 2008-12-12)
 ------------------------------------

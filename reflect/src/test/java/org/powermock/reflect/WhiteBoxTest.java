@@ -25,6 +25,8 @@ import java.lang.reflect.Method;
 import java.util.Set;
 
 import org.junit.Test;
+import org.powermock.reflect.exceptions.MethodNotFoundException;
+import org.powermock.reflect.exceptions.TooManyFieldsFoundException;
 import org.powermock.reflect.internal.WhiteboxImpl;
 import org.powermock.reflect.proxyframework.RegisterProxyFramework;
 import org.powermock.reflect.spi.ProxyFramework;
@@ -369,8 +371,8 @@ public class WhiteBoxTest {
 		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
 		try {
 			Whitebox.setInternalState(tested, value, ClassWithInternalState.class);
-			fail("should throw IllegalArgumentException");
-		} catch (IllegalArgumentException e) {
+			fail("should throw TooManyFieldsFoundException!");
+		} catch (TooManyFieldsFoundException e) {
 			assertEquals("Two or more fields matching type int.", e.getMessage());
 		}
 	}
@@ -381,8 +383,8 @@ public class WhiteBoxTest {
 		ClassWithInternalState tested = new ClassWithInternalState();
 		try {
 			Whitebox.setInternalState(tested, value);
-			fail("should throw IllegalArgumentException");
-		} catch (IllegalArgumentException e) {
+			fail("should throw TooManyFieldsFoundException!");
+		} catch (TooManyFieldsFoundException e) {
 			assertEquals("Two or more fields matching type int.", e.getMessage());
 		}
 	}
@@ -428,8 +430,8 @@ public class WhiteBoxTest {
 	public void testMethodWithNoMethodName_noMethodFound() throws Exception {
 		try {
 			Whitebox.getMethod(ClassWithInternalState.class, String.class);
-			fail("Should throw IllegalArgumentException");
-		} catch (IllegalArgumentException e) {
+			fail("Should throw MethodNotFoundException");
+		} catch (MethodNotFoundException e) {
 			assertEquals(
 					"No method was found with argument types: [ java.lang.String ] in class org.powermock.reflect.testclasses.ClassWithInternalState",
 					e.getMessage());

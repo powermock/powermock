@@ -13,37 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.reflect.internal.matcherstrategy;
+package org.powermock.reflect.internal.matcherstrategies;
 
 import java.lang.reflect.Field;
 
-import org.powermock.reflect.internal.PrimitiveWrapper;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
-public class AssignableToFieldTypeMatcherStrategy extends FieldTypeMatcherStrategy {
+public class FieldTypeMatcherStrategy extends FieldMatcherStrategy {
 
-	private final Class<?> primitiveCounterpart;
+	final Class<?> expectedFieldType;
 
-	public AssignableToFieldTypeMatcherStrategy(Class<?> fieldType) {
-		super(fieldType);
-		primitiveCounterpart = PrimitiveWrapper.getPrimitiveFromWrapperType(expectedFieldType);
+	public FieldTypeMatcherStrategy(Class<?> fieldType) {
+		if (fieldType == null) {
+			throw new IllegalArgumentException("field type cannot be null.");
+		}
+		this.expectedFieldType = fieldType;
 	}
 
 	@Override
 	public boolean matches(Field field) {
-		final Class<?> actualFieldType = field.getType();
-		return actualFieldType.isAssignableFrom(expectedFieldType)
-				|| (primitiveCounterpart != null && actualFieldType.isAssignableFrom(primitiveCounterpart));
+		return expectedFieldType.equals(field.getType());
 	}
 
 	@Override
 	public void notFound(Object object) throws IllegalArgumentException {
-		throw new IllegalArgumentException("No field assignable to \"" + expectedFieldType.getName() + "\" could be found in the class hierarchy of "
+		throw new IllegalArgumentException("No field of type \"" + expectedFieldType.getName() + "\" could be found in the class hierarchy of "
 				+ WhiteboxImpl.getType(object).getName() + ".");
 	}
 
 	@Override
 	public String toString() {
-		return "type " + primitiveCounterpart.getName();
+		return "type " + expectedFieldType.getName();
 	}
 }

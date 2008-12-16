@@ -7,6 +7,7 @@ import static org.powermock.api.easymock.PowerMock.createMockAndExpectNew;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.exceptions.TooManyConstructorsFoundException;
 
 import samples.expectnew.PrimitiveAndWrapperDemo;
 
@@ -20,8 +21,8 @@ public class PrimitiveAndWrapperDemoTest {
 	public void testWhenConstructorCannotBeDetermined() throws Exception {
 		try {
 			createMockAndExpectNew(PrimitiveAndWrapperDemo.class, 2);
-			fail("Should throw IllegalArgumentException");
-		} catch (IllegalArgumentException e) {
+			fail("Should throw TooManyConstructorsFoundException");
+		} catch (TooManyConstructorsFoundException e) {
 			assertEquals(
 					"Several matching constructors found, please specify the argument parameter types so that PowerMock can determine which method you're refering to."
 							+ "\nMatching constructors in class samples.expectnew.PrimitiveAndWrapperDemo were:\n"

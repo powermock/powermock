@@ -24,6 +24,7 @@ import static org.powermock.api.easymock.PowerMock.createPartialMock;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.powermock.reflect.exceptions.ConstructorNotFoundException;
 
 import samples.Service;
 import samples.constructor.PublicConstructorWithDependencyDemo;
@@ -70,8 +71,8 @@ public class PublicConstructorWithDependencyDemoTest {
 		try {
 			createPartialMock(PublicConstructorWithDependencyDemo.class,
 					new String[] { "aMethod" }, serviceMock, "bad argument");
-			fail("Should throw IllegalArgumentException.");
-		} catch (IllegalArgumentException e) {
+			fail("Should throw ConstructorNotFoundException.");
+		} catch (ConstructorNotFoundException e) {
 			assertEquals("No constructor found in class '"
 					+ PublicConstructorWithDependencyDemo.class.getName()
 					+ "' with argument types: [ " + Service.class.getName()

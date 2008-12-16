@@ -41,6 +41,7 @@ import org.easymock.classextension.internal.ClassInstantiatorFactory;
 import org.easymock.classextension.internal.ClassProxyFactory;
 import org.easymock.internal.IProxyFactory;
 import org.easymock.internal.ObjectMethodsFilter;
+import org.powermock.reflect.exceptions.MethodNotFoundException;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
 /**
@@ -89,13 +90,13 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 					return handler.invoke(obj, m, args);
 				}
 
-				// We conveniently mock abstract methods be default
+				// We conveniently mock abstract methods by default
 				if (Modifier.isAbstract(method.getModifiers())) {
 					return handler.invoke(obj, method, args);
 				}
 
 				Class<?> superclass = method.getDeclaringClass().getSuperclass();
-				if (mockedMethods != null && !mockedMethods.contains(method)) {
+				if (superclass != null && mockedMethods != null && !mockedMethods.contains(method)) {
 					/*
 					 * Added the following if statement to allow partial mocking
 					 * class hierarchy
@@ -103,7 +104,7 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 					Method superClassMethod = null;
 					try {
 						superClassMethod = WhiteboxImpl.getMethod(superclass, method.getName(), method.getParameterTypes());
-					} catch (IllegalArgumentException e) {
+					} catch (MethodNotFoundException e) {
 						// OK
 					}
 					boolean contains = mockedMethods.contains(superClassMethod);
@@ -143,7 +144,7 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 		}
 		enhancer.setSuperclass(toMock);
 		enhancer.setCallbackType(interceptor.getClass());
-		
+
 		Class mockClass = enhancer.createClass();
 		Enhancer.registerCallbacks(mockClass, new Callback[] { interceptor });
 

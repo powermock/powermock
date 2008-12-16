@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.reflect.internal.matcherstrategy;
+package org.powermock.reflect.internal.matcherstrategies;
 
 import java.lang.reflect.Field;
 
