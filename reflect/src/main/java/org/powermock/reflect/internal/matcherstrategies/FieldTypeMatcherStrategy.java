@@ -17,8 +17,6 @@ package org.powermock.reflect.internal.matcherstrategies;
 
 import java.lang.reflect.Field;
 
-import org.powermock.reflect.internal.WhiteboxImpl;
-
 public class FieldTypeMatcherStrategy extends FieldMatcherStrategy {
 
 	final Class<?> expectedFieldType;
@@ -36,9 +34,9 @@ public class FieldTypeMatcherStrategy extends FieldMatcherStrategy {
 	}
 
 	@Override
-	public void notFound(Object object) throws IllegalArgumentException {
+	public void notFound(Class<?> type) throws IllegalArgumentException {
 		throw new IllegalArgumentException("No field of type \"" + expectedFieldType.getName() + "\" could be found in the class hierarchy of "
-				+ WhiteboxImpl.getType(object).getName() + ".");
+				+ type.getName() + ".");
 	}
 
 	@Override

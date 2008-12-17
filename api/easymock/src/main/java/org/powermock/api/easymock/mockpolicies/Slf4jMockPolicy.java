@@ -15,7 +15,6 @@
  */
 package org.powermock.api.easymock.mockpolicies;
 
-import org.powermock.api.easymock.internal.mockpolicies.AbstractEasyMockLogPolicyBase;
 
 /**
  * An slf4j mock policy. This mock policy deals with solving slf4j related

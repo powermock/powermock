@@ -37,8 +37,8 @@ public abstract class FieldMatcherStrategy {
 	 * Throws an {@link IllegalArgumentException} if the strategy criteria could
 	 * not be found.
 	 * 
-	 * @param object
-	 *            The object where the strategy criteria could not be found.
+	 * @param type
+	 *            The type of the object that was not found.
 	 */
-	public abstract void notFound(Object object) throws IllegalArgumentException;
+	public abstract void notFound(Class<?> type) throws IllegalArgumentException;
 }

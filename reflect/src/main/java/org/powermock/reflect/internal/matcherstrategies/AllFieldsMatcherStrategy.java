@@ -17,8 +17,6 @@ package org.powermock.reflect.internal.matcherstrategies;
 
 import java.lang.reflect.Field;
 
-import org.powermock.reflect.internal.WhiteboxImpl;
-
 public class AllFieldsMatcherStrategy extends FieldMatcherStrategy {
 
 	@Override
@@ -27,7 +25,7 @@ public class AllFieldsMatcherStrategy extends FieldMatcherStrategy {
 	}
 
 	@Override
-	public void notFound(Object object) throws IllegalArgumentException {
-		throw new IllegalArgumentException("No fields were declared in " + WhiteboxImpl.getType(object).getName() + ".");
+	public void notFound(Class<?> type) throws IllegalArgumentException {
+		throw new IllegalArgumentException("No fields were declared in " + type.getName() + ".");
 	}
 }

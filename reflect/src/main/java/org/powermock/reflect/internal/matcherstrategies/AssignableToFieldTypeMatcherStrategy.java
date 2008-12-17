@@ -18,7 +18,6 @@ package org.powermock.reflect.internal.matcherstrategies;
 import java.lang.reflect.Field;
 
 import org.powermock.reflect.internal.PrimitiveWrapper;
-import org.powermock.reflect.internal.WhiteboxImpl;
 
 public class AssignableToFieldTypeMatcherStrategy extends FieldTypeMatcherStrategy {
 
@@ -37,9 +36,9 @@ public class AssignableToFieldTypeMatcherStrategy extends FieldTypeMatcherStrate
 	}
 
 	@Override
-	public void notFound(Object object) throws IllegalArgumentException {
+	public void notFound(Class<?> type) throws IllegalArgumentException {
 		throw new IllegalArgumentException("No field assignable to \"" + expectedFieldType.getName() + "\" could be found in the class hierarchy of "
-				+ WhiteboxImpl.getType(object).getName() + ".");
+				+ type.getName() + ".");
 	}
 
 	@Override

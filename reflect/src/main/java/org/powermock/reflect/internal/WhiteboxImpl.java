@@ -411,7 +411,7 @@ public class WhiteboxImpl {
 			startClass = startClass.getSuperclass();
 		}
 		if (foundField == null) {
-			strategy.notFound(object);
+			strategy.notFound(startClass);
 		}
 		foundField.setAccessible(true);
 		return foundField;

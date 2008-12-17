@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.api.easymock.internal.mockpolicies;
+package org.powermock.api.easymock.mockpolicies;
 
 import static org.easymock.classextension.EasyMock.makeThreadSafe;
 import static org.powermock.api.easymock.PowerMock.createNiceMock;
@@ -28,7 +28,7 @@ import org.powermock.mockpolicies.support.LogPolicySupport;
 /**
  * A base class for EasyMock log policies.
  */
-public abstract class AbstractEasyMockLogPolicyBase implements PowerMockPolicy {
+abstract class AbstractEasyMockLogPolicyBase implements PowerMockPolicy {
 
 	/**
 	 * {@inheritDoc}

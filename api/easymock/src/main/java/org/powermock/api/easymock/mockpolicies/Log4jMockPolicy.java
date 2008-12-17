@@ -15,7 +15,6 @@
  */
 package org.powermock.api.easymock.mockpolicies;
 
-import org.powermock.api.easymock.internal.mockpolicies.AbstractEasyMockLogPolicyBase;
 
 /**
  * A log4j mock policy. This mock policy deals with solving log4j related
