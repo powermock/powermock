@@ -901,7 +901,7 @@ public class WhiteboxImpl {
 	 * 
 	 * @return The object created after the constructor has been invoked.
 	 * @throws Exception
-	 *             If an exeption occur when invoking the constructor.
+	 *             If an exception occur when invoking the constructor.
 	 */
 	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Object... arguments) throws Exception {
 
