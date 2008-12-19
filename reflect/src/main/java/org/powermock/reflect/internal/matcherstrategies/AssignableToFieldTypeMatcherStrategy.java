@@ -17,7 +17,7 @@ package org.powermock.reflect.internal.matcherstrategies;
 
 import java.lang.reflect.Field;
 
-import org.powermock.reflect.internal.PrimitiveWrapper;
+import org.powermock.reflect.internal.primitivesupport.PrimitiveWrapper;
 
 public class AssignableToFieldTypeMatcherStrategy extends FieldTypeMatcherStrategy {
 

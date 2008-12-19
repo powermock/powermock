@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.reflect.internal;
+package org.powermock.reflect.internal.primitivesupport;
 
 import java.util.HashMap;
 import java.util.Map;
