@@ -1798,7 +1798,7 @@ public class PowerMock {
 		NewInvocationControl<IExpectationSetters<T>> newInvocationControl = (NewInvocationControl<IExpectationSetters<T>>) MockRepository
 				.getNewInstanceControl(unmockedType);
 		if (newInvocationControl == null) {
-			InvocationSubstitute<T> mock = doMock(InvocationSubstitute.class, false, mockStrategy, null, new Method[0]);
+			InvocationSubstitute<T> mock = doMock(InvocationSubstitute.class, false, mockStrategy, null, (Method[]) null);
 			newInvocationControl = new NewInvocationControlImpl<T>(mock, type);
 			MockRepository.putNewInstanceControl(type, newInvocationControl);
 			MockRepository.addObjectsToAutomaticallyReplayAndVerify(WhiteboxImpl.getUnmockedType(type));
@@ -1818,6 +1818,25 @@ public class PowerMock {
 	 */
 	public static synchronized <T> IExpectationSetters<T> expectNew(Class<T> type, Object... arguments) throws Exception {
 		return doExpectNew(type, new DefaultMockStrategy(), null, arguments);
+	}
+
+	/**
+	 * Allows specifying expectations on new invocations for private member
+	 * (inner) classes, local or anonymous classes. For example you might want
+	 * to throw an exception or return a mock. Note that you must replay the
+	 * class when using this method since this behavior is part of the class
+	 * mock.
+	 * 
+	 * @param fullyQualifiedName
+	 *            The fully-qualified name of the inner/local/anonymous type to
+	 *            expect.
+	 * @param arguments
+	 *            Optional number of arguments.
+	 */
+	@SuppressWarnings("unchecked")
+	public static synchronized IExpectationSetters<Object> expectNew(String fullyQualifiedName, Object... arguments) throws Exception {
+		final Class<?> forName = Class.forName(fullyQualifiedName);
+		return (IExpectationSetters<Object>) doExpectNew(forName, new DefaultMockStrategy(), null, arguments);
 	}
 
 	/**

@@ -18,6 +18,7 @@ package org.powermock.core;
 import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.regex.Matcher;
 
 import org.powermock.core.spi.support.InvocationSubstitute;
 
@@ -74,7 +75,7 @@ public class PowerMockUtils {
 		 */
 		String message = oldError.getMessage();
 		final String newSubsitutionMethodName = InvocationSubstitute.class.getDeclaredMethods()[0].getName();
-		message = message.replaceAll(newSubsitutionMethodName, type.getName());
+		message = message.replaceAll(newSubsitutionMethodName, Matcher.quoteReplacement(type.getName()));
 		message = message.replaceAll("method", "constructor");
 
 		throw new AssertionError(message);

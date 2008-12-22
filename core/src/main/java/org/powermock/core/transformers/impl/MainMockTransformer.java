@@ -17,6 +17,7 @@ package org.powermock.core.transformers.impl;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
+import javassist.CodeConverter;
 import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtField;
@@ -42,6 +43,8 @@ public class MainMockTransformer implements MockTransformer {
 		if (clazz.isFrozen()) {
 			clazz.defrost();
 		}
+
+		final CodeConverter converter = new CodeConverter();
 
 		/*
 		 * Set class to modifier to public to allow for mocking for package

@@ -27,8 +27,14 @@ public class SuppressField {
 
 	private final Object mySecondValue = new Object();
 
+	private DomainObject domainObject = new DomainObject();
+
 	public Object getMySecondValue() {
 		return mySecondValue;
+	}
+
+	public DomainObject getDomainObject() {
+		return domainObject;
 	}
 
 	private char myChar = 'a';

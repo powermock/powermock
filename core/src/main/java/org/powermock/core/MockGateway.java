@@ -17,6 +17,7 @@ package org.powermock.core;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.core.spi.NewInvocationControl;
@@ -87,6 +88,21 @@ public class MockGateway {
 	public static synchronized Object newInstanceCall(Class<?> type, Object[] args, Class<?>[] sig) throws Throwable {
 		final NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceControl(type);
 		if (newInvocationControl != null) {
+			/*
+			 * We need to deal with inner, local and anonymous inner classes
+			 * specifically. For example when new is invoked on an inner class
+			 * it seems like null is passed as an argument even though it
+			 * shouldn't. We correct this here.
+			 */
+			if (type.isMemberClass() && Modifier.isStatic(type.getModifiers())) {
+				if (args.length > 0 && args[0] == null && sig.length > 0) {
+					args = copyArgumentsForInnerOrLocalOrAnonymousClass(args);
+				}
+			} else if (type.isLocalClass() || type.isAnonymousClass() || type.isMemberClass()) {
+				if (args.length > 0 && sig.length > 0 && sig[0].equals(type.getEnclosingClass())) {
+					args = copyArgumentsForInnerOrLocalOrAnonymousClass(args);
+				}
+			}
 			return newInvocationControl.invoke(type, args, sig);
 		}
 		// Check if we should suppress the constructor code
@@ -117,5 +133,19 @@ public class MockGateway {
 			return null;
 		}
 		return PROCEED;
+	}
+
+	/**
+	 * The first parameter of an inner, local or anonymous inner class is
+	 * <code>null</code> or the enclosing instance. This should not be included
+	 * in the substitute invocation since it is never expected by the user.
+	 */
+	private static Object[] copyArgumentsForInnerOrLocalOrAnonymousClass(Object[] args) {
+		Object[] newArgs = new Object[args.length - 1];
+		for (int i = 1; i < args.length; i++) {
+			newArgs[i - 1] = args[i];
+		}
+		args = newArgs;
+		return args;
 	}
 }

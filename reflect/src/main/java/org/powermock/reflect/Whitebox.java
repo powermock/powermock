@@ -559,4 +559,49 @@ public class Whitebox {
 	public static Set<Field> getFieldsOfType(Object object, Class<?> type) {
 		return WhiteboxImpl.getFieldsOfType(object, type);
 	}
+
+	/**
+	 * Get an inner class type
+	 * 
+	 * @param declaringClass
+	 * @param name
+	 *            The unqualified name (simple name) of the inner class.
+	 * @return The type.
+	 */
+	public static Class<Object> getInnerClassType(Class<?> declaringClass, String name) throws ClassNotFoundException {
+		return WhiteboxImpl.getInnerClassType(declaringClass, name);
+	}
+
+	/**
+	 * Get the type of a local inner class.
+	 * 
+	 * @param declaringClass
+	 * @param occurrence
+	 *            The occurrence of the local class. For example if you have two
+	 *            local classes in the <code>declaringClass</code> you must pass
+	 *            in <code>1</code> if you want to get the type for the first
+	 *            one or <code>2</code> if you want the second one.
+	 * @param name
+	 *            The unqualified name (simple name) of the local class.
+	 * @return The type.
+	 */
+	public static Class<Object> getLocalClassType(Class<?> declaringClass, int occurrence, String name) throws ClassNotFoundException {
+		return WhiteboxImpl.getLocalClassType(declaringClass, occurrence, name);
+	}
+
+	/**
+	 * Get the type of an anonymous inner class.
+	 * 
+	 * @param declaringClass
+	 * @param occurrence
+	 *            The occurrence of the anonymous inner class. For example if
+	 *            you have two anonymous inner classes classes in the
+	 *            <code>declaringClass</code> you must pass in <code>1</code> if
+	 *            you want to get the type for the first one or <code>2</code>
+	 *            if you want the second one.
+	 * @return The type.
+	 */
+	public static Class<Object> getAnonymousInnerClassType(Class<?> declaringClass, int occurrence) throws ClassNotFoundException {
+		return WhiteboxImpl.getAnonymousInnerClassType(declaringClass, occurrence);
+	}
 }

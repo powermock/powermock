@@ -732,9 +732,11 @@ public class WhiteboxImpl {
 	 * found this method delegates to
 	 * {@link Whitebox#throwExceptionIfConstructorWasNotFound(Class, Object...).
 	 * 
-	 * @param type
-	 * @param arguments
-	 * @return
+	 * @param type The type where the constructor should be located. 
+	 * @param arguments The arguments passed to the constructor. 
+ 	 * @return The found constructor.
+ 	 * @throws TooManyConstructorsFoundException If too many constructors matched.
+ 	 * @throws ConstructorNotFoundException If no constructor matched. 
 	 */
 	public static Constructor<?> findConstructorOrThrowException(Class<?> type, Object... arguments) {
 		if (type == null) {
@@ -742,6 +744,13 @@ public class WhiteboxImpl {
 		}
 
 		Class<?> unmockedType = getUnmockedType(type);
+		if ((unmockedType.isLocalClass() || unmockedType.isAnonymousClass() || unmockedType.isMemberClass())
+				&& !Modifier.isStatic(unmockedType.getModifiers()) && arguments != null) {
+			Object[] argumentsForLocalClass = new Object[arguments.length + 1];
+			argumentsForLocalClass[0] = unmockedType.getEnclosingClass();
+			System.arraycopy(arguments, 0, argumentsForLocalClass, 1, arguments.length);
+			arguments = argumentsForLocalClass;
+		}
 
 		Constructor<?>[] constructors = unmockedType.getDeclaredConstructors();
 		Constructor<?> potentialConstructor = null;
@@ -1422,6 +1431,54 @@ public class WhiteboxImpl {
 			type = object.getClass();
 		}
 		return getUnmockedType(type);
+	}
+
+	/**
+	 * Get an inner class type
+	 * 
+	 * @param declaringClass
+	 * @param name
+	 *            The unqualified name (simple name) of the inner class.
+	 * @return The type.
+	 */
+	@SuppressWarnings("unchecked")
+	public static Class<Object> getInnerClassType(Class<?> declaringClass, String name) throws ClassNotFoundException {
+		return (Class<Object>) Class.forName(declaringClass.getName() + "$" + name);
+	}
+
+	/**
+	 * Get the type of a local inner class.
+	 * 
+	 * @param declaringClass
+	 * @param occurrence
+	 *            The occurrence of the local class. For example if you have two
+	 *            local classes in the <code>declaringClass</code> you must pass
+	 *            in <code>1</code> if you want to get the type for the first
+	 *            one or <code>2</code> if you want the second one.
+	 * @param name
+	 *            The unqualified name (simple name) of the local class.
+	 * @return The type.
+	 */
+	@SuppressWarnings("unchecked")
+	public static Class<Object> getLocalClassType(Class<?> declaringClass, int occurrence, String name) throws ClassNotFoundException {
+		return (Class<Object>) Class.forName(declaringClass.getName() + "$" + occurrence + name);
+	}
+
+	/**
+	 * Get the type of an anonymous inner class.
+	 * 
+	 * @param declaringClass
+	 * @param occurrence
+	 *            The occurrence of the anonymous inner class. For example if
+	 *            you have two anonymous inner classes classes in the
+	 *            <code>declaringClass</code> you must pass in <code>1</code> if
+	 *            you want to get the type for the first one or <code>2</code>
+	 *            if you want the second one.
+	 * @return The type.
+	 */
+	@SuppressWarnings("unchecked")
+	public static Class<Object> getAnonymousInnerClassType(Class<?> declaringClass, int occurrence) throws ClassNotFoundException {
+		return (Class<Object>) Class.forName(declaringClass.getName() + "$" + occurrence);
 	}
 
 	/**

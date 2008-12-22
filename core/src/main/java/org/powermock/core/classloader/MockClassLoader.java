@@ -191,7 +191,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 		try {
 			type = classPool.get(name);
 			if (type.isInterface()) {
-				return deferTo.loadClass(name);
+				return loadUnmockedClass(name);
 			} else {
 				// Only modify classes, not interfaces.
 				for (MockTransformer transformer : mockTransformerChain) {

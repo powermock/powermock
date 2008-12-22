@@ -93,8 +93,16 @@ public class PrepareForTestExtractorImpl extends AbstractTestClassExtractor {
 
 	private void addClassHierarchy(Set<String> all, Class<?> classToMock) {
 		while (classToMock != null && !classToMock.equals(Object.class)) {
+			addInnerClassesAndInterfaces(all, classToMock);
 			all.add(classToMock.getName());
 			classToMock = classToMock.getSuperclass();
+		}
+	}
+
+	private void addInnerClassesAndInterfaces(Set<String> all, Class<?> classToMock) {
+		Class<?>[] declaredClasses = classToMock.getDeclaredClasses();
+		for (Class<?> innerClass : declaredClasses) {
+			all.add(innerClass.getName());
 		}
 	}
 }
