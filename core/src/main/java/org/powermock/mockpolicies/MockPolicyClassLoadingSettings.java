@@ -20,7 +20,7 @@ package org.powermock.mockpolicies;
  * stored in this object to configure it's mock classloader to allow for
  * testability.
  * <p>
- * Since mock policies can be chained previous policies can override behavior
+ * Since mock policies can be chained subsequent policies can override behavior
  * of a previous policy. To avoid accidental overrides it's recommended
  * <i>add</i> behavior instead of <i>setting</i> behavior since the latter
  * overrides all previous configurations.
