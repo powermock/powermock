@@ -1002,10 +1002,10 @@ public class PowerMock {
 	}
 
 	/**
-	 * * A utility method that may be used to mock several methods in an easy
-	 * way (by just passing in the method names of the method you wish to mock).
-	 * The mock object created will support mocking of final and native methods
-	 * and invokes a specific constructor based on the supplied argument values.
+	 * A utility method that may be used to mock several methods in an easy way
+	 * (by just passing in the method names of the method you wish to mock). The
+	 * mock object created will support mocking of final and native methods and
+	 * invokes a specific constructor based on the supplied argument values.
 	 * 
 	 * @param <T>
 	 *            the type of the mock object
