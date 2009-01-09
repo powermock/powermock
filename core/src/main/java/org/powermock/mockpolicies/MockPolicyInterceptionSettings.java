@@ -24,7 +24,7 @@ import java.util.Map;
  * in this object to intercept method calls and field calls etc and specify a
  * return value or suppression.
  * <p>
- * Since mock policies can be chained previous policies can override behavior
+ * Since mock policies can be chained subsequent policies can override behavior
  * of a previous policy. To avoid accidental overrides it's recommended
  * <i>add</i> behavior instead of <i>setting</i> behavior since the latter
  * overrides all previous configurations.
