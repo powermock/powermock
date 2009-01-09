@@ -20,7 +20,8 @@ package org.powermock.reflect.exceptions;
  * were found.
  */
 public class TooManyConstructorsFoundException extends RuntimeException {
-	private static final long serialVersionUID = -3267907243933066607L;
+
+	private static final long serialVersionUID = 1365925879589152290L;
 
 	/**
 	 * Constructs a new exception with the specified detail message. The cause

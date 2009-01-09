@@ -20,7 +20,7 @@ package org.powermock.reflect.exceptions;
  * failed.
  */
 public class MethodInvocationException extends RuntimeException {
-	private static final long serialVersionUID = 5420195402982130931L;
+	private static final long serialVersionUID = 4051932931902248488L;
 
 	/**
 	 * Constructs a new exception with the specified detail message. The cause

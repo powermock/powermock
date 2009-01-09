@@ -20,7 +20,7 @@ package org.powermock.reflect.exceptions;
  * found.
  */
 public class TooManyFieldsFoundException extends RuntimeException {
-	private static final long serialVersionUID = -3267907243933066607L;
+	private static final long serialVersionUID = 1564231184610341053L;
 
 	/**
 	 * Constructs a new exception with the specified detail message. The cause

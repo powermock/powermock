@@ -20,7 +20,7 @@ package org.powermock.reflect.exceptions;
  * found.
  */
 public class MethodNotFoundException extends RuntimeException {
-	private static final long serialVersionUID = 5420195402982130931L;
+	private static final long serialVersionUID = -1617211962548265914L;
 
 	/**
 	 * Constructs a new exception with the specified detail message. The cause

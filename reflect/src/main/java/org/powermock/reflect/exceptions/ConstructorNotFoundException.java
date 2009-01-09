@@ -20,7 +20,7 @@ package org.powermock.reflect.exceptions;
  * not found.
  */
 public class ConstructorNotFoundException extends RuntimeException {
-	private static final long serialVersionUID = 5420195402982130931L;
+	private static final long serialVersionUID = -7329106318739007850L;
 
 	/**
 	 * Constructs a new exception with the specified detail message. The cause
