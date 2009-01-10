@@ -5,10 +5,10 @@ package samples.partialmocking;
  */
 public class PartialMockingWithConstructor {
 	public PartialMockingWithConstructor() {
-		initialise();
+		initialize();
 	}
 
-	public void initialise() {
+	public void initialize() {
 	}
 
 	public void touch() {

@@ -19,10 +19,10 @@ public class PartialMockingWithConstructorUsingEasyMockTest {
 	public void testPartialMock() throws Exception {
 
 		/*
-		 * In the original test case Nation had constructor arguments which I
-		 * removed to slim down the test case, originally I was using the
-		 * following method to create a partial mock. Regardless the same
-		 * problem still ocurrs.
+		 * In the original test case PartialMockingWithConstructor had
+		 * constructor arguments which I removed to slim down the test case,
+		 * originally I was using the following method to create a partial mock.
+		 * Regardless the same problem still occurs.
 		 */
 		ConstructorArgs args = new ConstructorArgs(PartialMockingWithConstructor.class.getConstructor());
 		Method touchMethod = PartialMockingWithConstructor.class.getMethod("touch");
@@ -38,7 +38,7 @@ public class PartialMockingWithConstructorUsingEasyMockTest {
 		replay(nationPartialMock);
 
 		// Uncommenting the following line has no effect on the test result.
-		// nationPartialMock.initialise();
+		// nationPartialMock.initialize();
 
 		verify(nationPartialMock);
 	}
