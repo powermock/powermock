@@ -1,8 +1,7 @@
 package samples.classwithinnermembers;
 
-
 /**
- * Class that is used to test that local and memeber class works with PowerMock.
+ * Class that is used to test that local and member class works with PowerMock.
  */
 public class ClassWithInnerMembers {
 
