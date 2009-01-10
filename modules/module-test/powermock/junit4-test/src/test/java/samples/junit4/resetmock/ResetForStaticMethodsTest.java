@@ -13,46 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package samples.junit4.annotationbased;
+package samples.junit4.resetmock;
 
-import static org.junit.Assert.assertEquals;
+import static org.powermock.api.easymock.PowerMock.expectLastCall;
+import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.replay;
+import static org.powermock.api.easymock.PowerMock.reset;
 import static org.powermock.api.easymock.PowerMock.verify;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.easymock.annotation.MockNice;
-import org.powermock.api.easymock.powermocklistener.AnnotationEnabler;
-import org.powermock.core.classloader.annotations.PowerMockListener;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import samples.finalmocking.FinalDemo;
+import samples.singleton.StaticService;
 
 /**
- * Test class to demonstrate non-static final mocking with one listeners
- * injecting mocks to fields annotated with {@link MockNice}.
+ * Asserts that it works to reset mocks for static methods even after verify has
+ * been invoked.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(FinalDemo.class)
-@PowerMockListener(AnnotationEnabler.class)
-public class FinalDemoWithNiceAnnotationInjectionTest {
-
-	@MockNice
-	private FinalDemo tested;
+@PrepareForTest(StaticService.class)
+public class ResetForStaticMethodsTest {
 
 	@Test
-	public void testSay() throws Exception {
-		String expected = null;
-		replay(tested);
+	public void assertThatResetWorksForStaticMethods() throws InterruptedException {
+		mockStatic(StaticService.class);
 
-		String actual = tested.say("hello");
+		StaticService.sayHello();
+		expectLastCall().once();
 
-		verify(tested);
-		assertEquals("Expected and actual did not match", expected, actual);
+		replay(StaticService.class);
 
-		// Should still be mocked by now.
-		String actual2 = tested.say("world");
-		assertEquals(expected, actual2);
+		StaticService.sayHello();
+
+		verify(StaticService.class);
+
+		reset(StaticService.class);
+
+		StaticService.sayHello();
+		expectLastCall().once();
 	}
 }

@@ -1608,31 +1608,27 @@ public class PowerMock {
 	 */
 	public static synchronized void verify(Object... objects) {
 		for (Object mock : objects) {
-			try {
-				if (mock instanceof Class) {
-					verifyClass((Class<?>) mock);
+			if (mock instanceof Class) {
+				verifyClass((Class<?>) mock);
+			} else {
+				MethodInvocationControl invocationControl = MockRepository.getInstanceMethodInvocationControl(mock);
+				if (invocationControl != null) {
+					invocationControl.verify();
 				} else {
-					MethodInvocationControl invocationControl = MockRepository.getInstanceMethodInvocationControl(mock);
-					if (invocationControl != null) {
-						invocationControl.verify();
+					if (isNiceReplayAndVerifyMode() && !isEasyMocked(mock)) {
+						// ignore non-mock
 					} else {
-						if (isNiceReplayAndVerifyMode() && !isEasyMocked(mock)) {
-							// ignore non-mock
-						} else {
-							/*
-							 * Delegate to easy mock class extension if we have
-							 * no handler registered for this object.
-							 */
-							try {
-								org.easymock.classextension.EasyMock.verify(mock);
-							} catch (RuntimeException e) {
-								throw new RuntimeException(mock + " is not a mock object", e);
-							}
+						/*
+						 * Delegate to easy mock class extension if we have no
+						 * handler registered for this object.
+						 */
+						try {
+							org.easymock.classextension.EasyMock.verify(mock);
+						} catch (RuntimeException e) {
+							throw new RuntimeException(mock + " is not a mock object", e);
 						}
 					}
 				}
-			} finally {
-				MockRepository.remove(mock);
 			}
 		}
 	}

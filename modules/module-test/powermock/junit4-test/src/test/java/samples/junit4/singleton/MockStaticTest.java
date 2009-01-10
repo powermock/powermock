@@ -18,6 +18,7 @@ package samples.junit4.singleton;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.powermock.api.easymock.PowerMock.expectPrivate;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.mockStaticPartial;
@@ -56,17 +57,20 @@ public class MockStaticTest {
 		verify(StaticService.class);
 		assertEquals("Expected and actual did not match", expected, actual);
 
-		// Singleton should no longer be mocked by now.
-		String actual2 = StaticService.say("world");
-		assertEquals("Hello world", actual2);
+		// Singleton still be mocked by now.
+		try {
+			StaticService.say("world");
+			fail("Should throw AssertionError!");
+		} catch (AssertionError e) {
+			assertEquals("\n  Unexpected method call say(\"world\"):", e.getMessage());
+		}
 	}
 
 	@Test
 	public void testMockStaticFinal() throws Exception {
 		mockStatic(StaticService.class);
 		String expected = "Hello altered World";
-		expect(StaticService.sayFinal("hello"))
-				.andReturn("Hello altered World");
+		expect(StaticService.sayFinal("hello")).andReturn("Hello altered World");
 		replay(StaticService.class);
 
 		String actual = StaticService.sayFinal("hello");
@@ -74,17 +78,20 @@ public class MockStaticTest {
 		verify(StaticService.class);
 		assertEquals("Expected and actual did not match", expected, actual);
 
-		// Singleton should no longer be mocked by now.
-		String actual2 = StaticService.sayFinal("world");
-		assertEquals("Hello world", actual2);
+		// Singleton still be mocked by now.
+		try {
+			StaticService.sayFinal("world");
+			fail("Should throw AssertionError!");
+		} catch (AssertionError e) {
+			assertEquals("\n  Unexpected method call sayFinal(\"world\"):", e.getMessage());
+		}
 	}
 
 	@Test
 	public void testMockStaticNative() throws Exception {
 		mockStatic(StaticService.class);
 		String expected = "Hello altered World";
-		expect(StaticService.sayNative("hello")).andReturn(
-				"Hello altered World");
+		expect(StaticService.sayNative("hello")).andReturn("Hello altered World");
 		replay(StaticService.class);
 
 		String actual = StaticService.sayNative("hello");
@@ -97,8 +104,7 @@ public class MockStaticTest {
 	public void testMockStaticFinalNative() throws Exception {
 		mockStatic(StaticService.class);
 		String expected = "Hello altered World";
-		expect(StaticService.sayFinalNative("hello")).andReturn(
-				"Hello altered World");
+		expect(StaticService.sayFinalNative("hello")).andReturn("Hello altered World");
 		replay(StaticService.class);
 
 		String actual = StaticService.sayFinalNative("hello");
@@ -148,13 +154,11 @@ public class MockStaticTest {
 		mockStaticPartial(StaticService.class, "sayPrivateStatic", String.class);
 
 		final String expected = "Hello world";
-		expectPrivate(StaticService.class, "sayPrivateStatic", "name")
-				.andReturn(expected);
+		expectPrivate(StaticService.class, "sayPrivateStatic", "name").andReturn(expected);
 
 		replay(StaticService.class);
 
-		String actual = (String) Whitebox.invokeMethod(StaticService.class,
-				"sayPrivateStatic", "name");
+		String actual = (String) Whitebox.invokeMethod(StaticService.class, "sayPrivateStatic", "name");
 
 		verify(StaticService.class);
 		assertEquals(expected, actual);
@@ -162,17 +166,14 @@ public class MockStaticTest {
 
 	@Test
 	public void testMockPrivateFinalStatic() throws Exception {
-		mockStaticPartial(StaticService.class, "sayPrivateFinalStatic",
-				String.class);
+		mockStaticPartial(StaticService.class, "sayPrivateFinalStatic", String.class);
 
 		final String expected = "Hello world";
-		expectPrivate(StaticService.class, "sayPrivateFinalStatic", "name")
-				.andReturn(expected);
+		expectPrivate(StaticService.class, "sayPrivateFinalStatic", "name").andReturn(expected);
 
 		replay(StaticService.class);
 
-		String actual = (String) Whitebox.invokeMethod(StaticService.class,
-				"sayPrivateFinalStatic", "name");
+		String actual = (String) Whitebox.invokeMethod(StaticService.class, "sayPrivateFinalStatic", "name");
 
 		verify(StaticService.class);
 		assertEquals(expected, actual);
@@ -180,17 +181,14 @@ public class MockStaticTest {
 
 	@Test
 	public void testMockPrivateNativeFinalStatic() throws Exception {
-		mockStaticPartial(StaticService.class, "sayPrivateNativeFinalStatic",
-				String.class);
+		mockStaticPartial(StaticService.class, "sayPrivateNativeFinalStatic", String.class);
 
 		final String expected = "Hello world";
-		expectPrivate(StaticService.class, "sayPrivateNativeFinalStatic",
-				"name").andReturn(expected);
+		expectPrivate(StaticService.class, "sayPrivateNativeFinalStatic", "name").andReturn(expected);
 
 		replay(StaticService.class);
 
-		String actual = (String) Whitebox.invokeMethod(StaticService.class,
-				"sayPrivateNativeFinalStatic", "name");
+		String actual = (String) Whitebox.invokeMethod(StaticService.class, "sayPrivateNativeFinalStatic", "name");
 
 		verify(StaticService.class);
 		assertEquals(expected, actual);

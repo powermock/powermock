@@ -17,6 +17,7 @@ package samples.junit4.annotationbased;
 
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.powermock.api.easymock.PowerMock.replay;
 import static org.powermock.api.easymock.PowerMock.verify;
 
@@ -53,9 +54,13 @@ public class FinalDemoWithAnnotationInjectionTest {
 		verify(tested);
 		assertEquals("Expected and actual did not match", expected, actual);
 
-		// Should no longer be mocked by now.
-		String actual2 = tested.say("world");
-		assertEquals("Hello world", actual2);
+		// Should still be mocked by now.
+		try {
+			tested.say("world");
+			fail("Should throw AssertionError!");
+		} catch (AssertionError e) {
+			assertEquals("\n  Unexpected method call say(\"world\"):", e.getMessage());
+		}
 	}
 
 	@Test
@@ -70,7 +75,11 @@ public class FinalDemoWithAnnotationInjectionTest {
 		assertEquals("Expected and actual did not match", expected, actual);
 
 		// Should no longer be mocked by now.
-		String actual2 = tested.say("world");
-		assertEquals("Hello world", actual2);
+		try {
+			tested.sayFinalNative("world");
+			fail("Should throw AssertionError!");
+		} catch (AssertionError e) {
+			assertEquals("\n  Unexpected method call sayFinalNative(\"world\"):", e.getMessage());
+		}
 	}
 }
