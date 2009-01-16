@@ -9,6 +9,7 @@ Change log 1.2 (under development)
 * Added three new methods to the Whitebox class, these are Whitebox.getInnerClassType(..), Whitebox.getLocalClassType(..) and Whitebox.getAnonymousInnerClassType(..). These methods helps with getting the class type for private inner, local or anonymous inner classes.
 * Inner member classes declared in class X are automatically prepared for test when X is prepared for test.
 * PowerMock now follows the semantics of EasyMock verification. This means that invoking an unexpected method of a mock object will cause an AssertionError to be thrown even if verify has been called prior to the method invocation.
+* Interfaces will now be bytecode manipulated if included in @PrepareForTest or @SuppressStaticInitializationFor. This is useful since interfaces can also contain evil static initializers (using bytecode manipulation or other tricks). Concrete example found in XMLBeans.
 
 Change log 1.1.1 (released 2008-12-15)                                                                     
 --------------------------------------

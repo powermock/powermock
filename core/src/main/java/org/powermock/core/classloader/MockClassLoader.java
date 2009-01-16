@@ -190,15 +190,10 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 		ClassPool.doPruning = false;
 		try {
 			type = classPool.get(name);
-			if (type.isInterface()) {
-				return loadUnmockedClass(name);
-			} else {
-				// Only modify classes, not interfaces.
-				for (MockTransformer transformer : mockTransformerChain) {
-					type = transformer.transform(type);
-				}
-				clazz = type.toBytecode();
+			for (MockTransformer transformer : mockTransformerChain) {
+				type = transformer.transform(type);
 			}
+			clazz = type.toBytecode();
 		} catch (Exception e) {
 			throw new IllegalStateException("Failed to transform class with name " + name + ". Reason: " + e.getMessage(), e);
 		}

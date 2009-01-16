@@ -24,7 +24,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -174,9 +177,14 @@ public class WhiteboxImpl {
 	 * @throws FieldNotFoundException
 	 *             If a field cannot be found in the hierarchy.
 	 */
+	@SuppressWarnings("unchecked")
 	public static Field getField(Class<?> type, String fieldName) {
-		Class<?> thisType = type;
-		while (thisType != null) {
+		LinkedList<Class<?>> examine = new LinkedList<Class<?>>();
+		examine.add(type);
+		Set<Class<?>> done = new HashSet<Class<?>>();
+		while (examine.isEmpty() == false) {
+			Class<?> thisType = examine.removeFirst();
+			done.add(thisType);
 			final Field[] declaredField = thisType.getDeclaredFields();
 			for (Field field : declaredField) {
 				if (fieldName.equals(field.getName())) {
@@ -184,7 +192,11 @@ public class WhiteboxImpl {
 					return field;
 				}
 			}
-			thisType = thisType.getSuperclass();
+			Set<Class<?>> potential = new HashSet<Class<?>>();
+			potential.add(thisType.getSuperclass());
+			potential.addAll((Collection<? extends Class<?>>) Arrays.asList(thisType.getInterfaces()));
+			potential.removeAll(done);
+			examine.addAll(potential);
 		}
 
 		throwExceptionIfFieldWasNotFound(type, fieldName, null);

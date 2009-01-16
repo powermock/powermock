@@ -17,7 +17,6 @@ package org.powermock.core.transformers.impl;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
-import javassist.CodeConverter;
 import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtField;
@@ -43,9 +42,6 @@ public class MainMockTransformer implements MockTransformer {
 		if (clazz.isFrozen()) {
 			clazz.defrost();
 		}
-
-		final CodeConverter converter = new CodeConverter();
-
 		/*
 		 * Set class to modifier to public to allow for mocking for package
 		 * private classes. This is needed because we've changed to CgLib naming
@@ -59,6 +55,10 @@ public class MainMockTransformer implements MockTransformer {
 		if (MockGateway.staticConstructorCall(name) != MockGateway.PROCEED) {
 			CtConstructor classInitializer = clazz.makeClassInitializer();
 			classInitializer.setBody("{}");
+		}
+
+		if (clazz.isInterface()) {
+			return clazz;
 		}
 
 		// This should probably be configurable
