@@ -194,7 +194,7 @@ public class WhiteboxImpl {
 			}
 			Set<Class<?>> potential = new HashSet<Class<?>>();
 			potential.add(thisType.getSuperclass());
-			potential.addAll((Collection<? extends Class<?>>) Arrays.asList(thisType.getInterfaces()));
+			potential.addAll((Collection) Arrays.asList(thisType.getInterfaces()));
 			potential.removeAll(done);
 			examine.addAll(potential);
 		}
