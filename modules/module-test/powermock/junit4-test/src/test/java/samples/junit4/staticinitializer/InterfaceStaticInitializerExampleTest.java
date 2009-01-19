@@ -25,8 +25,9 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import samples.staticinitializer.InterfaceComputation;
 
 @RunWith(PowerMockRunner.class)
-@SuppressStaticInitializationFor({"samples.staticinitializer.InterfaceA", "samples.staticinitializer.InterfaceB", "samples.staticinitializer.InterfaceC" })
-public class IntefaceStaticInitializerExampleTest {
+@SuppressStaticInitializationFor( { "samples.staticinitializer.InterfaceA", "samples.staticinitializer.InterfaceB",
+		"samples.staticinitializer.InterfaceC" })
+public class InterfaceStaticInitializerExampleTest {
 
 	@Test
 	public void testSupressStaticInitializer() throws Exception {

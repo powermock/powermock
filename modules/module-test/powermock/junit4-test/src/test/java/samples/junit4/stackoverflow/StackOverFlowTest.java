@@ -21,7 +21,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
- * Make sure we don't get a stackOverFlowError here. Thans to ride.sputnik for reporting this!
+ * Make sure we don't get a stackOverFlowError here. Thanks to ride.sputnik for
+ * reporting this!
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(EvilHashCode.class)
