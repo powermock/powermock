@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.core.spi.NewInvocationControl;
@@ -46,7 +47,7 @@ public class MockRepository {
 	/**
 	 * Holds info about general method invocation mocks for instances.
 	 */
-	private static Map<Object, MethodInvocationControl> instanceMocks = new HashMap<Object, MethodInvocationControl>();
+	private static Map<Object, MethodInvocationControl> instanceMocks = new ListMap<Object, MethodInvocationControl>();
 
 	/**
 	 * Holds info about which methods that should return a substitute/another
