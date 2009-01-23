@@ -24,7 +24,7 @@ import java.net.URLEncoder;
  */
 public class SystemClassUser {
 
-	public String getProperty() throws UnsupportedEncodingException {
+	public String performEncode() throws UnsupportedEncodingException {
 		return URLEncoder.encode("string", "enc");
 	}
 }

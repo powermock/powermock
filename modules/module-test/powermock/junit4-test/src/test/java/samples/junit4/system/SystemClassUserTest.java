@@ -53,7 +53,7 @@ public class SystemClassUserTest {
 		expect(URLEncoder.encode("string", "enc")).andReturn("something");
 		replayAll();
 
-		assertEquals("something", new SystemClassUser().getProperty());
+		assertEquals("something", new SystemClassUser().performEncode());
 
 		verifyAll();
 	}
