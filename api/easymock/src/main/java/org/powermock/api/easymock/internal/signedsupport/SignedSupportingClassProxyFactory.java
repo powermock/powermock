@@ -41,8 +41,6 @@ import org.easymock.classextension.internal.ClassInstantiatorFactory;
 import org.easymock.classextension.internal.ClassProxyFactory;
 import org.easymock.internal.IProxyFactory;
 import org.easymock.internal.ObjectMethodsFilter;
-import org.powermock.reflect.exceptions.MethodNotFoundException;
-import org.powermock.reflect.internal.WhiteboxImpl;
 
 /**
  * Essentially a rip-off of the {@link ClassProxyFactory} in EasyMock class
@@ -95,24 +93,33 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 					return handler.invoke(obj, method, args);
 				}
 
-				Class<?> superclass = method.getDeclaringClass().getSuperclass();
-				if (superclass != null && mockedMethods != null && !mockedMethods.contains(method)) {
-					/*
-					 * Added the following if statement to allow partial mocking
-					 * class hierarchy
-					 */
-					Method superClassMethod = null;
-					try {
-						superClassMethod = WhiteboxImpl.getMethod(superclass, method.getName(), method.getParameterTypes());
-					} catch (MethodNotFoundException e) {
-						// OK
-					}
-					boolean contains = mockedMethods.contains(superClassMethod);
-					if (superclass == null || superclass.equals(Object.class) || superClassMethod == null || !contains) {
-						return proxy.invokeSuper(obj, args);
-					} else {
-						return handler.invoke(obj, superClassMethod, args);
-					}
+				// Class<?> superclass =
+				// method.getDeclaringClass().getSuperclass();
+				// if (superclass != null && mockedMethods != null &&
+				// !mockedMethods.contains(method)) {
+				// /*
+				// * Added the following if statement to allow partial mocking
+				// * class hierarchy
+				// */
+				// Method superClassMethod = null;
+				// try {
+				// superClassMethod = WhiteboxImpl.getMethod(superclass,
+				// method.getName(), method.getParameterTypes());
+				// } catch (MethodNotFoundException e) {
+				// // OK
+				// }
+				// boolean contains = mockedMethods.contains(superClassMethod);
+				// if (superclass == null || superclass.equals(Object.class) ||
+				// superClassMethod == null || !contains) {
+				// return proxy.invokeSuper(obj, args);
+				// } else {
+				// return handler.invoke(obj, superClassMethod, args);
+				// }
+				// }
+				//
+				// return handler.invoke(obj, method, args);
+				if (mockedMethods != null && !mockedMethods.contains(method)) {
+					return proxy.invokeSuper(obj, args);
 				}
 
 				return handler.invoke(obj, method, args);
@@ -176,7 +183,14 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 				throw new RuntimeException("Failed to instantiate mock calling constructor", e);
 				// ///CLOVER:ON
 			} catch (InvocationTargetException e) {
-				throw new RuntimeException("Failed to instantiate mock calling constructor: Exception in constructor", e);
+				final Throwable targetException = e.getTargetException();
+				if (targetException instanceof RuntimeException) {
+					throw (RuntimeException) targetException;
+				} else if (targetException instanceof Error) {
+					throw (Error) targetException;
+				} else {
+					throw new RuntimeException("Failed to instantiate mock calling constructor: Exception in constructor", e);
+				}
 			}
 			return mock;
 		} else {

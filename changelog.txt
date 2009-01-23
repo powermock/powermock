@@ -11,6 +11,7 @@ Change log 1.2 (under development)
 * PowerMock now follows the semantics of EasyMock verification. This means that invoking an unexpected method of a mock object will cause an AssertionError to be thrown even if verify has been called prior to the method invocation.
 * Interfaces will now be bytecode manipulated if included in @PrepareForTest or @SuppressStaticInitializationFor. This is useful since interfaces can also contain evil static initializers (using bytecode manipulation or other tricks). Concrete example found in XMLBeans.
 * Fixed problem with infinite recursion with some hashCode implementations
+* Possible to mock non-final system classes such as java.net.URLEncoder. To do this you need to prepare the class that invokes the method of the system class as well as the actual test case.
 
 Change log 1.1.1 (released 2008-12-15)                                                                     
 --------------------------------------

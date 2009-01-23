@@ -28,6 +28,7 @@ import javassist.bytecode.DuplicateMemberException;
 import javassist.expr.ConstructorCall;
 import javassist.expr.ExprEditor;
 import javassist.expr.FieldAccess;
+import javassist.expr.MethodCall;
 import javassist.expr.NewExpr;
 
 import org.powermock.core.IndicateReloadClass;
@@ -36,6 +37,7 @@ import org.powermock.core.transformers.MockTransformer;
 
 public class MainMockTransformer implements MockTransformer {
 
+	private static final String VOID = "";
 	protected static final String METHOD_PREFIX = "____";
 
 	public CtClass transform(final CtClass clazz) throws Exception {
@@ -67,7 +69,7 @@ public class MainMockTransformer implements MockTransformer {
 		}
 
 		for (CtMethod m : clazz.getDeclaredMethods()) {
-			modifyMethod(clazz, m);
+			modifyMethod(m);
 		}
 
 		// Convert all constructors to public
@@ -90,21 +92,18 @@ public class MainMockTransformer implements MockTransformer {
 		return clazz;
 	}
 
-	public void modifyMethod(CtClass type, final CtMethod method) throws NotFoundException, CannotCompileException {
+	public void modifyMethod(final CtMethod method) throws NotFoundException, CannotCompileException {
 		if (!Modifier.isAbstract(method.getModifiers())) {
 			// Lookup the method return type
-			String returnTypeAsString = null;
 			final CtClass returnTypeAsCtClass = method.getReturnType();
-			if (!returnTypeAsCtClass.equals(CtClass.voidType)) {
-				returnTypeAsString = returnTypeAsCtClass.getName();
-			}
+			final String returnTypeAsString = getReturnTypeAsString(method);
 
 			if (Modifier.isNative(method.getModifiers())) {
 				String methodName = method.getName();
 				String returnValue = "($r)value";
 
 				if (returnTypeAsCtClass.equals(CtClass.voidType)) {
-					returnValue = "";
+					returnValue = VOID;
 				}
 
 				String classOrInstance = "this";
@@ -134,6 +133,15 @@ public class MainMockTransformer implements MockTransformer {
 		}
 	}
 
+	private String getReturnTypeAsString(final CtMethod method) throws NotFoundException {
+		CtClass returnType = method.getReturnType();
+		String returnTypeAsString = VOID;
+		if (!returnType.equals(CtClass.voidType)) {
+			returnTypeAsString = returnType.getName();
+		}
+		return returnTypeAsString;
+	}
+
 	/**
 	 * @return The correct return type, i.e. takes care of casting the a wrapper
 	 *         type to primitive type if needed.
@@ -142,7 +150,7 @@ public class MainMockTransformer implements MockTransformer {
 		final String returnTypeAsString = returnTypeAsCtClass.getName();
 		String returnValue = "($r)value";
 		if (returnTypeAsCtClass.equals(CtClass.voidType)) {
-			returnValue = "";
+			returnValue = VOID;
 		} else if (returnTypeAsCtClass.isPrimitive()) {
 			if (returnTypeAsString.equals("char")) {
 				returnValue = "((java.lang.Character)value).charValue()";
@@ -182,6 +190,34 @@ public class MainMockTransformer implements MockTransformer {
 				code.append("	$_ = ").append(getCorrectReturnValueType(returnTypeAsCtClass)).append(";");
 				code.append("}}");
 				f.replace(code.toString());
+			}
+		}
+
+		@Override
+		public void edit(MethodCall m) throws CannotCompileException {
+			try {
+				final CtMethod method = m.getMethod();
+				final CtClass declaringClass = method.getDeclaringClass();
+				if (declaringClass != null) {
+					final String className = declaringClass.getName();
+					if (className.startsWith("java.")) {
+						StringBuilder code = new StringBuilder();
+						code.append("{Object classOrInstance = null; if($class==null){classOrInstance = $0;} else { classOrInstance = $class;}");
+						code.append("Object value =  ").append(MockGateway.class.getName()).append(".methodCall(").append("classOrInstance,\"")
+								.append(m.getMethodName()).append("\",$args, $sig,\"").append(getReturnTypeAsString(method)).append("\");");
+						code.append("if(value == ").append(MockGateway.class.getName()).append(".PROCEED) {");
+						code.append("	$_ = $proceed($$);");
+						code.append("} else {");
+						final String correctReturnValueType = getCorrectReturnValueType(method.getReturnType());
+						if (!VOID.equals(correctReturnValueType)) {
+							code.append("	$_ = ").append(correctReturnValueType).append(";");
+						}
+						code.append("}}");
+						m.replace(code.toString());
+					}
+				}
+			} catch (NotFoundException e) {
+				throw new RuntimeException(e);
 			}
 		}
 
