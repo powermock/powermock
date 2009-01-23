@@ -18,6 +18,10 @@ package samples.system;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+/**
+ * Class used to demonstrate PowerMock's ability to mock non-final system
+ * classes.
+ */
 public class SystemClassUser {
 
 	public String getProperty() throws UnsupportedEncodingException {

@@ -30,6 +30,18 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import samples.system.SystemClassUser;
 
+/**
+ * Demonstrates PowerMock's ability to mock non-final system classes. To mock a
+ * system class you need to prepare the calling class and the unit test it self
+ * for testing. I.e. let's say you're testing class A which interacts with
+ * URLEncoder from a test named ATest then you would do:
+ * 
+ * <pre>
+ * 
+ * @PrepareForTest({A.class, ATest.class })
+ * 
+ * </pre>
+ */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { SystemClassUser.class, SystemClassUserTest.class })
 public class SystemClassUserTest {
