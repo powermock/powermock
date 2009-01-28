@@ -12,6 +12,7 @@ Change log 1.2 (under development)
 * Interfaces will now be bytecode manipulated if included in @PrepareForTest or @SuppressStaticInitializationFor. This is useful since interfaces can also contain evil static initializers (using bytecode manipulation or other tricks). Concrete example found in XMLBeans.
 * Fixed problem with infinite recursion with some hashCode implementations
 * Possible to mock non-final system classes such as java.net.URLEncoder. To do this you need to prepare the class that invokes the method of the system class as well as the actual test case.
+* Fixed a NPE bug in WhiteboxImpl#findSingleFieldUsingStrategy when the startClass was null and a field name haven't been found.
 
 Change log 1.1.1 (released 2008-12-15)                                                                     
 --------------------------------------

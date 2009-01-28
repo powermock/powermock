@@ -406,6 +406,7 @@ public class WhiteboxImpl {
 			throw new IllegalArgumentException("The object containing the field cannot be null");
 		}
 		Field foundField = null;
+		final Class<?> originalStartClass = startClass;
 		while (startClass != null) {
 			final Field[] declaredFields = startClass.getDeclaredFields();
 			for (Field field : declaredFields) {
@@ -424,7 +425,7 @@ public class WhiteboxImpl {
 			startClass = startClass.getSuperclass();
 		}
 		if (foundField == null) {
-			strategy.notFound(startClass);
+			strategy.notFound(originalStartClass);
 		}
 		foundField.setAccessible(true);
 		return foundField;
