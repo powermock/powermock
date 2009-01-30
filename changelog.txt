@@ -1,8 +1,8 @@
 Change log 1.3 (under development)
 ----------------------------------
 
-Change log 1.2 (2009-01-30)
----------------------------
+Change log 1.2 (released 2009-01-30)
+------------------------------------
 * Upgraded to Javassist 3.9
 * The test result related artifacts were moved from package org.powermock.tests.result to org.powermock.core.spi.testresult.
 * Structural refactoring to remove Structure 101 XS: Moved org.powermock.api.easymock.internal.proxyframework.spi.ProxyFramework to org.powermock.reflect.spi.ProxyFramework. 
