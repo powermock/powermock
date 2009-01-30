@@ -6,7 +6,7 @@ Change log 1.2 (released 2009-01-30)
 * Upgraded to Javassist 3.9
 * The test result related artifacts were moved from package org.powermock.tests.result to org.powermock.core.spi.testresult.
 * Structural refactoring to remove Structure 101 XS: Moved org.powermock.api.easymock.internal.proxyframework.spi.ProxyFramework to org.powermock.reflect.spi.ProxyFramework. 
-* Added PowerMock specific exceptions to the reflect project. Instead of getting RuntimeExceptions or IllegalArgument exceptions a more appropriate runtime excpetion is thrown. For example ConstructorNotFoundException or TooManyFieldsFoundException etc.
+* Added PowerMock specific exceptions to the reflect project. Instead of getting RuntimeExceptions or IllegalArgument exceptions a more appropriate runtime exception is thrown. For example ConstructorNotFoundException or TooManyFieldsFoundException etc.
 * Whitebox.getMethods(..) and Whitebox.getFields(..) now throw an MethodNotFoundException if no method or field was found.
 * Error messages when expecting new now works correctly for inner classes.
 * Added three new methods to the Whitebox class, these are Whitebox.getInnerClassType(..), Whitebox.getLocalClassType(..) and Whitebox.getAnonymousInnerClassType(..). These methods helps with getting the class type for private inner, local or anonymous inner classes.
