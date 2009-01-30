@@ -15,6 +15,7 @@
  */
 package samples.system;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -26,5 +27,9 @@ public class SystemClassUser {
 
 	public String performEncode() throws UnsupportedEncodingException {
 		return URLEncoder.encode("string", "enc");
+	}
+
+	public Process executeCommand() throws IOException {
+		return Runtime.getRuntime().exec("command");
 	}
 }

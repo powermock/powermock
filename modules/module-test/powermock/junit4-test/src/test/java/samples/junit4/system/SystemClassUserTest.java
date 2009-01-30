@@ -17,6 +17,8 @@ package samples.junit4.system;
 
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
@@ -38,7 +40,7 @@ import samples.system.SystemClassUser;
  * 
  * <pre>
  * 
- * @PrepareForTest({A.class, ATest.class })
+ * &#064;PrepareForTest({A.class, ATest.class })
  * 
  * </pre>
  */
@@ -54,6 +56,23 @@ public class SystemClassUserTest {
 		replayAll();
 
 		assertEquals("something", new SystemClassUser().performEncode());
+
+		verifyAll();
+	}
+
+	@Test
+	public void assertThatMockingOfTheRuntimeSystemClassWorks() throws Exception {
+		mockStatic(Runtime.class);
+
+		Runtime runtimeMock = createMock(Runtime.class);
+		Process processMock = createMock(Process.class);
+
+		expect(Runtime.getRuntime()).andReturn(runtimeMock);
+		expect(runtimeMock.exec("command")).andReturn(processMock);
+
+		replayAll();
+
+		assertSame(processMock, new SystemClassUser().executeCommand());
 
 		verifyAll();
 	}
