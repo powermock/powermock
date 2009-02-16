@@ -348,7 +348,8 @@ public class Whitebox {
 	 * Invoke a private or inner class method. This might be useful to test
 	 * private methods.
 	 */
-	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Object... arguments) throws Exception {
+	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Object... arguments)
+			throws Exception {
 		return WhiteboxImpl.invokeMethod(tested, methodToExecute, arguments);
 	}
 
@@ -361,8 +362,8 @@ public class Whitebox {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?>[] argumentTypes, Object... arguments)
-			throws Exception {
+	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?>[] argumentTypes,
+			Object... arguments) throws Exception {
 		return WhiteboxImpl.invokeMethod(tested, methodToExecute, argumentTypes, arguments);
 	}
 
@@ -376,8 +377,8 @@ public class Whitebox {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?> definedIn, Class<?>[] argumentTypes,
-			Object... arguments) throws Exception {
+	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?> definedIn,
+			Class<?>[] argumentTypes, Object... arguments) throws Exception {
 		return WhiteboxImpl.invokeMethod(tested, methodToExecute, definedIn, argumentTypes, arguments);
 	}
 
@@ -388,8 +389,8 @@ public class Whitebox {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments)
-			throws Exception {
+	public static synchronized Object invokeMethod(Object tested, Class<?> declaringClass, String methodToExecute,
+			Object... arguments) throws Exception {
 		return WhiteboxImpl.invokeMethod(tested, declaringClass, methodToExecute, arguments);
 	}
 
@@ -402,8 +403,8 @@ public class Whitebox {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object object, Class<?> declaringClass, String methodToExecute, Class<?>[] parameterTypes,
-			Object... arguments) throws Exception {
+	public static synchronized Object invokeMethod(Object object, Class<?> declaringClass, String methodToExecute,
+			Class<?>[] parameterTypes, Object... arguments) throws Exception {
 		return WhiteboxImpl.invokeMethod(object, declaringClass, methodToExecute, parameterTypes, arguments);
 	}
 
@@ -412,7 +413,8 @@ public class Whitebox {
 	 * private methods.
 	 * 
 	 */
-	public static synchronized Object invokeMethod(Class<?> clazz, String methodToExecute, Object... arguments) throws Exception {
+	public static synchronized Object invokeMethod(Class<?> clazz, String methodToExecute, Object... arguments)
+			throws Exception {
 		return WhiteboxImpl.invokeMethod(clazz, methodToExecute, arguments);
 	}
 
@@ -442,8 +444,8 @@ public class Whitebox {
 	 * @throws Exception
 	 *             If an exception occur when invoking the constructor.
 	 */
-	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Class<?>[] parameterTypes, Object[] arguments)
-			throws Exception {
+	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Class<?>[] parameterTypes,
+			Object[] arguments) throws Exception {
 		return WhiteboxImpl.invokeConstructor(classThatContainsTheConstructorToTest, parameterTypes, arguments);
 	}
 
@@ -456,7 +458,8 @@ public class Whitebox {
 	 * @throws Exception
 	 *             If an exception occur when invoking the constructor.
 	 */
-	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Object... arguments) throws Exception {
+	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Object... arguments)
+			throws Exception {
 		return WhiteboxImpl.invokeConstructor(classThatContainsTheConstructorToTest, arguments);
 	}
 
@@ -564,6 +567,7 @@ public class Whitebox {
 	 * Get an inner class type
 	 * 
 	 * @param declaringClass
+	 *            The class in which the inner class is declared.
 	 * @param name
 	 *            The unqualified name (simple name) of the inner class.
 	 * @return The type.
@@ -576,6 +580,7 @@ public class Whitebox {
 	 * Get the type of a local inner class.
 	 * 
 	 * @param declaringClass
+	 *            The class in which the local inner class is declared.
 	 * @param occurrence
 	 *            The occurrence of the local class. For example if you have two
 	 *            local classes in the <code>declaringClass</code> you must pass
@@ -585,7 +590,8 @@ public class Whitebox {
 	 *            The unqualified name (simple name) of the local class.
 	 * @return The type.
 	 */
-	public static Class<Object> getLocalClassType(Class<?> declaringClass, int occurrence, String name) throws ClassNotFoundException {
+	public static Class<Object> getLocalClassType(Class<?> declaringClass, int occurrence, String name)
+			throws ClassNotFoundException {
 		return WhiteboxImpl.getLocalClassType(declaringClass, occurrence, name);
 	}
 
@@ -593,6 +599,7 @@ public class Whitebox {
 	 * Get the type of an anonymous inner class.
 	 * 
 	 * @param declaringClass
+	 *            The class in which the anonymous inner class is declared.
 	 * @param occurrence
 	 *            The occurrence of the anonymous inner class. For example if
 	 *            you have two anonymous inner classes classes in the
@@ -601,7 +608,8 @@ public class Whitebox {
 	 *            if you want the second one.
 	 * @return The type.
 	 */
-	public static Class<Object> getAnonymousInnerClassType(Class<?> declaringClass, int occurrence) throws ClassNotFoundException {
+	public static Class<Object> getAnonymousInnerClassType(Class<?> declaringClass, int occurrence)
+			throws ClassNotFoundException {
 		return WhiteboxImpl.getAnonymousInnerClassType(declaringClass, occurrence);
 	}
 }

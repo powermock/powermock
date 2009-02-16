@@ -1,5 +1,7 @@
 Change log 1.3 (under development)
 ----------------------------------
+* Mocking of static methods in final system classes such as java.lang.System now works. To do this you need to prepare the class that invokes the method of the system class as well as the actual test case.
+* Fixed a major issue with mock policies which caused them to fail if a test case had more than one test method.
 
 Change log 1.2 (released 2009-01-30)
 ------------------------------------

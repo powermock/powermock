@@ -18,6 +18,7 @@ package org.powermock.api.easymock;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -40,6 +41,7 @@ import org.powermock.api.easymock.internal.mockstrategy.impl.DefaultMockStrategy
 import org.powermock.api.easymock.internal.mockstrategy.impl.NiceMockStrategy;
 import org.powermock.api.easymock.internal.mockstrategy.impl.StrictMockStrategy;
 import org.powermock.api.easymock.internal.proxyframework.CgLibProxyFramework;
+import org.powermock.core.ClassReplicaCreator;
 import org.powermock.core.MockRepository;
 import org.powermock.core.PowerMockUtils;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -444,8 +446,8 @@ public class PowerMock {
 	 *            that this is only needed to separate overloaded methods.
 	 * @return A mock object of type <T>.
 	 */
-	public static synchronized <T> T createPartialMockForAllMethodsExcept(Class<T> type, String methodNameToExclude, Class<?> firstArgumentType,
-			Class<?>... moreTypes) {
+	public static synchronized <T> T createPartialMockForAllMethodsExcept(Class<T> type, String methodNameToExclude,
+			Class<?> firstArgumentType, Class<?>... moreTypes) {
 		/*
 		 * The reason why we've split the first and "additional types" is
 		 * because it should not intervene with the mockAllExcept(type,
@@ -473,8 +475,8 @@ public class PowerMock {
 	 *            that this is only needed to separate overloaded methods.
 	 * @return A mock object of type <T>.
 	 */
-	public static synchronized <T> T createNicePartialMockForAllMethodsExcept(Class<T> type, String methodNameToExclude, Class<?> firstArgumentType,
-			Class<?>... moreTypes) {
+	public static synchronized <T> T createNicePartialMockForAllMethodsExcept(Class<T> type,
+			String methodNameToExclude, Class<?> firstArgumentType, Class<?>... moreTypes) {
 		/*
 		 * The reason why we've split the first and "additional types" is
 		 * because it should not intervene with the mockAllExcept(type,
@@ -502,8 +504,8 @@ public class PowerMock {
 	 *            that this is only needed to separate overloaded methods.
 	 * @return A mock object of type <T>.
 	 */
-	public static synchronized <T> T createStrictPartialMockForAllMethodsExcept(Class<T> type, String methodNameToExclude,
-			Class<?> firstArgumentType, Class<?>... moreTypes) {
+	public static synchronized <T> T createStrictPartialMockForAllMethodsExcept(Class<T> type,
+			String methodNameToExclude, Class<?> firstArgumentType, Class<?>... moreTypes) {
 		/*
 		 * The reason why we've split the first and "additional types" is
 		 * because it should not intervene with the mockAllExcept(type,
@@ -530,10 +532,10 @@ public class PowerMock {
 	 *            that this is only needed to separate overloaded methods.
 	 * @return A mock object of type <T>.
 	 */
-	public static synchronized <T> T createPartialMock(Class<T> type, String methodNameToMock, Class<?> firstArgumentType,
-			Class<?>... additionalArgumentTypes) {
-		return doMockSpecific(type, new DefaultMockStrategy(), new String[] { methodNameToMock }, null, mergeArgumentTypes(firstArgumentType,
-				additionalArgumentTypes));
+	public static synchronized <T> T createPartialMock(Class<T> type, String methodNameToMock,
+			Class<?> firstArgumentType, Class<?>... additionalArgumentTypes) {
+		return doMockSpecific(type, new DefaultMockStrategy(), new String[] { methodNameToMock }, null,
+				mergeArgumentTypes(firstArgumentType, additionalArgumentTypes));
 	}
 
 	/**
@@ -553,10 +555,10 @@ public class PowerMock {
 	 *            that this is only needed to separate overloaded methods.
 	 * @return A mock object of type <T>.
 	 */
-	public static synchronized <T> T createStrictPartialMock(Class<T> type, String methodNameToMock, Class<?> firstArgumentType,
-			Class<?>... additionalArgumentTypes) {
-		return doMockSpecific(type, new StrictMockStrategy(), new String[] { methodNameToMock }, null, mergeArgumentTypes(firstArgumentType,
-				additionalArgumentTypes));
+	public static synchronized <T> T createStrictPartialMock(Class<T> type, String methodNameToMock,
+			Class<?> firstArgumentType, Class<?>... additionalArgumentTypes) {
+		return doMockSpecific(type, new StrictMockStrategy(), new String[] { methodNameToMock }, null,
+				mergeArgumentTypes(firstArgumentType, additionalArgumentTypes));
 	}
 
 	/**
@@ -576,10 +578,10 @@ public class PowerMock {
 	 *            that this is only needed to separate overloaded methods.
 	 * @return A mock object of type <T>.
 	 */
-	public static synchronized <T> T createNicePartialMock(Class<T> type, String methodNameToMock, Class<?> firstArgumentType,
-			Class<?>... additionalArgumentTypes) {
-		return doMockSpecific(type, new NiceMockStrategy(), new String[] { methodNameToMock }, null, mergeArgumentTypes(firstArgumentType,
-				additionalArgumentTypes));
+	public static synchronized <T> T createNicePartialMock(Class<T> type, String methodNameToMock,
+			Class<?> firstArgumentType, Class<?>... additionalArgumentTypes) {
+		return doMockSpecific(type, new NiceMockStrategy(), new String[] { methodNameToMock }, null,
+				mergeArgumentTypes(firstArgumentType, additionalArgumentTypes));
 	}
 
 	/**
@@ -594,10 +596,10 @@ public class PowerMock {
 	 * @param additionalArgumentTypes
 	 *            Optional additional argument types.
 	 */
-	public static synchronized void mockStaticPartial(Class<?> clazz, String methodNameToMock, Class<?> firstArgumentType,
-			Class<?>... additionalArgumentTypes) {
-		doMockSpecific(clazz, new DefaultMockStrategy(), new String[] { methodNameToMock }, null, mergeArgumentTypes(firstArgumentType,
-				additionalArgumentTypes));
+	public static synchronized void mockStaticPartial(Class<?> clazz, String methodNameToMock,
+			Class<?> firstArgumentType, Class<?>... additionalArgumentTypes) {
+		doMockSpecific(clazz, new DefaultMockStrategy(), new String[] { methodNameToMock }, null, mergeArgumentTypes(
+				firstArgumentType, additionalArgumentTypes));
 	}
 
 	/**
@@ -612,10 +614,10 @@ public class PowerMock {
 	 * @param additionalArgumentTypes
 	 *            Optional additional argument types.
 	 */
-	public static synchronized void mockStaticPartialStrict(Class<?> clazz, String methodNameToMock, Class<?> firstArgumentType,
-			Class<?>... additionalArgumentTypes) {
-		doMockSpecific(clazz, new StrictMockStrategy(), new String[] { methodNameToMock }, null, mergeArgumentTypes(firstArgumentType,
-				additionalArgumentTypes));
+	public static synchronized void mockStaticPartialStrict(Class<?> clazz, String methodNameToMock,
+			Class<?> firstArgumentType, Class<?>... additionalArgumentTypes) {
+		doMockSpecific(clazz, new StrictMockStrategy(), new String[] { methodNameToMock }, null, mergeArgumentTypes(
+				firstArgumentType, additionalArgumentTypes));
 	}
 
 	/**
@@ -630,10 +632,10 @@ public class PowerMock {
 	 * @param additionalArgumentTypes
 	 *            Optional additional argument types.
 	 */
-	public static synchronized void mockStaticPartialNice(Class<?> clazz, String methodNameToMock, Class<?> firstArgumentType,
-			Class<?>... additionalArgumentTypes) {
-		doMockSpecific(clazz, new NiceMockStrategy(), new String[] { methodNameToMock }, null, mergeArgumentTypes(firstArgumentType,
-				additionalArgumentTypes));
+	public static synchronized void mockStaticPartialNice(Class<?> clazz, String methodNameToMock,
+			Class<?> firstArgumentType, Class<?>... additionalArgumentTypes) {
+		doMockSpecific(clazz, new NiceMockStrategy(), new String[] { methodNameToMock }, null, mergeArgumentTypes(
+				firstArgumentType, additionalArgumentTypes));
 	}
 
 	/**
@@ -708,8 +710,8 @@ public class PowerMock {
 		mockStaticNice(clazz, Whitebox.getMethods(clazz, methodNames));
 	}
 
-	static <T> T doMockSpecific(Class<T> type, MockStrategy mockStrategy, String[] methodNamesToMock, ConstructorArgs constructorArgs,
-			Class<?>... argumentTypes) {
+	static <T> T doMockSpecific(Class<T> type, MockStrategy mockStrategy, String[] methodNamesToMock,
+			ConstructorArgs constructorArgs, Class<?>... argumentTypes) {
 		List<Method> methods = new LinkedList<Method>();
 		for (String methodName : methodNamesToMock) {
 			methods.add(WhiteboxImpl.findMethodOrThrowException(type, methodName, argumentTypes));
@@ -866,7 +868,8 @@ public class PowerMock {
 	 *            methods in that class will be mocked).
 	 * @return A mock object of type <T>.
 	 */
-	public static synchronized <T> T createStrictPartialMock(Class<T> type, Class<? super T> where, String... methodNames) {
+	public static synchronized <T> T createStrictPartialMock(Class<T> type, Class<? super T> where,
+			String... methodNames) {
 		return createStrictMock(type, Whitebox.getMethods(where, methodNames));
 	}
 
@@ -953,8 +956,10 @@ public class PowerMock {
 	 *            methods in that class will be mocked).
 	 * @return the mock object.
 	 */
-	public static <T> T createPartialMockAndInvokeDefaultConstructor(Class<T> type, String... methodNames) throws Exception {
-		return createMock(type, new ConstructorArgs(Whitebox.getConstructor(type)), Whitebox.getMethods(type, methodNames));
+	public static <T> T createPartialMockAndInvokeDefaultConstructor(Class<T> type, String... methodNames)
+			throws Exception {
+		return createMock(type, new ConstructorArgs(Whitebox.getConstructor(type)), Whitebox.getMethods(type,
+				methodNames));
 	}
 
 	/**
@@ -975,8 +980,10 @@ public class PowerMock {
 	 *            methods in that class will be mocked).
 	 * @return the mock object.
 	 */
-	public static <T> T createNicePartialMockAndInvokeDefaultConstructor(Class<T> type, String... methodNames) throws Exception {
-		return createNiceMock(type, new ConstructorArgs(Whitebox.getConstructor(type)), Whitebox.getMethods(type, methodNames));
+	public static <T> T createNicePartialMockAndInvokeDefaultConstructor(Class<T> type, String... methodNames)
+			throws Exception {
+		return createNiceMock(type, new ConstructorArgs(Whitebox.getConstructor(type)), Whitebox.getMethods(type,
+				methodNames));
 	}
 
 	/**
@@ -997,8 +1004,10 @@ public class PowerMock {
 	 *            methods in that class will be mocked).
 	 * @return the mock object.
 	 */
-	public static <T> T createStrictPartialMockAndInvokeDefaultConstructor(Class<T> type, String... methodNames) throws Exception {
-		return createStrictMock(type, new ConstructorArgs(Whitebox.getConstructor(type)), Whitebox.getMethods(type, methodNames));
+	public static <T> T createStrictPartialMockAndInvokeDefaultConstructor(Class<T> type, String... methodNames)
+			throws Exception {
+		return createStrictMock(type, new ConstructorArgs(Whitebox.getConstructor(type)), Whitebox.getMethods(type,
+				methodNames));
 	}
 
 	/**
@@ -1109,10 +1118,12 @@ public class PowerMock {
 	 *            certain constructor. (optional)
 	 * @return the mock object.
 	 */
-	public static <T> T createPartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes, Object... constructorArguments) {
+	public static <T> T createPartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes,
+			Object... constructorArguments) {
 		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor, constructorArguments);
-		return doMockSpecific(type, new DefaultMockStrategy(), new String[] { methodName }, constructorArgs, methodParameterTypes);
+		return doMockSpecific(type, new DefaultMockStrategy(), new String[] { methodName }, constructorArgs,
+				methodParameterTypes);
 	}
 
 	/**
@@ -1140,10 +1151,12 @@ public class PowerMock {
 	 *            certain constructor. (optional)
 	 * @return the mock object.
 	 */
-	public static <T> T createStrictPartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes, Object... constructorArguments) {
+	public static <T> T createStrictPartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes,
+			Object... constructorArguments) {
 		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor, constructorArguments);
-		return doMockSpecific(type, new StrictMockStrategy(), new String[] { methodName }, constructorArgs, methodParameterTypes);
+		return doMockSpecific(type, new StrictMockStrategy(), new String[] { methodName }, constructorArgs,
+				methodParameterTypes);
 	}
 
 	/**
@@ -1171,10 +1184,12 @@ public class PowerMock {
 	 *            certain constructor. (optional)
 	 * @return the mock object.
 	 */
-	public static <T> T createNicePartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes, Object... constructorArguments) {
+	public static <T> T createNicePartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes,
+			Object... constructorArguments) {
 		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor, constructorArguments);
-		return doMockSpecific(type, new NiceMockStrategy(), new String[] { methodName }, constructorArgs, methodParameterTypes);
+		return doMockSpecific(type, new NiceMockStrategy(), new String[] { methodName }, constructorArgs,
+				methodParameterTypes);
 	}
 
 	/**
@@ -1206,10 +1221,12 @@ public class PowerMock {
 	 *            constructors.
 	 * @return the mock object.
 	 */
-	public static <T> T createPartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes, Object[] constructorArguments,
-			Class<?>[] constructorParameterTypes) {
-		ConstructorArgs constructorArgs = new ConstructorArgs(Whitebox.getConstructor(type, constructorParameterTypes), constructorArguments);
-		return doMockSpecific(type, new DefaultMockStrategy(), new String[] { methodName }, constructorArgs, methodParameterTypes);
+	public static <T> T createPartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes,
+			Object[] constructorArguments, Class<?>[] constructorParameterTypes) {
+		ConstructorArgs constructorArgs = new ConstructorArgs(Whitebox.getConstructor(type, constructorParameterTypes),
+				constructorArguments);
+		return doMockSpecific(type, new DefaultMockStrategy(), new String[] { methodName }, constructorArgs,
+				methodParameterTypes);
 	}
 
 	/**
@@ -1242,10 +1259,12 @@ public class PowerMock {
 	 *            constructors.
 	 * @return the mock object.
 	 */
-	public static <T> T createStrictPartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes, Object[] constructorArguments,
-			Class<?>[] constructorParameterTypes) {
-		ConstructorArgs constructorArgs = new ConstructorArgs(Whitebox.getConstructor(type, constructorParameterTypes), constructorArguments);
-		return doMockSpecific(type, new StrictMockStrategy(), new String[] { methodName }, constructorArgs, methodParameterTypes);
+	public static <T> T createStrictPartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes,
+			Object[] constructorArguments, Class<?>[] constructorParameterTypes) {
+		ConstructorArgs constructorArgs = new ConstructorArgs(Whitebox.getConstructor(type, constructorParameterTypes),
+				constructorArguments);
+		return doMockSpecific(type, new StrictMockStrategy(), new String[] { methodName }, constructorArgs,
+				methodParameterTypes);
 	}
 
 	/**
@@ -1278,17 +1297,20 @@ public class PowerMock {
 	 *            constructors.
 	 * @return the mock object.
 	 */
-	public static <T> T createNicePartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes, Object[] constructorArguments,
-			Class<?>[] constructorParameterTypes) {
-		ConstructorArgs constructorArgs = new ConstructorArgs(Whitebox.getConstructor(type, constructorParameterTypes), constructorArguments);
-		return doMockSpecific(type, new NiceMockStrategy(), new String[] { methodName }, constructorArgs, methodParameterTypes);
+	public static <T> T createNicePartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes,
+			Object[] constructorArguments, Class<?>[] constructorParameterTypes) {
+		ConstructorArgs constructorArgs = new ConstructorArgs(Whitebox.getConstructor(type, constructorParameterTypes),
+				constructorArguments);
+		return doMockSpecific(type, new NiceMockStrategy(), new String[] { methodName }, constructorArgs,
+				methodParameterTypes);
 	}
 
 	/**
 	 * Used to specify expectations on private static methods. If possible use
 	 * variant with only method name.
 	 */
-	public static synchronized <T> IExpectationSetters<T> expectPrivate(Class<?> clazz, Method method, Object... arguments) throws Exception {
+	public static synchronized <T> IExpectationSetters<T> expectPrivate(Class<?> clazz, Method method,
+			Object... arguments) throws Exception {
 		return doExpectPrivate(clazz, method, arguments);
 	}
 
@@ -1296,7 +1318,8 @@ public class PowerMock {
 	 * Used to specify expectations on private methods. If possible use variant
 	 * with only method name.
 	 */
-	public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, Method method, Object... arguments) throws Exception {
+	public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, Method method,
+			Object... arguments) throws Exception {
 		return doExpectPrivate(instance, method, arguments);
 	}
 
@@ -1305,8 +1328,8 @@ public class PowerMock {
 	 * handle overloaded methods.
 	 */
 	@SuppressWarnings("all")
-	public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, String methodName, Class<?>[] parameterTypes,
-			Object... arguments) throws Exception {
+	public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, String methodName,
+			Class<?>[] parameterTypes, Object... arguments) throws Exception {
 
 		if (arguments == null) {
 			arguments = new Object[0];
@@ -1315,7 +1338,8 @@ public class PowerMock {
 		if (instance == null) {
 			throw new IllegalArgumentException("instance cannot be null.");
 		} else if (arguments.length != parameterTypes.length) {
-			throw new IllegalArgumentException("The length of the arguments must be equal to the number of parameter types.");
+			throw new IllegalArgumentException(
+					"The length of the arguments must be equal to the number of parameter types.");
 		}
 
 		Method foundMethod = Whitebox.getMethod(instance.getClass(), methodName, parameterTypes);
@@ -1329,7 +1353,8 @@ public class PowerMock {
 	 * Used to specify expectations on methods using the method name. Works on
 	 * for example private or package private methods.
 	 */
-	public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, String methodName, Object... arguments) throws Exception {
+	public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, String methodName,
+			Object... arguments) throws Exception {
 		if (instance == null) {
 			throw new IllegalArgumentException("Instance or class cannot be null.");
 		}
@@ -1345,8 +1370,8 @@ public class PowerMock {
 	 * <p>
 	 * Use this for overloaded methods.
 	 */
-	public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, String methodName, Class<?> where,
-			Class<?>[] parameterTypes, Object... arguments) throws Exception {
+	public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, String methodName,
+			Class<?> where, Class<?>[] parameterTypes, Object... arguments) throws Exception {
 		if (instance == null) {
 			throw new IllegalArgumentException("Instance or class to expect cannot be null.");
 		}
@@ -1372,8 +1397,8 @@ public class PowerMock {
 	 * <code>where</code> parameter). Works on for example private or package
 	 * private methods.
 	 */
-	public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, String methodName, Class<?> where, Object... arguments)
-			throws Exception {
+	public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, String methodName,
+			Class<?> where, Object... arguments) throws Exception {
 		return expectPrivate(instance, methodName, where, null, arguments);
 	}
 
@@ -1665,7 +1690,8 @@ public class PowerMock {
 	 * @return A mock object of the same type as the mock.
 	 * @throws Exception
 	 */
-	public static synchronized <T> T createMockAndExpectNew(Class<T> type, Class<?>[] parameterTypes, Object... arguments) throws Exception {
+	public static synchronized <T> T createMockAndExpectNew(Class<T> type, Class<?>[] parameterTypes,
+			Object... arguments) throws Exception {
 		T mock = createMock(type);
 		expectNew(type, parameterTypes, arguments).andReturn(mock);
 		return mock;
@@ -1706,7 +1732,8 @@ public class PowerMock {
 	 * @return A mock object of the same type as the mock.
 	 * @throws Exception
 	 */
-	public static synchronized <T> T createNiceMockAndExpectNew(Class<T> type, Class<?>[] parameterTypes, Object... arguments) throws Exception {
+	public static synchronized <T> T createNiceMockAndExpectNew(Class<T> type, Class<?>[] parameterTypes,
+			Object... arguments) throws Exception {
 		T mock = createNiceMock(type);
 		IExpectationSetters<T> expectationSetters = expectNiceNew(type, parameterTypes, arguments);
 		if (expectationSetters != null) {
@@ -1747,7 +1774,8 @@ public class PowerMock {
 	 * @return A mock object of the same type as the mock.
 	 * @throws Exception
 	 */
-	public static synchronized <T> T createStrictMockAndExpectNew(Class<T> type, Class<?>[] parameterTypes, Object... arguments) throws Exception {
+	public static synchronized <T> T createStrictMockAndExpectNew(Class<T> type, Class<?>[] parameterTypes,
+			Object... arguments) throws Exception {
 		T mock = createStrictMock(type);
 		expectStrictNew(type, parameterTypes, arguments).andReturn(mock);
 		return mock;
@@ -1764,13 +1792,14 @@ public class PowerMock {
 	 * automatically. In most cases you should use
 	 * {@link #expectNew(Class, Object...)} instead.
 	 */
-	public static synchronized <T> IExpectationSetters<T> expectNew(Class<T> type, Class<?>[] parameterTypes, Object... arguments) throws Exception {
+	public static synchronized <T> IExpectationSetters<T> expectNew(Class<T> type, Class<?>[] parameterTypes,
+			Object... arguments) throws Exception {
 		return doExpectNew(type, new DefaultMockStrategy(), parameterTypes, arguments);
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T> IExpectationSetters<T> doExpectNew(Class<T> type, MockStrategy mockStrategy, Class<?>[] parameterTypes, Object... arguments)
-			throws Exception {
+	private static <T> IExpectationSetters<T> doExpectNew(Class<T> type, MockStrategy mockStrategy,
+			Class<?>[] parameterTypes, Object... arguments) throws Exception {
 		if (type == null) {
 			throw new IllegalArgumentException("type cannot be null");
 		} else if (mockStrategy == null) {
@@ -1794,7 +1823,8 @@ public class PowerMock {
 		NewInvocationControl<IExpectationSetters<T>> newInvocationControl = (NewInvocationControl<IExpectationSetters<T>>) MockRepository
 				.getNewInstanceControl(unmockedType);
 		if (newInvocationControl == null) {
-			InvocationSubstitute<T> mock = doMock(InvocationSubstitute.class, false, mockStrategy, null, (Method[]) null);
+			InvocationSubstitute<T> mock = doMock(InvocationSubstitute.class, false, mockStrategy, null,
+					(Method[]) null);
 			newInvocationControl = new NewInvocationControlImpl<T>(mock, type);
 			MockRepository.putNewInstanceControl(type, newInvocationControl);
 			MockRepository.addObjectsToAutomaticallyReplayAndVerify(WhiteboxImpl.getUnmockedType(type));
@@ -1812,7 +1842,8 @@ public class PowerMock {
 	 * the class when using this method since this behavior is part of the class
 	 * mock.
 	 */
-	public static synchronized <T> IExpectationSetters<T> expectNew(Class<T> type, Object... arguments) throws Exception {
+	public static synchronized <T> IExpectationSetters<T> expectNew(Class<T> type, Object... arguments)
+			throws Exception {
 		return doExpectNew(type, new DefaultMockStrategy(), null, arguments);
 	}
 
@@ -1830,7 +1861,8 @@ public class PowerMock {
 	 *            Optional number of arguments.
 	 */
 	@SuppressWarnings("unchecked")
-	public static synchronized IExpectationSetters<Object> expectNew(String fullyQualifiedName, Object... arguments) throws Exception {
+	public static synchronized IExpectationSetters<Object> expectNew(String fullyQualifiedName, Object... arguments)
+			throws Exception {
 		final Class<?> forName = Class.forName(fullyQualifiedName);
 		return (IExpectationSetters<Object>) doExpectNew(forName, new DefaultMockStrategy(), null, arguments);
 	}
@@ -1844,7 +1876,8 @@ public class PowerMock {
 	 * Note that you must replay the class when using this method since this
 	 * behavior is part of the class mock.
 	 */
-	public static synchronized <T> IExpectationSetters<T> expectStrictNew(Class<T> type, Object... arguments) throws Exception {
+	public static synchronized <T> IExpectationSetters<T> expectStrictNew(Class<T> type, Object... arguments)
+			throws Exception {
 		return doExpectNew(type, new StrictMockStrategy(), null, arguments);
 	}
 
@@ -1861,8 +1894,8 @@ public class PowerMock {
 	 * automatically. In most cases you should use
 	 * {@link #expectNew(Class, Object...)} instead.
 	 */
-	public static synchronized <T> IExpectationSetters<T> expectStrictNew(Class<T> type, Class<?>[] parameterTypes, Object... arguments)
-			throws Exception {
+	public static synchronized <T> IExpectationSetters<T> expectStrictNew(Class<T> type, Class<?>[] parameterTypes,
+			Object... arguments) throws Exception {
 		return doExpectNew(type, new StrictMockStrategy(), parameterTypes, arguments);
 	}
 
@@ -1876,7 +1909,8 @@ public class PowerMock {
 	 * Note that you must replay the class when using this method since this
 	 * behavior is part of the class mock.
 	 */
-	public static synchronized <T> IExpectationSetters<T> expectNiceNew(Class<T> type, Object... arguments) throws Exception {
+	public static synchronized <T> IExpectationSetters<T> expectNiceNew(Class<T> type, Object... arguments)
+			throws Exception {
 		return doExpectNew(type, new NiceMockStrategy(), null, arguments);
 	}
 
@@ -1894,8 +1928,8 @@ public class PowerMock {
 	 * automatically. In most cases you should use
 	 * {@link #expectNew(Class, Object...)} instead.
 	 */
-	public static synchronized <T> IExpectationSetters<T> expectNiceNew(Class<T> type, Class<?>[] parameterTypes, Object... arguments)
-			throws Exception {
+	public static synchronized <T> IExpectationSetters<T> expectNiceNew(Class<T> type, Class<?>[] parameterTypes,
+			Object... arguments) throws Exception {
 		return doExpectNew(type, new NiceMockStrategy(), parameterTypes, arguments);
 	}
 
@@ -2073,40 +2107,69 @@ public class PowerMock {
 		MockRepository.addMethodToSuppress(method);
 	}
 
-	private static <T> T doMock(Class<T> type, boolean isStatic, MockStrategy mockStrategy, ConstructorArgs constructorArgs, Method... methods) {
+	private static <T> T doMock(Class<T> type, boolean isStatic, MockStrategy mockStrategy,
+			ConstructorArgs constructorArgs, Method... methods) {
 		if (type == null) {
 			throw new IllegalArgumentException("The class to mock cannot be null");
 		}
 
-		final IMocksControl control = mockStrategy.createMockControl(type);
+		IMocksControl control = mockStrategy.createMockControl(type);
 		T mock = null;
 		if (type.isInterface()) {
 			mock = control.createMock(type);
-		} else {
-			MocksClassControl mocksClassControl = ((MocksClassControl) control);
-			if (constructorArgs == null) {
-				if (methods == null) {
-					mock = mocksClassControl.createMock(type);
-				} else {
-					mock = mocksClassControl.createMock(type, methods);
-				}
+		} else if (type.getName().startsWith("java.") && Modifier.isFinal(type.getModifiers())) {
+			// Create class replica
+			final Class<?> replicaType = new ClassReplicaCreator().createClassReplica(type);
+			final Object replica = doCreateMock(replicaType, constructorArgs, control, methods);
+			control = mockStrategy.createMockControl(replicaType);
+			MockInvocationHandler h = new MockInvocationHandler((MocksControl) control);
+			final Set<Method> methodsToMock = toSet(methods);
+			if (isStatic) {
+				MockRepository.putStaticMethodInvocationControl(type, new EasyMockMethodInvocationControl<Object>(h,
+						methodsToMock, replica));
+				MockRepository.addObjectsToAutomaticallyReplayAndVerify(type);
 			} else {
-				if (methods == null) {
-					mock = mocksClassControl.createMock(type, constructorArgs);
-				} else {
-					mock = mocksClassControl.createMock(type, constructorArgs, methods);
+				MockRepository.putInstanceMethodInvocationControl(replica, new EasyMockMethodInvocationControl<Object>(
+						h, methodsToMock));
+				if (mock instanceof InvocationSubstitute == false) {
+					MockRepository.addObjectsToAutomaticallyReplayAndVerify(replica);
 				}
 			}
+			return isStatic ? null : Whitebox.newInstance(type);
+		} else {
+			mock = doCreateMock(type, constructorArgs, control, methods);
 		}
 		MockInvocationHandler h = new MockInvocationHandler((MocksControl) control);
 		final Set<Method> methodsToMock = toSet(methods);
 		if (isStatic) {
-			MockRepository.putStaticMethodInvocationControl(type, new EasyMockMethodInvocationControl<T>(h, methodsToMock, mock));
+			MockRepository.putStaticMethodInvocationControl(type, new EasyMockMethodInvocationControl<T>(h,
+					methodsToMock, mock));
 			MockRepository.addObjectsToAutomaticallyReplayAndVerify(type);
 		} else {
-			MockRepository.putInstanceMethodInvocationControl(mock, new EasyMockMethodInvocationControl<T>(h, methodsToMock));
+			MockRepository.putInstanceMethodInvocationControl(mock, new EasyMockMethodInvocationControl<T>(h,
+					methodsToMock));
 			if (mock instanceof InvocationSubstitute == false) {
 				MockRepository.addObjectsToAutomaticallyReplayAndVerify(mock);
+			}
+		}
+		return mock;
+	}
+
+	private static <T> T doCreateMock(Class<T> type, ConstructorArgs constructorArgs, final IMocksControl control,
+			Method... methods) {
+		T mock;
+		MocksClassControl mocksClassControl = ((MocksClassControl) control);
+		if (constructorArgs == null) {
+			if (methods == null) {
+				mock = mocksClassControl.createMock(type);
+			} else {
+				mock = mocksClassControl.createMock(type, methods);
+			}
+		} else {
+			if (methods == null) {
+				mock = mocksClassControl.createMock(type, constructorArgs);
+			} else {
+				mock = mocksClassControl.createMock(type, constructorArgs, methods);
 			}
 		}
 		return mock;
@@ -2131,7 +2194,8 @@ public class PowerMock {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T> IExpectationSetters<T> doExpectPrivate(Object instance, Method methodToExpect, Object... arguments) throws Exception {
+	private static <T> IExpectationSetters<T> doExpectPrivate(Object instance, Method methodToExpect,
+			Object... arguments) throws Exception {
 		WhiteboxImpl.performMethodInvocation(instance, methodToExpect, arguments);
 		return (IExpectationSetters<T>) org.easymock.classextension.EasyMock.expectLastCall();
 	}

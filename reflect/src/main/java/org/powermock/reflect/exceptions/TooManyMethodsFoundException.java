@@ -16,8 +16,8 @@
 package org.powermock.reflect.exceptions;
 
 /**
- * A run-time exception that may be thrown to indicate that too many
- * constructors were found.
+ * A run-time exception that may be thrown to indicate that too many methods
+ * were found.
  */
 public class TooManyMethodsFoundException extends RuntimeException {
 	private static final long serialVersionUID = -3267907243933066607L;

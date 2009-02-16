@@ -111,9 +111,10 @@ public class MainMockTransformer implements MockTransformer {
 					classOrInstance = "$class";
 				}
 				method.setModifiers(method.getModifiers() - Modifier.NATIVE);
-				String code = "Object value = " + MockGateway.class.getName() + ".methodCall(" + classOrInstance + ", \"" + method.getName()
-						+ "\", $args, $sig, \"" + returnTypeAsString + "\");" + "if (value != " + MockGateway.class.getName() + ".PROCEED) "
-						+ "return " + returnValue + "; " + "throw new java.lang.UnsupportedOperationException(\"" + methodName + " is native\");";
+				String code = "Object value = " + MockGateway.class.getName() + ".methodCall(" + classOrInstance
+						+ ", \"" + method.getName() + "\", $args, $sig, \"" + returnTypeAsString + "\");"
+						+ "if (value != " + MockGateway.class.getName() + ".PROCEED) " + "return " + returnValue + "; "
+						+ "throw new java.lang.UnsupportedOperationException(\"" + methodName + " is native\");";
 				method.setBody("{" + code + "}");
 				return;
 			}
@@ -125,9 +126,9 @@ public class MainMockTransformer implements MockTransformer {
 				classOrInstance = "$class";
 			}
 
-			String code = "Object value = " + MockGateway.class.getName() + ".methodCall(" + classOrInstance + ", \"" + method.getName()
-					+ "\", $args, $sig, \"" + returnTypeAsString + "\");" + "if (value != " + MockGateway.class.getName() + ".PROCEED) " + "return "
-					+ returnValue + "; ";
+			String code = "Object value = " + MockGateway.class.getName() + ".methodCall(" + classOrInstance + ", \""
+					+ method.getName() + "\", $args, $sig, \"" + returnTypeAsString + "\");" + "if (value != "
+					+ MockGateway.class.getName() + ".PROCEED) " + "return " + returnValue + "; ";
 
 			method.insertBefore("{" + code + "}");
 		}
@@ -182,8 +183,8 @@ public class MainMockTransformer implements MockTransformer {
 					throw new RuntimeException("PowerMock internal error when modifying field.", e);
 				}
 				StringBuilder code = new StringBuilder();
-				code.append("{Object value =  ").append(MockGateway.class.getName()).append(".fieldCall(").append("$0,$class,\"").append(
-						f.getFieldName()).append("\",$type);");
+				code.append("{Object value =  ").append(MockGateway.class.getName()).append(".fieldCall(").append(
+						"$0,$class,\"").append(f.getFieldName()).append("\",$type);");
 				code.append("if(value == ").append(MockGateway.class.getName()).append(".PROCEED) {");
 				code.append("	$_ = $proceed($$);");
 				code.append("} else {");
@@ -202,9 +203,11 @@ public class MainMockTransformer implements MockTransformer {
 					final String className = declaringClass.getName();
 					if (className.startsWith("java.")) {
 						StringBuilder code = new StringBuilder();
-						code.append("{Object classOrInstance = null; if($class==null){classOrInstance = $0;} else { classOrInstance = $class;}");
-						code.append("Object value =  ").append(MockGateway.class.getName()).append(".methodCall(").append("classOrInstance,\"")
-								.append(m.getMethodName()).append("\",$args, $sig,\"").append(getReturnTypeAsString(method)).append("\");");
+						code
+								.append("{Object classOrInstance = null; if($class==null){classOrInstance = $0;} else { classOrInstance = $class;}");
+						code.append("Object value =  ").append(MockGateway.class.getName()).append(".methodCall(")
+								.append("classOrInstance,\"").append(m.getMethodName()).append("\",$args, $sig,\"")
+								.append(getReturnTypeAsString(method)).append("\");");
 						code.append("if(value == ").append(MockGateway.class.getName()).append(".PROCEED) {");
 						code.append("	$_ = $proceed($$);");
 						code.append("} else {");
@@ -249,7 +252,8 @@ public class MainMockTransformer implements MockTransformer {
 				 */
 				addNewDeferConstructor(clazz);
 				final StringBuilder code = new StringBuilder();
-				code.append("{Object value =").append(MockGateway.class.getName()).append(".constructorCall($class, $args, $sig);");
+				code.append("{Object value =").append(MockGateway.class.getName()).append(
+						".constructorCall($class, $args, $sig);");
 				code.append("if (value != ").append(MockGateway.class.getName()).append(".PROCEED){");
 
 				/*
@@ -297,20 +301,22 @@ public class MainMockTransformer implements MockTransformer {
 			try {
 				constructorType = classPool.get(IndicateReloadClass.class.getName());
 			} catch (NotFoundException e) {
-				throw new IllegalArgumentException("Internal error: failed to get the " + IndicateReloadClass.class.getName()
-						+ " when added defer constructor.");
+				throw new IllegalArgumentException("Internal error: failed to get the "
+						+ IndicateReloadClass.class.getName() + " when added defer constructor.");
 			}
 			clazz.defrost();
 			if (superClass.getName().equals(Object.class.getName())) {
 				try {
-					clazz.addConstructor(CtNewConstructor.make(new CtClass[] { constructorType }, new CtClass[0], "{super();}", clazz));
+					clazz.addConstructor(CtNewConstructor.make(new CtClass[] { constructorType }, new CtClass[0],
+							"{super();}", clazz));
 				} catch (DuplicateMemberException e) {
 					// OK, the constructor has already been added.
 				}
 			} else {
 				addNewDeferConstructor(superClass);
 				try {
-					clazz.addConstructor(CtNewConstructor.make(new CtClass[] { constructorType }, new CtClass[0], "{super($$);}", clazz));
+					clazz.addConstructor(CtNewConstructor.make(new CtClass[] { constructorType }, new CtClass[0],
+							"{super($$);}", clazz));
 				} catch (DuplicateMemberException e) {
 					// OK, the constructor has already been added.
 				}
@@ -320,7 +326,8 @@ public class MainMockTransformer implements MockTransformer {
 		@Override
 		public void edit(NewExpr e) throws CannotCompileException {
 			final StringBuilder code = new StringBuilder();
-			code.append("Object instance =").append(MockGateway.class.getName()).append(".newInstanceCall($type,$args,$sig);");
+			code.append("Object instance =").append(MockGateway.class.getName()).append(
+					".newInstanceCall($type,$args,$sig);");
 			code.append("if(instance != ").append(MockGateway.class.getName()).append(".PROCEED) {");
 			code.append("	if(instance instanceof java.lang.reflect.Constructor) {");
 			// TODO Change to objenisis instead

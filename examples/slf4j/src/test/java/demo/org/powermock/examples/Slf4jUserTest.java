@@ -32,6 +32,5 @@ public class Slf4jUserTest {
 		tested.getMessage();
 
 		verifyAll();
-
 	}
 }

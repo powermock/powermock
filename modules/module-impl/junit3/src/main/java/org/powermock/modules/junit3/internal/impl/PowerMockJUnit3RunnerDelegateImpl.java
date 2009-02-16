@@ -21,17 +21,22 @@ import java.util.Vector;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
+import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
 import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate;
+import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
 
 @SuppressWarnings("unchecked")
 public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements PowerMockJUnit3RunnerDelegate {
 
 	private final Method[] methodsToRun;
 
-	public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass, Method[] methodsToRun, String name, PowerMockTestListener[] powerListeners) {
+	private final Class<?> testClass;
+
+	public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass, Method[] methodsToRun, String name,
+			PowerMockTestListener[] powerListeners) {
 		this(theClass, methodsToRun, powerListeners);
 		setName(name);
 	}
@@ -41,15 +46,18 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements Powe
 	 * starting with "test" as test cases to the suite. Parts of this method was
 	 * cut'n'pasted on the train between Malmö and Stockholm.
 	 */
-	public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass, Method[] methodsToRun, PowerMockTestListener[] powerMockTestListeners) {
+	public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass, Method[] methodsToRun,
+			PowerMockTestListener[] powerMockTestListeners) {
 		this.methodsToRun = methodsToRun;
 		setName(theClass.getName());
+		testClass = theClass;
 
 		try {
 			getTestConstructor(theClass); // Avoid generating multiple error
 			// messages
 		} catch (NoSuchMethodException e) {
-			addTest(warning("Class " + theClass.getName() + " has no public constructor TestCase(String name) or TestCase()"));
+			addTest(warning("Class " + theClass.getName()
+					+ " has no public constructor TestCase(String name) or TestCase()"));
 			return;
 		}
 
@@ -113,5 +121,12 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements Powe
 			builder.append(method).append("\n");
 		}
 		return builder.toString();
+	}
+
+	@Override
+	public void runTest(Test test, TestResult result) {
+		// Initialize mock policies for each test
+		new MockPolicyInitializerImpl(testClass).initialize(this.getClass().getClassLoader());
+		super.runTest(test, result);
 	}
 }

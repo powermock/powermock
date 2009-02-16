@@ -27,8 +27,11 @@ public interface MockPolicyInitializer {
 	 * Initializes the mock policies for a given class loader. Note that this
 	 * method must <b><i>not</i></b> be called from the class loader (
 	 * <code>classLoader</code>) that you pass in to this method.
+	 * <p>
+	 * Note that if the class-loader is not an instance of
+	 * {@link MockClassLoader} this method will return silently.
 	 */
-	void initialize(MockClassLoader classLoader);
+	void initialize(ClassLoader classLoader);
 
 	/**
 	 * @return <code>true</code> if a client needs to perform initialization for

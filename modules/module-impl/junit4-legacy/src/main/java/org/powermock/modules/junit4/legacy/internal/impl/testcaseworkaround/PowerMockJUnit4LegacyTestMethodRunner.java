@@ -12,6 +12,7 @@ import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.powermock.reflect.Whitebox;
 import org.powermock.tests.utils.PowerMockTestNotifier;
+import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
 
 /**
  * This class is needed because the test method runner creates a new instance of
@@ -33,8 +34,8 @@ public class PowerMockJUnit4LegacyTestMethodRunner extends TestMethodRunner {
 
 	private final PowerMockTestNotifier powerMockTestNotifier;
 
-	public PowerMockJUnit4LegacyTestMethodRunner(Object test, Method method, RunNotifier notifier, Description description,
-			PowerMockTestNotifier powerMockTestNotifier) {
+	public PowerMockJUnit4LegacyTestMethodRunner(Object test, Method method, RunNotifier notifier,
+			Description description, PowerMockTestNotifier powerMockTestNotifier) {
 		super(test, method, notifier, description);
 		this.method = method;
 		this.description = description;
@@ -51,9 +52,14 @@ public class PowerMockJUnit4LegacyTestMethodRunner extends TestMethodRunner {
 			notifier.fireTestIgnored(description);
 			return;
 		}
+		// Initialize mock policies for each test
+		new MockPolicyInitializerImpl(Whitebox.getInternalState(this, "fTest").getClass()).initialize(this.getClass()
+				.getClassLoader());
+
 		notifier.fireTestStarted(description);
 		try {
-			powerMockTestNotifier.notifyBeforeTestMethod(Whitebox.getInternalState(this, "fTest"), method, new Object[0]);
+			powerMockTestNotifier.notifyBeforeTestMethod(Whitebox.getInternalState(this, "fTest"), method,
+					new Object[0]);
 			long timeout = testIntrospector.getTimeout(method);
 
 			// Execute the the setUp method if needed
@@ -108,7 +114,8 @@ public class PowerMockJUnit4LegacyTestMethodRunner extends TestMethodRunner {
 			if (!expectsException())
 				addFailure(actual);
 			else if (isUnexpected(actual)) {
-				String message = "Unexpected exception, expected<" + expectedException().getName() + "> but was<" + actual.getClass().getName() + ">";
+				String message = "Unexpected exception, expected<" + expectedException().getName() + "> but was<"
+						+ actual.getClass().getName() + ">";
 				addFailure(new Exception(message, actual));
 			}
 		} catch (Throwable e) {

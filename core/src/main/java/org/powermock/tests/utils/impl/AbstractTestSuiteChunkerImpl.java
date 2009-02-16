@@ -102,7 +102,8 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 
 	protected Object getPowerMockTestListenersLoadedByASpecificClassLoader(Class<?> clazz, ClassLoader classLoader) {
 		try {
-			final Class<?> powerMockTestListenerType = Class.forName(PowerMockTestListener.class.getName(), false, classLoader);
+			final Class<?> powerMockTestListenerType = Class.forName(PowerMockTestListener.class.getName(), false,
+					classLoader);
 			Object testListeners = null;
 			if (clazz.isAnnotationPresent(PowerMockListener.class)) {
 				PowerMockListener annotation = clazz.getAnnotation(PowerMockListener.class);
@@ -110,7 +111,8 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 				if (powerMockTestListeners.length > 0) {
 					testListeners = Array.newInstance(powerMockTestListenerType, powerMockTestListeners.length);
 					for (int i = 0; i < powerMockTestListeners.length; i++) {
-						final Class<?> listenerTypeLoadedByClassLoader = Class.forName(powerMockTestListeners[i].getName(), false, classLoader);
+						final Class<?> listenerTypeLoadedByClassLoader = Class.forName(powerMockTestListeners[i]
+								.getName(), false, classLoader);
 						Array.set(testListeners, i, Whitebox.newInstance(listenerTypeLoadedByClassLoader));
 					}
 				}
@@ -127,12 +129,13 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 		ClassLoader defaultMockLoader = null;
 		final String[] ignorePackages = getIgnorePackages(testClass);
 		if (testClass.isAnnotationPresent(PrepareEverythingForTest.class)) {
-			defaultMockLoader = createNewClassloader(testClass, new String[] { MockClassLoader.MODIFY_ALL_CLASSES }, ignorePackages);
+			defaultMockLoader = createNewClassloader(testClass, new String[] { MockClassLoader.MODIFY_ALL_CLASSES },
+					ignorePackages);
 		} else {
 			final String[] prepareForTestClasses = prepareForTestExtractor.getTestClasses(testClass);
 			final String[] suppressStaticClasses = suppressionExtractor.getTestClasses(testClass);
-			defaultMockLoader = createNewClassloader(testClass, arrayMerger.mergeArrays(String.class, prepareForTestClasses, suppressStaticClasses),
-					ignorePackages);
+			defaultMockLoader = createNewClassloader(testClass, arrayMerger.mergeArrays(String.class,
+					prepareForTestClasses, suppressStaticClasses), ignorePackages);
 		}
 		List<Method> currentClassloaderMethods = new LinkedList<Method>();
 		// Put the first suite in the map of internal suites.
@@ -158,9 +161,11 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 		return new String[0];
 	}
 
-	public ClassLoader createNewClassloader(Class<?> testClass, final String[] classesToLoadByMockClassloader, final String[] packagesToIgnore) {
+	public ClassLoader createNewClassloader(Class<?> testClass, final String[] classesToLoadByMockClassloader,
+			final String[] packagesToIgnore) {
 		ClassLoader mockLoader = null;
-		if ((classesToLoadByMockClassloader == null || classesToLoadByMockClassloader.length == 0) && !hasMockPolicyProvidedClasses(testClass)) {
+		if ((classesToLoadByMockClassloader == null || classesToLoadByMockClassloader.length == 0)
+				&& !hasMockPolicyProvidedClasses(testClass)) {
 			mockLoader = Thread.currentThread().getContextClassLoader();
 		} else {
 			List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
@@ -169,7 +174,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 
 			mockLoader = new MockClassLoader(classesToLoadByMockClassloader, packagesToIgnore);
 			((MockClassLoader) mockLoader).setMockTransformerChain(mockTransformerChain);
-			initializeMockPolicies(testClass, (MockClassLoader) mockLoader);
+			new MockPolicyInitializerImpl(testClass).initialize(mockLoader);
 		}
 		return mockLoader;
 	}
@@ -187,8 +192,8 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 		delegatesCreatedForTheseClasses.add(testClass);
 	}
 
-	protected abstract T createDelegatorFromClassloader(ClassLoader classLoader, Class<?> testClass, final List<Method> methodsToTest)
-			throws Exception;
+	protected abstract T createDelegatorFromClassloader(ClassLoader classLoader, Class<?> testClass,
+			final List<Method> methodsToTest) throws Exception;
 
 	private void initEntries(List<TestCaseEntry> entries) throws Exception {
 		for (TestCaseEntry testCaseEntry : entries) {
@@ -203,11 +208,12 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 						final String[] staticSuppressionClasses = getStaticSuppressionClasses(testClass, method);
 						ClassLoader mockClassloader = null;
 						if (method.isAnnotationPresent(PrepareEverythingForTest.class)) {
-							mockClassloader = createNewClassloader(testClass, new String[] { MockClassLoader.MODIFY_ALL_CLASSES },
-									getIgnorePackages(testClass));
+							mockClassloader = createNewClassloader(testClass,
+									new String[] { MockClassLoader.MODIFY_ALL_CLASSES }, getIgnorePackages(testClass));
 						} else {
-							mockClassloader = createNewClassloader(testClass, arrayMerger.mergeArrays(String.class, prepareForTestExtractor
-									.getTestClasses(method), staticSuppressionClasses), getIgnorePackages(testClass));
+							mockClassloader = createNewClassloader(testClass, arrayMerger.mergeArrays(String.class,
+									prepareForTestExtractor.getTestClasses(method), staticSuppressionClasses),
+									getIgnorePackages(testClass));
 						}
 						// executeClassLoaderDependentMockPolicyMethods(testClass,
 						// mockClassloader);
@@ -236,8 +242,10 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 	}
 
 	private boolean hasChunkAnnotation(Method method) {
-		return method.isAnnotationPresent(PrepareForTest.class) || method.isAnnotationPresent(SuppressStaticInitializationFor.class)
-				|| method.isAnnotationPresent(PrepareOnlyThisForTest.class) || method.isAnnotationPresent(PrepareEverythingForTest.class);
+		return method.isAnnotationPresent(PrepareForTest.class)
+				|| method.isAnnotationPresent(SuppressStaticInitializationFor.class)
+				|| method.isAnnotationPresent(PrepareOnlyThisForTest.class)
+				|| method.isAnnotationPresent(PrepareEverythingForTest.class);
 	}
 
 	private String[] getStaticSuppressionClasses(Class<?> testClass, Method method) {
@@ -340,19 +348,6 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 
 	public Class<?>[] getTestClasses() {
 		return testClasses;
-	}
-
-	/**
-	 * Initialize mock policies.
-	 */
-	protected void initializeMockPolicies(Class<?> testClass, MockClassLoader mockLoader) {
-		if (testClass.isAnnotationPresent(MockPolicy.class)) {
-			MockPolicy annotation = testClass.getAnnotation(MockPolicy.class);
-			final Class<? extends PowerMockPolicy>[] powerMockPolicies = annotation.value();
-			if (powerMockPolicies.length > 0) {
-				new MockPolicyInitializerImpl(powerMockPolicies).initialize(mockLoader);
-			}
-		}
 	}
 
 	/**

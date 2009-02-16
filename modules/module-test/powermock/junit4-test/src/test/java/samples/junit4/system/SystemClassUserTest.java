@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
+import static org.powermock.api.easymock.PowerMock.mockStaticPartial;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
 
@@ -33,10 +34,10 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import samples.system.SystemClassUser;
 
 /**
- * Demonstrates PowerMock's ability to mock non-final system classes. To mock a
- * system class you need to prepare the calling class and the unit test it self
- * for testing. I.e. let's say you're testing class A which interacts with
- * URLEncoder from a test named ATest then you would do:
+ * Demonstrates PowerMock's ability to mock non-final and final system classes.
+ * To mock a system class you need to prepare the calling class and the unit
+ * test it self for testing. I.e. let's say you're testing class A which
+ * interacts with URLEncoder from a test named ATest then you would do:
  * 
  * <pre>
  * 
@@ -73,6 +74,48 @@ public class SystemClassUserTest {
 		replayAll();
 
 		assertSame(processMock, new SystemClassUser().executeCommand());
+
+		verifyAll();
+	}
+
+	@Test
+	public void assertThatMockingOfFinalSystemClassesWorks() throws Exception {
+		mockStatic(System.class);
+
+		expect(System.getProperty("property")).andReturn("my property");
+
+		replayAll();
+
+		assertEquals("my property", new SystemClassUser().getSystemProperty());
+
+		verifyAll();
+	}
+
+	@Test
+	public void assertThatPartialMockingOfFinalSystemClassesWorks() throws Exception {
+		mockStaticPartial(System.class, "nanoTime");
+
+		expect(System.nanoTime()).andReturn(2L);
+
+		replayAll();
+
+		new SystemClassUser().doMoreComplicatedStuff();
+
+		assertEquals("2", System.getProperty("nanoTime"));
+
+		verifyAll();
+	}
+
+	@Test
+	public void assertThatPartialMockingOfFinalSystemClassesWorksForVoidMethods() throws Exception {
+		mockStaticPartial(System.class, "getProperty");
+
+		expect(System.getProperty("property")).andReturn("my property");
+
+		replayAll();
+
+		final SystemClassUser systemClassUser = new SystemClassUser();
+		systemClassUser.copyProperty("to", "property");
 
 		verifyAll();
 	}

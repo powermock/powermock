@@ -23,6 +23,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -111,10 +113,12 @@ public class WhiteboxImpl {
 		}
 
 		if (foundMethods.isEmpty()) {
-			throw new MethodNotFoundException("No method was found with argument types: [ " + getArgumentsAsString((Object[]) parameterTypes)
-					+ " ] in class " + getUnmockedType(type).getName());
+			throw new MethodNotFoundException("No method was found with argument types: [ "
+					+ getArgumentsAsString((Object[]) parameterTypes) + " ] in class "
+					+ getUnmockedType(type).getName());
 		} else {
-			throwExceptionWhenMultipleMethodMatchesFound("method name", foundMethods.toArray(new Method[foundMethods.size()]));
+			throwExceptionWhenMultipleMethodMatchesFound("method name", foundMethods.toArray(new Method[foundMethods
+					.size()]));
 		}
 		// Will never happen
 		return null;
@@ -149,7 +153,8 @@ public class WhiteboxImpl {
 		while (thisType != null) {
 			final Method[] declaredMethods = thisType.getDeclaredMethods();
 			for (Method method : declaredMethods) {
-				if (methodName.equals(method.getName()) && checkIfTypesAreSame(parameterTypes, method.getParameterTypes())) {
+				if (methodName.equals(method.getName())
+						&& checkIfTypesAreSame(parameterTypes, method.getParameterTypes())) {
 					method.setAccessible(true);
 					return method;
 				}
@@ -241,7 +246,8 @@ public class WhiteboxImpl {
 	 */
 	public static Constructor<?> getConstructor(Class<?> type, Class<?>... parameterTypes) {
 		try {
-			final Constructor<?> constructor = WhiteboxImpl.getUnmockedType(type).getDeclaredConstructor(parameterTypes);
+			final Constructor<?> constructor = WhiteboxImpl.getUnmockedType(type)
+					.getDeclaredConstructor(parameterTypes);
 			constructor.setAccessible(true);
 			return constructor;
 		} catch (RuntimeException e) {
@@ -401,7 +407,8 @@ public class WhiteboxImpl {
 		return findSingleFieldUsingStrategy(strategy, object, false, where);
 	}
 
-	private static Field findSingleFieldUsingStrategy(FieldMatcherStrategy strategy, Object object, boolean checkHierarchy, Class<?> startClass) {
+	private static Field findSingleFieldUsingStrategy(FieldMatcherStrategy strategy, Object object,
+			boolean checkHierarchy, Class<?> startClass) {
 		if (object == null) {
 			throw new IllegalArgumentException("The object containing the field cannot be null");
 		}
@@ -431,7 +438,8 @@ public class WhiteboxImpl {
 		return foundField;
 	}
 
-	private static Set<Field> findAllFieldsUsingStrategy(FieldMatcherStrategy strategy, Object object, boolean checkHierarchy, Class<?> startClass) {
+	private static Set<Field> findAllFieldsUsingStrategy(FieldMatcherStrategy strategy, Object object,
+			boolean checkHierarchy, Class<?> startClass) {
 		if (object == null) {
 			throw new IllegalArgumentException("The object containing the field cannot be null");
 		}
@@ -454,8 +462,8 @@ public class WhiteboxImpl {
 	}
 
 	private static boolean hasFieldProperModifier(Object object, Field field) {
-		return ((object instanceof Class && Modifier.isStatic(field.getModifiers())) || ((object instanceof Class == false && Modifier.isStatic(field
-				.getModifiers()) == false)));
+		return ((object instanceof Class && Modifier.isStatic(field.getModifiers())) || ((object instanceof Class == false && Modifier
+				.isStatic(field.getModifiers()) == false)));
 	}
 
 	/**
@@ -555,7 +563,8 @@ public class WhiteboxImpl {
 			field.setAccessible(true);
 			return (T) field.get(object);
 		} catch (NoSuchFieldException e) {
-			throw new FieldNotFoundException("Field '" + fieldName + "' was not found in class " + where.getName() + ".");
+			throw new FieldNotFoundException("Field '" + fieldName + "' was not found in class " + where.getName()
+					+ ".");
 		} catch (Exception e) {
 			throw new RuntimeException("Internal error: Failed to get field in method getInternalState.", e);
 		}
@@ -567,7 +576,8 @@ public class WhiteboxImpl {
 	 * 
 	 * @throws Throwable
 	 */
-	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Object... arguments) throws Exception {
+	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Object... arguments)
+			throws Exception {
 		return doInvokeMethod(tested, null, methodToExecute, arguments);
 	}
 
@@ -580,8 +590,8 @@ public class WhiteboxImpl {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?>[] argumentTypes, Object... arguments)
-			throws Exception {
+	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?>[] argumentTypes,
+			Object... arguments) throws Exception {
 		final Class<?> unmockedType = getType(tested);
 		Method method = getMethod(unmockedType, methodToExecute, argumentTypes);
 		if (method == null) {
@@ -600,8 +610,8 @@ public class WhiteboxImpl {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?> definedIn, Class<?>[] argumentTypes,
-			Object... arguments) throws Exception {
+	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?> definedIn,
+			Class<?>[] argumentTypes, Object... arguments) throws Exception {
 		Method method = getMethod(definedIn, methodToExecute, argumentTypes);
 		if (method == null) {
 			throwExceptionIfMethodWasNotFound(definedIn, methodToExecute, null, arguments);
@@ -616,8 +626,8 @@ public class WhiteboxImpl {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments)
-			throws Exception {
+	public static synchronized Object invokeMethod(Object tested, Class<?> declaringClass, String methodToExecute,
+			Object... arguments) throws Exception {
 		return doInvokeMethod(tested, declaringClass, methodToExecute, arguments);
 	}
 
@@ -630,8 +640,8 @@ public class WhiteboxImpl {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object object, Class<?> declaringClass, String methodToExecute, Class<?>[] parameterTypes,
-			Object... arguments) throws Exception {
+	public static synchronized Object invokeMethod(Object object, Class<?> declaringClass, String methodToExecute,
+			Class<?>[] parameterTypes, Object... arguments) throws Exception {
 		if (object == null) {
 			throw new IllegalArgumentException("object cannot be null");
 		}
@@ -646,11 +656,13 @@ public class WhiteboxImpl {
 	 * private methods.
 	 * 
 	 */
-	public static synchronized Object invokeMethod(Class<?> clazz, String methodToExecute, Object... arguments) throws Exception {
+	public static synchronized Object invokeMethod(Class<?> clazz, String methodToExecute, Object... arguments)
+			throws Exception {
 		return doInvokeMethod(clazz, null, methodToExecute, arguments);
 	}
 
-	private static Object doInvokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments) throws Exception {
+	private static Object doInvokeMethod(Object tested, Class<?> declaringClass, String methodToExecute,
+			Object... arguments) throws Exception {
 		Method methodToInvoke = findMethodOrThrowException(tested, declaringClass, methodToExecute, arguments);
 
 		// Invoke test
@@ -671,7 +683,8 @@ public class WhiteboxImpl {
 	 * @param arguments
 	 * @return
 	 */
-	public static Method findMethodOrThrowException(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments) {
+	public static Method findMethodOrThrowException(Object tested, Class<?> declaringClass, String methodToExecute,
+			Object... arguments) {
 
 		if (tested == null) {
 			throw new IllegalArgumentException("The object to perform the operation on cannot be null.");
@@ -724,7 +737,8 @@ public class WhiteboxImpl {
 							 * the same name and the same number of arguments
 							 * but one is using wrapper types.
 							 */
-							throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", new Method[] { potentialMethodToInvoke, method });
+							throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", new Method[] {
+									potentialMethodToInvoke, method });
 						}
 					}
 				} else if (method.isVarArgs() && areAllArgumentsOfSameType(arguments)) {
@@ -736,7 +750,8 @@ public class WhiteboxImpl {
 			}
 		}
 
-		WhiteboxImpl.throwExceptionIfMethodWasNotFound(getType(tested), methodToExecute, potentialMethodToInvoke, arguments);
+		WhiteboxImpl.throwExceptionIfMethodWasNotFound(getType(tested), methodToExecute, potentialMethodToInvoke,
+				arguments);
 		return potentialMethodToInvoke;
 	}
 
@@ -795,7 +810,8 @@ public class WhiteboxImpl {
 						 * name and the same number of arguments but one is
 						 * using wrapper types.
 						 */
-						throwExceptionWhenMultipleConstructorMatchesFound(new Constructor<?>[] { potentialConstructor, constructor });
+						throwExceptionWhenMultipleConstructorMatchesFound(new Constructor<?>[] { potentialConstructor,
+								constructor });
 					}
 				}
 			} else if (constructor.isVarArgs() && areAllArgumentsOfSameType(arguments)) {
@@ -829,7 +845,8 @@ public class WhiteboxImpl {
 		return types;
 	}
 
-	public static void throwExceptionIfMethodWasNotFound(Class<?> type, String methodName, Method methodToMock, Object... arguments) {
+	public static void throwExceptionIfMethodWasNotFound(Class<?> type, String methodName, Method methodToMock,
+			Object... arguments) {
 		if (methodToMock == null) {
 			throw new MethodNotFoundException("No method found with name '" + methodName + "' with argument types: [ "
 					+ getArgumentsAsString(arguments) + " ] in class " + getUnmockedType(type).getName());
@@ -838,14 +855,16 @@ public class WhiteboxImpl {
 
 	public static void throwExceptionIfFieldWasNotFound(Class<?> type, String fieldName, Field field) {
 		if (field == null) {
-			throw new FieldNotFoundException("No field was found with name '" + fieldName + "' in class " + getUnmockedType(type).getName());
+			throw new FieldNotFoundException("No field was found with name '" + fieldName + "' in class "
+					+ getUnmockedType(type).getName());
 		}
 	}
 
-	static void throwExceptionIfConstructorWasNotFound(Class<?> type, Constructor<?> potentialConstructor, Object... arguments) {
+	static void throwExceptionIfConstructorWasNotFound(Class<?> type, Constructor<?> potentialConstructor,
+			Object... arguments) {
 		if (potentialConstructor == null) {
-			throw new ConstructorNotFoundException("No constructor found in class '" + getUnmockedType(type).getName() + "' with argument types: [ "
-					+ getArgumentsAsString(arguments) + " ]");
+			throw new ConstructorNotFoundException("No constructor found in class '" + getUnmockedType(type).getName()
+					+ "' with argument types: [ " + getArgumentsAsString(arguments) + " ]");
 		}
 	}
 
@@ -899,8 +918,8 @@ public class WhiteboxImpl {
 	 * @throws Exception
 	 *             If an exception occur when invoking the constructor.
 	 */
-	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Class<?>[] parameterTypes, Object[] arguments)
-			throws Exception {
+	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Class<?>[] parameterTypes,
+			Object[] arguments) throws Exception {
 		if (parameterTypes != null && arguments != null) {
 			if (parameterTypes.length != arguments.length) {
 				throw new IllegalArgumentException("parameterTypes and arguments must have the same length");
@@ -926,7 +945,8 @@ public class WhiteboxImpl {
 	 * @throws Exception
 	 *             If an exception occur when invoking the constructor.
 	 */
-	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Object... arguments) throws Exception {
+	public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Object... arguments)
+			throws Exception {
 
 		if (classThatContainsTheConstructorToTest == null) {
 			throw new IllegalArgumentException("The class should contain the constructor cannot be null.");
@@ -954,8 +974,8 @@ public class WhiteboxImpl {
 		}
 
 		try {
-			potentialContstructorPrimitive = classThatContainsTheConstructorToTest.getDeclaredConstructor(PrimitiveWrapper
-					.toPrimitiveType(argumentTypes));
+			potentialContstructorPrimitive = classThatContainsTheConstructorToTest
+					.getDeclaredConstructor(PrimitiveWrapper.toPrimitiveType(argumentTypes));
 		} catch (Exception e) {
 			// Do nothing
 		}
@@ -964,7 +984,8 @@ public class WhiteboxImpl {
 			// Check if we can find a matching var args constructor.
 			constructor = getPotentialVarArgsConstructor(classThatContainsTheConstructorToTest, arguments);
 			if (constructor == null) {
-				throw new ConstructorNotFoundException("Failed to find a constructor with argument types: [" + getArgumentsAsString(arguments) + "]");
+				throw new ConstructorNotFoundException("Failed to find a constructor with argument types: ["
+						+ getArgumentsAsString(arguments) + "]");
 			}
 		} else if (potentialContstructorPrimitive == null && potentialContstructorWrapped != null) {
 			constructor = potentialContstructorWrapped;
@@ -981,14 +1002,17 @@ public class WhiteboxImpl {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T> Constructor<T> getPotentialVarArgsConstructor(Class<T> classThatContainsTheConstructorToTest, Object... arguments) {
+	private static <T> Constructor<T> getPotentialVarArgsConstructor(Class<T> classThatContainsTheConstructorToTest,
+			Object... arguments) {
 		if (areAllArgumentsOfSameType(arguments)) {
-			Constructor<T>[] declaredConstructors = (Constructor<T>[]) classThatContainsTheConstructorToTest.getDeclaredConstructors();
+			Constructor<T>[] declaredConstructors = (Constructor<T>[]) classThatContainsTheConstructorToTest
+					.getDeclaredConstructors();
 			for (Constructor<T> possibleVarArgsConstructor : declaredConstructors) {
 				if (possibleVarArgsConstructor.isVarArgs()) {
 					if (arguments == null || arguments.length == 0) {
 						return possibleVarArgsConstructor;
-					} else if (possibleVarArgsConstructor.getParameterTypes()[0].getComponentType().isAssignableFrom(getType(arguments[0]))) {
+					} else if (possibleVarArgsConstructor.getParameterTypes()[0].getComponentType().isAssignableFrom(
+							getType(arguments[0]))) {
 						return possibleVarArgsConstructor;
 					}
 				}
@@ -1048,7 +1072,14 @@ public class WhiteboxImpl {
 		Class<?> thisType = clazz;
 
 		while (thisType != null) {
-			final Method[] declaredMethods = thisType.getDeclaredMethods();
+			final Class<?> type = thisType;
+			final Method[] declaredMethods = AccessController.doPrivileged(new PrivilegedAction<Method[]>() {
+
+				public Method[] run() {
+					return type.getDeclaredMethods();
+				}
+
+			});
 			for (Method method : declaredMethods) {
 				method.setAccessible(true);
 				methods.add(method);
@@ -1152,11 +1183,13 @@ public class WhiteboxImpl {
 				}
 
 				if (methodToMock == null) {
-					WhiteboxImpl.throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", matchingMethodsList.toArray(new Method[0]));
+					WhiteboxImpl.throwExceptionWhenMultipleMethodMatchesFound("argument parameter types",
+							matchingMethodsList.toArray(new Method[0]));
 				}
 			} else {
 				// We've found several matching methods.
-				WhiteboxImpl.throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", matchingMethodsList.toArray(new Method[0]));
+				WhiteboxImpl.throwExceptionWhenMultipleMethodMatchesFound("argument parameter types",
+						matchingMethodsList.toArray(new Method[0]));
 			}
 		}
 
@@ -1181,7 +1214,8 @@ public class WhiteboxImpl {
 
 	static void throwExceptionWhenMultipleMethodMatchesFound(String helpInfo, Method[] methods) {
 		if (methods == null || methods.length < 2) {
-			throw new IllegalArgumentException("Internal error: throwExceptionWhenMultipleMethodMatchesFound needs at least two methods.");
+			throw new IllegalArgumentException(
+					"Internal error: throwExceptionWhenMultipleMethodMatchesFound needs at least two methods.");
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append("Several matching methods found, please specify the ");
@@ -1203,12 +1237,14 @@ public class WhiteboxImpl {
 
 	static void throwExceptionWhenMultipleConstructorMatchesFound(Constructor<?>[] constructors) {
 		if (constructors == null || constructors.length < 2) {
-			throw new IllegalArgumentException("Internal error: throwExceptionWhenMultipleMethodMatchesFound needs at least two methods.");
+			throw new IllegalArgumentException(
+					"Internal error: throwExceptionWhenMultipleMethodMatchesFound needs at least two methods.");
 		}
 		StringBuilder sb = new StringBuilder();
 		sb
 				.append("Several matching constructors found, please specify the argument parameter types so that PowerMock can determine which method you're refering to.\n");
-		sb.append("Matching constructors in class ").append(constructors[0].getDeclaringClass().getName()).append(" were:\n");
+		sb.append("Matching constructors in class ").append(constructors[0].getDeclaringClass().getName()).append(
+				" were:\n");
 
 		for (Constructor<?> constructor : constructors) {
 			sb.append(constructor.getName()).append("( ");
@@ -1258,7 +1294,8 @@ public class WhiteboxImpl {
 
 		final Method[] methodArray = methodsToMock.toArray(new Method[0]);
 		if (methodArray.length == 0) {
-			throw new MethodNotFoundException(String.format("No methods matching the name(s) %s were found in the class hierachry of %s.",
+			throw new MethodNotFoundException(String.format(
+					"No methods matching the name(s) %s were found in the class hierachry of %s.",
 					concatenateStrings(methodNames), getType(clazz)));
 		}
 		return methodArray;
@@ -1288,13 +1325,15 @@ public class WhiteboxImpl {
 
 		final Field[] fieldArray = fields.toArray(new Field[fields.size()]);
 		if (fieldArray.length == 0) {
-			throw new FieldNotFoundException(String.format("No fields matching the name(s) %s were found in the class hierachry of %s.",
+			throw new FieldNotFoundException(String.format(
+					"No fields matching the name(s) %s were found in the class hierachry of %s.",
 					concatenateStrings(fieldNames), getType(clazz)));
 		}
 		return fieldArray;
 	}
 
-	public static Object performMethodInvocation(Object tested, Method methodToInvoke, Object... arguments) throws Exception {
+	public static Object performMethodInvocation(Object tested, Method methodToInvoke, Object... arguments)
+			throws Exception {
 		methodToInvoke.setAccessible(true);
 		try {
 			if (methodToInvoke.isVarArgs()) {
@@ -1319,8 +1358,8 @@ public class WhiteboxImpl {
 				if (cause instanceof Exception) {
 					throw (Exception) cause;
 				} else {
-					throw new MethodInvocationException("Failed to invoke method " + methodToInvoke.getName() + " on object " + tested
-							+ ". Reason was \"" + e.getMessage() + "\".", e);
+					throw new MethodInvocationException("Failed to invoke method " + methodToInvoke.getName()
+							+ " on object " + tested + ". Reason was \"" + e.getMessage() + "\".", e);
 				}
 			} else {
 				throw e;
@@ -1425,7 +1464,8 @@ public class WhiteboxImpl {
 			if (argument == null) {
 				continue;
 			} else {
-				if (!parameterTypes[i].isAssignableFrom(getType(argument)) && !(parameterTypes[i].equals(Class.class) && isClass(argument))) {
+				if (!parameterTypes[i].isAssignableFrom(getType(argument))
+						&& !(parameterTypes[i].equals(Class.class) && isClass(argument))) {
 					return false;
 				}
 			}
@@ -1450,6 +1490,7 @@ public class WhiteboxImpl {
 	 * Get an inner class type
 	 * 
 	 * @param declaringClass
+	 *            The class in which the inner class is declared.
 	 * @param name
 	 *            The unqualified name (simple name) of the inner class.
 	 * @return The type.
@@ -1463,6 +1504,7 @@ public class WhiteboxImpl {
 	 * Get the type of a local inner class.
 	 * 
 	 * @param declaringClass
+	 *            The class in which the local inner class is declared.
 	 * @param occurrence
 	 *            The occurrence of the local class. For example if you have two
 	 *            local classes in the <code>declaringClass</code> you must pass
@@ -1473,7 +1515,8 @@ public class WhiteboxImpl {
 	 * @return The type.
 	 */
 	@SuppressWarnings("unchecked")
-	public static Class<Object> getLocalClassType(Class<?> declaringClass, int occurrence, String name) throws ClassNotFoundException {
+	public static Class<Object> getLocalClassType(Class<?> declaringClass, int occurrence, String name)
+			throws ClassNotFoundException {
 		return (Class<Object>) Class.forName(declaringClass.getName() + "$" + occurrence + name);
 	}
 
@@ -1481,6 +1524,7 @@ public class WhiteboxImpl {
 	 * Get the type of an anonymous inner class.
 	 * 
 	 * @param declaringClass
+	 *            The class in which the anonymous inner class is declared.
 	 * @param occurrence
 	 *            The occurrence of the anonymous inner class. For example if
 	 *            you have two anonymous inner classes classes in the
@@ -1490,7 +1534,8 @@ public class WhiteboxImpl {
 	 * @return The type.
 	 */
 	@SuppressWarnings("unchecked")
-	public static Class<Object> getAnonymousInnerClassType(Class<?> declaringClass, int occurrence) throws ClassNotFoundException {
+	public static Class<Object> getAnonymousInnerClassType(Class<?> declaringClass, int occurrence)
+			throws ClassNotFoundException {
 		return (Class<Object>) Class.forName(declaringClass.getName() + "$" + occurrence);
 	}
 
@@ -1522,7 +1567,8 @@ public class WhiteboxImpl {
 			System.arraycopy(additionalAnnotations, 0, annotations, 1, additionalAnnotations.length);
 		}
 
-		return findAllFieldsUsingStrategy(new FieldAnnotationMatcherStrategy(annotations), object, true, getType(object));
+		return findAllFieldsUsingStrategy(new FieldAnnotationMatcherStrategy(annotations), object, true,
+				getType(object));
 	}
 
 	/**
@@ -1608,7 +1654,8 @@ public class WhiteboxImpl {
 			field = where.getDeclaredField(fieldName);
 			field.setAccessible(true);
 		} catch (NoSuchFieldException e) {
-			throw new FieldNotFoundException("Field '" + fieldName + "' was not found in class " + where.getName() + ".");
+			throw new FieldNotFoundException("Field '" + fieldName + "' was not found in class " + where.getName()
+					+ ".");
 		}
 		return field;
 	}

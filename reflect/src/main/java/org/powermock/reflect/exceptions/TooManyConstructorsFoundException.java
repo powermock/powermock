@@ -16,8 +16,8 @@
 package org.powermock.reflect.exceptions;
 
 /**
- * A run-time exception that may be thrown to indicate that too many methods
- * were found.
+ * A run-time exception that may be thrown to indicate that too many
+ * constructors were found.
  */
 public class TooManyConstructorsFoundException extends RuntimeException {
 

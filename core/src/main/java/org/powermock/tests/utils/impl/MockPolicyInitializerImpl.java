@@ -24,6 +24,7 @@ import java.util.Map.Entry;
 
 import org.powermock.core.MockRepository;
 import org.powermock.core.classloader.MockClassLoader;
+import org.powermock.core.classloader.annotations.MockPolicy;
 import org.powermock.core.spi.PowerMockPolicy;
 import org.powermock.mockpolicies.MockPolicyClassLoadingSettings;
 import org.powermock.mockpolicies.MockPolicyInterceptionSettings;
@@ -45,6 +46,10 @@ public class MockPolicyInitializerImpl implements MockPolicyInitializer {
 		this(mockPolicies, false);
 	}
 
+	public MockPolicyInitializerImpl(Class<?> testClass) {
+		this(getMockPolicies(testClass), false);
+	}
+
 	private MockPolicyInitializerImpl(Class<? extends PowerMockPolicy>[] mockPolicies, boolean internal) {
 		if (internal) {
 			mockPolicyTypes = null;
@@ -63,26 +68,33 @@ public class MockPolicyInitializerImpl implements MockPolicyInitializer {
 
 	public boolean isPrepared(String fullyQualifiedClassName) {
 		MockPolicyClassLoadingSettings settings = getClassLoadingSettings();
-		final boolean foundInSuppressStaticInitializer = Arrays.binarySearch(settings.getStaticInitializersToSuppress(), fullyQualifiedClassName) < 0;
-		final boolean foundClassesLoadedByMockClassloader = Arrays.binarySearch(settings.getFullyQualifiedNamesOfClassesToLoadByMockClassloader(),
-				fullyQualifiedClassName) < 0;
+		final boolean foundInSuppressStaticInitializer = Arrays.binarySearch(
+				settings.getStaticInitializersToSuppress(), fullyQualifiedClassName) < 0;
+		final boolean foundClassesLoadedByMockClassloader = Arrays.binarySearch(settings
+				.getFullyQualifiedNamesOfClassesToLoadByMockClassloader(), fullyQualifiedClassName) < 0;
 		return foundInSuppressStaticInitializer || foundClassesLoadedByMockClassloader;
 	}
 
 	public boolean needsInitialization() {
 		MockPolicyClassLoadingSettings settings = getClassLoadingSettings();
-		return settings.getStaticInitializersToSuppress().length > 0 || settings.getFullyQualifiedNamesOfClassesToLoadByMockClassloader().length > 0;
+		return settings.getStaticInitializersToSuppress().length > 0
+				|| settings.getFullyQualifiedNamesOfClassesToLoadByMockClassloader().length > 0;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void initialize(MockClassLoader classLoader) {
-		if (getClass().getClassLoader() == classLoader) {
-			throw new IllegalArgumentException("PowerMock internal error: " + MockClassLoader.class.getName()
-					+ "#initialize(..) must be loaded by the context class loader " + Thread.currentThread().getContextClassLoader()
-					+ " but was loaded by " + classLoader + ".");
+	public void initialize(ClassLoader classLoader) {
+		if (classLoader instanceof MockClassLoader) {
+			initialize((MockClassLoader) classLoader);
 		}
+	}
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 */
+	private void initialize(MockClassLoader classLoader) {
 		if (mockPolicies.length > 0) {
 			MockPolicyClassLoadingSettings classLoadingSettings = getClassLoadingSettings();
 			String[] fullyQualifiedNamesOfClassesToLoadByMockClassloader = classLoadingSettings
@@ -102,10 +114,12 @@ public class MockPolicyInitializerImpl implements MockPolicyInitializer {
 			final int sizeOfPolicies = mockPolicyTypes.length;
 			Object mockPolicies = Array.newInstance(Class.class, sizeOfPolicies);
 			for (int i = 0; i < sizeOfPolicies; i++) {
-				final Class<?> policyLoadedByClassLoader = Class.forName(mockPolicyTypes[i].getName(), false, classLoader);
+				final Class<?> policyLoadedByClassLoader = Class.forName(mockPolicyTypes[i].getName(), false,
+						classLoader);
 				Array.set(mockPolicies, i, policyLoadedByClassLoader);
 			}
-			final Class<?> thisTypeLoadedByMockClassLoader = Class.forName(this.getClass().getName(), false, classLoader);
+			final Class<?> thisTypeLoadedByMockClassLoader = Class.forName(this.getClass().getName(), false,
+					classLoader);
 			Object mockPolicyHandler = Whitebox.invokeConstructor(thisTypeLoadedByMockClassLoader, mockPolicies, true);
 			Whitebox.invokeMethod(mockPolicyHandler, "initializeInterceptionSettings");
 		} catch (InvocationTargetException e) {
@@ -170,5 +184,18 @@ public class MockPolicyInitializerImpl implements MockPolicyInitializer {
 			mockPolicy.applyClassLoadingPolicy(settings);
 		}
 		return settings;
+	}
+
+	/**
+	 * Get the mock policies from a test-class.
+	 */
+	@SuppressWarnings("unchecked")
+	private static Class<? extends PowerMockPolicy>[] getMockPolicies(Class<?> testClass) {
+		Class<? extends PowerMockPolicy>[] powerMockPolicies = new Class[0];
+		if (testClass.isAnnotationPresent(MockPolicy.class)) {
+			MockPolicy annotation = testClass.getAnnotation(MockPolicy.class);
+			powerMockPolicies = annotation.value();
+		}
+		return powerMockPolicies;
 	}
 }

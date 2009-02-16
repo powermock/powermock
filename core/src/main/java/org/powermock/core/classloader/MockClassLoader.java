@@ -24,6 +24,7 @@ import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
 
+import org.powermock.core.ClassReplicaCreator;
 import org.powermock.core.spi.PowerMockPolicy;
 import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.core.transformers.MockTransformer;
@@ -56,19 +57,20 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 	 * Classes not deferred but loaded by the mock class loader but they're not
 	 * modified.
 	 */
-	private final String[] packagesToLoadButNotModify = new String[] { "org.junit.", "junit.", "org.easymock.", "net.sf.cglib.", "javassist.",
-			"org.powermock.modules.junit4.internal.", "org.powermock.modules.junit4.legacy.internal.", "org.powermock.modules.junit3.internal.",
-			"org.powermock" };
+	private final String[] packagesToLoadButNotModify = new String[] { "org.junit.", "junit.", "org.easymock.",
+			"net.sf.cglib.", "javassist.", "org.powermock.modules.junit4.internal.",
+			"org.powermock.modules.junit4.legacy.internal.", "org.powermock.modules.junit3.internal.", "org.powermock" };
 
-	private final String[] specificClassesToLoadButNotModify = new String[] { InvocationSubstitute.class.getName(), PowerMockPolicy.class.getName() };
+	private final String[] specificClassesToLoadButNotModify = new String[] { InvocationSubstitute.class.getName(),
+			PowerMockPolicy.class.getName(), ClassReplicaCreator.class.getName() };
 
 	/*
 	 * Classes that should always be deferred regardless of what the user
 	 * specifies in annotations etc.
 	 */
-	private static final String[] packagesToBeDeferred = new String[] { "org.hamcrest.", "java.", "javax.accessibility.", "sun.", "org.junit.",
-			"junit.", "org.powermock.modules.junit4.common.internal.", "org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate",
-			"org.powermock.core" };
+	private static final String[] packagesToBeDeferred = new String[] { "org.hamcrest.", "java.",
+			"javax.accessibility.", "sun.", "org.junit.", "junit.", "org.powermock.modules.junit4.common.internal.",
+			"org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate", "org.powermock.core" };
 
 	// TODO Why is this needed!? We need to find a better solution.
 	final private String ignoredClass = "net.sf.cglib.proxy.Enhancer$EnhancerKey$$KeyFactoryByCGLIB$$";
@@ -100,7 +102,8 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 		final String[] allPackagesToBeIgnored = new String[allIgnoreLength];
 		if (allIgnoreLength > defaultDeferPackagesLength) {
 			System.arraycopy(packagesToBeDeferred, 0, allPackagesToBeIgnored, 0, defaultDeferPackagesLength);
-			System.arraycopy(additionalDeferPackages, 0, allPackagesToBeIgnored, defaultDeferPackagesLength, additionalIgnorePackagesLength);
+			System.arraycopy(additionalDeferPackages, 0, allPackagesToBeIgnored, defaultDeferPackagesLength,
+					additionalIgnorePackagesLength);
 			return allPackagesToBeIgnored;
 		}
 		return packagesToBeDeferred;
@@ -140,7 +143,8 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 		// findSystemClass(s);
 		deferTo.loadClass(s);
 		if (shouldDefer(packagesToLoadButNotModify, s)
-				|| !(shouldIgnore(modify, s) || (modify.size() == 1 && modify.iterator().next().equals(MODIFY_ALL_CLASSES)))) {
+				|| !(shouldIgnore(modify, s) || (modify.size() == 1 && modify.iterator().next().equals(
+						MODIFY_ALL_CLASSES)))) {
 			loadedClass = loadUnmockedClass(s);
 		} else {
 			loadedClass = loadMockClass(s);
@@ -195,7 +199,8 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 			}
 			clazz = type.toBytecode();
 		} catch (Exception e) {
-			throw new IllegalStateException("Failed to transform class with name " + name + ". Reason: " + e.getMessage(), e);
+			throw new IllegalStateException("Failed to transform class with name " + name + ". Reason: "
+					+ e.getMessage(), e);
 		}
 
 		return defineClass(name, clazz, 0, clazz.length);
