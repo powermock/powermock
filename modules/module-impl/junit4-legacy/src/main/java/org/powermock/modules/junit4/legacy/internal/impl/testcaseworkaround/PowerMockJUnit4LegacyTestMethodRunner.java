@@ -12,7 +12,6 @@ import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.powermock.reflect.Whitebox;
 import org.powermock.tests.utils.PowerMockTestNotifier;
-import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
 
 /**
  * This class is needed because the test method runner creates a new instance of
@@ -52,10 +51,6 @@ public class PowerMockJUnit4LegacyTestMethodRunner extends TestMethodRunner {
 			notifier.fireTestIgnored(description);
 			return;
 		}
-		// Initialize mock policies for each test
-		new MockPolicyInitializerImpl(Whitebox.getInternalState(this, "fTest").getClass()).initialize(this.getClass()
-				.getClassLoader());
-
 		notifier.fireTestStarted(description);
 		try {
 			powerMockTestNotifier.notifyBeforeTestMethod(Whitebox.getInternalState(this, "fTest"), method,

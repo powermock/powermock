@@ -22,6 +22,8 @@ import junit.framework.TestResult;
 
 public interface PowerMockJUnit3RunnerDelegate {
 
+	public Class<?> getTestClass();
+	
 	public int testCount();
 
 	public int countTestCases();

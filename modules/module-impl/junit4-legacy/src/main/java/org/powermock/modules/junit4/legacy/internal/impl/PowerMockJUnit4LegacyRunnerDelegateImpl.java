@@ -28,6 +28,7 @@ import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate
 import org.powermock.modules.junit4.legacy.internal.impl.testcaseworkaround.PowerMockJUnit4LegacyTestClassMethodsRunner;
 import org.powermock.modules.junit4.legacy.internal.impl.testcaseworkaround.PowerMockJUnit4LegacyTestIntrospector;
 import org.powermock.reflect.Whitebox;
+import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
 
 /**
  * A JUnit4 legacy (i.e. v4.0-4.3) test runner that only runs a specified set of
@@ -44,21 +45,24 @@ public class PowerMockJUnit4LegacyRunnerDelegateImpl extends TestClassRunner imp
 
 	private final int testCount;
 
-	public PowerMockJUnit4LegacyRunnerDelegateImpl(Class<?> klass, String[] methodsToRun, PowerMockTestListener[] listeners)
-			throws InitializationError, NoTestsRemainException {
-		super(klass, new PowerMockJUnit4LegacyTestClassMethodsRunner(klass, listeners == null ? new PowerMockTestListener[0] : listeners));
+	public PowerMockJUnit4LegacyRunnerDelegateImpl(Class<?> klass, String[] methodsToRun,
+			PowerMockTestListener[] listeners) throws InitializationError, NoTestsRemainException {
+		super(klass, new PowerMockJUnit4LegacyTestClassMethodsRunner(klass,
+				listeners == null ? new PowerMockTestListener[0] : listeners));
 		filter(new PowerMockJUnit4LegacyFilter(methodsToRun));
 
 		testCount = methodsToRun.length;
 	}
 
-	public PowerMockJUnit4LegacyRunnerDelegateImpl(Class<?> klass, String[] methodsToRun) throws InitializationError, NoTestsRemainException {
+	public PowerMockJUnit4LegacyRunnerDelegateImpl(Class<?> klass, String[] methodsToRun) throws InitializationError,
+			NoTestsRemainException {
 		this(klass, methodsToRun, null);
 	}
 
 	@Override
 	public void run(final RunNotifier notifier) {
-		BeforeAndAfterRunner runner = new BeforeAndAfterRunner(getTestClass(), BeforeClass.class, AfterClass.class, null) {
+		BeforeAndAfterRunner runner = new BeforeAndAfterRunner(getTestClass(), BeforeClass.class, AfterClass.class,
+				null) {
 
 			@Override
 			protected void runUnprotected() {
@@ -71,8 +75,11 @@ public class PowerMockJUnit4LegacyRunnerDelegateImpl extends TestClassRunner imp
 			}
 		};
 
-		Whitebox.setInternalState(runner, "fTestIntrospector", new PowerMockJUnit4LegacyTestIntrospector(getTestClass()), BeforeAndAfterRunner.class);
+		Whitebox.setInternalState(runner, "fTestIntrospector",
+				new PowerMockJUnit4LegacyTestIntrospector(getTestClass()), BeforeAndAfterRunner.class);
 
+		// Initialize mock policies for each test
+		new MockPolicyInitializerImpl(getTestClass()).initialize(this.getClass().getClassLoader());
 		runner.runProtected();
 	}
 

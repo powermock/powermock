@@ -17,6 +17,7 @@ package powermock.examples.mockpolicy;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.MockPolicy;
@@ -32,6 +33,15 @@ import powermock.examples.mockpolicy.policy.MyCustomMockPolicy;
 @RunWith(PowerMockRunner.class)
 @MockPolicy(MyCustomMockPolicy.class)
 public class SeveralMockPolicyMethodsTest {
+
+	/**
+	 * Make sure that mock policies works in setup methods.
+	 */
+	@Before
+	public void setUp() {
+		DataObject dependencyData = new DependencyUser().getDependencyData();
+		assertEquals("Policy generated data object", dependencyData.getData());
+	}
 
 	@Test
 	public void assertThatMyFirstMockPolicyWork() throws Exception {

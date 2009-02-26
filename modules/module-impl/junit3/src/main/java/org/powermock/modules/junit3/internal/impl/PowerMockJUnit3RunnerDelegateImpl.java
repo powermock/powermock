@@ -21,23 +21,22 @@ import java.util.Vector;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
 import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate;
-import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
 
 @SuppressWarnings("unchecked")
 public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements PowerMockJUnit3RunnerDelegate {
 
 	private final Method[] methodsToRun;
 
-	private final Class<?> testClass;
+	private Class<?> testClass;
 
 	public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass, Method[] methodsToRun, String name,
 			PowerMockTestListener[] powerListeners) {
 		this(theClass, methodsToRun, powerListeners);
+		testClass = theClass;
 		setName(name);
 	}
 
@@ -48,9 +47,9 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements Powe
 	 */
 	public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass, Method[] methodsToRun,
 			PowerMockTestListener[] powerMockTestListeners) {
+		testClass = theClass;
 		this.methodsToRun = methodsToRun;
 		setName(theClass.getName());
-		testClass = theClass;
 
 		try {
 			getTestConstructor(theClass); // Avoid generating multiple error
@@ -102,6 +101,10 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements Powe
 		}
 	}
 
+	public Class<?> getTestClass() {
+		return testClass;
+	}
+
 	/**
 	 * Returns a test which will fail and log a warning message.
 	 */
@@ -123,10 +126,4 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements Powe
 		return builder.toString();
 	}
 
-	@Override
-	public void runTest(Test test, TestResult result) {
-		// Initialize mock policies for each test
-		new MockPolicyInitializerImpl(testClass).initialize(this.getClass().getClassLoader());
-		super.runTest(test, result);
-	}
 }

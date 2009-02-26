@@ -33,8 +33,10 @@ import org.powermock.modules.junit3.internal.JUnit3TestSuiteChunker;
 import org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate;
 import org.powermock.tests.utils.TestChunk;
 import org.powermock.tests.utils.impl.AbstractTestSuiteChunkerImpl;
+import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
 
-public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<PowerMockJUnit3RunnerDelegate> implements JUnit3TestSuiteChunker {
+public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<PowerMockJUnit3RunnerDelegate> implements
+		JUnit3TestSuiteChunker {
 
 	private String name;
 
@@ -66,9 +68,11 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	protected PowerMockJUnit3RunnerDelegate createDelegatorFromClassloader(ClassLoader classLoader, Class<?> testClass,
 			final List<Method> methodsToTest) throws Exception {
 		final Class<?> testClassLoadedByMockedClassLoader = Class.forName(testClass.getName(), false, classLoader);
-		final Class<?> powerMockTestListenerArrayType = Class.forName(PowerMockTestListener[].class.getName(), false, classLoader);
+		final Class<?> powerMockTestListenerArrayType = Class.forName(PowerMockTestListener[].class.getName(), false,
+				classLoader);
 		Class<?> delegateClass = Class.forName(PowerMockJUnit3RunnerDelegateImpl.class.getName(), false, classLoader);
-		Constructor<?> con = delegateClass.getConstructor(new Class[] { Class.class, Method[].class, powerMockTestListenerArrayType });
+		Constructor<?> con = delegateClass.getConstructor(new Class[] { Class.class, Method[].class,
+				powerMockTestListenerArrayType });
 		final PowerMockJUnit3RunnerDelegate newDelegate = (PowerMockJUnit3RunnerDelegate) con.newInstance(new Object[] {
 				testClassLoadedByMockedClassLoader, methodsToTest.toArray(new Method[0]),
 				getPowerMockTestListenersLoadedByASpecificClassLoader(testClass, classLoader) });
@@ -79,7 +83,8 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	@Override
 	protected void chunkClass(Class<?> testClass) throws Exception {
 		if (!TestCase.class.isAssignableFrom(testClass)) {
-			throw new IllegalArgumentException(testClass.getName() + " must be a subtype of " + TestCase.class.getName());
+			throw new IllegalArgumentException(testClass.getName() + " must be a subtype of "
+					+ TestCase.class.getName());
 		}
 		super.chunkClass(testClass);
 	}
@@ -101,7 +106,8 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	 * {@inheritDoc}
 	 */
 	public boolean shouldExecuteTestForMethod(Class<?> testClass, Method potentialTestMethod) {
-		return potentialTestMethod.getName().startsWith("test") && Modifier.isPublic(potentialTestMethod.getModifiers())
+		return potentialTestMethod.getName().startsWith("test")
+				&& Modifier.isPublic(potentialTestMethod.getModifiers())
 				&& potentialTestMethod.getReturnType().equals(Void.TYPE);
 	}
 
@@ -122,8 +128,9 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 				addTest((Test) tests.nextElement());
 			}
 		} else {
-			throw new IllegalArgumentException("The test type " + test.getClass().getName() + " is not supported. Only " + TestCase.class.getName()
-					+ " and " + TestSuite.class.getName() + " are supported.");
+			throw new IllegalArgumentException("The test type " + test.getClass().getName()
+					+ " is not supported. Only " + TestCase.class.getName() + " and " + TestSuite.class.getName()
+					+ " are supported.");
 		}
 	}
 
@@ -154,6 +161,8 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 			TestChunk next = iterator.next();
 			final PowerMockJUnit3TestListener listener = new PowerMockJUnit3TestListener(next.getClassLoader());
 			result.addListener(listener);
+			// Initialize mock policies for each test
+			new MockPolicyInitializerImpl(delegate.getTestClass()).initialize(this.getClass().getClassLoader());
 			delegate.run(result);
 			result.removeListener(listener);
 		}
