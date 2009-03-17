@@ -92,10 +92,16 @@ public class WhiteboxImpl {
 		}
 
 		List<Method> foundMethods = new LinkedList<Method>();
-
 		while (thisType != null) {
-			final Method[] declaredMethods = thisType.getDeclaredMethods();
-			for (Method method : declaredMethods) {
+			Method[] methodsToTraverse = null;
+			if (thisType.isInterface()) {
+				// Interfaces only contain public (and abstract) methods, no
+				// need to traverse the hierarchy.
+				methodsToTraverse = getAllPublicMethods(thisType);
+			} else {
+				methodsToTraverse = thisType.getDeclaredMethods();
+			}
+			for (Method method : methodsToTraverse) {
 				if (checkIfTypesAreSame(parameterTypes, method.getParameterTypes())) {
 					foundMethods.add(method);
 					if (foundMethods.size() == 1) {
@@ -151,8 +157,15 @@ public class WhiteboxImpl {
 			parameterTypes = new Class<?>[0];
 		}
 		while (thisType != null) {
-			final Method[] declaredMethods = thisType.getDeclaredMethods();
-			for (Method method : declaredMethods) {
+			Method[] methodsToTraverse = null;
+			if (thisType.isInterface()) {
+				// Interfaces only contain public (and abstract) methods, no
+				// need to traverse the hierarchy.
+				methodsToTraverse = getAllPublicMethods(thisType);
+			} else {
+				methodsToTraverse = thisType.getDeclaredMethods();
+			}
+			for (Method method : methodsToTraverse) {
 				if (methodName.equals(method.getName())
 						&& checkIfTypesAreSame(parameterTypes, method.getParameterTypes())) {
 					method.setAccessible(true);
@@ -571,6 +584,30 @@ public class WhiteboxImpl {
 	}
 
 	/**
+	 * Invoke a private or inner class method without the need to specify the
+	 * method name. This is thus a more refactor friendly version of the
+	 * {@link #invokeMethod(Object, String, Object...)} method and is recommend
+	 * over this method for that reason. This method might be useful to test
+	 * private methods.
+	 * 
+	 * @throws Throwable
+	 */
+	public static synchronized Object invokeMethod(Object tested, Object... arguments) throws Exception {
+		return doInvokeMethod(tested, null, null, arguments);
+	}
+
+	/**
+	 * Invoke a private or inner class method without the need to specify the
+	 * method name. This is thus a more refactor friendly version of the
+	 * {@link #invokeMethod(Object, String, Object...)} method and is recommend
+	 * over this method for that reason. This method might be useful to test
+	 * private methods.
+	 */
+	public static synchronized Object invokeMethod(Class<?> tested, Object... arguments) throws Exception {
+		return doInvokeMethod(tested, null, null, arguments);
+	}
+
+	/**
 	 * Invoke a private or inner class method. This might be useful to test
 	 * private methods.
 	 * 
@@ -632,10 +669,12 @@ public class WhiteboxImpl {
 	}
 
 	/**
-	 * Invoke a private or inner class method in that is located in a subclass
-	 * of the tested instance. This might be useful to test private methods.
+	 * Invoke a private method in that is located in a subclass of an instance.
+	 * This might be useful to test overloaded private methods.
 	 * <p>
-	 * Use this for overloaded methods.
+	 * Use this for overloaded methods only, if possible use
+	 * {@link #invokeMethod(Object, Object...)} or
+	 * {@link #invokeMethod(Object, String, Object...)} instead.
 	 * 
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
@@ -676,12 +715,16 @@ public class WhiteboxImpl {
 	 * .
 	 * 
 	 * @param tested
+	 *            The instance or class containing the method.
 	 * @param declaringClass
 	 *            The class where the method is supposed to be declared (may be
 	 *            <code>null</code>).
 	 * @param methodToExecute
+	 *            The method name. If <code>null</code> then method will be
+	 *            looked up based on the argument types only.
 	 * @param arguments
-	 * @return
+	 *            The arguments of the methods.
+	 * @return A single method.
 	 */
 	public static Method findMethodOrThrowException(Object tested, Class<?> declaringClass, String methodToExecute,
 			Object... arguments) {
@@ -709,7 +752,7 @@ public class WhiteboxImpl {
 		}
 		Method potentialMethodToInvoke = null;
 		for (Method method : methods) {
-			if (method.getName().equals(methodToExecute)) {
+			if (methodToExecute == null || method.getName().equals(methodToExecute)) {
 				Class<?>[] paramTypes = method.getParameterTypes();
 				if ((arguments != null && (paramTypes.length == arguments.length))) {
 					if (paramTypes.length == 0) {
@@ -848,7 +891,11 @@ public class WhiteboxImpl {
 	public static void throwExceptionIfMethodWasNotFound(Class<?> type, String methodName, Method methodToMock,
 			Object... arguments) {
 		if (methodToMock == null) {
-			throw new MethodNotFoundException("No method found with name '" + methodName + "' with argument types: [ "
+			String methodNameData = "";
+			if (methodName != null) {
+				methodNameData = "with name '" + methodName + "' ";
+			}
+			throw new MethodNotFoundException("No method found " + methodNameData + "with argument types: [ "
 					+ getArgumentsAsString(arguments) + " ] in class " + getUnmockedType(type).getName());
 		}
 	}
@@ -1090,6 +1137,27 @@ public class WhiteboxImpl {
 	}
 
 	/**
+	 * Get all public methods for a class (no duplicates)! Note that the
+	 * class-hierarchy will not be traversed.
+	 * 
+	 * @param clazz
+	 *            The class whose methods to get.
+	 * @return All public methods declared in <tt>this</tt> class.
+	 */
+	private static Method[] getAllPublicMethods(Class<?> clazz) {
+		if (clazz == null) {
+			throw new IllegalArgumentException("You must specify a class in order to get the methods.");
+		}
+		Set<Method> methods = new LinkedHashSet<Method>();
+
+		for (Method method : clazz.getMethods()) {
+			method.setAccessible(true);
+			methods.add(method);
+		}
+		return methods.toArray(new Method[0]);
+	}
+
+	/**
 	 * Get all fields in a class hierarchy! Both declared an non-declared (no
 	 * duplicates).
 	 * 
@@ -1138,18 +1206,24 @@ public class WhiteboxImpl {
 	 * Finds and returns a method based on the input parameters. If no
 	 * <code>parameterTypes</code> are present the method will return the first
 	 * method with name <code>methodNameToMock</code>. If no method was found,
-	 * <code>null</code> will be returned.
+	 * <code>null</code> will be returned. If no <code>methodName</code> is
+	 * specified the method will be found based on the parameter types. If
+	 * neither method name nor parameters are specified an
+	 * {@link IllegalArgumentException} will be thrown.
 	 * 
 	 * @param <T>
 	 * @param type
-	 * @param methodNameToMock
+	 * @param methodName
 	 * @param parameterTypes
 	 * @return
 	 */
-	static <T> Method findMethod(Class<T> type, String methodNameToMock, Class<?>... parameterTypes) {
+	static <T> Method findMethod(Class<T> type, String methodName, Class<?>... parameterTypes) {
+		if (methodName == null && parameterTypes == null) {
+			throw new IllegalArgumentException("You must specify a method name or parameter types.");
+		}
 		List<Method> matchingMethodsList = new LinkedList<Method>();
 		for (Method method : getAllMethods(type)) {
-			if (method.getName().equals(methodNameToMock)) {
+			if (methodName == null || method.getName().equals(methodName)) {
 				if (parameterTypes != null && parameterTypes.length > 0) {
 					// If argument types was supplied, make sure that they
 					// match.
@@ -1282,8 +1356,14 @@ public class WhiteboxImpl {
 			throw new IllegalArgumentException("You must supply at least one method name.");
 		}
 		final List<Method> methodsToMock = new LinkedList<Method>();
+		Method[] allMethods = null;
+		if (clazz.isInterface()) {
+			allMethods = getAllPublicMethods(clazz);
+		} else {
+			allMethods = getAllMethods(clazz);
+		}
 
-		for (Method method : getAllMethods(clazz)) {
+		for (Method method : allMethods) {
 			for (String methodName : methodNames) {
 				if (method.getName().equals(methodName)) {
 					method.setAccessible(true);

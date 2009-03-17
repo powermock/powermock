@@ -345,6 +345,31 @@ public class Whitebox {
 	}
 
 	/**
+	 * Invoke a private or inner class method without the need to specify the
+	 * method name. This is thus a more refactor friendly version of the
+	 * {@link #invokeMethod(Object, String, Object...)} method and is recommend
+	 * over this method for that reason. This method might be useful to test
+	 * private methods.
+	 * 
+	 * @throws Throwable
+	 */
+	public static synchronized Object invokeMethod(Object tested, Object... arguments) throws Exception {
+		return WhiteboxImpl.invokeMethod(tested, arguments);
+	}
+
+	/**
+	 * Invoke a private or inner class static method without the need to specify
+	 * the method name. This is thus a more refactor friendly version of the
+	 * {@link #invokeMethod(Class, String, Object...)} method and is recommend
+	 * over this method for that reason. This method might be useful to test
+	 * private methods.
+	 * 
+	 */
+	public static synchronized Object invokeMethod(Class<?> tested, Object... arguments) throws Exception {
+		return WhiteboxImpl.invokeMethod(tested, arguments);
+	}
+
+	/**
 	 * Invoke a private or inner class method. This might be useful to test
 	 * private methods.
 	 */
@@ -409,7 +434,7 @@ public class Whitebox {
 	}
 
 	/**
-	 * Invoke a private or inner class method. This might be useful to test
+	 * Invoke a static private or inner class method. This might be useful to test
 	 * private methods.
 	 * 
 	 */
