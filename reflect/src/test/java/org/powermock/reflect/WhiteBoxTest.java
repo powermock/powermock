@@ -514,7 +514,7 @@ public class WhiteBoxTest {
 			Whitebox.getMethods(ClassWithSeveralMethodsWithSameName.class, "notFound1", "notFound2");
 		} catch (MethodNotFoundException e) {
 			assertEquals(
-					"No methods matching the name(s) notFound1 or notFound2 were found in the class hierachry of class org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameName.",
+					"No methods matching the name(s) notFound1 or notFound2 were found in the class hierarchy of class org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameName.",
 					e.getMessage());
 		}
 	}
@@ -525,7 +525,7 @@ public class WhiteBoxTest {
 			Whitebox.getMethods(ClassWithSeveralMethodsWithSameName.class, "notFound1", "notFound2", "notFound3");
 		} catch (MethodNotFoundException e) {
 			assertEquals(
-					"No methods matching the name(s) notFound1, notFound2 or notFound3 were found in the class hierachry of class org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameName.",
+					"No methods matching the name(s) notFound1, notFound2 or notFound3 were found in the class hierarchy of class org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameName.",
 					e.getMessage());
 		}
 	}

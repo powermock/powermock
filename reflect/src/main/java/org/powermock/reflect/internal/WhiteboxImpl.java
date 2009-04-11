@@ -1375,7 +1375,7 @@ public class WhiteboxImpl {
 		final Method[] methodArray = methodsToMock.toArray(new Method[0]);
 		if (methodArray.length == 0) {
 			throw new MethodNotFoundException(String.format(
-					"No methods matching the name(s) %s were found in the class hierachry of %s.",
+					"No methods matching the name(s) %s were found in the class hierarchy of %s.",
 					concatenateStrings(methodNames), getType(clazz)));
 		}
 		return methodArray;
@@ -1406,7 +1406,7 @@ public class WhiteboxImpl {
 		final Field[] fieldArray = fields.toArray(new Field[fields.size()]);
 		if (fieldArray.length == 0) {
 			throw new FieldNotFoundException(String.format(
-					"No fields matching the name(s) %s were found in the class hierachry of %s.",
+					"No fields matching the name(s) %s were found in the class hierarchy of %s.",
 					concatenateStrings(fieldNames), getType(clazz)));
 		}
 		return fieldArray;
@@ -1769,8 +1769,9 @@ public class WhiteboxImpl {
 
 	private static String concatenateStrings(String... stringsToConcatenate) {
 		StringBuilder builder = new StringBuilder();
-		for (int i = 0; i < stringsToConcatenate.length; i++) {
-			if (i == stringsToConcatenate.length - 1) {
+		final int stringsLength = stringsToConcatenate.length;
+		for (int i = 0; i < stringsLength; i++) {
+			if (i == stringsLength - 1 && stringsLength != 1) {
 				builder.append(" or ");
 			} else if (i != 0) {
 				builder.append(", ");

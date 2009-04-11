@@ -22,8 +22,8 @@ import org.powermock.reflect.Whitebox;
 
 /**
  * PowerMockito extends Mockito functionality with several new features such as
- * mocking static and private methods, mocking new instances and more. Use
- * PowerMock instead of Mockito where applicable.
+ * mocking static and private methods and more. Use PowerMock instead of Mockito
+ * where applicable.
  */
 public class PowerMockito {
 
@@ -117,7 +117,8 @@ public class PowerMockito {
 			 * verification mode if verification fails (it tries to get the name
 			 * of the mock) and we get an inappropriate exception.
 			 */
-			final MockData<InvocationSubstitute> mockData = createMethodInvocationControl(mockName, InvocationSubstitute.class, null, methods);
+			final MockData<InvocationSubstitute> mockData = createMethodInvocationControl(mockName,
+					InvocationSubstitute.class, null, methods);
 			MockRepository.putStaticMethodInvocationControl(type, mockData.getMethodInvocationControl());
 			MockRepository.addObjectsToAutomaticallyReplayAndVerify(mockData.getMock());
 		} else {
@@ -200,15 +201,17 @@ public class PowerMockito {
 		}
 	}
 
-	private static <T> MockData<T> createMethodInvocationControl(final String mockName, Class<T> type, T optionalInstance, Method[] methods) {
-		MockHandler<T> mockHandler = new MockHandler<T>(mockName, Whitebox.getInternalState(Mockito.class, MockingProgress.class),
-				new MatchersBinder());
+	private static <T> MockData<T> createMethodInvocationControl(final String mockName, Class<T> type,
+			T optionalInstance, Method[] methods) {
+		MockHandler<T> mockHandler = new MockHandler<T>(mockName, Whitebox.getInternalState(Mockito.class,
+				MockingProgress.class), new MatchersBinder());
 		MethodInterceptorFilter<MockHandler<T>> filter = new MethodInterceptorFilter<MockHandler<T>>(type, mockHandler);
 		final T mock = (T) ClassImposterizer.INSTANCE.imposterise(filter, type);
 
 		filter.setInstance(optionalInstance == null ? mock : optionalInstance);
 
-		final MockitoMethodInvocationControl<T> invocationControl = new MockitoMethodInvocationControl<T>(filter, optionalInstance, methods);
+		final MockitoMethodInvocationControl<T> invocationControl = new MockitoMethodInvocationControl<T>(filter,
+				optionalInstance, methods);
 		return new MockData<T>(invocationControl, mock);
 	}
 

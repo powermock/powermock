@@ -15,6 +15,7 @@ import java.lang.annotation.Target;
  * For example:
  * 
  * <pre>
+ * ...
  * &#064;PowerMockListener(AnnotationEnabler.class)
  * public class PersonServiceTest {
  * 
@@ -39,6 +40,7 @@ import java.lang.annotation.Target;
  * following test:
  * 
  * <pre>
+ * ...
  * &#064;PowerMockListener(EasyMockAnnotationEnabler.class)
  * public class PersonServiceTest {
  * 
