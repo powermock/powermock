@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.reflect.internal.matcherstrategies;
+package samples.interfacefieldchange;
 
-import java.lang.reflect.Field;
-
-import org.powermock.reflect.exceptions.FieldNotFoundException;
-
-public class AllFieldsMatcherStrategy extends FieldMatcherStrategy {
-
-	@Override
-	public boolean matches(Field field) {
-		return true;
-	}
-
-	@Override
-	public void notFound(Class<?> type) throws FieldNotFoundException {
-		throw new FieldNotFoundException("No fields were declared in " + type.getName() + ".");
-	}
+/**
+ * The purpose of the simple class is to demonstrate PowerMocks (possibly
+ * future) ability to change static final fields in an interface. This is
+ * normally not possible (the simple byte-code manipulation approach of removing
+ * the final modifier doesn't work for interfaces since all static fields
+ * <i>must</i> be final in interfaces according to the specification).
+ */
+public interface InterfaceWithStaticFinalField {
+	static final String MY_STRING = "My value";
 }

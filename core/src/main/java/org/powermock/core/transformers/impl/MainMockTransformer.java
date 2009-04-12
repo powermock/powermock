@@ -38,58 +38,84 @@ import org.powermock.core.transformers.MockTransformer;
 public class MainMockTransformer implements MockTransformer {
 
 	private static final String VOID = "";
-	protected static final String METHOD_PREFIX = "____";
 
 	public CtClass transform(final CtClass clazz) throws Exception {
 		if (clazz.isFrozen()) {
 			clazz.defrost();
 		}
 		/*
-		 * Set class to modifier to public to allow for mocking for package
-		 * private classes. This is needed because we've changed to CgLib naming
-		 * policy to allow for mocking of signed classes.
+		 * Set class modifier to public to allow for mocking of package private
+		 * classes. This is needed because we've changed to CgLib naming policy
+		 * to allow for mocking of signed classes.
 		 */
-		final String name = clazz.getName();
-		if (!name.startsWith("java.")) {
-			clazz.setModifiers(Modifier.setPublic(clazz.getModifiers()));
-		}
+		final String name = allowMockingOfPackagePrivateClasses(clazz);
 
-		if (MockGateway.staticConstructorCall(name) != MockGateway.PROCEED) {
-			CtConstructor classInitializer = clazz.makeClassInitializer();
-			classInitializer.setBody("{}");
-		}
+		suppressStaticInitializerIfRequested(clazz, name);
 
 		if (clazz.isInterface()) {
 			return clazz;
 		}
 
 		// This should probably be configurable
+		removeFinalModifierFromClass(clazz);
+
+		allowMockingOfStaticAndFinalAndNativeMethods(clazz);
+
+		// Convert all constructors to public
+		setAllConstructorsToPublic(clazz);
+
+		// Remove final from all static final fields
+		removeFinalModifierFromAllStaticFinalFields(clazz);
+		
+		clazz.instrument(new PowerMockExpressionEditor(clazz));
+		return clazz;
+	}
+
+	private String allowMockingOfPackagePrivateClasses(final CtClass clazz) {
+		final String name = clazz.getName();
+		if (!name.startsWith("java.")) {
+			clazz.setModifiers(Modifier.setPublic(clazz.getModifiers()));
+		}
+		return name;
+	}
+
+	private void suppressStaticInitializerIfRequested(final CtClass clazz, final String name)
+			throws CannotCompileException {
+		if (MockGateway.staticConstructorCall(name) != MockGateway.PROCEED) {
+			CtConstructor classInitializer = clazz.makeClassInitializer();
+			classInitializer.setBody("{}");
+		}
+	}
+
+	private void removeFinalModifierFromClass(final CtClass clazz) {
 		if (Modifier.isFinal(clazz.getModifiers())) {
 			clazz.setModifiers(clazz.getModifiers() ^ Modifier.FINAL);
 		}
+	}
 
+	private void allowMockingOfStaticAndFinalAndNativeMethods(final CtClass clazz) throws NotFoundException,
+			CannotCompileException {
 		for (CtMethod m : clazz.getDeclaredMethods()) {
 			modifyMethod(m);
 		}
+	}
 
-		// Convert all constructors to public
-		for (CtConstructor c : clazz.getDeclaredConstructors()) {
-			final int modifiers = c.getModifiers();
-			if (!Modifier.isPublic(modifiers)) {
-				c.setModifiers(Modifier.setPublic(modifiers));
-			}
-		}
-
-		// Remove final from all static final fields
+	private void removeFinalModifierFromAllStaticFinalFields(final CtClass clazz) {
 		for (CtField f : clazz.getDeclaredFields()) {
 			final int modifiers = f.getModifiers();
 			if (Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers)) {
 				f.setModifiers(modifiers ^ Modifier.FINAL);
 			}
 		}
+	}
 
-		clazz.instrument(new PowerMockExpressionEditor(clazz));
-		return clazz;
+	private void setAllConstructorsToPublic(final CtClass clazz) {
+		for (CtConstructor c : clazz.getDeclaredConstructors()) {
+			final int modifiers = c.getModifiers();
+			if (!Modifier.isPublic(modifiers)) {
+				c.setModifiers(Modifier.setPublic(modifiers));
+			}
+		}
 	}
 
 	public void modifyMethod(final CtMethod method) throws NotFoundException, CannotCompileException {
@@ -130,7 +156,7 @@ public class MainMockTransformer implements MockTransformer {
 					+ method.getName() + "\", $args, $sig, \"" + returnTypeAsString + "\");" + "if (value != "
 					+ MockGateway.class.getName() + ".PROCEED) " + "return " + returnValue + "; ";
 
-			method.insertBefore("{" + code + "}");
+			method.insertBefore("{ " + code + "}");
 		}
 	}
 

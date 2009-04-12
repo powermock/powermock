@@ -18,6 +18,8 @@ package org.powermock.reflect.internal.matcherstrategies;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
+import org.powermock.reflect.exceptions.FieldNotFoundException;
+
 public class FieldAnnotationMatcherStrategy extends FieldMatcherStrategy {
 
 	final Class<? extends Annotation>[] annotations;
@@ -40,8 +42,8 @@ public class FieldAnnotationMatcherStrategy extends FieldMatcherStrategy {
 	}
 
 	@Override
-	public void notFound(Class<?> type) throws IllegalArgumentException {
-		throw new IllegalArgumentException("No field that has any of the annotation types \"" + getAnnotationNames()
+	public void notFound(Class<?> type) throws FieldNotFoundException {
+		throw new FieldNotFoundException("No field that has any of the annotation types \"" + getAnnotationNames()
 				+ "\" could be found in the class hierarchy of " + type.getName() + ".");
 	}
 

@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.mockPartial;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,6 +57,17 @@ public class PartialMockingExampleDefect {
 	public void partialMockitoMockingUsingStandardMock() throws Exception {
 		final String expected = "TEST VALUE";
 		underTest = mock(PartialMockingExample.class, Whitebox.getMethods(PartialMockingExample.class, "methodToMock"));
+		when(underTest.methodToMock()).thenReturn(expected);
+
+		assertEquals(expected, underTest.methodToTest());
+
+		verify(underTest).methodToMock();
+	}
+	
+	@Test
+	public void partialMockitoMockingUsingMockPartialMethod() throws Exception {
+		final String expected = "TEST VALUE";
+		underTest = mockPartial(PartialMockingExample.class,  "methodToMock");
 		when(underTest.methodToMock()).thenReturn(expected);
 
 		assertEquals(expected, underTest.methodToTest());

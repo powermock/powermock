@@ -434,8 +434,8 @@ public class Whitebox {
 	}
 
 	/**
-	 * Invoke a static private or inner class method. This might be useful to test
-	 * private methods.
+	 * Invoke a static private or inner class method. This might be useful to
+	 * test private methods.
 	 * 
 	 */
 	public static synchronized Object invokeMethod(Class<?> clazz, String methodToExecute, Object... arguments)
@@ -503,7 +503,7 @@ public class Whitebox {
 
 	/**
 	 * Get an array of {@link Method}'s that matches the supplied list of method
-	 * names.
+	 * names. Both instance and static methods are taken into account.
 	 * 
 	 * @param clazz
 	 *            The class that should contain the methods.

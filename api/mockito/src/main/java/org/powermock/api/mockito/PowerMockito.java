@@ -5,6 +5,7 @@ import static org.mockito.Mockito.times;
 import java.lang.reflect.Method;
 
 import org.mockito.Mockito;
+import org.mockito.ReturnValues;
 import org.mockito.exceptions.misusing.NotAMockException;
 import org.mockito.exceptions.misusing.NullInsteadOfMockException;
 import org.mockito.internal.MockHandler;
@@ -12,6 +13,7 @@ import org.mockito.internal.creation.MethodInterceptorFilter;
 import org.mockito.internal.creation.jmock.ClassImposterizer;
 import org.mockito.internal.invocation.MatchersBinder;
 import org.mockito.internal.progress.MockingProgress;
+import org.mockito.internal.util.MockName;
 import org.mockito.internal.verification.api.VerificationMode;
 import org.powermock.api.mockito.internal.invocationcontrol.MockitoMethodInvocationControl;
 import org.powermock.api.mockito.internal.proxyframework.CgLibProxyFramework;
@@ -44,6 +46,18 @@ public class PowerMockito {
 	}
 
 	/**
+	 * Enable static mocking for a class.
+	 * 
+	 * @param type
+	 *            the class to enable static mocking
+	 * @param methods
+	 *            optionally what methods to mock
+	 */
+	public static synchronized void mockStaticPartial(Class<?> type, String... methods) {
+		doMock(type, true, null, Whitebox.getMethods(type, methods));
+	}
+
+	/**
 	 * Enable static mocking for all methods of a class.
 	 * 
 	 * @param type
@@ -66,6 +80,22 @@ public class PowerMockito {
 	 */
 	public static synchronized <T> T mock(Class<T> type, Method... methods) {
 		return doMock(type, false, null, methods);
+	}
+
+	/**
+	 * Creates a partially mocked object that supports mocking of final and
+	 * native methods.
+	 * 
+	 * @param <T>
+	 *            the type of the mock object
+	 * @param type
+	 *            the type of the mock object
+	 * @param methodsToMock
+	 *            optionally what methods to mock
+	 * @return the mock object.
+	 */
+	public static synchronized <T> T mockPartial(Class<T> type, String... methodsToMock) {
+		return doMock(type, false, null, Whitebox.getMethods(type, methodsToMock));
 	}
 
 	/**
@@ -203,8 +233,9 @@ public class PowerMockito {
 
 	private static <T> MockData<T> createMethodInvocationControl(final String mockName, Class<T> type,
 			T optionalInstance, Method[] methods) {
-		MockHandler<T> mockHandler = new MockHandler<T>(mockName, Whitebox.getInternalState(Mockito.class,
-				MockingProgress.class), new MatchersBinder());
+		MockHandler<T> mockHandler = new MockHandler<T>(new MockName(mockName, type), Whitebox.getInternalState(
+				Mockito.class, MockingProgress.class), new MatchersBinder(), ((ReturnValues) Whitebox.getInternalState(
+				Mockito.class, "RETURNS_DEFAULTS")));
 		MethodInterceptorFilter<MockHandler<T>> filter = new MethodInterceptorFilter<MockHandler<T>>(type, mockHandler);
 		final T mock = (T) ClassImposterizer.INSTANCE.imposterise(filter, type);
 

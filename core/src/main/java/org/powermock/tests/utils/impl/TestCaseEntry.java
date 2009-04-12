@@ -21,7 +21,7 @@ import org.powermock.tests.utils.TestChunk;
 
 /**
  * A test case entry consists of a test class and a list of test chunks that
- * should be executed work this class.
+ * should be executed for this entry.
  */
 public class TestCaseEntry {
 

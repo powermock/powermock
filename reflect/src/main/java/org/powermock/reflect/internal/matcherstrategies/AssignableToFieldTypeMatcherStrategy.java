@@ -17,6 +17,7 @@ package org.powermock.reflect.internal.matcherstrategies;
 
 import java.lang.reflect.Field;
 
+import org.powermock.reflect.exceptions.FieldNotFoundException;
 import org.powermock.reflect.internal.primitivesupport.PrimitiveWrapper;
 
 public class AssignableToFieldTypeMatcherStrategy extends FieldTypeMatcherStrategy {
@@ -36,8 +37,8 @@ public class AssignableToFieldTypeMatcherStrategy extends FieldTypeMatcherStrate
 	}
 
 	@Override
-	public void notFound(Class<?> type) throws IllegalArgumentException {
-		throw new IllegalArgumentException("No field assignable to \"" + expectedFieldType.getName() + "\" could be found in the class hierarchy of "
+	public void notFound(Class<?> type) throws FieldNotFoundException {
+		throw new FieldNotFoundException("No field assignable to \"" + expectedFieldType.getName() + "\" could be found in the class hierarchy of "
 				+ type.getName() + ".");
 	}
 

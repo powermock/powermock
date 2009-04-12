@@ -5,6 +5,9 @@ Change log 1.3 (under development)
 * Fixed so that WhiteboxImpl#getMethod no longer fails when invoking proxified interface methods declared in extended interfaces. Previously if e.g. interface A extended B & C and a method was declared in B it wouldn't be found by WhiteboxImpl#getMethod since it only used to traverse the class hierarchy and not the structure of the extended interfaces.
 * Whitebox#invokeMethod now works without specifying any method name which can increase the refactoring possibilities of the code when invoking unique private methods.
 * Fixed the error message when a method couldn't be found and only one method was specified (for example when using Whitebox.getMethods(MyClass.class, "onlyOneMethod")).
+* All field matcher strategies now throws FieldNotFoundException's instead of IllegalArgumentException's.
+* Upgraded the Mockito API extension to use Mockito 1.7.
+* Added mockPartial and mockStaticPartial to the Mockito API to allow for easier creation of partial mocks.
 
 Change log 1.2 (released 2009-01-30)
 ------------------------------------

@@ -30,6 +30,7 @@ import org.mockito.Mockito;
 import org.mockito.cglib.proxy.MethodProxy;
 import org.mockito.internal.MockHandler;
 import org.mockito.internal.creation.MethodInterceptorFilter;
+import org.mockito.internal.creation.MockAwareInterceptor;
 import org.mockito.internal.progress.MockingProgress;
 import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.internal.verification.api.VerificationMode;
@@ -61,7 +62,8 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 	 *            the <code>invocationHandler</code> are considered to be
 	 *            mocked.
 	 */
-	public MockitoMethodInvocationControl(MethodInterceptorFilter<MockHandler<T>> invocationHandler, Method... methodsToMock) {
+	public MockitoMethodInvocationControl(MethodInterceptorFilter<MockHandler<T>> invocationHandler,
+			Method... methodsToMock) {
 		this(invocationHandler, null, methodsToMock);
 	}
 
@@ -83,7 +85,8 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 	 *            the <code>invocationHandler</code> are considered to be
 	 *            mocked.
 	 */
-	public MockitoMethodInvocationControl(MethodInterceptorFilter<MockHandler<T>> invocationHandler, T delegator, Method... methodsToMock) {
+	public MockitoMethodInvocationControl(MethodInterceptorFilter<MockHandler<T>> invocationHandler, T delegator,
+			Method... methodsToMock) {
 
 		if (invocationHandler == null) {
 			throw new IllegalArgumentException("Invocation Handler cannot be null.");
@@ -104,7 +107,8 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 
 	private boolean isInVerificationMode() {
 		try {
-			MockingProgress internalState = (MockingProgress) Whitebox.invokeMethod(ThreadSafeMockingProgress.class, "threadSafely");
+			MockingProgress internalState = (MockingProgress) Whitebox.invokeMethod(ThreadSafeMockingProgress.class,
+					"threadSafely");
 			return Whitebox.getInternalState(internalState, VerificationMode.class) == null;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -115,13 +119,30 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 		Object interceptionObject = obj;
 		// If the method is static we should get the substitution mock.
 		if (Modifier.isStatic(method.getModifiers()) && isMocked(method)) {
-			final InvocationSubstitute<?> substituteObject = (InvocationSubstitute<?>) Whitebox.getInternalState(invocationHandler.getDelegate(),
-					"instance");
+			final InvocationSubstitute<?> substituteObject = (InvocationSubstitute<?>) Whitebox.getInternalState(
+					invocationHandler.getDelegate(), "instance");
 			if (substituteObject != null) {
 				interceptionObject = substituteObject;
 			}
 		}
-		final Object returnValue = invocationHandler.intercept(interceptionObject, method, arguments, getMethodProxy(method));
+		/*
+		 * Mockito 1.7 changes the CGLib Naming policy using reflection if
+		 * calling invocationHandler.intercept(..) directly which will cause the
+		 * invocation to fail since we're proxying the proxy. To get around this
+		 * we get the delegator using reflection and invoke its intercept method
+		 * directly instead and thus bypassing this and some other stuff such as
+		 * equals and hashcode checks. This is not safe and should be regarded
+		 * as hack! The best way would probably be to persuade the Mockito guys
+		 * to create some sort of hook-method to replace the call to
+		 * "new CGLIBHacker().setMockitoNamingPolicy(methodProxy)" which is what
+		 * causing the trouble. If we could create our own CGLIBHacker which
+		 * uses the Whitebox hierarchy traverser mechanisms to set the field we
+		 * would be fine.
+		 */
+		MockAwareInterceptor<?> interceptorDelegator = (MockAwareInterceptor<?>) Whitebox.getInternalState(
+				invocationHandler, "delegate");
+		final Object returnValue = interceptorDelegator.intercept(interceptionObject, method, arguments,
+				getMethodProxy(method));
 		if (returnValue == null && isInVerificationMode()) {
 			return MockGateway.SUPPRESS;
 		}

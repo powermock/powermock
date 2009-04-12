@@ -17,6 +17,8 @@ package org.powermock.reflect.internal.matcherstrategies;
 
 import java.lang.reflect.Field;
 
+import org.powermock.reflect.exceptions.FieldNotFoundException;
+
 public class FieldTypeMatcherStrategy extends FieldMatcherStrategy {
 
 	final Class<?> expectedFieldType;
@@ -34,8 +36,8 @@ public class FieldTypeMatcherStrategy extends FieldMatcherStrategy {
 	}
 
 	@Override
-	public void notFound(Class<?> type) throws IllegalArgumentException {
-		throw new IllegalArgumentException("No field of type \"" + expectedFieldType.getName() + "\" could be found in the class hierarchy of "
+	public void notFound(Class<?> type) throws FieldNotFoundException {
+		throw new FieldNotFoundException("No field of type \"" + expectedFieldType.getName() + "\" could be found in the class hierarchy of "
 				+ type.getName() + ".");
 	}
 

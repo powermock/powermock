@@ -17,6 +17,8 @@ package org.powermock.reflect.internal.matcherstrategies;
 
 import java.lang.reflect.Field;
 
+import org.powermock.reflect.exceptions.FieldNotFoundException;
+
 /**
  * Class that should be implemented by field matching strategies.
  */
@@ -34,11 +36,11 @@ public abstract class FieldMatcherStrategy {
 	public abstract boolean matches(Field field);
 
 	/**
-	 * Throws an {@link IllegalArgumentException} if the strategy criteria could
+	 * Throws an {@link RuntimeException} if the strategy criteria could
 	 * not be found.
 	 * 
 	 * @param type
 	 *            The type of the object that was not found.
 	 */
-	public abstract void notFound(Class<?> type) throws IllegalArgumentException;
+	public abstract void notFound(Class<?> type) throws FieldNotFoundException;
 }
