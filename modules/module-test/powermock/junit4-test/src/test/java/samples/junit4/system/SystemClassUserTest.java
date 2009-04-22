@@ -23,8 +23,12 @@ import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.mockStaticPartial;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
+import static org.powermock.api.easymock.PowerMock.expectLastCall;
 
 import java.net.URLEncoder;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -102,6 +106,21 @@ public class SystemClassUserTest {
 		new SystemClassUser().doMoreComplicatedStuff();
 
 		assertEquals("2", System.getProperty("nanoTime"));
+
+		verifyAll();
+	}
+
+	@Test
+	public void assertThatMockingOfCollectionsWork() throws Exception {
+		List<?> list = new LinkedList<Object>();
+		mockStatic(Collections.class);
+
+		Collections.shuffle(list);
+		expectLastCall().once();
+
+		replayAll();
+
+		new SystemClassUser().shuffleCollection(list);
 
 		verifyAll();
 	}

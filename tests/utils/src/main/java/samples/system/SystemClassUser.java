@@ -18,10 +18,11 @@ package samples.system;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Collections;
+import java.util.List;
 
 /**
- * Class used to demonstrate PowerMock's ability to mock non-final system
- * classes.
+ * Class used to demonstrate PowerMock's ability to mock system classes.
  */
 public class SystemClassUser {
 
@@ -43,5 +44,9 @@ public class SystemClassUser {
 
 	public void copyProperty(String to, String from) throws IOException {
 		System.setProperty(to, System.getProperty(from));
+	}
+
+	public void shuffleCollection(List<?> list) {
+		Collections.shuffle(list);
 	}
 }
