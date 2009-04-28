@@ -34,13 +34,13 @@ public class MockGateway {
 	public static final Object SUPPRESS = new Object();
 
 	// used for static methods
-	public static synchronized Object methodCall(Class<?> type, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString)
-			throws Throwable {
+	public static synchronized Object methodCall(Class<?> type, String methodName, Object[] args, Class<?>[] sig,
+			String returnTypeAsString) throws Throwable {
 		return doMethodCall(type, methodName, args, sig, returnTypeAsString);
 	}
 
-	private static Object doMethodCall(Object object, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString) throws Throwable,
-			NoSuchMethodException {
+	private static Object doMethodCall(Object object, String methodName, Object[] args, Class<?>[] sig,
+			String returnTypeAsString) throws Throwable, NoSuchMethodException {
 		if ((methodName.equals("hashCode") && sig.length == 0) || (methodName.equals("equals") && sig.length == 1)) {
 			return PROCEED;
 		}
@@ -65,7 +65,8 @@ public class MockGateway {
 		 */
 		final Method method = WhiteboxImpl.getMethod(objectType, methodName, sig);
 		if (methodInvocationControl != null && methodInvocationControl.isMocked(method)) {
-			returnValue = methodInvocationControl.invoke(object, WhiteboxImpl.getMethod(objectType, methodName, sig), args);
+			returnValue = methodInvocationControl.invoke(object, WhiteboxImpl.getMethod(objectType, methodName, sig),
+					args);
 			if (returnValue == SUPPRESS) {
 				returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
 			}
@@ -80,8 +81,8 @@ public class MockGateway {
 	}
 
 	// used for instance methods
-	public static synchronized Object methodCall(Object instance, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString)
-			throws Throwable {
+	public static synchronized Object methodCall(Object instance, String methodName, Object[] args, Class<?>[] sig,
+			String returnTypeAsString) throws Throwable {
 		return doMethodCall(instance, methodName, args, sig, returnTypeAsString);
 	}
 
@@ -112,8 +113,8 @@ public class MockGateway {
 		return PROCEED;
 	}
 
-	public static synchronized Object fieldCall(Object instanceOrClassContainingTheField, Class<?> classDefiningField, String fieldName,
-			Class<?> fieldType) {
+	public static synchronized Object fieldCall(Object instanceOrClassContainingTheField, Class<?> classDefiningField,
+			String fieldName, Class<?> fieldType) {
 		if (MockRepository.shouldSuppressField(WhiteboxImpl.getField(classDefiningField, fieldName))) {
 			return TypeUtils.getDefaultValue(fieldType);
 		}

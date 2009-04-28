@@ -1,3 +1,18 @@
+/*
+ * Copyright 2008 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package demo.org.powermock.examples.tutorial.domainmocking.impl;
 
 import static org.easymock.EasyMock.expect;
@@ -47,7 +62,7 @@ public class SampleServiceImplTest_Tutorial {
 
 	@After
 	public void tearDown() {
-		// TODO Set all references to null
+		// TODO Set all references to null or use the FieldDefaulter test listener
 	}
 
 	@Test
@@ -58,7 +73,7 @@ public class SampleServiceImplTest_Tutorial {
 		// TODO Expect the call to businessMessages.hasErrors(..) and make it return false
 		// TODO Replay all mock objects used and also replay the classes whose constructions were mocked
 		// TODO Perform the actual test and assert that the result is false
-		// TODO Verify all mock objects used and also replay the classes whose constructions were mocked
+		// TODO Verify all mock objects used and also verify the classes whose constructions were mocked
 	}
 
 	@Test
@@ -70,7 +85,7 @@ public class SampleServiceImplTest_Tutorial {
 		// TODO Expect the all to eventService.sendErrorEvent(..)
 		// TODO Replay all mock objects used and also replay the classes whose constructions were mocked
 		// TODO Perform the actual test and assert that the result is false
-		// TODO Verify all mock objects used and also replay the classes whose constructions were mocked
+		// TODO Verify all mock objects used and also verify the classes whose constructions were mocked
 	}
 
 	@Test(expected = SampleServiceException.class)
@@ -78,6 +93,6 @@ public class SampleServiceImplTest_Tutorial {
 		// TODO Create a mock object of the Person class and mock the a construction of "new Person" but instead throw an IllegalArgumentException
 		// TODO Replay all mock objects used and also replay the classes whose constructions were mocked
 		// TODO Perform the actual test and assert that the result is false
-		// TODO Verify all mock objects used and also replay the classes whose constructions were mocked
+		// TODO Verify all mock objects used and also verify the classes whose constructions were mocked
 	}
 }
