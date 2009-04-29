@@ -25,6 +25,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Set;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.powermock.reflect.exceptions.MethodNotFoundException;
 import org.powermock.reflect.exceptions.TooManyFieldsFoundException;
@@ -154,6 +155,7 @@ public class WhiteBoxTest {
 	 * @throws Exception
 	 */
 	@Test
+	@Ignore("Invokes different methods on PC and MAC (hashCode on mac)")
 	public void testInvokePrivateMethod_withoutSpecifyingMethodName_noArguments() throws Exception {
 		assertNull(Whitebox.invokeMethod(new ClassWithUniquePrivateMethods()));
 	}
