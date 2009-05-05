@@ -3,7 +3,7 @@
 	<groupId>org.powermock.examples.tutorial</groupId>
 	<artifactId>powermock-examples-tutorial</artifactId>
 	<packaging>jar</packaging>
-	<version>1.2.5</version>
+	<version>1.3-SNAPSHOT</version>
 	<name>tutorial</name>
 	<url>http://maven.apache.org</url>
 	<distributionManagement>
