@@ -138,4 +138,21 @@ public class SystemClassUserTest {
 
 		verifyAll();
 	}
+
+	@Test
+	public void assertThatMockingStringWorks() throws Exception {
+		mockStatic(String.class);
+		final String string = "string";
+		final String args = "args";
+		final String returnValue = "returnValue";
+
+		expect(String.format(string, args)).andReturn(returnValue);
+
+		replayAll();
+
+		final SystemClassUser systemClassUser = new SystemClassUser();
+		assertEquals(systemClassUser.format(string, args), returnValue);
+
+		verifyAll();
+	}
 }

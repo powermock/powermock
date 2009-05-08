@@ -45,6 +45,10 @@ public class SystemClassUser {
 	public void copyProperty(String to, String from) throws IOException {
 		System.setProperty(to, System.getProperty(from));
 	}
+	
+	public String format(String one, String args) throws IOException {
+		return String.format(one, args);
+	}
 
 	public void shuffleCollection(List<?> list) {
 		Collections.shuffle(list);
