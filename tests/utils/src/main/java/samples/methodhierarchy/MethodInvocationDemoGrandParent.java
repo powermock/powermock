@@ -15,19 +15,19 @@
  */
 package samples.methodhierarchy;
 
-public class MethodInvocationDemoGrandChild {
+public class MethodInvocationDemoGrandParent {
 
 	protected String getTheString() {
-		return "a string from MethodInvocationDemoGrandChild";
+		return "a string from MethodInvocationDemoGrandParent";
 	}
 
 	@SuppressWarnings("unused")
 	private String getString() {
-		return "MethodInvocationDemoGrandChild";
+		return "MethodInvocationDemoGrandParent";
 	}
 
 	@SuppressWarnings("unused")
 	private String getString(int index) {
-		return "MethodInvocationDemoGrandChild: " + index;
+		return "MethodInvocationDemoGrandParent: " + index;
 	}
 }

@@ -15,7 +15,7 @@
  */
 package samples.methodhierarchy;
 
-public class MethodInvocationDemo extends MethodInvocationDemoChild {
+public class MethodInvocationDemo extends MethodInvocationDemoParent {
 
 	@SuppressWarnings("unused")
 	private String getString() {

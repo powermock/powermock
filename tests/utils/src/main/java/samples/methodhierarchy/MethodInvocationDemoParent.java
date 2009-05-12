@@ -15,15 +15,15 @@
  */
 package samples.methodhierarchy;
 
-public class MethodInvocationDemoChild extends MethodInvocationDemoGrandChild {
+public class MethodInvocationDemoParent extends MethodInvocationDemoGrandParent {
 
 	@Override
 	protected String getTheString() {
-		return "MethodInvocationDemoChild wrapped " + super.getTheString();
+		return "MethodInvocationDemoParent wrapped " + super.getTheString();
 	}
 
 	@SuppressWarnings("unused")
 	private String getString() {
-		return "MethodInvocationDemoChild";
+		return "MethodInvocationDemoParent";
 	}
 }
