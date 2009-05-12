@@ -57,13 +57,13 @@ public class MethodInvocationDemoTest {
 	public void testCreatePartialMockForAProtectedMethodInASpecificSubclass() throws Exception {
 		final String value = "another string";
 		final String getTheStringMethodName = "getTheString";
-		MethodInvocationDemo tested = createPartialMock(MethodInvocationDemo.class, MethodInvocationDemoGrandChild.class, getTheStringMethodName);
+		MethodInvocationDemo tested = createPartialMock(MethodInvocationDemo.class, MethodInvocationDemoGrandParent.class, getTheStringMethodName);
 
-		expectPrivate(tested, getTheStringMethodName, MethodInvocationDemoGrandChild.class).andReturn(value);
+		expectPrivate(tested, getTheStringMethodName, MethodInvocationDemoGrandParent.class).andReturn(value);
 
 		replay(tested);
 
-		assertEquals("MethodInvocationDemoChild wrapped " + value, tested.getTheString());
+		assertEquals("MethodInvocationDemoParent wrapped " + value, tested.getTheString());
 
 		verify(tested);
 	}
@@ -74,7 +74,7 @@ public class MethodInvocationDemoTest {
 
 		};
 
-		assertEquals("MethodInvocationDemoChild wrapped a string from MethodInvocationDemoGrandChild", Whitebox.invokeMethod(tested, "getString"));
+		assertEquals("MethodInvocationDemoParent wrapped a string from MethodInvocationDemoGrandParent", Whitebox.invokeMethod(tested, "getString"));
 	}
 
 	@Test
@@ -83,7 +83,7 @@ public class MethodInvocationDemoTest {
 
 		};
 
-		assertEquals("MethodInvocationDemoChild", Whitebox.invokeMethod(tested, MethodInvocationDemoChild.class, "getString"));
+		assertEquals("MethodInvocationDemoParent", Whitebox.invokeMethod(tested, MethodInvocationDemoParent.class, "getString"));
 	}
 
 	@Test
@@ -92,7 +92,7 @@ public class MethodInvocationDemoTest {
 
 		};
 
-		assertEquals("MethodInvocationDemoChild wrapped a string from MethodInvocationDemoGrandChild", tested.getTheString());
+		assertEquals("MethodInvocationDemoParent wrapped a string from MethodInvocationDemoGrandParent", tested.getTheString());
 	}
 
 	@Test
@@ -101,14 +101,14 @@ public class MethodInvocationDemoTest {
 
 		};
 
-		assertEquals("MethodInvocationDemoChild wrapped a string from MethodInvocationDemoGrandChild", Whitebox.invokeMethod(tested, "getTheString"));
+		assertEquals("MethodInvocationDemoParent wrapped a string from MethodInvocationDemoGrandParent", Whitebox.invokeMethod(tested, "getTheString"));
 	}
 
 	@Test
 	public void testInvokeSpecificMethodInHierarchy() throws Exception {
 		MethodInvocationDemo tested = new MethodInvocationDemo();
 
-		assertEquals("MethodInvocationDemoGrandChild", Whitebox.invokeMethod(tested, MethodInvocationDemoGrandChild.class, "getString",
+		assertEquals("MethodInvocationDemoGrandParent", Whitebox.invokeMethod(tested, MethodInvocationDemoGrandParent.class, "getString",
 				(Object[]) new Class<?>[0]));
 	}
 
@@ -116,7 +116,7 @@ public class MethodInvocationDemoTest {
 	public void testInvokeSpecificMethodInHierarchyWithArguments() throws Exception {
 		MethodInvocationDemo tested = new MethodInvocationDemo();
 
-		assertEquals("MethodInvocationDemoGrandChild: 2", Whitebox.invokeMethod(tested, MethodInvocationDemoGrandChild.class, "getString",
+		assertEquals("MethodInvocationDemoGrandParent: 2", Whitebox.invokeMethod(tested, MethodInvocationDemoGrandParent.class, "getString",
 				new Class<?>[] { int.class }, 2));
 	}
 }
