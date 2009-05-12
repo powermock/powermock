@@ -1,4 +1,4 @@
-package samples.mockpolicy;
+package samples.junit4.mockpolicy;
 
 import static org.junit.Assert.assertEquals;
 
@@ -12,6 +12,9 @@ import org.powermock.mockpolicies.MockPolicyClassLoadingSettings;
 import org.powermock.mockpolicies.MockPolicyInterceptionSettings;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
+
+import samples.mockpolicy.ResultCalculator;
+import samples.mockpolicy.SomeClassWithAMethod;
 
 /**
  * A simple example of a mock policy that stubs out a method call.
