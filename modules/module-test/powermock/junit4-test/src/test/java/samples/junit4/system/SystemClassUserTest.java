@@ -126,7 +126,7 @@ public class SystemClassUserTest {
 	}
 
 	@Test
-	public void assertThatPartialMockingOfFinalSystemClassesWorksForVoidMethods() throws Exception {
+	public void assertThatPartialMockingOfFinalSystemClassesWorksForNonVoidMethods() throws Exception {
 		mockStaticPartial(System.class, "getProperty");
 
 		expect(System.getProperty("property")).andReturn("my property");
