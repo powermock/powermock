@@ -18,6 +18,7 @@ package powermock.examples.newmocking;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertTrue;
 import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.powermock.api.easymock.PowerMock.createMockAndExpectNew;
 import static org.powermock.api.easymock.PowerMock.expectNew;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
@@ -80,11 +81,10 @@ public class PersistenceManagerWithReplayAllAndVerifyAllTest {
 	@Test
 	public void testCreateDirectoryStructure_usingCreateMockAndExpectNew() throws Exception {
 		final String path = "directoryPath";
-		File fileMock = createMock(File.class);
+		File fileMock = createMockAndExpectNew(File.class, path);
 
 		PersistenceManager tested = new PersistenceManager();
 
-		expectNew(File.class, path).andReturn(fileMock);
 		expect(fileMock.exists()).andReturn(false);
 		expect(fileMock.mkdirs()).andReturn(true);
 
