@@ -20,12 +20,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.powermock.api.easymock.PowerMock.suppressMethod;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import samples.suppressmethod.SuppressMethod;
+import samples.suppressmethod.SuppressMethodParent;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(SuppressMethod.class)
@@ -136,4 +138,15 @@ public class SuppressMethodTest {
 		// Should not cause an NPE when suppressing code.
 		tested.invokeVoid(null);
 	}
+	
+	@Test
+	@Ignore("Doesn't work atm")
+	public void testSuppressMethodInParentOnly() throws Exception {
+		suppressMethod(SuppressMethodParent.class, "myMethod");
+
+		SuppressMethod tested = new SuppressMethod();
+		// Should not cause an NPE when suppressing code.
+		assertEquals(20, tested.myMethod());
+	}
+	
 }
