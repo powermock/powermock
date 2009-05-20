@@ -26,15 +26,15 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import samples.suppressconstructor.InvokeConstructor;
-import samples.suppressconstructor.SuppressConstructorHierarchyChild;
+import samples.suppressconstructor.SuppressConstructorHierarchyParent;
 
-@PrepareForTest(SuppressConstructorHierarchyChild.class)
+@PrepareForTest(SuppressConstructorHierarchyParent.class)
 @RunWith(PowerMockRunner.class)
 public class SuppressConstructorHierarchyDemoTest {
 
 	@Test
 	public void testSuppressConstructorHierarchy() throws Exception {
-		suppressConstructor(SuppressConstructorHierarchyChild.class);
+		suppressConstructor(SuppressConstructorHierarchyParent.class);
 		final String message = new InvokeConstructor().doStuff("qwe");
 		assertNull("Message should have been null since we're skipping the execution of the constructor code. Message was \"" + message + "\".",
 				message);
@@ -44,7 +44,7 @@ public class SuppressConstructorHierarchyDemoTest {
 	@PrepareForTest
 	public void testNotSuppressConstructorWithoutByteCodeManipulation() throws Exception {
 		try {
-			new SuppressConstructorHierarchyChild("message");
+			new SuppressConstructorHierarchyParent("message");
 			fail("Should throw RuntimeException since we're running this test with a new class loader!");
 		} catch (RuntimeException e) {
 			assertEquals("This should be suppressed!!", e.getMessage());
@@ -54,7 +54,7 @@ public class SuppressConstructorHierarchyDemoTest {
 	@Test
 	public void testNotSuppressConstructorWithByteCodeManipulation() throws Exception {
 		try {
-			new SuppressConstructorHierarchyChild("message");
+			new SuppressConstructorHierarchyParent("message");
 			fail("Should throw RuntimeException since we're running this test with a new class loader!");
 		} catch (RuntimeException e) {
 			assertEquals("This should be suppressed!!", e.getMessage());
@@ -69,8 +69,8 @@ public class SuppressConstructorHierarchyDemoTest {
 	 */
 	@Test
 	public void testSuppressConstructorHierarchyAgain() throws Exception {
-		suppressConstructor(SuppressConstructorHierarchyChild.class);
-		SuppressConstructorHierarchyChild tested = new SuppressConstructorHierarchyChild("message");
+		suppressConstructor(SuppressConstructorHierarchyParent.class);
+		SuppressConstructorHierarchyParent tested = new SuppressConstructorHierarchyParent("message");
 		assertEquals(42, tested.getNumber());
 	}
 }
