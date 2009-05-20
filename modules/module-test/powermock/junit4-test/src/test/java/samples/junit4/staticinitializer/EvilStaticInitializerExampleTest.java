@@ -31,17 +31,16 @@ import samples.staticinitializer.EvilStaticInitializerExample;
  * Test that demonstrates a (naive) example of when chunking may be handy.
  */
 @RunWith(PowerMockRunner.class)
-@SuppressStaticInitializationFor("samples.staticinitializer.EvilStaticInitializerExample")
 public class EvilStaticInitializerExampleTest {
 
 	@Test
+	@SuppressStaticInitializationFor("samples.staticinitializer.EvilStaticInitializerExample")
 	public void assertNativeCodeInvocationWorks() throws Exception {
 		EvilStaticInitializerExample tested = new EvilStaticInitializerExample();
 		assertThat(tested.doSomeNativeStuffUsingTheLoadedSystemLibrary(), instanceOf(String.class));
 	}
 
 	@Test
-	@SuppressStaticInitializationFor
 	public void assertCorrectErrorMessageIfLibraryNotFound() throws Exception {
 		try {
 			new EvilStaticInitializerExample();
