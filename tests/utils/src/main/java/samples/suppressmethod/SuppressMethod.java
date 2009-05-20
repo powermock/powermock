@@ -15,7 +15,7 @@
  */
 package samples.suppressmethod;
 
-public class SuppressMethod {
+public class SuppressMethod extends SuppressMethodParent {
 
 	public Object getObject() {
 		return new Object();
@@ -59,5 +59,10 @@ public class SuppressMethod {
 
 	public void invokeVoid(StringBuilder s) {
 		s.append("This should be suppressed!");
+	}
+
+	@Override
+	public int myMethod() {
+		return 20 + super.myMethod();
 	}
 }
