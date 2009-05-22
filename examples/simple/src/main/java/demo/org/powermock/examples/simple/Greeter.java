@@ -32,7 +32,7 @@ public class Greeter {
         }
     }
 
-    static String getMessage() {
+    private static String getMessage() {
 		return SimpleConfig.getGreeting() + " " + SimpleConfig.getTarget();
 	}
 }
