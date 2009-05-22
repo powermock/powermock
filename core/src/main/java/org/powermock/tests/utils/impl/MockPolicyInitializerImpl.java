@@ -102,6 +102,7 @@ public class MockPolicyInitializerImpl implements MockPolicyInitializer {
 			classLoader.addClassesToModify(fullyQualifiedNamesOfClassesToLoadByMockClassloader);
 
 			for (String string : classLoadingSettings.getStaticInitializersToSuppress()) {
+				classLoader.addClassesToModify(string);
 				MockRepository.addSuppressStaticInitializer(string);
 			}
 
