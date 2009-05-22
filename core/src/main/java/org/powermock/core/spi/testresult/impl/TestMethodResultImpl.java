@@ -30,5 +30,9 @@ public class TestMethodResultImpl implements TestMethodResult {
 	public Result getResult() {
 		return result;
 	}
-
+	
+	@Override
+	public String toString() {
+		return result.toString();
+	}
 }
