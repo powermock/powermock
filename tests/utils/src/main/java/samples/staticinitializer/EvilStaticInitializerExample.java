@@ -32,7 +32,7 @@ public class EvilStaticInitializerExample {
 
 	/*
 	 * We imagine that this method require the library to execute, but we want
-	 * to test it anyway in seperation.
+	 * to test it anyway in separation.
 	 */
 	public String doSomeNativeStuffUsingTheLoadedSystemLibrary() {
 		return "native stuff";
