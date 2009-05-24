@@ -64,5 +64,8 @@ public class TestSuiteResultImpl implements TestSuiteResult {
 		return testCount;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return getResult().toString();
+	}
 }
