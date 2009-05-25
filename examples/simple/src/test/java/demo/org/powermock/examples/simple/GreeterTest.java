@@ -51,7 +51,7 @@ public class GreeterTest {
 	@Test
 	public void testRun() throws Exception {
 		Logger logger = createMock(Logger.class);
-		
+
 		expectNew(Logger.class).andReturn(logger);
 		logger.log("Hello");
 		expectLastCall().times(10);
@@ -72,4 +72,17 @@ public class GreeterTest {
 		verify(Logger.class);
 	}
 
+	/**
+	 * This test demonstrates that issue 110
+	 * (http://code.google.com/p/powermock/issues/detail?id=110) has been
+	 * solved.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	@SuppressStaticInitializationFor
+	@PrepareForTest(fullyQualifiedNames="demo.org.powermock.examples.simple.SimpleConfig")
+	public void assertItsOkToInvokeReflectionMethodsOnClasses() throws Exception {
+		new SimpleConfig();
+	}
 }
