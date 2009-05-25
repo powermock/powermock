@@ -2,6 +2,9 @@ Change log 1.3 (under development)
 ----------------------------------
 * Classes that will have their static initializers suppressed are automatically added to prepare for test in mock policies.
 * Added a toString implementation for TestMethodResultImpl
+* Added a toString implementation for TestSuiteResultImpl
+* suppressMethod(Class...classes) now takes a class and additional classes as var args (i.e. suppressMethod(Class cls, Class...classes). This makes it easier to suppress all methods of a particular class for only one class.
+* Invoking reflection methods now works again. This failed in version 1.2 and 1.2.5 when PowerMock begun supporting mocking of system classes. E.g. MyClass.class.getClassloader() now works again even if MyClass is prepared for test.
 
 Change log 1.2.5 (released 2009-05-05)
 --------------------------------------
