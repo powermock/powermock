@@ -21,6 +21,7 @@ import java.lang.reflect.Modifier;
 
 import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.core.spi.NewInvocationControl;
+import org.powermock.reflect.exceptions.MethodNotFoundException;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
 /**
@@ -34,13 +35,13 @@ public class MockGateway {
 	public static final Object SUPPRESS = new Object();
 
 	// used for static methods
-	public static synchronized Object methodCall(Class<?> type, String methodName, Object[] args, Class<?>[] sig,
-			String returnTypeAsString) throws Throwable {
+	public static synchronized Object methodCall(Class<?> type, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString)
+			throws Throwable {
 		return doMethodCall(type, methodName, args, sig, returnTypeAsString);
 	}
 
-	private static Object doMethodCall(Object object, String methodName, Object[] args, Class<?>[] sig,
-			String returnTypeAsString) throws Throwable, NoSuchMethodException {
+	private static Object doMethodCall(Object object, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString) throws Throwable,
+			NoSuchMethodException {
 		if ((methodName.equals("hashCode") && sig.length == 0) || (methodName.equals("equals") && sig.length == 1)) {
 			return PROCEED;
 		}
@@ -63,10 +64,25 @@ public class MockGateway {
 		 * original method or suppress the method code otherwise invoke the
 		 * invocation handler.
 		 */
-		final Method method = WhiteboxImpl.getMethod(objectType, methodName, sig);
+		Method method = null;
+		try {
+			method = WhiteboxImpl.getMethod(objectType, methodName, sig);
+		} catch (MethodNotFoundException e) {
+			/*
+			 * Dirty hack to get around issue 110
+			 * (http://code.google.com/p/powermock/issues/detail?id=110). Review
+			 * this! What we do here is to try to find a reflective method on
+			 * class. This has begun to fail since version 1.2 when we supported
+			 * mocking static methods in system classes.
+			 */
+			try {
+				method = WhiteboxImpl.getMethod(Class.class, methodName, sig);
+			} catch (MethodNotFoundException e2) {
+				throw e;
+			}
+		}
 		if (methodInvocationControl != null && methodInvocationControl.isMocked(method)) {
-			returnValue = methodInvocationControl.invoke(object, WhiteboxImpl.getMethod(objectType, methodName, sig),
-					args);
+			returnValue = methodInvocationControl.invoke(object, WhiteboxImpl.getMethod(objectType, methodName, sig), args);
 			if (returnValue == SUPPRESS) {
 				returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
 			}
@@ -81,8 +97,8 @@ public class MockGateway {
 	}
 
 	// used for instance methods
-	public static synchronized Object methodCall(Object instance, String methodName, Object[] args, Class<?>[] sig,
-			String returnTypeAsString) throws Throwable {
+	public static synchronized Object methodCall(Object instance, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString)
+			throws Throwable {
 		return doMethodCall(instance, methodName, args, sig, returnTypeAsString);
 	}
 
@@ -113,8 +129,8 @@ public class MockGateway {
 		return PROCEED;
 	}
 
-	public static synchronized Object fieldCall(Object instanceOrClassContainingTheField, Class<?> classDefiningField,
-			String fieldName, Class<?> fieldType) {
+	public static synchronized Object fieldCall(Object instanceOrClassContainingTheField, Class<?> classDefiningField, String fieldName,
+			Class<?> fieldType) {
 		if (MockRepository.shouldSuppressField(WhiteboxImpl.getField(classDefiningField, fieldName))) {
 			return TypeUtils.getDefaultValue(fieldType);
 		}
