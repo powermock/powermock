@@ -230,7 +230,7 @@ public class MainMockTransformer implements MockTransformer {
 					if (className.startsWith("java.")) {
 						StringBuilder code = new StringBuilder();
 						code
-								.append("{Object classOrInstance = null; if($class==null){classOrInstance = $0;} else { classOrInstance = $class;}");
+								.append("{Object classOrInstance = null; if($0!=null){classOrInstance = $0;} else { classOrInstance = $class;}");
 						code.append("Object value =  ").append(MockGateway.class.getName()).append(".methodCall(")
 								.append("classOrInstance,\"").append(m.getMethodName()).append("\",$args, $sig,\"")
 								.append(getReturnTypeAsString(method)).append("\");");
