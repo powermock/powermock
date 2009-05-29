@@ -33,7 +33,8 @@ public class StaticConstructorSuppressExtractorImpl extends AbstractTestClassExt
 	/**
 	 * {@inheritDoc}
 	 */
-	public String[] getTestClasses(AnnotatedElement element) {
+	@Override
+	public String[] getClassesToModify(AnnotatedElement element) {
 		List<String> all = new LinkedList<String>();
 
 		final SuppressStaticInitializationFor suppressAnnotation = element.getAnnotation(SuppressStaticInitializationFor.class);

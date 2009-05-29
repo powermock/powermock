@@ -35,7 +35,8 @@ public class PrepareForTestExtractorImpl extends AbstractTestClassExtractor {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String[] getTestClasses(AnnotatedElement element) {
+	@Override
+	protected String[] getClassesToModify(AnnotatedElement element) {
 		Set<String> all = new LinkedHashSet<String>();
 
 		PrepareForTest prepareForTestAnnotation = element.getAnnotation(PrepareForTest.class);

@@ -16,6 +16,8 @@
 package org.powermock.tests.utils.impl;
 
 import java.lang.reflect.AnnotatedElement;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.powermock.tests.utils.TestClassesExtractor;
 
@@ -23,6 +25,50 @@ import org.powermock.tests.utils.TestClassesExtractor;
  * Base class for all test class extractors.
  */
 public abstract class AbstractTestClassExtractor implements TestClassesExtractor {
+
+	/**
+	 * If <code>element</code> is a class this method traverses the hierarchy
+	 * and extracts classes that should be prepared for test in all super
+	 * classes.
+	 */
+	public final String[] getTestClasses(AnnotatedElement element) {
+		final Set<String> classesToPrepareForTest = new HashSet<String>();
+		if (element instanceof Class<?>) {
+			Class<?> classToInvestigate = (Class<?>) element;
+			/*
+			 * We skip the first class because it's extracted below this
+			 * if-statement
+			 */
+			classToInvestigate = classToInvestigate.getSuperclass();
+			while (classToInvestigate != null && !classToInvestigate.equals(Object.class)) {
+				extractClassesAndAddThemToList(classToInvestigate, classesToPrepareForTest);
+				classToInvestigate = classToInvestigate.getSuperclass();
+			}
+		}
+		extractClassesAndAddThemToList(element, classesToPrepareForTest);
+		return classesToPrepareForTest.toArray(new String[classesToPrepareForTest.size()]);
+	}
+
+	private void extractClassesAndAddThemToList(AnnotatedElement elementToExtractClassFrom, final Set<String> classesToPrepareForTest) {
+		final String[] classesToModify = getClassesToModify(elementToExtractClassFrom);
+		if (classesToModify != null) {
+			for (String className : classesToModify) {
+				classesToPrepareForTest.add(className);
+			}
+		}
+	}
+
+	/**
+	 * Get the fully qualified names for classes that must should be modified
+	 * for this <code>element</code>.
+	 * 
+	 * @param element
+	 *            The element that may contain info regarding which classes that
+	 *            must be modified by PowerMock.
+	 * @return An array of fully-qualified names to classes that must be
+	 *         modified by PowerMock for the specific <code>element</code>.
+	 */
+	protected abstract String[] getClassesToModify(AnnotatedElement element);
 
 	public boolean isPrepared(AnnotatedElement element, String fullyQualifiedClassName) {
 		if (fullyQualifiedClassName == null) {
