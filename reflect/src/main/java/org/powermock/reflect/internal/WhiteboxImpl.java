@@ -1432,18 +1432,6 @@ public class WhiteboxImpl {
 			} else {
 				throw new MethodInvocationException(cause);
 			}
-		} catch (Exception e) {
-			if (e instanceof InvocationTargetException) {
-				Throwable cause = e.getCause();
-				if (cause instanceof Exception) {
-					throw (Exception) cause;
-				} else {
-					throw new MethodInvocationException("Failed to invoke method " + methodToInvoke.getName()
-							+ " on object " + tested + ". Reason was \"" + e.getMessage() + "\".", e);
-				}
-			} else {
-				throw e;
-			}
 		}
 	}
 
