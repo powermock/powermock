@@ -41,7 +41,7 @@ public class PrepareForTestExtractorImplTest {
 	@Test
 	public void shouldFindClassesToPrepareForTestInTheWholeClassHierarchy() throws Exception {
 		final PrepareForTestExtractorImpl tested = new PrepareForTestExtractorImpl();
-		final String[] classesToPrepare = tested.getTestClasses(DemoClassForPrepareForTest.class);
+		final String[] classesToPrepare = tested.getTestClasses(PrepareForTestDemoClass.class);
 		assertEquals(5, classesToPrepare.length);
 		final String classPrefix = "Class";
 		final List<String> classesToPrepareList = Arrays.asList(classesToPrepare);
@@ -52,16 +52,16 @@ public class PrepareForTestExtractorImplTest {
 }
 
 @PrepareForTest(fullyQualifiedNames = { "Class1", "Class2" })
-class DemoClassForPrepareForTest extends DemoClassForPrepareForTestParent {
+class PrepareForTestDemoClass extends PrepareForTestDemoClassParent {
 
 }
 
 @PrepareForTest(fullyQualifiedNames = { "Class3" })
-class DemoClassForPrepareForTestParent extends DemoClassForPrepareForTestGrandParent {
+class PrepareForTestDemoClassParent extends PrepareForTestDemoClassGrandParent {
 
 }
 
 @PrepareForTest(fullyQualifiedNames = { "Class4", "Class5" })
-class DemoClassForPrepareForTestGrandParent {
+class PrepareForTestDemoClassGrandParent {
 
 }
