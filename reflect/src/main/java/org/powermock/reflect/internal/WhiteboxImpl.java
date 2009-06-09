@@ -1312,7 +1312,7 @@ public class WhiteboxImpl {
 	static void throwExceptionWhenMultipleConstructorMatchesFound(Constructor<?>[] constructors) {
 		if (constructors == null || constructors.length < 2) {
 			throw new IllegalArgumentException(
-					"Internal error: throwExceptionWhenMultipleMethodMatchesFound needs at least two methods.");
+					"Internal error: throwExceptionWhenMultipleConstructorMatchesFound needs at least two methods.");
 		}
 		StringBuilder sb = new StringBuilder();
 		sb
