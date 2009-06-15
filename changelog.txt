@@ -7,6 +7,7 @@ Change log 1.3 (under development)
 * Invoking reflection methods now works again. This failed in version 1.2 and 1.2.5 when PowerMock begun supporting mocking of system classes. E.g. MyClass.class.getClassloader() now works again even if MyClass is prepared for test.
 * The standard JUnit 4 runner has been verified to work with JUnit 4.6. The version dependency for JUnit4 is thus changed from [4.4,4.5] to [4.4,4.6].
 * Classes prepared for test in parent test classes are now automatically prepared for test as well. I.e. if Test Case A extends Test Case B and A prepares X.class and B prepares Y.class then both X and Y will be prepared for test. Before only X was prepared for test.
+* Fixed a bug in Whitebox which prevented it from instantiating classes with constructors combining normal and var-arg parameters. The same was fix was applied to method invocations as well.
 
 Change log 1.2.5 (released 2009-05-05)
 --------------------------------------

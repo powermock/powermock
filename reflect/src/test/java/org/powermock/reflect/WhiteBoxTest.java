@@ -15,10 +15,11 @@
  */
 package org.powermock.reflect;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.Field;
@@ -40,6 +41,7 @@ import org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameName;
 import org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameNameOneWithoutParameters;
 import org.powermock.reflect.testclasses.ClassWithUniquePrivateMethods;
 import org.powermock.reflect.testclasses.ClassWithVarArgsConstructor;
+import org.powermock.reflect.testclasses.ClassWithVarArgsConstructor2;
 
 /**
  * Tests the WhiteBox's functionality.
@@ -61,8 +63,7 @@ public class WhiteBoxTest {
 	@Test
 	public void testFindMethod_classContainingMethodWithNoParameters() throws Exception {
 		Method expected = ClassWithSeveralMethodsWithSameNameOneWithoutParameters.class.getMethod("getDouble");
-		Method actual = WhiteboxImpl.findMethodOrThrowException(
-				ClassWithSeveralMethodsWithSameNameOneWithoutParameters.class, "getDouble");
+		Method actual = WhiteboxImpl.findMethodOrThrowException(ClassWithSeveralMethodsWithSameNameOneWithoutParameters.class, "getDouble");
 		assertEquals(expected, actual);
 	}
 
@@ -83,9 +84,8 @@ public class WhiteBoxTest {
 			WhiteboxImpl.findMethodOrThrowException(ClassWithSeveralMethodsWithSameName.class, "getDouble2");
 			fail("Should throw runtime exception!");
 		} catch (RuntimeException e) {
-			assertEquals("Error message did not match",
-					"No method found with name 'getDouble2' with argument types: [  ] in class "
-							+ ClassWithSeveralMethodsWithSameName.class.getName(), e.getMessage());
+			assertEquals("Error message did not match", "No method found with name 'getDouble2' with argument types: [  ] in class "
+					+ ClassWithSeveralMethodsWithSameName.class.getName(), e.getMessage());
 		}
 	}
 
@@ -200,20 +200,20 @@ public class WhiteBoxTest {
 
 	@Test
 	public void testMethodWithPrimitiveIntAndString_primitive() throws Exception {
-		assertEquals("My int value is: " + 8, (String) Whitebox.invokeMethod(new ClassWithPrivateMethods(),
-				"methodWithPrimitiveIntAndString", 8, "My int value is: "));
+		assertEquals("My int value is: " + 8, (String) Whitebox.invokeMethod(new ClassWithPrivateMethods(), "methodWithPrimitiveIntAndString", 8,
+				"My int value is: "));
 	}
 
 	@Test
 	public void testMethodWithPrimitiveIntAndString_Wrapped() throws Exception {
-		assertEquals("My int value is: " + 8, (String) Whitebox.invokeMethod(new ClassWithPrivateMethods(),
-				"methodWithPrimitiveIntAndString", Integer.valueOf(8), "My int value is: "));
+		assertEquals("My int value is: " + 8, (String) Whitebox.invokeMethod(new ClassWithPrivateMethods(), "methodWithPrimitiveIntAndString",
+				Integer.valueOf(8), "My int value is: "));
 	}
 
 	@Test
 	public void testMethodWithPrimitiveAndWrappedInt_primtive_wrapped() throws Exception {
-		assertEquals(17, Whitebox.invokeMethod(new ClassWithPrivateMethods(), "methodWithPrimitiveAndWrappedInt",
-				new Class[] { int.class, Integer.class }, 9, Integer.valueOf(8)));
+		assertEquals(17, Whitebox.invokeMethod(new ClassWithPrivateMethods(), "methodWithPrimitiveAndWrappedInt", new Class[] { int.class,
+				Integer.class }, 9, Integer.valueOf(8)));
 	}
 
 	@Test
@@ -256,11 +256,10 @@ public class WhiteBoxTest {
 	}
 
 	@Test
-	public void testInstantiateVarArgsConstructor() throws Exception {
+	public void testInstantiateVarArgsOnlyConstructor() throws Exception {
 		final String argument1 = "argument1";
 		final String argument2 = "argument2";
-		ClassWithVarArgsConstructor instance = Whitebox.invokeConstructor(ClassWithVarArgsConstructor.class, argument1,
-				argument2);
+		ClassWithVarArgsConstructor instance = Whitebox.invokeConstructor(ClassWithVarArgsConstructor.class, argument1, argument2);
 		String[] strings = instance.getStrings();
 		assertEquals(2, strings.length);
 		assertEquals(argument1, strings[0]);
@@ -268,7 +267,7 @@ public class WhiteBoxTest {
 	}
 
 	@Test
-	public void testInstantiateVarArgsConstructor_noArguments() throws Exception {
+	public void testInstantiateVarArgsOnlyConstructor_noArguments() throws Exception {
 		ClassWithVarArgsConstructor instance = Whitebox.invokeConstructor(ClassWithVarArgsConstructor.class);
 		String[] strings = instance.getStrings();
 		assertEquals(0, strings.length);
@@ -323,8 +322,7 @@ public class WhiteBoxTest {
 	}
 
 	@Test
-	public void testSetInternalStateInClassAndMakeSureThatTheChildClassIsNotAffectedEvenThoughItHasAFieldWithTheSameName()
-			throws Exception {
+	public void testSetInternalStateInClassAndMakeSureThatTheChildClassIsNotAffectedEvenThoughItHasAFieldWithTheSameName() throws Exception {
 		final int value = 22;
 		final String fieldName = "anotherInternalState";
 		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState() {
@@ -361,8 +359,7 @@ public class WhiteBoxTest {
 		Whitebox.setInternalState(tested, int.class, value);
 		assertEquals(value, (int) Whitebox.getInternalState(tested, int.class));
 		assertEquals(value, Whitebox.getInternalState(tested, "anotherInternalState"));
-		assertEquals(value, Whitebox.getInternalState(tested, "anotherInternalState",
-				ClassWithChildThatHasInternalState.class));
+		assertEquals(value, Whitebox.getInternalState(tested, "anotherInternalState", ClassWithChildThatHasInternalState.class));
 	}
 
 	@Test
@@ -388,8 +385,8 @@ public class WhiteBoxTest {
 		final int value = 21;
 		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
 		Whitebox.setInternalState(tested, value);
-		assertEquals((Integer) value, Whitebox.getInternalState(tested, "anotherInternalState",
-				ClassWithChildThatHasInternalState.class, Integer.class));
+		assertEquals((Integer) value, Whitebox.getInternalState(tested, "anotherInternalState", ClassWithChildThatHasInternalState.class,
+				Integer.class));
 	}
 
 	@Test
@@ -401,8 +398,7 @@ public class WhiteBoxTest {
 	}
 
 	@Test
-	public void testSetInternalStateBasedOnObjectTypeAtASpecificPlaceInTheClassHierarchyForPrimitiveType()
-			throws Exception {
+	public void testSetInternalStateBasedOnObjectTypeAtASpecificPlaceInTheClassHierarchyForPrimitiveType() throws Exception {
 		final long value = 31;
 		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
 		Whitebox.setInternalState(tested, value, ClassWithInternalState.class);
@@ -410,8 +406,7 @@ public class WhiteBoxTest {
 	}
 
 	@Test
-	public void testSetInternalStateBasedOnObjectTypeAtANonSpecificPlaceInTheClassHierarchyForPrimitiveType()
-			throws Exception {
+	public void testSetInternalStateBasedOnObjectTypeAtANonSpecificPlaceInTheClassHierarchyForPrimitiveType() throws Exception {
 		final long value = 31;
 		ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
 		Whitebox.setInternalState(tested, value);
@@ -497,10 +492,8 @@ public class WhiteBoxTest {
 			Whitebox.getMethod(ClassWithSeveralMethodsWithSameName.class);
 			fail("Should throw TooManyMethodsFoundException");
 		} catch (TooManyMethodsFoundException e) {
-			assertTrue(e
-					.getMessage()
-					.contains(
-							"Several matching methods found, please specify the method name so that PowerMock can determine which method you're refering to"));
+			assertTrue(e.getMessage().contains(
+					"Several matching methods found, please specify the method name so that PowerMock can determine which method you're refering to"));
 		}
 	}
 
@@ -530,6 +523,28 @@ public class WhiteBoxTest {
 					"No methods matching the name(s) notFound1, notFound2 or notFound3 were found in the class hierarchy of class org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameName.",
 					e.getMessage());
 		}
+	}
+
+	/**
+	 * Asserts that <a
+	 * href="http://code.google.com/p/powermock/issues/detail?id=118">issue
+	 * 118</a> is fixed. Thanks to cemcatik for finding this.
+	 */
+	@Test
+	public void testInvokeConstructorWithBothNormalAndVarArgsParameter() throws Exception {
+		ClassWithVarArgsConstructor2 instance = Whitebox.invokeConstructor(ClassWithVarArgsConstructor2.class, "first", "second", "third");
+		assertArrayEquals(new String[] { "first", "second", "third" }, instance.getStrings());
+	}
+
+	/**
+	 * Asserts that <a
+	 * href="http://code.google.com/p/powermock/issues/detail?id=118">issue
+	 * 118</a> is fixed. Thanks to cemcatik for finding this.
+	 */
+	@Test
+	public void testInvokeMethodWithBothNormalAndVarArgsParameter() throws Exception {
+		ClassWithPrivateMethods tested = new ClassWithPrivateMethods();
+		assertEquals(4, Whitebox.invokeMethod(tested, "varArgsMethod2", 1, 2, 3));
 	}
 
 	public void testFinalState() {

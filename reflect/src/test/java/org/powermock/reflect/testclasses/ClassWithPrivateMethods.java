@@ -54,4 +54,8 @@ public class ClassWithPrivateMethods {
 	private int varArgsMethod(int value) {
 		return value * 2;
 	}
+
+	private int varArgsMethod2(int value, int... moreValues) {
+		return value * 2 + moreValues.length;
+	}
 }
