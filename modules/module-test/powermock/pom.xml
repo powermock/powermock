@@ -14,5 +14,6 @@
     <module>junit4-legacy-test</module>
     <module>junit4-test</module>
     <module>junit45-test</module>
+    <module>testng-test</module>
   </modules>
 </project>

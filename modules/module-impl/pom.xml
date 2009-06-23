@@ -14,5 +14,6 @@
     <module>junit4</module>
     <module>junit4-common</module>
     <module>junit4-legacy</module>
+    <module>testng</module>
   </modules>
 </project>
