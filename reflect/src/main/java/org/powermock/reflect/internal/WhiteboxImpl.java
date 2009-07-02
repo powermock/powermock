@@ -1969,22 +1969,23 @@ public class WhiteboxImpl {
 
 	private static boolean isPotentialVarArgsMethod(Method method,
 			Object[] arguments) {
-		return doesParameterTypesMatchForVarArgsInvocation(
-				method.isVarArgs(),
-				method.getParameterTypes()[method.getParameterTypes().length - 1]
-						.getComponentType(), arguments);
+		return doesParameterTypesMatchForVarArgsInvocation(method.isVarArgs(),
+				method.getParameterTypes(), arguments);
 	}
 
 	private static boolean isPotentialVarArgsConstructor(
 			Constructor<?> constructor, Object[] arguments) {
+		final Class<?>[] parameterTypes = constructor.getParameterTypes();
 		return doesParameterTypesMatchForVarArgsInvocation(constructor
-				.isVarArgs(), constructor.getParameterTypes()[constructor
-				.getParameterTypes().length - 1].getComponentType(), arguments);
+				.isVarArgs(), parameterTypes, arguments);
 	}
 
 	private static boolean doesParameterTypesMatchForVarArgsInvocation(
-			boolean isVarArgs, Class<?> componentType, Object[] arguments) {
-		if (isVarArgs && arguments != null && arguments.length >= 1) {
+			boolean isVarArgs, Class<?>[] parameterTypes, Object[] arguments) {
+		if (isVarArgs && arguments != null && arguments.length >= 1
+				&& parameterTypes != null && parameterTypes.length >= 1) {
+			final Class<?> componentType = parameterTypes[parameterTypes.length - 1]
+					.getComponentType();
 			final Class<?> firstArgumentTypeAsPrimitive = getTypeAsPrimitiveIfWrapped(arguments[0]);
 			final Class<?> varArgsParameterTypeAsPrimitive = getTypeAsPrimitiveIfWrapped(componentType);
 			isVarArgs = isVarArgs
