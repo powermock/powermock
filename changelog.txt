@@ -8,8 +8,8 @@ Change log 1.3 (under development)
 * The standard JUnit 4 runner has been verified to work with JUnit 4.6. The version dependency for JUnit4 is thus changed from [4.4,4.5] to [4.4,4.6].
 * Classes prepared for test in parent test classes are now automatically prepared for test as well. I.e. if Test Case A extends Test Case B and A prepares X.class and B prepares Y.class then both X and Y will be prepared for test. Before only X was prepared for test.
 * Fixed a bug in Whitebox which prevented it from instantiating classes with constructors combining normal and var-arg parameters. The same was fix was applied to method invocations as well.
-* Fixed so that WhiteboxImpl#findMethodOrThrowException(..) throws a TooManyMethodsFoundException if a potential method had previously been found and a new matching var-args constructor was found.
-* Fixed so that WhiteboxImpl#findConstructorOrThrowException(..) throws a TooManyConstructorsFoundException if a potential constructor had previously been found and a new matching var-args method was found.
+* Fixed so that WhiteboxImpl#findMethodOrThrowException(..) throws a TooManyMethodsFoundException if a potential method had previously been found and a new matching var-args method was found.
+* Fixed so that WhiteboxImpl#findConstructorOrThrowException(..) throws a TooManyConstructorsFoundException if a potential constructor had previously been found and a new matching var-args constructor was found.
 * Fixed a bug so that when Whitebox looks for a var args method it now also checks that the component type of the var args array is the same as the supplied argument type(s).
 * Implemented so that expectPrivate in the EasyMock extension API can be used without specifying a method name. The method is looked up by using the argument types.
 
