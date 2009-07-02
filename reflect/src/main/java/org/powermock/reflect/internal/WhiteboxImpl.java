@@ -936,17 +936,28 @@ public class WhiteboxImpl {
 						/*
 						 * We've already found a constructor match before, this
 						 * means that PowerMock cannot determine which method to
-						 * expect since+ there are two methods with the same
-						 * name and the same number of arguments but one is
-						 * using wrapper types.
+						 * expect since there are two methods with the same name
+						 * and the same number of arguments but one is using
+						 * wrapper types.
 						 */
 						throwExceptionWhenMultipleConstructorMatchesFound(new Constructor<?>[] {
 								potentialConstructor, constructor });
 					}
 				}
-			} else if (constructor.isVarArgs()
-					&& areAllArgumentsOfSameType(arguments)) {
-				potentialConstructor = constructor;
+			} else if (isPotentialVarArgsConstructor(constructor, arguments)) {
+				if (potentialConstructor == null) {
+					potentialConstructor = constructor;
+				} else {
+					/*
+					 * We've already found a constructor match before, this
+					 * means that PowerMock cannot determine which method to
+					 * expect since there are two methods with the same name and
+					 * the same number of arguments but one is using wrapper
+					 * types.
+					 */
+					throwExceptionWhenMultipleConstructorMatchesFound(new Constructor<?>[] {
+							potentialConstructor, constructor });
+				}
 				break;
 			} else if (arguments != null
 					&& (paramTypes.length != arguments.length)) {
@@ -1958,17 +1969,29 @@ public class WhiteboxImpl {
 
 	private static boolean isPotentialVarArgsMethod(Method method,
 			Object[] arguments) {
-		boolean isPotentialMethod = method.isVarArgs();
-		if (isPotentialMethod && arguments != null && arguments.length >= 1) {
+		return doesParameterTypesMatchForVarArgsInvocation(
+				method.isVarArgs(),
+				method.getParameterTypes()[method.getParameterTypes().length - 1]
+						.getComponentType(), arguments);
+	}
+
+	private static boolean isPotentialVarArgsConstructor(
+			Constructor<?> constructor, Object[] arguments) {
+		return doesParameterTypesMatchForVarArgsInvocation(constructor
+				.isVarArgs(), constructor.getParameterTypes()[constructor
+				.getParameterTypes().length - 1].getComponentType(), arguments);
+	}
+
+	private static boolean doesParameterTypesMatchForVarArgsInvocation(
+			boolean isVarArgs, Class<?> componentType, Object[] arguments) {
+		if (isVarArgs && arguments != null && arguments.length >= 1) {
 			final Class<?> firstArgumentTypeAsPrimitive = getTypeAsPrimitiveIfWrapped(arguments[0]);
-			final Class<?> varArgsParameterTypeAsPrimitive = getTypeAsPrimitiveIfWrapped(method
-					.getParameterTypes()[method.getParameterTypes().length - 1]
-					.getComponentType());
-			isPotentialMethod = isPotentialMethod
+			final Class<?> varArgsParameterTypeAsPrimitive = getTypeAsPrimitiveIfWrapped(componentType);
+			isVarArgs = isVarArgs
 					&& varArgsParameterTypeAsPrimitive
 							.isAssignableFrom(firstArgumentTypeAsPrimitive);
 		}
-		return isPotentialMethod && areAllArgumentsOfSameType(arguments);
+		return isVarArgs && areAllArgumentsOfSameType(arguments);
 	}
 
 	/**
