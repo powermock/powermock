@@ -547,6 +547,12 @@ public class WhiteBoxTest {
 		assertEquals(4, Whitebox.invokeMethod(tested, "varArgsMethod2", 1, 2, 3));
 	}
 
+	@Test
+	public void testInvokePrivateMethodWithArrayArgument() throws Exception {
+		ClassWithPrivateMethods tested = new ClassWithPrivateMethods();
+		assertEquals("Hello World", Whitebox.invokeMethod(tested, "evilConcatOfStrings", new Object[] { new String[] { "Hello ", "World" } }));
+	}
+
 	public void testFinalState() {
 		ClassWithInternalState state = new ClassWithInternalState();
 		String expected = "changed";
