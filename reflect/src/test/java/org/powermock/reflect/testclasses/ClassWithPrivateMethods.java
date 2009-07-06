@@ -35,6 +35,14 @@ public class ClassWithPrivateMethods {
 		return myInt + myInt2;
 	}
 
+	private String evilConcatOfStrings(String[] strings) {
+		String returnValue = "";
+		for (String string : strings) {
+			returnValue += string;
+		}
+		return returnValue;
+	}
+
 	private int varArgsMethod(int... ints) {
 		int sum = 0;
 		for (int i : ints) {
