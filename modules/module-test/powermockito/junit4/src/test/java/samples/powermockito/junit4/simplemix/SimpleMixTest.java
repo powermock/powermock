@@ -23,7 +23,6 @@ import static org.powermock.api.mockito.PowerMockito.mockPartial;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockListener;
@@ -45,34 +44,33 @@ import samples.simplemix.SimpleMixUtilities;
 @PowerMockListener(FieldDefaulter.class)
 public class SimpleMixTest {
 
-	@PrepareForTest( { SimpleMixUtilities.class, SimpleMixCollaborator.class, SimpleMix.class })
-	@Test
-	public void staticPartialFinalMocking() throws Exception {
-		SimpleMix tested = mockPartial(SimpleMix.class, "getValue");
+    @PrepareForTest( { SimpleMixUtilities.class, SimpleMixCollaborator.class, SimpleMix.class })
+    @Test
+    public void staticPartialFinalMocking() throws Exception {
+        SimpleMix tested = mockPartial(SimpleMix.class, "getValue");
 
-		SimpleMixCollaborator simpleMixCollaboratorMock = mock(SimpleMixCollaborator.class);
-		mockStatic(SimpleMixUtilities.class);
+        SimpleMixCollaborator simpleMixCollaboratorMock = mock(SimpleMixCollaborator.class);
+        mockStatic(SimpleMixUtilities.class);
 
-		Whitebox.setInternalState(tested, simpleMixCollaboratorMock);
+        Whitebox.setInternalState(tested, simpleMixCollaboratorMock);
 
-		when(SimpleMixUtilities.getRandomInteger()).thenReturn(10);
-		when(simpleMixCollaboratorMock.getRandomInteger()).thenReturn(6);
+        when(SimpleMixUtilities.getRandomInteger()).thenReturn(10);
+        when(simpleMixCollaboratorMock.getRandomInteger()).thenReturn(6);
 
-		assertEquals(4, tested.calculate());
+        assertEquals(4, tested.calculate());
 
-		verifyStatic(SimpleMixUtilities.class);
-		SimpleMixUtilities.getRandomInteger();
-	}
+        verifyStatic(SimpleMixUtilities.class);
+        SimpleMixUtilities.getRandomInteger();
+    }
 
-	@PrepareForTest( { SimpleMix.class, SimpleMixTest.class })
-	@Test
-	@Ignore
-	public void finalSystemClassMocking() throws Exception {
-		SimpleMix tested = new SimpleMix();
-		mockStatic(System.class);
+    @PrepareForTest( { SimpleMix.class, SimpleMixTest.class })
+    @Test
+    public void finalSystemClassMocking() throws Exception {
+        SimpleMix tested = new SimpleMix();
+        mockStatic(System.class);
 
-		when(System.currentTimeMillis()).thenReturn(2000L);
+        when(System.currentTimeMillis()).thenReturn(2000L);
 
-		assertEquals(2,  Whitebox.invokeMethod(tested, "getValue"));
-	}
+        assertEquals(2, Whitebox.invokeMethod(tested, "getValue"));
+    }
 }

@@ -15,6 +15,7 @@ Change log 1.3 (under development)
 * Extended the Whitebox.setInternalState functionality to accept a var-args list of values to set on an object. I.e. you can now do Whitebox.setInternalState(object, myState1, .., myStateN).
 * Upgraded to Javassist 3.10 (3.11 doesn't work with PowerMock due to a bug).
 * Fixed a bug in the EasyMock extension API regarding suppression of methods so that it now uses Whitebox.getMethods(..) instead of Whitebox.getMethod(..).
+* Mocking of static methods in final system classes now works with the Mockito extension (because of a bug fix in Javassist 3.10)
 
 Change log 1.2.5 (released 2009-05-05)
 --------------------------------------
