@@ -316,8 +316,10 @@ public class WhiteboxImpl {
      */
     public static void setInternalState(Object object, Object value, Object... additionalValues) {
         setField(object, value, findFieldInHierarchy(object, new AssignableToFieldTypeMatcherStrategy(getType(value))));
-        for (Object additionalValue : additionalValues) {
-            setField(object, additionalValue, findFieldInHierarchy(object, new AssignableToFieldTypeMatcherStrategy(getType(additionalValue))));
+        if (additionalValues != null && additionalValues.length > 0) {
+            for (Object additionalValue : additionalValues) {
+                setField(object, additionalValue, findFieldInHierarchy(object, new AssignableToFieldTypeMatcherStrategy(getType(additionalValue))));
+            }
         }
     }
 
@@ -1231,7 +1233,7 @@ public class WhiteboxImpl {
      * @param parameterTypes
      * @return
      */
-    static <T> Method findMethod(Class<T> type, String methodName, Class<?>... parameterTypes) {
+    public static <T> Method findMethod(Class<T> type, String methodName, Class<?>... parameterTypes) {
         if (methodName == null && parameterTypes == null) {
             throw new IllegalArgumentException("You must specify a method name or parameter types.");
         }

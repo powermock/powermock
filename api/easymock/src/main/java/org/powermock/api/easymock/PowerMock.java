@@ -2065,9 +2065,13 @@ public class PowerMock {
      *            Additional methods to suppress in class <code>clazz</code>.
      */
     public static synchronized void suppressMethod(Class<?> clazz, String methodName, String... additionalMethodNames) {
-        MockRepository.addMethodToSuppress(Whitebox.getMethod(clazz, methodName));
-        for (Method method : Whitebox.getMethods(clazz, additionalMethodNames)) {
+        for (Method method : Whitebox.getMethods(clazz, methodName)) {
             MockRepository.addMethodToSuppress(method);
+        }
+        if (additionalMethodNames != null && additionalMethodNames.length > 0) {
+            for (Method method : Whitebox.getMethods(clazz, additionalMethodNames)) {
+                MockRepository.addMethodToSuppress(method);
+            }
         }
     }
 
