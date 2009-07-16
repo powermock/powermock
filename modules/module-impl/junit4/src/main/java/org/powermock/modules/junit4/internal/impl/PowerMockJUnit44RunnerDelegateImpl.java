@@ -208,8 +208,10 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 			@Override
 			public void runBeforesThenTestThenAfters(Runnable test) {
 				// Initialize mock policies for each test
-				new MockPolicyInitializerImpl(testClass.getJavaClass()).initialize(this.getClass().getClassLoader());
+				final ClassLoader classloader = this.getClass().getClassLoader();
+				new MockPolicyInitializerImpl(testClass.getJavaClass()).initialize(classloader);
 				powerMockTestNotifier.notifyBeforeTestMethod(testInstance, method, new Object[0]);
+				Thread.currentThread().setContextClassLoader(classloader);
 				super.runBeforesThenTestThenAfters(test);
 			}
 

@@ -21,6 +21,7 @@ import java.util.Vector;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
+import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
 import org.powermock.core.spi.PowerMockTestListener;
@@ -43,7 +44,7 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements Powe
 	/**
 	 * Constructs a TestSuite from the given class. Adds all the methods
 	 * starting with "test" as test cases to the suite. Parts of this method was
-	 * cut'n'pasted on the train between Malmö and Stockholm.
+	 * cut'n'pasted on the train between Malmï¿½ and Stockholm.
 	 */
 	public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass, Method[] methodsToRun,
 			PowerMockTestListener[] powerMockTestListeners) {
@@ -103,6 +104,12 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements Powe
 
 	public Class<?> getTestClass() {
 		return testClass;
+	}
+
+	@Override
+	public void run(TestResult result) {
+		Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+		super.run(result);
 	}
 
 	/**

@@ -145,11 +145,6 @@ public class MockPolicyInitializerImpl implements MockPolicyInitializer {
 	 */
 	@SuppressWarnings("unused")
 	private void initializeInterceptionSettings() {
-		if (getClass().getClassLoader() == Thread.currentThread().getContextClassLoader()) {
-			throw new IllegalArgumentException("PowerMock internal error: " + MockClassLoader.class.getName()
-					+ "#initializeInterceptionSettings(..) cannot be loaded by the context class loader "
-					+ Thread.currentThread().getContextClassLoader() + ".");
-		}
 		MockPolicyInterceptionSettings interceptionSettings = getInterceptionSettings();
 
 		for (Method method : interceptionSettings.getMethodsToSuppress()) {

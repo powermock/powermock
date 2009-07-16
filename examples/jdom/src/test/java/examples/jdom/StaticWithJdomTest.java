@@ -28,11 +28,11 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
- * Thanks to Manuel Fern‡ndez S‡nchez de la Blanca for this example.
+ * Thanks to Manuel Fernï¿½ndez Sï¿½nchez de la Blanca for this example.
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { StaticClass.class })
-@PowerMockIgnore("org.jdom")
+@PowerMockIgnore({"org.jdom", "com.sun.org.apache.xerces"})
 public class StaticWithJdomTest {
 
 	@org.junit.Test

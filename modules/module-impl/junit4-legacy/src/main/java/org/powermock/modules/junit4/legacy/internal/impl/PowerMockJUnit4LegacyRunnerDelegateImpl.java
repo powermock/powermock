@@ -79,7 +79,9 @@ public class PowerMockJUnit4LegacyRunnerDelegateImpl extends TestClassRunner imp
 				new PowerMockJUnit4LegacyTestIntrospector(getTestClass()), BeforeAndAfterRunner.class);
 
 		// Initialize mock policies for each test
-		new MockPolicyInitializerImpl(getTestClass()).initialize(this.getClass().getClassLoader());
+		final ClassLoader classLoader = this.getClass().getClassLoader();
+		new MockPolicyInitializerImpl(getTestClass()).initialize(classLoader);
+		Thread.currentThread().setContextClassLoader(classLoader);
 		runner.runProtected();
 	}
 
