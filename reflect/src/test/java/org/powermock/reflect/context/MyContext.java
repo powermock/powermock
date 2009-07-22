@@ -20,7 +20,13 @@ public class MyContext {
     private int myIntState = 42;
 
     private String myStringState = "myString";
-    
+
+    private static long myLongState = 21L;
+
+    public long getMyLongState() {
+        return myLongState;
+    }
+
     public int getMyIntState() {
         return myIntState;
     }

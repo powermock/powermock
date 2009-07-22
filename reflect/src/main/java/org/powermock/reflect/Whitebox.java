@@ -640,4 +640,8 @@ public class Whitebox {
     public static void setInternalStateFromContext(Object tested, Object context, Object... additionalContexts) {
         WhiteboxImpl.setInternalStateFromContext(tested, context, additionalContexts);
     }
+    
+    public static void setInternalStateFromContext(Object tested, Class<?> context, Class<?>... additionalContexts) {
+        WhiteboxImpl.setInternalStateFromContext(tested, context, additionalContexts);
+    }
 }

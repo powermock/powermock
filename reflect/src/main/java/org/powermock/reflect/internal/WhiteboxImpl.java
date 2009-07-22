@@ -1821,34 +1821,41 @@ public class WhiteboxImpl {
     }
 
     public static void setInternalStateFromContext(Object object, Object context, Object[] additionalContexts) {
-        copyState(object, context, true);
+        if (!isClass(context)) {
+            copyState(object, context);
+        }
+        copyState(object, getType(object));
         if (additionalContexts != null && additionalContexts.length > 0) {
             for (Object additionContext : additionalContexts) {
-                copyState(object, additionContext, true);
+                if (!isClass(additionContext)) {
+                    copyState(object, additionContext);
+                }
+                copyState(object, getType(additionContext));
             }
         }
     }
 
     public static void setInternalStateFromContext(Object object, Class<?> context, Class<?>[] additionalContexts) {
-        copyState(object, context, false);
+        copyState(object, context);
         if (additionalContexts != null && additionalContexts.length > 0) {
             for (Class<?> additionContext : additionalContexts) {
-                copyState(object, additionContext, false);
+                copyState(object, additionContext);
             }
         }
     }
 
-    static void copyState(Object object, Object context, boolean isInstance) {
+    static void copyState(Object object, Object context) {
         if (object == null) {
             throw new IllegalArgumentException("object to set state cannot be null");
         } else if (context == null) {
             throw new IllegalArgumentException("context cannot be null");
         }
 
-        Set<Field> allFields = isInstance ? getAllInstanceFields(context) : getAllStaticFields(getType(context));
+        Set<Field> allFields = isClass(context) ? getAllStaticFields(getType(context)) : getAllInstanceFields(context);
         for (Field field : allFields) {
             try {
-                setInternalState(object, field.getType(), field.get(context));
+                final boolean isStaticField = Modifier.isStatic(field.getModifiers());
+                setInternalState(isStaticField ? getType(object) : object, field.getType(), field.get(context));
             } catch (IllegalAccessException e) {
                 // Should never happen
                 throw new RuntimeException("Internal Error: Failed to get the field value in method setInternalStateFromContext.", e);

@@ -28,9 +28,12 @@ import java.util.Set;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.powermock.reflect.context.FieldsNotInTargetContext;
 import org.powermock.reflect.context.MyContext;
 import org.powermock.reflect.context.MyIntContext;
 import org.powermock.reflect.context.MyStringContext;
+import org.powermock.reflect.context.OneInstanceAndOneStaticFieldOfSameTypeContext;
+import org.powermock.reflect.exceptions.FieldNotFoundException;
 import org.powermock.reflect.exceptions.MethodNotFoundException;
 import org.powermock.reflect.exceptions.TooManyFieldsFoundException;
 import org.powermock.reflect.exceptions.TooManyMethodsFoundException;
@@ -43,6 +46,7 @@ import org.powermock.reflect.testclasses.ClassWithPrivateMethods;
 import org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameName;
 import org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameNameOneWithoutParameters;
 import org.powermock.reflect.testclasses.ClassWithSimpleInternalState;
+import org.powermock.reflect.testclasses.ClassWithStaticAndInstanceInternalStateOfSameType;
 import org.powermock.reflect.testclasses.ClassWithUniquePrivateMethods;
 import org.powermock.reflect.testclasses.ClassWithVarArgsConstructor;
 import org.powermock.reflect.testclasses.ClassWithVarArgsConstructor2;
@@ -396,7 +400,7 @@ public class WhiteBoxTest {
 
     @Test
     public void testSetInternalStateBasedOnObjectTypeWhenArgumentIsAPrimitiveType() throws Exception {
-        final int value = 21;
+        final int value = 22;
         ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
         Whitebox.setInternalState(tested, value);
         assertEquals((Integer) value, Whitebox.getInternalState(tested, "anotherInternalState", ClassWithChildThatHasInternalState.class,
@@ -590,7 +594,41 @@ public class WhiteBoxTest {
     public void testSetInternalStateFromContext_contextIsAClass() throws Exception {
         ClassWithSimpleInternalState tested = new ClassWithSimpleInternalState();
         Whitebox.setInternalStateFromContext(tested, MyContext.class);
-        assertEquals(Whitebox.getInternalState(new MyContext(), String.class), tested.getSomeStringState());
+        assertEquals((Long) Whitebox.getInternalState(MyContext.class, long.class), (Long) tested.getSomeStaticLongState());
+    }
+
+    @Test
+    public void testSetInternalStateFromContext_contextIsAClassAndAnInstance() throws Exception {
+        ClassWithSimpleInternalState tested = new ClassWithSimpleInternalState();
+        MyContext myContext = new MyContext();
+        Whitebox.setInternalStateFromContext(tested, MyContext.class, myContext);
+        assertEquals(myContext.getMyStringState(), tested.getSomeStringState());
+        assertEquals(myContext.getMyIntState(), tested.getSomeIntState());
+        assertEquals((Long) myContext.getMyLongState(), (Long) tested.getSomeStaticLongState());
+    }
+
+    @Test
+    public void testSetInternalStateFromContext_contextHasOneInstanceAndOneStaticFieldOfSameType_onlyInstanceContext() throws Exception {
+        ClassWithStaticAndInstanceInternalStateOfSameType tested = new ClassWithStaticAndInstanceInternalStateOfSameType();
+        OneInstanceAndOneStaticFieldOfSameTypeContext context = new OneInstanceAndOneStaticFieldOfSameTypeContext();
+        Whitebox.setInternalStateFromContext(tested, context);
+        assertEquals(context.getMyStringState(), tested.getStringState());
+        assertEquals("Static String state", tested.getStaticStringState());
+    }
+
+    @Test
+    public void testSetInternalStateFromContext_contextHasOneInstanceAndOneStaticFieldOfSameType_onlyStaticContext() throws Exception {
+        ClassWithStaticAndInstanceInternalStateOfSameType tested = new ClassWithStaticAndInstanceInternalStateOfSameType();
+        Whitebox.setInternalStateFromContext(tested, OneInstanceAndOneStaticFieldOfSameTypeContext.class);
+        assertEquals(OneInstanceAndOneStaticFieldOfSameTypeContext.getMyStaticStringState(), tested.getStaticStringState());
+        assertEquals("String state", tested.getStringState());
+    }
+
+    @Test(expected = FieldNotFoundException.class)
+    public void testSetInternalStateFromContext_contextHasFieldsNotDefinedInTargetObject() throws Exception {
+        ClassWithSimpleInternalState tested = new ClassWithSimpleInternalState();
+        FieldsNotInTargetContext fieldsNotInTargetContext = new FieldsNotInTargetContext();
+        Whitebox.setInternalStateFromContext(tested, fieldsNotInTargetContext);
     }
 
     public void testFinalState() {

@@ -17,10 +17,16 @@
 package org.powermock.reflect.testclasses;
 
 public class ClassWithSimpleInternalState {
-    
+
     private int someIntState = -1;
-    
+
     private String someStringState = "-1";
+
+    private static long someStaticLongState = -1L;
+
+    public long getSomeStaticLongState() {
+        return someStaticLongState;
+    }
 
     public int getSomeIntState() {
         return someIntState;
