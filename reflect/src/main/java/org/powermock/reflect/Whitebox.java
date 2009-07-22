@@ -21,14 +21,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Set;
 
-import org.powermock.reflect.context.MyContext;
 import org.powermock.reflect.exceptions.ConstructorNotFoundException;
 import org.powermock.reflect.exceptions.FieldNotFoundException;
 import org.powermock.reflect.exceptions.MethodNotFoundException;
 import org.powermock.reflect.exceptions.TooManyMethodsFoundException;
 import org.powermock.reflect.internal.WhiteboxImpl;
-import org.powermock.reflect.internal.matcherstrategies.AssignableToFieldTypeMatcherStrategy;
-import org.powermock.reflect.testclasses.ClassWithSimpleInternalState;
 
 /**
  * Various utilities for accessing internals of a class. Basically a simplified
