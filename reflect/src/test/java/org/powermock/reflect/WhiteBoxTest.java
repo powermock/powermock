@@ -28,6 +28,9 @@ import java.util.Set;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.powermock.reflect.context.MyContext;
+import org.powermock.reflect.context.MyIntContext;
+import org.powermock.reflect.context.MyStringContext;
 import org.powermock.reflect.exceptions.MethodNotFoundException;
 import org.powermock.reflect.exceptions.TooManyFieldsFoundException;
 import org.powermock.reflect.exceptions.TooManyMethodsFoundException;
@@ -39,6 +42,7 @@ import org.powermock.reflect.testclasses.ClassWithInternalState;
 import org.powermock.reflect.testclasses.ClassWithPrivateMethods;
 import org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameName;
 import org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameNameOneWithoutParameters;
+import org.powermock.reflect.testclasses.ClassWithSimpleInternalState;
 import org.powermock.reflect.testclasses.ClassWithUniquePrivateMethods;
 import org.powermock.reflect.testclasses.ClassWithVarArgsConstructor;
 import org.powermock.reflect.testclasses.ClassWithVarArgsConstructor2;
@@ -561,6 +565,32 @@ public class WhiteBoxTest {
     public void testInvokePrivateMethodWithArrayArgument() throws Exception {
         ClassWithPrivateMethods tested = new ClassWithPrivateMethods();
         assertEquals("Hello World", Whitebox.invokeMethod(tested, "evilConcatOfStrings", new Object[] { new String[] { "Hello ", "World" } }));
+    }
+
+    @Test
+    public void testSetInternalStateFromContext_allStatesInSameOneContext() throws Exception {
+        ClassWithSimpleInternalState tested = new ClassWithSimpleInternalState();
+        MyContext context = new MyContext();
+        Whitebox.setInternalStateFromContext(tested, context);
+        assertEquals(context.getMyStringState(), tested.getSomeStringState());
+        assertEquals(context.getMyIntState(), tested.getSomeIntState());
+    }
+
+    @Test
+    public void testSetInternalStateFromContext_statesInDifferentContext() throws Exception {
+        ClassWithSimpleInternalState tested = new ClassWithSimpleInternalState();
+        MyIntContext myIntContext = new MyIntContext();
+        MyStringContext myStringContext = new MyStringContext();
+        Whitebox.setInternalStateFromContext(tested, myIntContext, myStringContext);
+        assertEquals(myStringContext.getMyStringState(), tested.getSomeStringState());
+        assertEquals(myIntContext.getSimpleIntState(), tested.getSomeIntState());
+    }
+
+    @Test
+    public void testSetInternalStateFromContext_contextIsAClass() throws Exception {
+        ClassWithSimpleInternalState tested = new ClassWithSimpleInternalState();
+        Whitebox.setInternalStateFromContext(tested, MyContext.class);
+        assertEquals(Whitebox.getInternalState(new MyContext(), String.class), tested.getSomeStringState());
     }
 
     public void testFinalState() {
