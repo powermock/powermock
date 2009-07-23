@@ -18,6 +18,7 @@ Change log 1.3 (under development)
 * Mocking of static methods in final system classes now works with the Mockito extension (because of a bug fix in Javassist 3.10)
 * PowerMock now changes the context class-loader to the MockClassloader which means that you don't need to use @PowerMockIgnore as often as before. This solves many issues with frameworks that creates new instances using reflection like log4j, hibernate and many XML frameworks. This fix is not backward compatible with version 1.2.5! If you've been using PowerMockIgnore in your test you may need to remove it (or update the ignored package list) otherwise the test might fail.
 * Implemented support for setting internal state from a context (using Whitebox.setInternalStateFromContext(..)).
+* Error message differ between static or instance type fields when internal state cannot be set because a field wasn't found.
 
 
 Change log 1.2.5 (released 2009-05-05)
