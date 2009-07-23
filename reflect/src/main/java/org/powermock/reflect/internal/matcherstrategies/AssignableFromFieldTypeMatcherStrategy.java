@@ -18,30 +18,32 @@ package org.powermock.reflect.internal.matcherstrategies;
 import java.lang.reflect.Field;
 
 import org.powermock.reflect.exceptions.FieldNotFoundException;
+import org.powermock.reflect.internal.primitivesupport.PrimitiveWrapper;
 
-public class FieldNameMatcherStrategy extends FieldMatcherStrategy {
+public class AssignableFromFieldTypeMatcherStrategy extends FieldTypeMatcherStrategy {
 
-    private final String fieldName;
+    private final Class<?> primitiveCounterpart;
 
-    public FieldNameMatcherStrategy(String fieldName) {
-        if (fieldName == null || fieldName.equals("") || fieldName.startsWith(" ")) {
-            throw new IllegalArgumentException("field name cannot be null.");
-        }
-        this.fieldName = fieldName;
+    public AssignableFromFieldTypeMatcherStrategy(Class<?> fieldType) {
+        super(fieldType);
+        primitiveCounterpart = PrimitiveWrapper.getPrimitiveFromWrapperType(expectedFieldType);
     }
 
     @Override
     public boolean matches(Field field) {
-        return fieldName.equals(field.getName());
+        final Class<?> actualFieldType = field.getType();
+        return actualFieldType.isAssignableFrom(expectedFieldType)
+                || (primitiveCounterpart != null && actualFieldType.isAssignableFrom(primitiveCounterpart));
     }
 
     @Override
     public void notFound(Class<?> type, boolean isInstanceField) throws FieldNotFoundException {
-        throw new FieldNotFoundException(String.format("No %s field named \"%s\" could be found in the class hierarchy of %s.",
-                isInstanceField ? "instance" : "static", fieldName, type.getName()));
+        throw new FieldNotFoundException(String.format("No %s field assignable from \"%s\" could be found in the class hierarchy of %s.",
+                isInstanceField ? "instance" : "static", expectedFieldType.getName(), type.getName()));
     }
 
+    @Override
     public String toString() {
-        return "fieldName " + fieldName;
+        return "type " + primitiveCounterpart.getName();
     }
 }

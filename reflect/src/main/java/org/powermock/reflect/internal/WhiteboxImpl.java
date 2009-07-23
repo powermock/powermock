@@ -46,7 +46,7 @@ import org.powermock.reflect.exceptions.TooManyConstructorsFoundException;
 import org.powermock.reflect.exceptions.TooManyFieldsFoundException;
 import org.powermock.reflect.exceptions.TooManyMethodsFoundException;
 import org.powermock.reflect.internal.matcherstrategies.AllFieldsMatcherStrategy;
-import org.powermock.reflect.internal.matcherstrategies.AssignableToFieldTypeMatcherStrategy;
+import org.powermock.reflect.internal.matcherstrategies.AssignableFromFieldTypeMatcherStrategy;
 import org.powermock.reflect.internal.matcherstrategies.FieldAnnotationMatcherStrategy;
 import org.powermock.reflect.internal.matcherstrategies.FieldMatcherStrategy;
 import org.powermock.reflect.internal.matcherstrategies.FieldNameMatcherStrategy;
@@ -315,10 +315,10 @@ public class WhiteboxImpl {
      *            Additional values to set on the object
      */
     public static void setInternalState(Object object, Object value, Object... additionalValues) {
-        setField(object, value, findFieldInHierarchy(object, new AssignableToFieldTypeMatcherStrategy(getType(value))));
+        setField(object, value, findFieldInHierarchy(object, new AssignableFromFieldTypeMatcherStrategy(getType(value))));
         if (additionalValues != null && additionalValues.length > 0) {
             for (Object additionalValue : additionalValues) {
-                setField(object, additionalValue, findFieldInHierarchy(object, new AssignableToFieldTypeMatcherStrategy(getType(additionalValue))));
+                setField(object, additionalValue, findFieldInHierarchy(object, new AssignableFromFieldTypeMatcherStrategy(getType(additionalValue))));
             }
         }
     }
@@ -336,7 +336,7 @@ public class WhiteboxImpl {
      *            the class in the hierarchy where the field is defined
      */
     public static void setInternalState(Object object, Object value, Class<?> where) {
-        setField(object, value, findField(object, new AssignableToFieldTypeMatcherStrategy(getType(value)), where));
+        setField(object, value, findField(object, new AssignableFromFieldTypeMatcherStrategy(getType(value)), where));
     }
 
     /**
@@ -447,7 +447,7 @@ public class WhiteboxImpl {
             startClass = startClass.getSuperclass();
         }
         if (foundField == null) {
-            strategy.notFound(originalStartClass);
+            strategy.notFound(originalStartClass, !isClass(object));
         }
         foundField.setAccessible(true);
         return foundField;
@@ -1663,7 +1663,7 @@ public class WhiteboxImpl {
      * @return A set of all fields of the particular type.
      */
     public static Set<Field> getFieldsOfType(Object object, Class<?> type) {
-        return findAllFieldsUsingStrategy(new AssignableToFieldTypeMatcherStrategy(type), object, true, getType(object));
+        return findAllFieldsUsingStrategy(new AssignableFromFieldTypeMatcherStrategy(type), object, true, getType(object));
     }
 
     /**

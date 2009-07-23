@@ -42,7 +42,7 @@ public class FieldAnnotationMatcherStrategy extends FieldMatcherStrategy {
 	}
 
 	@Override
-	public void notFound(Class<?> type) throws FieldNotFoundException {
+	public void notFound(Class<?> type, boolean isInstanceField) throws FieldNotFoundException {
 		throw new FieldNotFoundException("No field that has any of the annotation types \"" + getAnnotationNames()
 				+ "\" could be found in the class hierarchy of " + type.getName() + ".");
 	}

@@ -21,13 +21,13 @@ import org.powermock.reflect.exceptions.FieldNotFoundException;
 
 public class AllFieldsMatcherStrategy extends FieldMatcherStrategy {
 
-	@Override
-	public boolean matches(Field field) {
-		return true;
-	}
+    @Override
+    public boolean matches(Field field) {
+        return true;
+    }
 
-	@Override
-	public void notFound(Class<?> type) throws FieldNotFoundException {
-		throw new FieldNotFoundException("No fields were declared in " + type.getName() + ".");
-	}
+    @Override
+    public void notFound(Class<?> type, boolean isInstanceField) throws FieldNotFoundException {
+        throw new FieldNotFoundException(String.format("No %s fields were declared in %s.", isInstanceField ? "instance" : "static", type.getName()));
+    }
 }

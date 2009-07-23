@@ -15,6 +15,7 @@
  */
 package org.powermock.reflect;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -629,6 +630,29 @@ public class WhiteBoxTest {
         ClassWithSimpleInternalState tested = new ClassWithSimpleInternalState();
         FieldsNotInTargetContext fieldsNotInTargetContext = new FieldsNotInTargetContext();
         Whitebox.setInternalStateFromContext(tested, fieldsNotInTargetContext);
+    }
+
+    @Test
+    public void assertThatErrorMessageIsCorrectWhenNoInstanceFieldFound() throws Exception {
+        ClassWithInternalState classWithInternalState = new ClassWithInternalState();
+        try {
+            Whitebox.setInternalState(classWithInternalState, (byte) 23);
+            fail("Should throw a FieldNotFoundException.");
+        } catch (FieldNotFoundException e) {
+            assertEquals("No instance field assignable from \"java.lang.Byte\" could be found in the class hierarchy of "
+                    + ClassWithInternalState.class.getName() + ".", e.getMessage());
+        }
+    }
+
+    @Test
+    public void assertThatErrorMessageIsCorrectWhenNoStaticFieldFound() throws Exception {
+        try {
+            Whitebox.setInternalState(ClassWithInternalState.class, (byte) 23);
+            fail("Should throw a FieldNotFoundException.");
+        } catch (FieldNotFoundException e) {
+            assertEquals("No static field assignable from \"java.lang.Byte\" could be found in the class hierarchy of "
+                    + ClassWithInternalState.class.getName() + ".", e.getMessage());
+        }
     }
 
     public void testFinalState() {
