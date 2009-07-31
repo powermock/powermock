@@ -92,8 +92,8 @@ public class WhiteBoxTest {
             WhiteboxImpl.findMethodOrThrowException(ClassWithSeveralMethodsWithSameName.class, "getDouble2");
             fail("Should throw runtime exception!");
         } catch (RuntimeException e) {
-            assertEquals("Error message did not match", "No method found with name 'getDouble2' with argument types: [  ] in class "
-                    + ClassWithSeveralMethodsWithSameName.class.getName(), e.getMessage());
+            assertEquals("Error message did not match", "No method found with name 'getDouble2' with parameter types: [ <none> ] in class "
+                    + ClassWithSeveralMethodsWithSameName.class.getName() + ".", e.getMessage());
         }
     }
 
@@ -218,14 +218,14 @@ public class WhiteBoxTest {
 
     @Test
     public void testMethodWithPrimitiveIntAndString_primitive() throws Exception {
-        assertEquals("My int value is: " + 8, (String) Whitebox.invokeMethod(new ClassWithPrivateMethods(), "methodWithPrimitiveIntAndString", 8,
-                "My int value is: "));
+        assertEquals("My int value is: " + 8, (String) Whitebox.invokeMethod(new ClassWithPrivateMethods(),
+                "methodWithPrimitiveIntAndString", 8, "My int value is: "));
     }
 
     @Test
     public void testMethodWithPrimitiveIntAndString_Wrapped() throws Exception {
-        assertEquals("My int value is: " + 8, (String) Whitebox.invokeMethod(new ClassWithPrivateMethods(), "methodWithPrimitiveIntAndString",
-                Integer.valueOf(8), "My int value is: "));
+        assertEquals("My int value is: " + 8, (String) Whitebox.invokeMethod(new ClassWithPrivateMethods(),
+                "methodWithPrimitiveIntAndString", Integer.valueOf(8), "My int value is: "));
     }
 
     @Test
@@ -499,7 +499,7 @@ public class WhiteBoxTest {
             fail("Should throw MethodNotFoundException");
         } catch (MethodNotFoundException e) {
             assertEquals(
-                    "No method was found with argument types: [ java.lang.String ] in class org.powermock.reflect.testclasses.ClassWithInternalState",
+                    "No method was found with parameter types: [ java.lang.String ] in class org.powermock.reflect.testclasses.ClassWithInternalState.",
                     e.getMessage());
         }
     }
@@ -510,8 +510,10 @@ public class WhiteBoxTest {
             Whitebox.getMethod(ClassWithSeveralMethodsWithSameName.class);
             fail("Should throw TooManyMethodsFoundException");
         } catch (TooManyMethodsFoundException e) {
-            assertTrue(e.getMessage().contains(
-                    "Several matching methods found, please specify the method name so that PowerMock can determine which method you're refering to"));
+            assertTrue(e
+                    .getMessage()
+                    .contains(
+                            "Several matching methods found, please specify the method name so that PowerMock can determine which method you're refering to"));
         }
     }
 
@@ -568,7 +570,8 @@ public class WhiteBoxTest {
     @Test
     public void testInvokePrivateMethodWithArrayArgument() throws Exception {
         ClassWithPrivateMethods tested = new ClassWithPrivateMethods();
-        assertEquals("Hello World", Whitebox.invokeMethod(tested, "evilConcatOfStrings", new Object[] { new String[] { "Hello ", "World" } }));
+        assertEquals("Hello World", Whitebox.invokeMethod(tested, "evilConcatOfStrings",
+                new Object[] { new String[] { "Hello ", "World" } }));
     }
 
     @Test
