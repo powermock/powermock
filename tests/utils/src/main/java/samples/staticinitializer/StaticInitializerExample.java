@@ -23,7 +23,6 @@ public class StaticInitializerExample {
     private static final Set<String> mySet;
 
     static {
-        System.out.println("CL = " + StaticInitializerExample.class.getClassLoader());
         mySet = new HashSet<String>();
         if (true) {
             throw new RuntimeException("This code must be suppressed!");
