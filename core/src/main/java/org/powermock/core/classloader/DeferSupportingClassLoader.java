@@ -31,8 +31,6 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
 
 	ClassLoader deferTo;
 
-	static int count;
-
 	public String[] getIgnoredPackages() {
 		return deferPackages;
 	}

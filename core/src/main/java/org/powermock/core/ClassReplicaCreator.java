@@ -201,7 +201,7 @@ public class ClassReplicaCreator {
 
     private static String getParametersAsString(String[] types) {
         StringBuilder parametersAsString = new StringBuilder();
-        if (types.length == 0) {
+        if (types != null && types.length == 0) {
             parametersAsString.append("new Class[0]");
         } else {
             parametersAsString.append("new Class[] {");
