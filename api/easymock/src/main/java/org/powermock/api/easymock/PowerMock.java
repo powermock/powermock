@@ -2161,7 +2161,7 @@ public class PowerMock {
                 T newInstance = Whitebox.newInstance(type);
                 MockRepository.putInstanceMethodInvocationControl(newInstance, new EasyMockMethodInvocationControl<Object>(h,
                         methodsToMock, replica));
-                if (mock instanceof InvocationSubstitute<?> == false) {
+                if (newInstance instanceof InvocationSubstitute<?> == false) {
                     MockRepository.addObjectsToAutomaticallyReplayAndVerify(newInstance);
                 }
                 return newInstance;
