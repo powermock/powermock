@@ -37,47 +37,43 @@ import samples.constructor.PublicConstructorWithDependencyDemo;
  */
 public class PublicConstructorWithDependencyDemoTest {
 
-	private Service serviceMock;
+    private Service serviceMock;
 
-	@Before
-	public void setUp() {
-		serviceMock = createMock(Service.class);
-	}
+    @Before
+    public void setUp() {
+        serviceMock = createMock(Service.class);
+    }
 
-	@After
-	public void tearDown() {
-		serviceMock = null;
-	}
+    @After
+    public void tearDown() {
+        serviceMock = null;
+    }
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void testConstructorFound() throws Exception {
-		PublicConstructorWithDependencyDemo tested = createPartialMock(
-				PublicConstructorWithDependencyDemo.class,
-				new String[] { "aMethod" }, serviceMock);
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testConstructorFound() throws Exception {
+        PublicConstructorWithDependencyDemo tested = createPartialMock(PublicConstructorWithDependencyDemo.class,
+                new String[] { "aMethod" }, serviceMock);
 
-		assertSame(serviceMock, tested.getService());
-	}
+        assertSame(serviceMock, tested.getService());
+    }
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void testConstructorNotFound() throws Exception {
-		try {
-			createPartialMock(PublicConstructorWithDependencyDemo.class,
-					new String[] { "aMethod" }, serviceMock, "bad argument");
-			fail("Should throw ConstructorNotFoundException.");
-		} catch (ConstructorNotFoundException e) {
-			assertEquals("No constructor found in class '"
-					+ PublicConstructorWithDependencyDemo.class.getName()
-					+ "' with argument types: [ " + Service.class.getName()
-					+ ", " + String.class.getName() + " ]", e.getMessage());
-		}
-	}
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testConstructorNotFound() throws Exception {
+        try {
+            createPartialMock(PublicConstructorWithDependencyDemo.class, new String[] { "aMethod" }, serviceMock, "bad argument");
+            fail("Should throw ConstructorNotFoundException.");
+        } catch (ConstructorNotFoundException e) {
+            assertEquals("No constructor found in class '" + PublicConstructorWithDependencyDemo.class.getName()
+                    + "' with parameter types: [ " + Service.class.getName() + ", " + String.class.getName() + " ].", e.getMessage());
+        }
+    }
 
 }
