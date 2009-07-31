@@ -119,8 +119,8 @@ public class WhiteboxImpl {
         }
 
         if (foundMethods.isEmpty()) {
-            throw new MethodNotFoundException("No method was found with argument types: [ " + getArgumentsAsString((Object[]) parameterTypes)
-                    + " ] in class " + getUnmockedType(type).getName());
+            throw new MethodNotFoundException("No method was found with parameter types: [ "
+                    + getArgumentTypesAsString((Object[]) parameterTypes) + " ] in class " + getUnmockedType(type).getName() + ".");
         } else {
             throwExceptionWhenMultipleMethodMatchesFound("method name", foundMethods.toArray(new Method[foundMethods.size()]));
         }
@@ -318,7 +318,8 @@ public class WhiteboxImpl {
         setField(object, value, findFieldInHierarchy(object, new AssignableFromFieldTypeMatcherStrategy(getType(value))));
         if (additionalValues != null && additionalValues.length > 0) {
             for (Object additionalValue : additionalValues) {
-                setField(object, additionalValue, findFieldInHierarchy(object, new AssignableFromFieldTypeMatcherStrategy(getType(additionalValue))));
+                setField(object, additionalValue, findFieldInHierarchy(object, new AssignableFromFieldTypeMatcherStrategy(
+                        getType(additionalValue))));
             }
         }
     }
@@ -423,7 +424,8 @@ public class WhiteboxImpl {
         return findSingleFieldUsingStrategy(strategy, object, false, where);
     }
 
-    private static Field findSingleFieldUsingStrategy(FieldMatcherStrategy strategy, Object object, boolean checkHierarchy, Class<?> startClass) {
+    private static Field findSingleFieldUsingStrategy(FieldMatcherStrategy strategy, Object object, boolean checkHierarchy,
+            Class<?> startClass) {
         if (object == null) {
             throw new IllegalArgumentException("The object containing the field cannot be null");
         }
@@ -453,7 +455,8 @@ public class WhiteboxImpl {
         return foundField;
     }
 
-    private static Set<Field> findAllFieldsUsingStrategy(FieldMatcherStrategy strategy, Object object, boolean checkHierarchy, Class<?> startClass) {
+    private static Set<Field> findAllFieldsUsingStrategy(FieldMatcherStrategy strategy, Object object, boolean checkHierarchy,
+            Class<?> startClass) {
         if (object == null) {
             throw new IllegalArgumentException("The object containing the field cannot be null");
         }
@@ -678,8 +681,8 @@ public class WhiteboxImpl {
      * @throws Exception
      *             Exception that may occur when invoking this method.
      */
-    public static synchronized Object invokeMethod(Object object, Class<?> declaringClass, String methodToExecute, Class<?>[] parameterTypes,
-            Object... arguments) throws Exception {
+    public static synchronized Object invokeMethod(Object object, Class<?> declaringClass, String methodToExecute,
+            Class<?>[] parameterTypes, Object... arguments) throws Exception {
         if (object == null) {
             throw new IllegalArgumentException("object cannot be null");
         }
@@ -698,7 +701,8 @@ public class WhiteboxImpl {
         return doInvokeMethod(clazz, null, methodToExecute, arguments);
     }
 
-    private static Object doInvokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments) throws Exception {
+    private static Object doInvokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments)
+            throws Exception {
         Method methodToInvoke = findMethodOrThrowException(tested, declaringClass, methodToExecute, arguments);
 
         // Invoke test
@@ -775,7 +779,8 @@ public class WhiteboxImpl {
                              * the same name and the same number of arguments
                              * but one is using wrapper types.
                              */
-                            throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", new Method[] { potentialMethodToInvoke, method });
+                            throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", new Method[] {
+                                    potentialMethodToInvoke, method });
                         }
                     }
                 } else if (isPotentialVarArgsMethod(method, arguments)) {
@@ -789,7 +794,8 @@ public class WhiteboxImpl {
                          * and the same number of arguments but one is using
                          * wrapper types.
                          */
-                        throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", new Method[] { potentialMethodToInvoke, method });
+                        throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", new Method[] { potentialMethodToInvoke,
+                                method });
                     }
                     break;
                 } else if (arguments != null && (paramTypes.length != arguments.length)) {
@@ -908,26 +914,29 @@ public class WhiteboxImpl {
             if (methodName != null) {
                 methodNameData = "with name '" + methodName + "' ";
             }
-            throw new MethodNotFoundException("No method found " + methodNameData + "with argument types: [ " + getArgumentsAsString(arguments)
-                    + " ] in class " + getUnmockedType(type).getName());
+            throw new MethodNotFoundException("No method found " + methodNameData + "with parameter types: [ "
+                    + getArgumentTypesAsString(arguments) + " ] in class " + getUnmockedType(type).getName() + ".");
         }
     }
 
     public static void throwExceptionIfFieldWasNotFound(Class<?> type, String fieldName, Field field) {
         if (field == null) {
-            throw new FieldNotFoundException("No field was found with name '" + fieldName + "' in class " + getUnmockedType(type).getName());
+            throw new FieldNotFoundException("No field was found with name '" + fieldName + "' in class " + getUnmockedType(type).getName()
+                    + ".");
         }
     }
 
     static void throwExceptionIfConstructorWasNotFound(Class<?> type, Constructor<?> potentialConstructor, Object... arguments) {
         if (potentialConstructor == null) {
-            throw new ConstructorNotFoundException("No constructor found in class '" + getUnmockedType(type).getName() + "' with argument types: [ "
-                    + getArgumentsAsString(arguments) + " ]");
+            String message = "No constructor found in class '" + getUnmockedType(type).getName() + "' with " + "parameter types: [ "
+                    + getArgumentTypesAsString(arguments) + " ].";
+            throw new ConstructorNotFoundException(message);
         }
     }
 
-    private static String getArgumentsAsString(Object... arguments) {
+    private static String getArgumentTypesAsString(Object... arguments) {
         StringBuilder argumentsAsString = new StringBuilder();
+        final String noParameters = "<none>";
         if (arguments != null && arguments.length != 0) {
             for (int i = 0; i < arguments.length; i++) {
                 String argumentName = null;
@@ -935,6 +944,8 @@ public class WhiteboxImpl {
 
                 if (argument instanceof Class<?>) {
                     argumentName = ((Class<?>) argument).getName();
+                } else if (argument instanceof Class<?>[] && arguments.length == 1) {
+                    argumentName = noParameters;
                 } else if (argument == null) {
                     argumentName = "null";
                 } else {
@@ -946,6 +957,8 @@ public class WhiteboxImpl {
                     argumentsAsString.append(", ");
                 }
             }
+        } else {
+            argumentsAsString.append("<none>");
         }
         return argumentsAsString.toString();
     }
@@ -1041,7 +1054,8 @@ public class WhiteboxImpl {
             // Check if we can find a matching var args constructor.
             constructor = getPotentialVarArgsConstructor(classThatContainsTheConstructorToTest, arguments);
             if (constructor == null) {
-                throw new ConstructorNotFoundException("Failed to find a constructor with argument types: [" + getArgumentsAsString(arguments) + "]");
+                throw new ConstructorNotFoundException("Failed to find a constructor with parameter types: ["
+                        + getArgumentTypesAsString(arguments) + "]");
             }
         } else if (potentialContstructorPrimitive == null && potentialContstructorWrapped != null) {
             constructor = potentialContstructorWrapped;
@@ -1273,11 +1287,13 @@ public class WhiteboxImpl {
                 }
 
                 if (methodToMock == null) {
-                    WhiteboxImpl.throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", matchingMethodsList.toArray(new Method[0]));
+                    WhiteboxImpl.throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", matchingMethodsList
+                            .toArray(new Method[0]));
                 }
             } else {
                 // We've found several matching methods.
-                WhiteboxImpl.throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", matchingMethodsList.toArray(new Method[0]));
+                WhiteboxImpl.throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", matchingMethodsList
+                        .toArray(new Method[0]));
             }
         }
 
@@ -1324,7 +1340,8 @@ public class WhiteboxImpl {
 
     static void throwExceptionWhenMultipleConstructorMatchesFound(Constructor<?>[] constructors) {
         if (constructors == null || constructors.length < 2) {
-            throw new IllegalArgumentException("Internal error: throwExceptionWhenMultipleConstructorMatchesFound needs at least two methods.");
+            throw new IllegalArgumentException(
+                    "Internal error: throwExceptionWhenMultipleConstructorMatchesFound needs at least two methods.");
         }
         StringBuilder sb = new StringBuilder();
         sb
