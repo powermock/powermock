@@ -18,9 +18,12 @@ package samples.junit4.finalmocking;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.powermock.api.easymock.PowerMock.createPartialMock;
+import static org.powermock.api.easymock.PowerMock.createPartialMockAndInvokeDefaultConstructor;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -55,4 +58,30 @@ public class MockingOfInstanceMethodsInFinalSystemClassTest {
 
         verifyAll();
     }
+
+    @Test
+    public void assertThatPartialMockingOfInstanceMethodsInFinalSystemClassesWhenNotInvokingConstructorWorks() throws Exception {
+        Long tested = createPartialMock(Long.class, "doubleValue");
+        expect(tested.doubleValue()).andReturn(54d);
+        replayAll();
+
+        assertEquals(0, tested.longValue());
+        assertEquals(54d, tested.doubleValue(), 0.0d);
+
+        verifyAll();
+    }
+
+    @Test
+    @Ignore("Doesn't current work")
+    public void assertThatPartialMockingOfInstanceMethodsInFinalSystemClassesWhenNotInvokingNonDefaultConstructorWorks() throws Exception {
+        Long tested = createPartialMock(Long.class, new String[] { "doubleValue" }, 27L);
+        expect(tested.doubleValue()).andReturn(54d);
+        replayAll();
+
+        assertEquals(27L, tested.longValue());
+        assertEquals(54d, tested.doubleValue(), 0.0d);
+
+        verifyAll();
+    }
+
 }

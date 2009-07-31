@@ -17,6 +17,7 @@ package org.powermock.api.easymock;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
@@ -2146,8 +2147,7 @@ public class PowerMock {
         if (type.isInterface()) {
             mock = control.createMock(type);
         } else if (type.getName().startsWith("java.") && Modifier.isFinal(type.getModifiers())) {
-            // Create class replica
-            final Class<?> replicaType = new ClassReplicaCreator().createClassReplica(type);
+            Class<?> replicaType = createReplicaType(type, isStatic, constructorArgs);
             final Object replica = doCreateMock(replicaType, constructorArgs, control, methods);
             control = mockStrategy.createMockControl(replicaType);
             MockInvocationHandler h = new MockInvocationHandler((MocksControl) control);
@@ -2181,6 +2181,31 @@ public class PowerMock {
             }
         }
         return mock;
+    }
+
+    private static <T> Class<?> createReplicaType(Class<T> type, boolean isStatic, ConstructorArgs constructorArgs) {
+        ClassReplicaCreator classReplicaCreator = new ClassReplicaCreator();
+        Class<?> replicaType = null;
+        if (isStatic || constructorArgs == null) {
+            replicaType = classReplicaCreator.createClassReplica(type);
+        } else {
+            try {
+                replicaType = classReplicaCreator.createInstanceReplica(constructorArgs.getConstructor().newInstance(
+                        constructorArgs.getInitArgs()));
+            } catch (RuntimeException e) {
+                throw e;
+            } catch (InvocationTargetException e) {
+                Throwable targetException = ((InvocationTargetException) e).getTargetException();
+                if (targetException instanceof RuntimeException) {
+                    throw (RuntimeException) targetException;
+                }
+                throw new RuntimeException(e);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+        return replicaType;
     }
 
     private static <T> T doCreateMock(Class<T> type, ConstructorArgs constructorArgs, final IMocksControl control, Method... methods) {

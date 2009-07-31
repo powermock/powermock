@@ -22,6 +22,7 @@ Change log 1.3 (under development)
 * PowerMock now supports mocking instance methods of final system classes (such as java.lang.String). To do this you need to prepare the class that invokes the method of the system class as well as the actual test case. Note that partial mocking of instance methods in final system classes doesn't yet work if a constructor needs to be invoked on the mock.
 * You can now mock new instance calls to final system classes in the same was you'd mock any other new instance call. However if you want to setup expectations for the final system class mock returned by expectNew you must also prepare the actual test case using @PrepareForTest.
 * Improved error message in Whitebox when getting a method or constructor which was not found and no parameter types were supplied.
+* The state of classes that should have their static intializers suppressed are no longer clear after each atomic test. This means that suppression of static initializers works (again) in test suites.
 
 
 Change log 1.2.5 (released 2009-05-05)

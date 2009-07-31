@@ -20,16 +20,17 @@ import java.util.Set;
 
 public class StaticInitializerExample {
 
-	private static final Set<String> mySet;
+    private static final Set<String> mySet;
 
-	static {
-		mySet = new HashSet<String>();
-		if (true) {
-			throw new RuntimeException("This code must be suppressed!");
-		}
-	}
+    static {
+        System.out.println("CL = " + StaticInitializerExample.class.getClassLoader());
+        mySet = new HashSet<String>();
+        if (true) {
+            throw new RuntimeException("This code must be suppressed!");
+        }
+    }
 
-	public static Set<String> getMySet() {
-		return mySet;
-	}
+    public static Set<String> getMySet() {
+        return mySet;
+    }
 }
