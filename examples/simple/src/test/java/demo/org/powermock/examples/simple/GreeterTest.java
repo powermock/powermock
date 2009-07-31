@@ -25,7 +25,6 @@ import static org.powermock.api.easymock.PowerMock.replay;
 import static org.powermock.api.easymock.PowerMock.verify;
 import static org.powermock.reflect.Whitebox.invokeMethod;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -37,54 +36,50 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest( { Greeter.class, Logger.class })
 public class GreeterTest {
 
-	@Test
-	public void testGetMessage() throws Exception {
-		mockStatic(SimpleConfig.class);
-		expect(SimpleConfig.getGreeting()).andReturn("Hi");
-		expect(SimpleConfig.getTarget()).andReturn("All");
-		replay(SimpleConfig.class);
+    @Test
+    public void testGetMessage() throws Exception {
+        mockStatic(SimpleConfig.class);
+        expect(SimpleConfig.getGreeting()).andReturn("Hi");
+        expect(SimpleConfig.getTarget()).andReturn("All");
+        replay(SimpleConfig.class);
 
-		assertEquals("Hi All", invokeMethod(Greeter.class, "getMessage"));
+        assertEquals("Hi All", invokeMethod(Greeter.class, "getMessage"));
 
-		verify(SimpleConfig.class);
-	}
+        verify(SimpleConfig.class);
+    }
 
-	@Test
-	public void testRun() throws Exception {
-		Logger logger = createMock(Logger.class);
+    @Test
+    public void testRun() throws Exception {
+        Logger logger = createMock(Logger.class);
 
-		expectNew(Logger.class).andReturn(logger);
-		logger.log("Hello");
-		expectLastCall().times(10);
-		replay(logger, Logger.class);
+        expectNew(Logger.class).andReturn(logger);
+        logger.log("Hello");
+        expectLastCall().times(10);
+        replay(logger, Logger.class);
 
-		invokeMethod(new Greeter(), "run", 10, "Hello");
+        invokeMethod(new Greeter(), "run", 10, "Hello");
 
-		verify(logger, Logger.class);
-	}
+        verify(logger, Logger.class);
+    }
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testRunWhenLoggerThrowsUnexpectedRuntimeExeception() throws Exception {
-		expectNew(Logger.class).andThrow(new IllegalArgumentException("Unexpected exeception"));
-		replay(Logger.class);
+    @Test(expected = IllegalArgumentException.class)
+    public void testRunWhenLoggerThrowsUnexpectedRuntimeExeception() throws Exception {
+        expectNew(Logger.class).andThrow(new IllegalArgumentException("Unexpected exeception"));
+        replay(Logger.class);
 
-		invokeMethod(new Greeter(), "run", 10, "Hello");
+        invokeMethod(new Greeter(), "run", 10, "Hello");
 
-		verify(Logger.class);
-	}
+        verify(Logger.class);
+    }
 
-	/**
-	 * This test demonstrates that issue 110
-	 * (http://code.google.com/p/powermock/issues/detail?id=110) has been
-	 * solved.
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	@SuppressStaticInitializationFor
-	@PrepareForTest(fullyQualifiedNames="demo.org.powermock.examples.simple.SimpleConfig")
-	@Ignore("Temporary ignored, we need to investigate why this doesn't work")
-	public void assertItsOkToInvokeReflectionMethodsOnClasses() throws Exception {
-		new SimpleConfig();
-	}
+    /**
+     * This test demonstrates that <a
+     * href="http://code.google.com/p/powermock/issues/detail?id=110">issue
+     * 110</a> has been resolved.
+     */
+    @Test
+    @PrepareForTest( { SimpleConfig.class })
+    public void assertItsOkToInvokeReflectionMethodsOnClasses() throws Exception {
+        new SimpleConfig();
+    }
 }
