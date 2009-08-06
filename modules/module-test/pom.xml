@@ -9,16 +9,6 @@
   <artifactId>powermock-modules-test</artifactId>
   <packaging>pom</packaging>
   <name>powermock-modules-test</name>
-  <build>
-    <plugins>
-     <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-            <forkMode>pertest</forkMode> 
-        </configuration>
-      </plugin>
-     </plugins>
-  </build>
   <modules>              
     <module>powermock</module>
     <module>powermockito</module>

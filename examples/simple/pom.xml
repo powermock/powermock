@@ -8,16 +8,6 @@
 	<groupId>org.powermock.examples</groupId>
 	<artifactId>powermock-examples-simple</artifactId>
 	<name>Simple Demo how to use PowerMock</name>
-	<build>
-	  <plugins>
-	     <plugin>
-		<artifactId>maven-surefire-plugin</artifactId>
-		<configuration>
-		    <forkMode>pertest</forkMode> 
-		</configuration>
-	      </plugin>
-	     </plugins>
-	  </build>
 	<dependencies>
 		<dependency>
 			<groupId>org.powermock</groupId>
