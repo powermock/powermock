@@ -5,7 +5,7 @@ Change log 1.3 (under development)
 * Added a toString implementation for TestSuiteResultImpl
 * suppressMethod(Class...classes) now takes a class and additional classes as var args (i.e. suppressMethod(Class cls, Class...classes). This makes it easier to suppress all methods of a particular class for only one class.
 * Invoking reflection methods now works again. This failed in version 1.2 and 1.2.5 when PowerMock begun supporting mocking of system classes. E.g. MyClass.class.getClassloader() now works again even if MyClass is prepared for test.
-* The standard JUnit 4 runner has been verified to work with JUnit 4.6. The version dependency for JUnit4 is thus changed from [4.4,4.5] to [4.4,4.6].
+* The standard JUnit 4 runner has been verified to work with JUnit 4.6 and 4.7. The version dependency for JUnit4 is thus changed from [4.4,4.5] to [4.4,4.7].
 * Classes prepared for test in parent test classes are now automatically prepared for test as well. I.e. if Test Case A extends Test Case B and A prepares X.class and B prepares Y.class then both X and Y will be prepared for test. Before only X was prepared for test.
 * Fixed a bug in Whitebox which prevented it from instantiating classes with constructors combining normal and var-arg parameters. The same was fix was applied to method invocations as well.
 * Fixed so that WhiteboxImpl#findMethodOrThrowException(..) throws a TooManyMethodsFoundException if a potential method had previously been found and a new matching var-args method was found.
