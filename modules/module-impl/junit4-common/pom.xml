@@ -13,7 +13,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.3</version>
+			<version>[4.3,4.7]</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
