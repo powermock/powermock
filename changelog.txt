@@ -26,6 +26,7 @@ Change log 1.3 (under development)
 * Simple experimental TestNG support implemented (thanks to Dan Fabulich for helping us with this).
 * Deprecated Whitebox#getInternalState(Object object, String fieldName, Class<?> where, Class<T> type), use "Whitebox.<Type> getInternalState(Object object, String fieldName, Class<?> where)" instead.
 * Changed return type of Whitebox#getInternalState(Object object, String fieldName) from Object to T. This means that you can avoid cast using e.g. "Whitebox.<MyType> getInternalState(instance, "myFieldName")".
+* PowerMockRunner now supports JUnit 4.7 rules
 
 
 Change log 1.2.5 (released 2009-05-05)

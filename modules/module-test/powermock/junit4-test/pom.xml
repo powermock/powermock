@@ -1,45 +1,56 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-   <parent>
-      <artifactId>powermock-modules-powermock-test
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>powermock-modules-powermock-test
       </artifactId>
-      <groupId>org.powermock.modules.powermock.test
+		<groupId>org.powermock.modules.powermock.test
       </groupId>
-      <version>1.3-SNAPSHOT</version>
-   </parent>
-   <modelVersion>4.0.0</modelVersion>
-   <groupId>org.powermock.modules.test.junit4
+		<version>1.3-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.powermock.modules.test.junit4
    </groupId>
-   <artifactId>powermock-module-test-junit4
+	<artifactId>powermock-module-test-junit4
    </artifactId>
-   <name>powermock-module-test-junit4</name>
-   <version>1.3-SNAPSHOT</version>
-   <url>http://maven.apache.org</url>
-   <dependencies>
-      <dependency>
-         <groupId>org.easymock</groupId>
-         <artifactId>easymock</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.easymock</groupId>
-         <artifactId>easymockclassextension</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.powermock.tests</groupId>
-         <artifactId>powermock-tests-utils</artifactId>
-         <version>${version}</version>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.powermock.api</groupId>
-         <artifactId>powermock-api-easymock</artifactId>
-         <version>${version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.powermock.modules</groupId>
-         <artifactId>powermock-module-junit4
-         </artifactId>
-         <version>${version}</version>
-         <scope>test</scope>
-      </dependency>
-   </dependencies>
+	<name>powermock-module-test-junit4</name>
+	<version>1.3-SNAPSHOT</version>
+	<url>http://maven.apache.org</url>
+	<dependencies>
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymock</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymockclassextension</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock.tests</groupId>
+			<artifactId>powermock-tests-utils</artifactId>
+			<version>${version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock.api</groupId>
+			<artifactId>powermock-api-easymock</artifactId>
+			<version>${version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock.modules</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>${version}</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>junit</artifactId>
+					<groupId>junit</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<artifactId>junit</artifactId>
+			<groupId>junit</groupId>
+			<version>4.4</version>
+		</dependency>
+	</dependencies>
 </project>

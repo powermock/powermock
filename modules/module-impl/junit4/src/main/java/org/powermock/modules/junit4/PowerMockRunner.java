@@ -15,12 +15,24 @@
  */
 package org.powermock.modules.junit4;
 
+import junit.runner.Version;
+
 import org.powermock.modules.junit4.common.internal.impl.AbstractCommonPowerMockRunner;
 import org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl;
+import org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl;
 
 public class PowerMockRunner extends AbstractCommonPowerMockRunner {
 
 	public PowerMockRunner(Class<?> klass) throws Exception {
-		super(klass, PowerMockJUnit44RunnerDelegateImpl.class);
+		super(klass, getJUnitVersion() >= 4.7f ? PowerMockJUnit47RunnerDelegateImpl.class : PowerMockJUnit44RunnerDelegateImpl.class);
+	}
+
+	private static float getJUnitVersion() {
+		try {
+			return Float.parseFloat(Version.id());
+		} catch (NumberFormatException e) {
+			// If this happens we revert to JUnit 4.4 runner
+			return 4.4f;
+		}
 	}
 }
