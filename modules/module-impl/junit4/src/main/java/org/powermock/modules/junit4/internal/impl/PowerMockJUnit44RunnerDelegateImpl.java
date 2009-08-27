@@ -70,7 +70,6 @@ import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
  * @see JUnit4ClassRunner
  * 
  */
-@SuppressWarnings("deprecation")
 public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filterable, Sortable,
 		PowerMockJUnitRunnerDelegate {
 	private final List<Method> testMethods;

@@ -269,8 +269,9 @@ public class Whitebox {
 	 * @param fieldName
 	 *            the name of the field
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T getInternalState(Object object, String fieldName) {
-		return WhiteboxImpl.getInternalState(object, fieldName);
+		return (T) WhiteboxImpl.getInternalState(object, fieldName);
 	}
 
 	/**
@@ -285,8 +286,9 @@ public class Whitebox {
 	 * @param where
 	 *            which class the field is defined
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T getInternalState(Object object, String fieldName, Class<?> where) {
-		return WhiteboxImpl.getInternalState(object, fieldName, where);
+		return (T) WhiteboxImpl.getInternalState(object, fieldName, where);
 	}
 
 	/**
