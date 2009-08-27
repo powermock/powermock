@@ -216,8 +216,8 @@ public class Whitebox {
 	 * @param where
 	 *            which class the field is defined
 	 */
-	public static Object getInternalState(Object object, String fieldName, Class<?> where) {
-		return WhiteboxImpl.getInternalState(object, fieldName, where, Object.class);
+	public static <T> T getInternalState(Object object, String fieldName, Class<?> where) {
+		return WhiteboxImpl.getInternalState(object, fieldName, where);
 	}
 
 	/**
@@ -238,7 +238,7 @@ public class Whitebox {
 	 *            the expected type of the field
 	 */
 	public static <T> T getInternalState(Object object, String fieldName, Class<?> where, Class<T> type) {
-		return WhiteboxImpl.getInternalState(object, fieldName, where, type);
+		return WhiteboxImpl.getInternalState(object, fieldName, where);
 	}
 
 	/**

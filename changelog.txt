@@ -24,6 +24,8 @@ Change log 1.3 (under development)
 * Improved error message in Whitebox when getting a method or constructor which was not found and no parameter types were supplied.
 * The state of classes that should have their static intializers suppressed are no longer clear after each atomic test. This means that suppression of static initializers works (again) in test suites.
 * Simple experimental TestNG support implemented (thanks to Dan Fabulich for helping us with this).
+* Deprecated Whitebox#getInternalState(Object object, String fieldName, Class<?> where, Class<T> type), use "Whitebox.<Type> getInternalState(Object object, String fieldName, Class<?> where)" instead.
+* Changed return type of Whitebox#getInternalState(Object object, String fieldName) from Object to T. This means that you can avoid cast using e.g. "Whitebox.<MyType> getInternalState(instance, "myFieldName")".
 
 
 Change log 1.2.5 (released 2009-05-05)

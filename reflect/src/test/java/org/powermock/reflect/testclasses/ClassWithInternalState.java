@@ -15,6 +15,9 @@
  */
 package org.powermock.reflect.testclasses;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class ClassWithInternalState {
 
 	private static int staticState = 5;
@@ -26,8 +29,10 @@ public class ClassWithInternalState {
 	private int anotherInternalState = -1;
 
 	private final String finalString = "hello";
-	
-	private long internalLongState=17;
+
+	private long internalLongState = 17;
+
+	private Set<String> genericState = new HashSet<String>();
 
 	private ClassWithPrivateMethods classWithPrivateMethods;
 
@@ -62,5 +67,8 @@ public class ClassWithInternalState {
 	public long getInternalLongState() {
 		return internalLongState;
 	}
-
+	
+	public Set<String> getGenericState() {
+		return genericState;
+	}
 }
