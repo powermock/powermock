@@ -571,8 +571,9 @@ public class WhiteboxImpl {
 	 * 
 	 * @throws Throwable
 	 */
-	public static synchronized Object invokeMethod(Object tested, Object... arguments) throws Exception {
-		return doInvokeMethod(tested, null, null, arguments);
+	@SuppressWarnings("unchecked")
+    public static synchronized <T> T invokeMethod(Object tested, Object... arguments) throws Exception {
+		return (T) doInvokeMethod(tested, null, null, arguments);
 	}
 
 	/**
@@ -582,8 +583,9 @@ public class WhiteboxImpl {
 	 * over this method for that reason. This method might be useful to test
 	 * private methods.
 	 */
-	public static synchronized Object invokeMethod(Class<?> tested, Object... arguments) throws Exception {
-		return doInvokeMethod(tested, null, null, arguments);
+	@SuppressWarnings("unchecked")
+    public static synchronized <T> T invokeMethod(Class<?> tested, Object... arguments) throws Exception {
+		return (T) doInvokeMethod(tested, null, null, arguments);
 	}
 
 	/**
@@ -592,8 +594,9 @@ public class WhiteboxImpl {
 	 * 
 	 * @throws Throwable
 	 */
-	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Object... arguments) throws Exception {
-		return doInvokeMethod(tested, null, methodToExecute, arguments);
+	@SuppressWarnings("unchecked")
+    public static synchronized <T> T invokeMethod(Object tested, String methodToExecute, Object... arguments) throws Exception {
+		return (T) doInvokeMethod(tested, null, methodToExecute, arguments);
 	}
 
 	/**
@@ -605,14 +608,15 @@ public class WhiteboxImpl {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?>[] argumentTypes, Object... arguments)
+	@SuppressWarnings("unchecked")
+    public static synchronized <T> T invokeMethod(Object tested, String methodToExecute, Class<?>[] argumentTypes, Object... arguments)
 			throws Exception {
 		final Class<?> unmockedType = getType(tested);
 		Method method = getMethod(unmockedType, methodToExecute, argumentTypes);
 		if (method == null) {
 			throwExceptionIfMethodWasNotFound(unmockedType, methodToExecute, null, arguments);
 		}
-		return performMethodInvocation(tested, method, arguments);
+		return (T) performMethodInvocation(tested, method, arguments);
 	}
 
 	/**
@@ -625,13 +629,14 @@ public class WhiteboxImpl {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?> definedIn, Class<?>[] argumentTypes,
+	@SuppressWarnings("unchecked")
+    public static synchronized <T> T invokeMethod(Object tested, String methodToExecute, Class<?> definedIn, Class<?>[] argumentTypes,
 			Object... arguments) throws Exception {
 		Method method = getMethod(definedIn, methodToExecute, argumentTypes);
 		if (method == null) {
 			throwExceptionIfMethodWasNotFound(definedIn, methodToExecute, null, arguments);
 		}
-		return performMethodInvocation(tested, method, arguments);
+		return (T) performMethodInvocation(tested, method, arguments);
 	}
 
 	/**
@@ -641,9 +646,10 @@ public class WhiteboxImpl {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments)
+	@SuppressWarnings("unchecked")
+    public static synchronized <T> T invokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments)
 			throws Exception {
-		return doInvokeMethod(tested, declaringClass, methodToExecute, arguments);
+		return (T) doInvokeMethod(tested, declaringClass, methodToExecute, arguments);
 	}
 
 	/**
@@ -657,7 +663,8 @@ public class WhiteboxImpl {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object object, Class<?> declaringClass, String methodToExecute, Class<?>[] parameterTypes,
+	@SuppressWarnings("unchecked")
+    public static synchronized <T> T invokeMethod(Object object, Class<?> declaringClass, String methodToExecute, Class<?>[] parameterTypes,
 			Object... arguments) throws Exception {
 		if (object == null) {
 			throw new IllegalArgumentException("object cannot be null");
@@ -665,7 +672,7 @@ public class WhiteboxImpl {
 
 		final Method methodToInvoke = getMethod(declaringClass, methodToExecute, parameterTypes);
 		// Invoke method
-		return performMethodInvocation(object, methodToInvoke, arguments);
+		return (T) performMethodInvocation(object, methodToInvoke, arguments);
 	}
 
 	/**
@@ -673,15 +680,17 @@ public class WhiteboxImpl {
 	 * private methods.
 	 * 
 	 */
-	public static synchronized Object invokeMethod(Class<?> clazz, String methodToExecute, Object... arguments) throws Exception {
-		return doInvokeMethod(clazz, null, methodToExecute, arguments);
+	@SuppressWarnings("unchecked")
+    public static synchronized <T> T invokeMethod(Class<?> clazz, String methodToExecute, Object... arguments) throws Exception {
+		return (T) doInvokeMethod(clazz, null, methodToExecute, arguments);
 	}
 
-	private static Object doInvokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments) throws Exception {
+	@SuppressWarnings("unchecked")
+    private static <T> T doInvokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments) throws Exception {
 		Method methodToInvoke = findMethodOrThrowException(tested, declaringClass, methodToExecute, arguments);
 
 		// Invoke test
-		return performMethodInvocation(tested, methodToInvoke, arguments);
+		return (T) performMethodInvocation(tested, methodToInvoke, arguments);
 	}
 
 	/**
@@ -1407,7 +1416,8 @@ public class WhiteboxImpl {
 		return fieldArray;
 	}
 
-	public static Object performMethodInvocation(Object tested, Method methodToInvoke, Object... arguments) throws Exception {
+	@SuppressWarnings("unchecked")
+    public static <T> T performMethodInvocation(Object tested, Method methodToInvoke, Object... arguments) throws Exception {
 		methodToInvoke.setAccessible(true);
 		try {
 			if (isPotentialVarArgsMethod(methodToInvoke, arguments)) {
@@ -1420,9 +1430,9 @@ public class WhiteboxImpl {
 					completeArgumentList[i] = arguments[i];
 				}
 				completeArgumentList[completeArgumentList.length - 1] = varArgsArrayInstance;
-				return methodToInvoke.invoke(tested, completeArgumentList);
+				return (T) methodToInvoke.invoke(tested, completeArgumentList);
 			} else {
-				return methodToInvoke.invoke(tested, arguments == null ? new Object[] { arguments } : arguments);
+				return (T) methodToInvoke.invoke(tested, arguments == null ? new Object[] { arguments } : arguments);
 			}
 		} catch (InvocationTargetException e) {
 			Throwable cause = e.getCause();

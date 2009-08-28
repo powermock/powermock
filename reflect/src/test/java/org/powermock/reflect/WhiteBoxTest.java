@@ -158,7 +158,7 @@ public class WhiteBoxTest {
 
 	@Test
 	public void testInvokePrivateMethod_primtiveType() throws Exception {
-		assertTrue((Boolean) Whitebox.invokeMethod(new ClassWithPrivateMethods(), "primitiveMethod", 8.2));
+		assertTrue(Whitebox.<Boolean> invokeMethod(new ClassWithPrivateMethods(), "primitiveMethod", 8.2));
 	}
 
 	@Test

@@ -271,7 +271,7 @@ public class Whitebox {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getInternalState(Object object, String fieldName) {
-		return (T) WhiteboxImpl.getInternalState(object, fieldName);
+		return WhiteboxImpl.<T> getInternalState(object, fieldName);
 	}
 
 	/**
@@ -288,7 +288,7 @@ public class Whitebox {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getInternalState(Object object, String fieldName, Class<?> where) {
-		return (T) WhiteboxImpl.getInternalState(object, fieldName, where);
+		return WhiteboxImpl.<T> getInternalState(object, fieldName, where);
 	}
 
 	/**
@@ -327,7 +327,7 @@ public class Whitebox {
 	 *            the type of the field
 	 */
 	public static <T> T getInternalState(Object object, Class<T> fieldType) {
-		return WhiteboxImpl.getInternalState(object, fieldType);
+		return WhiteboxImpl.<T> getInternalState(object, fieldType);
 
 	}
 
@@ -347,7 +347,7 @@ public class Whitebox {
 	 *            which class the field is defined
 	 */
 	public static <T> T getInternalState(Object object, Class<T> fieldType, Class<?> where) {
-		return WhiteboxImpl.getInternalState(object, fieldType, where);
+		return WhiteboxImpl.<T> getInternalState(object, fieldType, where);
 	}
 
 	/**
@@ -359,8 +359,8 @@ public class Whitebox {
 	 * 
 	 * @throws Throwable
 	 */
-	public static synchronized Object invokeMethod(Object tested, Object... arguments) throws Exception {
-		return WhiteboxImpl.invokeMethod(tested, arguments);
+	public static synchronized <T> T invokeMethod(Object tested, Object... arguments) throws Exception {
+		return WhiteboxImpl.<T> invokeMethod(tested, arguments);
 	}
 
 	/**
@@ -371,16 +371,16 @@ public class Whitebox {
 	 * private methods.
 	 * 
 	 */
-	public static synchronized Object invokeMethod(Class<?> tested, Object... arguments) throws Exception {
-		return WhiteboxImpl.invokeMethod(tested, arguments);
+	public static synchronized <T> T invokeMethod(Class<?> tested, Object... arguments) throws Exception {
+		return WhiteboxImpl.<T> invokeMethod(tested, arguments);
 	}
 
 	/**
 	 * Invoke a private or inner class method. This might be useful to test
 	 * private methods.
 	 */
-	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Object... arguments) throws Exception {
-		return WhiteboxImpl.invokeMethod(tested, methodToExecute, arguments);
+	public static synchronized <T> T invokeMethod(Object tested, String methodToExecute, Object... arguments) throws Exception {
+		return WhiteboxImpl.<T> invokeMethod(tested, methodToExecute, arguments);
 	}
 
 	/**
@@ -392,9 +392,9 @@ public class Whitebox {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?>[] argumentTypes, Object... arguments)
+	public static synchronized <T> T invokeMethod(Object tested, String methodToExecute, Class<?>[] argumentTypes, Object... arguments)
 			throws Exception {
-		return WhiteboxImpl.invokeMethod(tested, methodToExecute, argumentTypes, arguments);
+		return WhiteboxImpl.<T> invokeMethod(tested, methodToExecute, argumentTypes, arguments);
 	}
 
 	/**
@@ -407,9 +407,9 @@ public class Whitebox {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object tested, String methodToExecute, Class<?> definedIn, Class<?>[] argumentTypes,
+	public static synchronized <T> T invokeMethod(Object tested, String methodToExecute, Class<?> definedIn, Class<?>[] argumentTypes,
 			Object... arguments) throws Exception {
-		return WhiteboxImpl.invokeMethod(tested, methodToExecute, definedIn, argumentTypes, arguments);
+		return WhiteboxImpl.<T> invokeMethod(tested, methodToExecute, definedIn, argumentTypes, arguments);
 	}
 
 	/**
@@ -419,9 +419,9 @@ public class Whitebox {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments)
+	public static synchronized <T> T invokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments)
 			throws Exception {
-		return WhiteboxImpl.invokeMethod(tested, declaringClass, methodToExecute, arguments);
+		return WhiteboxImpl.<T> invokeMethod(tested, declaringClass, methodToExecute, arguments);
 	}
 
 	/**
@@ -433,9 +433,9 @@ public class Whitebox {
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized Object invokeMethod(Object object, Class<?> declaringClass, String methodToExecute, Class<?>[] parameterTypes,
+	public static synchronized <T> T invokeMethod(Object object, Class<?> declaringClass, String methodToExecute, Class<?>[] parameterTypes,
 			Object... arguments) throws Exception {
-		return WhiteboxImpl.invokeMethod(object, declaringClass, methodToExecute, parameterTypes, arguments);
+		return WhiteboxImpl.<T> invokeMethod(object, declaringClass, methodToExecute, parameterTypes, arguments);
 	}
 
 	/**
@@ -443,8 +443,8 @@ public class Whitebox {
 	 * test private methods.
 	 * 
 	 */
-	public static synchronized Object invokeMethod(Class<?> clazz, String methodToExecute, Object... arguments) throws Exception {
-		return WhiteboxImpl.invokeMethod(clazz, methodToExecute, arguments);
+	public static synchronized <T> T invokeMethod(Class<?> clazz, String methodToExecute, Object... arguments) throws Exception {
+		return WhiteboxImpl.<T> invokeMethod(clazz, methodToExecute, arguments);
 	}
 
 	/**
