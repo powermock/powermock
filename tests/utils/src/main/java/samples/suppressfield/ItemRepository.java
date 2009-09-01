@@ -24,7 +24,7 @@ public class ItemRepository {
 
     private static class MyClass {
         public MyClass() {
-            throw new IllegalArgumentException("Not possible!");
+            throw new IllegalArgumentException("Constructor should never be called during this test");
         }
     }
 }
