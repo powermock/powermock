@@ -27,7 +27,7 @@ Change log 1.3 (under development)
 * Deprecated Whitebox#getInternalState(Object object, String fieldName, Class<?> where, Class<T> type), use "Whitebox.<Type> getInternalState(Object object, String fieldName, Class<?> where)" instead.
 * Changed return type of Whitebox#getInternalState(Object object, String fieldName) from Object to T. This means that you can avoid cast using e.g. "Whitebox.<MyType> getInternalState(instance, "myFieldName")".
 * Changed return type of Whitebox#invokeMethod(..) from Object to T. This means that you can avoid cast using e.g. "Whitebox.<MyType> invokeMethod(..)".
-* PowerMockRunner now supports JUnit 4.7 rules
+* JUnit test runner now supports JUnit 4.7 rules
 * Upgraded the Mockito extension to use Mockito 1.8
 * Created a reusable component (PowerMockIgnorePackagesExtractorImpl) that can be used by test runners to extract which packages that should be ignored in a test case.
 
