@@ -29,6 +29,7 @@ Change log 1.3 (under development)
 * Changed return type of Whitebox#invokeMethod(..) from Object to T. This means that you can avoid cast using e.g. "Whitebox.<MyType> invokeMethod(..)".
 * PowerMockRunner now supports JUnit 4.7 rules
 * Upgraded the Mockito extension to use Mockito 1.8
+* Created a reusable component (PowerMockIgnorePackagesExtractorImpl) that can be used be test runners to extract which packages that should be ignored in a test case.
 
 
 Change log 1.2.5 (released 2009-05-05)

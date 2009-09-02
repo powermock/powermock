@@ -20,6 +20,7 @@ import static org.easymock.classextension.EasyMock.verify;
 import static org.powermock.api.easymock.PowerMock.createPartialMock;
 import static org.powermock.api.easymock.PowerMock.expectPrivate;
 
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -28,7 +29,7 @@ import samples.privateandfinal.PrivateFinal;
 /**
  * Test class to demonstrate private+final method mocking.
  */
-//@PrepareForTest(PrivateFinal.class)
+@PrepareForTest(PrivateFinal.class)
 public class PrivateFinalTest {
 
   @Test

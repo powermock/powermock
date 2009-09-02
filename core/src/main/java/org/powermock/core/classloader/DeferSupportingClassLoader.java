@@ -31,8 +31,12 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
 
 	ClassLoader deferTo;
 
-	public String[] getIgnoredPackages() {
-		return deferPackages;
+	public void addIgnorePackage(String... packagesToIgnore) {
+		if (packagesToIgnore != null && packagesToIgnore.length > 0) {
+			final int previousLength = deferPackages.length;
+			deferPackages = new String[previousLength + packagesToIgnore.length];
+			System.arraycopy(packagesToIgnore, 0, deferPackages, previousLength, packagesToIgnore.length);
+		}
 	}
 
 	public DeferSupportingClassLoader(ClassLoader classloader, String deferPackages[]) {
