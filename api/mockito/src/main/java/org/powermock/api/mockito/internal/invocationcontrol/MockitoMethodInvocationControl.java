@@ -43,6 +43,7 @@ import org.mockito.internal.reporting.PrintSettings;
 import org.mockito.internal.util.MockUtil;
 import org.mockito.internal.verification.api.VerificationMode;
 import org.powermock.core.MockGateway;
+import org.powermock.core.MockRepository;
 import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.reflect.Whitebox;
 
@@ -124,10 +125,7 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 	}
 
 	public Object invoke(final Object obj, final Method method, final Object[] arguments) throws Throwable {
-		Object interceptionObject = obj;
-		// If the method is static we should get the substitution mock.
-
-		final Object returnValue = performIntercept(invocationHandler, interceptionObject, method, arguments);
+		final Object returnValue = performIntercept(invocationHandler, obj, method, arguments);
 		if (returnValue == null && isInVerificationMode()) {
 			return MockGateway.SUPPRESS;
 		}
@@ -169,8 +167,6 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 					if (mockUtil.isMock(target)) {
 						return method.invoke(target, arguments);
 					} else {
-						System.out.println(method);
-						System.out.println(target);
 						return method.invoke(target, arguments);
 					}
 				}
@@ -236,6 +232,22 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 			MethodHandler mi = new MethodHandler() {
 				public Object invoke(Object self, Method m, Method proceed, Object[] args) throws Throwable {
 					final Object[] realArguments = (Object[]) args[1];
+					if (delegator instanceof Class<?>) {
+						/*
+						 * Tell the MockGateway to always defer the next method
+						 * call to the real object/class. The reason for this is
+						 * that if the delegator is a class then the Mockito
+						 * proxy will delegate to the original class and the
+						 * method call will be caught by the MockGateway. The
+						 * MockGateway will find a MethodInvocationControl for
+						 * this type and thus invoke the proxy again (i.e. we
+						 * will end up in this method one more time) and we will
+						 * end up in an infinite recursion. To avoid this we
+						 * need to instruct the MockGateway to always delegate
+						 * the next call to the original class.
+						 */
+						MockRepository.putAdditionalState(MockGateway.DONT_MOCK_NEXT_CALL, true);
+					}
 					// execute the original method.
 					final Object invoke = method.invoke(delegator, realArguments);
 					return invoke;

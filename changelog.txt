@@ -30,6 +30,7 @@ Change log 1.3 (under development)
 * JUnit test runner now supports JUnit 4.7 rules
 * Upgraded the Mockito extension to use Mockito 1.8
 * Created a reusable component (PowerMockIgnorePackagesExtractorImpl) that can be used by test runners to extract which packages that should be ignored in a test case.
+* Mockito extension now supports spying on classes
 
 
 Change log 1.2.5 (released 2009-05-05)

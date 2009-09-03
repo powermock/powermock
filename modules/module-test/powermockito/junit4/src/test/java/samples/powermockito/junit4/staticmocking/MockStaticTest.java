@@ -21,6 +21,7 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 import org.junit.Ignore;
@@ -144,6 +145,12 @@ public class MockStaticTest {
 
 	@Test
 	public void testSpyOnStaticMethods() throws Exception {
-		
+		spy(StaticService.class);
+
+		String expectedMockValue = "expected";
+		when(StaticService.say("world")).thenReturn(expectedMockValue);
+
+		assertEquals(expectedMockValue, StaticService.say("world"));
+		assertEquals("Hello world2", StaticService.say("world2"));
 	}
 }

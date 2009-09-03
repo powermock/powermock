@@ -33,6 +33,12 @@ public class MockGateway {
 
 	public static final Object PROCEED = new Object();
 	public static final Object SUPPRESS = new Object();
+	/**
+	 * Used to tell the MockGateway that the next call should not be mocked
+	 * regardless if a {@link MethodInvocationControl} is found in the
+	 * {@link MockRepository}. Used to allow for e.g. recursive partial mocking.
+	 */
+	public static final String DONT_MOCK_NEXT_CALL = "DontMockNextCall";
 
 	// used for static methods
 	public static synchronized Object methodCall(Class<?> type, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString)
@@ -81,7 +87,7 @@ public class MockGateway {
 				throw e;
 			}
 		}
-		if (methodInvocationControl != null && methodInvocationControl.isMocked(method)) {
+		if (methodInvocationControl != null && methodInvocationControl.isMocked(method) && !shouldMockThisCall()) {
 			returnValue = methodInvocationControl.invoke(object, WhiteboxImpl.getMethod(objectType, methodName, sig), args);
 			if (returnValue == SUPPRESS) {
 				returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
@@ -94,6 +100,18 @@ public class MockGateway {
 			returnValue = PROCEED;
 		}
 		return returnValue;
+	}
+
+	private static boolean shouldMockThisCall() {
+		Boolean repositoryState = MockRepository.<Boolean> getAdditionalState(DONT_MOCK_NEXT_CALL);
+		final boolean shouldMockThisCall;
+		if (repositoryState == null || !repositoryState) {
+			shouldMockThisCall = false;
+		} else {
+			shouldMockThisCall = true;
+			MockRepository.removeAdditionalState(DONT_MOCK_NEXT_CALL);
+		}
+		return shouldMockThisCall;
 	}
 
 	// used for instance methods

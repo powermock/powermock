@@ -3,9 +3,9 @@ package org.powermock.api.mockito;
 import static org.mockito.Mockito.times;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import org.mockito.Mockito;
-import org.mockito.ReturnValues;
 import org.mockito.exceptions.misusing.NotAMockException;
 import org.mockito.exceptions.misusing.NullInsteadOfMockException;
 import org.mockito.internal.MockHandler;
@@ -18,6 +18,7 @@ import org.mockito.internal.util.MockName;
 import org.mockito.internal.verification.api.VerificationMode;
 import org.powermock.api.mockito.internal.invocationcontrol.MockitoMethodInvocationControl;
 import org.powermock.api.mockito.internal.proxyframework.CgLibProxyFramework;
+import org.powermock.core.ClassReplicaCreator;
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.core.spi.support.InvocationSubstitute;
@@ -129,36 +130,37 @@ public class PowerMockito {
 		return doMock((Class<T>) Whitebox.getType(object), false, true, object, (Method[]) null);
 	}
 
+	public static synchronized <T> void spy(Class<T> type) {
+		doMock(type, true, true, type, (Method[]) null);
+	}
+
 	@SuppressWarnings("unchecked")
-	private static <T> T doMock(Class<T> type, boolean isStatic, boolean isSpy, T delegator, Method... methods) {
+	private static <T> T doMock(Class<T> type, boolean isStatic, boolean isSpy, Object delegator, Method... methods) {
 		if (type == null) {
 			throw new IllegalArgumentException("The class to mock cannot be null");
 		}
 
 		T mock = null;
 		final String mockName = toInstanceName(type);
-		if (isStatic) {
-			/*
-			 * The reason why we have to create a substitution mock for the
-			 * static method calls is because of the
-			 * org.mockito.internal.util.MockUtil#isMockitoMock(Object..)
-			 * method. Mockito only assumes instance mocks and thus
-			 * Enhancer.isEnhanced(mock.getClass()) won't work when working with
-			 * class mocks. The isMockitoMock method is called by Mockito in
-			 * verification mode if verification fails (it tries to get the name
-			 * of the mock) and we get an inappropriate exception.
-			 */
-			final MockData<InvocationSubstitute> mockData = createMethodInvocationControl(mockName, InvocationSubstitute.class, methods, isSpy, null);
-			MockRepository.putStaticMethodInvocationControl(type, mockData.getMethodInvocationControl());
-			MockRepository.addObjectsToAutomaticallyReplayAndVerify(mockData.getMock());
-		} else {
-			MockData<T> mockData = createMethodInvocationControl(mockName, type, methods, isSpy, delegator);
 
-			mock = mockData.getMock();
+		final Class<T> typeToMock;
+		if (type.getName().startsWith("java.") && Modifier.isFinal(type.getModifiers())) {
+			typeToMock = (Class<T>) new ClassReplicaCreator().createClassReplica(type);
+		} else {
+			typeToMock = type;
+		}
+
+		MockData<T> mockData = createMethodInvocationControl(mockName, typeToMock, methods, isSpy, (T) delegator);
+
+		mock = mockData.getMock();
+		if (isStatic) {
+			MockRepository.putStaticMethodInvocationControl(type, mockData.getMethodInvocationControl());
+		} else {
 			MockRepository.putInstanceMethodInvocationControl(mock, mockData.getMethodInvocationControl());
-			if (mock instanceof InvocationSubstitute == false) {
-				MockRepository.addObjectsToAutomaticallyReplayAndVerify(mock);
-			}
+		}
+
+		if (mock instanceof InvocationSubstitute == false) {
+			MockRepository.addObjectsToAutomaticallyReplayAndVerify(mock);
 		}
 		return mock;
 	}
@@ -231,7 +233,8 @@ public class PowerMockito {
 		}
 	}
 
-	private static <T> MockData<T> createMethodInvocationControl(final String mockName, Class<T> type, Method[] methods, boolean isSpy, T delegator) {
+	private static <T> MockData<T> createMethodInvocationControl(final String mockName, Class<T> type, Method[] methods, boolean isSpy,
+			Object delegator) {
 		final MockSettingsImpl mockSettings;
 		if (isSpy) {
 			mockSettings = (MockSettingsImpl) new MockSettingsImpl().defaultAnswer(Mockito.CALLS_REAL_METHODS);
@@ -242,7 +245,7 @@ public class PowerMockito {
 				Whitebox.getInternalState(Mockito.class, MockingProgress.class), new MatchersBinder(), mockSettings);
 		MethodInterceptorFilter filter = new MethodInterceptorFilter(type, mockHandler);
 		final T mock = (T) ClassImposterizer.INSTANCE.imposterise(filter, type);
-		final MockitoMethodInvocationControl<T> invocationControl = new MockitoMethodInvocationControl<T>(filter, delegator, methods);
+		final MockitoMethodInvocationControl invocationControl = new MockitoMethodInvocationControl(filter, delegator, methods);
 		return new MockData<T>(invocationControl, mock);
 	}
 
