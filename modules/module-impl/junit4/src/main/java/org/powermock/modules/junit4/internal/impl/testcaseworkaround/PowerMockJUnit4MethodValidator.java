@@ -37,6 +37,7 @@ import org.powermock.reflect.Whitebox;
  * actually a workaround for JUnit 4.4 when the test case extends from the
  * <code>TestCase</code> class.
  */
+@SuppressWarnings("deprecation")
 public class PowerMockJUnit4MethodValidator extends MethodValidator {
 
     public PowerMockJUnit4MethodValidator(TestClass testClass) {

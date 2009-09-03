@@ -173,6 +173,8 @@ public class PowerMockito {
 	}
 
 	/**
+	 * Expect calls to private methods.
+	 * 
 	 * @see {@link Mockito#when(Object)}
 	 * @throws Exception
 	 *             If something unexpected goes wrong.
@@ -182,7 +184,104 @@ public class PowerMockito {
 	}
 
 	/**
+	 * Expect calls to private methods without having to specify the method
+	 * name. The method will be looked up using the parameter types (if
+	 * possible).
+	 * 
+	 * @see {@link Mockito#when(Object)}
+	 * @throws Exception
+	 *             If something unexpected goes wrong.
+	 */
+	public static <T> OngoingStubbing<T> when(Object instance, Object... arguments) throws Exception {
+		return Mockito.when(Whitebox.<T> invokeMethod(instance, arguments));
+	}
+
+	/**
+	 * Expect a private or inner class method call in cases where PowerMock
+	 * cannot automatically determine the type of the parameters, for example
+	 * when mixing primitive types and wrapper types in the same method. For
+	 * most situations use {@link #when(Object, Object...)} instead.
+	 * 
+	 * @see {@link Mockito#when(Object)}
+	 * @throws Exception
+	 *             If something unexpected goes wrong.
+	 */
+	public static <T> OngoingStubbing<T> when(Object instance, String methodToExecute, Class<?>[] argumentTypes, Object... arguments)
+			throws Exception {
+		return Mockito.when(Whitebox.<T> invokeMethod(instance, methodToExecute, argumentTypes, arguments));
+	}
+
+	/**
+	 * Expected a private or inner class method call in a subclass (defined by
+	 * <code>definedIn</code>) in cases where PowerMock cannot automatically
+	 * determine the type of the parameters, for example when mixing primitive
+	 * types and wrapper types in the same method. For most situations use
+	 * {@link #invokeMethod(Object, Object...)} instead.
+	 * 
+	 * @see {@link Mockito#when(Object)}
+	 * @throws Exception
+	 *             If something unexpected goes wrong.
+	 */
+	public static <T> OngoingStubbing<T> when(Object instance, String methodToExecute, Class<?> definedIn, Class<?>[] argumentTypes,
+			Object... arguments) throws Exception {
+		return Mockito.when(Whitebox.<T> invokeMethod(instance, methodToExecute, definedIn, argumentTypes, arguments));
+	}
+
+	/**
+	 * Expect a private or inner class method call that is located in a subclass
+	 * of the instance.
+	 * 
+	 * @see {@link Mockito#when(Object)}
+	 * @throws Exception
+	 *             If something unexpected goes wrong.
+	 */
+	public static <T> OngoingStubbing<T> when(Object instance, Class<?> declaringClass, String methodToExecute, Object... arguments) throws Exception {
+		return Mockito.when(Whitebox.<T> invokeMethod(instance, declaringClass, methodToExecute, arguments));
+	}
+
+	/**
+	 * Expect a private or inner class method call in that is located in a
+	 * subclass of the instance. This might be useful to test private methods.
+	 * <p>
+	 * Use this for overloaded methods.
+	 * 
+	 * @see {@link Mockito#when(Object)}
+	 * @throws Exception
+	 *             If something unexpected goes wrong.
+	 */
+	public static <T> OngoingStubbing<T> when(Object object, Class<?> declaringClass, String methodToExecute, Class<?>[] parameterTypes,
+			Object... arguments) throws Exception {
+		return Mockito.when(Whitebox.<T> invokeMethod(object, declaringClass, methodToExecute, parameterTypes, arguments));
+	}
+
+	/**
+	 * Expect a static private or inner class method call.
+	 * 
+	 * @see {@link Mockito#when(Object)}
+	 * @throws Exception
+	 *             If something unexpected goes wrong.
+	 */
+	public static <T> OngoingStubbing<T> when(Class<?> clazz, String methodToExecute, Object... arguments) throws Exception {
+		return Mockito.when(Whitebox.<T> invokeMethod(clazz, methodToExecute, arguments));
+	}
+
+	/**
+	 * Expect calls to private methods without having to specify the method
+	 * name. The method will be looked up using the parameter types (if
+	 * possible).
+	 * 
+	 * @see {@link Mockito#when(Object)}
+	 * @throws Exception
+	 *             If something unexpected goes wrong.
+	 */
+	public static <T> OngoingStubbing<T> when(Class<?> klass, Object... arguments) throws Exception {
+		return Mockito.when(Whitebox.<T> invokeMethod(klass, arguments));
+	}
+
+	/**
 	 * Just delegates to the original {@link Mockito#when(Object)} method.
+	 * 
+	 * @see {@link Mockito#when(Object)}
 	 */
 	public static <T> OngoingStubbing<T> when(T methodCall) {
 		return Mockito.when(methodCall);

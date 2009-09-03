@@ -25,7 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import junit.framework.TestCase;
-import junit.runner.Version;
 
 import org.junit.internal.runners.ClassRoadie;
 import org.junit.internal.runners.InitializationError;

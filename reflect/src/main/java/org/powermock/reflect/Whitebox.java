@@ -357,8 +357,8 @@ public class Whitebox {
 	 * 
 	 * @throws Throwable
 	 */
-	public static synchronized <T> T invokeMethod(Object tested, Object... arguments) throws Exception {
-		return WhiteboxImpl.<T> invokeMethod(tested, arguments);
+	public static synchronized <T> T invokeMethod(Object instance, Object... arguments) throws Exception {
+		return WhiteboxImpl.<T> invokeMethod(instance, arguments);
 	}
 
 	/**
@@ -369,62 +369,62 @@ public class Whitebox {
 	 * private methods.
 	 * 
 	 */
-	public static synchronized <T> T invokeMethod(Class<?> tested, Object... arguments) throws Exception {
-		return WhiteboxImpl.<T> invokeMethod(tested, arguments);
+	public static synchronized <T> T invokeMethod(Class<?> klass, Object... arguments) throws Exception {
+		return WhiteboxImpl.<T> invokeMethod(klass, arguments);
 	}
 
 	/**
 	 * Invoke a private or inner class method. This might be useful to test
 	 * private methods.
 	 */
-	public static synchronized <T> T invokeMethod(Object tested, String methodToExecute, Object... arguments) throws Exception {
-		return WhiteboxImpl.<T> invokeMethod(tested, methodToExecute, arguments);
+	public static synchronized <T> T invokeMethod(Object instance, String methodToExecute, Object... arguments) throws Exception {
+		return WhiteboxImpl.<T> invokeMethod(instance, methodToExecute, arguments);
 	}
 
 	/**
-	 * Invoke a private or inner class method in cases where power mock cannot
+	 * Invoke a private or inner class method in cases where PowerMock cannot
 	 * automatically determine the type of the parameters, for example when
 	 * mixing primitive types and wrapper types in the same method. For most
-	 * situations use {@link #invokeMethod(Class, String, Object...)} instead.
+	 * situations use {@link #invokeMethod(Object, Object...)} instead.
 	 * 
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized <T> T invokeMethod(Object tested, String methodToExecute, Class<?>[] argumentTypes, Object... arguments)
+	public static synchronized <T> T invokeMethod(Object instance, String methodToExecute, Class<?>[] argumentTypes, Object... arguments)
 			throws Exception {
-		return WhiteboxImpl.<T> invokeMethod(tested, methodToExecute, argumentTypes, arguments);
+		return WhiteboxImpl.<T> invokeMethod(instance, methodToExecute, argumentTypes, arguments);
 	}
 
 	/**
 	 * Invoke a private or inner class method in a subclass (defined by
-	 * <code>definedIn</code>) in cases where power mock cannot automatically
+	 * <code>definedIn</code>) in cases where PowerMock cannot automatically
 	 * determine the type of the parameters, for example when mixing primitive
 	 * types and wrapper types in the same method. For most situations use
-	 * {@link #invokeMethod(Class, String, Object...)} instead.
+	 * {@link #invokeMethod(Object, Object...)} instead.
 	 * 
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized <T> T invokeMethod(Object tested, String methodToExecute, Class<?> definedIn, Class<?>[] argumentTypes,
+	public static synchronized <T> T invokeMethod(Object instance, String methodToExecute, Class<?> definedIn, Class<?>[] argumentTypes,
 			Object... arguments) throws Exception {
-		return WhiteboxImpl.<T> invokeMethod(tested, methodToExecute, definedIn, argumentTypes, arguments);
+		return WhiteboxImpl.<T> invokeMethod(instance, methodToExecute, definedIn, argumentTypes, arguments);
 	}
 
 	/**
 	 * Invoke a private or inner class method in that is located in a subclass
-	 * of the tested instance. This might be useful to test private methods.
+	 * of the instance. This might be useful to test private methods.
 	 * 
 	 * @throws Exception
 	 *             Exception that may occur when invoking this method.
 	 */
-	public static synchronized <T> T invokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments)
+	public static synchronized <T> T invokeMethod(Object instance, Class<?> declaringClass, String methodToExecute, Object... arguments)
 			throws Exception {
-		return WhiteboxImpl.<T> invokeMethod(tested, declaringClass, methodToExecute, arguments);
+		return WhiteboxImpl.<T> invokeMethod(instance, declaringClass, methodToExecute, arguments);
 	}
 
 	/**
 	 * Invoke a private or inner class method in that is located in a subclass
-	 * of the tested instance. This might be useful to test private methods.
+	 * of the instance. This might be useful to test private methods.
 	 * <p>
 	 * Use this for overloaded methods.
 	 * 
@@ -437,7 +437,7 @@ public class Whitebox {
 	}
 
 	/**
-	 * Invoke a static private or inner class method. This might be useful to
+	 * Invoke a static private or inner class method. This may be useful to
 	 * test private methods.
 	 * 
 	 */
@@ -637,11 +637,11 @@ public class Whitebox {
 		return WhiteboxImpl.getAnonymousInnerClassType(declaringClass, occurrence);
 	}
 
-	public static void setInternalStateFromContext(Object tested, Object context, Object... additionalContexts) {
-		WhiteboxImpl.setInternalStateFromContext(tested, context, additionalContexts);
+	public static void setInternalStateFromContext(Object instance, Object context, Object... additionalContexts) {
+		WhiteboxImpl.setInternalStateFromContext(instance, context, additionalContexts);
 	}
 
-	public static void setInternalStateFromContext(Object tested, Class<?> context, Class<?>... additionalContexts) {
-		WhiteboxImpl.setInternalStateFromContext(tested, context, additionalContexts);
+	public static void setInternalStateFromContext(Object instance, Class<?> context, Class<?>... additionalContexts) {
+		WhiteboxImpl.setInternalStateFromContext(instance, context, additionalContexts);
 	}
 }
