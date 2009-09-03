@@ -31,6 +31,9 @@ Change log 1.3 (under development)
 * Upgraded the Mockito extension to use Mockito 1.8
 * Created a reusable component (PowerMockIgnorePackagesExtractorImpl) that can be used by test runners to extract which packages that should be ignored in a test case.
 * Mockito extension now supports spying on classes
+* Remove mockStatic(Class<?> type, Method method, Method... methods), mockStaticPartial, mockPartial, mock(Class<T> type, Method... methods) & mock(Class<T> type, Method... methods) from the Mockito extension API. You should use PowerMockito.spy instead.
+* When using the PowerMock Mock annotation with Mockito the method names (previously used for partial mocking) are ignored. They are no longer needed, just use PowerMockito.spy instead.
+* Mockito extension API support for private methods using PowerMockito.when(..).
 
 
 Change log 1.2.5 (released 2009-05-05)

@@ -41,16 +41,16 @@ public class AnnotationEnabler extends AbstractPowerMockTestListenerBase {
 				org.powermock.core.classloader.annotations.Mock.class);
 		for (Field field : fields) {
 			final Class<?> type = field.getType();
-			Method[] methods = null;
 			if (field.isAnnotationPresent(org.powermock.core.classloader.annotations.Mock.class)) {
 				org.powermock.core.classloader.annotations.Mock annotation = field
 						.getAnnotation(org.powermock.core.classloader.annotations.Mock.class);
 				final String[] value = annotation.value();
 				if (value.length != 1 || !"".equals(value[0])) {
-					methods = Whitebox.getMethods(type, value);
+					System.err
+							.println("PowerMockito deprecation: Use PowerMockito.spy(..) for partial mocking instead. A standard mock will be created instead.");
 				}
 			}
-			field.set(testInstance, mock(type, methods));
+			field.set(testInstance, mock(type));
 		}
 	}
 }

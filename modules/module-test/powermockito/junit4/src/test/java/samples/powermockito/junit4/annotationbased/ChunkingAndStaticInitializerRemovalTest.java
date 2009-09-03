@@ -40,11 +40,11 @@ import samples.staticinitializer.SimpleStaticInitializerExample;
 @PrepareForTest(SimpleStaticInitializerExample.class)
 public class ChunkingAndStaticInitializerRemovalTest {
 
-	@Mock("getConcatenatedString")
+	@Mock
 	private SimpleStaticInitializerExample tested;
 
 	@Test
-	public void testPartialMockingWithNoChunking() throws Exception {
+	public void testMockingWithNoChunking() throws Exception {
 		final String argument = "hello";
 		final String string = tested.getString();
 		assertEquals(Whitebox.getInternalState(SimpleStaticInitializerExample.class, String.class), string);
@@ -55,7 +55,7 @@ public class ChunkingAndStaticInitializerRemovalTest {
 
 	@SuppressStaticInitializationFor("samples.staticinitializer.SimpleStaticInitializerExample")
 	@Test
-	public void testPartialMockingWithChunking() throws Exception {
+	public void testMockingWithChunking() throws Exception {
 		final String argument = "hello";
 		assertNull(tested.getString());
 		assertNull(tested.getConcatenatedString(argument));

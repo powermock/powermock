@@ -19,17 +19,12 @@ package samples.powermockito.junit4.partialmocking;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockPartial;
+import static org.powermock.api.mockito.PowerMockito.spy;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.mockito.powermocklistener.AnnotationEnabler;
-import org.powermock.core.classloader.annotations.Mock;
-import org.powermock.core.classloader.annotations.PowerMockListener;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
 import samples.partialmocking.PartialMockingExample;
 
@@ -38,36 +33,23 @@ import samples.partialmocking.PartialMockingExample;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(PartialMockingExample.class)
-@PowerMockListener(AnnotationEnabler.class)
 public class PartialMockingExampleDefect {
-
-	@Mock("methodToMock")
-	private PartialMockingExample underTest;
-
-	@Test
-	public void partialMockitoMockingUsingAnnotaion() throws Exception {
-		final String expected = "TEST VALUE";
-		when(underTest.methodToMock()).thenReturn(expected);
-		assertEquals(expected, underTest.methodToTest());
-
-		verify(underTest).methodToMock();
-	}
 
 	@Test
 	public void partialMockitoMockingUsingStandardMock() throws Exception {
 		final String expected = "TEST VALUE";
-		underTest = mock(PartialMockingExample.class, Whitebox.getMethods(PartialMockingExample.class, "methodToMock"));
+		PartialMockingExample underTest = spy(new PartialMockingExample());
 		when(underTest.methodToMock()).thenReturn(expected);
 
 		assertEquals(expected, underTest.methodToTest());
 
 		verify(underTest).methodToMock();
 	}
-	
+
 	@Test
 	public void partialMockitoMockingUsingMockPartialMethod() throws Exception {
 		final String expected = "TEST VALUE";
-		underTest = mockPartial(PartialMockingExample.class,  "methodToMock");
+		PartialMockingExample underTest = spy(new PartialMockingExample());
 		when(underTest.methodToMock()).thenReturn(expected);
 
 		assertEquals(expected, underTest.methodToTest());

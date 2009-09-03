@@ -16,6 +16,7 @@ import org.mockito.internal.invocation.MatchersBinder;
 import org.mockito.internal.progress.MockingProgress;
 import org.mockito.internal.util.MockName;
 import org.mockito.internal.verification.api.VerificationMode;
+import org.mockito.stubbing.OngoingStubbing;
 import org.powermock.api.mockito.internal.invocationcontrol.MockitoMethodInvocationControl;
 import org.powermock.api.mockito.internal.proxyframework.CgLibProxyFramework;
 import org.powermock.core.ClassReplicaCreator;
@@ -36,30 +37,6 @@ public class PowerMockito {
 	}
 
 	/**
-	 * Enable static mocking for a class.
-	 * 
-	 * @param type
-	 *            the class to enable static mocking
-	 * @param methods
-	 *            optionally what methods to mock
-	 */
-	public static synchronized void mockStatic(Class<?> type, Method... methods) {
-		doMock(type, true, false, null, methods);
-	}
-
-	/**
-	 * Enable static mocking for a class.
-	 * 
-	 * @param type
-	 *            the class to enable static mocking
-	 * @param methods
-	 *            optionally what methods to mock
-	 */
-	public static synchronized void mockStaticPartial(Class<?> type, String... methods) {
-		doMock(type, true, false, null, Whitebox.getMethods(type, methods));
-	}
-
-	/**
 	 * Enable static mocking for all methods of a class.
 	 * 
 	 * @param type
@@ -67,37 +44,6 @@ public class PowerMockito {
 	 */
 	public static synchronized void mockStatic(Class<?> type) {
 		doMock(type, true, false, null, (Method[]) null);
-	}
-
-	/**
-	 * Creates a mock object that supports mocking of final and native methods.
-	 * 
-	 * @param <T>
-	 *            the type of the mock object
-	 * @param type
-	 *            the type of the mock object
-	 * @param methods
-	 *            optionally what methods to mock
-	 * @return the mock object.
-	 */
-	public static synchronized <T> T mock(Class<T> type, Method... methods) {
-		return doMock(type, false, false, null, methods);
-	}
-
-	/**
-	 * Creates a partially mocked object that supports mocking of final and
-	 * native methods.
-	 * 
-	 * @param <T>
-	 *            the type of the mock object
-	 * @param type
-	 *            the type of the mock object
-	 * @param methodsToMock
-	 *            optionally what methods to mock
-	 * @return the mock object.
-	 */
-	public static synchronized <T> T mockPartial(Class<T> type, String... methodsToMock) {
-		return doMock(type, false, false, null, Whitebox.getMethods(type, methodsToMock));
 	}
 
 	/**
@@ -127,7 +73,7 @@ public class PowerMockito {
 	 */
 	@SuppressWarnings("unchecked")
 	public static synchronized <T> T spy(T object) {
-		return doMock((Class<T>) Whitebox.getType(object), false, true, object, (Method[]) null);
+		return doMock((Class<T>) Whitebox.getType(object), false, true, null, (Method[]) null);
 	}
 
 	public static synchronized <T> void spy(Class<T> type) {
@@ -226,6 +172,22 @@ public class PowerMockito {
 		Whitebox.getInternalState(Mockito.class, MockingProgress.class).verificationStarted(mode);
 	}
 
+	/**
+	 * @see {@link Mockito#when(Object)}
+	 * @throws Exception
+	 *             If something unexpected goes wrong.
+	 */
+	public static <T> OngoingStubbing<T> when(Object instance, String methodName, Object... arguments) throws Exception {
+		return Mockito.when(Whitebox.<T> invokeMethod(instance, methodName, arguments));
+	}
+
+	/**
+	 * Just delegates to the original {@link Mockito#when(Object)} method.
+	 */
+	public static <T> OngoingStubbing<T> when(T methodCall) {
+		return Mockito.when(methodCall);
+	}
+
 	private static void assertValidMock(Class<?> mock) {
 		final MethodInvocationControl instanceInvocationHandler = MockRepository.getStaticMethodInvocationControl(mock);
 		if (instanceInvocationHandler == null) {
@@ -266,16 +228,16 @@ public class PowerMockito {
 	 * Class that encapsulate a mock and its corresponding invocation control.
 	 */
 	private static class MockData<T> {
-		private final MockitoMethodInvocationControl<T> methodInvocationControl;
+		private final MockitoMethodInvocationControl methodInvocationControl;
 
 		private final T mock;
 
-		MockData(MockitoMethodInvocationControl<T> methodInvocationControl, T mock) {
+		MockData(MockitoMethodInvocationControl methodInvocationControl, T mock) {
 			this.methodInvocationControl = methodInvocationControl;
 			this.mock = mock;
 		}
 
-		public MockitoMethodInvocationControl<T> getMethodInvocationControl() {
+		public MockitoMethodInvocationControl getMethodInvocationControl() {
 			return methodInvocationControl;
 		}
 

@@ -40,7 +40,6 @@ import org.mockito.internal.progress.MockingProgress;
 import org.mockito.internal.progress.SequenceNumber;
 import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.internal.reporting.PrintSettings;
-import org.mockito.internal.util.MockUtil;
 import org.mockito.internal.verification.api.VerificationMode;
 import org.powermock.core.MockGateway;
 import org.powermock.core.MockRepository;
@@ -50,12 +49,12 @@ import org.powermock.reflect.Whitebox;
 /**
  * A Mockito implementation of the {@link MethodInvocationControl} interface.
  */
-public class MockitoMethodInvocationControl<T> implements MethodInvocationControl {
+public class MockitoMethodInvocationControl implements MethodInvocationControl {
 
 	private final MethodInterceptorFilter invocationHandler;
 
 	private final Set<Method> mockedMethods;
-	private final T delegator;
+	private final Object delegator;
 
 	/**
 	 * Creates a new instance.
@@ -91,7 +90,7 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 	 *            the <code>invocationHandler</code> are considered to be
 	 *            mocked.
 	 */
-	public MockitoMethodInvocationControl(MethodInterceptorFilter invocationHandler, T delegator, Method... methodsToMock) {
+	public MockitoMethodInvocationControl(MethodInterceptorFilter invocationHandler, Object delegator, Method... methodsToMock) {
 		if (invocationHandler == null) {
 			throw new IllegalArgumentException("Invocation Handler cannot be null.");
 		}
@@ -157,18 +156,20 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 		}
 
 		final FilteredCGLIBProxyRealMethod cglibProxyRealMethod;
-		if (isMockitoSpy()) {
+		if (hasDelegator()) {
 			cglibProxyRealMethod = new FilteredCGLIBProxyRealMethod(getMethodProxy(method));
 		} else {
 			cglibProxyRealMethod = new FilteredCGLIBProxyRealMethod(new RealMethod() {
-				private MockUtil mockUtil = new MockUtil();
-
 				public Object invoke(Object target, Object[] arguments) throws Throwable {
-					if (mockUtil.isMock(target)) {
-						return method.invoke(target, arguments);
-					} else {
-						return method.invoke(target, arguments);
-					}
+					/*
+					 * Instruct the MockGateway to don't intercept the next
+					 * call. The reason is that when Mockito is spying on
+					 * objects it should call the "real method" (which is
+					 * proxied by Mockito anyways) so that we don't end up in
+					 * here one more time which causes intifite recursion.
+					 */
+					MockRepository.putAdditionalState(MockGateway.DONT_MOCK_NEXT_CALL, true);
+					return method.invoke(target, arguments);
 				}
 			});
 		}
@@ -226,12 +227,12 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 	 */
 	@SuppressWarnings("unchecked")
 	private MethodProxy getMethodProxy(final Method method) {
-		if (isMockitoSpy()) {
+		if (hasDelegator()) {
 			ProxyFactory f = new ProxyFactory();
 			f.setSuperclass(MethodProxy.class);
 			MethodHandler mi = new MethodHandler() {
 				public Object invoke(Object self, Method m, Method proceed, Object[] args) throws Throwable {
-					final Object[] realArguments = (Object[]) args[1];
+					final Object[] realArguments = args.length > 0 ? (Object[]) args[1] : new Object[0];
 					if (delegator instanceof Class<?>) {
 						/*
 						 * Tell the MockGateway to always defer the next method
@@ -285,7 +286,7 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
 		return methods == null ? null : new HashSet<Method>(Arrays.asList(methods));
 	}
 
-	private boolean isMockitoSpy() {
+	private boolean hasDelegator() {
 		return delegator != null;
 	}
 }

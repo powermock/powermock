@@ -15,7 +15,6 @@
  */
 package samples.powermockito.junit4.annotationbased;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
 
@@ -48,9 +47,6 @@ public class MockFinalUsingAnnotationsTest {
 	@org.powermock.core.classloader.annotations.Mock
 	private FinalDemo usingPowerMockMockAnnotation;
 
-	@org.powermock.core.classloader.annotations.Mock("sayFinalNative")
-	private FinalDemo usingPowerMockMockAnnotationForPartialMocking;
-
 	@Test
 	public void assertMockFinalWithMockitoMockAnnotationWorks() throws Exception {
 		final String argument = "hello";
@@ -76,13 +72,5 @@ public class MockFinalUsingAnnotationsTest {
 		assertNull(usingPowerMockMockAnnotation.say(argument));
 
 		verify(usingPowerMockMockAnnotation).say(argument);
-	}
-
-	@Test
-	public void assertMockPartialWorksWhenUsingPowerMockMockAnnotation() throws Exception {
-		final String argument = " world";
-		assertEquals("Hello " + argument, usingPowerMockMockAnnotationForPartialMocking.say(argument));
-		assertNull(usingPowerMockMockAnnotationForPartialMocking.sayFinalNative(argument));
-		verify(usingPowerMockMockAnnotationForPartialMocking).sayFinalNative(argument);
 	}
 }
