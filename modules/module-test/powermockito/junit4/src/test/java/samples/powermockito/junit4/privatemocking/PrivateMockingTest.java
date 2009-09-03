@@ -6,6 +6,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -23,6 +24,17 @@ public class PrivateMockingTest {
 		when(tested, "doSayYear", 12, "test").thenReturn("another");
 
 		assertEquals("Hello Johan, you are 29 old.", tested.sayYear("Johan", 29));
+		assertEquals("another", tested.sayYear("test", 12));
+	}
+
+	@Test
+	public void expectationsWorkWithArgumentMatchersWhenSpyingOnPrivateMethods() throws Exception {
+		PrivateMethodDemo tested = spy(new PrivateMethodDemo());
+		assertEquals("Hello Temp, you are 50 old.", tested.sayYear("Temp", 50));
+
+		when(tested, "doSayYear", Mockito.anyInt(), Mockito.anyString()).thenReturn("another");
+
+		assertEquals("another", tested.sayYear("Johan", 29));
 		assertEquals("another", tested.sayYear("test", 12));
 	}
 }
