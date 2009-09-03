@@ -166,7 +166,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
 					 * call. The reason is that when Mockito is spying on
 					 * objects it should call the "real method" (which is
 					 * proxied by Mockito anyways) so that we don't end up in
-					 * here one more time which causes intifite recursion.
+					 * here one more time which causes infinite recursion.
 					 */
 					MockRepository.putAdditionalState(MockGateway.DONT_MOCK_NEXT_CALL, true);
 					return method.invoke(target, arguments);

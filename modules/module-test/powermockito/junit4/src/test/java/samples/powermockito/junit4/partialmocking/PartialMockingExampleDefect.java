@@ -29,25 +29,18 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import samples.partialmocking.PartialMockingExample;
 
 /**
- * Asserts that partial mocking with Mockito works for non-final methods.
+ * Asserts that partial mocking (spying) with PowerMockito works for non-final
+ * methods.
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(PartialMockingExample.class)
 public class PartialMockingExampleDefect {
 
 	@Test
-	public void partialMockitoMockingUsingStandardMock() throws Exception {
-		final String expected = "TEST VALUE";
-		PartialMockingExample underTest = spy(new PartialMockingExample());
-		when(underTest.methodToMock()).thenReturn(expected);
-
-		assertEquals(expected, underTest.methodToTest());
-
-		verify(underTest).methodToMock();
-	}
-
-	@Test
-	public void partialMockitoMockingUsingMockPartialMethod() throws Exception {
+	public void validatingSpiedObjectGivesCorrectNumberOfExpectedInvocations() throws Exception {
+		/*
+		 * This doesn't work because when
+		 */
 		final String expected = "TEST VALUE";
 		PartialMockingExample underTest = spy(new PartialMockingExample());
 		when(underTest.methodToMock()).thenReturn(expected);

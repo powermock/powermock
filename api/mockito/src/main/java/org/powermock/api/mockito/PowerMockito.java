@@ -105,6 +105,15 @@ public class PowerMockito {
 			MockRepository.putInstanceMethodInvocationControl(mock, mockData.getMethodInvocationControl());
 		}
 
+		if (isSpy && !isStatic) {
+			// TODO Must add something as additional state so that MockGateway
+			// can figure out if this _instance_ should never be proxied!! I.e.
+			// we must remove the MockGateway#DONT_MOCK_NEXT_CALL and change it
+			// to something that takes the instance (or class?) into account.
+			// (it shouldn't be in case of spies, at least in case of instance
+			// spies!)
+		}
+
 		if (mock instanceof InvocationSubstitute == false) {
 			MockRepository.addObjectsToAutomaticallyReplayAndVerify(mock);
 		}
