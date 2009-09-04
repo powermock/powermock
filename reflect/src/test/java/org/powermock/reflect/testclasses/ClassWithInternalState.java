@@ -15,60 +15,65 @@
  */
 package org.powermock.reflect.testclasses;
 
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
 public class ClassWithInternalState {
 
-	private static int staticState = 5;
+    private static int staticState = 5;
 
-	private static final int staticFinalState = 15;
+    private static final int staticFinalState = 15;
 
-	private int internalState = 0;
+    private int internalState = 0;
 
-	private int anotherInternalState = -1;
+    private int anotherInternalState = -1;
 
-	private final String finalString = "hello";
+    private final String finalString = "hello";
 
-	private long internalLongState = 17;
+    private long internalLongState = 17;
 
-	private Set<String> genericState = new HashSet<String>();
+    private Set<String> genericState = new HashSet<String>();
 
-	private ClassWithPrivateMethods classWithPrivateMethods;
+    private ClassWithPrivateMethods classWithPrivateMethods;
 
-	public String getFinalString() {
-		return finalString;
-	}
+    public String getFinalString() {
+        return finalString;
+    }
 
-	public void increaseInteralState() {
-		internalState++;
-	}
+    public void increaseInteralState() {
+        internalState++;
+    }
 
-	public void decreaseInteralState() {
-		internalState--;
-	}
+    public void decreaseInteralState() {
+        internalState--;
+    }
 
-	public int getAnotherInternalState() {
-		return anotherInternalState;
-	}
+    public int getAnotherInternalState() {
+        return anotherInternalState;
+    }
 
-	public static int getStaticState() {
-		return staticState;
-	}
+    public static int getStaticState() {
+        return staticState;
+    }
 
-	public static int getStaticFinalState() {
-		return staticFinalState;
-	}
+    public static int getStaticFinalState() {
+        return staticFinalState;
+    }
 
-	public ClassWithPrivateMethods getClassWithPrivateMethods() {
-		return classWithPrivateMethods;
-	}
+    public ClassWithPrivateMethods getClassWithPrivateMethods() {
+        return classWithPrivateMethods;
+    }
 
-	public long getInternalLongState() {
-		return internalLongState;
-	}
-	
-	public Set<String> getGenericState() {
-		return genericState;
-	}
+    public long getInternalLongState() {
+        return internalLongState;
+    }
+
+    public Set<String> getGenericState() {
+        return genericState;
+    }
+
+    public static String methodWithArgument(InputStream inputStream) {
+        return "";
+    }
 }
