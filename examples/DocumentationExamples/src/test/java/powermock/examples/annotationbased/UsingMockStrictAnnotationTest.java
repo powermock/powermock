@@ -25,15 +25,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.annotation.MockStrict;
 import org.powermock.api.easymock.powermocklistener.AnnotationEnabler;
-import org.powermock.core.classloader.annotations.Mock;
 import org.powermock.core.classloader.annotations.PowerMockListener;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import powermock.examples.annotationbased.dao.SomeDao;
 
 /**
- * Test of the {@link SomeService} when using the {@link Mock} annotation to
- * create and inject mocks.
+ * Test of the {@link SomeService} when using the {@link MockStrict} annotation
+ * to create and inject mocks.
  */
 @RunWith(PowerMockRunner.class)
 @PowerMockListener(AnnotationEnabler.class)

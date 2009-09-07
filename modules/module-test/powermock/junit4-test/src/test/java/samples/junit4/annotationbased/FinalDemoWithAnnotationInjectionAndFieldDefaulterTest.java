@@ -23,8 +23,8 @@ import static org.powermock.api.easymock.PowerMock.verify;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.api.easymock.powermocklistener.AnnotationEnabler;
-import org.powermock.core.classloader.annotations.Mock;
 import org.powermock.core.classloader.annotations.PowerMockListener;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.testlisteners.FieldDefaulter;
@@ -46,7 +46,7 @@ public class FinalDemoWithAnnotationInjectionAndFieldDefaulterTest {
 	// Asserts that the FieldDefaulter handles primitive types.
 	private int intType = 6;
 
-	@org.powermock.api.easymock.annotation.Mock
+	@Mock
 	private FinalDemo tested;
 
 	@Test

@@ -44,6 +44,7 @@ public class MockFinalUsingAnnotationsTest {
 	@org.mockito.MockitoAnnotations.Mock
 	private FinalDemo usingDeprecatedMockitoMockAnnotation;
 
+	@SuppressWarnings("deprecation")
 	@org.powermock.core.classloader.annotations.Mock
 	private FinalDemo usingPowerMockMockAnnotation;
 
