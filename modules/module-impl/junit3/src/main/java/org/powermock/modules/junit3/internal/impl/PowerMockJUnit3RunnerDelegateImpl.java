@@ -30,107 +30,112 @@ import org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate;
 @SuppressWarnings("unchecked")
 public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements PowerMockJUnit3RunnerDelegate {
 
-	private final Method[] methodsToRun;
+    private final Method[] methodsToRun;
 
-	private Class<?> testClass;
+    private Class<?> testClass;
 
-	public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass, Method[] methodsToRun, String name,
-			PowerMockTestListener[] powerListeners) {
-		this(theClass, methodsToRun, powerListeners);
-		testClass = theClass;
-		setName(name);
-	}
+    public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass, Method[] methodsToRun, String name,
+            PowerMockTestListener[] powerListeners) {
+        this(theClass, methodsToRun, powerListeners);
+        testClass = theClass;
+        setName(name);
+    }
 
-	/**
-	 * Constructs a TestSuite from the given class. Adds all the methods
-	 * starting with "test" as test cases to the suite. Parts of this method was
-	 * cut'n'pasted on the train between Malm� and Stockholm.
-	 */
-	public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass, Method[] methodsToRun,
-			PowerMockTestListener[] powerMockTestListeners) {
-		testClass = theClass;
-		this.methodsToRun = methodsToRun;
-		setName(theClass.getName());
+    /**
+     * Constructs a TestSuite from the given class. Adds all the methods
+     * starting with "test" as test cases to the suite. Parts of this method was
+     * cut'n'pasted on the train between Malm� and Stockholm.
+     */
+    public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass, Method[] methodsToRun, PowerMockTestListener[] powerMockTestListeners) {
+        testClass = theClass;
+        this.methodsToRun = methodsToRun;
+        setName(theClass.getName());
 
-		try {
-			getTestConstructor(theClass); // Avoid generating multiple error
-			// messages
-		} catch (NoSuchMethodException e) {
-			addTest(warning("Class " + theClass.getName()
-					+ " has no public constructor TestCase(String name) or TestCase()"));
-			return;
-		}
+        try {
+            getTestConstructor(theClass); // Avoid generating multiple error
+            // messages
+        } catch (NoSuchMethodException e) {
+            addTest(warning("Class " + theClass.getName() + " has no public constructor TestCase(String name) or TestCase()"));
+            return;
+        }
 
-		if (!Modifier.isPublic(theClass.getModifiers())) {
-			addTest(warning("Class " + theClass.getName() + " is not public"));
-			return;
-		}
+        if (!Modifier.isPublic(theClass.getModifiers())) {
+            addTest(warning("Class " + theClass.getName() + " is not public"));
+            return;
+        }
 
-		Class<?> superClass = theClass;
-		Vector<?> names = new Vector<Object>();
-		Method addTestMethod = null;
-		Method[] declaredMethods = TestSuite.class.getDeclaredMethods();
-		for (Method method : declaredMethods) {
-			/*
-			 * Since the TestSuite class is loaded by another classloader we
-			 * look up the method this way (which is not fail-proof, but good
-			 * enough).
-			 */
-			if (method.getName().equals("addTestMethod")) {
-				addTestMethod = method;
-			}
-		}
+        Class<?> superClass = theClass;
+        Vector<?> names = new Vector<Object>();
+        Method addTestMethod = null;
+        Method[] declaredMethods = TestSuite.class.getDeclaredMethods();
+        for (Method method : declaredMethods) {
+            /*
+             * Since the TestSuite class is loaded by another classloader we
+             * look up the method this way (which is not fail-proof, but good
+             * enough).
+             */
+            if (method.getName().equals("addTestMethod")) {
+                addTestMethod = method;
+            }
+        }
 
-		if (addTestMethod == null) {
-			throw new RuntimeException("Internal error: Failed to get addTestMethod for JUnit3.");
-		}
+        if (addTestMethod == null) {
+            throw new RuntimeException("Internal error: Failed to get addTestMethod for JUnit3.");
+        }
 
-		addTestMethod.setAccessible(true);
+        addTestMethod.setAccessible(true);
 
-		while (Test.class.isAssignableFrom(superClass)) {
-			for (int i = 0; i < methodsToRun.length; i++) {
-				try {
-					addTestMethod.invoke(this, methodsToRun[i], names, theClass);
-				} catch (Exception e) {
-					throw new RuntimeException("Internal error: Failed to execute addTestMethod for JUnit3.");
-				}
-			}
-			superClass = superClass.getSuperclass();
-		}
-		if (testCount() == 0) {
-			addTest(warning("No tests found in " + theClass.getName()));
-		}
-	}
+        while (Test.class.isAssignableFrom(superClass)) {
+            for (int i = 0; i < methodsToRun.length; i++) {
+                try {
+                    addTestMethod.invoke(this, methodsToRun[i], names, theClass);
+                } catch (Exception e) {
+                    throw new RuntimeException("Internal error: Failed to execute addTestMethod for JUnit3.");
+                }
+            }
+            superClass = superClass.getSuperclass();
+        }
+        if (testCount() == 0) {
+            addTest(warning("No tests found in " + theClass.getName()));
+        }
+    }
 
-	public Class<?> getTestClass() {
-		return testClass;
-	}
+    public Class<?> getTestClass() {
+        return testClass;
+    }
 
-	@Override
-	public void run(TestResult result) {
-		Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-		super.run(result);
-	}
+    @Override
+    public void run(TestResult result) {
+        final ClassLoader classloader = this.getClass().getClassLoader();
+        final Thread currentThread = Thread.currentThread();
+        final ClassLoader originalClassLoader = currentThread.getContextClassLoader();
+        currentThread.setContextClassLoader(classloader);
+        try {
+            super.run(result);
+        } finally {
+            currentThread.setContextClassLoader(originalClassLoader);
+        }
+    }
 
-	/**
-	 * Returns a test which will fail and log a warning message.
-	 */
-	private static Test warning(final String message) {
-		return new TestCase("warning") {
-			protected void runTest() {
-				fail(message);
-			}
-		};
-	}
+    /**
+     * Returns a test which will fail and log a warning message.
+     */
+    private static Test warning(final String message) {
+        return new TestCase("warning") {
+            protected void runTest() {
+                fail(message);
+            }
+        };
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Methods ran by this test runner delegate:\n");
-		for (Method method : methodsToRun) {
-			builder.append(method).append("\n");
-		}
-		return builder.toString();
-	}
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Methods ran by this test runner delegate:\n");
+        for (Method method : methodsToRun) {
+            builder.append(method).append("\n");
+        }
+        return builder.toString();
+    }
 
 }

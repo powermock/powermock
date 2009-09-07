@@ -6,7 +6,7 @@ public class ItemRepository {
     private static HashMap<String, String> itemMap = new HashMap<String, String>();
 
     @SuppressWarnings("unused")
-    private static MyClass myClass = new MyClass();
+    private MyClass myClass = new MyClass();
 
     private int totalItems = 0;
 
