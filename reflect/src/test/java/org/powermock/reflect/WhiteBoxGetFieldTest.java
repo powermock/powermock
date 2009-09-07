@@ -51,6 +51,11 @@ public class WhiteBoxGetFieldTest {
 		private String fieldB;
 	}
 
+	/**
+	 * Verifies that <a
+	 * href="http://code.google.com/p/powermock/issues/detail?id=149">issue
+	 * 149</a> has been resolved.
+	 */
 	@Test
 	public void testGetField() {
 		Field fieldA = WhiteboxImpl.getField(ClassUnderTest.class, "fieldA");
