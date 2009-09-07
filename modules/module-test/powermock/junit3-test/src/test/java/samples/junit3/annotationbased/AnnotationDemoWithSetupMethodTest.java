@@ -6,7 +6,6 @@ import static org.powermock.api.easymock.PowerMock.verifyAll;
 import junit.framework.TestCase;
 
 import org.powermock.api.easymock.powermocklistener.AnnotationEnabler;
-import org.powermock.core.classloader.annotations.Mock;
 import org.powermock.core.classloader.annotations.PowerMockListener;
 
 import samples.Service;
@@ -19,7 +18,7 @@ import samples.annotationbased.AnnotationDemo;
 @PowerMockListener(AnnotationEnabler.class)
 public class AnnotationDemoWithSetupMethodTest extends TestCase {
 
-	@Mock
+	@org.powermock.api.easymock.annotation.Mock
 	private Service serviceMock;
 
 	private AnnotationDemo tested;

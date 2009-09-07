@@ -21,8 +21,8 @@ import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.powermock.api.mockito.powermocklistener.AnnotationEnabler;
-import org.powermock.core.classloader.annotations.Mock;
 import org.powermock.core.classloader.annotations.PowerMockListener;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;

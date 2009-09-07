@@ -36,6 +36,7 @@ Change log 1.3 (under development)
 * Fixed so that Whitebox error message prints correct parameter types when a MethodNotFoundException is thrown if a method with correct name but wrong parameter types were specified.
 * EasyMock extension API: You can now manually use replay(..) or verify(..) and then fall back on replayAll(..) verifyAll(..) even if a mock has previously been replayed/verified. I.e. replayAll/verifyAll only replays and verifies mocks that has previously not been manually replayed/verified.
 * WhiteboxImpl#getField(..) now check for null returned from Class.getSuperclass() to avoid NullPointerException when type is an interface (thanks to Ben Chatelain for the patch)
+* Deprecated org.powermock.core.classloader.annotations.Mock, you should now use the Mock annotation in respective extension API instead. For EasyMock this is org.powermock.api.easymock.annotation.Mock and for Mockito it's org.mockito.Mock.
 
 
 Change log 1.2.5 (released 2009-05-05)

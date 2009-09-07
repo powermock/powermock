@@ -25,7 +25,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.annotation.MockNice;
 import org.powermock.api.easymock.powermocklistener.AnnotationEnabler;
-import org.powermock.core.classloader.annotations.Mock;
 import org.powermock.core.classloader.annotations.PowerMockListener;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
@@ -33,7 +32,7 @@ import org.powermock.reflect.Whitebox;
 import powermock.examples.annotationbased.dao.SomeDao;
 
 /**
- * Test of the {@link SomeService} when using the {@link Mock} annotation to
+ * Test of the {@link SomeService} when using the {@link MockNice} annotation to
  * create and inject mocks.
  */
 @RunWith(PowerMockRunner.class)

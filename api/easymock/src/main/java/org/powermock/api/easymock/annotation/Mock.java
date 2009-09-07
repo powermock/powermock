@@ -1,4 +1,4 @@
-package org.powermock.core.classloader.annotations;
+package org.powermock.api.easymock.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -57,9 +57,6 @@ import java.lang.annotation.Target;
  * }
  * </pre>
  * <p>
- * 
- * @deprecated Use Mock annotation in respective extension API instead. This
- *             annotation will be removed in an upcoming release.
  */
 
 @Target( { ElementType.FIELD })

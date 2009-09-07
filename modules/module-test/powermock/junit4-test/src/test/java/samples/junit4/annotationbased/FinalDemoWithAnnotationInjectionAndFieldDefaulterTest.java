@@ -46,7 +46,7 @@ public class FinalDemoWithAnnotationInjectionAndFieldDefaulterTest {
 	// Asserts that the FieldDefaulter handles primitive types.
 	private int intType = 6;
 
-	@Mock
+	@org.powermock.api.easymock.annotation.Mock
 	private FinalDemo tested;
 
 	@Test

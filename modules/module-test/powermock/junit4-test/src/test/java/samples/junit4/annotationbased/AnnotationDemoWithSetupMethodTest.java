@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.powermocklistener.AnnotationEnabler;
-import org.powermock.core.classloader.annotations.Mock;
 import org.powermock.core.classloader.annotations.PowerMockListener;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -23,7 +22,7 @@ import samples.annotationbased.AnnotationDemo;
 @PowerMockListener(AnnotationEnabler.class)
 public class AnnotationDemoWithSetupMethodTest {
 
-	@Mock
+	@org.powermock.api.easymock.annotation.Mock
 	private Service serviceMock;
 
 	private AnnotationDemo tested;

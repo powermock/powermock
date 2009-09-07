@@ -35,6 +35,7 @@ import org.powermock.reflect.Whitebox;
  * {@link MockNice} or {@link MockStrict} will have mock objects created for
  * them and injected to the fields.
  */
+@SuppressWarnings("deprecation")
 public class AnnotationEnabler extends AbstractPowerMockTestListenerBase {
 
 	@Override
@@ -71,6 +72,7 @@ public class AnnotationEnabler extends AbstractPowerMockTestListenerBase {
 				return createMock(type, methods);
 			}
 		};
+		fieldInjector.inject(testInstance, org.powermock.api.easymock.annotation.Mock.class);
 		fieldInjector.inject(testInstance, Mock.class);
 	}
 
