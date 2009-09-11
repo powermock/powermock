@@ -9,7 +9,7 @@ import javassist.util.proxy.ProxyFactory;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.MainMockTransformer;
-import org.powermock.modules.testng.internal.PowerMockTestNGCleanupHandler;
+import org.powermock.modules.testng.internal.PowerMockTestNGMethodHandler;
 import org.powermock.modules.testng.internal.TestNGMethodFilter;
 import org.powermock.reflect.Whitebox;
 import org.powermock.tests.utils.IgnorePackagesExtractor;
@@ -39,7 +39,6 @@ public class PowerMockObjectFactory implements IObjectFactory {
         mockLoader.setMockTransformerChain(mockTransformerChain);
         testClassesExtractor = new PrepareForTestExtractorImpl();
         ignorePackagesExtractor = new PowerMockIgnorePackagesExtractorImpl();
-
     }
 
     @SuppressWarnings("unchecked")
@@ -62,9 +61,10 @@ public class PowerMockObjectFactory implements IObjectFactory {
     }
 
     private void setInvocationHandler(Object testInstance) throws Exception {
-        Class<?> powerMockTestNGCleanupHandlerClass = Class.forName(PowerMockTestNGCleanupHandler.class.getName(), false, mockLoader);
-        Object powerMockTestNGCleanupHandlerInstance = powerMockTestNGCleanupHandlerClass.newInstance();
-        Whitebox.invokeMethod(testInstance, "setHandler", powerMockTestNGCleanupHandlerInstance);
+        Class<?> powerMockTestNGMethodHandlerClass = Class.forName(PowerMockTestNGMethodHandler.class.getName(), false, mockLoader);
+        Object powerMockTestNGMethodHandlerInstance = powerMockTestNGMethodHandlerClass.getConstructor(Class.class).newInstance(
+                testInstance.getClass());
+        Whitebox.invokeMethod(testInstance, "setHandler", powerMockTestNGMethodHandlerInstance);
     }
 
     /**

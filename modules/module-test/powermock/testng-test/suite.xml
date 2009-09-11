@@ -3,6 +3,7 @@
         <classes>
             <class name="samples.testng.PrivateFinalTest"/>
             <class name="samples.testng.MockStaticTest"/>
+            <class name="samples.testng.AnnotationDemoTest"/>
         </classes>
     </test>
 </suite>

@@ -9,7 +9,7 @@ import samples.annotationbased.AnnotationDemo;
 
 /**
  * Verifies that PowerMock test listeners works correctly with setup methods
- * when this is supported by unit 3.
+ * when this is supported by junit 3.
  */
 public class AnnotationDemoWithSetupMethodTest extends TestCase {
 
