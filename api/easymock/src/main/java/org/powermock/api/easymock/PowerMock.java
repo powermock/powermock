@@ -45,7 +45,6 @@ import org.powermock.api.easymock.internal.mockstrategy.impl.StrictMockStrategy;
 import org.powermock.api.easymock.internal.proxyframework.CgLibProxyFramework;
 import org.powermock.core.ClassReplicaCreator;
 import org.powermock.core.MockRepository;
-import org.powermock.core.PowerMockUtils;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;

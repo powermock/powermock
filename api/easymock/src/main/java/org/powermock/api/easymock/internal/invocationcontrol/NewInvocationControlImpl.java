@@ -21,7 +21,6 @@ import org.easymock.IExpectationSetters;
 import org.easymock.classextension.EasyMock;
 import org.easymock.internal.MocksControl.MockType;
 import org.powermock.core.MockRepository;
-import org.powermock.core.PowerMockUtils;
 import org.powermock.core.spi.NewInvocationControl;
 import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.reflect.internal.WhiteboxImpl;

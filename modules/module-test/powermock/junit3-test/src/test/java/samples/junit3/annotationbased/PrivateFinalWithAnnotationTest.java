@@ -16,14 +16,11 @@
 package samples.junit3.annotationbased;
 
 import static org.easymock.EasyMock.expect;
-
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 import junit.framework.TestCase;
 
 import org.powermock.api.easymock.annotation.Mock;
-import org.powermock.api.easymock.powermocklistener.AnnotationEnabler;
-import org.powermock.core.classloader.annotations.PowerMockListener;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import samples.privateandfinal.PrivateFinal;
@@ -33,7 +30,6 @@ import samples.privateandfinal.PrivateFinal;
  * is available.
  */
 @PrepareForTest(PrivateFinal.class)
-@PowerMockListener(AnnotationEnabler.class)
 public class PrivateFinalWithAnnotationTest extends TestCase {
 
 //	@SuppressWarnings("unchecked")

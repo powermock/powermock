@@ -24,8 +24,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.annotation.MockNice;
-import org.powermock.api.easymock.powermocklistener.AnnotationEnabler;
-import org.powermock.core.classloader.annotations.PowerMockListener;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
@@ -36,7 +34,6 @@ import powermock.examples.annotationbased.dao.SomeDao;
  * create and inject mocks.
  */
 @RunWith(PowerMockRunner.class)
-@PowerMockListener(AnnotationEnabler.class)
 public class UsingMockNiceAnnotationToCreateAPartialMockTest {
 
 	@MockNice("getSomeData")

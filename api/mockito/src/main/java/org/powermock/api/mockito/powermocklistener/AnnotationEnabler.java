@@ -15,42 +15,14 @@
  */
 package org.powermock.api.mockito.powermocklistener;
 
-import static org.powermock.api.mockito.PowerMockito.mock;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Set;
-
-import org.mockito.MockitoAnnotations.Mock;
-import org.powermock.core.spi.support.AbstractPowerMockTestListenerBase;
-import org.powermock.reflect.Whitebox;
-
 /**
  * Before each test method all fields annotated with {@link Mock},
  * {@link org.mockito.Mock} or {@link Mock} have mock objects created for them
  * and injected to the fields.
  * 
+ * @deprecated Test Runners uses an annotation enabling listener per default
+ *             since version 1.3. You should just remove this listener.
  */
-@SuppressWarnings("deprecation")
-public class AnnotationEnabler extends AbstractPowerMockTestListenerBase {
+public class AnnotationEnabler extends org.powermock.api.extensions.listener.AnnotationEnabler {
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public void beforeTestMethod(Object testInstance, Method method, Object[] arguments) throws Exception {
-		Set<Field> fields = Whitebox.getFieldsAnnotatedWith(testInstance, org.mockito.Mock.class, Mock.class,
-				org.powermock.core.classloader.annotations.Mock.class);
-		for (Field field : fields) {
-			final Class<?> type = field.getType();
-			if (field.isAnnotationPresent(org.powermock.core.classloader.annotations.Mock.class)) {
-				org.powermock.core.classloader.annotations.Mock annotation = field
-						.getAnnotation(org.powermock.core.classloader.annotations.Mock.class);
-				final String[] value = annotation.value();
-				if (value.length != 1 || !"".equals(value[0])) {
-					System.err
-							.println("PowerMockito deprecation: Use PowerMockito.spy(..) for partial mocking instead. A standard mock will be created instead.");
-				}
-			}
-			field.set(testInstance, mock(type));
-		}
-	}
 }

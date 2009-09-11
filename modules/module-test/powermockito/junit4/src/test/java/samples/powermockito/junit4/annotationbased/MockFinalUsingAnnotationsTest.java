@@ -21,8 +21,6 @@ import static org.mockito.Mockito.verify;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.powermocklistener.AnnotationEnabler;
-import org.powermock.core.classloader.annotations.PowerMockListener;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -34,7 +32,6 @@ import samples.finalmocking.FinalDemo;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(FinalDemo.class)
-@PowerMockListener(AnnotationEnabler.class)
 public class MockFinalUsingAnnotationsTest {
 
 	@Mock

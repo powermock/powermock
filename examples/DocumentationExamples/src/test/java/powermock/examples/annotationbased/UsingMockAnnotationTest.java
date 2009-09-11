@@ -15,17 +15,15 @@
  */
 package powermock.examples.annotationbased;
 
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertSame;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
-import static org.easymock.EasyMock.expect;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.annotation.Mock;
-import org.powermock.api.easymock.powermocklistener.AnnotationEnabler;
-import org.powermock.core.classloader.annotations.PowerMockListener;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import powermock.examples.annotationbased.dao.SomeDao;
@@ -35,7 +33,6 @@ import powermock.examples.annotationbased.dao.SomeDao;
  * create and inject mocks.
  */
 @RunWith(PowerMockRunner.class)
-@PowerMockListener(AnnotationEnabler.class)
 public class UsingMockAnnotationTest {
 
 	@Mock

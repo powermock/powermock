@@ -191,6 +191,7 @@ public class PowerMockito {
      * @param mode
      *            times(x), atLeastOnce() or never()
      */
+    @SuppressWarnings("unchecked")
     public static <T> ConstructorArgumentsVerification verifyConstructionOf(Class<?> mock, VerificationMode mode) {
         NewInvocationControl<?> invocationControl = MockRepository.getNewInstanceControl(mock);
         MockRepository.putAdditionalState("VerificationMode", mode);

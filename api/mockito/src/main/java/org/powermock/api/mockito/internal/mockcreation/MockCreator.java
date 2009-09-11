@@ -59,11 +59,6 @@ public class MockCreator {
         return mock;
     }
 
-    private static void cleanupMockitoState() {
-        // TODO Auto-generated method stub
-        
-    }
-
     private static <T> MockData<T> createMethodInvocationControl(final String mockName, Class<T> type, Method[] methods, boolean isSpy,
             Object delegator) {
         final MockSettingsImpl mockSettings;

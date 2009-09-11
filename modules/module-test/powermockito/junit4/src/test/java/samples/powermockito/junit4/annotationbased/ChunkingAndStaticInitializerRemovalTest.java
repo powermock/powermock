@@ -22,8 +22,6 @@ import static org.mockito.Mockito.verify;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.powermocklistener.AnnotationEnabler;
-import org.powermock.core.classloader.annotations.PowerMockListener;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -36,7 +34,6 @@ import samples.staticinitializer.SimpleStaticInitializerExample;
  * annotations.
  */
 @RunWith(PowerMockRunner.class)
-@PowerMockListener(AnnotationEnabler.class)
 @PrepareForTest(SimpleStaticInitializerExample.class)
 public class ChunkingAndStaticInitializerRemovalTest {
 
