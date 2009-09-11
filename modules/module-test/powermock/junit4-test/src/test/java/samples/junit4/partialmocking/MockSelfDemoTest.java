@@ -192,7 +192,7 @@ public class MockSelfDemoTest {
 			createPartialMockAndInvokeDefaultConstructor(MockSelfWithNoDefaultConstructorDemo.class, "aMethod2");
 			fail("Should throw ConstructorNotFoundException!");
 		} catch (ConstructorNotFoundException e) {
-			assertEquals("Failed to lookup constructor.", e.getMessage());
+			assertEquals("Failed to lookup constructor with parameter types [ <none> ] in class samples.partialmocking.MockSelfWithNoDefaultConstructorDemo.", e.getMessage());
 		}
 	}
 }

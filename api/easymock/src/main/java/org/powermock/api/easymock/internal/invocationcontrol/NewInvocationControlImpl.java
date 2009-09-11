@@ -63,14 +63,14 @@ public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpect
 			}
 			return result;
 		} catch (AssertionError e) {
-			PowerMockUtils.throwAssertionErrorForNewSubstitutionFailure(e, type);
+			NewInvocationControlAssertionError.throwAssertionErrorForNewSubstitutionFailure(e, type);
 		}
 
 		// Won't happen
 		return null;
 	}
 
-	public IExpectationSetters<T> performSubstitutionLogic(Object... arguments) throws Exception {
+	public IExpectationSetters<T> expectSubstitutionLogic(Object... arguments) throws Exception {
 		return EasyMock.expect(substitute.performSubstitutionLogic(arguments));
 	}
 

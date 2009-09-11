@@ -38,6 +38,10 @@ Change log 1.3 (under development)
 * WhiteboxImpl#getField(..) now check for null returned from Class.getSuperclass() to avoid NullPointerException when type is an interface (thanks to Ben Chatelain for the patch)
 * Deprecated org.powermock.core.classloader.annotations.Mock, you should now use the Mock annotation in respective extension API instead. For EasyMock this is org.powermock.api.easymock.annotation.Mock and for Mockito it's org.mockito.Mock.
 * Packages ignored for test in parent test classes are now automatically ignored as well when using @PowerMockIgnore. I.e. if Test Case A extends Test Case B and A ignores X and B ignores Y then both X and Y will be ignored in the test case. Before only X was ignored.
+* The method IExpectationSetters<Object> expectNew(String fullyQualifiedName, Object... arguments) in the EasyMock extension API changed return type to <T> IExpectationSetters<T> expectNew(String fullyQualifiedName, Object... arguments).
+* Improved error message for Whitebox#getConstructor when no constructor was found.
+* Fixed a bug in PowerMockito's CgLibProxyFramework#getUnproxiedType(..) so that it now _really_ returns the unproxied type.
+* You can now mock construction of new objects using the Mockito extension. To do so use PowerMockito#mockConstructionOf(..), e.g. mockConstructionOf(MyClass.class).withArguments(myObject1, myObject2).thenReturn(myMock). Verification can be done with PowerMockito#verifyConstructionOf(..), e.g. verifyConstructionOf(MyClass.class).withArguments(myObject1, myObject2).
 
 Change log 1.2.5 (released 2009-05-05)
 --------------------------------------

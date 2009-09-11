@@ -10,13 +10,13 @@ import org.powermock.core.spi.support.InvocationSubstitute;
  */
 public interface NewInvocationControl<T> extends DefaultBehavior {
 
-	/**
-	 * Invoke the invocation control
-	 */
-	Object invoke(Class<?> type, Object[] args, Class<?>[] sig) throws Exception;
+    /**
+     * Invoke the invocation control
+     */
+    Object invoke(Class<?> type, Object[] args, Class<?>[] sig) throws Exception;
 
-	/**
-	 * Perform new instance substitution logic.
-	 */
-	T performSubstitutionLogic(Object... arguments) throws Exception;
+    /**
+     * Expect a call to the new instance substitution logic.
+     */
+    T expectSubstitutionLogic(Object... arguments) throws Exception;
 }
