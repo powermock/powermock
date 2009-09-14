@@ -16,6 +16,7 @@
 package samples.powermockito.junit4.whennew;
 
 import static org.junit.Assert.assertEquals;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -25,9 +26,9 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.verifyConstructionOf;
+import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenConstructionOf;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -53,14 +54,14 @@ import samples.newmocking.MyClass;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { MyClass.class, ExpectNewDemo.class, DataInputStream.class })
-public class WhenConstructionOfTest {
+public class WhenNewTest {
 
     @Test
     public void testNewWithCheckedException() throws Exception {
         ExpectNewDemo tested = new ExpectNewDemo();
 
         final String expectedFailMessage = "testing checked exception";
-        whenConstructionOf(MyClass.class).withNoArguments().thenThrow(new IOException(expectedFailMessage));
+        whenNew(MyClass.class).withNoArguments().thenThrow(new IOException(expectedFailMessage));
 
         try {
             tested.throwExceptionAndWrapInRunTimeWhenInvoction();
@@ -70,7 +71,7 @@ public class WhenConstructionOfTest {
             assertEquals(expectedFailMessage, e.getMessage());
         }
 
-        verifyConstructionOf(MyClass.class).withNoArguments();
+        verifyNew(MyClass.class).withNoArguments();
     }
 
     @Test
@@ -78,7 +79,7 @@ public class WhenConstructionOfTest {
         ExpectNewDemo tested = new ExpectNewDemo();
         MyClass myClassMock = mock(MyClass.class);
 
-        whenConstructionOf(MyClass.class).withNoArguments().thenReturn(myClassMock);
+        whenNew(MyClass.class).withNoArguments().thenReturn(myClassMock);
 
         String expected = "Hello altered World";
         when(myClassMock.getMessage()).thenReturn("Hello altered World");
@@ -86,7 +87,7 @@ public class WhenConstructionOfTest {
         String actual = tested.getMessage();
 
         verify(myClassMock).getMessage();
-        verifyConstructionOf(MyClass.class).withNoArguments();
+        verifyNew(MyClass.class).withNoArguments();
         assertEquals("Expected and actual did not match", expected, actual);
     }
 
@@ -95,7 +96,7 @@ public class WhenConstructionOfTest {
         ExpectNewDemo tested = new ExpectNewDemo();
 
         MyClass myClassMock = mock(MyClass.class);
-        whenConstructionOf(MyClass.class).withNoArguments().thenReturn(myClassMock);
+        whenNew(MyClass.class).withNoArguments().thenReturn(myClassMock);
 
         String expected = "Hello altered World";
         when(myClassMock.getMessage("test")).thenReturn("Hello altered World");
@@ -103,7 +104,7 @@ public class WhenConstructionOfTest {
         String actual = tested.getMessageWithArgument();
 
         verify(myClassMock).getMessage("test");
-        verifyConstructionOf(MyClass.class).withNoArguments();
+        verifyNew(MyClass.class).withNoArguments();
         assertEquals("Expected and actual did not match", expected, actual);
     }
 
@@ -112,14 +113,14 @@ public class WhenConstructionOfTest {
         ExpectNewDemo tested = new ExpectNewDemo();
 
         MyClass myClassMock = mock(MyClass.class);
-        whenConstructionOf(MyClass.class).withNoArguments().thenReturn(myClassMock);
+        whenNew(MyClass.class).withNoArguments().thenReturn(myClassMock);
 
         doNothing().when(myClassMock).voidMethod();
 
         tested.invokeVoidMethod();
 
         verify(myClassMock).voidMethod();
-        verifyConstructionOf(MyClass.class).withNoArguments();
+        verifyNew(MyClass.class).withNoArguments();
     }
 
     @Test
@@ -127,7 +128,7 @@ public class WhenConstructionOfTest {
         ExpectNewDemo tested = new ExpectNewDemo();
 
         final String expectedFailMessage = "testing";
-        whenConstructionOf(MyClass.class).withNoArguments().thenThrow(new RuntimeException(expectedFailMessage));
+        whenNew(MyClass.class).withNoArguments().thenThrow(new RuntimeException(expectedFailMessage));
 
         try {
             tested.throwExceptionWhenInvoction();
@@ -136,7 +137,7 @@ public class WhenConstructionOfTest {
             assertEquals(expectedFailMessage, e.getMessage());
         }
 
-        verifyConstructionOf(MyClass.class).withNoArguments();
+        verifyNew(MyClass.class).withNoArguments();
     }
 
     @Test
@@ -145,14 +146,14 @@ public class WhenConstructionOfTest {
 
         MyClass myClassMock = mock(MyClass.class);
 
-        whenConstructionOf(MyClass.class).withNoArguments().thenReturn(myClassMock);
+        whenNew(MyClass.class).withNoArguments().thenReturn(myClassMock);
 
         when(myClassMock.getMessage()).thenReturn("Hello");
 
         final String actual = tested.multipleNew();
 
         verify(myClassMock, times(2)).getMessage();
-        verifyConstructionOf(MyClass.class, times(2)).withNoArguments();
+        verifyNew(MyClass.class, times(2)).withNoArguments();
 
         assertEquals("HelloHello", actual);
     }
@@ -163,11 +164,11 @@ public class WhenConstructionOfTest {
 
         MyClass myClassMock = mock(MyClass.class);
 
-        whenConstructionOf(MyClass.class).withNoArguments().thenReturn(myClassMock);
+        whenNew(MyClass.class).withNoArguments().thenReturn(myClassMock);
 
         tested.simpleMultipleNew();
 
-        verifyConstructionOf(MyClass.class, times(3)).withNoArguments();
+        verifyNew(MyClass.class, times(3)).withNoArguments();
     }
 
     @Test
@@ -176,12 +177,12 @@ public class WhenConstructionOfTest {
 
         MyClass myClassMock = mock(MyClass.class);
 
-        whenConstructionOf(MyClass.class).withNoArguments().thenReturn(myClassMock);
+        whenNew(MyClass.class).withNoArguments().thenReturn(myClassMock);
 
         tested.simpleMultipleNew();
 
         try {
-            verifyConstructionOf(MyClass.class, times(4)).withNoArguments();
+            verifyNew(MyClass.class, times(4)).withNoArguments();
             fail("Should throw AssertionError.");
         } catch (AssertionError e) {
             assertEquals("samples.newmocking.MyClass();\nWanted 4 times but was 3 times.", e.getMessage());
@@ -194,11 +195,11 @@ public class WhenConstructionOfTest {
 
         MyClass myClassMock1 = mock(MyClass.class);
 
-        whenConstructionOf(MyClass.class).withNoArguments().thenReturn(myClassMock1);
+        whenNew(MyClass.class).withNoArguments().thenReturn(myClassMock1);
 
         tested.simpleMultipleNew();
         try {
-            verifyConstructionOf(MyClass.class, times(1)).withNoArguments();
+            verifyNew(MyClass.class, times(1)).withNoArguments();
             fail("Should throw AssertionError.");
         } catch (AssertionError e) {
             assertEquals("samples.newmocking.MyClass();\nWanted 1 time but was 3 times.", e.getMessage());
@@ -215,12 +216,12 @@ public class WhenConstructionOfTest {
 
         MyClass myClassMock1 = mock(MyClass.class);
 
-        whenConstructionOf(MyClass.class).withNoArguments().thenReturn(myClassMock1);
+        whenNew(MyClass.class).withNoArguments().thenReturn(myClassMock1);
 
         Whitebox.invokeMethod(tested, "simpleMultipleNewPrivate");
 
         try {
-            verifyConstructionOf(MyClass.class, times(2)).withNoArguments();
+            verifyNew(MyClass.class, times(2)).withNoArguments();
             fail("Should throw AssertionError.");
         } catch (AssertionError e) {
             assertEquals("samples.newmocking.MyClass();\nWanted 2 times but was 3 times.", e.getMessage());
@@ -233,11 +234,11 @@ public class WhenConstructionOfTest {
 
         MyClass myClassMock1 = mock(MyClass.class);
 
-        whenConstructionOf(MyClass.class).withNoArguments().thenReturn(myClassMock1);
+        whenNew(MyClass.class).withNoArguments().thenReturn(myClassMock1);
 
         Whitebox.invokeMethod(tested, "simpleMultipleNewPrivate");
 
-        verifyConstructionOf(MyClass.class, times(3)).withNoArguments();
+        verifyNew(MyClass.class, times(3)).withNoArguments();
     }
 
     @Test
@@ -246,11 +247,11 @@ public class WhenConstructionOfTest {
 
         MyClass myClassMock1 = mock(MyClass.class);
 
-        whenConstructionOf(MyClass.class).withNoArguments().thenReturn(myClassMock1);
+        whenNew(MyClass.class).withNoArguments().thenReturn(myClassMock1);
 
         tested.simpleSingleNew();
 
-        verifyConstructionOf(MyClass.class).withNoArguments();
+        verifyNew(MyClass.class).withNoArguments();
     }
 
     @Test
@@ -259,11 +260,11 @@ public class WhenConstructionOfTest {
 
         MyClass myClassMock1 = mock(MyClass.class);
 
-        whenConstructionOf(MyClass.class).withNoArguments().thenReturn(myClassMock1);
+        whenNew(MyClass.class).withNoArguments().thenReturn(myClassMock1);
 
         tested.simpleSingleNew();
 
-        verifyConstructionOf(MyClass.class, atLeastOnce()).withNoArguments();
+        verifyNew(MyClass.class, atLeastOnce()).withNoArguments();
     }
 
     @Test
@@ -272,22 +273,22 @@ public class WhenConstructionOfTest {
 
         MyClass myClassMock1 = mock(MyClass.class);
 
-        whenConstructionOf(MyClass.class).withNoArguments().thenReturn(myClassMock1);
+        whenNew(MyClass.class).withNoArguments().thenReturn(myClassMock1);
 
         tested.simpleMultipleNew();
 
-        verifyConstructionOf(MyClass.class, atLeastOnce()).withNoArguments();
+        verifyNew(MyClass.class, atLeastOnce()).withNoArguments();
     }
 
     //
     @Test
     public void testAlternativeFlow() throws Exception {
         ExpectNewDemo tested = new ExpectNewDemo();
-        whenConstructionOf(DataInputStream.class).withArguments(null).thenThrow(new RuntimeException("error"));
+        whenNew(DataInputStream.class).withArguments(null).thenThrow(new RuntimeException("error"));
 
         InputStream stream = tested.alternativePath();
 
-        verifyConstructionOf(DataInputStream.class).withArguments(null);
+        verifyNew(DataInputStream.class).withArguments(null);
 
         assertNotNull("The returned inputstream should not be null.", stream);
         assertTrue("The returned inputstream should be an instance of ByteArrayInputStream.", stream instanceof ByteArrayInputStream);
@@ -299,11 +300,11 @@ public class WhenConstructionOfTest {
 
         MyClass myClassMock1 = mock(MyClass.class);
 
-        whenConstructionOf(MyClass.class).withNoArguments().thenReturn(myClassMock1);
+        whenNew(MyClass.class).withNoArguments().thenReturn(myClassMock1);
 
         Whitebox.invokeMethod(tested, "simpleMultipleNewPrivate");
         try {
-            verifyConstructionOf(MyClass.class, times(4)).withNoArguments();
+            verifyNew(MyClass.class, times(4)).withNoArguments();
             fail("Should throw an exception!.");
         } catch (AssertionError e) {
             assertEquals("samples.newmocking.MyClass();\nWanted 4 times but was 3 times.", e.getMessage());
@@ -319,12 +320,12 @@ public class WhenConstructionOfTest {
         ExpectNewServiceUser expectNewServiceImplMock = mock(ExpectNewServiceUser.class);
         Service serviceMock = mock(Service.class);
 
-        whenConstructionOf(ExpectNewServiceUser.class).withArguments(serviceMock, numberOfTimes).thenReturn(expectNewServiceImplMock);
+        whenNew(ExpectNewServiceUser.class).withArguments(serviceMock, numberOfTimes).thenReturn(expectNewServiceImplMock);
         when(expectNewServiceImplMock.useService()).thenReturn(expected);
 
         assertEquals(expected, tested.newWithArguments(serviceMock, numberOfTimes));
 
-        verifyConstructionOf(ExpectNewServiceUser.class).withArguments(serviceMock, numberOfTimes);
+        verifyNew(ExpectNewServiceUser.class).withArguments(serviceMock, numberOfTimes);
     }
 
     @Test
@@ -335,7 +336,7 @@ public class WhenConstructionOfTest {
         ExpectNewDemo tested = new ExpectNewDemo();
         VarArgsConstructorDemo varArgsConstructorDemoMock = mock(VarArgsConstructorDemo.class);
 
-        whenConstructionOf(VarArgsConstructorDemo.class).withArguments(firstString, secondString).thenReturn(varArgsConstructorDemoMock);
+        whenNew(VarArgsConstructorDemo.class).withArguments(firstString, secondString).thenReturn(varArgsConstructorDemoMock);
         when(varArgsConstructorDemoMock.getAllMessages()).thenReturn(new String[] { firstString, secondString });
 
         String[] varArgs = tested.newVarArgs(firstString, secondString);
@@ -343,14 +344,14 @@ public class WhenConstructionOfTest {
         assertEquals(firstString, varArgs[0]);
         assertEquals(secondString, varArgs[1]);
 
-        verifyConstructionOf(VarArgsConstructorDemo.class).withArguments(firstString, secondString);
+        verifyNew(VarArgsConstructorDemo.class).withArguments(firstString, secondString);
     }
 
     @Test
     public void testNewWhenTheExpectedConstructorIsNotFound() throws Exception {
         final Object object = new Object();
         try {
-            whenConstructionOf(VarArgsConstructorDemo.class).withArguments(object);
+            whenNew(VarArgsConstructorDemo.class).withArguments(object);
             fail("Should throw ConstructorNotFoundException!");
         } catch (ConstructorNotFoundException e) {
             assertEquals("No constructor found in class '" + VarArgsConstructorDemo.class.getName() + "' with parameter types: [ "
@@ -371,14 +372,14 @@ public class WhenConstructionOfTest {
             }
         };
 
-        whenConstructionOf(VarArgsConstructorDemo.class).withArguments(serviceSubTypeInstance, serviceMock).thenReturn(varArgsConstructorDemoMock);
+        whenNew(VarArgsConstructorDemo.class).withArguments(serviceSubTypeInstance, serviceMock).thenReturn(varArgsConstructorDemoMock);
         when(varArgsConstructorDemoMock.getAllServices()).thenReturn(new Service[] { serviceMock });
 
         Service[] varArgs = tested.newVarArgs(serviceSubTypeInstance, serviceMock);
         assertEquals(1, varArgs.length);
         assertSame(serviceMock, varArgs[0]);
 
-        verifyConstructionOf(VarArgsConstructorDemo.class).withArguments(serviceSubTypeInstance, serviceMock);
+        verifyNew(VarArgsConstructorDemo.class).withArguments(serviceSubTypeInstance, serviceMock);
     }
 
     @Test
@@ -388,14 +389,14 @@ public class WhenConstructionOfTest {
 
         final byte[] byteArrayOne = new byte[] { 42 };
         final byte[] byteArrayTwo = new byte[] { 17 };
-        whenConstructionOf(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(varArgsConstructorDemoMock);
+        whenNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(varArgsConstructorDemoMock);
         when(varArgsConstructorDemoMock.getByteArrays()).thenReturn(new byte[][] { byteArrayOne });
 
         byte[][] varArgs = tested.newVarArgs(byteArrayOne, byteArrayTwo);
         assertEquals(1, varArgs.length);
         assertSame(byteArrayOne, varArgs[0]);
 
-        verifyConstructionOf(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo);
+        verifyNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo);
     }
 
     @Test
@@ -405,14 +406,14 @@ public class WhenConstructionOfTest {
 
         final byte[] byteArrayOne = new byte[] { 42 };
         final byte[] byteArrayTwo = new byte[] { 17 };
-        whenConstructionOf(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(varArgsConstructorDemoMock);
+        whenNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(varArgsConstructorDemoMock);
         when(varArgsConstructorDemoMock.getByteArrays()).thenReturn(new byte[][] { byteArrayOne });
 
         byte[][] varArgs = tested.newVarArgsWithMatchers();
         assertEquals(1, varArgs.length);
         assertSame(byteArrayOne, varArgs[0]);
 
-        verifyConstructionOf(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo);
+        verifyNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo);
     }
 
     @Test
@@ -422,14 +423,14 @@ public class WhenConstructionOfTest {
 
         final byte[] byteArrayOne = null;
         final byte[] byteArrayTwo = new byte[] { 17 };
-        whenConstructionOf(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(varArgsConstructorDemoMock);
+        whenNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(varArgsConstructorDemoMock);
         when(varArgsConstructorDemoMock.getByteArrays()).thenReturn(new byte[][] { byteArrayTwo });
 
         byte[][] varArgs = tested.newVarArgs(byteArrayOne, byteArrayTwo);
         assertEquals(1, varArgs.length);
         assertSame(byteArrayTwo, varArgs[0]);
 
-        verifyConstructionOf(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo);
+        verifyNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo);
     }
 
     @Test
@@ -439,14 +440,14 @@ public class WhenConstructionOfTest {
 
         final byte[] byteArrayOne = new byte[] { 42 };
         final byte[] byteArrayTwo = null;
-        whenConstructionOf(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(varArgsConstructorDemoMock);
+        whenNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(varArgsConstructorDemoMock);
         when(varArgsConstructorDemoMock.getByteArrays()).thenReturn(new byte[][] { byteArrayOne });
 
         byte[][] varArgs = tested.newVarArgs(byteArrayOne, byteArrayTwo);
         assertEquals(1, varArgs.length);
         assertSame(byteArrayOne, varArgs[0]);
 
-        verifyConstructionOf(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo);
+        verifyNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo);
     }
 
     @Test
@@ -457,7 +458,7 @@ public class WhenConstructionOfTest {
         final byte[] byteArrayOne = null;
         final byte[] byteArrayTwo = new byte[] { 42 };
         final byte[] byteArrayThree = null;
-        whenConstructionOf(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo, byteArrayThree).thenReturn(
+        whenNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo, byteArrayThree).thenReturn(
                 varArgsConstructorDemoMock);
         when(varArgsConstructorDemoMock.getByteArrays()).thenReturn(new byte[][] { byteArrayTwo });
 
@@ -465,7 +466,7 @@ public class WhenConstructionOfTest {
         assertEquals(1, varArgs.length);
         assertSame(byteArrayTwo, varArgs[0]);
 
-        verifyConstructionOf(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo, byteArrayThree);
+        verifyNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo, byteArrayThree);
     }
 
     @Test
@@ -475,14 +476,14 @@ public class WhenConstructionOfTest {
 
         final byte[] byteArrayOne = null;
         final byte[] byteArrayTwo = null;
-        whenConstructionOf(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(varArgsConstructorDemoMock);
+        whenNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(varArgsConstructorDemoMock);
         when(varArgsConstructorDemoMock.getByteArrays()).thenReturn(new byte[][] { byteArrayTwo });
 
         byte[][] varArgs = tested.newVarArgs(byteArrayOne, byteArrayTwo);
         assertEquals(1, varArgs.length);
         assertSame(byteArrayTwo, varArgs[0]);
 
-        verifyConstructionOf(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo);
+        verifyNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo);
     }
 
     @Test(expected = NullPointerException.class)
@@ -494,12 +495,12 @@ public class WhenConstructionOfTest {
         ExpectNewServiceUser expectNewServiceImplMock = mock(ExpectNewServiceUser.class);
         Service serviceMock = mock(Service.class);
 
-        whenConstructionOf(ExpectNewServiceUser.class).withArguments(serviceMock, numberOfTimes).thenReturn(expectNewServiceImplMock);
+        whenNew(ExpectNewServiceUser.class).withArguments(serviceMock, numberOfTimes).thenReturn(expectNewServiceImplMock);
         when(expectNewServiceImplMock.useService()).thenReturn(expected);
 
         assertEquals(expected, tested.newWithWrongArguments(serviceMock, numberOfTimes));
 
-        verifyConstructionOf(ExpectNewServiceUser.class).withArguments(serviceMock, numberOfTimes);
+        verifyNew(ExpectNewServiceUser.class).withArguments(serviceMock, numberOfTimes);
         /*
          * Should throw NPE because the default behavior of Mockito when a
          * something isn't expected is to return a default value. In this case
@@ -517,12 +518,12 @@ public class WhenConstructionOfTest {
 
         MyClass myClassMock1 = mock(MyClass.class);
 
-        whenConstructionOf(MyClass.class).withNoArguments().thenReturn(myClassMock1);
+        whenNew(MyClass.class).withNoArguments().thenReturn(myClassMock1);
 
         tested.makeDate();
 
         try {
-            verifyConstructionOf(MyClass.class).withNoArguments();
+            verifyNew(MyClass.class).withNoArguments();
             fail("Should throw AssertionError!");
         } catch (AssertionError e) {
             assertEquals("Wanted but not invoked samples.newmocking.MyClass();\nActually, there were zero interactions with this mock.", e.getMessage());

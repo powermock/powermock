@@ -158,7 +158,7 @@ public class PowerMockito {
      *            Class mocked by PowerMock.
      */
     @SuppressWarnings("unchecked")
-    public static synchronized <T> ConstructorArgumentsVerification verifyConstructionOf(Class<T> mock) {
+    public static synchronized <T> ConstructorArgumentsVerification verifyNew(Class<T> mock) {
         NewInvocationControl<?> invocationControl = MockRepository.getNewInstanceControl(mock);
         if (invocationControl == null) {
             throw new IllegalArgumentException(String.format("A constructor invocation in %s was unexpected.", Whitebox.getType(mock)));
@@ -192,7 +192,7 @@ public class PowerMockito {
      *            times(x), atLeastOnce() or never()
      */
     @SuppressWarnings("unchecked")
-    public static <T> ConstructorArgumentsVerification verifyConstructionOf(Class<?> mock, VerificationMode mode) {
+    public static <T> ConstructorArgumentsVerification verifyNew(Class<?> mock, VerificationMode mode) {
         NewInvocationControl<?> invocationControl = MockRepository.getNewInstanceControl(mock);
         MockRepository.putAdditionalState("VerificationMode", mode);
         try {
@@ -327,9 +327,9 @@ public class PowerMockito {
      * Use this method when you need to specify parameter types for the
      * constructor when PowerMock cannot determine which constructor to use
      * automatically. In most cases you should use
-     * {@link #whenConstructionOf(Class, Object...)} instead.
+     * {@link #whenNew(Class, Object...)} instead.
      */
-    public static synchronized <T> ConstructorExpectationSetup<T> whenConstructionOf(Class<T> type) {
+    public static synchronized <T> ConstructorExpectationSetup<T> whenNew(Class<T> type) {
         return new DefaultConstructorExpectationSetup<T>(type);
     }
 
@@ -347,7 +347,7 @@ public class PowerMockito {
      *            Optional number of arguments.
      */
     @SuppressWarnings("unchecked")
-    public static synchronized <T> ConstructorExpectationSetup<T> whenConstructionOf(String fullyQualifiedName) throws Exception {
+    public static synchronized <T> ConstructorExpectationSetup<T> whenNew(String fullyQualifiedName) throws Exception {
         final Class<T> forName = (Class<T>) Class.forName(fullyQualifiedName);
         return new DefaultConstructorExpectationSetup<T>(forName);
     }
