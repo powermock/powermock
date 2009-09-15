@@ -50,7 +50,6 @@ import org.powermock.reflect.internal.matcherstrategies.AssignableFromFieldTypeM
 import org.powermock.reflect.internal.matcherstrategies.FieldAnnotationMatcherStrategy;
 import org.powermock.reflect.internal.matcherstrategies.FieldMatcherStrategy;
 import org.powermock.reflect.internal.matcherstrategies.FieldNameMatcherStrategy;
-import org.powermock.reflect.internal.matcherstrategies.FieldTypeMatcherStrategy;
 import org.powermock.reflect.internal.primitivesupport.PrimitiveWrapper;
 import org.powermock.reflect.spi.ProxyFramework;
 
