@@ -303,7 +303,7 @@ public class WhiteboxImpl {
      *            the new value of the field
      */
     public static void setInternalState(Object object, Class<?> fieldType, Object value) {
-        setField(object, value, findFieldInHierarchy(object, new FieldTypeMatcherStrategy(fieldType)));
+        setField(object, value, findFieldInHierarchy(object, new AssignableFromFieldTypeMatcherStrategy(fieldType)));
     }
 
     /**
@@ -498,7 +498,7 @@ public class WhiteboxImpl {
      */
     @SuppressWarnings("unchecked")
     public static <T> T getInternalState(Object object, Class<T> fieldType) {
-        Field foundField = findFieldInHierarchy(object, new FieldTypeMatcherStrategy(fieldType));
+        Field foundField = findFieldInHierarchy(object, new AssignableFromFieldTypeMatcherStrategy(fieldType));
         try {
             return (T) foundField.get(object);
         } catch (IllegalAccessException e) {
