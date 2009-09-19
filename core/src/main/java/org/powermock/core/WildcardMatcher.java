@@ -36,6 +36,9 @@ public class WildcardMatcher {
      */
 
     public static boolean matches(String text, String pattern) {
+        if (text == null) {
+            throw new IllegalArgumentException("text cannot be null");
+        }
         // Create the cards by splitting using a RegEx. If more speed
         // is desired, a simpler character based splitting can be done.
         String[] cards = pattern.split("\\*");

@@ -44,6 +44,12 @@ import org.powermock.core.IndicateReloadClass;
  * Sometimes you need to prepare inner classes for testing, this can be done by
  * suppling the fully-qualified name of the inner-class that should be mocked to
  * the {@link #fullyQualifiedNames()} list.
+ * <p>
+ * You can also prepare whole packages for test by using wildcards:
+ * 
+ * <pre>
+ * &#064;PrepareForTest(&quot;com.mypackage.*&quot;)
+ * </pre>
  * 
  * <p>
  * The annotation should always be combined with the
@@ -51,7 +57,7 @@ import org.powermock.core.IndicateReloadClass;
  * 
  * <pre>
  * public static TestSuite suite() throws Exception {
- * 	return new PowerMockSuite(MyTestCase.class);
+ *     return new PowerMockSuite(MyTestCase.class);
  * }
  * </pre>
  * 
@@ -67,7 +73,7 @@ import org.powermock.core.IndicateReloadClass;
 @Documented
 @Inherited
 public @interface PrepareForTest {
-	Class<?>[] value() default IndicateReloadClass.class;
+    Class<?>[] value() default IndicateReloadClass.class;
 
-	String[] fullyQualifiedNames() default "";
+    String[] fullyQualifiedNames() default "";
 }

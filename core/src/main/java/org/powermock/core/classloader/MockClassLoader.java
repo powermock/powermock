@@ -142,7 +142,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
         Class<?> loadedClass = null;
         // findSystemClass(s);
         deferTo.loadClass(s);
-        if (shouldModify(s)) {
+        if (shouldModify(s) && !shouldLoadModified(s)) {
             loadedClass = loadMockClass(s);
         } else {
             loadedClass = loadUnmockedClass(s);
@@ -224,6 +224,15 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
     protected boolean shouldLoadUnmodifiedClass(String className) {
         for (String classNameToLoadButNotModify : specificClassesToLoadButNotModify) {
             if (className.equals(classNameToLoadButNotModify)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean shouldLoadModified(String className) {
+        for (String packageToLoadButNotModify : packagesToLoadButNotModify) {
+            if (className.startsWith(packageToLoadButNotModify)) {
                 return true;
             }
         }

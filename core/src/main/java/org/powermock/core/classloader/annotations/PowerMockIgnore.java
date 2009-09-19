@@ -23,15 +23,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation tells PowerMock to defer the loading of all classes starting
- * with the names supplied to {@link #value()} to the system classloader.
+ * This annotation tells PowerMock to defer the loading of classes with the
+ * names supplied to {@link #value()} to the system classloader.
  * <p>
  * For example suppose you'd like to defer the loading of all classes in the
  * <tt>org.myproject</tt> package and all its sub-packages but you still like to
  * prepare "MyClass" for test. Then you do like this:
  * 
  * <pre>
- * &#064;PowerMockIgnore(&quot;org.myproject&quot;)
+ * &#064;PowerMockIgnore(&quot;org.myproject.*&quot;)
  * &#064;PrepareForTest(MyClass.class)
  * &#064;RunWith(PowerMockRunner.class)
  * public class MyTest {
@@ -53,5 +53,5 @@ import java.lang.annotation.Target;
 @Documented
 @Inherited
 public @interface PowerMockIgnore {
-	String[] value() default "";
+    String[] value() default "";
 }

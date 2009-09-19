@@ -95,18 +95,17 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
         }
         return false;
     }
-    
+
     protected boolean shouldIgnore(String[] packages, String name) {
         synchronized (packages) {
             for (String ignore : packages) {
-                if (WildcardMatcher.matches(ignore, name)) {
+                if (WildcardMatcher.matches(name, ignore)) {
                     return true;
                 }
             }
         }
         return false;
     }
-
 
     protected boolean shouldModify(Iterable<String> packages, String name) {
         return !shouldIgnore(packages, name);
