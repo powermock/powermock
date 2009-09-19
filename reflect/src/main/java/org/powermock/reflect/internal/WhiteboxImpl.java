@@ -1295,6 +1295,10 @@ public class WhiteboxImpl {
         return methodToMock;
     }
 
+    public static boolean isProxy(Class<?> type) {
+        return proxyFramework.isProxy(type);
+    }
+
     public static <T> Class<?> getUnmockedType(Class<T> type) {
         if (type == null) {
             throw new IllegalArgumentException("type cannot be null");

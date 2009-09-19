@@ -31,14 +31,11 @@ public class Log4jUserTest {
 
         replayAll();
 
+        final String actual = tested.mergeMessageWith(otherMessage);
         /*
-         * Since 1.2.5 getClass() invocations are mockable as well so this
-         * assertion makes sure that getClass() returns null because the Logger
-         * has been replaced with a nice mock (which thus is returning null for
-         * all unexpected calls).
+         * The logger instance is proxied!
          */
         assertNull(Whitebox.getInternalState(Log4jUserParent.class, Logger.class).getClass());
-        final String actual = tested.mergeMessageWith(otherMessage);
 
         verifyAll();
 

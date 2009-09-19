@@ -1,21 +1,13 @@
-package org.powermock.api.mockito.internal.proxyframework;
+package org.powermock.api.extension.proxyframework;
 
 import org.mockito.cglib.proxy.Enhancer;
 import org.mockito.cglib.proxy.Factory;
-import org.powermock.reflect.proxyframework.RegisterProxyFramework;
 import org.powermock.reflect.spi.ProxyFramework;
 
 /**
  * CGLib proxy framework setup.
  */
-public class CgLibProxyFramework implements ProxyFramework {
-
-    /**
-     * Registers a new instance of the proxy framework.
-     */
-    public static void registerProxyFramework() {
-        RegisterProxyFramework.registerProxyFramework(new CgLibProxyFramework());
-    }
+public class ProxyFrameworkImpl implements ProxyFramework {
 
     /**
      * {@inheritDoc}
@@ -37,6 +29,9 @@ public class CgLibProxyFramework implements ProxyFramework {
      * {@inheritDoc}
      */
     public boolean isProxy(Class<?> type) {
-        return Enhancer.isEnhanced(type);
+        if (type == null) {
+            return false;
+        }
+        return type.getName().contains("$$EnhancerByCGLIB$$") || Enhancer.isEnhanced(type);
     }
 }

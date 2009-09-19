@@ -33,40 +33,38 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
-
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Logger.class})
+@PrepareForTest( { Logger.class })
 public class LoggerTest {
-	
-	@Test(expected=IllegalStateException.class)
-	public void testException() throws Exception {
-		expectNew(FileWriter.class, "target/logger.log").andThrow(new IOException());
-		
-		replayAll();
-		new Logger();
-	}
-	
-	@Test
-	public void testLogger() throws Exception {
-		PrintWriter printWriter = createMock(PrintWriter.class);
-		printWriter.println("qwe");
-		expectNew(PrintWriter.class, new Class[] { Writer.class }, EasyMock.anyObject()).andReturn(printWriter);
-		replayAll();
-		Logger logger = new Logger();
-		logger.log("qwe");
-		verifyAll();
-	}
 
+    @Test(expected = IllegalStateException.class)
+    public void testException() throws Exception {
+        expectNew(FileWriter.class, "target/logger.log").andThrow(new IOException());
 
-	@Test
-	public void testLogger2() throws Exception {
-		PrintWriter printWriter = createMock(PrintWriter.class);
-		printWriter.println("qwe");
-		suppressConstructor(Logger.class);
-		replayAll();
-		Logger logger = new Logger();
-		Whitebox.setInternalState(logger, printWriter);
-		logger.log("qwe");
-		verifyAll();
-	}
+        replayAll();
+        new Logger();
+    }
+
+    @Test
+    public void testLogger() throws Exception {
+        PrintWriter printWriter = createMock(PrintWriter.class);
+        printWriter.println("qwe");
+        expectNew(PrintWriter.class, new Class[] { Writer.class }, EasyMock.anyObject()).andReturn(printWriter);
+        replayAll();
+        Logger logger = new Logger();
+        logger.log("qwe");
+        verifyAll();
+    }
+
+    @Test
+    public void testLogger2() throws Exception {
+        PrintWriter printWriter = createMock(PrintWriter.class);
+        printWriter.println("qwe");
+        suppressConstructor(Logger.class);
+        replayAll();
+        Logger logger = new Logger();
+        Whitebox.setInternalState(logger, printWriter);
+        logger.log("qwe");
+        verifyAll();
+    }
 }

@@ -39,6 +39,7 @@ import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.MainMockTransformer;
 import org.powermock.reflect.Whitebox;
+import org.powermock.reflect.proxyframework.RegisterProxyFramework;
 import org.powermock.tests.utils.ArrayMerger;
 import org.powermock.tests.utils.IgnorePackagesExtractor;
 import org.powermock.tests.utils.TestChunk;
@@ -111,11 +112,13 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
             int defaultListenerSize = DEFAULT_TEST_LISTENERS_SIZE;
             Class<?> annotationEnablerClass = null;
             try {
-                annotationEnablerClass = Class.forName("org.powermock.api.extensions.listener.AnnotationEnabler", false, classLoader);
+                annotationEnablerClass = Class.forName("org.powermock.api.extension.listener.AnnotationEnabler", false, classLoader);
             } catch (ClassNotFoundException e) {
                 // Annotation enabler wasn't found in class path
                 defaultListenerSize = 0;
             }
+
+            registerProxyframework(classLoader);
 
             final Class<?> powerMockTestListenerType = Class.forName(PowerMockTestListener.class.getName(), false, classLoader);
             Object testListeners = null;
@@ -145,6 +148,31 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
         }
     }
 
+    private void registerProxyframework(ClassLoader classLoader) {
+        Class<?> proxyFrameworkClass = null;
+        try {
+            proxyFrameworkClass = Class.forName("org.powermock.api.extension.proxyframework.ProxyFrameworkImpl", false, classLoader);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException(
+                    "Extension API internal error: org.powermock.api.extension.proxyframework.ProxyFrameworkImpl could not be located in classpath.");
+        }
+
+        Class<?> proxyFrameworkRegistrar = null;
+        try {
+            proxyFrameworkRegistrar = Class.forName(RegisterProxyFramework.class.getName(), false, classLoader);
+        } catch (ClassNotFoundException e) {
+            // Should never happen
+            throw new RuntimeException(e);
+        }
+        try {
+            Whitebox.invokeMethod(proxyFrameworkRegistrar, "registerProxyFramework", Whitebox.newInstance(proxyFrameworkClass));
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     protected void chunkClass(final Class<?> testClass) throws Exception {
         ClassLoader defaultMockLoader = null;
         final String[] ignorePackages = ignorePackagesExtractor.getPackagesToIgnore(testClass);
@@ -155,7 +183,12 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
             final String[] suppressStaticClasses = suppressionExtractor.getTestClasses(testClass);
             defaultMockLoader = createNewClassloader(testClass, arrayMerger.mergeArrays(String.class, prepareForTestClasses, suppressStaticClasses),
                     ignorePackages);
+            if (defaultMockLoader instanceof MockClassLoader) {
+                // Test class should always be prepared
+                ((MockClassLoader) defaultMockLoader).addClassesToModify(testClass.getName());
+            }
         }
+        registerProxyframework(defaultMockLoader);
         List<Method> currentClassloaderMethods = new LinkedList<Method>();
         // Put the first suite in the map of internal suites.
         TestChunk defaultTestChunk = new TestChunkImpl(defaultMockLoader, currentClassloaderMethods);
@@ -185,7 +218,13 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
                     return new MockClassLoader(classesToLoadByMockClassloader, packagesToIgnore);
                 }
             });
-            ((MockClassLoader) mockLoader).setMockTransformerChain(mockTransformerChain);
+            MockClassLoader mockClassLoader = (MockClassLoader) mockLoader;
+            mockClassLoader.setMockTransformerChain(mockTransformerChain);
+            if (!mockClassLoader.shouldModifyAll()) {
+                // Always prepare test class for testing if not all classes are
+                // prepared
+                mockClassLoader.addClassesToModify(testClass.getName());
+            }
             new MockPolicyInitializerImpl(testClass).initialize(mockLoader);
         }
         return mockLoader;
@@ -226,8 +265,6 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
                             mockClassloader = createNewClassloader(testClass, arrayMerger.mergeArrays(String.class, prepareForTestExtractor
                                     .getTestClasses(method), staticSuppressionClasses), ignorePackagesExtractor.getPackagesToIgnore(testClass));
                         }
-                        // executeClassLoaderDependentMockPolicyMethods(testClass,
-                        // mockClassloader);
                         TestChunkImpl chunk = new TestChunkImpl(mockClassloader, methodsInThisChunk);
                         testCaseEntry.getTestChunks().add(chunk);
                         updatedIndexes();

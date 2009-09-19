@@ -18,6 +18,8 @@ package org.powermock.core.classloader;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.powermock.core.WildcardMatcher;
+
 /**
  * Defers classloading of system classes to a delegate.
  * 
@@ -25,83 +27,94 @@ import java.util.Map;
  * @author Jan Kronquist
  */
 public abstract class DeferSupportingClassLoader extends ClassLoader {
-	private Map<String, Class<?>> classes;
+    private Map<String, Class<?>> classes;
 
-	private String deferPackages[];
+    String deferPackages[];
 
-	ClassLoader deferTo;
+    ClassLoader deferTo;
 
-	public void addIgnorePackage(String... packagesToIgnore) {
-		if (packagesToIgnore != null && packagesToIgnore.length > 0) {
-			final int previousLength = deferPackages.length;
-			deferPackages = new String[previousLength + packagesToIgnore.length];
-			System.arraycopy(packagesToIgnore, 0, deferPackages, previousLength, packagesToIgnore.length);
-		}
-	}
+    public void addIgnorePackage(String... packagesToIgnore) {
+        if (packagesToIgnore != null && packagesToIgnore.length > 0) {
+            final int previousLength = deferPackages.length;
+            deferPackages = new String[previousLength + packagesToIgnore.length];
+            System.arraycopy(packagesToIgnore, 0, deferPackages, previousLength, packagesToIgnore.length);
+        }
+    }
 
-	public DeferSupportingClassLoader(ClassLoader classloader, String deferPackages[]) {
-		if (classloader == null) {
-			deferTo = ClassLoader.getSystemClassLoader();
-		} else {
-			deferTo = classloader;
-		}
-		classes = new HashMap<String, Class<?>>();
-		this.deferPackages = deferPackages;
-	}
+    public DeferSupportingClassLoader(ClassLoader classloader, String deferPackages[]) {
+        if (classloader == null) {
+            deferTo = ClassLoader.getSystemClassLoader();
+        } else {
+            deferTo = classloader;
+        }
+        classes = new HashMap<String, Class<?>>();
+        this.deferPackages = deferPackages;
+    }
 
-	protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-		Class<?> clazz = null;
-		if ((clazz = (Class<?>) classes.get(name)) == null) {
-			final boolean shouldDefer = shouldDefer(deferPackages, name);
-			if (shouldDefer) {
-				clazz = deferTo.loadClass(name);
-			} else {
-				clazz = loadModifiedClass(name);
-			}
-			if (resolve) {
-				resolveClass(clazz);
-			}
-		}
+    protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        Class<?> clazz = null;
+        if ((clazz = (Class<?>) classes.get(name)) == null) {
+            final boolean shouldDefer = shouldDefer(deferPackages, name);
+            if (shouldDefer) {
+                clazz = deferTo.loadClass(name);
+            } else {
+                clazz = loadModifiedClass(name);
+            }
+            if (resolve) {
+                resolveClass(clazz);
+            }
+        }
 
-		classes.put(name, clazz);
-		return clazz;
-	}
+        classes.put(name, clazz);
+        return clazz;
+    }
 
-	protected boolean shouldDefer(String[] packages, String name) {
-		for (String packageToCheck : packages) {
-			if (deferConditionMatches(name, packageToCheck)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    protected boolean shouldDefer(String[] packages, String name) {
+        for (String packageToCheck : packages) {
+            if (deferConditionMatches(name, packageToCheck)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	private boolean deferConditionMatches(String name, String packageName) {
-		if ((name.startsWith(packageName) || name.endsWith(packageName))
-				&& !(shouldLoadUnmodifiedClass(name) || name.startsWith(packageName) && shouldModifyClass(name))) {
-			return true;
-		}
-		return false;
-	}
+    private boolean deferConditionMatches(String name, String packageName) {
+        if (name.startsWith(packageName) && !(shouldLoadUnmodifiedClass(name) || name.startsWith(packageName) && shouldModifyClass(name))) {
+            return true;
+        }
+        return false;
+    }
 
-	protected boolean shouldIgnore(Iterable<String> packages, String name) {
-		synchronized (packages) {
-			for (String ignore : packages) {
-				if (name.startsWith(ignore) || name.endsWith(ignore)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+    protected boolean shouldIgnore(Iterable<String> packages, String name) {
+        synchronized (packages) {
+            for (String ignore : packages) {
+                if (WildcardMatcher.matches(ignore, name)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    protected boolean shouldIgnore(String[] packages, String name) {
+        synchronized (packages) {
+            for (String ignore : packages) {
+                if (WildcardMatcher.matches(ignore, name)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-	protected boolean shouldModify(Iterable<String> packages, String name) {
-		return !shouldIgnore(packages, name);
-	}
 
-	protected abstract Class<?> loadModifiedClass(String s) throws ClassFormatError, ClassNotFoundException;
+    protected boolean shouldModify(Iterable<String> packages, String name) {
+        return !shouldIgnore(packages, name);
+    }
 
-	protected abstract boolean shouldModifyClass(String s);
+    protected abstract Class<?> loadModifiedClass(String s) throws ClassFormatError, ClassNotFoundException;
 
-	protected abstract boolean shouldLoadUnmodifiedClass(String className);
+    protected abstract boolean shouldModifyClass(String s);
+
+    protected abstract boolean shouldLoadUnmodifiedClass(String className);
 }

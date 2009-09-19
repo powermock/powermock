@@ -46,6 +46,7 @@ public class PowerMockObjectFactory implements IObjectFactory {
         Class<?> testClass = constructor.getDeclaringClass();
         mockLoader.addIgnorePackage(ignorePackagesExtractor.getPackagesToIgnore(testClass));
         mockLoader.addClassesToModify(testClassesExtractor.getTestClasses(testClass));
+        mockLoader.addClassesToModify(testClass.getName());
         new MockPolicyInitializerImpl(testClass).initialize(mockLoader);
         try {
             final Class<?> testClassLoadedByMockedClassLoader = createTestClassStateCleanupProxy(testClass);

@@ -4,7 +4,7 @@ package org.powermock.reflect.spi;
  * The purpose of a the proxy framework implementation is to return the
  * unproxied types of classes.
  */
-public interface ProxyFramework {
+public interface ProxyFramework {    
 
 	/**
 	 * Check if the class is a proxy and if it is return the unproxied type.

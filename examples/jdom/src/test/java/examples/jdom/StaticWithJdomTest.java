@@ -32,23 +32,23 @@ import org.powermock.modules.junit4.PowerMockRunner;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { StaticClass.class })
-@PowerMockIgnore({"org.jdom", "com.sun.org.apache.xerces"})
+@PowerMockIgnore( { "org.jdom.*", "com.sun.org.apache.xerces.*" })
 public class StaticWithJdomTest {
 
-	@org.junit.Test
-	public void test() throws Exception {
+    @org.junit.Test
+    public void test() throws Exception {
 
-		PowerMock.mockStatic(StaticClass.class);
-		EasyMock.expect(StaticClass.staticMethod()).andReturn(2).anyTimes();
-		PowerMock.replay(StaticClass.class);
+        PowerMock.mockStatic(StaticClass.class);
+        EasyMock.expect(StaticClass.staticMethod()).andReturn(2).anyTimes();
+        PowerMock.replay(StaticClass.class);
 
-		int i = StaticClass.staticMethod();
+        int i = StaticClass.staticMethod();
 
-		String xml = "<xml>" + i + "</xml>";
-		SAXBuilder b = new SAXBuilder();
+        String xml = "<xml>" + i + "</xml>";
+        SAXBuilder b = new SAXBuilder();
 
-		Document d = b.build(new StringReader(xml));
-		Assert.assertTrue(d.getRootElement().getText().equals("2"));
-		PowerMock.verify(StaticClass.class);
-	}
+        Document d = b.build(new StringReader(xml));
+        Assert.assertTrue(d.getRootElement().getText().equals("2"));
+        PowerMock.verify(StaticClass.class);
+    }
 }

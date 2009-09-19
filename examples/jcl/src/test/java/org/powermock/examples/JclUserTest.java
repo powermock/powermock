@@ -1,5 +1,6 @@
 package org.powermock.examples;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
@@ -22,16 +23,19 @@ import org.powermock.reflect.Whitebox;
 @MockPolicy(JclMockPolicy.class)
 public class JclUserTest {
 
-	@Test
-	public void assertJclMockPolicyWorks() throws Exception {
-		final JclUser tested = new JclUser();
+    @Test
+    public void assertJclMockPolicyWorks() throws Exception {
+        final JclUser tested = new JclUser();
 
-		assertTrue(Proxy.isProxyClass(Whitebox.getInternalState(JclUser.class, Log.class).getClass()));
+        replayAll();
 
-		replayAll();
+        tested.getMessage();
+        /*
+         * Should return null since getClass() is mocked as a nice mock (because
+         * the logger is mocked)
+         */
+        assertNull(Whitebox.getInternalState(JclUser.class, Log.class).getClass());
 
-		tested.getMessage();
-
-		verifyAll();
-	}
+        verifyAll();
+    }
 }

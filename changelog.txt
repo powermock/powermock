@@ -46,6 +46,7 @@ Change log 1.3 (under development)
 * Whitebox#getInternalState(..) and Whitebox#setInternalState(..) now uses isAssignableFrom instead of equals when looking for field types.
 * Added a new api-support project that contains functionality shared between all mock API projects
 * Mockito extension API now supports suppressing constructors, fields and methods.
+* ProxyFramework is now registered from the test runner instead of the extension API. This means that Whitebox always works correctly in the test cases regardless if the mock api is used or not.
 
 Change log 1.2.5 (released 2009-05-05)
 --------------------------------------

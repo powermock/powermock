@@ -42,7 +42,6 @@ import org.powermock.api.easymock.internal.mockstrategy.MockStrategy;
 import org.powermock.api.easymock.internal.mockstrategy.impl.DefaultMockStrategy;
 import org.powermock.api.easymock.internal.mockstrategy.impl.NiceMockStrategy;
 import org.powermock.api.easymock.internal.mockstrategy.impl.StrictMockStrategy;
-import org.powermock.api.easymock.internal.proxyframework.CgLibProxyFramework;
 import org.powermock.api.support.SuppressCode;
 import org.powermock.core.ClassReplicaCreator;
 import org.powermock.core.MockRepository;
@@ -63,10 +62,6 @@ import org.powermock.reflect.internal.WhiteboxImpl;
 public class PowerMock {
 
     private static final String NICE_REPLAY_AND_VERIFY_KEY = "PowerMock.niceReplayAndVerify";
-
-    static {
-        CgLibProxyFramework.registerProxyFramework();
-    }
 
     /**
      * Creates a mock object that supports mocking of final and native methods.

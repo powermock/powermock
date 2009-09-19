@@ -17,7 +17,6 @@ import org.powermock.api.mockito.expectation.ConstructorExpectationSetup;
 import org.powermock.api.mockito.internal.expectation.DefaultConstructorArgumentsVerfication;
 import org.powermock.api.mockito.internal.expectation.DefaultConstructorExpectationSetup;
 import org.powermock.api.mockito.internal.mockcreation.MockCreator;
-import org.powermock.api.mockito.internal.proxyframework.CgLibProxyFramework;
 import org.powermock.api.support.SuppressCode;
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.MethodInvocationControl;
@@ -30,10 +29,6 @@ import org.powermock.reflect.Whitebox;
  * where applicable.
  */
 public class PowerMockito {
-
-    static {
-        CgLibProxyFramework.registerProxyFramework();
-    }
 
     /**
      * Enable static mocking for all methods of a class.
@@ -354,7 +349,7 @@ public class PowerMockito {
         final Class<T> forName = (Class<T>) Class.forName(fullyQualifiedName);
         return new DefaultConstructorExpectationSetup<T>(forName);
     }
-    
+
     /**
      * Suppress constructor calls on specific constructors only.
      */
