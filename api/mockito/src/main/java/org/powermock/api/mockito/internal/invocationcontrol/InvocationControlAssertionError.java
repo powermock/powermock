@@ -3,12 +3,23 @@ package org.powermock.api.mockito.internal.invocationcontrol;
 import java.util.regex.Matcher;
 
 import org.powermock.core.spi.support.InvocationSubstitute;
+import org.powermock.reflect.Whitebox;
 
-public class NewInvocationControlAssertionError {
+public class InvocationControlAssertionError {
     private static final String ERROR_LOCATION_MARKER = "->";
     private static final String COLON_NEWLINE = ":\n";
     private static final String HERE_TEXT = "here:\n";
     private static final String UNDESIRED_INVOCATION_TEXT = " Undesired invocation:";
+
+    public static void updateErrorMessageForMethodInvocation(AssertionError oldError, Class<?> type) {
+        /*
+         * We failed to verify the new substitution mock. This happens when, for
+         * example, the user has done something like
+         * whenNew(MyClass.class).thenReturn(myMock).times(3) when in fact an
+         * instance of MyClass has been created less or more times than 3.
+         */
+        Whitebox.setInternalState(oldError, "\n" + changeMessageContent(oldError.getMessage()));
+    }
 
     public static void throwAssertionErrorForNewSubstitutionFailure(AssertionError oldError, Class<?> type) {
         /*
@@ -23,7 +34,10 @@ public class NewInvocationControlAssertionError {
         final String newSubsitutionMethodName = InvocationSubstitute.class.getDeclaredMethods()[0].getName();
         message = message.replaceAll(newSubsitutionClassNameInMockito + "." + newSubsitutionMethodName, Matcher.quoteReplacement(type.getName()));
         message = message.replaceAll("method", "constructor");
+        throw new AssertionError(changeMessageContent(message));
+    }
 
+    private static String changeMessageContent(String message) {
         /*
          * Temp fix: Remove powermock internal "at locations" (points to which
          * line the expectation went wrong in Mockito). We should try to find
@@ -36,8 +50,8 @@ public class NewInvocationControlAssertionError {
         removeAndReplaceText(builder, HERE_TEXT, ' ');
 
         removeAndReplaceText(builder, COLON_NEWLINE, ' ');
-
-        throw new AssertionError(builder.toString().trim());
+        final String finalMessage = builder.toString().trim();
+        return finalMessage;
     }
 
     private static StringBuilder removeFailureLocations(String message) {
@@ -82,4 +96,5 @@ public class NewInvocationControlAssertionError {
             textIndex = builder.indexOf(text);
         }
     }
+
 }

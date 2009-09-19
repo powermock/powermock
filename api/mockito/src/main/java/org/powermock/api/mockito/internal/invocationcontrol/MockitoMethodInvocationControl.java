@@ -29,6 +29,7 @@ import javassist.util.proxy.ProxyObject;
 import org.hamcrest.Matcher;
 import org.mockito.Mockito;
 import org.mockito.cglib.proxy.MethodProxy;
+import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.internal.MockHandler;
 import org.mockito.internal.creation.MethodInterceptorFilter;
 import org.mockito.internal.debugging.Localized;
@@ -51,242 +52,247 @@ import org.powermock.reflect.Whitebox;
  */
 public class MockitoMethodInvocationControl implements MethodInvocationControl {
 
-	private final MethodInterceptorFilter invocationHandler;
+    private final MethodInterceptorFilter invocationHandler;
 
-	private final Set<Method> mockedMethods;
-	private final Object delegator;
+    private final Set<Method> mockedMethods;
+    private final Object delegator;
 
-	/**
-	 * Creates a new instance.
-	 * 
-	 * @param invocationHandler
-	 *            The mock invocation handler to be associated with this
-	 *            instance.
-	 * @param methodsToMock
-	 *            The methods that are mocked for this instance. If
-	 *            <code>methodsToMock</code> is null or empty, all methods for
-	 *            the <code>invocationHandler</code> are considered to be
-	 *            mocked.
-	 */
-	public MockitoMethodInvocationControl(MethodInterceptorFilter invocationHandler, Method... methodsToMock) {
-		this(invocationHandler, null, methodsToMock);
-	}
+    /**
+     * Creates a new instance.
+     * 
+     * @param invocationHandler
+     *            The mock invocation handler to be associated with this
+     *            instance.
+     * @param methodsToMock
+     *            The methods that are mocked for this instance. If
+     *            <code>methodsToMock</code> is null or empty, all methods for
+     *            the <code>invocationHandler</code> are considered to be
+     *            mocked.
+     */
+    public MockitoMethodInvocationControl(MethodInterceptorFilter invocationHandler, Method... methodsToMock) {
+        this(invocationHandler, null, methodsToMock);
+    }
 
-	/**
-	 * Creates a new instance with a delegator. This delegator may be
-	 * <code>null</code> (if it is then no calls will be forwarded to this
-	 * instance). If a delegator exists (i.e. not null) all non-mocked calls
-	 * will be delegated to that instance.
-	 * 
-	 * @param invocationHandler
-	 *            The mock invocation handler to be associated with this
-	 *            instance.
-	 * @param delegator
-	 *            If the user spies on an instance the original instance must be
-	 *            injected here.
-	 * @param methodsToMock
-	 *            The methods that are mocked for this instance. If
-	 *            <code>methodsToMock</code> is null or empty, all methods for
-	 *            the <code>invocationHandler</code> are considered to be
-	 *            mocked.
-	 */
-	public MockitoMethodInvocationControl(MethodInterceptorFilter invocationHandler, Object delegator, Method... methodsToMock) {
-		if (invocationHandler == null) {
-			throw new IllegalArgumentException("Invocation Handler cannot be null.");
-		}
+    /**
+     * Creates a new instance with a delegator. This delegator may be
+     * <code>null</code> (if it is then no calls will be forwarded to this
+     * instance). If a delegator exists (i.e. not null) all non-mocked calls
+     * will be delegated to that instance.
+     * 
+     * @param invocationHandler
+     *            The mock invocation handler to be associated with this
+     *            instance.
+     * @param delegator
+     *            If the user spies on an instance the original instance must be
+     *            injected here.
+     * @param methodsToMock
+     *            The methods that are mocked for this instance. If
+     *            <code>methodsToMock</code> is null or empty, all methods for
+     *            the <code>invocationHandler</code> are considered to be
+     *            mocked.
+     */
+    public MockitoMethodInvocationControl(MethodInterceptorFilter invocationHandler, Object delegator, Method... methodsToMock) {
+        if (invocationHandler == null) {
+            throw new IllegalArgumentException("Invocation Handler cannot be null.");
+        }
 
-		mockedMethods = toSet(methodsToMock);
-		this.delegator = delegator;
-		this.invocationHandler = invocationHandler;
-	}
+        mockedMethods = toSet(methodsToMock);
+        this.delegator = delegator;
+        this.invocationHandler = invocationHandler;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isMocked(Method method) {
-		return mockedMethods == null || (mockedMethods != null && mockedMethods.contains(method));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isMocked(Method method) {
+        return mockedMethods == null || (mockedMethods != null && mockedMethods.contains(method));
+    }
 
-	@SuppressWarnings("unchecked")
-	private boolean isInVerificationMode() {
-		try {
-			MockingProgress progress = (MockingProgress) Whitebox.invokeMethod(ThreadSafeMockingProgress.class, "threadSafely");
-			if (progress instanceof ThreadSafeMockingProgress) {
-				ThreadLocal<MockingProgress> threadLocal = Whitebox.getInternalState(progress, ThreadLocal.class);
-				return threadLocal.get() == null;
-			} else {
-				Localized<VerificationMode> verificationMode = Whitebox.getInternalState(progress, Localized.class);
-				return verificationMode == null;
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+    @SuppressWarnings("unchecked")
+    private boolean isInVerificationMode() {
+        try {
+            MockingProgress progress = (MockingProgress) Whitebox.invokeMethod(ThreadSafeMockingProgress.class, "threadSafely");
+            if (progress instanceof ThreadSafeMockingProgress) {
+                ThreadLocal<MockingProgress> threadLocal = Whitebox.getInternalState(progress, ThreadLocal.class);
+                return threadLocal.get() == null;
+            } else {
+                Localized<VerificationMode> verificationMode = Whitebox.getInternalState(progress, Localized.class);
+                return verificationMode == null;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	public Object invoke(final Object obj, final Method method, final Object[] arguments) throws Throwable {
-		final Object returnValue = performIntercept(invocationHandler, obj, method, arguments);
-		if (returnValue == null && isInVerificationMode()) {
-			return MockGateway.SUPPRESS;
-		}
-		return returnValue;
-	}
+    public Object invoke(final Object obj, final Method method, final Object[] arguments) throws Throwable {
+        final Object returnValue = performIntercept(invocationHandler, obj, method, arguments);
+        if (returnValue == null && isInVerificationMode()) {
+            return MockGateway.SUPPRESS;
+        }
+        return returnValue;
+    }
 
-	private Object performIntercept(MethodInterceptorFilter invocationHandler, Object interceptionObject, final Method method, Object[] arguments)
-			throws Throwable {
-		/*
-		 * Mockito 1.7 and 1.8.0 changes the CGLib Naming policy using
-		 * reflection if calling invocationHandler.intercept(..) directly which
-		 * will cause the invocation to fail since we're proxying the proxy. To
-		 * get around this we get the delegator using reflection and invoke its
-		 * intercept method directly instead and thus bypassing this and some
-		 * other stuff such as equals and hashcode checks. This is not safe and
-		 * should be regarded as hack! The best way would probably be to
-		 * persuade the Mockito guys to create some sort of hook-method to
-		 * replace the call to
-		 * "new CGLIBHacker().setMockitoNamingPolicy(methodProxy)" which is what
-		 * causing the trouble. If we could create our own CGLIBHacker which
-		 * uses the Whitebox hierarchy traverser mechanisms to set the field we
-		 * would be fine.
-		 */
-		MockHandler<?> mockHandler = invocationHandler.getMockHandler();
-		if (Whitebox.<Method> getInternalState(invocationHandler, "equalsMethod").equals(method)) {
-			return Boolean.valueOf(interceptionObject == arguments[0]);
-		} else if (Whitebox.<Method> getInternalState(invocationHandler, "hashCodeMethod").equals(method)) {
-			return Whitebox.invokeMethod(invocationHandler, "hashCodeForMock", interceptionObject);
-		}
+    private Object performIntercept(MethodInterceptorFilter invocationHandler, Object interceptionObject, final Method method, Object[] arguments)
+            throws Throwable {
+        /*
+         * Mockito 1.7 and 1.8.0 changes the CGLib Naming policy using
+         * reflection if calling invocationHandler.intercept(..) directly which
+         * will cause the invocation to fail since we're proxying the proxy. To
+         * get around this we get the delegator using reflection and invoke its
+         * intercept method directly instead and thus bypassing this and some
+         * other stuff such as equals and hashcode checks. This is not safe and
+         * should be regarded as hack! The best way would probably be to
+         * persuade the Mockito guys to create some sort of hook-method to
+         * replace the call to
+         * "new CGLIBHacker().setMockitoNamingPolicy(methodProxy)" which is what
+         * causing the trouble. If we could create our own CGLIBHacker which
+         * uses the Whitebox hierarchy traverser mechanisms to set the field we
+         * would be fine.
+         */
+        MockHandler<?> mockHandler = invocationHandler.getMockHandler();
+        if (Whitebox.<Method> getInternalState(invocationHandler, "equalsMethod").equals(method)) {
+            return Boolean.valueOf(interceptionObject == arguments[0]);
+        } else if (Whitebox.<Method> getInternalState(invocationHandler, "hashCodeMethod").equals(method)) {
+            return Whitebox.invokeMethod(invocationHandler, "hashCodeForMock", interceptionObject);
+        }
 
-		final FilteredCGLIBProxyRealMethod cglibProxyRealMethod;
-		if (hasDelegator()) {
-			cglibProxyRealMethod = new FilteredCGLIBProxyRealMethod(getMethodProxy(method));
-		} else {
-			cglibProxyRealMethod = new FilteredCGLIBProxyRealMethod(new RealMethod() {
-				public Object invoke(Object target, Object[] arguments) throws Throwable {
-					/*
-					 * Instruct the MockGateway to don't intercept the next
-					 * call. The reason is that when Mockito is spying on
-					 * objects it should call the "real method" (which is
-					 * proxied by Mockito anyways) so that we don't end up in
-					 * here one more time which causes infinite recursion.
-					 */
-					MockRepository.putAdditionalState(MockGateway.DONT_MOCK_NEXT_CALL, true);
-					return method.invoke(target, arguments);
-				}
-			});
-		}
-		Invocation invocation = new Invocation(interceptionObject, method, arguments, SequenceNumber.next(), cglibProxyRealMethod) {
+        final FilteredCGLIBProxyRealMethod cglibProxyRealMethod;
+        if (hasDelegator()) {
+            cglibProxyRealMethod = new FilteredCGLIBProxyRealMethod(getMethodProxy(method));
+        } else {
+            cglibProxyRealMethod = new FilteredCGLIBProxyRealMethod(new RealMethod() {
+                public Object invoke(Object target, Object[] arguments) throws Throwable {
+                    /*
+                     * Instruct the MockGateway to don't intercept the next
+                     * call. The reason is that when Mockito is spying on
+                     * objects it should call the "real method" (which is
+                     * proxied by Mockito anyways) so that we don't end up in
+                     * here one more time which causes infinite recursion.
+                     */
+                    MockRepository.putAdditionalState(MockGateway.DONT_MOCK_NEXT_CALL, true);
+                    return method.invoke(target, arguments);
+                }
+            });
+        }
+        Invocation invocation = new Invocation(interceptionObject, method, arguments, SequenceNumber.next(), cglibProxyRealMethod) {
 
-			/**
-			 * We need to override this method because normally the String
-			 * "method" is assembled by calling the "qualifiedName" method but
-			 * this is not possible in our case. The reason is that the
-			 * qualifiedName method does
-			 * 
-			 * <pre>
-			 * new MockUtil().getMockName(mock)
-			 * </pre>
-			 * 
-			 * which later will call the "isMockitoMock" method which will
-			 * return false and an exception will be thrown. The reason why
-			 * "isMockitoMock" returns false is that the mock is not created by
-			 * the Mockito CGLib Enhancer in case of static methods.
-			 */
-			@SuppressWarnings("unchecked")
-			@Override
-			protected String toString(List<Matcher> matchers, PrintSettings printSettings) {
-				MatchersPrinter matchersPrinter = new MatchersPrinter();
-				String method = Whitebox.getType(getMock()).getName() + "." + getMethodName();
-				String invocation = method + matchersPrinter.getArgumentsLine(matchers, printSettings);
-				if (printSettings.isMultiline()
-						|| (!matchers.isEmpty() && invocation.length() > Whitebox.<Integer> getInternalState(Invocation.class, "MAX_LINE_LENGTH"))) {
-					return method + matchersPrinter.getArgumentsBlock(matchers, printSettings);
-				} else {
-					return invocation;
-				}
-			}
-		};
-		return mockHandler.handle(invocation);
-	}
+            /**
+             * We need to override this method because normally the String
+             * "method" is assembled by calling the "qualifiedName" method but
+             * this is not possible in our case. The reason is that the
+             * qualifiedName method does
+             * 
+             * <pre>
+             * new MockUtil().getMockName(mock)
+             * </pre>
+             * 
+             * which later will call the "isMockitoMock" method which will
+             * return false and an exception will be thrown. The reason why
+             * "isMockitoMock" returns false is that the mock is not created by
+             * the Mockito CGLib Enhancer in case of static methods.
+             */
+            @SuppressWarnings("unchecked")
+            @Override
+            protected String toString(List<Matcher> matchers, PrintSettings printSettings) {
+                MatchersPrinter matchersPrinter = new MatchersPrinter();
+                String method = Whitebox.getType(getMock()).getName() + "." + getMethodName();
+                String invocation = method + matchersPrinter.getArgumentsLine(matchers, printSettings);
+                if (printSettings.isMultiline()
+                        || (!matchers.isEmpty() && invocation.length() > Whitebox.<Integer> getInternalState(Invocation.class, "MAX_LINE_LENGTH"))) {
+                    return method + matchersPrinter.getArgumentsBlock(matchers, printSettings);
+                } else {
+                    return invocation;
+                }
+            }
+        };
+        try {
+            return mockHandler.handle(invocation);
+        } catch (MockitoAssertionError e) {
+            InvocationControlAssertionError.updateErrorMessageForMethodInvocation(e, null);
+            throw e;
+        }
+    }
 
-	/**
-	 * Get a method proxy if needed. This is needed when this method invocation
-	 * control is in spy mode (i.e. the {@link #delegator} is set). What Mockito
-	 * does in its
-	 * {@link MockHandler#intercept(Object, Method, Object[], MethodProxy)}
-	 * method is to invoke a MethodProxy that in its turn invoke the original
-	 * method. Since we don't have access to this method proxy we create a
-	 * Javassist proxy for the MethodProxy class. When the invoke method is
-	 * called we simply invoke the method on the original delegator.
-	 * <p>
-	 * The reason why we're not using a CgLib proxy is because the
-	 * {@link MethodProxy} has a private constructor and CgLib cannot proxy
-	 * classes with a private constructor (but Javassist can). However I failed
-	 * to instantiate the generated Javaassist Proxy Class using reflection (got
-	 * a exception) so instead we're using {@link Whitebox#newInstance(Class)}
-	 * to create an instance of the class using Objenisis (i.e. the constructor
-	 * is never invoked which is actually good).
-	 */
-	@SuppressWarnings("unchecked")
-	private MethodProxy getMethodProxy(final Method method) {
-		if (hasDelegator()) {
-			ProxyFactory f = new ProxyFactory();
-			f.setSuperclass(MethodProxy.class);
-			MethodHandler mi = new MethodHandler() {
-				public Object invoke(Object self, Method m, Method proceed, Object[] args) throws Throwable {
-					final Object[] realArguments = args.length > 0 ? (Object[]) args[1] : new Object[0];
-					if (delegator instanceof Class<?>) {
-						/*
-						 * Tell the MockGateway to always defer the next method
-						 * call to the real object/class. The reason for this is
-						 * that if the delegator is a class then the Mockito
-						 * proxy will delegate to the original class and the
-						 * method call will be caught by the MockGateway. The
-						 * MockGateway will find a MethodInvocationControl for
-						 * this type and thus invoke the proxy again (i.e. we
-						 * will end up in this method one more time) and we will
-						 * end up in an infinite recursion. To avoid this we
-						 * need to instruct the MockGateway to always delegate
-						 * the next call to the original class.
-						 */
-						MockRepository.putAdditionalState(MockGateway.DONT_MOCK_NEXT_CALL, true);
-					}
-					// execute the original method.
-					final Object invoke = method.invoke(delegator, realArguments);
-					return invoke;
-				}
-			};
-			f.setFilter(new MethodFilter() {
-				public boolean isHandled(Method m) {
-					return !m.getName().equals("finalize");
-				}
-			});
-			Class<MethodProxy> c = f.createClass();
-			final MethodProxy methodProxy = Whitebox.newInstance(c);
-			((ProxyObject) methodProxy).setHandler(mi);
-			return methodProxy;
-		}
-		return null;
-	}
+    /**
+     * Get a method proxy if needed. This is needed when this method invocation
+     * control is in spy mode (i.e. the {@link #delegator} is set). What Mockito
+     * does in its
+     * {@link MockHandler#intercept(Object, Method, Object[], MethodProxy)}
+     * method is to invoke a MethodProxy that in its turn invoke the original
+     * method. Since we don't have access to this method proxy we create a
+     * Javassist proxy for the MethodProxy class. When the invoke method is
+     * called we simply invoke the method on the original delegator.
+     * <p>
+     * The reason why we're not using a CgLib proxy is because the
+     * {@link MethodProxy} has a private constructor and CgLib cannot proxy
+     * classes with a private constructor (but Javassist can). However I failed
+     * to instantiate the generated Javaassist Proxy Class using reflection (got
+     * a exception) so instead we're using {@link Whitebox#newInstance(Class)}
+     * to create an instance of the class using Objenisis (i.e. the constructor
+     * is never invoked which is actually good).
+     */
+    @SuppressWarnings("unchecked")
+    private MethodProxy getMethodProxy(final Method method) {
+        if (hasDelegator()) {
+            ProxyFactory f = new ProxyFactory();
+            f.setSuperclass(MethodProxy.class);
+            MethodHandler mi = new MethodHandler() {
+                public Object invoke(Object self, Method m, Method proceed, Object[] args) throws Throwable {
+                    final Object[] realArguments = args.length > 0 ? (Object[]) args[1] : new Object[0];
+                    if (delegator instanceof Class<?>) {
+                        /*
+                         * Tell the MockGateway to always defer the next method
+                         * call to the real object/class. The reason for this is
+                         * that if the delegator is a class then the Mockito
+                         * proxy will delegate to the original class and the
+                         * method call will be caught by the MockGateway. The
+                         * MockGateway will find a MethodInvocationControl for
+                         * this type and thus invoke the proxy again (i.e. we
+                         * will end up in this method one more time) and we will
+                         * end up in an infinite recursion. To avoid this we
+                         * need to instruct the MockGateway to always delegate
+                         * the next call to the original class.
+                         */
+                        MockRepository.putAdditionalState(MockGateway.DONT_MOCK_NEXT_CALL, true);
+                    }
+                    // execute the original method.
+                    final Object invoke = method.invoke(delegator, realArguments);
+                    return invoke;
+                }
+            };
+            f.setFilter(new MethodFilter() {
+                public boolean isHandled(Method m) {
+                    return !m.getName().equals("finalize");
+                }
+            });
+            Class<MethodProxy> c = f.createClass();
+            final MethodProxy methodProxy = Whitebox.newInstance(c);
+            ((ProxyObject) methodProxy).setHandler(mi);
+            return methodProxy;
+        }
+        return null;
+    }
 
-	public Object replay(Object... mocks) {
-		throw new IllegalStateException("Internal error: No such thing as replay exists in Mockito.");
-	}
+    public Object replay(Object... mocks) {
+        throw new IllegalStateException("Internal error: No such thing as replay exists in Mockito.");
+    }
 
-	public Object reset(Object... mocks) {
-		throw new IllegalStateException("Internal error: No such thing as reset exists in Mockito.");
-	}
+    public Object reset(Object... mocks) {
+        throw new IllegalStateException("Internal error: No such thing as reset exists in Mockito.");
+    }
 
-	public Object verify(Object... mocks) {
-		if (mocks == null || mocks.length != 1) {
-			throw new IllegalArgumentException("Must supply one mock to the verify method.");
-		}
-		return Mockito.verify(mocks[0]);
-	}
+    public Object verify(Object... mocks) {
+        if (mocks == null || mocks.length != 1) {
+            throw new IllegalArgumentException("Must supply one mock to the verify method.");
+        }
+        return Mockito.verify(mocks[0]);
+    }
 
-	private Set<Method> toSet(Method... methods) {
-		return methods == null ? null : new HashSet<Method>(Arrays.asList(methods));
-	}
+    private Set<Method> toSet(Method... methods) {
+        return methods == null ? null : new HashSet<Method>(Arrays.asList(methods));
+    }
 
-	private boolean hasDelegator() {
-		return delegator != null;
-	}
+    private boolean hasDelegator() {
+        return delegator != null;
+    }
 }

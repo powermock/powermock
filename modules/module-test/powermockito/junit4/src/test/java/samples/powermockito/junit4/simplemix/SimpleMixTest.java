@@ -60,7 +60,7 @@ public class SimpleMixTest {
 
         assertEquals(4, tested.calculate());
 
-        verifyStatic(SimpleMixUtilities.class);
+        verifyStatic();
         SimpleMixUtilities.getRandomInteger();
     }
 

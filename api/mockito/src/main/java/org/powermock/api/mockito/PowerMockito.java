@@ -7,8 +7,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.mockito.Mockito;
-import org.mockito.exceptions.misusing.NotAMockException;
-import org.mockito.exceptions.misusing.NullInsteadOfMockException;
 import org.mockito.internal.progress.MockingProgress;
 import org.mockito.internal.verification.api.VerificationMode;
 import org.mockito.stubbing.OngoingStubbing;
@@ -21,7 +19,6 @@ import org.powermock.api.mockito.verification.ConstructorArgumentsVerification;
 import org.powermock.api.mockito.verification.PrivateMethodVerification;
 import org.powermock.api.support.SuppressCode;
 import org.powermock.core.MockRepository;
-import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.core.spi.NewInvocationControl;
 import org.powermock.reflect.Whitebox;
 
@@ -79,17 +76,17 @@ public class PowerMockito {
     /**
      * Verifies certain behavior <b>happened once</b>
      * <p>
-     * Alias to <code>verifyStatic(mock, times(1))</code> E.g:
+     * Alias to <code>verifyStatic(times(1))</code> E.g:
      * 
      * <pre>
-     * verifyStatic(ClassWithStaticMethod.class);
+     * verifyStatic();
      * ClassWithStaticMethod.someStaticMethod(&quot;some arg&quot;);
      * </pre>
      * 
      * Above is equivalent to:
      * 
      * <pre>
-     * verifyStatic(ClassWithStaticMethod.class, times(1));
+     * verifyStatic(times(1));
      * ClassWithStaticMethod.someStaticMethod(&quot;some arg&quot;);
      * </pre>
      * 
@@ -99,12 +96,36 @@ public class PowerMockito {
      * cares what foo.bar() returns then something else breaks(often before even
      * verify() gets executed). If your code doesn't care what get(0) returns
      * then it should not be stubbed.
-     * 
-     * @param mock
-     *            Class mocked by PowerMock.
      */
-    public static synchronized void verifyStatic(Class<?> mock) {
-        verifyStatic(mock, times(1));
+    public static synchronized void verifyStatic() {
+        verifyStatic(times(1));
+    }
+
+    /**
+     * Verifies certain behavior happened at least once / exact number of times
+     * / never. E.g:
+     * 
+     * <pre>
+     *   verifyStatic(times(5));
+     *   ClassWithStaticMethod.someStaticMethod(&quot;was called five times&quot;);
+     *   
+     *   verifyStatic(atLeast(2));
+     *   ClassWithStaticMethod.someStaticMethod(&quot;was called at least two times&quot;);
+     *   
+     *   //you can use flexible argument matchers, e.g:
+     *   verifyStatic(atLeastOnce());
+     *   ClassWithStaticMethod.someMethod(&lt;b&gt;anyString()&lt;/b&gt;);
+     * </pre>
+     * 
+     * <b>times(1) is the default</b> and can be omitted
+     * <p>
+     * 
+     * @param mode
+     *            times(x), atLeastOnce() or never()
+     */
+    public static synchronized void verifyStatic(VerificationMode verificationMode) {
+        Whitebox.getInternalState(Mockito.class, MockingProgress.class).verificationStarted(verificationMode);
+
     }
 
     /**
@@ -151,36 +172,6 @@ public class PowerMockito {
      */
     public static PrivateMethodVerification verifyPrivate(Class<?> clazz, VerificationMode verificationMode) throws Exception {
         return verifyPrivate((Object) clazz, verificationMode);
-    }
-
-    /**
-     * Verifies certain behavior happened at least once / exact number of times
-     * / never. E.g:
-     * 
-     * <pre>
-     *   verifyStatic(ClassWithStaticMethod.class, times(5));
-     *   ClassWithStaticMethod.someStaticMethod(&quot;was called five times&quot;);
-     *   
-     *   verifyStatic(ClassWithStaticMethod.class, atLeast(2));
-     *   ClassWithStaticMethod.someStaticMethod(&quot;was called at least two times&quot;);
-     *   
-     *   //you can use flexible argument matchers, e.g:
-     *   verifyStatic(ClassWithStaticMethod.class, atLeastOnce());
-     *   ClassWithStaticMethod.someMethod(&lt;b&gt;anyString()&lt;/b&gt;);
-     * </pre>
-     * 
-     * <b>times(1) is the default</b> and can be omitted
-     * <p>
-     * 
-     * @param mock
-     *            to be verified
-     * @param mode
-     *            times(x), atLeastOnce() or never()
-     */
-    public static void verifyStatic(Class<?> mock, VerificationMode mode) {
-        assertMockNotNull(mock);
-        assertValidMock(mock);
-        Whitebox.getInternalState(Mockito.class, MockingProgress.class).verificationStarted(mode);
     }
 
     /**
@@ -543,19 +534,5 @@ public class PowerMockito {
      */
     public static synchronized void suppressMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
         SuppressCode.suppressMethod(clazz, methodName, parameterTypes);
-    }
-
-    private static void assertValidMock(Class<?> mock) {
-        final MethodInvocationControl instanceInvocationHandler = MockRepository.getStaticMethodInvocationControl(mock);
-        if (instanceInvocationHandler == null) {
-            throw new NotAMockException("Argument passed to verifyStatic() is not a PowerMockito mock.");
-        }
-    }
-
-    private static void assertMockNotNull(Class<?> mock) {
-        if (mock == null) {
-            throw new NullInsteadOfMockException("Argument passed to verifyStatic() is null! "
-                    + "Concider using the @MockStatic annotation to ensure that you don't miss mock initialization.");
-        }
     }
 }

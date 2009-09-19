@@ -20,6 +20,7 @@ import static org.mockito.Mockito.times;
 import java.lang.reflect.Constructor;
 
 import org.mockito.Mockito;
+import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.internal.verification.api.VerificationMode;
 import org.mockito.stubbing.OngoingStubbing;
 import org.powermock.core.MockRepository;
@@ -50,8 +51,8 @@ public class MockitoNewInvocationControl<T> implements NewInvocationControl<Ongo
         }
         try {
             return substitute.performSubstitutionLogic(args);
-        } catch (AssertionError e) {
-            NewInvocationControlAssertionError.throwAssertionErrorForNewSubstitutionFailure(e, type);
+        } catch (MockitoAssertionError e) {
+            InvocationControlAssertionError.throwAssertionErrorForNewSubstitutionFailure(e, type);
         }
 
         // Won't happen
