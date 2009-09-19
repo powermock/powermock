@@ -34,16 +34,16 @@ import samples.partialmocking.PartialMockingExample;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(PartialMockingExample.class)
-public class PartialMockingExampleDefect {
+public class PartialMockingExampleTest {
 
-	@Test
-	public void validatingSpiedObjectGivesCorrectNumberOfExpectedInvocations() throws Exception {
-		final String expected = "TEST VALUE";
-		PartialMockingExample underTest = spy(new PartialMockingExample());
-		when(underTest.methodToMock()).thenReturn(expected);
+    @Test
+    public void validatingSpiedObjectGivesCorrectNumberOfExpectedInvocations() throws Exception {
+        final String expected = "TEST VALUE";
+        PartialMockingExample underTest = spy(new PartialMockingExample());
+        when(underTest.methodToMock()).thenReturn(expected);
 
-		assertEquals(expected, underTest.methodToTest());
+        assertEquals(expected, underTest.methodToTest());
 
-		verify(underTest).methodToMock();
-	}
+        verify(underTest).methodToMock();
+    }
 }

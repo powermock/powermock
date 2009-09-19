@@ -1438,7 +1438,10 @@ public class WhiteboxImpl {
 
     @SuppressWarnings("unchecked")
     public static <T> T performMethodInvocation(Object tested, Method methodToInvoke, Object... arguments) throws Exception {
-        methodToInvoke.setAccessible(true);
+        final boolean accessible = methodToInvoke.isAccessible();
+        if (!accessible) {
+            methodToInvoke.setAccessible(true);
+        }
         try {
             if (isPotentialVarArgsMethod(methodToInvoke, arguments)) {
                 Class<?>[] parameterTypes = methodToInvoke.getParameterTypes();
@@ -1462,6 +1465,10 @@ public class WhiteboxImpl {
                 throw (Error) cause;
             } else {
                 throw new MethodInvocationException(cause);
+            }
+        } finally {
+            if (!accessible) {
+                methodToInvoke.setAccessible(false);
             }
         }
     }

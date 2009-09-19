@@ -16,23 +16,19 @@
 package org.powermock.api.mockito.internal.invocationcontrol;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javassist.util.proxy.MethodFilter;
-import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
-
 import org.hamcrest.Matcher;
 import org.mockito.Mockito;
-import org.mockito.cglib.proxy.MethodProxy;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.internal.MockHandler;
 import org.mockito.internal.creation.MethodInterceptorFilter;
 import org.mockito.internal.debugging.Localized;
+import org.mockito.internal.exceptions.base.StackTraceFilter;
 import org.mockito.internal.invocation.Invocation;
 import org.mockito.internal.invocation.realmethod.FilteredCGLIBProxyRealMethod;
 import org.mockito.internal.invocation.realmethod.RealMethod;
@@ -125,11 +121,46 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
     }
 
     public Object invoke(final Object obj, final Method method, final Object[] arguments) throws Throwable {
-        final Object returnValue = performIntercept(invocationHandler, obj, method, arguments);
-        if (returnValue == null && isInVerificationMode()) {
-            return MockGateway.SUPPRESS;
+        /*
+         * If we come here and it means that the class has been modified by
+         * PowerMock. If this handler has a delegator (i.e. is in spy mode in
+         * the current implementation) and it has been caught by the Mockito
+         * proxy before our Mockgateway we need to know if the method is private
+         * or not. Because if the previously described preconditions are met and
+         * the method is not private it means that Mockito has already processed
+         * the method invocation and we should NOT delegate the call to Mockito
+         * again (thus we return proceed). If we would do that Mockito will
+         * receive multiple method invocations to proxy for each method
+         * invocation. For privately spied methods Mockito haven't received the
+         * invocation and thus we should delegate the call to the Mockito proxy.
+         */
+        final Object returnValue;
+        if (hasDelegator() && hasBeenCaughtByMockitoProxy() && !Modifier.isPrivate(method.getModifiers())) {
+            returnValue = MockGateway.PROCEED;
+        } else {
+            returnValue = performIntercept(invocationHandler, obj, method, arguments);
+            if (returnValue == null && isInVerificationMode()) {
+                return MockGateway.SUPPRESS;
+            }
         }
         return returnValue;
+    }
+
+    private boolean hasBeenCaughtByMockitoProxy() {
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        StackTraceFilter filter = new StackTraceFilter();
+        /*
+         * We loop through all stack trace elements and see if it's "bad". Bad
+         * means that the stack trance is cluttered with Mockito proxy
+         * invocations which is why we know that the invocation has been caught
+         * by the proxy if isBad returns true.
+         */
+        for (StackTraceElement stackTraceElement : stackTrace) {
+            if (filter.isBad(stackTraceElement)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Object performIntercept(MethodInterceptorFilter invocationHandler, Object interceptionObject, final Method method, Object[] arguments)
@@ -156,24 +187,20 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
             return Whitebox.invokeMethod(invocationHandler, "hashCodeForMock", interceptionObject);
         }
 
-        final FilteredCGLIBProxyRealMethod cglibProxyRealMethod;
-        if (hasDelegator()) {
-            cglibProxyRealMethod = new FilteredCGLIBProxyRealMethod(getMethodProxy(method));
-        } else {
-            cglibProxyRealMethod = new FilteredCGLIBProxyRealMethod(new RealMethod() {
-                public Object invoke(Object target, Object[] arguments) throws Throwable {
-                    /*
-                     * Instruct the MockGateway to don't intercept the next
-                     * call. The reason is that when Mockito is spying on
-                     * objects it should call the "real method" (which is
-                     * proxied by Mockito anyways) so that we don't end up in
-                     * here one more time which causes infinite recursion.
-                     */
-                    MockRepository.putAdditionalState(MockGateway.DONT_MOCK_NEXT_CALL, true);
-                    return method.invoke(target, arguments);
-                }
-            });
-        }
+        final FilteredCGLIBProxyRealMethod cglibProxyRealMethod = new FilteredCGLIBProxyRealMethod(new RealMethod() {
+            public Object invoke(Object target, Object[] arguments) throws Throwable {
+                /*
+                 * Instruct the MockGateway to don't intercept the next call.
+                 * The reason is that when Mockito is spying on objects it
+                 * should call the "real method" (which is proxied by Mockito
+                 * anyways) so that we don't end up in here one more time which
+                 * causes infinite recursion.
+                 */
+                MockRepository.putAdditionalState(MockGateway.DONT_MOCK_NEXT_CALL, true);
+                return method.invoke(target, arguments);
+            }
+        });
+        // }
         Invocation invocation = new Invocation(interceptionObject, method, arguments, SequenceNumber.next(), cglibProxyRealMethod) {
 
             /**
@@ -211,66 +238,6 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
             InvocationControlAssertionError.updateErrorMessageForMethodInvocation(e, null);
             throw e;
         }
-    }
-
-    /**
-     * Get a method proxy if needed. This is needed when this method invocation
-     * control is in spy mode (i.e. the {@link #delegator} is set). What Mockito
-     * does in its
-     * {@link MockHandler#intercept(Object, Method, Object[], MethodProxy)}
-     * method is to invoke a MethodProxy that in its turn invoke the original
-     * method. Since we don't have access to this method proxy we create a
-     * Javassist proxy for the MethodProxy class. When the invoke method is
-     * called we simply invoke the method on the original delegator.
-     * <p>
-     * The reason why we're not using a CgLib proxy is because the
-     * {@link MethodProxy} has a private constructor and CgLib cannot proxy
-     * classes with a private constructor (but Javassist can). However I failed
-     * to instantiate the generated Javaassist Proxy Class using reflection (got
-     * a exception) so instead we're using {@link Whitebox#newInstance(Class)}
-     * to create an instance of the class using Objenisis (i.e. the constructor
-     * is never invoked which is actually good).
-     */
-    @SuppressWarnings("unchecked")
-    private MethodProxy getMethodProxy(final Method method) {
-        if (hasDelegator()) {
-            ProxyFactory f = new ProxyFactory();
-            f.setSuperclass(MethodProxy.class);
-            MethodHandler mi = new MethodHandler() {
-                public Object invoke(Object self, Method m, Method proceed, Object[] args) throws Throwable {
-                    final Object[] realArguments = args.length > 0 ? (Object[]) args[1] : new Object[0];
-                    if (delegator instanceof Class<?>) {
-                        /*
-                         * Tell the MockGateway to always defer the next method
-                         * call to the real object/class. The reason for this is
-                         * that if the delegator is a class then the Mockito
-                         * proxy will delegate to the original class and the
-                         * method call will be caught by the MockGateway. The
-                         * MockGateway will find a MethodInvocationControl for
-                         * this type and thus invoke the proxy again (i.e. we
-                         * will end up in this method one more time) and we will
-                         * end up in an infinite recursion. To avoid this we
-                         * need to instruct the MockGateway to always delegate
-                         * the next call to the original class.
-                         */
-                        MockRepository.putAdditionalState(MockGateway.DONT_MOCK_NEXT_CALL, true);
-                    }
-                    // execute the original method.
-                    final Object invoke = method.invoke(delegator, realArguments);
-                    return invoke;
-                }
-            };
-            f.setFilter(new MethodFilter() {
-                public boolean isHandled(Method m) {
-                    return !m.getName().equals("finalize");
-                }
-            });
-            Class<MethodProxy> c = f.createClass();
-            final MethodProxy methodProxy = Whitebox.newInstance(c);
-            ((ProxyObject) methodProxy).setHandler(mi);
-            return methodProxy;
-        }
-        return null;
     }
 
     public Object replay(Object... mocks) {

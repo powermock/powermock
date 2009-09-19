@@ -21,7 +21,6 @@ import java.lang.reflect.Modifier;
 
 import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.core.spi.NewInvocationControl;
-import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.exceptions.MethodNotFoundException;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
@@ -88,13 +87,8 @@ public class MockGateway {
                 throw e;
             }
         }
-        System.out.println("innan invoke " + method.getName());
         if (methodInvocationControl != null && methodInvocationControl.isMocked(method) && !shouldMockThisCall()) {
-//            if(WhiteboxImpl.isProxy(object.getClass())) {
-//                return PROCEED;
-//            }
             returnValue = methodInvocationControl.invoke(object, method, args);
-            System.out.println("efter invoke" + returnValue);
             if (returnValue == SUPPRESS) {
                 returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
             }
@@ -106,7 +100,6 @@ public class MockGateway {
             returnValue = PROCEED;
         }
 
-        System.out.println("Returning " + (returnValue == PROCEED ? "proceed" : returnValue));
         return returnValue;
     }
 

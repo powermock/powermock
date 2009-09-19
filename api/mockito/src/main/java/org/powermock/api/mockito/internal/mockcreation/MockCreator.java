@@ -24,7 +24,7 @@ public class MockCreator {
         if (type == null) {
             throw new IllegalArgumentException("The class to mock cannot be null");
         }
-        
+
         T mock = null;
         final String mockName = toInstanceName(type);
 
@@ -71,7 +71,8 @@ public class MockCreator {
                 Whitebox.getInternalState(Mockito.class, MockingProgress.class), new MatchersBinder(), mockSettings);
         MethodInterceptorFilter filter = new MethodInterceptorFilter(type, mockHandler);
         final T mock = (T) ClassImposterizer.INSTANCE.imposterise(filter, type);
-        final MockitoMethodInvocationControl invocationControl = new MockitoMethodInvocationControl(filter, delegator, methods);
+        final MockitoMethodInvocationControl invocationControl = new MockitoMethodInvocationControl(filter, isSpy && delegator == null ? new Object()
+                : null, methods);
         return new MockData<T>(invocationControl, mock);
     }
 
@@ -80,7 +81,7 @@ public class MockCreator {
         // lower case first letter
         return className.substring(0, 1).toLowerCase() + className.substring(1);
     }
-    
+
     /**
      * Class that encapsulate a mock and its corresponding invocation control.
      */
