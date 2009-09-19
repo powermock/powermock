@@ -1920,7 +1920,7 @@ public class PowerMock {
      */
     public static synchronized void suppressConstructor(Constructor<?>... constructors) {
         for (Constructor<?> constructor : constructors) {
-            MockRepository.addConstructorToSuppress(constructor);
+            MockRepository.addConstructo      rToSuppress(constructor);
         }
     }
 
