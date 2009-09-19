@@ -43,6 +43,7 @@ import org.powermock.api.easymock.internal.mockstrategy.impl.DefaultMockStrategy
 import org.powermock.api.easymock.internal.mockstrategy.impl.NiceMockStrategy;
 import org.powermock.api.easymock.internal.mockstrategy.impl.StrictMockStrategy;
 import org.powermock.api.easymock.internal.proxyframework.CgLibProxyFramework;
+import org.powermock.api.support.SuppressCode;
 import org.powermock.core.ClassReplicaCreator;
 import org.powermock.core.MockRepository;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -1919,9 +1920,7 @@ public class PowerMock {
      * Suppress constructor calls on specific constructors only.
      */
     public static synchronized void suppressConstructor(Constructor<?>... constructors) {
-        for (Constructor<?> constructor : constructors) {
-            MockRepository.addConstructo      rToSuppress(constructor);
-        }
+        SuppressCode.suppressConstructor(constructors);
     }
 
     /**
@@ -1933,7 +1932,7 @@ public class PowerMock {
      *            The parameter types of the constructor to suppress.
      */
     public static synchronized void suppressSpecificConstructor(Class<?> clazz, Class<?>... parameterTypes) {
-        MockRepository.addConstructorToSuppress(Whitebox.getConstructor(clazz, parameterTypes));
+        SuppressCode.suppressSpecificConstructor(clazz, parameterTypes);
     }
 
     /**
@@ -1943,13 +1942,7 @@ public class PowerMock {
      *            The classes whose constructors will be suppressed.
      */
     public static synchronized void suppressConstructor(Class<?>... classes) {
-        for (Class<?> clazz : classes) {
-            Class<?> tempClass = clazz;
-            while (tempClass != Object.class) {
-                suppressConstructor(tempClass, false);
-                tempClass = tempClass.getSuperclass();
-            }
-        }
+        SuppressCode.suppressConstructor(classes);
     }
 
     /**
@@ -1961,17 +1954,7 @@ public class PowerMock {
      *            optionally keep code in private constructors
      */
     public static synchronized void suppressConstructor(Class<?> clazz, boolean excludePrivateConstructors) {
-        Constructor<?>[] ctors = null;
-
-        if (excludePrivateConstructors) {
-            ctors = clazz.getConstructors();
-        } else {
-            ctors = clazz.getDeclaredConstructors();
-        }
-
-        for (Constructor<?> ctor : ctors) {
-            MockRepository.addConstructorToSuppress(ctor);
-        }
+        SuppressCode.suppressConstructor(clazz, excludePrivateConstructors);
     }
 
     /**
@@ -1980,21 +1963,14 @@ public class PowerMock {
      * of a mock behavior.
      */
     public static synchronized void suppressField(Field... fields) {
-        for (Field field : fields) {
-            MockRepository.addFieldToSuppress(field);
-        }
+        SuppressCode.suppressField(fields);
     }
 
     /**
      * Suppress all fields for these classes.
      */
     public static synchronized void suppressField(Class<?>[] classes) {
-        if (classes == null || classes.length == 0) {
-            throw new IllegalArgumentException("You must supply at least one class.");
-        }
-        for (Class<?> clazz : classes) {
-            suppressField(clazz.getDeclaredFields());
-        }
+        SuppressCode.suppressField(classes);
     }
 
     /**
@@ -2008,13 +1984,7 @@ public class PowerMock {
      *            suppressed.
      */
     public static synchronized void suppressField(Class<?> clazz, String... fieldNames) {
-        if (fieldNames == null || fieldNames.length == 0) {
-            suppressField(new Class<?>[] { clazz });
-        } else {
-            for (Field field : Whitebox.getFields(clazz, fieldNames)) {
-                MockRepository.addFieldToSuppress(field);
-            }
-        }
+        SuppressCode.suppressField(clazz, fieldNames);
     }
 
     /**
@@ -2023,9 +1993,7 @@ public class PowerMock {
      * verify are not needed as this is not part of a mock behavior.
      */
     public static synchronized void suppressMethod(Method... methods) {
-        for (Method method : methods) {
-            MockRepository.addMethodToSuppress(method);
-        }
+        SuppressCode.suppressMethod(methods);
     }
 
     /**
@@ -2037,10 +2005,7 @@ public class PowerMock {
      *            Additional classes whose methods will be suppressed.
      */
     public static synchronized void suppressMethod(Class<?> cls, Class<?>... additionalClasses) {
-        suppressMethod(cls, false);
-        for (Class<?> clazz : additionalClasses) {
-            suppressMethod(clazz, false);
-        }
+        SuppressCode.suppressMethod(cls, additionalClasses);
     }
 
     /**
@@ -2050,9 +2015,7 @@ public class PowerMock {
      *            Classes whose methods will be suppressed.
      */
     public static synchronized void suppressMethod(Class<?>[] classes) {
-        for (Class<?> clazz : classes) {
-            suppressMethod(clazz, false);
-        }
+        SuppressCode.suppressMethod(classes);
     }
 
     /**
@@ -2066,14 +2029,7 @@ public class PowerMock {
      *            Additional methods to suppress in class <code>clazz</code>.
      */
     public static synchronized void suppressMethod(Class<?> clazz, String methodName, String... additionalMethodNames) {
-        for (Method method : Whitebox.getMethods(clazz, methodName)) {
-            MockRepository.addMethodToSuppress(method);
-        }
-        if (additionalMethodNames != null && additionalMethodNames.length > 0) {
-            for (Method method : Whitebox.getMethods(clazz, additionalMethodNames)) {
-                MockRepository.addMethodToSuppress(method);
-            }
-        }
+        SuppressCode.suppressMethod(clazz, methodName, additionalMethodNames);
     }
 
     /**
@@ -2085,9 +2041,7 @@ public class PowerMock {
      *            Methods to suppress in class <code>clazz</code>.
      */
     public static synchronized void suppressMethod(Class<?> clazz, String[] methodNames) {
-        for (Method method : Whitebox.getMethods(clazz, methodNames)) {
-            MockRepository.addMethodToSuppress(method);
-        }
+        SuppressCode.suppressMethod(clazz, methodNames);
     }
 
     /**
@@ -2099,30 +2053,14 @@ public class PowerMock {
      *            optionally not suppress private methods
      */
     public static synchronized void suppressMethod(Class<?> clazz, boolean excludePrivateMethods) {
-        Method[] methods = null;
-
-        if (excludePrivateMethods) {
-            methods = clazz.getMethods();
-        } else {
-            methods = clazz.getDeclaredMethods();
-        }
-
-        for (Method method : methods) {
-            MockRepository.addMethodToSuppress(method);
-        }
+        SuppressCode.suppressMethod(clazz, excludePrivateMethods);
     }
 
     /**
      * Suppress a specific method call. Use this for overloaded methods.
      */
     public static synchronized void suppressMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
-        Method method = null;
-        if (parameterTypes.length > 0) {
-            method = Whitebox.getMethod(clazz, methodName, parameterTypes);
-        } else {
-            method = WhiteboxImpl.findMethodOrThrowException(clazz, methodName, parameterTypes);
-        }
-        MockRepository.addMethodToSuppress(method);
+        SuppressCode.suppressMethod(clazz, methodName, parameterTypes);
     }
 
     private static <T> T doMock(Class<T> type, boolean isStatic, MockStrategy mockStrategy, ConstructorArgs constructorArgs, Method... methods) {

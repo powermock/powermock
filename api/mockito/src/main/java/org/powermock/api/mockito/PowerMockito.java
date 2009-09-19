@@ -2,6 +2,8 @@ package org.powermock.api.mockito;
 
 import static org.mockito.Mockito.times;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.mockito.Mockito;
@@ -16,6 +18,7 @@ import org.powermock.api.mockito.internal.expectation.DefaultConstructorArgument
 import org.powermock.api.mockito.internal.expectation.DefaultConstructorExpectationSetup;
 import org.powermock.api.mockito.internal.mockcreation.MockCreator;
 import org.powermock.api.mockito.internal.proxyframework.CgLibProxyFramework;
+import org.powermock.api.support.SuppressCode;
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.core.spi.NewInvocationControl;
@@ -350,6 +353,153 @@ public class PowerMockito {
     public static synchronized <T> ConstructorExpectationSetup<T> whenNew(String fullyQualifiedName) throws Exception {
         final Class<T> forName = (Class<T>) Class.forName(fullyQualifiedName);
         return new DefaultConstructorExpectationSetup<T>(forName);
+    }
+    
+    /**
+     * Suppress constructor calls on specific constructors only.
+     */
+    public static synchronized void suppressConstructor(Constructor<?>... constructors) {
+        SuppressCode.suppressConstructor(constructors);
+    }
+
+    /**
+     * This method can be used to suppress the code in a specific constructor.
+     * 
+     * @param clazz
+     *            The class where the constructor is located.
+     * @param parameterTypes
+     *            The parameter types of the constructor to suppress.
+     */
+    public static synchronized void suppressSpecificConstructor(Class<?> clazz, Class<?>... parameterTypes) {
+        SuppressCode.suppressSpecificConstructor(clazz, parameterTypes);
+    }
+
+    /**
+     * Suppress all constructors in the given class and it's super classes.
+     * 
+     * @param classes
+     *            The classes whose constructors will be suppressed.
+     */
+    public static synchronized void suppressConstructor(Class<?>... classes) {
+        SuppressCode.suppressConstructor(classes);
+    }
+
+    /**
+     * Suppress all constructors in the given class.
+     * 
+     * @param classes
+     *            The classes whose constructors will be suppressed.
+     * @param excludePrivateConstructors
+     *            optionally keep code in private constructors
+     */
+    public static synchronized void suppressConstructor(Class<?> clazz, boolean excludePrivateConstructors) {
+        SuppressCode.suppressConstructor(clazz, excludePrivateConstructors);
+    }
+
+    /**
+     * Suppress specific fields. This works on both instance methods and static
+     * methods. Note that replay and verify are not needed as this is not part
+     * of a mock behavior.
+     */
+    public static synchronized void suppressField(Field... fields) {
+        SuppressCode.suppressField(fields);
+    }
+
+    /**
+     * Suppress all fields for these classes.
+     */
+    public static synchronized void suppressField(Class<?>[] classes) {
+        SuppressCode.suppressField(classes);
+    }
+
+    /**
+     * Suppress multiple methods for a class.
+     * 
+     * @param classes
+     *            The class whose methods will be suppressed.
+     * @param fieldNames
+     *            The names of the methods that'll be suppressed. If field names
+     *            are empty, <i>all</i> fields in the supplied class will be
+     *            suppressed.
+     */
+    public static synchronized void suppressField(Class<?> clazz, String... fieldNames) {
+        SuppressCode.suppressField(clazz, fieldNames);
+    }
+
+    /**
+     * Suppress specific method calls on all types containing this method. This
+     * works on both instance methods and static methods. Note that replay and
+     * verify are not needed as this is not part of a mock behavior.
+     */
+    public static synchronized void suppressMethod(Method... methods) {
+        SuppressCode.suppressMethod(methods);
+    }
+
+    /**
+     * Suppress all methods for these classes.
+     * 
+     * @param cls
+     *            The first class whose methods will be suppressed.
+     * @param additionalClasses
+     *            Additional classes whose methods will be suppressed.
+     */
+    public static synchronized void suppressMethod(Class<?> cls, Class<?>... additionalClasses) {
+        SuppressCode.suppressMethod(cls, additionalClasses);
+    }
+
+    /**
+     * Suppress all methods for these classes.
+     * 
+     * @param classes
+     *            Classes whose methods will be suppressed.
+     */
+    public static synchronized void suppressMethod(Class<?>[] classes) {
+        SuppressCode.suppressMethod(classes);
+    }
+
+    /**
+     * Suppress multiple methods for a class.
+     * 
+     * @param clazz
+     *            The class whose methods will be suppressed.
+     * @param methodName
+     *            The first method to be suppress in class <code>clazz</code>.
+     * @param additionalMethodNames
+     *            Additional methods to suppress in class <code>clazz</code>.
+     */
+    public static synchronized void suppressMethod(Class<?> clazz, String methodName, String... additionalMethodNames) {
+        SuppressCode.suppressMethod(clazz, methodName, additionalMethodNames);
+    }
+
+    /**
+     * Suppress multiple methods for a class.
+     * 
+     * @param clazz
+     *            The class whose methods will be suppressed.
+     * @param methodNames
+     *            Methods to suppress in class <code>clazz</code>.
+     */
+    public static synchronized void suppressMethod(Class<?> clazz, String[] methodNames) {
+        SuppressCode.suppressMethod(clazz, methodNames);
+    }
+
+    /**
+     * suSuppress all methods for this class.
+     * 
+     * @param classes
+     *            The class which methods will be suppressed.
+     * @param excludePrivateMethods
+     *            optionally not suppress private methods
+     */
+    public static synchronized void suppressMethod(Class<?> clazz, boolean excludePrivateMethods) {
+        SuppressCode.suppressMethod(clazz, excludePrivateMethods);
+    }
+
+    /**
+     * Suppress a specific method call. Use this for overloaded methods.
+     */
+    public static synchronized void suppressMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
+        SuppressCode.suppressMethod(clazz, methodName, parameterTypes);
     }
 
     private static void assertValidMock(Class<?> mock) {

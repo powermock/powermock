@@ -44,6 +44,8 @@ Change log 1.3 (under development)
 * You can now mock construction of new objects using the Mockito extension. To do so use PowerMockito#whenNew(..), e.g. whenNew(MyClass.class).withArguments(myObject1, myObject2).thenReturn(myMock). Verification can be done with PowerMockito#verifyNew(..), e.g. verifyNew(MyClass.class).withArguments(myObject1, myObject2).
 * Annotation support has been integrated in the test runners (both for JUnit and TestNG) so there's no need to specify the AnnotationEnabler listener using @PowerMockListener(AnnotationEnabler.class). It works both for the EasyMock and Mockito extension API's. This means that org.powermock.api.easymock.powermocklistener.AnnotationEnabler and org.powermock.api.mockito.powermocklistener.AnnotationEnabler has been deprecated.
 * Whitebox#getInternalState(..) and Whitebox#setInternalState(..) now uses isAssignableFrom instead of equals when looking for field types.
+* Added a new api-support project that contains functionality shared between all mock API projects
+* Mockito extension API now supports suppressing constructors, fields and methods.
 
 Change log 1.2.5 (released 2009-05-05)
 --------------------------------------
