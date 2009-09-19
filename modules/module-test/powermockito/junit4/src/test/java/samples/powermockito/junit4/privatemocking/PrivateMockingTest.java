@@ -2,6 +2,7 @@ package samples.powermockito.junit4.privatemocking;
 
 import static org.junit.Assert.assertEquals;
 import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 import org.junit.Test;
@@ -16,25 +17,29 @@ import samples.privatemocking.PrivateMethodDemo;
 @PrepareForTest( { PrivateMethodDemo.class })
 public class PrivateMockingTest {
 
-	@Test
-	public void expectationsWorkWhenSpyingOnPrivateMethods() throws Exception {
-		PrivateMethodDemo tested = spy(new PrivateMethodDemo());
-		assertEquals("Hello Temp, you are 50 old.", tested.sayYear("Temp", 50));
+    @Test
+    public void expectationsWorkWhenSpyingOnPrivateMethods() throws Exception {
+        PrivateMethodDemo tested = spy(new PrivateMethodDemo());
+        assertEquals("Hello Temp, you are 50 old.", tested.sayYear("Temp", 50));
 
-		when(tested, "doSayYear", 12, "test").thenReturn("another");
+        when(tested, "doSayYear", 12, "test").thenReturn("another");
 
-		assertEquals("Hello Johan, you are 29 old.", tested.sayYear("Johan", 29));
-		assertEquals("another", tested.sayYear("test", 12));
-	}
+        assertEquals("Hello Johan, you are 29 old.", tested.sayYear("Johan", 29));
+        assertEquals("another", tested.sayYear("test", 12));
 
-	@Test
-	public void expectationsWorkWithArgumentMatchersWhenSpyingOnPrivateMethods() throws Exception {
-		PrivateMethodDemo tested = spy(new PrivateMethodDemo());
-		assertEquals("Hello Temp, you are 50 old.", tested.sayYear("Temp", 50));
+        verifyPrivate(tested).method("doSayYear", 12, "test");
+    }
 
-		when(tested, "doSayYear", Mockito.anyInt(), Mockito.anyString()).thenReturn("another");
+    @Test
+    public void expectationsWorkWithArgumentMatchersWhenSpyingOnPrivateMethods() throws Exception {
+        PrivateMethodDemo tested = spy(new PrivateMethodDemo());
+        assertEquals("Hello Temp, you are 50 old.", tested.sayYear("Temp", 50));
 
-		assertEquals("another", tested.sayYear("Johan", 29));
-		assertEquals("another", tested.sayYear("test", 12));
-	}
+        when(tested, "doSayYear", Mockito.anyInt(), Mockito.anyString()).thenReturn("another");
+
+        assertEquals("another", tested.sayYear("Johan", 29));
+        assertEquals("another", tested.sayYear("test", 12));
+
+        verifyPrivate(tested).method("doSayYear", 50, "Temp");
+    }
 }

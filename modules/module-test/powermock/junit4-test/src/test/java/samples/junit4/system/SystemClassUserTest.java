@@ -19,11 +19,11 @@ import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.powermock.api.easymock.PowerMock.expectLastCall;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.mockStaticPartial;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
-import static org.powermock.api.easymock.PowerMock.expectLastCall;
 
 import java.net.URLEncoder;
 import java.util.Collections;
@@ -39,120 +39,120 @@ import samples.system.SystemClassUser;
 
 /**
  * Demonstrates PowerMock's ability to mock non-final and final system classes.
- * To mock a system class you need to prepare the calling class and the unit
- * test it self for testing. I.e. let's say you're testing class A which
- * interacts with URLEncoder from a test named ATest then you would do:
+ * To mock a system class you need to prepare the calling class for testing.
+ * I.e. let's say you're testing class A which interacts with URLEncoder then
+ * you would do:
  * 
  * <pre>
  * 
- * &#064;PrepareForTest({A.class, ATest.class })
+ * &#064;PrepareForTest({A.class})
  * 
  * </pre>
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest( { SystemClassUser.class, SystemClassUserTest.class })
+@PrepareForTest( { SystemClassUser.class })
 public class SystemClassUserTest {
 
-	@Test
-	public void assertThatMockingOfNonFinalSystemClassesWorks() throws Exception {
-		mockStatic(URLEncoder.class);
+    @Test
+    public void assertThatMockingOfNonFinalSystemClassesWorks() throws Exception {
+        mockStatic(URLEncoder.class);
 
-		expect(URLEncoder.encode("string", "enc")).andReturn("something");
-		replayAll();
+        expect(URLEncoder.encode("string", "enc")).andReturn("something");
+        replayAll();
 
-		assertEquals("something", new SystemClassUser().performEncode());
+        assertEquals("something", new SystemClassUser().performEncode());
 
-		verifyAll();
-	}
+        verifyAll();
+    }
 
-	@Test
-	public void assertThatMockingOfTheRuntimeSystemClassWorks() throws Exception {
-		mockStatic(Runtime.class);
+    @Test
+    public void assertThatMockingOfTheRuntimeSystemClassWorks() throws Exception {
+        mockStatic(Runtime.class);
 
-		Runtime runtimeMock = createMock(Runtime.class);
-		Process processMock = createMock(Process.class);
+        Runtime runtimeMock = createMock(Runtime.class);
+        Process processMock = createMock(Process.class);
 
-		expect(Runtime.getRuntime()).andReturn(runtimeMock);
-		expect(runtimeMock.exec("command")).andReturn(processMock);
+        expect(Runtime.getRuntime()).andReturn(runtimeMock);
+        expect(runtimeMock.exec("command")).andReturn(processMock);
 
-		replayAll();
+        replayAll();
 
-		assertSame(processMock, new SystemClassUser().executeCommand());
+        assertSame(processMock, new SystemClassUser().executeCommand());
 
-		verifyAll();
-	}
+        verifyAll();
+    }
 
-	@Test
-	public void assertThatMockingOfFinalSystemClassesWorks() throws Exception {
-		mockStatic(System.class);
+    @Test
+    public void assertThatMockingOfFinalSystemClassesWorks() throws Exception {
+        mockStatic(System.class);
 
-		expect(System.getProperty("property")).andReturn("my property");
+        expect(System.getProperty("property")).andReturn("my property");
 
-		replayAll();
+        replayAll();
 
-		assertEquals("my property", new SystemClassUser().getSystemProperty());
+        assertEquals("my property", new SystemClassUser().getSystemProperty());
 
-		verifyAll();
-	}
+        verifyAll();
+    }
 
-	@Test
-	public void assertThatPartialMockingOfFinalSystemClassesWorks() throws Exception {
-		mockStaticPartial(System.class, "nanoTime");
+    @Test
+    public void assertThatPartialMockingOfFinalSystemClassesWorks() throws Exception {
+        mockStaticPartial(System.class, "nanoTime");
 
-		expect(System.nanoTime()).andReturn(2L);
+        expect(System.nanoTime()).andReturn(2L);
 
-		replayAll();
+        replayAll();
 
-		new SystemClassUser().doMoreComplicatedStuff();
+        new SystemClassUser().doMoreComplicatedStuff();
 
-		assertEquals("2", System.getProperty("nanoTime"));
+        assertEquals("2", System.getProperty("nanoTime"));
 
-		verifyAll();
-	}
+        verifyAll();
+    }
 
-	@Test
-	public void assertThatMockingOfCollectionsWork() throws Exception {
-		List<?> list = new LinkedList<Object>();
-		mockStatic(Collections.class);
+    @Test
+    public void assertThatMockingOfCollectionsWork() throws Exception {
+        List<?> list = new LinkedList<Object>();
+        mockStatic(Collections.class);
 
-		Collections.shuffle(list);
-		expectLastCall().once();
+        Collections.shuffle(list);
+        expectLastCall().once();
 
-		replayAll();
+        replayAll();
 
-		new SystemClassUser().shuffleCollection(list);
+        new SystemClassUser().shuffleCollection(list);
 
-		verifyAll();
-	}
+        verifyAll();
+    }
 
-	@Test
-	public void assertThatPartialMockingOfFinalSystemClassesWorksForNonVoidMethods() throws Exception {
-		mockStaticPartial(System.class, "getProperty");
+    @Test
+    public void assertThatPartialMockingOfFinalSystemClassesWorksForNonVoidMethods() throws Exception {
+        mockStaticPartial(System.class, "getProperty");
 
-		expect(System.getProperty("property")).andReturn("my property");
+        expect(System.getProperty("property")).andReturn("my property");
 
-		replayAll();
+        replayAll();
 
-		final SystemClassUser systemClassUser = new SystemClassUser();
-		systemClassUser.copyProperty("to", "property");
+        final SystemClassUser systemClassUser = new SystemClassUser();
+        systemClassUser.copyProperty("to", "property");
 
-		verifyAll();
-	}
+        verifyAll();
+    }
 
-	@Test
-	public void assertThatMockingStringWorks() throws Exception {
-		mockStatic(String.class);
-		final String string = "string";
-		final String args = "args";
-		final String returnValue = "returnValue";
+    @Test
+    public void assertThatMockingStringWorks() throws Exception {
+        mockStatic(String.class);
+        final String string = "string";
+        final String args = "args";
+        final String returnValue = "returnValue";
 
-		expect(String.format(string, args)).andReturn(returnValue);
+        expect(String.format(string, args)).andReturn(returnValue);
 
-		replayAll();
+        replayAll();
 
-		final SystemClassUser systemClassUser = new SystemClassUser();
-		assertEquals(systemClassUser.format(string, args), returnValue);
+        final SystemClassUser systemClassUser = new SystemClassUser();
+        assertEquals(systemClassUser.format(string, args), returnValue);
 
-		verifyAll();
-	}
+        verifyAll();
+    }
 }

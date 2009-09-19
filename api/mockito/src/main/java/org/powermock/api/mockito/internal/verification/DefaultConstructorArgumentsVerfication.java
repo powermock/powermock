@@ -1,8 +1,8 @@
-package org.powermock.api.mockito.internal.expectation;
+package org.powermock.api.mockito.internal.verification;
 
-import org.powermock.api.mockito.expectation.ConstructorArgumentsVerification;
 import org.powermock.api.mockito.internal.invocationcontrol.MockitoNewInvocationControl;
 import org.powermock.api.mockito.internal.invocationcontrol.NewInvocationControlAssertionError;
+import org.powermock.api.mockito.verification.ConstructorArgumentsVerification;
 import org.powermock.core.spi.NewInvocationControl;
 
 public class DefaultConstructorArgumentsVerfication<T> implements ConstructorArgumentsVerification {

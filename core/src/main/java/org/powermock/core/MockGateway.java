@@ -88,8 +88,13 @@ public class MockGateway {
                 throw e;
             }
         }
+        System.out.println("innan invoke " + method.getName());
         if (methodInvocationControl != null && methodInvocationControl.isMocked(method) && !shouldMockThisCall()) {
+//            if(WhiteboxImpl.isProxy(object.getClass())) {
+//                return PROCEED;
+//            }
             returnValue = methodInvocationControl.invoke(object, method, args);
+            System.out.println("efter invoke" + returnValue);
             if (returnValue == SUPPRESS) {
                 returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
             }
@@ -100,6 +105,8 @@ public class MockGateway {
         } else {
             returnValue = PROCEED;
         }
+
+        System.out.println("Returning " + (returnValue == PROCEED ? "proceed" : returnValue));
         return returnValue;
     }
 

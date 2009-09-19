@@ -16,7 +16,7 @@ public class ProxyFrameworkImpl implements ProxyFramework {
         Class<?> currentType = type;
         while (isProxy(currentType)) {
             for (Class<?> i : currentType.getInterfaces()) {
-                if (!i.equals(Factory.class)) {
+                if (!i.getName().equals(Factory.class.getName())) {
                     return i;
                 }
             }
@@ -32,6 +32,6 @@ public class ProxyFrameworkImpl implements ProxyFramework {
         if (type == null) {
             return false;
         }
-        return type.getName().contains("$$EnhancerByCGLIB$$") || Enhancer.isEnhanced(type);
+        return type.getName().contains("$$EnhancerByMockitoWithCGLIB$$") || Enhancer.isEnhanced(type);
     }
 }

@@ -38,9 +38,6 @@ public class PartialMockingExampleDefect {
 
 	@Test
 	public void validatingSpiedObjectGivesCorrectNumberOfExpectedInvocations() throws Exception {
-		/*
-		 * This doesn't work because when
-		 */
 		final String expected = "TEST VALUE";
 		PartialMockingExample underTest = spy(new PartialMockingExample());
 		when(underTest.methodToMock()).thenReturn(expected);

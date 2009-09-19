@@ -1,4 +1,4 @@
-package org.powermock.api.mockito.expectation;
+package org.powermock.api.mockito.verification;
 
 public interface ConstructorArgumentsVerification {
 

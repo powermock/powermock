@@ -12,11 +12,13 @@ import org.mockito.exceptions.misusing.NullInsteadOfMockException;
 import org.mockito.internal.progress.MockingProgress;
 import org.mockito.internal.verification.api.VerificationMode;
 import org.mockito.stubbing.OngoingStubbing;
-import org.powermock.api.mockito.expectation.ConstructorArgumentsVerification;
 import org.powermock.api.mockito.expectation.ConstructorExpectationSetup;
-import org.powermock.api.mockito.internal.expectation.DefaultConstructorArgumentsVerfication;
 import org.powermock.api.mockito.internal.expectation.DefaultConstructorExpectationSetup;
 import org.powermock.api.mockito.internal.mockcreation.MockCreator;
+import org.powermock.api.mockito.internal.verification.DefaultConstructorArgumentsVerfication;
+import org.powermock.api.mockito.internal.verification.DefaultPrivateMethodVerification;
+import org.powermock.api.mockito.verification.ConstructorArgumentsVerification;
+import org.powermock.api.mockito.verification.PrivateMethodVerification;
 import org.powermock.api.support.SuppressCode;
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.MethodInvocationControl;
@@ -103,6 +105,52 @@ public class PowerMockito {
      */
     public static synchronized void verifyStatic(Class<?> mock) {
         verifyStatic(mock, times(1));
+    }
+
+    /**
+     * Verify a private method invocation for an instance.
+     * 
+     * @see {@link Mockito#verify(Object)}
+     * @throws Exception
+     *             If something unexpected goes wrong.
+     */
+    public static PrivateMethodVerification verifyPrivate(Object object) throws Exception {
+        return verifyPrivate(object, times(1));
+    }
+
+    /**
+     * Verify a private method invocation with a given verification mode.
+     * 
+     * @see {@link Mockito#verify(Object)}
+     * @throws Exception
+     *             If something unexpected goes wrong.
+     */
+    public static PrivateMethodVerification verifyPrivate(Object object, VerificationMode verificationMode) throws Exception {
+        Whitebox.getInternalState(Mockito.class, MockingProgress.class).verificationStarted(verificationMode);
+        return new DefaultPrivateMethodVerification(object);
+    }
+
+    /**
+     * Verify a private method invocation for a class.
+     * 
+     * @see {@link Mockito#verify(Object)}
+     * @throws Exception
+     *             If something unexpected goes wrong.
+     */
+    public static PrivateMethodVerification verifyPrivate(Class<?> clazz) throws Exception {
+        return verifyPrivate((Object) clazz);
+    }
+
+    /**
+     * Verify a private method invocation for a class with a given verification
+     * mode.
+     * 
+     * @see {@link Mockito#verify(Object)}
+     * @throws Exception
+     *             If something unexpected goes wrong.
+     */
+    public static PrivateMethodVerification verifyPrivate(Class<?> clazz, VerificationMode verificationMode) throws Exception {
+        return verifyPrivate((Object) clazz, verificationMode);
     }
 
     /**
