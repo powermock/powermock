@@ -79,7 +79,7 @@ public class MockitoNewInvocationControl<T> implements NewInvocationControl<Ongo
      */
     public synchronized Object verify(Object... mocks) {
         if (!hasVerified) {
-            final VerificationMode verificationMode; 
+            final VerificationMode verificationMode;
             Object mode = MockRepository.getAdditionalState("VerificationMode");
             if (mode != null) {
                 if (mode instanceof VerificationMode) {
@@ -88,7 +88,7 @@ public class MockitoNewInvocationControl<T> implements NewInvocationControl<Ongo
                     throw new IllegalStateException("Internal error. VerificationMode in MockRepository was not of type "
                             + VerificationMode.class.getName() + ".");
                 }
-            }else {
+            } else {
                 verificationMode = times(1);
             }
             Mockito.verify(substitute, verificationMode);
@@ -105,5 +105,14 @@ public class MockitoNewInvocationControl<T> implements NewInvocationControl<Ongo
         Mockito.<InvocationSubstitute<T>> reset(substitute);
         hasVerified = false;
         return null;
+    }
+
+    public void verifyNoMoreInteractions() {
+        try {
+            Mockito.verifyNoMoreInteractions(substitute);
+        } catch (MockitoAssertionError e) {
+            InvocationControlAssertionError.updateErrorMessageForVerifyNoMoreInteractions(e);
+            throw e;
+        }
     }
 }

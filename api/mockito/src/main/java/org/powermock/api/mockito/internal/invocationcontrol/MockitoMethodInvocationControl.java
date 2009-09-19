@@ -235,7 +235,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
         try {
             return mockHandler.handle(invocation);
         } catch (MockitoAssertionError e) {
-            InvocationControlAssertionError.updateErrorMessageForMethodInvocation(e, null);
+            InvocationControlAssertionError.updateErrorMessageForMethodInvocation(e);
             throw e;
         }
     }
@@ -253,6 +253,15 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
             throw new IllegalArgumentException("Must supply one mock to the verify method.");
         }
         return Mockito.verify(mocks[0]);
+    }
+
+    public void verifyNoMoreInteractions() {
+        try {
+            invocationHandler.getMockHandler().verifyNoMoreInteractions();
+        } catch (MockitoAssertionError e) {
+            InvocationControlAssertionError.updateErrorMessageForVerifyNoMoreInteractions(e);
+            throw e;
+        }
     }
 
     private Set<Method> toSet(Method... methods) {

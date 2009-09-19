@@ -2,23 +2,61 @@ package org.powermock.api.mockito.internal.invocationcontrol;
 
 import java.util.regex.Matcher;
 
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.reflect.Whitebox;
 
 public class InvocationControlAssertionError {
+    private static final String AT = "at";
     private static final String ERROR_LOCATION_MARKER = "->";
     private static final String COLON_NEWLINE = ":\n";
     private static final String HERE_TEXT = "here:\n";
     private static final String UNDESIRED_INVOCATION_TEXT = " Undesired invocation:";
 
-    public static void updateErrorMessageForMethodInvocation(AssertionError oldError, Class<?> type) {
+    public static void updateErrorMessageForVerifyNoMoreInteractions(AssertionError errorToUpdate) {
+        /*
+         * VerifyNoMoreInteractions failed, we need to update the error message.
+         */
+        String verifyNoMoreInteractionsInvocation = null;
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        for (int i = stackTrace.length - 1; i >= 0; i--) {
+            final StackTraceElement stackTraceElement = stackTrace[i];
+            if (stackTraceElement.getClassName().equals(PowerMockito.class.getName())
+                    && stackTraceElement.getMethodName().equals("verifyNoMoreInteractions")) {
+                final int invocationStackTraceIndex;
+                if (stackTrace[i + 1].getClassName().equals(PowerMockito.class.getName())
+                        && stackTrace[i + 1].getMethodName().equals("verifyZeroInteractions")) {
+                    invocationStackTraceIndex = i + 2;
+                } else {
+                    invocationStackTraceIndex = i + 1;
+                }
+                verifyNoMoreInteractionsInvocation = stackTrace[invocationStackTraceIndex].toString();
+            }
+        }
+
+        if (verifyNoMoreInteractionsInvocation == null) {
+            // Something unexpected happened, just return
+            return;
+        }
+        String message = errorToUpdate.getMessage();
+        StringBuilder builder = new StringBuilder();
+        builder.append(message);
+        final int indexOfFirstAt = message.indexOf(AT);
+        final int startOfVerifyNoMoreInteractionsInvocation = indexOfFirstAt + AT.length() + 1;
+        final int endOfVerifyNoMoreInteractionsInvocation = message.indexOf('\n', indexOfFirstAt + AT.length());
+        builder.replace(startOfVerifyNoMoreInteractionsInvocation, endOfVerifyNoMoreInteractionsInvocation, verifyNoMoreInteractionsInvocation);
+        builder.delete(builder.indexOf("\n", endOfVerifyNoMoreInteractionsInvocation + 1), builder.lastIndexOf("\n"));
+        Whitebox.setInternalState(errorToUpdate, builder.toString());
+    }
+
+    public static void updateErrorMessageForMethodInvocation(AssertionError errorToUpdate) {
         /*
          * We failed to verify the new substitution mock. This happens when, for
          * example, the user has done something like
          * whenNew(MyClass.class).thenReturn(myMock).times(3) when in fact an
          * instance of MyClass has been created less or more times than 3.
          */
-        Whitebox.setInternalState(oldError, "\n" + changeMessageContent(oldError.getMessage()));
+        Whitebox.setInternalState(errorToUpdate, "\n" + changeMessageContent(errorToUpdate.getMessage()));
     }
 
     public static void throwAssertionErrorForNewSubstitutionFailure(AssertionError oldError, Class<?> type) {

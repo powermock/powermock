@@ -15,6 +15,7 @@ import org.powermock.api.mockito.internal.expectation.DefaultConstructorExpectat
 import org.powermock.api.mockito.internal.mockcreation.MockCreator;
 import org.powermock.api.mockito.internal.verification.DefaultConstructorArgumentsVerfication;
 import org.powermock.api.mockito.internal.verification.DefaultPrivateMethodVerification;
+import org.powermock.api.mockito.internal.verification.VerifyNoMoreInteractions;
 import org.powermock.api.mockito.verification.ConstructorArgumentsVerification;
 import org.powermock.api.mockito.verification.PrivateMethodVerification;
 import org.powermock.api.support.SuppressCode;
@@ -125,7 +126,6 @@ public class PowerMockito {
      */
     public static synchronized void verifyStatic(VerificationMode verificationMode) {
         Whitebox.getInternalState(Mockito.class, MockingProgress.class).verificationStarted(verificationMode);
-
     }
 
     /**
@@ -387,6 +387,86 @@ public class PowerMockito {
     public static synchronized <T> ConstructorExpectationSetup<T> whenNew(String fullyQualifiedName) throws Exception {
         final Class<T> forName = (Class<T>) Class.forName(fullyQualifiedName);
         return new DefaultConstructorExpectationSetup<T>(forName);
+    }
+
+    /**
+     * Checks if any of given mocks (can be both instance and class mocks) has
+     * any unverified interaction. Delegates to the orignal
+     * {@link Mockito#verifyNoMoreInteractions(Object...)} if the mock is not a
+     * PowerMockito mock.
+     * <p>
+     * You can use this method after you verified your mocks - to make sure that
+     * nothing else was invoked on your mocks.
+     * <p>
+     * See also {@link Mockito#never()} - it is more explicit and communicates
+     * the intent well.
+     * <p>
+     * Stubbed invocations (if called) are also treated as interactions.
+     * <p>
+     * A word of <b>warning</b>: Some users who did a lot of classic,
+     * expect-run-verify mocking tend to use verifyNoMoreInteractions() very
+     * often, even in every test method. verifyNoMoreInteractions() is not
+     * recommended to use in every test method. verifyNoMoreInteractions() is a
+     * handy assertion from the interaction testing toolkit. Use it only when
+     * it's relevant. Abusing it leads to overspecified, less maintainable
+     * tests. You can find further reading <a href=
+     * "http://monkeyisland.pl/2008/07/12/should-i-worry-about-the-unexpected/"
+     * >here</a>.
+     * <p>
+     * This method will also detect unverified invocations that occurred before
+     * the test method, for example: in setUp(), &#064;Before method or in
+     * constructor. Consider writing nice code that makes interactions only in
+     * test methods.
+     * 
+     * <p>
+     * Example:
+     * 
+     * <pre>
+     * //interactions
+     * mock.doSomething();
+     * mock.doSomethingUnexpected();
+     * 
+     * //verification
+     * verify(mock).doSomething();
+     * 
+     * //following will fail because 'doSomethingUnexpected()' is unexpected
+     * verifyNoMoreInteractions(mock);
+     * 
+     * </pre>
+     * 
+     * See examples in javadoc for {@link Mockito} class
+     * 
+     * @param mocks
+     *            to be verified
+     */
+    public static void verifyNoMoreInteractions(Object... mocks) {
+        VerifyNoMoreInteractions.verifyNoMoreInteractions(mocks);
+    }
+
+    /**
+     * Verifies that no interactions happened on given mocks (can be both
+     * instance and class mocks). Delegates to the orignal
+     * {@link Mockito#verifyNoMoreInteractions(Object...)} if the mock is not a
+     * PowerMockito mock.
+     * 
+     * <pre>
+     * verifyZeroInteractions(mockOne, mockTwo);
+     * </pre>
+     * 
+     * This method will also detect invocations that occurred before the test
+     * method, for example: in setUp(), &#064;Before method or in constructor.
+     * Consider writing nice code that makes interactions only in test methods.
+     * <p>
+     * See also {@link Mockito#never()} - it is more explicit and communicates
+     * the intent well.
+     * <p>
+     * See examples in javadoc for {@link Mockito} class
+     * 
+     * @param mocks
+     *            to be verified
+     */
+    public static void verifyZeroInteractions(Object... mocks) {
+        VerifyNoMoreInteractions.verifyNoMoreInteractions(mocks);
     }
 
     /**
