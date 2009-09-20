@@ -25,7 +25,6 @@ import static org.powermock.api.easymock.PowerMock.verify;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.annotation.Mock;
-import org.powermock.api.easymock.powermocklistener.AnnotationEnabler;
 import org.powermock.core.classloader.annotations.PowerMockListener;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.testlisteners.FieldDefaulter;
@@ -40,7 +39,7 @@ import samples.finalmocking.FinalDemo;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(FinalDemo.class)
-@PowerMockListener( { AnnotationEnabler.class, FieldDefaulter.class })
+@PowerMockListener( { FieldDefaulter.class })
 public class FinalDemoWithAnnotationInjectionAndFieldDefaulterTest {
 
 	@SuppressWarnings("unused")
