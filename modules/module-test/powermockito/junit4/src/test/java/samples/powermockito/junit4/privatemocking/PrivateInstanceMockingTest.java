@@ -22,7 +22,7 @@ import samples.privatemocking.PrivateMethodDemo;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { PrivateMethodDemo.class })
-public class PrivateMockingTest {
+public class PrivateInstanceMockingTest {
 
 	@Test
 	public void expectationsWorkWhenSpyingOnPrivateMethods() throws Exception {
