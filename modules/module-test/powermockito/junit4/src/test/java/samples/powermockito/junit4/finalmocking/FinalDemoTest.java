@@ -17,12 +17,15 @@ package samples.powermockito.junit4.finalmocking;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
+import static org.powermock.api.mockito.PowerMockito.when;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -35,7 +38,7 @@ import samples.privateandfinal.PrivateFinal;
  * Test class to demonstrate non-static final mocking with Mockito.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(FinalDemo.class)
+@PrepareForTest( { FinalDemo.class, PrivateFinal.class })
 public class FinalDemoTest {
 
 	@Test
@@ -104,11 +107,17 @@ public class FinalDemoTest {
 	}
 
 	@Test
+	@Ignore("Must work for 1.3")
 	public void assertSpyingOnPrivateFinalInstanceMethodWorks() throws Exception {
-		PrivateFinal tested = new PrivateFinal();
-		PrivateFinal spy = spy(tested);
-		
-//		doThrow(new ArrayStoreException()).when;
-		
+		PrivateFinal spy = spy(new PrivateFinal());
+
+		final String expected = "test";
+		assertEquals("Hello " + expected, spy.say(expected));
+
+		when(spy, "sayIt", isA(String.class)).thenReturn(expected);
+
+		assertEquals(expected, spy.say(expected));
+
+		verifyPrivate(spy).invocation("sayIt", expected);
 	}
 }

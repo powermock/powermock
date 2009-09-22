@@ -19,6 +19,7 @@ import static org.mockito.Mockito.times;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 import org.mockito.Mockito;
@@ -40,6 +41,7 @@ import org.powermock.api.mockito.internal.verification.DefaultPrivateMethodVerif
 import org.powermock.api.mockito.internal.verification.VerifyNoMoreInteractions;
 import org.powermock.api.mockito.verification.ConstructorArgumentsVerification;
 import org.powermock.api.mockito.verification.PrivateMethodVerification;
+import org.powermock.api.support.MethodProxy;
 import org.powermock.api.support.Stubber;
 import org.powermock.api.support.SuppressCode;
 import org.powermock.core.MockRepository;
@@ -837,5 +839,21 @@ public class PowerMockito {
 	 */
 	public static void stubMethod(Class<?> declaringClass, String methodName, Object returnObject) {
 		Stubber.stubMethod(declaringClass, methodName, returnObject);
+	}
+
+	/**
+	 * Add a proxy for this method. Each call to the method will be routed to
+	 * the invocationHandler instead.
+	 */
+	public static void proxy(Method method, InvocationHandler invocationHandler) {
+		MethodProxy.proxy(method, invocationHandler);
+	}
+
+	/**
+	 * Add a proxy for a method declared in class <code>declaringClass</code>.
+	 * Each call to the method will be routed to the invocationHandler instead.
+	 */
+	public static void proxy(Class<?> declaringClass, String methodName, InvocationHandler invocationHandler) {
+		MethodProxy.proxy(declaringClass, methodName, invocationHandler);
 	}
 }

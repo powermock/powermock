@@ -16,6 +16,7 @@
 package org.powermock.core;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
@@ -92,9 +93,24 @@ public class MockGateway {
 			if (returnValue == SUPPRESS) {
 				returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
 			}
+		} else if (MockRepository.hasMethodProxy(method)) {
+			/*
+			 * We must temporary remove the method proxy when invoking the
+			 * invocation handler because if the invocation handler delegates
+			 * the call we will end up here again and we'll get a
+			 * StackOverflowError.
+			 */
+			final InvocationHandler invocationHandler = MockRepository.removeMethodProxy(method);
+			try {
+				returnValue = invocationHandler.invoke(object, method, args);
+			} finally {
+				// Set the method proxy again after the invocation
+				MockRepository.putMethodProxy(method, invocationHandler);
+			}
+
 		} else if (MockRepository.shouldSuppressMethod(method)) {
 			returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
-		} else if (MockRepository.hasSubstituteReturnValue(method)) {
+		} else if (MockRepository.shouldStubMethod(method)) {
 			returnValue = MockRepository.getMethodToStub(method);
 		} else {
 			returnValue = PROCEED;

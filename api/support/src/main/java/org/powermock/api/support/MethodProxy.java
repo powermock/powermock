@@ -15,6 +15,7 @@
  */
 package org.powermock.api.support;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 import org.powermock.core.MockRepository;
@@ -22,20 +23,22 @@ import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.exceptions.MethodNotFoundException;
 import org.powermock.reflect.exceptions.TooManyMethodsFoundException;
 
-public class Stubber {
+public class MethodProxy {
 	/**
-	 * Add a method that should be intercepted and return another value (
-	 * <code>returnObject</code>) (i.e. the method is stubbed).
+	 * Add a proxy for this method. Each call to the method will be routed to
+	 * the invocationHandler instead.
 	 */
-	public static void stubMethod(Method method, Object returnObject) {
-		MockRepository.putMethodToStub(method, returnObject);
+	public static void proxy(Method method, InvocationHandler invocationHandler) {
+		assertInvocationHandlerNotNull(invocationHandler);
+		MockRepository.putMethodProxy(method, invocationHandler);
 	}
 
 	/**
-	 * Add a method that should be intercepted and return another value (
-	 * <code>returnObject</code>) (i.e. the method is stubbed).
+	 * Add a proxy for a method declared in class <code>declaringClass</code>.
+	 * Each call to the method will be routed to the invocationHandler instead.
 	 */
-	public static void stubMethod(Class<?> declaringClass, String methodName, Object returnObject) {
+	public static void proxy(Class<?> declaringClass, String methodName, InvocationHandler invocationHandler) {
+		assertInvocationHandlerNotNull(invocationHandler);
 		if (declaringClass == null) {
 			throw new IllegalArgumentException("declaringClass cannot be null");
 		}
@@ -51,7 +54,12 @@ public class Stubber {
 					methodName, declaringClass.getName()));
 		}
 
-		MockRepository.putMethodToStub(methods[0], returnObject);
+		MockRepository.putMethodProxy(methods[0], invocationHandler);
 	}
 
+	private static void assertInvocationHandlerNotNull(InvocationHandler invocationHandler) {
+		if (invocationHandler == null) {
+			throw new IllegalArgumentException("invocationHandler cannot be null");
+		}
+	}
 }
