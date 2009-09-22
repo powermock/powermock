@@ -30,92 +30,90 @@ import java.util.Map;
  * overrides all previous configurations.
  */
 public interface MockPolicyInterceptionSettings {
-	/**
-	 * Set which methods to suppress. Note that this overrides all previous
-	 * configurations.
-	 */
-	void setMethodsToSuppress(Method[] methods);
+    /**
+     * Set which methods to suppress. Note that this overrides all previous
+     * configurations.
+     */
+    void setMethodsToSuppress(Method[] methods);
 
-	/**
-	 * Add methods to suppress upon invocation.
-	 */
-	void addMethodsToSuppress(Method methodToSuppress, Method... additionalMethodsToSuppress);
+    /**
+     * Add methods to suppress upon invocation.
+     */
+    void addMethodsToSuppress(Method methodToSuppress, Method... additionalMethodsToSuppress);
 
-	/**
-	 * Add methods to suppress upon invocation.
-	 */
-	void addMethodsToSuppress(Method[] methods);
+    /**
+     * Add methods to suppress upon invocation.
+     */
+    void addMethodsToSuppress(Method[] methods);
 
-	/**
-	 * Set the substitute return values. The substitute return values is a
-	 * key-value map where each key is a method that should be intercepted and
-	 * each value is the new return value for that method when it's intercepted.
-	 * <p>
-	 * Note that this overrides all previous configurations.
-	 */
-	void setSubtituteReturnValues(Map<Method, Object> substituteReturnValues);
+    /**
+     * Set the substitute return values. The substitute return values is a
+     * key-value map where each key is a method that should be intercepted and
+     * each value is the new return value for that method when it's intercepted.
+     * <p>
+     * Note that this overrides all previous configurations.
+     */
+    void setMethodsToStub(Map<Method, Object> substituteReturnValues);
 
-	/**
-	 * Add a method that should be intercepted and return another value (
-	 * <code>returnObject</code>). The substitute return values is a key-value
-	 * map where each key is a method that should be intercepted and each value
-	 * is the new return value for that method when it's intercepted.
-	 */
-	void addSubtituteReturnValue(Method method, Object returnObject);
+    /**
+     * Add a method that should be intercepted and return another value (
+     * <code>returnObject</code>) (i.e. the method is stubbed).
+     */
+    void stubMethod(Method method, Object returnObject);
 
-	/**
-	 * Set specific fields that should be suppressed upon invocation. Note that
-	 * this overrides all previous configurations.
-	 */
-	void setFieldsSuppress(Field[] fields);
+    /**
+     * Set specific fields that should be suppressed upon invocation. Note that
+     * this overrides all previous configurations.
+     */
+    void setFieldsSuppress(Field[] fields);
 
-	/**
-	 * Add specific fields that should be suppressed upon invocation.
-	 */
-	void addFieldToSuppress(Field firstField, Field... additionalFields);
+    /**
+     * Add specific fields that should be suppressed upon invocation.
+     */
+    void addFieldToSuppress(Field firstField, Field... additionalFields);
 
-	/**
-	 * Add specific fields that should be suppressed upon invocation.
-	 */
-	void addFieldToSuppress(Field[] fields);
+    /**
+     * Add specific fields that should be suppressed upon invocation.
+     */
+    void addFieldToSuppress(Field[] fields);
 
-	/**
-	 * Set which field types that should be suppressed. Note that this overrides
-	 * all previous configurations.
-	 */
-	void setFieldTypesToSuppress(String[] fieldTypes);
+    /**
+     * Set which field types that should be suppressed. Note that this overrides
+     * all previous configurations.
+     */
+    void setFieldTypesToSuppress(String[] fieldTypes);
 
-	/**
-	 * Add field types that should be suppressed.
-	 */
-	void addFieldTypesToSuppress(String firstType, String... additionalFieldTypes);
+    /**
+     * Add field types that should be suppressed.
+     */
+    void addFieldTypesToSuppress(String firstType, String... additionalFieldTypes);
 
-	/**
-	 * Add field types that should be suppressed.
-	 */
-	void addFieldTypesToSuppress(String[] fieldTypes);
+    /**
+     * Add field types that should be suppressed.
+     */
+    void addFieldTypesToSuppress(String[] fieldTypes);
 
-	/**
-	 * @return Which methods that should be suppressed/stubbed (i.e. return a
-	 *         default value when invoked).
-	 */
-	Method[] getMethodsToSuppress();
+    /**
+     * @return Which methods that should be suppressed/stubbed (i.e. return a
+     *         default value when invoked).
+     */
+    Method[] getMethodsToSuppress();
 
-	/**
-	 * Get all substitute return values and also returns an unmodifiable map of
-	 * all method-object pairs the were initialized.
-	 */
-	Map<Method, Object> getSubtituteReturnValues();
+    /**
+     * Get all substitute return values and also returns an unmodifiable map of
+     * all method-object pairs the were initialized.
+     */
+    Map<Method, Object> getStubbedMethods();
 
-	/**
-	 * @return Which fields should be suppressed (i.e. will be set to
-	 *         <code>null</code> or other default values).
-	 */
-	Field[] getFieldsToSuppress();
+    /**
+     * @return Which fields should be suppressed (i.e. will be set to
+     *         <code>null</code> or other default values).
+     */
+    Field[] getFieldsToSuppress();
 
-	/**
-	 * @return The fully-qualified names to the fields that should be
-	 *         suppressed.
-	 */
-	String[] getFieldTypesToSuppress();
+    /**
+     * @return The fully-qualified names to the fields that should be
+     *         suppressed.
+     */
+    String[] getFieldTypesToSuppress();
 }

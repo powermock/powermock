@@ -36,6 +36,6 @@ public class SimpleFrameworkMockPolicy implements PowerMockPolicy {
 	public void applyInterceptionPolicy(MockPolicyInterceptionSettings settings) {
 		final Method doNativeStuffMethod = Whitebox.getMethod(SimpleFramework.class, String.class);
 		NativeResult nativeResult = new NativeResult(NATIVE_RESULT_VALUE);
-		settings.addSubtituteReturnValue(doNativeStuffMethod, nativeResult);
+		settings.stubMethod(doNativeStuffMethod, nativeResult);
 	}
 }

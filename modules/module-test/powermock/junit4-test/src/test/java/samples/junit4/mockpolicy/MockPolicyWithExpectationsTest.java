@@ -63,6 +63,6 @@ class MockPolicyExpectationsExample implements PowerMockPolicy {
 		replay(calculatorMock);
 
 		Method calculateMethod = Whitebox.getMethod(ResultCalculator.class, "calculate");
-		settings.addSubtituteReturnValue(calculateMethod, calculatorMock.calculate());
+		settings.stubMethod(calculateMethod, calculatorMock.calculate());
 	}
 }

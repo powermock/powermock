@@ -59,7 +59,7 @@ abstract class AbstractEasyMockLogPolicyBase implements PowerMockPolicy {
 		makeThreadSafe(loggerMock, true);
 
 		for (Method method : loggerFactoryMethods) {
-			settings.addSubtituteReturnValue(method, loggerMock);
+			settings.stubMethod(method, loggerMock);
 		}
 	}
 

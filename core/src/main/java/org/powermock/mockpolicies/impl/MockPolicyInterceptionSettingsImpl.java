@@ -62,7 +62,7 @@ public class MockPolicyInterceptionSettingsImpl implements MockPolicyInterceptio
 		return methodsToSuppress.toArray(new Method[methodsToSuppress.size()]);
 	}
 
-	public Map<Method, Object> getSubtituteReturnValues() {
+	public Map<Method, Object> getStubbedMethods() {
 		return Collections.unmodifiableMap(substituteReturnValues);
 	}
 
@@ -88,7 +88,7 @@ public class MockPolicyInterceptionSettingsImpl implements MockPolicyInterceptio
 		}
 	}
 
-	public void addSubtituteReturnValue(Method method, Object returnObject) {
+	public void stubMethod(Method method, Object returnObject) {
 		substituteReturnValues.put(method, returnObject);
 	}
 
@@ -102,7 +102,7 @@ public class MockPolicyInterceptionSettingsImpl implements MockPolicyInterceptio
 		addMethodsToSuppress(methods);
 	}
 
-	public void setSubtituteReturnValues(Map<Method, Object> substituteReturnValues) {
+	public void setMethodsToStub(Map<Method, Object> substituteReturnValues) {
 		this.substituteReturnValues = substituteReturnValues;
 	}
 

@@ -317,7 +317,7 @@ public class MockRepository {
      * @return The substitute return value for a particular method, may be
      *         <code>null</code>.
      */
-    public static synchronized Object getSubstituteReturnValue(Method method) {
+    public static synchronized Object getMethodToStub(Method method) {
         return substituteReturnValues.get(method);
     }
 
@@ -327,7 +327,7 @@ public class MockRepository {
      * 
      * @return The previous substitute value if any.
      */
-    public static synchronized Object putSubstituteReturnValue(Method method, Object value) {
+    public static synchronized Object putMethodToStub(Method method, Object value) {
         return substituteReturnValues.put(method, value);
     }
 }

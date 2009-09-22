@@ -54,6 +54,8 @@ Change log 1.3 (under development)
 * Mockito extension API now supports verification of private methods (for both static and instance methods). Use verifyPrivate(..).invocation(..), e.g. verifyPrivate(myObject, times(2)).invocation("myMethod", argument1, argument2).
 * Verification behavior of static method in the Mockito extension API has changed. Before you did "verifyStatic(MyClass.class); MyClass.methodToVerify(argument);", now you do "verifyStatic(); MyClass.methodToVerify(argument);". You can also pass a verification mode when verifying static methods: "verifyStatic(times(2)); MyClass.methodToVerify(argument);". This change is NOT backward compatible with version 1.2.5.
 * Mockito extension API now supports "verifyNoMoreInteractions" and "verifyZeroInteractions" for both instance mocks, class mocks and new instance mocks.
+* Name changes in MockPolicyInterceptionSettings for MockPolicies: Renamed setSubstituteReturnValues to setMethodsToStub, addSubtituteReturnValue to stubMethod and getSubtituteReturnValues to getStubbedMethods
+* Renamed MockRepository#getSubstituteReturnValue to getMethodToStub and MockRepository#putSubstituteReturnValue to putMethodToStub.
 
 Change log 1.2.5 (released 2009-05-05)
 --------------------------------------

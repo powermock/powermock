@@ -46,6 +46,6 @@ public class MyCustomMockPolicy implements PowerMockPolicy {
 	public void applyInterceptionPolicy(MockPolicyInterceptionSettings settings) {
 		final Method getDataMethod = Whitebox.getMethod(Dependency.class);
 		final DataObject dataObject = new DataObject("Policy generated data object");
-		settings.addSubtituteReturnValue(getDataMethod, dataObject);
+		settings.stubMethod(getDataMethod, dataObject);
 	}
 }

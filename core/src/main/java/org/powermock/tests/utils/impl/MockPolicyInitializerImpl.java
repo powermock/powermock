@@ -151,10 +151,10 @@ public class MockPolicyInitializerImpl implements MockPolicyInitializer {
 			MockRepository.addMethodToSuppress(method);
 		}
 
-		for (Entry<Method, Object> entry : interceptionSettings.getSubtituteReturnValues().entrySet()) {
+		for (Entry<Method, Object> entry : interceptionSettings.getStubbedMethods().entrySet()) {
 			final Method method = entry.getKey();
 			final Object className = entry.getValue();
-			MockRepository.putSubstituteReturnValue(method, className);
+			MockRepository.putMethodToStub(method, className);
 		}
 
 		for (Field field : interceptionSettings.getFieldsToSuppress()) {

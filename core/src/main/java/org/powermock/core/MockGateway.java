@@ -95,7 +95,7 @@ public class MockGateway {
         } else if (MockRepository.shouldSuppressMethod(method)) {
             returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
         } else if (MockRepository.hasSubstituteReturnValue(method)) {
-            returnValue = MockRepository.getSubstituteReturnValue(method);
+            returnValue = MockRepository.getMethodToStub(method);
         } else {
             returnValue = PROCEED;
         }
