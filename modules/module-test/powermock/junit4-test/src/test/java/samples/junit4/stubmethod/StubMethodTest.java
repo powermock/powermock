@@ -92,4 +92,13 @@ public class StubMethodTest {
         assertEquals(expected, SuppressMethod.getObjectStatic());
         assertEquals(expected, SuppressMethod.getObjectStatic());
     }
+
+    @Test(expected = ClassCastException.class)
+    public void whenStubbingInstanceMethodWithWrongReturnTypeThenClasscastExceptionIsThrown() throws Exception {
+        String illegalReturnType = "Hello";
+        stubMethod(Whitebox.getMethod(SuppressMethod.class, "getFloat"), illegalReturnType);
+        SuppressMethod tested = new SuppressMethod();
+        tested.getFloat();
+
+    }
 }
