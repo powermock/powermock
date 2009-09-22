@@ -21,5 +21,13 @@ public final class FinalDemo {
 		return "Hello " + string;
 	}
 
+	public final void finalVoidCaller() {
+		finalVoidCallee();
+	}
+
+	public final void finalVoidCallee() {
+		System.err.println("void method");
+	}
+
 	public final native String sayFinalNative(String string);
 }

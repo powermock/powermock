@@ -15,12 +15,9 @@
  */
 package org.powermock.core;
 
-import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.powermock.reflect.Whitebox;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;

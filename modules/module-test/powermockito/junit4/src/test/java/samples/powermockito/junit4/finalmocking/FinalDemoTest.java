@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.spy;
 
@@ -28,6 +29,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import samples.finalmocking.FinalDemo;
+import samples.privateandfinal.PrivateFinal;
 
 /**
  * Test class to demonstrate non-static final mocking with Mockito.
@@ -89,5 +91,24 @@ public class FinalDemoTest {
 		assertEquals("Hello " + argument, spy.say(argument));
 		when(spy.say(argument)).thenReturn(expected);
 		assertEquals(expected, spy.say(argument));
+	}
+
+	@Test(expected = ArrayStoreException.class)
+	public void assertSpyingOnFinalVoidInstanceMethodWorks() throws Exception {
+		FinalDemo tested = new FinalDemo();
+		FinalDemo spy = spy(tested);
+
+		doThrow(new ArrayStoreException()).when(spy).finalVoidCallee();
+
+		spy.finalVoidCaller();
+	}
+
+	@Test
+	public void assertSpyingOnPrivateFinalInstanceMethodWorks() throws Exception {
+		PrivateFinal tested = new PrivateFinal();
+		PrivateFinal spy = spy(tested);
+		
+//		doThrow(new ArrayStoreException()).when;
+		
 	}
 }

@@ -21,11 +21,11 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.exceptions.base.MockitoAssertionError;
@@ -44,136 +44,137 @@ import samples.singleton.StaticService;
 @PrepareForTest( { StaticService.class, StaticHelper.class })
 public class MockStaticTest {
 
-    @Test
-    public void testMockStaticNoExpectations() throws Exception {
-        mockStatic(StaticService.class);
-        assertNull(StaticService.say("hello"));
+	@Test
+	public void testMockStaticNoExpectations() throws Exception {
+		mockStatic(StaticService.class);
+		assertNull(StaticService.say("hello"));
 
-        // Verification is done in two steps using static methods.
-        verifyStatic();
-        StaticService.say("hello");
-    }
+		// Verification is done in two steps using static methods.
+		verifyStatic();
+		StaticService.say("hello");
+	}
 
-    @Test
-    public void testMockStaticWithExpectations() throws Exception {
-        final String expected = "Hello world";
-        final String argument = "hello";
+	@Test
+	public void testMockStaticWithExpectations() throws Exception {
+		final String expected = "Hello world";
+		final String argument = "hello";
 
-        mockStatic(StaticService.class);
+		mockStatic(StaticService.class);
 
-        when(StaticService.say(argument)).thenReturn(expected);
+		when(StaticService.say(argument)).thenReturn(expected);
 
-        assertEquals(expected, StaticService.say(argument));
+		assertEquals(expected, StaticService.say(argument));
 
-        // Verification is done in two steps using static methods.
-        verifyStatic();
-        StaticService.say(argument);
-    }
+		// Verification is done in two steps using static methods.
+		verifyStatic();
+		StaticService.say(argument);
+	}
 
-    @Test
-    public void errorousVerificationOfStaticMethodsGivesANonMockitoStandardMessage() throws Exception {
-        final String expected = "Hello world";
-        final String argument = "hello";
+	@Test
+	public void errorousVerificationOfStaticMethodsGivesANonMockitoStandardMessage() throws Exception {
+		final String expected = "Hello world";
+		final String argument = "hello";
 
-        mockStatic(StaticService.class);
+		mockStatic(StaticService.class);
 
-        when(StaticService.say(argument)).thenReturn(expected);
+		when(StaticService.say(argument)).thenReturn(expected);
 
-        assertEquals(expected, StaticService.say(argument));
+		assertEquals(expected, StaticService.say(argument));
 
-        // Verification is done in two steps using static methods.
-        verifyStatic(times(2));
-        try {
-            StaticService.say(argument);
-            fail("Should throw assertion error");
-        } catch (MockitoAssertionError e) {
-            assertEquals("\nsamples.singleton.StaticService.say(\"hello\");\nWanted 2 times but was 1 time.", e.getMessage());
-        }
-    }
+		// Verification is done in two steps using static methods.
+		verifyStatic(times(2));
+		try {
+			StaticService.say(argument);
+			fail("Should throw assertion error");
+		} catch (MockitoAssertionError e) {
+			assertEquals("\nsamples.singleton.StaticService.say(\"hello\");\nWanted 2 times but was 1 time.", e.getMessage());
+		}
+	}
 
-    @Test(expected = IllegalStateException.class)
-    public void testMockStaticThatThrowsException() throws Exception {
-        final String argument = "hello";
+	@Test(expected = IllegalStateException.class)
+	public void testMockStaticThatThrowsException() throws Exception {
+		final String argument = "hello";
 
-        mockStatic(StaticService.class);
+		mockStatic(StaticService.class);
 
-        when(StaticService.say(argument)).thenThrow(new IllegalStateException());
+		when(StaticService.say(argument)).thenThrow(new IllegalStateException());
 
-        StaticService.say(argument);
-    }
+		StaticService.say(argument);
+	}
 
-    @Test(expected = ArgumentsAreDifferent.class)
-    public void testMockStaticVerificationFails() throws Exception {
-        mockStatic(StaticService.class);
-        assertNull(StaticService.say("hello"));
+	@Test(expected = ArgumentsAreDifferent.class)
+	public void testMockStaticVerificationFails() throws Exception {
+		mockStatic(StaticService.class);
+		assertNull(StaticService.say("hello"));
 
-        // Verification is done in two steps using static methods.
-        verifyStatic();
-        StaticService.say("Hello");
-    }
+		// Verification is done in two steps using static methods.
+		verifyStatic();
+		StaticService.say("Hello");
+	}
 
-    @Test
-    public void testMockStaticAtLeastOnce() throws Exception {
-        mockStatic(StaticService.class);
-        assertNull(StaticService.say("hello"));
-        assertNull(StaticService.say("hello"));
+	@Test
+	public void testMockStaticAtLeastOnce() throws Exception {
+		mockStatic(StaticService.class);
+		assertNull(StaticService.say("hello"));
+		assertNull(StaticService.say("hello"));
 
-        // Verification is done in two steps using static methods.
-        verifyStatic(atLeastOnce());
-        StaticService.say("hello");
-    }
+		// Verification is done in two steps using static methods.
+		verifyStatic(atLeastOnce());
+		StaticService.say("hello");
+	}
 
-    @Test
-    public void testMockStaticCorrectTimes() throws Exception {
-        mockStatic(StaticService.class);
-        assertNull(StaticService.say("hello"));
-        assertNull(StaticService.say("hello"));
+	@Test
+	public void testMockStaticCorrectTimes() throws Exception {
+		mockStatic(StaticService.class);
+		assertNull(StaticService.say("hello"));
+		assertNull(StaticService.say("hello"));
 
-        // Verification is done in two steps using static methods.
-        verifyStatic(times(2));
-        StaticService.say("hello");
-    }
+		// Verification is done in two steps using static methods.
+		verifyStatic(times(2));
+		StaticService.say("hello");
+	}
 
-    @Test(expected = TooLittleActualInvocations.class)
-    public void testMockStaticIncorrectTimes() throws Exception {
-        mockStatic(StaticService.class);
-        assertNull(StaticService.say("hello"));
-        assertNull(StaticService.say("hello"));
+	@Test(expected = TooLittleActualInvocations.class)
+	public void testMockStaticIncorrectTimes() throws Exception {
+		mockStatic(StaticService.class);
+		assertNull(StaticService.say("hello"));
+		assertNull(StaticService.say("hello"));
 
-        // Verification is done in two steps using static methods.
-        verifyStatic(times(3));
-        StaticService.say("hello");
-    }
+		// Verification is done in two steps using static methods.
+		verifyStatic(times(3));
+		StaticService.say("hello");
+	}
 
-    @Test
-    public void testMockStaticVoidWithNoExpectations() throws Exception {
-        mockStatic(StaticService.class);
+	@Test
+	public void testMockStaticVoidWithNoExpectations() throws Exception {
+		mockStatic(StaticService.class);
 
-        StaticService.sayHello();
+		StaticService.sayHello();
 
-        verifyStatic();
-        StaticService.sayHello();
-    }
+		verifyStatic();
+		StaticService.sayHello();
+	}
 
-    @Test
-    @Ignore("TODO: Handle void throws etc for methods")
-    public void testMockStaticVoidWhenThrowingException() throws Exception {
-        mockStatic(StaticService.class);
+	@Test(expected = ArrayStoreException.class)
+	public void testMockStaticVoidWhenThrowingException() throws Exception {
+		mockStatic(StaticService.class);
 
-        // doThrow(new IllegalStateException()).when(StaticService.sayHello());
+		// Expectations
+		doThrow(new ArrayStoreException("Mock error")).when(StaticService.class);
+		StaticService.sayHello();
 
-        verifyStatic();
-        StaticService.sayHello();
-    }
+		// Test
+		StaticService.sayHello();
+	}
 
-    @Test
-    public void testSpyOnStaticMethods() throws Exception {
-        spy(StaticService.class);
+	@Test
+	public void testSpyOnStaticMethods() throws Exception {
+		spy(StaticService.class);
 
-        String expectedMockValue = "expected";
-        when(StaticService.say("world")).thenReturn(expectedMockValue);
+		String expectedMockValue = "expected";
+		when(StaticService.say("world")).thenReturn(expectedMockValue);
 
-        assertEquals(expectedMockValue, StaticService.say("world"));
-        assertEquals("Hello world2", StaticService.say("world2"));
-    }
+		assertEquals(expectedMockValue, StaticService.say("world"));
+		assertEquals("Hello world2", StaticService.say("world2"));
+	}
 }
