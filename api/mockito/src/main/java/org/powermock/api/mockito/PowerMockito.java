@@ -18,6 +18,7 @@ import org.powermock.api.mockito.internal.verification.DefaultPrivateMethodVerif
 import org.powermock.api.mockito.internal.verification.VerifyNoMoreInteractions;
 import org.powermock.api.mockito.verification.ConstructorArgumentsVerification;
 import org.powermock.api.mockito.verification.PrivateMethodVerification;
+import org.powermock.api.support.Stubber;
 import org.powermock.api.support.SuppressCode;
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.NewInvocationControl;
@@ -303,7 +304,8 @@ public class PowerMockito {
      * @throws Exception
      *             If something unexpected goes wrong.
      */
-    public static <T> OngoingStubbing<T> when(Object instance, Class<?> declaringClass, String methodToExecute, Object... arguments) throws Exception {
+    public static <T> OngoingStubbing<T> when(Object instance, Class<?> declaringClass, String methodToExecute, Object... arguments)
+            throws Exception {
         return Mockito.when(Whitebox.<T> invokeMethod(instance, declaringClass, methodToExecute, arguments));
     }
 
@@ -614,5 +616,21 @@ public class PowerMockito {
      */
     public static synchronized void suppressMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
         SuppressCode.suppressMethod(clazz, methodName, parameterTypes);
+    }
+
+    /**
+     * Add a method that should be intercepted and return another value (
+     * <code>returnObject</code>) (i.e. the method is stubbed).
+     */
+    public static void stubMethod(Method method, Object returnObject) {
+        Stubber.stubMethod(method, returnObject);
+    }
+
+    /**
+     * Add a method that should be intercepted and return another value (
+     * <code>returnObject</code>) (i.e. the method is stubbed).
+     */
+    public static void stubMethod(Class<?> declaringClass, String methodName, Object returnObject) {
+        Stubber.stubMethod(declaringClass, methodName, returnObject);
     }
 }

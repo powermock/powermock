@@ -56,6 +56,7 @@ Change log 1.3 (under development)
 * Mockito extension API now supports "verifyNoMoreInteractions" and "verifyZeroInteractions" for both instance mocks, class mocks and new instance mocks.
 * Name changes in MockPolicyInterceptionSettings for MockPolicies: Renamed setSubstituteReturnValues to setMethodsToStub, addSubtituteReturnValue to stubMethod and getSubtituteReturnValues to getStubbedMethods
 * Renamed MockRepository#getSubstituteReturnValue to getMethodToStub and MockRepository#putSubstituteReturnValue to putMethodToStub.
+* PowerMock and PowerMockito now supports stubbing methods (including private methods). Use PowerMock#stubMethod or PowerMockito#stubMethod to accomplish this.
 
 Change log 1.2.5 (released 2009-05-05)
 --------------------------------------
