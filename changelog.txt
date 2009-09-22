@@ -58,7 +58,7 @@ Change log 1.3 (under development)
 * Renamed MockRepository#getSubstituteReturnValue to getMethodToStub and MockRepository#putSubstituteReturnValue to putMethodToStub.
 * PowerMock and PowerMockito now supports stubbing methods (including private methods). Use PowerMock#stubMethod or PowerMockito#stubMethod to accomplish this.
 * PowerMockito now supports, doAnswer, doThrow, doCallRealMethod, doNothing and doReturn for void methods defined in final classes, final void methods and static methods. Note that if a method is a private void method you should still use PowerMockito#when.
-*PowerMock and PowerMockito now supports proxying methods, including private methods using proxy(..), e.g. proxy(MyClass.class, "methodToProxy", myInvocationHandler). Every call to the "methodToProxy" method will be routed to the supplied invocation handler instead.
+* PowerMock and PowerMockito now supports proxying methods, including private methods using proxy(..), e.g. proxy(MyClass.class, "methodToProxy", myInvocationHandler). Every call to the "methodToProxy" method will be routed to the supplied invocation handler instead.
 
 Change log 1.2.5 (released 2009-05-05)
 --------------------------------------
