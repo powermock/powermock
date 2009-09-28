@@ -41,83 +41,83 @@ import samples.privateandfinal.PrivateFinal;
 @PrepareForTest( { FinalDemo.class, PrivateFinal.class })
 public class FinalDemoTest {
 
-	@Test
-	public void assertMockFinalWithNoExpectationsWorks() throws Exception {
-		final String argument = "hello";
+    @Test
+    public void assertMockFinalWithNoExpectationsWorks() throws Exception {
+        final String argument = "hello";
 
-		FinalDemo tested = mock(FinalDemo.class);
+        FinalDemo tested = mock(FinalDemo.class);
 
-		assertNull(tested.say(argument));
+        assertNull(tested.say(argument));
 
-		verify(tested).say(argument);
-	}
+        verify(tested).say(argument);
+    }
 
-	@Test
-	public void assertMockFinalWithExpectationsWorks() throws Exception {
-		final String argument = "hello";
-		final String expected = "Hello altered World";
+    @Test
+    public void assertMockFinalWithExpectationsWorks() throws Exception {
+        final String argument = "hello";
+        final String expected = "Hello altered World";
 
-		FinalDemo tested = mock(FinalDemo.class);
+        FinalDemo tested = mock(FinalDemo.class);
 
-		when(tested.say(argument)).thenReturn(expected);
+        when(tested.say(argument)).thenReturn(expected);
 
-		final String actual = tested.say(argument);
+        final String actual = tested.say(argument);
 
-		verify(tested).say(argument);
+        verify(tested).say(argument);
 
-		assertEquals("Expected and actual did not match", expected, actual);
-	}
+        assertEquals("Expected and actual did not match", expected, actual);
+    }
 
-	@Test
-	public void assertFinalNativeWithExpectationsWorks() throws Exception {
-		final String expected = "Hello altered World";
-		final String argument = "hello";
+    @Test
+    public void assertFinalNativeWithExpectationsWorks() throws Exception {
+        final String expected = "Hello altered World";
+        final String argument = "hello";
 
-		FinalDemo tested = mock(FinalDemo.class);
+        FinalDemo tested = mock(FinalDemo.class);
 
-		when(tested.sayFinalNative(argument)).thenReturn("Hello altered World");
+        when(tested.sayFinalNative(argument)).thenReturn("Hello altered World");
 
-		String actual = tested.sayFinalNative(argument);
+        String actual = tested.sayFinalNative(argument);
 
-		verify(tested).sayFinalNative(argument);
-		assertEquals("Expected and actual did not match", expected, actual);
-	}
+        verify(tested).sayFinalNative(argument);
+        assertEquals("Expected and actual did not match", expected, actual);
+    }
 
-	@Test
-	public void assertSpyingOnFinalInstanceMethodWorks() throws Exception {
-		FinalDemo tested = new FinalDemo();
-		FinalDemo spy = spy(tested);
+    @Test
+    public void assertSpyingOnFinalInstanceMethodWorks() throws Exception {
+        FinalDemo tested = new FinalDemo();
+        FinalDemo spy = spy(tested);
 
-		final String argument = "PowerMock";
-		final String expected = "something";
+        final String argument = "PowerMock";
+        final String expected = "something";
 
-		assertEquals("Hello " + argument, spy.say(argument));
-		when(spy.say(argument)).thenReturn(expected);
-		assertEquals(expected, spy.say(argument));
-	}
+        assertEquals("Hello " + argument, spy.say(argument));
+        when(spy.say(argument)).thenReturn(expected);
+        assertEquals(expected, spy.say(argument));
+    }
 
-	@Test(expected = ArrayStoreException.class)
-	public void assertSpyingOnFinalVoidInstanceMethodWorks() throws Exception {
-		FinalDemo tested = new FinalDemo();
-		FinalDemo spy = spy(tested);
+    @Test(expected = ArrayStoreException.class)
+    @Ignore
+    public void assertSpyingOnFinalVoidInstanceMethodWorks() throws Exception {
+        FinalDemo tested = new FinalDemo();
+        FinalDemo spy = spy(tested);
 
-		doThrow(new ArrayStoreException()).when(spy).finalVoidCallee();
+        doThrow(new ArrayStoreException()).when(spy).finalVoidCallee();
 
-		spy.finalVoidCaller();
-	}
+        spy.finalVoidCaller();
+    }
 
-	@Test
-	@Ignore("Must work for 1.3")
-	public void assertSpyingOnPrivateFinalInstanceMethodWorks() throws Exception {
-		PrivateFinal spy = spy(new PrivateFinal());
+    @Test
+    public void assertSpyingOnPrivateFinalInstanceMethodWorks() throws Exception {
+        PrivateFinal spy = spy(new PrivateFinal());
 
-		final String expected = "test";
-		assertEquals("Hello " + expected, spy.say(expected));
+        final String expected = "test";
+        assertEquals("Hello " + expected, spy.say(expected));
 
-		when(spy, "sayIt", isA(String.class)).thenReturn(expected);
+        when(spy, "sayIt", isA(String.class)).thenReturn(expected);
 
-		assertEquals(expected, spy.say(expected));
+        assertEquals(expected, spy.say(expected));
 
-		verifyPrivate(spy).invocation("sayIt", expected);
-	}
+        verifyPrivate(spy).invocation("sayIt", expected);
+    }
 }

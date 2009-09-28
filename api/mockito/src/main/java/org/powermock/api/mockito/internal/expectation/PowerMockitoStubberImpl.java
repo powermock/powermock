@@ -30,37 +30,37 @@ import org.powermock.reflect.Whitebox;
  */
 public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockitoStubber {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void when(Class<?> classMock) {
-		MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository
-				.getStaticMethodInvocationControl(classMock);
-		addAnswersForStubbing(invocationControl);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public void when(Class<?> classMock) {
+        MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository
+                .getStaticMethodInvocationControl(classMock);
+        addAnswersForStubbing(invocationControl);
+    }
 
-	/**
-	 * Supports PowerMockito mocks. If <code>mock</code> is not a PowerMockito
-	 * mock it will delegate to Mockito.
-	 * 
-	 * @see Stubber#when(Object)
-	 */
-	@Override
-	public <T> T when(T instanceMock) {
-		MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository
-				.getInstanceMethodInvocationControl(instanceMock);
-		final T returnValue;
-		if (invocationControl == null) {
-			returnValue = super.when(instanceMock);
-		} else {
-			addAnswersForStubbing(invocationControl);
-			returnValue = instanceMock;
-		}
-		return returnValue;
-	}
+    /**
+     * Supports PowerMockito mocks. If <code>mock</code> is not a PowerMockito
+     * mock it will delegate to Mockito.
+     * 
+     * @see Stubber#when(Object)
+     */
+    @Override
+    public <T> T when(T instanceMock) {
+        MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository
+                .getInstanceMethodInvocationControl(instanceMock);
+        final T returnValue;
+        if (invocationControl == null) {
+            returnValue = super.when(instanceMock);
+        } else {
+            addAnswersForStubbing(invocationControl);
+            returnValue = instanceMock;
+        }
+        return returnValue;
+    }
 
-	@SuppressWarnings("unchecked")
-	private void addAnswersForStubbing(MockitoMethodInvocationControl invocationControl) {
-		invocationControl.getInvocationHandler().getMockHandler().setAnswersForStubbing(Whitebox.getInternalState(this, List.class));
-	}
+    @SuppressWarnings("unchecked")
+    private void addAnswersForStubbing(MockitoMethodInvocationControl invocationControl) {
+        invocationControl.getInvocationHandler().getMockHandler().setAnswersForStubbing(Whitebox.getInternalState(this, List.class));
+    }
 }

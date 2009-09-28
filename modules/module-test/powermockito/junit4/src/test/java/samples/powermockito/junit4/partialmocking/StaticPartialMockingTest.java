@@ -21,7 +21,6 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -34,12 +33,10 @@ import samples.singleton.StaticExample;
 public class StaticPartialMockingTest {
 
 	@Test
-	@Ignore("Must work til version 1.3")
 	public void partialMockingOfStaticMethodReturningObjectWorks() throws Exception {
 		spy(StaticExample.class);
 
 		assertTrue(Object.class.equals(StaticExample.objectMethod().getClass()));
-
 		when(StaticExample.class, "privateObjectMethod").thenReturn("Hello static");
 
 		assertEquals("Hello static", StaticExample.objectMethod());
@@ -47,7 +44,6 @@ public class StaticPartialMockingTest {
 	}
 
 	@Test
-	@Ignore("Must work til version 1.3")
 	public void partialMockingOfStaticFinalMethodReturningObjectWorks() throws Exception {
 		spy(StaticExample.class);
 
