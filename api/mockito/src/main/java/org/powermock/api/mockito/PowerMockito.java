@@ -47,7 +47,6 @@ import org.powermock.api.support.SuppressCode;
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.NewInvocationControl;
 import org.powermock.reflect.Whitebox;
-import org.powermock.reflect.internal.WhiteboxImpl;
 
 /**
  * PowerMockito extends Mockito functionality with several new features such as

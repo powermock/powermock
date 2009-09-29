@@ -26,7 +26,6 @@ import org.powermock.core.MockRepository;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.MainMockTransformer;
-import org.powermock.modules.testng.internal.FakeInterface;
 import org.powermock.modules.testng.internal.HierarchicalMethodInvoker;
 import org.powermock.modules.testng.internal.PowerMockTestNGMethodHandler;
 import org.powermock.modules.testng.internal.TestNGMethodFilter;
