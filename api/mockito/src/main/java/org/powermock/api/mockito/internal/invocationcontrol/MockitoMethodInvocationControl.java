@@ -38,7 +38,6 @@ import org.mockito.internal.progress.SequenceNumber;
 import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.internal.reporting.PrintSettings;
 import org.mockito.internal.verification.api.VerificationMode;
-import org.powermock.api.mockito.internal.PowerMockitoWhenRepository;
 import org.powermock.core.MockGateway;
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.MethodInvocationControl;
@@ -136,10 +135,8 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
          * invocation and thus we should delegate the call to the Mockito proxy.
          */
         final Object returnValue;
-        boolean isInReplay = PowerMockitoWhenRepository.hasState(obj, method);
-        if (hasDelegator()
-                && ((!isInReplay && hasBeenCaughtByMockitoProxy()) || !Modifier.isPrivate(method.getModifiers())
-                        && !Modifier.isFinal(method.getModifiers()) && hasBeenCaughtByMockitoProxy())) {
+        if (hasDelegator() && !Modifier.isPrivate(method.getModifiers()) && !Modifier.isFinal(method.getModifiers())
+                && hasBeenCaughtByMockitoProxy()) {
             returnValue = MockGateway.PROCEED;
         } else {
             returnValue = performIntercept(methodInterceptorFilter, obj, method, arguments);

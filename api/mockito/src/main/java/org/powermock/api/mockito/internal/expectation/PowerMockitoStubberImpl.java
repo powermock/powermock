@@ -20,7 +20,6 @@ import java.util.List;
 import org.mockito.internal.stubbing.StubberImpl;
 import org.mockito.stubbing.Stubber;
 import org.powermock.api.mockito.expectation.PowerMockitoStubber;
-import org.powermock.api.mockito.internal.PowerMockitoWhenRepository;
 import org.powermock.api.mockito.internal.invocationcontrol.MockitoMethodInvocationControl;
 import org.powermock.core.MockRepository;
 import org.powermock.reflect.Whitebox;
@@ -35,7 +34,6 @@ public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockito
      * {@inheritDoc}
      */
     public void when(Class<?> classMock) {
-        PowerMockitoWhenRepository.add(classMock, null);
         MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository
                 .getStaticMethodInvocationControl(classMock);
         addAnswersForStubbing(invocationControl);
@@ -49,7 +47,6 @@ public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockito
      */
     @Override
     public <T> T when(T instanceMock) {
-        PowerMockitoWhenRepository.add(instanceMock, null);
         MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository
                 .getInstanceMethodInvocationControl(instanceMock);
         final T returnValue;

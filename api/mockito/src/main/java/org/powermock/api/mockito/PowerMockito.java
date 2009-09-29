@@ -34,7 +34,6 @@ import org.mockito.stubbing.OngoingStubbing;
 import org.powermock.api.mockito.expectation.ConstructorExpectationSetup;
 import org.powermock.api.mockito.expectation.PowerMockitoStubber;
 import org.powermock.api.mockito.internal.PowerMockitoCore;
-import org.powermock.api.mockito.internal.PowerMockitoWhenRepository;
 import org.powermock.api.mockito.internal.expectation.DefaultConstructorExpectationSetup;
 import org.powermock.api.mockito.internal.mockcreation.MockCreator;
 import org.powermock.api.mockito.internal.verification.DefaultConstructorArgumentsVerfication;
@@ -48,7 +47,6 @@ import org.powermock.api.support.SuppressCode;
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.NewInvocationControl;
 import org.powermock.reflect.Whitebox;
-import org.powermock.reflect.internal.WhiteboxImpl;
 
 /**
  * PowerMockito extends Mockito functionality with several new features such as
@@ -276,9 +274,7 @@ public class PowerMockito {
      *             If something unexpected goes wrong.
      */
     public static <T> OngoingStubbing<T> when(Object instance, String methodName, Object... arguments) throws Exception {
-        Method methodToInvoke = WhiteboxImpl.findMethodOrThrowException(instance, null, methodName, arguments);
-        whenStarted(instance, methodToInvoke);
-        return Mockito.when(WhiteboxImpl.<T> performMethodInvocation(instance, methodToInvoke, arguments));
+        return Mockito.when(Whitebox.<T> invokeMethod(instance, methodName, arguments));
     }
 
     /**
@@ -291,9 +287,7 @@ public class PowerMockito {
      *             If something unexpected goes wrong.
      */
     public static <T> OngoingStubbing<T> when(Object instance, Object... arguments) throws Exception {
-        Method methodToInvoke = WhiteboxImpl.findMethodOrThrowException(instance, null, null, arguments);
-        whenStarted(instance, methodToInvoke);
-        return Mockito.when(WhiteboxImpl.<T> performMethodInvocation(instance, methodToInvoke, arguments));
+        return Mockito.when(Whitebox.<T> invokeMethod(instance, arguments));
     }
 
     /**
@@ -308,7 +302,6 @@ public class PowerMockito {
      */
     public static <T> OngoingStubbing<T> when(Object instance, String methodToExecute, Class<?>[] argumentTypes, Object... arguments)
             throws Exception {
-        // whenStarted(instance);
         return Mockito.when(Whitebox.<T> invokeMethod(instance, methodToExecute, argumentTypes, arguments));
     }
 
@@ -325,7 +318,6 @@ public class PowerMockito {
      */
     public static <T> OngoingStubbing<T> when(Object instance, String methodToExecute, Class<?> definedIn, Class<?>[] argumentTypes,
             Object... arguments) throws Exception {
-        // whenStarted(instance);
         return Mockito.when(Whitebox.<T> invokeMethod(instance, methodToExecute, definedIn, argumentTypes, arguments));
     }
 
@@ -339,7 +331,6 @@ public class PowerMockito {
      */
     public static <T> OngoingStubbing<T> when(Object instance, Class<?> declaringClass, String methodToExecute, Object... arguments)
             throws Exception {
-        // whenStarted(instance);
         return Mockito.when(Whitebox.<T> invokeMethod(instance, declaringClass, methodToExecute, arguments));
     }
 
@@ -355,7 +346,6 @@ public class PowerMockito {
      */
     public static <T> OngoingStubbing<T> when(Object object, Class<?> declaringClass, String methodToExecute, Class<?>[] parameterTypes,
             Object... arguments) throws Exception {
-        // whenStarted(object);
         return Mockito.when(Whitebox.<T> invokeMethod(object, declaringClass, methodToExecute, parameterTypes, arguments));
     }
 
@@ -367,14 +357,12 @@ public class PowerMockito {
      *             If something unexpected goes wrong.
      */
     public static <T> OngoingStubbing<T> when(Class<?> clazz, String methodToExecute, Object... arguments) throws Exception {
-        Method methodToInvoke = WhiteboxImpl.findMethodOrThrowException(clazz, null, methodToExecute, arguments);
-        whenStarted(clazz, methodToInvoke);
-        return Mockito.when(WhiteboxImpl.<T> performMethodInvocation(clazz, methodToInvoke, arguments));
+        return Mockito.when(Whitebox.<T> invokeMethod(clazz, methodToExecute, arguments));
     }
 
     /**
-     * Expect calls to private methods without having to specify the method
-     * name. The method will be looked up using the parameter types (if
+     * Expect calls to private static methods without having to specify the
+     * method name. The method will be looked up using the parameter types (if
      * possible).
      * 
      * @see {@link Mockito#when(Object)}
@@ -382,9 +370,7 @@ public class PowerMockito {
      *             If something unexpected goes wrong.
      */
     public static <T> OngoingStubbing<T> when(Class<?> klass, Object... arguments) throws Exception {
-        Method methodToInvoke = WhiteboxImpl.findMethodOrThrowException(klass, null, null, arguments);
-        whenStarted(klass, methodToInvoke);
-        return Mockito.when(WhiteboxImpl.<T> performMethodInvocation(klass, methodToInvoke, arguments));
+        return Mockito.when(Whitebox.<T> invokeMethod(klass, arguments));
     }
 
     /**
@@ -870,9 +856,5 @@ public class PowerMockito {
      */
     public static void proxy(Class<?> declaringClass, String methodName, InvocationHandler invocationHandler) {
         MethodProxy.proxy(declaringClass, methodName, invocationHandler);
-    }
-
-    private static void whenStarted(Object instance, Method methodToInvoke) {
-        PowerMockitoWhenRepository.add(instance, methodToInvoke);
     }
 }

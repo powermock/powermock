@@ -18,6 +18,7 @@ package samples.powermockito.junit4.finalmocking;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.mock;
@@ -25,7 +26,6 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -117,6 +117,6 @@ public class FinalDemoTest {
 
         assertEquals(expected, spy.say(expected));
 
-        verifyPrivate(spy).invocation("sayIt", expected);
+        verifyPrivate(spy, times(2)).invocation("sayIt", expected);
     }
 }
