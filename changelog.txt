@@ -60,6 +60,8 @@ Change log 1.3 (under development)
 * PowerMockito now supports, doAnswer, doThrow, doCallRealMethod, doNothing and doReturn for void methods defined in final classes, final void methods and static methods. Note that if a method is a private void method you should still use PowerMockito#when.
 * PowerMock and PowerMockito now supports proxying methods, including private methods using proxy(..), e.g. proxy(MyClass.class, "methodToProxy", myInvocationHandler). Every call to the "methodToProxy" method will be routed to the supplied invocation handler instead.
 * Removed the deprecated classes "org.powermock.PowerMock" and "org.powermock.Whitebox".
+* PowerMock support API now has a DeepCloner class that you can use to create a clone of an object. This clone can also be cloned to a different classloader.
+* Added a PowerMock classloading project which can be used to execute any Runnable or Callable in a different classloader. The result of a callable operation will be cloned to the the callers classloader.
 
 Change log 1.2.5 (released 2009-05-05)
 --------------------------------------
