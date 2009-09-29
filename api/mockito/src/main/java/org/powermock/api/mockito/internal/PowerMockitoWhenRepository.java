@@ -22,7 +22,9 @@ public class PowerMockitoWhenRepository {
             methods = new LinkedList<Method>();
             additionalState.put(object, methods);
         }
-        methods.add(method);
+        if (method != null) {
+            methods.add(method);
+        }
     }
 
     public static boolean hasState(Object object, Method method) {
@@ -31,8 +33,10 @@ public class PowerMockitoWhenRepository {
             return false;
         }
         List<Method> list = additionalState.get(object);
-        if (list == null || list.isEmpty()) {
+        if (list == null) {
             return false;
+        } else if (list.isEmpty()) {
+            return true;
         }
         return list.contains(method);
     }

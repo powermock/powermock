@@ -97,7 +97,6 @@ public class FinalDemoTest {
     }
 
     @Test(expected = ArrayStoreException.class)
-    @Ignore
     public void assertSpyingOnFinalVoidInstanceMethodWorks() throws Exception {
         FinalDemo tested = new FinalDemo();
         FinalDemo spy = spy(tested);
