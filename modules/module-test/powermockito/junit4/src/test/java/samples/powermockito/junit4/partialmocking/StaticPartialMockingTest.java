@@ -45,7 +45,7 @@ public class StaticPartialMockingTest {
          * privateObjectMethod should be invoked twice, once at "assertTrue" and
          * once above.
          */
-        verifyPrivate(StaticExample.class, times(2)).invocation("privateObjectMethod");
+        verifyPrivate(StaticExample.class, times(2)).invoke("privateObjectMethod");
     }
 
     @Test
@@ -58,7 +58,7 @@ public class StaticPartialMockingTest {
 
         assertEquals("Hello static", StaticExample.objectFinalMethod());
 
-        verifyPrivate(StaticExample.class, times(2)).invocation("privateObjectFinalMethod");
+        verifyPrivate(StaticExample.class, times(2)).invoke("privateObjectFinalMethod");
     }
 
     @Test(expected = ArrayStoreException.class)

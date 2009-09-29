@@ -34,7 +34,7 @@ public class PrivateInstanceMockingTest {
         assertEquals("Hello Johan, you are 29 old.", tested.sayYear("Johan", 29));
         assertEquals("another", tested.sayYear("test", 12));
 
-        verifyPrivate(tested).invocation("doSayYear", 12, "test");
+        verifyPrivate(tested).invoke("doSayYear", 12, "test");
     }
 
     @Test
@@ -47,9 +47,9 @@ public class PrivateInstanceMockingTest {
         assertEquals("another", tested.sayYear("Johan", 29));
         assertEquals("another", tested.sayYear("test", 12));
 
-        verifyPrivate(tested).invocation("doSayYear", 29, "Johan");
-        verifyPrivate(tested).invocation("doSayYear", 12, "test");
-        verifyPrivate(tested).invocation("doSayYear", 50, "Temp");
+        verifyPrivate(tested).invoke("doSayYear", 29, "Johan");
+        verifyPrivate(tested).invoke("doSayYear", 12, "test");
+        verifyPrivate(tested).invoke("doSayYear", 50, "Temp");
     }
 
     @Test
@@ -63,7 +63,7 @@ public class PrivateInstanceMockingTest {
         assertEquals("another", tested.sayYear("test", 12));
 
         try {
-            verifyPrivate(tested, never()).invocation("doSayYear", 50, "Temp");
+            verifyPrivate(tested, never()).invoke("doSayYear", 50, "Temp");
             fail("Should throw assertion error");
         } catch (MockitoAssertionError e) {
             assertEquals("\nsamples.privatemocking.PrivateMethodDemo.doSayYear(\n    50,\n    \"Temp\"\n);\nNever wanted  but invoked .", e

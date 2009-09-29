@@ -117,6 +117,6 @@ public class FinalDemoTest {
 
         assertEquals(expected, spy.say(expected));
 
-        verifyPrivate(spy, times(2)).invocation("sayIt", expected);
+        verifyPrivate(spy, times(2)).invoke("sayIt", expected);
     }
 }
