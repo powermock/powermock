@@ -47,6 +47,7 @@ import org.powermock.api.support.SuppressCode;
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.NewInvocationControl;
 import org.powermock.reflect.Whitebox;
+import org.powermock.reflect.internal.WhiteboxImpl;
 
 /**
  * PowerMockito extends Mockito functionality with several new features such as
@@ -363,7 +364,16 @@ public class PowerMockito {
     /**
      * Expect calls to private static methods without having to specify the
      * method name. The method will be looked up using the parameter types (if
-     * possible).
+     * ======= Method methodToInvoke =
+     * WhiteboxImpl.findMethodOrThrowException(clazz, null, methodToExecute,
+     * arguments); whenStarted(clazz, methodToInvoke); return
+     * Mockito.when(WhiteboxImpl.<T> performMethodInvocation(clazz,
+     * methodToInvoke, arguments)); }
+     * 
+     * /** Expect calls to private methods without having to specify the method
+     * name. The method will be looked up using the parameter types (if >>>>>>>
+     * 824ac08fa7decf78b6d1aa38b1a7571c79393b2b:api/mockito/src/main/java/org/
+     * powermock/api/mockito/PowerMockito.java possible).
      * 
      * @see {@link Mockito#when(Object)}
      * @throws Exception

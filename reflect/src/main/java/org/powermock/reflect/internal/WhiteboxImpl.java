@@ -1723,7 +1723,7 @@ public class WhiteboxImpl {
         return fields;
     }
 
-    private static boolean isClass(Object argument) {
+    public static boolean isClass(Object argument) {
         return argument instanceof Class<?>;
     }
 
