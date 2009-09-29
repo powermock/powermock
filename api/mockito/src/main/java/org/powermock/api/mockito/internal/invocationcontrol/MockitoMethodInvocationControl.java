@@ -135,8 +135,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
          * invocation and thus we should delegate the call to the Mockito proxy.
          */
         final Object returnValue;
-        if (hasDelegator() && !Modifier.isPrivate(method.getModifiers()) && !Modifier.isFinal(method.getModifiers())
-                && hasBeenCaughtByMockitoProxy()) {
+        if (hasDelegator() && !Modifier.isPrivate(method.getModifiers()) && !Modifier.isFinal(method.getModifiers()) && hasBeenCaughtByMockitoProxy()) {
             returnValue = MockGateway.PROCEED;
         } else {
             returnValue = performIntercept(methodInterceptorFilter, obj, method, arguments);
@@ -164,7 +163,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
         return false;
     }
 
-    private Object performIntercept(MethodInterceptorFilter invocationHandler, Object interceptionObject, final Method method,
+    private Object performIntercept(MethodInterceptorFilter invocationHandler, final Object interceptionObject, final Method method,
             Object[] arguments) throws Throwable {
         /*
          * Mockito 1.7 and 1.8.0 changes the CGLib Naming policy using
@@ -195,9 +194,15 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
                  * The reason is that when Mockito is spying on objects it
                  * should call the "real method" (which is proxied by Mockito
                  * anyways) so that we don't end up in here one more time which
-                 * causes infinite recursion.
+                 * causes infinite recursion. This should not be done if the
+                 * interceptionObject is a final system class because these are
+                 * never caught by the Mockito proxy.
                  */
-                MockRepository.putAdditionalState(MockGateway.DONT_MOCK_NEXT_CALL, true);
+                final Class<?> type = Whitebox.getType(interceptionObject);
+                final boolean isFinalSystemClass = type.getName().startsWith("java.") && Modifier.isFinal(type.getModifiers());
+                if (!isFinalSystemClass) {
+                    MockRepository.putAdditionalState(MockGateway.DONT_MOCK_NEXT_CALL, true);
+                }
                 return method.invoke(target, arguments);
             }
         });
@@ -226,8 +231,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
                 String method = Whitebox.getType(getMock()).getName() + "." + getMethodName();
                 String invocation = method + matchersPrinter.getArgumentsLine(matchers, printSettings);
                 if (printSettings.isMultiline()
-                        || (!matchers.isEmpty() && invocation.length() > Whitebox.<Integer> getInternalState(Invocation.class,
-                                "MAX_LINE_LENGTH"))) {
+                        || (!matchers.isEmpty() && invocation.length() > Whitebox.<Integer> getInternalState(Invocation.class, "MAX_LINE_LENGTH"))) {
                     return method + matchersPrinter.getArgumentsBlock(matchers, printSettings);
                 } else {
                     return invocation;
