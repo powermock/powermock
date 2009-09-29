@@ -330,8 +330,7 @@ public class PowerMockito {
      * @throws Exception
      *             If something unexpected goes wrong.
      */
-    public static <T> OngoingStubbing<T> when(Object instance, Class<?> declaringClass, String methodToExecute, Object... arguments)
-            throws Exception {
+    public static <T> OngoingStubbing<T> when(Object instance, Class<?> declaringClass, String methodToExecute, Object... arguments) throws Exception {
         return Mockito.when(Whitebox.<T> invokeMethod(instance, declaringClass, methodToExecute, arguments));
     }
 
@@ -363,17 +362,8 @@ public class PowerMockito {
 
     /**
      * Expect calls to private static methods without having to specify the
-     * method name. The method will be looked up using the parameter types (if
-     * ======= Method methodToInvoke =
-     * WhiteboxImpl.findMethodOrThrowException(clazz, null, methodToExecute,
-     * arguments); whenStarted(clazz, methodToInvoke); return
-     * Mockito.when(WhiteboxImpl.<T> performMethodInvocation(clazz,
-     * methodToInvoke, arguments)); }
-     * 
-     * /** Expect calls to private methods without having to specify the method
-     * name. The method will be looked up using the parameter types (if >>>>>>>
-     * 824ac08fa7decf78b6d1aa38b1a7571c79393b2b:api/mockito/src/main/java/org/
-     * powermock/api/mockito/PowerMockito.java possible).
+     * method name. The method will be looked up using the parameter types if
+     * possible
      * 
      * @see {@link Mockito#when(Object)}
      * @throws Exception
