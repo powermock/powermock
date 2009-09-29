@@ -39,7 +39,6 @@ public class PrivateInstanceMockingTest {
     }
 
     @Test
-    @Ignore
     public void expectationsWorkWithArgumentMatchersWhenSpyingOnPrivateMethods() throws Exception {
         PrivateMethodDemo tested = spy(new PrivateMethodDemo());
         assertEquals("Hello Temp, you are 50 old.", tested.sayYear("Temp", 50));
@@ -49,7 +48,8 @@ public class PrivateInstanceMockingTest {
         assertEquals("another", tested.sayYear("Johan", 29));
         assertEquals("another", tested.sayYear("test", 12));
 
-        verifyPrivate(tested).invocation("doSayYear", 50, "Temp");
+        verifyPrivate(tested).invocation("doSayYear", 29, "Johan");
+        verifyPrivate(tested).invocation("doSayYear", 12, "test");
     }
 
     @Test
