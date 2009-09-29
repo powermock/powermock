@@ -33,7 +33,7 @@ public class DeepCloner {
      */
     public static <T> T clone(T objectToClone) {
         assertObjectNotNull(objectToClone);
-        return performClone(getType(objectToClone), objectToClone);
+        return (T) performClone(getType(objectToClone), objectToClone);
     }
 
     /**
@@ -45,8 +45,8 @@ public class DeepCloner {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> Class<? extends Object> getType(T objectToClone) {
-        return (Class<? extends Object>) (objectToClone instanceof Class ? objectToClone : objectToClone.getClass());
+    private static <T> Class<T> getType(T objectToClone) {
+        return (Class<T>) (objectToClone instanceof Class ? objectToClone : objectToClone.getClass());
     }
 
     private static void assertObjectNotNull(Object object) {
@@ -56,7 +56,7 @@ public class DeepCloner {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> T performClone(Class<?> targetClass, Object source) {
+    private static <T> T performClone(Class<T> targetClass, Object source) {
         Object target = Whitebox.newInstance(targetClass);
         Class<?> currentTargetClass = targetClass;
         while (currentTargetClass != null && !currentTargetClass.getName().startsWith(IGNORED_PACKAGES)) {
@@ -70,7 +70,7 @@ public class DeepCloner {
                     if (Whitebox.getType(object).getName().startsWith(IGNORED_PACKAGES) || object == null) {
                         instantiatedValue = object;
                     } else {
-                        instantiatedValue = performClone(ClassLoaderUtil.loadClassWithClassloader(targetClass.getClassLoader(), object.getClass()),
+                        instantiatedValue = performClone(ClassLoaderUtil.loadClassWithClassloader(targetClass.getClassLoader(), getType(object)),
                                 object);
                     }
                     field.set(target, instantiatedValue);
