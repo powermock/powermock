@@ -34,65 +34,71 @@ import org.powermock.reflect.Whitebox;
  * Before each test method all fields annotated with {@link Mock},
  * {@link MockNice} or {@link MockStrict} will have mock objects created for
  * them and injected to the fields.
+ * <p>
+ * It will only inject to fields that haven't been set before (i.e that are
+ * <code>null</code>).
  */
 @SuppressWarnings("deprecation")
 public class AnnotationEnabler extends AbstractPowerMockTestListenerBase {
 
-	@Override
-	public void beforeTestMethod(Object testInstance, Method method, Object[] arguments) throws Exception {
-		injectDefaultMocks(testInstance);
-		injectNiceMocks(testInstance);
-		injectStrictMocks(testInstance);
-	}
+    @Override
+    public void beforeTestMethod(Object testInstance, Method method, Object[] arguments) throws Exception {
+        injectDefaultMocks(testInstance);
+        injectNiceMocks(testInstance);
+        injectStrictMocks(testInstance);
+    }
 
-	protected void injectStrictMocks(Object testInstance) throws Exception {
-		FieldInjector fieldInjector = new FieldInjector() {
-			@Override
-			public Object createMockInstance(Class<?> type, Method[] methods) {
-				return createStrictMock(type, methods);
-			}
-		};
-		fieldInjector.inject(testInstance, MockStrict.class);
-	}
+    protected void injectStrictMocks(Object testInstance) throws Exception {
+        FieldInjector fieldInjector = new FieldInjector() {
+            @Override
+            public Object createMockInstance(Class<?> type, Method[] methods) {
+                return createStrictMock(type, methods);
+            }
+        };
+        fieldInjector.inject(testInstance, MockStrict.class);
+    }
 
-	protected void injectNiceMocks(Object testInstance) throws Exception {
-		FieldInjector fieldInjector = new FieldInjector() {
-			@Override
-			public Object createMockInstance(Class<?> type, Method[] methods) {
-				return createNiceMock(type, methods);
-			}
-		};
-		fieldInjector.inject(testInstance, MockNice.class);
-	}
+    protected void injectNiceMocks(Object testInstance) throws Exception {
+        FieldInjector fieldInjector = new FieldInjector() {
+            @Override
+            public Object createMockInstance(Class<?> type, Method[] methods) {
+                return createNiceMock(type, methods);
+            }
+        };
+        fieldInjector.inject(testInstance, MockNice.class);
+    }
 
-	protected void injectDefaultMocks(Object testInstance) throws Exception {
-		FieldInjector fieldInjector = new FieldInjector() {
-			@Override
-			public Object createMockInstance(Class<?> type, Method[] methods) {
-				return createMock(type, methods);
-			}
-		};
-		fieldInjector.inject(testInstance, org.powermock.api.easymock.annotation.Mock.class);
-		fieldInjector.inject(testInstance, Mock.class);
-	}
+    protected void injectDefaultMocks(Object testInstance) throws Exception {
+        FieldInjector fieldInjector = new FieldInjector() {
+            @Override
+            public Object createMockInstance(Class<?> type, Method[] methods) {
+                return createMock(type, methods);
+            }
+        };
+        fieldInjector.inject(testInstance, org.powermock.api.easymock.annotation.Mock.class);
+        fieldInjector.inject(testInstance, Mock.class);
+    }
 
-	protected abstract class FieldInjector {
+    protected abstract class FieldInjector {
 
-		public void inject(Object testInstance, Class<? extends Annotation> annotation) throws Exception {
-			Set<Field> fields = Whitebox.getFieldsAnnotatedWith(testInstance, annotation);
-			for (Field field : fields) {
-				final Class<?> type = field.getType();
-				Annotation annotationInstance = field.getAnnotation(annotation);
-				final String[] value = (String[]) Whitebox.invokeMethod(annotationInstance, "value");
-				Method[] methods = null;
-				if (value.length != 1 || !"".equals(value[0])) {
-					methods = Whitebox.getMethods(type, value);
-				}
-				final Object createMock = createMockInstance(type, methods);
-				field.set(testInstance, createMock);
-			}
-		}
+        public void inject(Object testInstance, Class<? extends Annotation> annotation) throws Exception {
+            Set<Field> fields = Whitebox.getFieldsAnnotatedWith(testInstance, annotation);
+            for (Field field : fields) {
+                if (field.get(testInstance) != null) {
+                    continue;
+                }
+                final Class<?> type = field.getType();
+                Annotation annotationInstance = field.getAnnotation(annotation);
+                final String[] value = (String[]) Whitebox.invokeMethod(annotationInstance, "value");
+                Method[] methods = null;
+                if (value.length != 1 || !"".equals(value[0])) {
+                    methods = Whitebox.getMethods(type, value);
+                }
+                final Object createMock = createMockInstance(type, methods);
+                field.set(testInstance, createMock);
+            }
+        }
 
-		public abstract Object createMockInstance(final Class<?> type, final Method[] methods);
-	}
+        public abstract Object createMockInstance(final Class<?> type, final Method[] methods);
+    }
 }
