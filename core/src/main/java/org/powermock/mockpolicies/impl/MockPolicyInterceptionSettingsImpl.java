@@ -26,87 +26,99 @@ import java.util.Set;
 import org.powermock.mockpolicies.MockPolicyInterceptionSettings;
 
 public class MockPolicyInterceptionSettingsImpl implements MockPolicyInterceptionSettings {
-	private Set<Field> fieldsToSuppress;
-	private Set<Method> methodsToSuppress;
-	private Map<Method, Object> substituteReturnValues;
-	private Set<String> fieldsTypesToSuppress;
+    private Set<Field> fieldsToSuppress;
+    private Set<Method> methodsToSuppress;
+    private Map<Method, Object> substituteReturnValues;
+    private Set<String> fieldsTypesToSuppress;
 
-	public MockPolicyInterceptionSettingsImpl() {
-		fieldsToSuppress = new LinkedHashSet<Field>();
-		methodsToSuppress = new LinkedHashSet<Method>();
-		substituteReturnValues = new HashMap<Method, Object>();
-		fieldsTypesToSuppress = new LinkedHashSet<String>();
-	}
+    public MockPolicyInterceptionSettingsImpl() {
+        fieldsToSuppress = new LinkedHashSet<Field>();
+        methodsToSuppress = new LinkedHashSet<Method>();
+        substituteReturnValues = new HashMap<Method, Object>();
+        fieldsTypesToSuppress = new LinkedHashSet<String>();
+    }
 
-	public void addFieldTypesToSuppress(String firstType, String... additionalFieldTypes) {
-		fieldsTypesToSuppress.add(firstType);
-		addFieldTypesToSuppress(additionalFieldTypes);
-	}
+    public void addFieldTypesToSuppress(String firstType, String... additionalFieldTypes) {
+        fieldsTypesToSuppress.add(firstType);
+        addFieldTypesToSuppress(additionalFieldTypes);
+    }
 
-	public void addFieldTypesToSuppress(String[] fieldTypes) {
-		for (String fieldType : fieldTypes) {
-			fieldsTypesToSuppress.add(fieldType);
-		}
-	}
+    public void addFieldTypesToSuppress(String[] fieldTypes) {
+        for (String fieldType : fieldTypes) {
+            fieldsTypesToSuppress.add(fieldType);
+        }
+    }
 
-	public void setFieldTypesToSuppress(String[] fieldTypes) {
-		fieldsTypesToSuppress.clear();
-		addFieldTypesToSuppress(fieldTypes);
-	}
+    public void setFieldTypesToSuppress(String[] fieldTypes) {
+        fieldsTypesToSuppress.clear();
+        addFieldTypesToSuppress(fieldTypes);
+    }
 
-	public Field[] getFieldsToSuppress() {
-		return fieldsToSuppress.toArray(new Field[fieldsToSuppress.size()]);
-	}
+    public Field[] getFieldsToSuppress() {
+        return fieldsToSuppress.toArray(new Field[fieldsToSuppress.size()]);
+    }
 
-	public Method[] getMethodsToSuppress() {
-		return methodsToSuppress.toArray(new Method[methodsToSuppress.size()]);
-	}
+    public Method[] getMethodsToSuppress() {
+        return methodsToSuppress.toArray(new Method[methodsToSuppress.size()]);
+    }
 
-	public Map<Method, Object> getStubbedMethods() {
-		return Collections.unmodifiableMap(substituteReturnValues);
-	}
+    public Map<Method, Object> getStubbedMethods() {
+        return Collections.unmodifiableMap(substituteReturnValues);
+    }
 
-	public void addFieldToSuppress(Field firstField, Field... fields) {
-		fieldsToSuppress.add(firstField);
-		addFieldToSuppress(fields);
-	}
+    public void addFieldToSuppress(Field firstField, Field... fields) {
+        fieldsToSuppress.add(firstField);
+        addFieldToSuppress(fields);
+    }
 
-	public void addFieldToSuppress(Field[] fields) {
-		for (Field field : fields) {
-			fieldsToSuppress.add(field);
-		}
-	}
+    public void addFieldToSuppress(Field[] fields) {
+        for (Field field : fields) {
+            fieldsToSuppress.add(field);
+        }
+    }
 
-	public void addMethodsToSuppress(Method methodToSuppress, Method... additionalMethodsToSuppress) {
-		methodsToSuppress.add(methodToSuppress);
-		addMethodsToSuppress(additionalMethodsToSuppress);
-	}
+    public void addMethodsToSuppress(Method methodToSuppress, Method... additionalMethodsToSuppress) {
+        methodsToSuppress.add(methodToSuppress);
+        addMethodsToSuppress(additionalMethodsToSuppress);
+    }
 
-	public void addMethodsToSuppress(Method[] methods) {
-		for (Method method : methods) {
-			methodsToSuppress.add(method);
-		}
-	}
+    public void addMethodsToSuppress(Method[] methods) {
+        for (Method method : methods) {
+            methodsToSuppress.add(method);
+        }
+    }
 
-	public void stubMethod(Method method, Object returnObject) {
-		substituteReturnValues.put(method, returnObject);
-	}
+    public void stubMethod(Method method, Object returnObject) {
+        substituteReturnValues.put(method, returnObject);
+    }
 
-	public void setFieldsSuppress(Field[] fields) {
-		fieldsToSuppress.clear();
-		addFieldToSuppress(fields);
-	}
+    public void setFieldsSuppress(Field[] fields) {
+        fieldsToSuppress.clear();
+        addFieldToSuppress(fields);
+    }
 
-	public void setMethodsToSuppress(Method[] methods) {
-		methodsToSuppress.clear();
-		addMethodsToSuppress(methods);
-	}
+    public void setMethodsToSuppress(Method[] methods) {
+        methodsToSuppress.clear();
+        addMethodsToSuppress(methods);
+    }
 
-	public void setMethodsToStub(Map<Method, Object> substituteReturnValues) {
-		this.substituteReturnValues = substituteReturnValues;
-	}
+    public void setMethodsToStub(Map<Method, Object> substituteReturnValues) {
+        this.substituteReturnValues = substituteReturnValues;
+    }
 
-	public String[] getFieldTypesToSuppress() {
-		return fieldsTypesToSuppress.toArray(new String[fieldsTypesToSuppress.size()]);
-	}
+    public String[] getFieldTypesToSuppress() {
+        return fieldsTypesToSuppress.toArray(new String[fieldsTypesToSuppress.size()]);
+    }
+
+    public void addSubtituteReturnValue(Method method, Object returnObject) {
+        substituteReturnValues.put(method, returnObject);
+    }
+
+    public void setSubtituteReturnValues(Map<Method, Object> substituteReturnValues) {
+        this.substituteReturnValues = substituteReturnValues;
+    }
+
+    public Map<Method, Object> getSubstituteReturnValues() {
+        return getStubbedMethods();
+    }
 }

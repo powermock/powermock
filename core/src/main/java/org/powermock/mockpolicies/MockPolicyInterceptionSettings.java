@@ -62,6 +62,27 @@ public interface MockPolicyInterceptionSettings {
     void stubMethod(Method method, Object returnObject);
 
     /**
+     * Set the substitute return values. The substitute return values is a
+     * key-value map where each key is a method that should be intercepted and
+     * each value is the new return value for that method when it's intercepted.
+     * <p>
+     * Note that this overrides all previous configurations.
+     * 
+     * @deprecated Use {@link #stubMethod(Method, Object)} instead.
+     */
+    void setSubtituteReturnValues(Map<Method, Object> substituteReturnValues);
+
+    /**
+     * Add a method that should be intercepted and return another value (
+     * <code>returnObject</code>). The substitute return values is a key-value
+     * map where each key is a method that should be intercepted and each value
+     * is the new return value for that method when it's intercepted.
+     * 
+     * @deprecated Use {@link #stubMethod(Method, Object)} instead.
+     */
+    void addSubtituteReturnValue(Method method, Object returnObject);
+
+    /**
      * Set specific fields that should be suppressed upon invocation. Note that
      * this overrides all previous configurations.
      */
@@ -104,6 +125,14 @@ public interface MockPolicyInterceptionSettings {
      * all method-object pairs the were initialized.
      */
     Map<Method, Object> getStubbedMethods();
+
+    /**
+     * Get all substitute return values and also returns an unmodifiable map of
+     * all method-object pairs the were initialized.
+     * 
+     * @deprecated Use {@link #getStubbedMethods()} instead.
+     */
+    Map<Method, Object> getSubstituteReturnValues();
 
     /**
      * @return Which fields should be suppressed (i.e. will be set to
