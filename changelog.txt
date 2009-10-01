@@ -56,15 +56,28 @@ Change log 1.3 (under development)
 * Mockito extension API now supports "verifyNoMoreInteractions" and "verifyZeroInteractions" for both instance mocks, class mocks and new instance mocks.
 * Deprecated setSubstituteReturnValues, getSubstituteReturnValues and addSubtituteReturnValue in MockPolicyInterceptionSettings, you should now use setMethodsToStub, getStubbedMethods and stubMethod instead.
 * Renamed MockRepository#getSubstituteReturnValue to getMethodToStub and MockRepository#putSubstituteReturnValue to putMethodToStub.
-* PowerMock and PowerMockito now supports stubbing methods (including private methods). Use PowerMock#stubMethod or PowerMockito#stubMethod to accomplish this.
 * PowerMockito now supports, doAnswer, doThrow, doCallRealMethod, doNothing and doReturn for void methods defined in final classes, final void methods and static methods. Note that if a method is a private void method you should still use PowerMockito#when.
-* PowerMock and PowerMockito now supports proxying methods, including private methods using proxy(..), e.g. proxy(MyClass.class, "methodToProxy", myInvocationHandler). Every call to the "methodToProxy" method will be routed to the supplied invocation handler instead.
 * Removed the deprecated classes "org.powermock.PowerMock" and "org.powermock.Whitebox".
 * PowerMock support API now has a DeepCloner class that you can use to create a clone of an object. This clone can also be cloned to a different classloader.
 * Added a PowerMock classloading project which can be used to execute any Runnable or Callable in a different classloader. The result of a callable operation will be cloned to the the callers classloader.
 * Mocking static methods in final system classes works in the Mockito extension API.
 * AnnotationEnablers only injects to fields that haven't previously been set (i.e. if the field is null).
 * Added org.powermock.core.spi.listener.AnnotationEnablerListener interface that all AnnotationEnablers must implement.
+* Implemented a fluent API for suppression, replacing and stubbing (org.powermock.api.support.membermodification.MemberModifier). It uses matcher methods defined in org.powermock.api.support.membermodification.MemberMatcher. Some examples:
+        replace(method(X)).with(method(Y)); // Works only for static methods
+	replace(method(X)).with(invocationHandler); 
+	stub(method(X)).andReturn(Y);
+	suppress(methodsDeclaredIn(X.class, Y.class))
+	suppress(method(X.class, "methodName"))
+	suppress(methods(method(X.class, "methodName"), method(Y.class, "methodName2")))
+	suppress(methods(X.class, "methodName1", "methodName2"))
+	suppress(field(..))
+	suppress(constructor(..));
+* Deprecated all suppressMethod, suppressField and suppressConstructor methods in the EasyMock extension API. You should now use PowerMock#suppress instead.
+* PowerMock and PowerMockito now supports stubbing methods (including private methods). Use PowerMock#stub or PowerMockito#stub to accomplish this.
+* PowerMock and PowerMockito now supports proxying methods, including private methods using replace(..), e.g. replace(method(MyClass.class, "methodToProxy")).with(myInvocationHandler). Every call to the "methodToProxy" method will be routed to the supplied invocation handler instead.
+* PowerMock and PowerMockito now supports duck typing of static methods, including static private methods using replace(..), e.g. replace(method(MyClass.class, "methodToDuckType")).with(method(MyOtherClass.class, "methodToInvoke")). Every call to the "methodToDuckType" method will be routed to the "methodToInvoke" method instead.
+
 
 Change log 1.2.5 (released 2009-05-05)
 --------------------------------------

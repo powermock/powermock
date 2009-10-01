@@ -18,8 +18,9 @@ package demo.org.powermock.examples.simple;
 import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.expectNew;
 import static org.powermock.api.easymock.PowerMock.replayAll;
-import static org.powermock.api.easymock.PowerMock.suppressConstructor;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
+import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
+import static org.powermock.api.support.membermodification.MemberModifier.suppress;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -60,7 +61,7 @@ public class LoggerTest {
     public void testLogger2() throws Exception {
         PrintWriter printWriter = createMock(PrintWriter.class);
         printWriter.println("qwe");
-        suppressConstructor(Logger.class);
+        suppress(constructor(Logger.class));
         replayAll();
         Logger logger = new Logger();
         Whitebox.setInternalState(logger, printWriter);

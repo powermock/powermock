@@ -19,19 +19,21 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.proxy;
 import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.replace;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
 import samples.suppressmethod.SuppressMethod;
+import samples.suppressmethod.SuppressMethodExample;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(SuppressMethod.class)
@@ -39,35 +41,35 @@ public class ProxyMethodTest {
 
 	@Test(expected = ArrayStoreException.class)
 	public void expectionThrowingMethodProxyWorksForJavaLangReflectMethods() throws Exception {
-		proxy(Whitebox.getMethod(SuppressMethod.class, "getObject"), new ThrowingInvocationHandler());
+		replace(method(SuppressMethod.class, "getObject")).with(new ThrowingInvocationHandler());
 
 		new SuppressMethod().getObject();
 	}
 
 	@Test(expected = ArrayStoreException.class)
 	public void expectionThrowingMethodProxyWorksForMethodNames() throws Exception {
-		proxy(SuppressMethod.class, "getObject", new ThrowingInvocationHandler());
+		replace(method(SuppressMethod.class, "getObject")).with(new ThrowingInvocationHandler());
 
 		new SuppressMethod().getObject();
 	}
 
 	@Test
 	public void returnValueChangingMethodProxyWorksForMethodNames() throws Exception {
-		proxy(SuppressMethod.class, "getObject", new ReturnValueChangingInvocationHandler());
+		replace(method(SuppressMethod.class, "getObject")).with(new ReturnValueChangingInvocationHandler());
 
 		assertEquals("hello world", new SuppressMethod().getObject());
 	}
 
 	@Test
 	public void delegatingMethodProxyWorksForMethodNames() throws Exception {
-		proxy(SuppressMethod.class, "getObject", new DelegatingInvocationHandler());
+		replace(method(SuppressMethod.class, "getObject")).with(new DelegatingInvocationHandler());
 
 		assertSame(SuppressMethod.OBJECT, new SuppressMethod().getObject());
 	}
 
 	@Test
 	public void mockingAndMethodProxyAtTheSameTimeWorks() throws Exception {
-		proxy(SuppressMethod.class, "getObjectStatic", new DelegatingInvocationHandler());
+		replace(method(SuppressMethod.class, "getObjectStatic")).with(new DelegatingInvocationHandler());
 		SuppressMethod tested = mock(SuppressMethod.class);
 
 		when(tested.getObject()).thenReturn("Hello world");
@@ -77,6 +79,31 @@ public class ProxyMethodTest {
 		assertEquals("Hello world", tested.getObject());
 
 		verify(tested).getObject();
+	}
+
+	@Test
+	@Ignore("Doesn't work atm")
+	public void replaceInstanceMethodsWork() throws Exception {
+		replace(method(SuppressMethod.class, "getObject")).with(method(SuppressMethodExample.class, "getStringObject"));
+		SuppressMethod tested = new SuppressMethod();
+		assertEquals("test", tested.getObject());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void replaceInstanceMethodToStaticMethodDoesntWork() throws Exception {
+		replace(method(SuppressMethod.class, "getObject")).with(method(SuppressMethodExample.class, "getStringObjectStatic"));
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void replaceStaticMethodToInstaceMethodDoesntWork() throws Exception {
+		replace(method(SuppressMethod.class, "getObjectStatic")).with(method(SuppressMethodExample.class, "getStringObject"));
+	}
+
+
+	@Test
+	public void replaceStaticMethodsWork() throws Exception {
+		replace(method(SuppressMethod.class, "getObjectStatic")).with(method(SuppressMethodExample.class, "getStringObjectStatic"));
+		assertEquals("test", SuppressMethod.getObjectStatic());
 	}
 
 	private final class ThrowingInvocationHandler implements InvocationHandler {

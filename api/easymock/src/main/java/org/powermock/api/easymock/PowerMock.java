@@ -17,7 +17,6 @@ package org.powermock.api.easymock;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -43,9 +42,8 @@ import org.powermock.api.easymock.internal.mockstrategy.MockStrategy;
 import org.powermock.api.easymock.internal.mockstrategy.impl.DefaultMockStrategy;
 import org.powermock.api.easymock.internal.mockstrategy.impl.NiceMockStrategy;
 import org.powermock.api.easymock.internal.mockstrategy.impl.StrictMockStrategy;
-import org.powermock.api.support.MethodProxy;
-import org.powermock.api.support.Stubber;
 import org.powermock.api.support.SuppressCode;
+import org.powermock.api.support.membermodification.MemberModifier;
 import org.powermock.core.ClassReplicaCreator;
 import org.powermock.core.MockRepository;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -62,7 +60,7 @@ import org.powermock.reflect.internal.WhiteboxImpl;
  * mocking static and private methods, mocking new instances and more. Use
  * PowerMock instead of EasyMock where applicable.
  */
-public class PowerMock {
+public class PowerMock extends MemberModifier {
 
 	private static final String NICE_REPLAY_AND_VERIFY_KEY = "PowerMock.niceReplayAndVerify";
 
@@ -127,7 +125,7 @@ public class PowerMock {
 	 * @return the mock object.
 	 */
 	public static <T> T createMock(Class<T> type, Object... constructorArguments) {
-		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(type, constructorArguments);
+		Constructor<?> constructor = WhiteboxImpl.findUniqueConstructorOrThrowException(type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor, constructorArguments);
 		return doMock(type, false, new DefaultMockStrategy(), constructorArgs, (Method[]) null);
 	}
@@ -245,7 +243,7 @@ public class PowerMock {
 	 * @return the mock object.
 	 */
 	public static <T> T createStrictMock(Class<T> type, Object... constructorArguments) {
-		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(type, constructorArguments);
+		Constructor<?> constructor = WhiteboxImpl.findUniqueConstructorOrThrowException(type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor, constructorArguments);
 		return doMock(type, false, new StrictMockStrategy(), constructorArgs, (Method[]) null);
 	}
@@ -265,7 +263,7 @@ public class PowerMock {
 	 * @return the mock object.
 	 */
 	public static <T> T createNiceMock(Class<T> type, Object... constructorArguments) {
-		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(type, constructorArguments);
+		Constructor<?> constructor = WhiteboxImpl.findUniqueConstructorOrThrowException(type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor, constructorArguments);
 		return doMock(type, false, new NiceMockStrategy(), constructorArgs, (Method[]) null);
 	}
@@ -1025,7 +1023,7 @@ public class PowerMock {
 	 * @return the mock object.
 	 */
 	public static <T> T createPartialMock(Class<T> type, String[] methodNames, Object... constructorArguments) {
-		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(type, constructorArguments);
+		Constructor<?> constructor = WhiteboxImpl.findUniqueConstructorOrThrowException(type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor, constructorArguments);
 		return doMock(type, false, new DefaultMockStrategy(), constructorArgs, Whitebox.getMethods(type, methodNames));
 	}
@@ -1053,7 +1051,7 @@ public class PowerMock {
 	 * @return the mock object.
 	 */
 	public static <T> T createStrictPartialMock(Class<T> type, String[] methodNames, Object... constructorArguments) {
-		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(type, constructorArguments);
+		Constructor<?> constructor = WhiteboxImpl.findUniqueConstructorOrThrowException(type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor, constructorArguments);
 		return doMock(type, false, new StrictMockStrategy(), constructorArgs, Whitebox.getMethods(type, methodNames));
 	}
@@ -1081,7 +1079,7 @@ public class PowerMock {
 	 * @return the mock object.
 	 */
 	public static <T> T createNicePartialMock(Class<T> type, String[] methodNames, Object... constructorArguments) {
-		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(type, constructorArguments);
+		Constructor<?> constructor = WhiteboxImpl.findUniqueConstructorOrThrowException(type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor, constructorArguments);
 		return doMock(type, false, new NiceMockStrategy(), constructorArgs, Whitebox.getMethods(type, methodNames));
 	}
@@ -1112,7 +1110,7 @@ public class PowerMock {
 	 * @return the mock object.
 	 */
 	public static <T> T createPartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes, Object... constructorArguments) {
-		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(type, constructorArguments);
+		Constructor<?> constructor = WhiteboxImpl.findUniqueConstructorOrThrowException(type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor, constructorArguments);
 		return doMockSpecific(type, new DefaultMockStrategy(), new String[] { methodName }, constructorArgs, methodParameterTypes);
 	}
@@ -1143,7 +1141,7 @@ public class PowerMock {
 	 * @return the mock object.
 	 */
 	public static <T> T createStrictPartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes, Object... constructorArguments) {
-		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(type, constructorArguments);
+		Constructor<?> constructor = WhiteboxImpl.findUniqueConstructorOrThrowException(type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor, constructorArguments);
 		return doMockSpecific(type, new StrictMockStrategy(), new String[] { methodName }, constructorArgs, methodParameterTypes);
 	}
@@ -1174,7 +1172,7 @@ public class PowerMock {
 	 * @return the mock object.
 	 */
 	public static <T> T createNicePartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes, Object... constructorArguments) {
-		Constructor<?> constructor = WhiteboxImpl.findConstructorOrThrowException(type, constructorArguments);
+		Constructor<?> constructor = WhiteboxImpl.findUniqueConstructorOrThrowException(type, constructorArguments);
 		ConstructorArgs constructorArgs = new ConstructorArgs(constructor, constructorArguments);
 		return doMockSpecific(type, new NiceMockStrategy(), new String[] { methodName }, constructorArgs, methodParameterTypes);
 	}
@@ -1797,7 +1795,7 @@ public class PowerMock {
 		final Class<T> unmockedType = (Class<T>) WhiteboxImpl.getUnmockedType(type);
 		if (!isNiceMock) {
 			if (parameterTypes == null) {
-				WhiteboxImpl.findConstructorOrThrowException(type, arguments);
+				WhiteboxImpl.findUniqueConstructorOrThrowException(type, arguments);
 			} else {
 				WhiteboxImpl.getConstructor(unmockedType, parameterTypes);
 			}
@@ -1916,6 +1914,8 @@ public class PowerMock {
 
 	/**
 	 * Suppress constructor calls on specific constructors only.
+	 * 
+	 * @deprecated Use {@link #suppress(Constructor[])} instead.
 	 */
 	public static synchronized void suppressConstructor(Constructor<?>... constructors) {
 		SuppressCode.suppressConstructor(constructors);
@@ -1928,6 +1928,7 @@ public class PowerMock {
 	 *            The class where the constructor is located.
 	 * @param parameterTypes
 	 *            The parameter types of the constructor to suppress.
+	 * @deprecated Use {@link #suppress(Constructor)} instead.
 	 */
 	public static synchronized void suppressSpecificConstructor(Class<?> clazz, Class<?>... parameterTypes) {
 		SuppressCode.suppressSpecificConstructor(clazz, parameterTypes);
@@ -1938,6 +1939,7 @@ public class PowerMock {
 	 * 
 	 * @param classes
 	 *            The classes whose constructors will be suppressed.
+	 * @deprecated Use {@link #suppress(Constructor[])} instead.
 	 */
 	public static synchronized void suppressConstructor(Class<?>... classes) {
 		SuppressCode.suppressConstructor(classes);
@@ -1950,6 +1952,7 @@ public class PowerMock {
 	 *            The classes whose constructors will be suppressed.
 	 * @param excludePrivateConstructors
 	 *            optionally keep code in private constructors
+	 * @deprecated Use {@link #suppress(Constructor[])} instead.
 	 */
 	public static synchronized void suppressConstructor(Class<?> clazz, boolean excludePrivateConstructors) {
 		SuppressCode.suppressConstructor(clazz, excludePrivateConstructors);
@@ -1959,6 +1962,8 @@ public class PowerMock {
 	 * Suppress specific fields. This works on both instance methods and static
 	 * methods. Note that replay and verify are not needed as this is not part
 	 * of a mock behavior.
+	 * 
+	 * @deprecated Use {@link #suppress(Field[])} instead.
 	 */
 	public static synchronized void suppressField(Field... fields) {
 		SuppressCode.suppressField(fields);
@@ -1966,6 +1971,8 @@ public class PowerMock {
 
 	/**
 	 * Suppress all fields for these classes.
+	 * 
+	 * @deprecated Use {@link #suppress(Field[])} instead.
 	 */
 	public static synchronized void suppressField(Class<?>[] classes) {
 		SuppressCode.suppressField(classes);
@@ -1980,6 +1987,7 @@ public class PowerMock {
 	 *            The names of the methods that'll be suppressed. If field names
 	 *            are empty, <i>all</i> fields in the supplied class will be
 	 *            suppressed.
+	 * @deprecated Use {@link #suppress(Field)} instead.
 	 */
 	public static synchronized void suppressField(Class<?> clazz, String... fieldNames) {
 		SuppressCode.suppressField(clazz, fieldNames);
@@ -1989,6 +1997,8 @@ public class PowerMock {
 	 * Suppress specific method calls on all types containing this method. This
 	 * works on both instance methods and static methods. Note that replay and
 	 * verify are not needed as this is not part of a mock behavior.
+	 * 
+	 * @deprecated Use {@link #suppress(Method[])} instead.
 	 */
 	public static synchronized void suppressMethod(Method... methods) {
 		SuppressCode.suppressMethod(methods);
@@ -2001,6 +2011,7 @@ public class PowerMock {
 	 *            The first class whose methods will be suppressed.
 	 * @param additionalClasses
 	 *            Additional classes whose methods will be suppressed.
+	 * @deprecated Use {@link #suppress(Method[])} instead.
 	 */
 	public static synchronized void suppressMethod(Class<?> cls, Class<?>... additionalClasses) {
 		SuppressCode.suppressMethod(cls, additionalClasses);
@@ -2011,6 +2022,7 @@ public class PowerMock {
 	 * 
 	 * @param classes
 	 *            Classes whose methods will be suppressed.
+	 * @deprecated Use {@link #suppress(Method[])} instead.
 	 */
 	public static synchronized void suppressMethod(Class<?>[] classes) {
 		SuppressCode.suppressMethod(classes);
@@ -2025,6 +2037,7 @@ public class PowerMock {
 	 *            The first method to be suppress in class <code>clazz</code>.
 	 * @param additionalMethodNames
 	 *            Additional methods to suppress in class <code>clazz</code>.
+	 * @deprecated Use {@link #suppress(Method[])} instead.
 	 */
 	public static synchronized void suppressMethod(Class<?> clazz, String methodName, String... additionalMethodNames) {
 		SuppressCode.suppressMethod(clazz, methodName, additionalMethodNames);
@@ -2037,6 +2050,7 @@ public class PowerMock {
 	 *            The class whose methods will be suppressed.
 	 * @param methodNames
 	 *            Methods to suppress in class <code>clazz</code>.
+	 * @deprecated Use {@link #suppress(Method[])} instead.
 	 */
 	public static synchronized void suppressMethod(Class<?> clazz, String[] methodNames) {
 		SuppressCode.suppressMethod(clazz, methodNames);
@@ -2049,6 +2063,7 @@ public class PowerMock {
 	 *            The class which methods will be suppressed.
 	 * @param excludePrivateMethods
 	 *            optionally not suppress private methods
+	 * @deprecated Use {@link #suppress(Method[])} instead.
 	 */
 	public static synchronized void suppressMethod(Class<?> clazz, boolean excludePrivateMethods) {
 		SuppressCode.suppressMethod(clazz, excludePrivateMethods);
@@ -2056,6 +2071,8 @@ public class PowerMock {
 
 	/**
 	 * Suppress a specific method call. Use this for overloaded methods.
+	 * 
+	 * @deprecated Use {@link #suppress(Method)} instead.
 	 */
 	public static synchronized void suppressMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
 		SuppressCode.suppressMethod(clazz, methodName, parameterTypes);
@@ -2210,37 +2227,5 @@ public class PowerMock {
 	private static boolean isNiceReplayAndVerifyMode() {
 		final Boolean mode = (Boolean) MockRepository.getAdditionalState(NICE_REPLAY_AND_VERIFY_KEY);
 		return mode != null && mode;
-	}
-
-	/**
-	 * Add a method that should be intercepted and return another value (
-	 * <code>returnObject</code>) (i.e. the method is stubbed).
-	 */
-	public static void stubMethod(Method method, Object returnObject) {
-		Stubber.stubMethod(method, returnObject);
-	}
-
-	/**
-	 * Add a method that should be intercepted and return another value (
-	 * <code>returnObject</code>) (i.e. the method is stubbed).
-	 */
-	public static void stubMethod(Class<?> declaringClass, String methodName, Object returnObject) {
-		Stubber.stubMethod(declaringClass, methodName, returnObject);
-	}
-
-	/**
-	 * Add a proxy for this method. Each call to the method will be routed to
-	 * the invocationHandler instead.
-	 */
-	public static void proxy(Method method, InvocationHandler invocationHandler) {
-		MethodProxy.proxy(method, invocationHandler);
-	}
-
-	/**
-	 * Add a proxy for a method declared in class <code>declaringClass</code>.
-	 * Each call to the method will be routed to the invocationHandler instead.
-	 */
-	public static void proxy(Class<?> declaringClass, String methodName, InvocationHandler invocationHandler) {
-		MethodProxy.proxy(declaringClass, methodName, invocationHandler);
 	}
 }

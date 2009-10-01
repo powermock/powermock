@@ -18,7 +18,8 @@ package samples.junit4.suppressconstructor;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
-import static org.powermock.api.easymock.PowerMock.suppressConstructor;
+import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
+import static org.powermock.api.support.membermodification.MemberModifier.suppress;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +35,7 @@ public class SuppressConstructorHierarchyDemoTest {
 
 	@Test
 	public void testSuppressConstructorHierarchy() throws Exception {
-		suppressConstructor(SuppressConstructorHierarchyParent.class);
+		suppress(constructor(SuppressConstructorHierarchyParent.class));
 		final String message = new InvokeConstructor().doStuff("qwe");
 		assertNull("Message should have been null since we're skipping the execution of the constructor code. Message was \"" + message + "\".",
 				message);
@@ -69,7 +70,7 @@ public class SuppressConstructorHierarchyDemoTest {
 	 */
 	@Test
 	public void testSuppressConstructorHierarchyAgain() throws Exception {
-		suppressConstructor(SuppressConstructorHierarchyParent.class);
+		suppress(constructor(SuppressConstructorHierarchyParent.class));
 		SuppressConstructorHierarchyParent tested = new SuppressConstructorHierarchyParent("message");
 		assertEquals(42, tested.getNumber());
 	}

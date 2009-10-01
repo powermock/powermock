@@ -19,6 +19,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.powermock.api.easymock.PowerMock.suppressConstructor;
+import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
+import static org.powermock.api.support.membermodification.MemberModifier.suppress;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,7 +65,7 @@ public class SuppressConstructorHierarchyDemoTest {
 	 */
 	@Test
 	public void testGetNumber() throws Exception {
-		suppressConstructor(SuppressConstructorHierarchyParent.class);
+		suppress(constructor(SuppressConstructorHierarchyParent.class));
 		SuppressConstructorHierarchyParent tested = new SuppressConstructorHierarchyParent("message");
 		assertEquals(42, tested.getNumber());
 	}

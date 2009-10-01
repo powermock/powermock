@@ -62,7 +62,7 @@ public class DefaultConstructorExpectationSetup<T> implements ConstructorExpecta
 
         final Class<T> unmockedType = (Class<T>) WhiteboxImpl.getUnmockedType(type);
         if (parameterTypes == null) {
-            WhiteboxImpl.findConstructorOrThrowException(type, arguments);
+            WhiteboxImpl.findUniqueConstructorOrThrowException(type, arguments);
         } else {
             WhiteboxImpl.getConstructor(unmockedType, parameterTypes);
         }

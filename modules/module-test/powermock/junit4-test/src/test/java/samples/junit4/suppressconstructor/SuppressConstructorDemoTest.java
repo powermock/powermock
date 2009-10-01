@@ -20,8 +20,9 @@ import static org.junit.Assert.assertNull;
 import static org.powermock.api.easymock.PowerMock.createPartialMock;
 import static org.powermock.api.easymock.PowerMock.expectPrivate;
 import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.suppressConstructor;
 import static org.powermock.api.easymock.PowerMock.verify;
+import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
+import static org.powermock.api.support.membermodification.MemberModifier.suppress;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,7 +55,7 @@ public class SuppressConstructorDemoTest {
 	 */
 	@Test
 	public void testSuppressParentConstructor() throws Exception {
-		suppressConstructor(SuppressConstructorSubclassDemo.class);
+		suppress(constructor(SuppressConstructorSubclassDemo.class));
 		final SuppressConstructorDemo tested = new SuppressConstructorDemo("a message");
 		assertNull("Message should have been null since we're skipping the execution of the constructor code.", tested.getMessage());
 	}
@@ -65,7 +66,7 @@ public class SuppressConstructorDemoTest {
 	 */
 	@Test
 	public void testPartialMockingAndSuppressParentConstructor() throws Exception {
-		suppressConstructor(SuppressConstructorSubclassDemo.class);
+		suppress(constructor(SuppressConstructorSubclassDemo.class));
 		final SuppressConstructorDemo tested = createPartialMock(SuppressConstructorDemo.class, "returnAMessage");
 		final String expected = "Hello world!";
 		expectPrivate(tested, "returnAMessage").andReturn(expected);

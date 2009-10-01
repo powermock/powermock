@@ -16,7 +16,8 @@
 package samples.suppressconstructor;
 
 import static org.junit.Assert.fail;
-import static org.powermock.api.easymock.PowerMock.suppressSpecificConstructor;
+import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
+import static org.powermock.api.support.membermodification.MemberModifier.suppress;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +30,7 @@ public class SuppressSpecificConstructorDemoTest {
 
 	@Test
 	public void testMockStringConstructor() throws Exception {
-		suppressSpecificConstructor(SuppressSpecificConstructorDemo.class, String.class);
+		suppress(constructor(SuppressSpecificConstructorDemo.class, String.class));
 
 		// This should be fine
 		new SuppressSpecificConstructorDemo("This expection should not occur");

@@ -15,7 +15,8 @@
  */
 package samples.junit3.suppressconstructor;
 
-import static org.powermock.api.easymock.PowerMock.suppressConstructor;
+import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
+import static org.powermock.api.support.membermodification.MemberModifier.suppress;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
@@ -23,8 +24,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit3.PowerMockSuite;
 
 import samples.suppressconstructor.SuppressConstructorHeirarchyEvilGrandParent;
-import samples.suppressconstructor.SuppressConstructorHierarchyParent;
 import samples.suppressconstructor.SuppressConstructorHierarchyGrandParent;
+import samples.suppressconstructor.SuppressConstructorHierarchyParent;
 
 @PrepareForTest( { SuppressConstructorHierarchyParent.class, SuppressConstructorHierarchyGrandParent.class,
 		SuppressConstructorHeirarchyEvilGrandParent.class })
@@ -36,7 +37,7 @@ public class SuppressConstructorHierarchyDemoTest extends TestCase {
 	}
 
 	public void testSuppressConstructor() throws Exception {
-		suppressConstructor(SuppressConstructorHierarchyParent.class);
+		suppress(constructor(SuppressConstructorHierarchyParent.class));
 		SuppressConstructorHierarchyParent tested = new SuppressConstructorHierarchyParent("message");
 
 		final String message = tested.getMessage();
@@ -61,7 +62,7 @@ public class SuppressConstructorHierarchyDemoTest extends TestCase {
 	 * class).
 	 */
 	public void testGetNumber() throws Exception {
-		suppressConstructor(SuppressConstructorHierarchyParent.class);
+		suppress(constructor(SuppressConstructorHierarchyParent.class));
 		SuppressConstructorHierarchyParent tested = new SuppressConstructorHierarchyParent("message");
 		assertEquals(42, tested.getNumber());
 	}

@@ -16,7 +16,8 @@
 package powermock.examples.suppress.constructor;
 
 import static org.junit.Assert.assertEquals;
-import static org.powermock.api.easymock.PowerMock.suppressConstructor;
+import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
+import static org.powermock.api.support.membermodification.MemberModifier.suppress;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +33,7 @@ public class ExampleWithEvilChildTest {
 
 	@Test
 	public void testSuppressConstructorOfEvilChild() throws Exception {
-		suppressConstructor(EvilChild.class);
+		suppress(constructor(EvilChild.class));
 		final String message = "myMessage";
 		ExampleWithEvilChild tested = new ExampleWithEvilChild(message);
 		assertEquals(message, tested.getMessage());
