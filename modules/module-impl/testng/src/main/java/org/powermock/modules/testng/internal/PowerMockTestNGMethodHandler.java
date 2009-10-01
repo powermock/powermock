@@ -15,7 +15,10 @@
  */
 package org.powermock.modules.testng.internal;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Set;
 
 import javassist.util.proxy.MethodHandler;
 
@@ -44,9 +47,20 @@ public class PowerMockTestNGMethodHandler implements MethodHandler {
         injectMocksUsingAnnotationEnabler(self);
         final Object result = proceed.invoke(self, args);
         if (thisMethod.isAnnotationPresent(Test.class)) {
+            clearMockFields();
             MockRepository.clear();
         }
         return result;
+    }
+
+    private void clearMockFields() throws Exception, IllegalAccessException {
+        if (annotationEnabler != null) {
+            Set<Field> mockFields = Whitebox.getFieldsAnnotatedWith(this, Whitebox.<Class<? extends Annotation>[]> invokeMethod(annotationEnabler,
+                    "getMockAnnotations"));
+            for (Field field : mockFields) {
+                field.set(this, null);
+            }
+        }
     }
 
     private void injectMocksUsingAnnotationEnabler(Object self) throws Exception {

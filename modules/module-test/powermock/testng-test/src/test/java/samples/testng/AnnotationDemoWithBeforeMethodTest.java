@@ -5,6 +5,7 @@ import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -16,7 +17,7 @@ import samples.annotationbased.AnnotationDemo;
  * Verifies that PowerMock test listeners works correctly with before methods in
  * TestNG.
  */
-public class AnnotationDemoWithBeforeMethodTest {
+public class AnnotationDemoWithBeforeMethodTest extends PowerMockTestCase {
 
     @Mock
     private Service serviceMock;

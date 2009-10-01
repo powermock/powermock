@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.modules.testng.internal;
+package org.powermock.core.spi.listener;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
+import java.lang.annotation.Annotation;
 
-import org.powermock.reflect.Whitebox;
+import org.powermock.core.spi.PowerMockTestListener;
 
-public class HierarchicalMethodInvoker implements InvocationHandler {
+public interface AnnotationEnablerListener extends PowerMockTestListener {
 
-	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-		return Whitebox.invokeMethod(args[0], ((Method) args[1]).getName(), (Object[]) args[2]);
-	}
+    /**
+     * @return The mock annotations considered by this annotation enabler.
+     */
+    Class<? extends Annotation>[] getMockAnnotations();
 }

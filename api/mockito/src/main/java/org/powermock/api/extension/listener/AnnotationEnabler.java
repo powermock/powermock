@@ -17,11 +17,13 @@ package org.powermock.api.extension.listener;
 
 import static org.powermock.api.mockito.PowerMockito.mock;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Set;
 
 import org.mockito.MockitoAnnotations.Mock;
+import org.powermock.core.spi.listener.AnnotationEnablerListener;
 import org.powermock.core.spi.support.AbstractPowerMockTestListenerBase;
 import org.powermock.reflect.Whitebox;
 
@@ -34,13 +36,11 @@ import org.powermock.reflect.Whitebox;
  * <code>null</code>).
  */
 @SuppressWarnings("deprecation")
-public class AnnotationEnabler extends AbstractPowerMockTestListenerBase {
+public class AnnotationEnabler extends AbstractPowerMockTestListenerBase implements AnnotationEnablerListener {
 
     @Override
-    @SuppressWarnings("unchecked")
     public void beforeTestMethod(Object testInstance, Method method, Object[] arguments) throws Exception {
-        Set<Field> fields = Whitebox.getFieldsAnnotatedWith(testInstance, org.mockito.Mock.class, Mock.class,
-                org.powermock.core.classloader.annotations.Mock.class);
+        Set<Field> fields = Whitebox.getFieldsAnnotatedWith(testInstance, getMockAnnotations());
         for (Field field : fields) {
             if (field.get(testInstance) != null) {
                 continue;
@@ -57,5 +57,10 @@ public class AnnotationEnabler extends AbstractPowerMockTestListenerBase {
             }
             field.set(testInstance, mock(type));
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public Class<? extends Annotation>[] getMockAnnotations() {
+        return new Class[] { org.mockito.Mock.class, Mock.class, org.powermock.core.classloader.annotations.Mock.class };
     }
 }

@@ -27,6 +27,7 @@ import java.util.Set;
 import org.powermock.api.easymock.annotation.MockNice;
 import org.powermock.api.easymock.annotation.MockStrict;
 import org.powermock.core.classloader.annotations.Mock;
+import org.powermock.core.spi.listener.AnnotationEnablerListener;
 import org.powermock.core.spi.support.AbstractPowerMockTestListenerBase;
 import org.powermock.reflect.Whitebox;
 
@@ -39,7 +40,7 @@ import org.powermock.reflect.Whitebox;
  * <code>null</code>).
  */
 @SuppressWarnings("deprecation")
-public class AnnotationEnabler extends AbstractPowerMockTestListenerBase {
+public class AnnotationEnabler extends AbstractPowerMockTestListenerBase implements AnnotationEnablerListener {
 
     @Override
     public void beforeTestMethod(Object testInstance, Method method, Object[] arguments) throws Exception {
@@ -100,5 +101,10 @@ public class AnnotationEnabler extends AbstractPowerMockTestListenerBase {
         }
 
         public abstract Object createMockInstance(final Class<?> type, final Method[] methods);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Class<? extends Annotation>[] getMockAnnotations() {
+        return new Class[] { org.powermock.api.easymock.annotation.Mock.class, Mock.class, MockNice.class, MockStrict.class };
     }
 }

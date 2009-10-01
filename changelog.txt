@@ -63,7 +63,8 @@ Change log 1.3 (under development)
 * PowerMock support API now has a DeepCloner class that you can use to create a clone of an object. This clone can also be cloned to a different classloader.
 * Added a PowerMock classloading project which can be used to execute any Runnable or Callable in a different classloader. The result of a callable operation will be cloned to the the callers classloader.
 * Mocking static methods in final system classes works in the Mockito extension API.
-* AnnotationEnablers only injects to fields if the field hasn't previously been set (i.e. if the field is null).
+* AnnotationEnablers only injects to fields that haven't previously been set (i.e. if the field is null).
+* Added org.powermock.core.spi.listener.AnnotationEnablerListener interface that all AnnotationEnablers must implement.
 
 Change log 1.2.5 (released 2009-05-05)
 --------------------------------------

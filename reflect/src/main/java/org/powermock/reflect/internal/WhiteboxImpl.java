@@ -1669,8 +1669,24 @@ public class WhiteboxImpl {
             annotations[0] = annotation;
             System.arraycopy(additionalAnnotations, 0, annotations, 1, additionalAnnotations.length);
         }
+        return getFieldsAnnotatedWith(object, annotations);
+    }
 
-        return findAllFieldsUsingStrategy(new FieldAnnotationMatcherStrategy(annotations), object, true, getType(object));
+    /**
+     * Get all fields annotated with a particular annotation. This method
+     * traverses the class hierarchy when checking for the annotation.
+     * 
+     * @param object
+     *            The object to look for annotations. Note that if're you're
+     *            passing an object only instance fields are checked, passing a
+     *            class will only check static fields.
+     * @param annotationTypes
+     *            The annotation types to look for
+     * @return A set of all fields containing the particular annotation(s).
+     * @since 1.3
+     */
+    public static Set<Field> getFieldsAnnotatedWith(Object object, Class<? extends Annotation>[] annotationTypes) {
+        return findAllFieldsUsingStrategy(new FieldAnnotationMatcherStrategy(annotationTypes), object, true, getType(object));
     }
 
     /**

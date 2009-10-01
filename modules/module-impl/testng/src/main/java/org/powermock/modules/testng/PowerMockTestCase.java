@@ -1,0 +1,121 @@
+/*
+ * Copyright 2009 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.powermock.modules.testng;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Set;
+
+import org.powermock.core.MockRepository;
+import org.powermock.reflect.Whitebox;
+import org.testng.IObjectFactory;
+import org.testng.ITestContext;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.ObjectFactory;
+
+/**
+ * A PowerMock base class that <i>should</i> be used as a base class for all
+ * TestNG test cases that uses PowerMock.
+ * <p>
+ * Note that the test case might still work without this base class <i>if</i>
+ * the test doesn't use any of the following annotations:
+ * <ul>
+ * <li>org.testng.annotations.BeforeSuite</li>
+ * <li>org.testng.annotations.BeforeTest</li>
+ * <li>org.testng.annotations.BeforeClass</li>
+ * <li>org.testng.annotations.BeforeMethod</li>
+ * </ul>
+ * It is always recommended to extend from this base class anyway to avoid
+ * confusion.
+ */
+public class PowerMockTestCase {
+
+    private Object annotationEnabler;
+
+    public PowerMockTestCase() {
+        try {
+            Class<?> annotationEnablerClass = Class.forName("org.powermock.api.extension.listener.AnnotationEnabler");
+            annotationEnabler = Whitebox.newInstance(annotationEnablerClass);
+        } catch (ClassNotFoundException e) {
+            annotationEnabler = null;
+        }
+    }
+
+    /**
+     * Must be executed before each test method. This method does the following:
+     * <ol>
+     * <li>Injects all mock fields (if they haven't been injected already)</li>
+     * </ol>
+     * 
+     * 
+     * 
+     * @throws Exception
+     *             If something unexpected goes wrong.
+     */
+    @BeforeMethod
+    protected void beforePowerMockTestMethod() throws Exception {
+        injectMocks();
+    }
+
+    /**
+     * Must be executed after each test method. This method does the following:
+     * <ol>
+     * <li>Clear all injection fields (those annotated with a Mock annotation)</li>
+     * <li>Clears the PowerMock MockRepository</li>
+     * </ol>
+     * 
+     * 
+     * 
+     * @throws Exception
+     *             If something unexpected goes wrong.
+     */
+    @AfterMethod
+    protected void afterPowerMockTestMethod() throws Exception {
+        try {
+            clearMockFields();
+        } finally {
+            MockRepository.clear();
+        }
+    }
+
+    /**
+     * @return The PowerMock object factory.
+     */
+    @ObjectFactory
+    public IObjectFactory create(ITestContext context) {
+        return new PowerMockObjectFactory();
+    }
+
+    private void clearMockFields() throws Exception, IllegalAccessException {
+        if (annotationEnabler != null) {
+            final Class<? extends Annotation>[] mockAnnotations = Whitebox.<Class<? extends Annotation>[]> invokeMethod(annotationEnabler,
+                    "getMockAnnotations");
+            Set<Field> mockFields = Whitebox.getFieldsAnnotatedWith(this, mockAnnotations);
+            for (Field field : mockFields) {
+                field.set(this, null);
+            }
+        }
+    }
+
+    private void injectMocks() throws Exception {
+        if (annotationEnabler != null) {
+            Whitebox.invokeMethod(annotationEnabler, "beforeTestMethod", new Class<?>[] { Object.class, Method.class, Object[].class }, this, null,
+                    null);
+        }
+    }
+}
