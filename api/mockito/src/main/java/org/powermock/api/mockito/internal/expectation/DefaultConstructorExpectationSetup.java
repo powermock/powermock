@@ -18,7 +18,7 @@ package org.powermock.api.mockito.internal.expectation;
 import java.lang.reflect.Method;
 
 import org.mockito.stubbing.OngoingStubbing;
-import org.powermock.api.mockito.expectation.ExpectationSetup;
+import org.powermock.api.mockito.expectation.ConstructorExpectationSetup;
 import org.powermock.api.mockito.expectation.WithExpectedArguments;
 import org.powermock.api.mockito.internal.invocationcontrol.MockitoNewInvocationControl;
 import org.powermock.api.mockito.internal.mockcreation.MockCreator;
@@ -29,7 +29,7 @@ import org.powermock.reflect.internal.WhiteboxImpl;
 import org.powermock.tests.utils.ArrayMerger;
 import org.powermock.tests.utils.impl.ArrayMergerImpl;
 
-public class DefaultConstructorExpectationSetup<T> implements ExpectationSetup<T> {
+public class DefaultConstructorExpectationSetup<T> implements ConstructorExpectationSetup<T> {
 
     private Class<?>[] parameterTypes = null;
     private final Class<T> mockType;

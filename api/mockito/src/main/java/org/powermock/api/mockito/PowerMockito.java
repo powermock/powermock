@@ -28,10 +28,12 @@ import org.mockito.internal.stubbing.answers.ThrowsException;
 import org.mockito.internal.verification.api.VerificationMode;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
-import org.powermock.api.mockito.expectation.ExpectationSetup;
+import org.powermock.api.mockito.expectation.ConstructorExpectationSetup;
 import org.powermock.api.mockito.expectation.PowerMockitoStubber;
+import org.powermock.api.mockito.expectation.WithOrWithoutExpectedArguments;
 import org.powermock.api.mockito.internal.PowerMockitoCore;
 import org.powermock.api.mockito.internal.expectation.DefaultConstructorExpectationSetup;
+import org.powermock.api.mockito.internal.expectation.DefaultMethodExpectationSetup;
 import org.powermock.api.mockito.internal.mockcreation.MockCreator;
 import org.powermock.api.mockito.internal.verification.DefaultConstructorArgumentsVerfication;
 import org.powermock.api.mockito.internal.verification.DefaultPrivateMethodVerification;
@@ -47,6 +49,8 @@ import org.powermock.reflect.Whitebox;
  * PowerMockito extends Mockito functionality with several new features such as
  * mocking static and private methods and more. Use PowerMock instead of Mockito
  * where applicable.
+ * 
+ * @see Mockito
  */
 public class PowerMockito extends MemberModifier {
 	private static final PowerMockitoCore POWERMOCKITO_CORE = new PowerMockitoCore();
@@ -273,6 +277,28 @@ public class PowerMockito extends MemberModifier {
 	}
 
 	/**
+	 * Expect calls to private methods.
+	 * 
+	 * @see {@link Mockito#when(Object)}
+	 * @throws Exception
+	 *             If something unexpected goes wrong.
+	 */
+	public static <T> WithOrWithoutExpectedArguments<T> when(Object instance, Method method) throws Exception {
+		return new DefaultMethodExpectationSetup<T>(instance, method);
+	}
+
+	/**
+	 * Expect calls to private static methods.
+	 * 
+	 * @see {@link Mockito#when(Object)}
+	 * @throws Exception
+	 *             If something unexpected goes wrong.
+	 */
+	public static <T> WithOrWithoutExpectedArguments<T> when(Class<?> cls, Method method) throws Exception {
+		return new DefaultMethodExpectationSetup<T>(cls, method);
+	}
+
+	/**
 	 * Expect calls to private methods without having to specify the method
 	 * name. The method will be looked up using the parameter types (if
 	 * possible).
@@ -286,72 +312,14 @@ public class PowerMockito extends MemberModifier {
 	}
 
 	/**
-	 * Expect a private or inner class method call in cases where PowerMock
-	 * cannot automatically determine the type of the parameters, for example
-	 * when mixing primitive types and wrapper types in the same method. For
-	 * most situations use {@link #when(Object, Object...)} instead.
-	 * 
-	 * @see {@link Mockito#when(Object)}
-	 * @throws Exception
-	 *             If something unexpected goes wrong.
-	 */
-	public static <T> OngoingStubbing<T> when(Object instance, String methodToExecute, Class<?>[] argumentTypes, Object... arguments)
-			throws Exception {
-		return Mockito.when(Whitebox.<T> invokeMethod(instance, methodToExecute, argumentTypes, arguments));
-	}
-
-	/**
-	 * Expected a private or inner class method call in a subclass (defined by
-	 * <code>definedIn</code>) in cases where PowerMock cannot automatically
-	 * determine the type of the parameters, for example when mixing primitive
-	 * types and wrapper types in the same method. For most situations use
-	 * {@link #invokeMethod(Object, Object...)} instead.
-	 * 
-	 * @see {@link Mockito#when(Object)}
-	 * @throws Exception
-	 *             If something unexpected goes wrong.
-	 */
-	public static <T> OngoingStubbing<T> when(Object instance, String methodToExecute, Class<?> definedIn, Class<?>[] argumentTypes,
-			Object... arguments) throws Exception {
-		return Mockito.when(Whitebox.<T> invokeMethod(instance, methodToExecute, definedIn, argumentTypes, arguments));
-	}
-
-	/**
-	 * Expect a private or inner class method call that is located in a subclass
-	 * of the instance.
-	 * 
-	 * @see {@link Mockito#when(Object)}
-	 * @throws Exception
-	 *             If something unexpected goes wrong.
-	 */
-	public static <T> OngoingStubbing<T> when(Object instance, Class<?> declaringClass, String methodToExecute, Object... arguments) throws Exception {
-		return Mockito.when(Whitebox.<T> invokeMethod(instance, declaringClass, methodToExecute, arguments));
-	}
-
-	/**
-	 * Expect a private or inner class method call in that is located in a
-	 * subclass of the instance. This might be useful to test private methods.
-	 * <p>
-	 * Use this for overloaded methods.
-	 * 
-	 * @see {@link Mockito#when(Object)}
-	 * @throws Exception
-	 *             If something unexpected goes wrong.
-	 */
-	public static <T> OngoingStubbing<T> when(Object object, Class<?> declaringClass, String methodToExecute, Class<?>[] parameterTypes,
-			Object... arguments) throws Exception {
-		return Mockito.when(Whitebox.<T> invokeMethod(object, declaringClass, methodToExecute, parameterTypes, arguments));
-	}
-
-	/**
 	 * Expect a static private or inner class method call.
 	 * 
 	 * @see {@link Mockito#when(Object)}
 	 * @throws Exception
 	 *             If something unexpected goes wrong.
 	 */
-	public static <T> OngoingStubbing<T> when(Class<?> clazz, String methodToExecute, Object... arguments) throws Exception {
-		return Mockito.when(Whitebox.<T> invokeMethod(clazz, methodToExecute, arguments));
+	public static <T> OngoingStubbing<T> when(Class<?> clazz, String methodToExpect, Object... arguments) throws Exception {
+		return Mockito.when(Whitebox.<T> invokeMethod(clazz, methodToExpect, arguments));
 	}
 
 	/**
@@ -387,7 +355,7 @@ public class PowerMockito extends MemberModifier {
 	 * automatically. In most cases you should use
 	 * {@link #whenNew(Class, Object...)} instead.
 	 */
-	public static synchronized <T> ExpectationSetup<T> whenNew(Class<T> type) {
+	public static synchronized <T> ConstructorExpectationSetup<T> whenNew(Class<T> type) {
 		return new DefaultConstructorExpectationSetup<T>(type);
 	}
 
@@ -405,7 +373,7 @@ public class PowerMockito extends MemberModifier {
 	 *            Optional number of arguments.
 	 */
 	@SuppressWarnings("unchecked")
-	public static synchronized <T> ExpectationSetup<T> whenNew(String fullyQualifiedName) throws Exception {
+	public static synchronized <T> ConstructorExpectationSetup<T> whenNew(String fullyQualifiedName) throws Exception {
 		final Class<T> forName = (Class<T>) Class.forName(fullyQualifiedName);
 		return new DefaultConstructorExpectationSetup<T>(forName);
 	}

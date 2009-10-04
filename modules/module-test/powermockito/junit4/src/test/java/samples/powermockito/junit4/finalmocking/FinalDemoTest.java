@@ -27,6 +27,8 @@ import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
 
+import java.lang.reflect.Method;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -127,11 +129,12 @@ public class FinalDemoTest {
 
 		final String expected = "test";
 		assertEquals("Hello " + expected, spy.say(expected));
-
-		when(spy, "sayIt", isA(String.class)).thenReturn(expected);
+		
+		final Method methodToExpect = method(PrivateFinal.class, "sayIt");
+		when(spy, methodToExpect).withArguments(isA(String.class)).thenReturn(expected);
 
 		assertEquals(expected, spy.say(expected));
 
-		verifyPrivate(spy, times(2)).invoke(method(PrivateFinal.class, "sayIt")).withArguments(expected);
+		verifyPrivate(spy, times(2)).invoke(methodToExpect).withArguments(expected);
 	}
 }
