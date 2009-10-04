@@ -15,40 +15,54 @@
  */
 package org.powermock.api.mockito.internal.verification;
 
+import java.lang.reflect.Method;
+
 import org.powermock.api.mockito.verification.PrivateMethodVerification;
+import org.powermock.api.mockito.verification.WithOrWithoutVerifiedArguments;
 import org.powermock.reflect.Whitebox;
 
 public class DefaultPrivateMethodVerification implements PrivateMethodVerification {
 
-    private final Object objectToVerify;
+	private final Object objectToVerify;
 
-    public DefaultPrivateMethodVerification(Object objectToVerify) {
-        this.objectToVerify = objectToVerify;
-    }
+	public DefaultPrivateMethodVerification(Object objectToVerify) {
+		this.objectToVerify = objectToVerify;
+	}
 
-    public void invoke(Object... arguments) throws Exception {
-        Whitebox.invokeMethod(objectToVerify, arguments);
+	public void invoke(Object... arguments) throws Exception {
+		Whitebox.invokeMethod(objectToVerify, arguments);
 
-    }
+	}
 
-    public void invoke(String methodToExecute, Class<?>[] argumentTypes, Object... arguments) throws Exception {
-        Whitebox.invokeMethod(objectToVerify, methodToExecute, argumentTypes, arguments);
+	public void invoke(String methodToExecute, Object... arguments) throws Exception {
+		Whitebox.invokeMethod(objectToVerify, methodToExecute, (Object[]) arguments);
+	}
 
-    }
+	public WithOrWithoutVerifiedArguments invoke(Method method) throws Exception {
+		return new VerificationArguments(method);
+	}
 
-    public void invoke(String methodToExecute, Class<?> definedIn, Class<?>[] argumentTypes, Object... arguments) throws Exception {
-        Whitebox.invokeMethod(objectToVerify, methodToExecute, definedIn, argumentTypes, (Object[]) arguments);
-    }
+	private class VerificationArguments implements WithOrWithoutVerifiedArguments {
+		private final Method method;
 
-    public void invoke(Class<?> declaringClass, String methodToExecute, Object... arguments) throws Exception {
-        Whitebox.invokeMethod(objectToVerify, declaringClass, methodToExecute, (Object[]) arguments);
-    }
+		public VerificationArguments(Method method) {
+			if (method == null) {
+				throw new IllegalArgumentException("method cannot be null");
+			}
+			this.method = method;
+			this.method.setAccessible(true);
+		}
 
-    public void invoke(Class<?> declaringClass, String methodToExecute, Class<?>[] parameterTypes, Object... arguments) throws Exception {
-        Whitebox.invokeMethod(objectToVerify, declaringClass, methodToExecute, parameterTypes, (Object[]) arguments);
-    }
+		public void withArguments(Object firstArgument, Object... additionalArguments) throws Exception {
+			if (additionalArguments == null || additionalArguments.length == 0) {
+				method.invoke(objectToVerify, firstArgument);
+			} else {
+				method.invoke(objectToVerify, firstArgument, additionalArguments);
+			}
+		}
 
-    public void invoke(String methodToExecute, Object... arguments) throws Exception {
-        Whitebox.invokeMethod(objectToVerify, methodToExecute, (Object[]) arguments);
-    }
+		public void withNoArguments() throws Exception {
+			method.invoke(objectToVerify);
+		}
+	}
 }

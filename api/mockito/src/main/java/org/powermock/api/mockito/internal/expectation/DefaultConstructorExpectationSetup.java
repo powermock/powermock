@@ -18,8 +18,8 @@ package org.powermock.api.mockito.internal.expectation;
 import java.lang.reflect.Method;
 
 import org.mockito.stubbing.OngoingStubbing;
-import org.powermock.api.mockito.expectation.ConstructorExpectationSetup;
-import org.powermock.api.mockito.expectation.ExpectedConstructorWithArguments;
+import org.powermock.api.mockito.expectation.ExpectationSetup;
+import org.powermock.api.mockito.expectation.WithExpectedArguments;
 import org.powermock.api.mockito.internal.invocationcontrol.MockitoNewInvocationControl;
 import org.powermock.api.mockito.internal.mockcreation.MockCreator;
 import org.powermock.core.MockRepository;
@@ -29,7 +29,7 @@ import org.powermock.reflect.internal.WhiteboxImpl;
 import org.powermock.tests.utils.ArrayMerger;
 import org.powermock.tests.utils.impl.ArrayMergerImpl;
 
-public class DefaultConstructorExpectationSetup<T> implements ConstructorExpectationSetup<T> {
+public class DefaultConstructorExpectationSetup<T> implements ExpectationSetup<T> {
 
     private Class<?>[] parameterTypes = null;
     private final Class<T> mockType;
@@ -49,7 +49,7 @@ public class DefaultConstructorExpectationSetup<T> implements ConstructorExpecta
         return createNewSubsituteMock(mockType, parameterTypes, new Object[0]);
     }
 
-    public ExpectedConstructorWithArguments<T> withParameterTypes(Class<?> parameterType, Class<?>... additionalParameterTypes) {
+    public WithExpectedArguments<T> withParameterTypes(Class<?> parameterType, Class<?>... additionalParameterTypes) {
         this.parameterTypes = arrayMerger.mergeArrays(Class.class, new Class<?>[] { parameterType }, additionalParameterTypes);
         return this;
     }

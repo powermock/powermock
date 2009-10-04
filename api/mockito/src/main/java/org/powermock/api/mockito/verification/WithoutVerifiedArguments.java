@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.api.mockito.expectation;
+package org.powermock.api.mockito.verification;
 
-import org.mockito.stubbing.OngoingStubbing;
+public interface WithoutVerifiedArguments {
 
-public interface ExpectedConstructorWithArguments<T> {
-
-    public abstract OngoingStubbing<T> withArguments(Object firstArgument, Object... additionalArguments) throws Exception;
+	public void withNoArguments() throws Exception;
 
 }

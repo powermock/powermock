@@ -15,5 +15,6 @@
  */
 package org.powermock.api.mockito.expectation;
 
-public interface ExpectedConstructorArguments<T> extends ExpectedConstructorWithArguments<T>, ExpectedConstructorWithoutArguments<T> {
+public interface ExpectationSetup<T> extends WithOrWithoutExpectedArguments<T>, WithExpectedParameterTypes<T> {
+
 }

@@ -28,7 +28,7 @@ import org.mockito.internal.stubbing.answers.ThrowsException;
 import org.mockito.internal.verification.api.VerificationMode;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
-import org.powermock.api.mockito.expectation.ConstructorExpectationSetup;
+import org.powermock.api.mockito.expectation.ExpectationSetup;
 import org.powermock.api.mockito.expectation.PowerMockitoStubber;
 import org.powermock.api.mockito.internal.PowerMockitoCore;
 import org.powermock.api.mockito.internal.expectation.DefaultConstructorExpectationSetup;
@@ -387,7 +387,7 @@ public class PowerMockito extends MemberModifier {
 	 * automatically. In most cases you should use
 	 * {@link #whenNew(Class, Object...)} instead.
 	 */
-	public static synchronized <T> ConstructorExpectationSetup<T> whenNew(Class<T> type) {
+	public static synchronized <T> ExpectationSetup<T> whenNew(Class<T> type) {
 		return new DefaultConstructorExpectationSetup<T>(type);
 	}
 
@@ -405,7 +405,7 @@ public class PowerMockito extends MemberModifier {
 	 *            Optional number of arguments.
 	 */
 	@SuppressWarnings("unchecked")
-	public static synchronized <T> ConstructorExpectationSetup<T> whenNew(String fullyQualifiedName) throws Exception {
+	public static synchronized <T> ExpectationSetup<T> whenNew(String fullyQualifiedName) throws Exception {
 		final Class<T> forName = (Class<T>) Class.forName(fullyQualifiedName);
 		return new DefaultConstructorExpectationSetup<T>(forName);
 	}
