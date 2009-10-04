@@ -31,55 +31,59 @@ import org.powermock.tests.utils.impl.ArrayMergerImpl;
 
 public class DefaultConstructorExpectationSetup<T> implements ConstructorExpectationSetup<T> {
 
-    private Class<?>[] parameterTypes = null;
-    private final Class<T> mockType;
-    private final ArrayMerger arrayMerger;
+	private Class<?>[] parameterTypes = null;
+	private final Class<T> mockType;
+	private final ArrayMerger arrayMerger;
 
-    public DefaultConstructorExpectationSetup(Class<T> mockType) {
-        this.mockType = mockType;
-        arrayMerger = new ArrayMergerImpl();
-    }
+	public DefaultConstructorExpectationSetup(Class<T> mockType) {
+		this.mockType = mockType;
+		arrayMerger = new ArrayMergerImpl();
+	}
 
-    public OngoingStubbing<T> withArguments(Object firstArgument, Object... additionalArguments) throws Exception {
-        return createNewSubsituteMock(mockType, parameterTypes, arrayMerger.mergeArrays(Object.class, new Object[] { firstArgument },
-                additionalArguments));
-    }
+	public void setParameterTypes(Class<?>[] parameterTypes) {
+		this.parameterTypes = parameterTypes;
+	}
 
-    public OngoingStubbing<T> withNoArguments() throws Exception {
-        return createNewSubsituteMock(mockType, parameterTypes, new Object[0]);
-    }
+	public OngoingStubbing<T> withArguments(Object firstArgument, Object... additionalArguments) throws Exception {
+		return createNewSubsituteMock(mockType, parameterTypes, arrayMerger.mergeArrays(Object.class, new Object[] { firstArgument },
+				additionalArguments));
+	}
 
-    public WithExpectedArguments<T> withParameterTypes(Class<?> parameterType, Class<?>... additionalParameterTypes) {
-        this.parameterTypes = arrayMerger.mergeArrays(Class.class, new Class<?>[] { parameterType }, additionalParameterTypes);
-        return this;
-    }
+	public OngoingStubbing<T> withNoArguments() throws Exception {
+		return createNewSubsituteMock(mockType, parameterTypes, new Object[0]);
+	}
 
-    @SuppressWarnings("unchecked")
-    private static <T> OngoingStubbing<T> createNewSubsituteMock(Class<T> type, Class<?>[] parameterTypes, Object... arguments) throws Exception {
-        if (type == null) {
-            throw new IllegalArgumentException("type cannot be null");
-        }
+	public WithExpectedArguments<T> withParameterTypes(Class<?> parameterType, Class<?>... additionalParameterTypes) {
+		this.parameterTypes = arrayMerger.mergeArrays(Class.class, new Class<?>[] { parameterType }, additionalParameterTypes);
+		return this;
+	}
 
-        final Class<T> unmockedType = (Class<T>) WhiteboxImpl.getUnmockedType(type);
-        if (parameterTypes == null) {
-            WhiteboxImpl.findUniqueConstructorOrThrowException(type, arguments);
-        } else {
-            WhiteboxImpl.getConstructor(unmockedType, parameterTypes);
-        }
+	@SuppressWarnings("unchecked")
+	private static <T> OngoingStubbing<T> createNewSubsituteMock(Class<T> type, Class<?>[] parameterTypes, Object... arguments) throws Exception {
+		if (type == null) {
+			throw new IllegalArgumentException("type cannot be null");
+		}
 
-        /*
-         * Check if this type has been mocked before
-         */
-        NewInvocationControl<OngoingStubbing<T>> newInvocationControl = (NewInvocationControl<OngoingStubbing<T>>) MockRepository
-                .getNewInstanceControl(unmockedType);
-        if (newInvocationControl == null) {
-            InvocationSubstitute<T> mock = MockCreator.mock(InvocationSubstitute.class, false, false, null, (Method[]) null);
-            newInvocationControl = new MockitoNewInvocationControl(mock);
-            MockRepository.putNewInstanceControl(type, newInvocationControl);
-            MockRepository.addObjectsToAutomaticallyReplayAndVerify(WhiteboxImpl.getUnmockedType(type));
-        }
+		final Class<T> unmockedType = (Class<T>) WhiteboxImpl.getUnmockedType(type);
+		if (parameterTypes == null) {
+			WhiteboxImpl.findUniqueConstructorOrThrowException(type, arguments);
+		} else {
+			WhiteboxImpl.getConstructor(unmockedType, parameterTypes);
+		}
 
-        return newInvocationControl.expectSubstitutionLogic(arguments);
-    }
+		/*
+		 * Check if this type has been mocked before
+		 */
+		NewInvocationControl<OngoingStubbing<T>> newInvocationControl = (NewInvocationControl<OngoingStubbing<T>>) MockRepository
+				.getNewInstanceControl(unmockedType);
+		if (newInvocationControl == null) {
+			InvocationSubstitute<T> mock = MockCreator.mock(InvocationSubstitute.class, false, false, null, (Method[]) null);
+			newInvocationControl = new MockitoNewInvocationControl(mock);
+			MockRepository.putNewInstanceControl(type, newInvocationControl);
+			MockRepository.addObjectsToAutomaticallyReplayAndVerify(WhiteboxImpl.getUnmockedType(type));
+		}
+
+		return newInvocationControl.expectSubstitutionLogic(arguments);
+	}
 
 }

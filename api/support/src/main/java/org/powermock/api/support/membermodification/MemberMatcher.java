@@ -252,8 +252,9 @@ public class MemberMatcher {
 	 * @throws ConstructorNotFoundException
 	 *             if the constructor cannot be found.
 	 */
-	public static Constructor<?> constructor(Class<?> type, Class<?>... parameterTypes) {
-		return WhiteboxImpl.findUniqueConstructorOrThrowException(type, (Object[]) parameterTypes);
+	@SuppressWarnings("unchecked")
+	public static <T> Constructor<T> constructor(Class<T> type, Class<?>... parameterTypes) {
+		return (Constructor<T>) WhiteboxImpl.findUniqueConstructorOrThrowException(type, (Object[]) parameterTypes);
 	}
 
 	/**
@@ -265,8 +266,9 @@ public class MemberMatcher {
 	 * @throws TooManyConstructorsFoundException
 	 *             If more than one constructor was present in <code>type</code>
 	 */
-	public static Constructor<?> constructor(Class<?> type) {
-		return WhiteboxImpl.findConstructorOrThrowException(type);
+	@SuppressWarnings("unchecked")
+	public static <T> Constructor<T> constructor(Class<T> type) {
+		return (Constructor<T>) WhiteboxImpl.findConstructorOrThrowException(type);
 	}
 
 	/**

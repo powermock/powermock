@@ -17,6 +17,7 @@ package org.powermock.api.mockito;
 
 import static org.mockito.Mockito.times;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import org.mockito.Mockito;
@@ -32,6 +33,7 @@ import org.powermock.api.mockito.expectation.ConstructorExpectationSetup;
 import org.powermock.api.mockito.expectation.PowerMockitoStubber;
 import org.powermock.api.mockito.expectation.WithOrWithoutExpectedArguments;
 import org.powermock.api.mockito.internal.PowerMockitoCore;
+import org.powermock.api.mockito.internal.expectation.ConstructorAwareExpectationSetup;
 import org.powermock.api.mockito.internal.expectation.DefaultConstructorExpectationSetup;
 import org.powermock.api.mockito.internal.expectation.DefaultMethodExpectationSetup;
 import org.powermock.api.mockito.internal.mockcreation.MockCreator;
@@ -346,14 +348,15 @@ public class PowerMockito extends MemberModifier {
 
 	/**
 	 * Allows specifying expectations on new invocations. For example you might
-	 * want to throw an exception or return a mock. Note that you must replay
-	 * the class when using this method since this behavior is part of the class
-	 * mock.
-	 * <p>
-	 * Use this method when you need to specify parameter types for the
-	 * constructor when PowerMock cannot determine which constructor to use
-	 * automatically. In most cases you should use
-	 * {@link #whenNew(Class, Object...)} instead.
+	 * want to throw an exception or return a mock.
+	 */
+	public static synchronized <T> WithOrWithoutExpectedArguments<T> whenNew(Constructor<T> ctor) {
+		return new ConstructorAwareExpectationSetup<T>(ctor);
+	}
+
+	/**
+	 * Allows specifying expectations on new invocations. For example you might
+	 * want to throw an exception or return a mock.
 	 */
 	public static synchronized <T> ConstructorExpectationSetup<T> whenNew(Class<T> type) {
 		return new DefaultConstructorExpectationSetup<T>(type);
@@ -362,9 +365,7 @@ public class PowerMockito extends MemberModifier {
 	/**
 	 * Allows specifying expectations on new invocations for private member
 	 * (inner) classes, local or anonymous classes. For example you might want
-	 * to throw an exception or return a mock. Note that you must replay the
-	 * class when using this method since this behavior is part of the class
-	 * mock.
+	 * to throw an exception or return a mock.
 	 * 
 	 * @param fullyQualifiedName
 	 *            The fully-qualified name of the inner/local/anonymous type to

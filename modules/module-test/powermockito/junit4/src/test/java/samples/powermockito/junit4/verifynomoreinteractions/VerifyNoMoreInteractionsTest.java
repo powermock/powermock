@@ -25,6 +25,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.verifyNoMoreInteractions;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,82 +46,96 @@ import samples.singleton.StaticService;
 @PrepareForTest( { StaticService.class, StaticHelper.class, ExpectNewDemo.class })
 public class VerifyNoMoreInteractionsTest {
 
-    @Test
-    public void verifyNoMoreInteractionsForStaticMethodsReturnsSilentlyWhenNoMoreInteractionsTookPlace() throws Exception {
-        mockStatic(StaticService.class);
-        assertNull(StaticService.say("hello"));
+	@Test
+	public void verifyNoMoreInteractionsForStaticMethodsReturnsSilentlyWhenNoMoreInteractionsTookPlace() throws Exception {
+		mockStatic(StaticService.class);
+		assertNull(StaticService.say("hello"));
 
-        verifyStatic();
-        StaticService.say("hello");
-        verifyNoMoreInteractions(StaticService.class);
-    }
+		verifyStatic();
+		StaticService.say("hello");
+		verifyNoMoreInteractions(StaticService.class);
+	}
 
-    @Test
-    public void verifyNoMoreInteractionsOnMethodThrowsAssertionErrorWhenMoreInteractionsTookPlace() throws Exception {
-        mockStatic(StaticService.class);
-        assertNull(StaticService.say("hello"));
+	@Test
+	public void verifyNoMoreInteractionsOnMethodThrowsAssertionErrorWhenMoreInteractionsTookPlace() throws Exception {
+		mockStatic(StaticService.class);
+		assertNull(StaticService.say("hello"));
 
-        try {
-            verifyNoMoreInteractions(StaticService.class);
-            fail("Should throw exception!");
-        } catch (MockitoAssertionError e) {
-            assertTrue(e
-                    .getMessage()
-                    .startsWith(
-                            "\nNo interactions wanted here:\n-> at samples.powermockito.junit4.verifynomoreinteractions.VerifyNoMoreInteractionsTest.verifyNoMoreInteractionsOnMethodThrowsAssertionErrorWhenMoreInteractionsTookPlace(VerifyNoMoreInteractionsTest.java"));
-        }
-    }
+		try {
+			verifyNoMoreInteractions(StaticService.class);
+			fail("Should throw exception!");
+		} catch (MockitoAssertionError e) {
+			assertTrue(e
+					.getMessage()
+					.startsWith(
+							"\nNo interactions wanted here:\n-> at samples.powermockito.junit4.verifynomoreinteractions.VerifyNoMoreInteractionsTest.verifyNoMoreInteractionsOnMethodThrowsAssertionErrorWhenMoreInteractionsTookPlace(VerifyNoMoreInteractionsTest.java"));
+		}
+	}
 
-    @Test
-    public void verifyNoMoreInteractionsOnNewInstancesThrowsAssertionErrorWhenMoreInteractionsTookPlace() throws Exception {
-        ExpectNewDemo tested = new ExpectNewDemo();
+	@Test
+	public void verifyNoMoreInteractionsOnNewInstancesThrowsAssertionErrorWhenMoreInteractionsTookPlace() throws Exception {
+		ExpectNewDemo tested = new ExpectNewDemo();
 
-        MyClass myClassMock = mock(MyClass.class);
+		MyClass myClassMock = mock(MyClass.class);
 
-        whenNew(MyClass.class).withNoArguments().thenReturn(myClassMock);
+		whenNew(MyClass.class).withNoArguments().thenReturn(myClassMock);
 
-        tested.simpleMultipleNew();
+		tested.simpleMultipleNew();
 
-        try {
-            verifyNoMoreInteractions(MyClass.class);
-            fail("Should throw exception!");
-        } catch (MockitoAssertionError e) {
-            assertTrue(e
-                    .getMessage()
-                    .startsWith(
-                            "\nNo interactions wanted here:\n-> at samples.powermockito.junit4.verifynomoreinteractions.VerifyNoMoreInteractionsTest.verifyNoMoreInteractionsOnNewInstancesThrowsAssertionErrorWhenMoreInteractionsTookPlace(VerifyNoMoreInteractionsTest.java:"));
-        }
-    }
+		try {
+			verifyNoMoreInteractions(MyClass.class);
+			fail("Should throw exception!");
+		} catch (MockitoAssertionError e) {
+			assertTrue(e
+					.getMessage()
+					.startsWith(
+							"\nNo interactions wanted here:\n-> at samples.powermockito.junit4.verifynomoreinteractions.VerifyNoMoreInteractionsTest.verifyNoMoreInteractionsOnNewInstancesThrowsAssertionErrorWhenMoreInteractionsTookPlace(VerifyNoMoreInteractionsTest.java:"));
+		}
+	}
 
-    @Test
-    public void verifyNoMoreInteractionsOnNewInstancesWorks() throws Exception {
-        ExpectNewDemo tested = new ExpectNewDemo();
+	@Test
+	public void verifyNoMoreInteractionsOnNewInstancesWorks() throws Exception {
+		ExpectNewDemo tested = new ExpectNewDemo();
 
-        MyClass myClassMock = mock(MyClass.class);
+		MyClass myClassMock = mock(MyClass.class);
 
-        whenNew(MyClass.class).withNoArguments().thenReturn(myClassMock);
+		whenNew(MyClass.class).withNoArguments().thenReturn(myClassMock);
 
-        tested.simpleMultipleNew();
+		tested.simpleMultipleNew();
 
-        verifyNew(MyClass.class, times(3)).withNoArguments();
-        verifyNoMoreInteractions(MyClass.class);
-    }
+		verifyNew(MyClass.class, times(3)).withNoArguments();
+		verifyNoMoreInteractions(MyClass.class);
+	}
 
-    @Test
-    public void verifyNoMoreInteractionsDelegatesToPlainMockitoWhenMockIsNotAPowerMockitoMock() throws Exception {
-        MyClass myClassMock = Mockito.mock(MyClass.class);
-        myClassMock.getMessage();
+	@Test
+	public void verifyNoMoreInteractionsOnNewInstancesWorksWhenUsingConstructorToExpect() throws Exception {
+		ExpectNewDemo tested = new ExpectNewDemo();
 
-        try {
-            verifyNoMoreInteractions(myClassMock);
-            fail("Should throw exception!");
-        } catch (AssertionError e) {
-            /*
-             * This string would have been deleted by PowerMockito but should
-             * exists if delegation took place.
-             */
-            final String expectedTextThatProvesDelegation = "But found this interaction";
-            assertTrue(e.getMessage().contains(expectedTextThatProvesDelegation));
-        }
-    }
+		MyClass myClassMock = mock(MyClass.class);
+
+		whenNew(constructor(MyClass.class)).withNoArguments().thenReturn(myClassMock);
+
+		tested.simpleMultipleNew();
+
+		verifyNew(MyClass.class, times(3)).withNoArguments();
+		verifyNoMoreInteractions(MyClass.class);
+	}
+
+	@Test
+	public void verifyNoMoreInteractionsDelegatesToPlainMockitoWhenMockIsNotAPowerMockitoMock() throws Exception {
+		MyClass myClassMock = Mockito.mock(MyClass.class);
+		myClassMock.getMessage();
+
+		try {
+			verifyNoMoreInteractions(myClassMock);
+			fail("Should throw exception!");
+		} catch (AssertionError e) {
+			/*
+			 * This string would have been deleted by PowerMockito but should
+			 * exists if delegation took place.
+			 */
+			final String expectedTextThatProvesDelegation = "But found this interaction";
+			assertTrue(e.getMessage().contains(expectedTextThatProvesDelegation));
+		}
+	}
 }
