@@ -69,8 +69,8 @@ public class MemberMatcher {
 	 * hierarchy. If the method is not found an {@link IllegalArgumentException}
 	 * is thrown.
 	 * 
-	 * @param type
-	 *            The type of the class where the method is located.
+	 * @param declaringClass
+	 *            The declaringClass of the class where the method is located.
 	 * @param methodName
 	 *            The method names.
 	 * @param parameterTypes
@@ -79,9 +79,9 @@ public class MemberMatcher {
 	 * @throws MethodNotFoundException
 	 *             If a method cannot be found in the hierarchy.
 	 */
-	public static Method method(Class<?> type, String methodName, Class<?>... parameterTypes) {
-		final Method method = WhiteboxImpl.findMethod(type, methodName, parameterTypes);
-		WhiteboxImpl.throwExceptionIfMethodWasNotFound(type, methodName, method, (Object[]) parameterTypes);
+	public static Method method(Class<?> declaringClass, String methodName, Class<?>... parameterTypes) {
+		final Method method = WhiteboxImpl.findMethod(declaringClass, methodName, parameterTypes);
+		WhiteboxImpl.throwExceptionIfMethodWasNotFound(declaringClass, methodName, method, (Object[]) parameterTypes);
 		return method;
 	}
 
@@ -96,8 +96,8 @@ public class MemberMatcher {
 	 * {@link IllegalArgumentException} is thrown if two or more methods matches
 	 * the same parameter types in the same class.
 	 * 
-	 * @param type
-	 *            The type of the class where the method is located.
+	 * @param declaringClass
+	 *            The declaringClass of the class where the method is located.
 	 * @param parameterTypes
 	 *            All parameter types of the method (may be <code>null</code>).
 	 * @return A <code>java.lang.reflect.Method</code>.
@@ -106,8 +106,8 @@ public class MemberMatcher {
 	 * @throws TooManyMethodsFoundException
 	 *             If several methods were found.
 	 */
-	public static Method method(Class<?> type, Class<?>... parameterTypes) {
-		return Whitebox.getMethod(type, parameterTypes);
+	public static Method method(Class<?> declaringClass, Class<?>... parameterTypes) {
+		return Whitebox.getMethod(declaringClass, parameterTypes);
 	}
 
 	/**
@@ -167,16 +167,16 @@ public class MemberMatcher {
 	 * the super class. This will continue throughout the whole class hierarchy.
 	 * If the field is not found an {@link IllegalArgumentException} is thrown.
 	 * 
-	 * @param type
-	 *            The type of the class where the method is located.
+	 * @param declaringClass
+	 *            The declaringClass of the class where the method is located.
 	 * @param fieldName
 	 *            The method names.
 	 * @return A <code>java.lang.reflect.Field</code>.
 	 * @throws FieldNotFoundException
 	 *             If a field cannot be found in the hierarchy.
 	 */
-	public static Field field(Class<?> type, String fieldName) {
-		return Whitebox.getField(type, fieldName);
+	public static Field field(Class<?> declaringClass, String fieldName) {
+		return Whitebox.getField(declaringClass, fieldName);
 	}
 
 	/**
@@ -241,10 +241,11 @@ public class MemberMatcher {
 	}
 
 	/**
-	 * Returns a constructor specified in type.
+	 * Returns a constructor specified in declaringClass.
 	 * 
-	 * @param type
-	 *            The type of the class where the constructor is located.
+	 * @param declaringClass
+	 *            The declaringClass of the class where the constructor is
+	 *            located.
 	 * @param parameterTypes
 	 *            All parameter types of the constructor (may be
 	 *            <code>null</code>).
@@ -253,22 +254,24 @@ public class MemberMatcher {
 	 *             if the constructor cannot be found.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Constructor<T> constructor(Class<T> type, Class<?>... parameterTypes) {
-		return (Constructor<T>) WhiteboxImpl.findUniqueConstructorOrThrowException(type, (Object[]) parameterTypes);
+	public static <T> Constructor<T> constructor(Class<T> declaringClass, Class<?>... parameterTypes) {
+		return (Constructor<T>) WhiteboxImpl.findUniqueConstructorOrThrowException(declaringClass, (Object[]) parameterTypes);
 	}
 
 	/**
-	 * Returns the constructor specified in type.
+	 * Returns the constructor specified in declaringClass.
 	 * 
-	 * @param type
-	 *            The type of the class where the constructor is located.
+	 * @param declaringClass
+	 *            The declaringClass of the class where the constructor is
+	 *            located.
 	 * @return A <code>java.lang.reflect.Constructor</code>.
 	 * @throws TooManyConstructorsFoundException
-	 *             If more than one constructor was present in <code>type</code>
+	 *             If more than one constructor was present in
+	 *             <code>declaringClass</code>
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Constructor<T> constructor(Class<T> type) {
-		return (Constructor<T>) WhiteboxImpl.findConstructorOrThrowException(type);
+	public static <T> Constructor<T> constructor(Class<T> declaringClass) {
+		return (Constructor<T>) WhiteboxImpl.findConstructorOrThrowException(declaringClass);
 	}
 
 	/**

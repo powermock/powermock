@@ -17,6 +17,7 @@ package org.powermock.tests.utils.impl;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -68,17 +69,15 @@ public class MockPolicyInitializerImpl implements MockPolicyInitializer {
 
 	public boolean isPrepared(String fullyQualifiedClassName) {
 		MockPolicyClassLoadingSettings settings = getClassLoadingSettings();
-		final boolean foundInSuppressStaticInitializer = Arrays.binarySearch(
-				settings.getStaticInitializersToSuppress(), fullyQualifiedClassName) < 0;
-		final boolean foundClassesLoadedByMockClassloader = Arrays.binarySearch(settings
-				.getFullyQualifiedNamesOfClassesToLoadByMockClassloader(), fullyQualifiedClassName) < 0;
+		final boolean foundInSuppressStaticInitializer = Arrays.binarySearch(settings.getStaticInitializersToSuppress(), fullyQualifiedClassName) < 0;
+		final boolean foundClassesLoadedByMockClassloader = Arrays.binarySearch(settings.getFullyQualifiedNamesOfClassesToLoadByMockClassloader(),
+				fullyQualifiedClassName) < 0;
 		return foundInSuppressStaticInitializer || foundClassesLoadedByMockClassloader;
 	}
 
 	public boolean needsInitialization() {
 		MockPolicyClassLoadingSettings settings = getClassLoadingSettings();
-		return settings.getStaticInitializersToSuppress().length > 0
-				|| settings.getFullyQualifiedNamesOfClassesToLoadByMockClassloader().length > 0;
+		return settings.getStaticInitializersToSuppress().length > 0 || settings.getFullyQualifiedNamesOfClassesToLoadByMockClassloader().length > 0;
 	}
 
 	/**
@@ -115,12 +114,10 @@ public class MockPolicyInitializerImpl implements MockPolicyInitializer {
 			final int sizeOfPolicies = mockPolicyTypes.length;
 			Object mockPolicies = Array.newInstance(Class.class, sizeOfPolicies);
 			for (int i = 0; i < sizeOfPolicies; i++) {
-				final Class<?> policyLoadedByClassLoader = Class.forName(mockPolicyTypes[i].getName(), false,
-						classLoader);
+				final Class<?> policyLoadedByClassLoader = Class.forName(mockPolicyTypes[i].getName(), false, classLoader);
 				Array.set(mockPolicies, i, policyLoadedByClassLoader);
 			}
-			final Class<?> thisTypeLoadedByMockClassLoader = Class.forName(this.getClass().getName(), false,
-					classLoader);
+			final Class<?> thisTypeLoadedByMockClassLoader = Class.forName(this.getClass().getName(), false, classLoader);
 			Object mockPolicyHandler = Whitebox.invokeConstructor(thisTypeLoadedByMockClassLoader, mockPolicies, true);
 			Whitebox.invokeMethod(mockPolicyHandler, "initializeInterceptionSettings");
 		} catch (InvocationTargetException e) {
@@ -149,6 +146,10 @@ public class MockPolicyInitializerImpl implements MockPolicyInitializer {
 
 		for (Method method : interceptionSettings.getMethodsToSuppress()) {
 			MockRepository.addMethodToSuppress(method);
+		}
+
+		for (Entry<Method, InvocationHandler> entry : interceptionSettings.getProxiedMethods().entrySet()) {
+			MockRepository.putMethodProxy(entry.getKey(), entry.getValue());
 		}
 
 		for (Entry<Method, Object> entry : interceptionSettings.getStubbedMethods().entrySet()) {

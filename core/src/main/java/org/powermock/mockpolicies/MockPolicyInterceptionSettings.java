@@ -16,6 +16,7 @@
 package org.powermock.mockpolicies;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -30,119 +31,140 @@ import java.util.Map;
  * overrides all previous configurations.
  */
 public interface MockPolicyInterceptionSettings {
-    /**
-     * Set which methods to suppress. Note that this overrides all previous
-     * configurations.
-     */
-    void setMethodsToSuppress(Method[] methods);
+	/**
+	 * Set which methods to suppress. Note that this overrides all previous
+	 * configurations.
+	 */
+	void setMethodsToSuppress(Method[] methods);
 
-    /**
-     * Add methods to suppress upon invocation.
-     */
-    void addMethodsToSuppress(Method methodToSuppress, Method... additionalMethodsToSuppress);
+	/**
+	 * Add methods to suppress upon invocation.
+	 */
+	void addMethodsToSuppress(Method methodToSuppress, Method... additionalMethodsToSuppress);
 
-    /**
-     * Add methods to suppress upon invocation.
-     */
-    void addMethodsToSuppress(Method[] methods);
+	/**
+	 * Add methods to suppress upon invocation.
+	 */
+	void addMethodsToSuppress(Method[] methods);
 
-    /**
-     * Set the substitute return values. The substitute return values is a
-     * key-value map where each key is a method that should be intercepted and
-     * each value is the new return value for that method when it's intercepted.
-     * <p>
-     * Note that this overrides all previous configurations.
-     */
-    void setMethodsToStub(Map<Method, Object> substituteReturnValues);
+	/**
+	 * Set the substitute return values. The substitute return values is a
+	 * key-value map where each key is a method that should be intercepted and
+	 * each value is the new return value for that method when it's intercepted.
+	 * <p>
+	 * Note that this overrides all previous configurations.
+	 */
+	void setMethodsToStub(Map<Method, Object> substituteReturnValues);
 
-    /**
-     * Add a method that should be intercepted and return another value (
-     * <code>returnObject</code>) (i.e. the method is stubbed).
-     */
-    void stubMethod(Method method, Object returnObject);
+	/**
+	 * Add a method that should be intercepted and return another value (
+	 * <code>returnObject</code>) (i.e. the method is stubbed).
+	 */
+	void stubMethod(Method method, Object returnObject);
 
-    /**
-     * Set the substitute return values. The substitute return values is a
-     * key-value map where each key is a method that should be intercepted and
-     * each value is the new return value for that method when it's intercepted.
-     * <p>
-     * Note that this overrides all previous configurations.
-     * 
-     * @deprecated Use {@link #stubMethod(Method, Object)} instead.
-     */
-    void setSubtituteReturnValues(Map<Method, Object> substituteReturnValues);
+	/**
+	 * Proxy a method with the given invocation handler. Each call to the method
+	 * will be routed to the invocationHandler instead.
+	 */
+	void proxyMethod(Method method, InvocationHandler invocationHandler);
 
-    /**
-     * Add a method that should be intercepted and return another value (
-     * <code>returnObject</code>). The substitute return values is a key-value
-     * map where each key is a method that should be intercepted and each value
-     * is the new return value for that method when it's intercepted.
-     * 
-     * @deprecated Use {@link #stubMethod(Method, Object)} instead.
-     */
-    void addSubtituteReturnValue(Method method, Object returnObject);
+	/**
+	 * Get all methods that should be proxied and the invocation handler for
+	 * each method.
+	 */
+	Map<Method, InvocationHandler> getProxiedMethods();
 
-    /**
-     * Set specific fields that should be suppressed upon invocation. Note that
-     * this overrides all previous configurations.
-     */
-    void setFieldsSuppress(Field[] fields);
+	/**
+	 * Set the methods to proxy. The proxies are a key-value map where each key
+	 * is a method that should be intercepted and routed to the invocation
+	 * handler instead.
+	 * <p>
+	 * Note that this overrides all previous configurations.
+	 */
+	void setMethodsToProxy(Map<Method, InvocationHandler> proxies);
 
-    /**
-     * Add specific fields that should be suppressed upon invocation.
-     */
-    void addFieldToSuppress(Field firstField, Field... additionalFields);
+	/**
+	 * Set the substitute return values. The substitute return values is a
+	 * key-value map where each key is a method that should be intercepted and
+	 * each value is the new return value for that method when it's intercepted.
+	 * <p>
+	 * Note that this overrides all previous configurations.
+	 * 
+	 * @deprecated Use {@link #stubMethod(Method, Object)} instead.
+	 */
+	void setSubtituteReturnValues(Map<Method, Object> substituteReturnValues);
 
-    /**
-     * Add specific fields that should be suppressed upon invocation.
-     */
-    void addFieldToSuppress(Field[] fields);
+	/**
+	 * Add a method that should be intercepted and return another value (
+	 * <code>returnObject</code>). The substitute return values is a key-value
+	 * map where each key is a method that should be intercepted and each value
+	 * is the new return value for that method when it's intercepted.
+	 * 
+	 * @deprecated Use {@link #stubMethod(Method, Object)} instead.
+	 */
+	void addSubtituteReturnValue(Method method, Object returnObject);
 
-    /**
-     * Set which field types that should be suppressed. Note that this overrides
-     * all previous configurations.
-     */
-    void setFieldTypesToSuppress(String[] fieldTypes);
+	/**
+	 * Set specific fields that should be suppressed upon invocation. Note that
+	 * this overrides all previous configurations.
+	 */
+	void setFieldsSuppress(Field[] fields);
 
-    /**
-     * Add field types that should be suppressed.
-     */
-    void addFieldTypesToSuppress(String firstType, String... additionalFieldTypes);
+	/**
+	 * Add specific fields that should be suppressed upon invocation.
+	 */
+	void addFieldToSuppress(Field firstField, Field... additionalFields);
 
-    /**
-     * Add field types that should be suppressed.
-     */
-    void addFieldTypesToSuppress(String[] fieldTypes);
+	/**
+	 * Add specific fields that should be suppressed upon invocation.
+	 */
+	void addFieldToSuppress(Field[] fields);
 
-    /**
-     * @return Which methods that should be suppressed/stubbed (i.e. return a
-     *         default value when invoked).
-     */
-    Method[] getMethodsToSuppress();
+	/**
+	 * Set which field types that should be suppressed. Note that this overrides
+	 * all previous configurations.
+	 */
+	void setFieldTypesToSuppress(String[] fieldTypes);
 
-    /**
-     * Get all substitute return values and also returns an unmodifiable map of
-     * all method-object pairs the were initialized.
-     */
-    Map<Method, Object> getStubbedMethods();
+	/**
+	 * Add field types that should be suppressed.
+	 */
+	void addFieldTypesToSuppress(String firstType, String... additionalFieldTypes);
 
-    /**
-     * Get all substitute return values and also returns an unmodifiable map of
-     * all method-object pairs the were initialized.
-     * 
-     * @deprecated Use {@link #getStubbedMethods()} instead.
-     */
-    Map<Method, Object> getSubstituteReturnValues();
+	/**
+	 * Add field types that should be suppressed.
+	 */
+	void addFieldTypesToSuppress(String[] fieldTypes);
 
-    /**
-     * @return Which fields should be suppressed (i.e. will be set to
-     *         <code>null</code> or other default values).
-     */
-    Field[] getFieldsToSuppress();
+	/**
+	 * @return Which methods that should be suppressed/stubbed (i.e. return a
+	 *         default value when invoked).
+	 */
+	Method[] getMethodsToSuppress();
 
-    /**
-     * @return The fully-qualified names to the fields that should be
-     *         suppressed.
-     */
-    String[] getFieldTypesToSuppress();
+	/**
+	 * Get all substitute return values and also returns an unmodifiable map of
+	 * all method-object pairs the were initialized.
+	 */
+	Map<Method, Object> getStubbedMethods();
+
+	/**
+	 * Get all substitute return values and also returns an unmodifiable map of
+	 * all method-object pairs the were initialized.
+	 * 
+	 * @deprecated Use {@link #getStubbedMethods()} instead.
+	 */
+	Map<Method, Object> getSubstituteReturnValues();
+
+	/**
+	 * @return Which fields should be suppressed (i.e. will be set to
+	 *         <code>null</code> or other default values).
+	 */
+	Field[] getFieldsToSuppress();
+
+	/**
+	 * @return The fully-qualified names to the fields that should be
+	 *         suppressed.
+	 */
+	String[] getFieldTypesToSuppress();
 }
