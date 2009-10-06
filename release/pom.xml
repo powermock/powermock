@@ -15,7 +15,8 @@
     <modules>
         <module>full</module>
         <module>src</module>
-        <module>with-dependencies</module>
+        <module>with-easymock-dependencies</module>
+        <module>with-mockito-dependencies</module>
     </modules>
 
 </project>

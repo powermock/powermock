@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.powermock</groupId>
         <artifactId>powermock</artifactId>
-        <version>1.3</version>
+        <version>1.3-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -72,9 +72,8 @@
            <artifactId>powermock-classloading</artifactId>
 	   <version>${version}</version>
            <classifier>sources</classifier>
-       </dependencies>
+        </dependency>    
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
