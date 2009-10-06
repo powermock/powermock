@@ -53,7 +53,7 @@
 			<uniqueVersion>false</uniqueVersion>
 			<id>file</id>
 			<name>Local file Repository</name>
-			<url>file://target/repo</url>
+			<url>file:./../repo</url>
 			<layout>default</layout>
 		</repository>
 		<site>
