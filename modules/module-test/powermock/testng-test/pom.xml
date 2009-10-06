@@ -4,7 +4,7 @@
       </artifactId>
       <groupId>org.powermock.modules.powermock.test
       </groupId>
-      <version>1.3</version>
+      <version>1.4-SNAPSHOT</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.powermock.modules.test.testng
@@ -12,7 +12,7 @@
    <artifactId>powermock-module-test-testng
    </artifactId>
    <name>powermock-module-test-testng</name>
-   <version>1.3</version>
+   <version>1.4-SNAPSHOT</version>
    <url>http://maven.apache.org</url>
    <dependencies>
       <dependency>
