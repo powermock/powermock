@@ -39,7 +39,7 @@
                 <configuration>
                     <finalName>powermock-${version}</finalName>
                     <descriptors>
-                        <descriptor>src/assembly/with-dependencies.xml</descriptor>
+                        <descriptor>src/assembly/with-easymock-dependencies.xml</descriptor>
                     </descriptors>
                 </configuration>
                 <executions>

@@ -1,5 +1,5 @@
 <assembly>
-    <id>with-dependencies</id>
+    <id>with-easymock-dependencies</id>
     <formats>
         <format>zip</format>
     </formats>
