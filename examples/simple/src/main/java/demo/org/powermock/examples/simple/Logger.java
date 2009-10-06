@@ -24,7 +24,6 @@ public class Logger {
 
     public Logger() {
         try {
-        	System.out.println(Logger.class.getClassLoader());
 			writer = new PrintWriter(new FileWriter("target/logger.log"));
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
