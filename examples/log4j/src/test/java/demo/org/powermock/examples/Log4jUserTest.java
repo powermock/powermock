@@ -21,24 +21,25 @@ import org.powermock.reflect.Whitebox;
 @MockPolicy(Log4jMockPolicy.class)
 public class Log4jUserTest {
 
-    @Test
-    public void assertThatLog4jMockPolicyWorks() throws Exception {
-        final Log4jUser tested = createPartialMockAndInvokeDefaultConstructor(Log4jUser.class, "getMessage");
-        final String otherMessage = "other message";
-        final String firstMessage = "first message and ";
+	@Test
+	public void assertThatLog4jMockPolicyWorks() throws Exception {
+		final Log4jUser tested = createPartialMockAndInvokeDefaultConstructor(Log4jUser.class, "getMessage");
+		final String otherMessage = "other message";
+		final String firstMessage = "first message and ";
 
-        expect(tested.getMessage()).andReturn(firstMessage);
+		expect(tested.getMessage()).andReturn(firstMessage);
 
-        replayAll();
+		replayAll();
 
-        final String actual = tested.mergeMessageWith(otherMessage);
-        /*
-         * The logger instance is proxied!
-         */
-        assertNull(Whitebox.getInternalState(Log4jUserParent.class, Logger.class).getClass());
+		final String actual = tested.mergeMessageWith(otherMessage);
+		/*
+		 * The Logger instance has been nice-proxied by PowerMock and because of
+		 * this the call to getClass returns null.
+		 */
+		assertNull(Whitebox.getInternalState(Log4jUserParent.class, Logger.class).getClass());
 
-        verifyAll();
+		verifyAll();
 
-        assertEquals(firstMessage + otherMessage, actual);
-    }
+		assertEquals(firstMessage + otherMessage, actual);
+	}
 }

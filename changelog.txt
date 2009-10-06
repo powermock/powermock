@@ -78,8 +78,8 @@ Change log 1.3 (under development)
 * PowerMock and PowerMockito now supports proxying methods, including private methods using replace(..), e.g. replace(method(MyClass.class, "methodToProxy")).with(myInvocationHandler). Every call to the "methodToProxy" method will be routed to the supplied invocation handler instead.
 * PowerMock and PowerMockito now supports duck typing of static methods, including static private methods using replace(..), e.g. replace(method(MyClass.class, "methodToDuckType")).with(method(MyOtherClass.class, "methodToInvoke")). Every call to the "methodToDuckType" method will be routed to the "methodToInvoke" method instead.
 * Mock policies now supports proxing methods using proxyMethod(..).
+* Private inner memeber interfaces are not changed to public anymore during the byte-code manipulation session
 * PowerMock JUnit4 Runner can now instantiate test classes that have a String constructor if the test class extends from junit.framework.TestCase.
-
 
 Change log 1.2.5 (released 2009-05-05)
 --------------------------------------
