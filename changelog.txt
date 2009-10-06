@@ -1,5 +1,8 @@
-Change log 1.3 (under development)
+Change log 1.4 (under development)
 ----------------------------------
+
+Change log 1.3 (released 2009-10-06)
+------------------------------------
 * Classes that will have their static initializers suppressed are automatically added to prepare for test in mock policies.
 * Added a toString implementation for TestMethodResultImpl
 * Added a toString implementation for TestSuiteResultImpl
