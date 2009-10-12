@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.powermock.modules.junit4.internal.impl;
 
 import java.lang.reflect.Field;
@@ -43,6 +58,8 @@ public class PowerMockJUnit47RunnerDelegateImpl extends PowerMockJUnit44RunnerDe
 
     protected class PowerMockJUnit47MethodRunner extends PowerMockJUnit44MethodRunner {
 
+        private Throwable potentialTestFailure;
+
         protected PowerMockJUnit47MethodRunner(Object testInstance, TestMethod method, RunNotifier notifier, Description description,
                 boolean extendsFromTestCase) {
             super(testInstance, method, notifier, description, extendsFromTestCase);
@@ -64,15 +81,27 @@ public class PowerMockJUnit47RunnerDelegateImpl extends PowerMockJUnit44RunnerDe
                                 new LastRuleTestExecutorStatement(processedFields, rules.size(), test, testInstance, method), new FrameworkMethod(
                                         method), testInstance);
                         statement.evaluate();
-                    } catch (RuntimeException e) {
-                        throw (RuntimeException) e;
-                    } catch (AssertionError e) {
-                        throw e;
                     } catch (Throwable e) {
-                        throw new RuntimeException(e);
+                        /*
+                         * No rule could handle the exception thus we need to
+                         * add it as a failure.
+                         */
+                        super.handleException(testMethod, potentialTestFailure);
                     }
                 }
             }
+        }
+
+        /**
+         * Since a JUnit 4.7 rule may potentially deal with "unexpected"
+         * exceptions we cannot handle the exception before the rule has been
+         * completely evaluated. Thus we just store the exception here and
+         * rethrow it after the test method has finished executing. In that way
+         * the rule may get a chance to handle the exception appropriately.
+         */
+        @Override
+        protected void handleException(TestMethod testMethod, Throwable actual) {
+            potentialTestFailure = actual;
         }
 
         private void executeTestInSuper(final Method method, final Object testInstance, final Runnable test) {
@@ -98,6 +127,10 @@ public class PowerMockJUnit47RunnerDelegateImpl extends PowerMockJUnit44RunnerDe
             public void evaluate() throws Throwable {
                 if (currentRule == noOfRules) {
                     executeTestInSuper(method, testInstance, test);
+                    if (potentialTestFailure != null) {
+                        // Rethrow the potential failure caught in the test.
+                        throw potentialTestFailure;
+                    }
                 }
             }
         }
