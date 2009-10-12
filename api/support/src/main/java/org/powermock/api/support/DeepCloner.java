@@ -15,6 +15,7 @@
  */
 package org.powermock.api.support;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 
 import org.powermock.reflect.Whitebox;
@@ -46,6 +47,9 @@ public class DeepCloner {
 
     @SuppressWarnings("unchecked")
     private static <T> Class<T> getType(T objectToClone) {
+        if (objectToClone == null) {
+            return null;
+        }
         return (Class<T>) (objectToClone instanceof Class ? objectToClone : objectToClone.getClass());
     }
 
@@ -57,7 +61,7 @@ public class DeepCloner {
 
     @SuppressWarnings("unchecked")
     private static <T> T performClone(Class<T> targetClass, Object source) {
-        Object target = Whitebox.newInstance(targetClass);
+        Object target = targetClass.isArray() ? instantiateArray(targetClass, source) : Whitebox.newInstance(targetClass);
         Class<?> currentTargetClass = targetClass;
         while (currentTargetClass != null && !currentTargetClass.getName().startsWith(IGNORED_PACKAGES)) {
             for (Field field : currentTargetClass.getDeclaredFields()) {
@@ -67,7 +71,7 @@ public class DeepCloner {
                     declaredField.setAccessible(true);
                     final Object object = declaredField.get(source);
                     final Object instantiatedValue;
-                    if (Whitebox.getType(object).getName().startsWith(IGNORED_PACKAGES) || object == null) {
+                    if (getType(object).getName().startsWith(IGNORED_PACKAGES) || object == null) {
                         instantiatedValue = object;
                     } else {
                         instantiatedValue = performClone(ClassLoaderUtil.loadClassWithClassloader(targetClass.getClassLoader(), getType(object)),
@@ -83,5 +87,16 @@ public class DeepCloner {
             currentTargetClass = currentTargetClass.getSuperclass();
         }
         return (T) target;
+    }
+
+    private static Object instantiateArray(Class<?> arrayClass, Object objectToClone) {
+        final int arrayLength = Array.getLength(objectToClone);
+        final Object array = Array.newInstance(arrayClass.getComponentType(), arrayLength);
+        for (int i = 0; i < arrayLength; i++) {
+            final Object object = Array.get(objectToClone, i);
+            final Object performClone = performClone(ClassLoaderUtil.loadClassWithClassloader(arrayClass.getClassLoader(), getType(object)), object);
+            Array.set(array, i, performClone);
+        }
+        return array;
     }
 }

@@ -36,7 +36,25 @@ public class ClassloaderExecutorTest {
 
     @Test
     public void classloaderExecutorLoadsObjectGraphInSpecifiedClassloaderAndReturnsResultInOriginalClassloader() throws Exception {
+        MockClassLoader classloader = createClassloader();
+        final MyReturnValue expectedConstructorValue = new MyReturnValue(new MyArgument("first value"));
+        final MyClass myClass = new MyClass(expectedConstructorValue);
+        final MyArgument expected = new MyArgument("A value");
+        MyReturnValue[] actual = new ClassloaderExecutor(classloader).execute(new Callable<MyReturnValue[]>() {
+            public MyReturnValue[] call() throws Exception {
+                assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+                return myClass.myMethod(expected);
+            }
+        });
 
+        assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
+
+        final MyReturnValue myReturnValue = actual[0];
+        assertEquals(expectedConstructorValue.getMyArgument().getValue(), myReturnValue.getMyArgument().getValue());
+        assertEquals(expected.getValue(), actual[1].getMyArgument().getValue());
+    }
+
+    private MockClassLoader createClassloader() {
         MockClassLoader classloader = new MockClassLoader(new String[] { MyClass.class.getName(), MyArgument.class.getName(),
                 MyReturnValue.class.getName() });
         MockTransformer mainMockTransformer = new MockTransformer() {
@@ -47,18 +65,6 @@ public class ClassloaderExecutorTest {
         LinkedList<MockTransformer> linkedList = new LinkedList<MockTransformer>();
         linkedList.add(mainMockTransformer);
         classloader.setMockTransformerChain(linkedList);
-
-        final MyClass myClass = new MyClass();
-        final MyArgument expected = new MyArgument("A value");
-        MyReturnValue actual = new ClassloaderExecutor(classloader).execute(new Callable<MyReturnValue>() {
-            public MyReturnValue call() throws Exception {
-                assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
-                return myClass.myMethod(expected);
-            }
-        });
-
-        assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
-
-        assertEquals(expected.getValue(), actual.getMyArgument().getValue());
+        return classloader;
     }
 }

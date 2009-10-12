@@ -17,7 +17,16 @@ package powermock.classloading.classes;
 
 public class MyClass {
 
-    public MyReturnValue myMethod(MyArgument myArgument) {
-        return new MyReturnValue(myArgument);
+    private final MyReturnValue myReturnValue;
+
+    public MyClass(MyReturnValue myReturnValue) {
+        this.myReturnValue = myReturnValue;
+    }
+
+    public MyReturnValue[] myMethod(MyArgument myArgument) {
+        MyReturnValue[] returnValues = new MyReturnValue[2];
+        returnValues[0] = myReturnValue;
+        returnValues[1] = new MyReturnValue(myArgument); 
+        return returnValues;
     }
 }
