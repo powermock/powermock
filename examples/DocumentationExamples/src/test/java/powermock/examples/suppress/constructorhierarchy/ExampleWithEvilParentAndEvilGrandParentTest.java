@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package powermock.examples.suppress.constructor;
+package powermock.examples.suppress.constructorhierarchy;
 
 import static org.junit.Assert.assertEquals;
 import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
@@ -25,24 +25,31 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
- * Example that demonstrates PowerMock's ability to suppress parent
- * constructors.
+ * Example that demonstrates PowerMock's ability to suppress constructor
+ * hierarchies.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(ExampleWithEvilParent.class)
-public class ExampleWithParentChildTest {
+@PrepareForTest(ExampleWithEvilParentAndEvilGrandParent.class)
+public class ExampleWithEvilParentAndEvilGrandParentTest {
 
     @Test
-    public void testSuppressConstructorOfEvilParent() throws Exception {
+    public void testSuppressConstructorHierarchy() throws Exception {
         suppress(constructor(EvilParent.class));
         final String message = "myMessage";
-        ExampleWithEvilParent tested = new ExampleWithEvilParent(message);
+        ExampleWithEvilParentAndEvilGrandParent tested = new ExampleWithEvilParentAndEvilGrandParent(message);
         assertEquals(message, tested.getMessage());
     }
 
-    @Test(expected = UnsatisfiedLinkError.class)
-    public void testNotSuppressConstructorOfEvilParent() throws Exception {
+    @Test
+    public void testSuppressConstructorOfEvilChild() throws Exception {
+        suppress(constructor(EvilParent.class));
         final String message = "myMessage";
-        new ExampleWithEvilParent(message);
+        new ExampleWithEvilParentAndEvilGrandParent(message);
+    }
+
+    @Test(expected = UnsatisfiedLinkError.class)
+    public void testNotSuppressConstructorOfEvilChild() throws Exception {
+        final String message = "myMessage";
+        new ExampleWithEvilParentAndEvilGrandParent(message);
     }
 }

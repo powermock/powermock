@@ -19,9 +19,9 @@ package powermock.examples.suppress.constructorhierarchy;
  * Example that demonstrates PowerMock's ability to suppress constructor
  * hierarchies.
  */
-public class EvilParentChild {
+public class EvilGrandParent {
 
-	public EvilParentChild() {
+	public EvilGrandParent() {
 		System.loadLibrary("evil grand parent.dll");
 	}
 }

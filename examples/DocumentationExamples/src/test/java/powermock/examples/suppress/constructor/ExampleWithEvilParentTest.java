@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package powermock.examples.suppress.constructorhierarchy;
+package powermock.examples.suppress.constructor;
 
 import static org.junit.Assert.assertEquals;
 import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
@@ -25,31 +25,24 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
- * Example that demonstrates PowerMock's ability to suppress constructor
- * hierarchies.
+ * Example that demonstrates PowerMock's ability to suppress parent
+ * constructors.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(ExampleWithEvilParentAndEvilGrandParent.class)
-public class ExampleWithEvilChildAndEvilGrandParentTest {
+@PrepareForTest(ExampleWithEvilParent.class)
+public class ExampleWithEvilParentTest {
 
     @Test
-    public void testSuppressConstructorHierarchy() throws Exception {
+    public void testSuppressConstructorOfEvilParent() throws Exception {
         suppress(constructor(EvilParent.class));
         final String message = "myMessage";
-        ExampleWithEvilParentAndEvilGrandParent tested = new ExampleWithEvilParentAndEvilGrandParent(message);
+        ExampleWithEvilParent tested = new ExampleWithEvilParent(message);
         assertEquals(message, tested.getMessage());
     }
 
-    @Test
-    public void testSuppressConstructorOfEvilChild() throws Exception {
-        suppress(constructor(EvilParent.class));
-        final String message = "myMessage";
-        new ExampleWithEvilParentAndEvilGrandParent(message);
-    }
-
     @Test(expected = UnsatisfiedLinkError.class)
-    public void testNotSuppressConstructorOfEvilChild() throws Exception {
+    public void testNotSuppressConstructorOfEvilParent() throws Exception {
         final String message = "myMessage";
-        new ExampleWithEvilParentAndEvilGrandParent(message);
+        new ExampleWithEvilParent(message);
     }
 }
