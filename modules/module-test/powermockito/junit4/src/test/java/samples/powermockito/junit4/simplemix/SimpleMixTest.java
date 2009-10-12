@@ -20,8 +20,12 @@ import static org.junit.Assert.assertEquals;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.powermock.api.mockito.PowerMockito.verifyNew;
+import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +37,7 @@ import org.powermock.reflect.Whitebox;
 
 import samples.simplemix.SimpleMix;
 import samples.simplemix.SimpleMixCollaborator;
+import samples.simplemix.SimpleMixConstruction;
 import samples.simplemix.SimpleMixUtilities;
 
 /**
@@ -52,16 +57,21 @@ public class SimpleMixTest {
         when(tested, "getValue").thenReturn(0);
         SimpleMixCollaborator simpleMixCollaboratorMock = mock(SimpleMixCollaborator.class);
         mockStatic(SimpleMixUtilities.class);
+        SimpleMixConstruction simpleMixConstructionMock = mock(SimpleMixConstruction.class);
 
         Whitebox.setInternalState(tested, simpleMixCollaboratorMock);
 
         when(SimpleMixUtilities.getRandomInteger()).thenReturn(10);
         when(simpleMixCollaboratorMock.getRandomInteger()).thenReturn(6);
+        whenNew(SimpleMixConstruction.class).withNoArguments().thenReturn(simpleMixConstructionMock);
+        when(simpleMixConstructionMock.getMyValue()).thenReturn(1);
 
         assertEquals(4, tested.calculate());
 
         verifyStatic();
         SimpleMixUtilities.getRandomInteger();
+        verifyNew(SimpleMixConstruction.class).withNoArguments();
+        verifyPrivate(tested).invoke(method(SimpleMix.class, "getValue"));
     }
 
     @PrepareForTest( { SimpleMix.class })

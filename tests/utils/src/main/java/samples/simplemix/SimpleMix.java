@@ -21,13 +21,13 @@ package samples.simplemix;
  */
 public class SimpleMix {
 
-	private SimpleMixCollaborator collaborator;
+    private SimpleMixCollaborator collaborator;
 
-	public final int calculate() {
-		return SimpleMixUtilities.getRandomInteger() + getValue() - collaborator.getRandomInteger();
-	}
+    public final int calculate() {
+        return (SimpleMixUtilities.getRandomInteger() + getValue() - collaborator.getRandomInteger()) * new SimpleMixConstruction().getMyValue();
+    }
 
-	private int getValue() {
-		return (int) (System.currentTimeMillis() / 1000);
-	}
+    private int getValue() {
+        return (int) (System.currentTimeMillis() / 1000);
+    }
 }
