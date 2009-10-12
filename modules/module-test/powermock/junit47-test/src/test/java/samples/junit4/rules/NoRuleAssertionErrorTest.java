@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package samples.expectnew;
+package samples.junit4.rules;
 
-public class ExpectNewOfFinalSystemClassDemo {
+import static org.junit.Assert.assertTrue;
 
-    public char getFirstChar() {
-        String myString = new String("My String");
-        return myString.charAt(0);
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+@RunWith(PowerMockRunner.class)
+public class NoRuleAssertionErrorTest {
+
+    @Test(expected = AssertionError.class)
+    public void assertionErrorIsThrownOnFailureWhenNoRulesDefined() throws Exception {
+        assertTrue(false);
     }
 }

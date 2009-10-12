@@ -100,8 +100,12 @@ public class PowerMockJUnit47RunnerDelegateImpl extends PowerMockJUnit44RunnerDe
          * the rule may get a chance to handle the exception appropriately.
          */
         @Override
-        protected void handleException(TestMethod testMethod, Throwable actual) {
-            potentialTestFailure = actual;
+        protected void handleException(TestMethod testMethod, Throwable actualFailure) {
+            if (hasRules) {
+                potentialTestFailure = actualFailure;
+            } else {
+                super.handleException(testMethod, actualFailure);
+            }
         }
 
         private void executeTestInSuper(final Method method, final Object testInstance, final Runnable test) {
