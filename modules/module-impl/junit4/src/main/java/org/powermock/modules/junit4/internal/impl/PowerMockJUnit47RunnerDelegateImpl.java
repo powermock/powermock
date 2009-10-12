@@ -43,29 +43,6 @@ public class PowerMockJUnit47RunnerDelegateImpl extends PowerMockJUnit44RunnerDe
 
     protected class PowerMockJUnit47MethodRunner extends PowerMockJUnit44MethodRunner {
 
-        private final class LastRuleTestExecutorStatement extends Statement {
-            private final Runnable test;
-            private final Object testInstance;
-            private final Method method;
-            private final int noOfRules;
-            private final int currentRule;
-
-            private LastRuleTestExecutorStatement(int currentRuleNumber, int noOfRules, Runnable test, Object testInstance, Method method) {
-                this.currentRule = currentRuleNumber;
-                this.noOfRules = noOfRules;
-                this.test = test;
-                this.testInstance = testInstance;
-                this.method = method;
-            }
-
-            @Override
-            public void evaluate() throws Throwable {
-                if (currentRule == noOfRules) {
-                    executeTestInSuper(method, testInstance, test);
-                }
-            }
-        }
-
         protected PowerMockJUnit47MethodRunner(Object testInstance, TestMethod method, RunNotifier notifier, Description description,
                 boolean extendsFromTestCase) {
             super(testInstance, method, notifier, description, extendsFromTestCase);
@@ -75,7 +52,7 @@ public class PowerMockJUnit47RunnerDelegateImpl extends PowerMockJUnit44RunnerDe
         public void executeTest(final Method method, final Object testInstance, final Runnable test) {
             final Set<Field> rules = Whitebox.getFieldsAnnotatedWith(testInstance, Rule.class);
             hasRules = !rules.isEmpty();
-            if (hasRules) {
+            if (!hasRules) {
                 executeTestInSuper(method, testInstance, test);
             } else {
                 int processedFields = 0;
@@ -99,7 +76,30 @@ public class PowerMockJUnit47RunnerDelegateImpl extends PowerMockJUnit44RunnerDe
         }
 
         private void executeTestInSuper(final Method method, final Object testInstance, final Runnable test) {
-                super.executeTest(method, testInstance, test);
+            super.executeTest(method, testInstance, test);
+        }
+
+        private final class LastRuleTestExecutorStatement extends Statement {
+            private final Runnable test;
+            private final Object testInstance;
+            private final Method method;
+            private final int noOfRules;
+            private final int currentRule;
+
+            private LastRuleTestExecutorStatement(int currentRuleNumber, int noOfRules, Runnable test, Object testInstance, Method method) {
+                this.currentRule = currentRuleNumber;
+                this.noOfRules = noOfRules;
+                this.test = test;
+                this.testInstance = testInstance;
+                this.method = method;
+            }
+
+            @Override
+            public void evaluate() throws Throwable {
+                if (currentRule == noOfRules) {
+                    executeTestInSuper(method, testInstance, test);
+                }
+            }
         }
     }
 }
