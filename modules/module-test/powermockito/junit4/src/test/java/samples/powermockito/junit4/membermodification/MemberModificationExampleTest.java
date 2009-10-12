@@ -21,7 +21,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
+import static org.powermock.api.support.membermodification.MemberMatcher.field;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberMatcher.methods;
 import static org.powermock.api.support.membermodification.MemberMatcher.methodsDeclaredIn;
 import static org.powermock.api.support.membermodification.MemberModifier.replace;
 import static org.powermock.api.support.membermodification.MemberModifier.stub;
@@ -37,13 +39,14 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import samples.staticandinstance.StaticAndInstanceDemo;
 import samples.suppressconstructor.SuppressConstructorHierarchy;
+import samples.suppressfield.SuppressField;
 import samples.suppressmethod.SuppressMethod;
 
 /**
  * Demonstrates PowerMock's ability to modify member structures.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(SuppressMethod.class)
+@PrepareForTest( { SuppressMethod.class, SuppressField.class })
 public class MemberModificationExampleTest {
 
     @Test
@@ -51,6 +54,22 @@ public class MemberModificationExampleTest {
         suppress(method(SuppressMethod.class, "getObject"));
 
         assertNull(new SuppressMethod().getObject());
+    }
+
+    @Test
+    public void suppressMultipleMethodsExample1() throws Exception {
+        suppress(methods(SuppressMethod.class, "getObject", "getInt"));
+
+        assertNull(new SuppressMethod().getObject());
+        assertEquals(0, new SuppressMethod().getInt());
+    }
+
+    @Test
+    public void suppressMultipleMethodsExample2() throws Exception {
+        suppress(methods(method(SuppressMethod.class, "getObject"), method(SuppressMethod.class, "getInt")));
+
+        assertNull(new SuppressMethod().getObject());
+        assertEquals(0, new SuppressMethod().getInt());
     }
 
     @Test
@@ -62,6 +81,24 @@ public class MemberModificationExampleTest {
         assertNull(tested.getObject());
         assertNull(SuppressMethod.getObjectStatic());
         assertEquals(0, tested.getByte());
+    }
+
+    @Test
+    public void suppressSingleFieldExample() throws Exception {
+        suppress(field(SuppressField.class, "domainObject"));
+
+        SuppressField tested = new SuppressField();
+        assertNull(tested.getDomainObject());
+    }
+
+    @Test
+    public void suppressConstructorExample() throws Exception {
+        suppress(constructor(SuppressConstructorHierarchy.class));
+
+        SuppressConstructorHierarchy tested = new SuppressConstructorHierarchy("message");
+
+        assertEquals(42, tested.getNumber());
+        assertNull(tested.getMessage());
     }
 
     @Test
@@ -79,16 +116,6 @@ public class MemberModificationExampleTest {
         replace(method(SuppressMethod.class, "getObjectStatic")).with(method(StaticAndInstanceDemo.class, "getStaticMessage"));
 
         assertEquals(SuppressMethod.getObjectStatic(), StaticAndInstanceDemo.getStaticMessage());
-    }
-
-    @Test
-    public void suppressConstructorExample() throws Exception {
-        suppress(constructor(SuppressConstructorHierarchy.class));
-        
-        SuppressConstructorHierarchy tested = new SuppressConstructorHierarchy("message");
-
-        assertEquals(42, tested.getNumber());
-        assertNull(tested.getMessage());
     }
 
     @Test
