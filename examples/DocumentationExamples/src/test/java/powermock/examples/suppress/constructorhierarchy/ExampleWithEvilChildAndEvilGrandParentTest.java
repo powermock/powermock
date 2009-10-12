@@ -29,27 +29,27 @@ import org.powermock.modules.junit4.PowerMockRunner;
  * hierarchies.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(ExampleWithEvilChildAndEvilGrandChild.class)
-public class ExampleWithEvilChildAndEvilGrandChildTest {
+@PrepareForTest(ExampleWithEvilParentAndEvilGrandParent.class)
+public class ExampleWithEvilChildAndEvilGrandParentTest {
 
-	@Test
-	public void testSuppressConstructorHierarchy() throws Exception {
-		suppress(constructor(EvilChild.class));
-		final String message = "myMessage";
-		ExampleWithEvilChildAndEvilGrandChild tested = new ExampleWithEvilChildAndEvilGrandChild(message);
-		assertEquals(message, tested.getMessage());
-	}
+    @Test
+    public void testSuppressConstructorHierarchy() throws Exception {
+        suppress(constructor(EvilParent.class));
+        final String message = "myMessage";
+        ExampleWithEvilParentAndEvilGrandParent tested = new ExampleWithEvilParentAndEvilGrandParent(message);
+        assertEquals(message, tested.getMessage());
+    }
 
-	@Test
-	public void testSuppressConstructorOfEvilChild() throws Exception {
-		suppress(constructor(EvilChild.class));
-		final String message = "myMessage";
-		new ExampleWithEvilChildAndEvilGrandChild(message);
-	}
+    @Test
+    public void testSuppressConstructorOfEvilChild() throws Exception {
+        suppress(constructor(EvilParent.class));
+        final String message = "myMessage";
+        new ExampleWithEvilParentAndEvilGrandParent(message);
+    }
 
-	@Test(expected = UnsatisfiedLinkError.class)
-	public void testNotSuppressConstructorOfEvilChild() throws Exception {
-		final String message = "myMessage";
-		new ExampleWithEvilChildAndEvilGrandChild(message);
-	}
+    @Test(expected = UnsatisfiedLinkError.class)
+    public void testNotSuppressConstructorOfEvilChild() throws Exception {
+        final String message = "myMessage";
+        new ExampleWithEvilParentAndEvilGrandParent(message);
+    }
 }

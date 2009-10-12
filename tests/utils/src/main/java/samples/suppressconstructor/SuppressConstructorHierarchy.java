@@ -15,22 +15,20 @@
  */
 package samples.suppressconstructor;
 
-public class SuppressConstructorHierarchyGrandParent extends
-		SuppressConstructorHeirarchyEvilGrandParent {
+public class SuppressConstructorHierarchy extends SuppressConstructorHierarchyParent {
 
-	private String message;
-
-	SuppressConstructorHierarchyGrandParent() {
-		System.out.println("Parent constructor");
-		this.message = "Default message";
+	public SuppressConstructorHierarchy(String message) {
+		super(message);
 	}
 
-	SuppressConstructorHierarchyGrandParent(String message) {
-		System.out.println("Parent constructor with message");
-		this.message = message;
+	/**
+	 * This method is just here to check if it works to execute several tests
+	 * with the same test suite class loader.
+	 * 
+	 * @return 42.
+	 */
+	public int getNumber() {
+		return 42;
 	}
 
-	public String getMessage() {
-		return message;
-	}
 }

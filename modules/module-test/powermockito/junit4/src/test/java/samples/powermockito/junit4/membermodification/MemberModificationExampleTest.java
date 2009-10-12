@@ -1,0 +1,113 @@
+/*
+ * Copyright 2009 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package samples.powermockito.junit4.membermodification;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberMatcher.methodsDeclaredIn;
+import static org.powermock.api.support.membermodification.MemberModifier.replace;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.powermock.api.support.membermodification.MemberModifier.suppress;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import samples.staticandinstance.StaticAndInstanceDemo;
+import samples.suppressconstructor.SuppressConstructorHierarchy;
+import samples.suppressmethod.SuppressMethod;
+
+/**
+ * Demonstrates PowerMock's ability to modify member structures.
+ */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(SuppressMethod.class)
+public class MemberModificationExampleTest {
+
+    @Test
+    public void suppressSingleMethodExample() throws Exception {
+        suppress(method(SuppressMethod.class, "getObject"));
+
+        assertNull(new SuppressMethod().getObject());
+    }
+
+    @Test
+    public void suppressAllMethodsExample() throws Exception {
+        suppress(methodsDeclaredIn(SuppressMethod.class));
+
+        final SuppressMethod tested = new SuppressMethod();
+
+        assertNull(tested.getObject());
+        assertNull(SuppressMethod.getObjectStatic());
+        assertEquals(0, tested.getByte());
+    }
+
+    @Test
+    public void stubSingleMethodExample() throws Exception {
+        final String expectedReturnValue = "new";
+        stub(method(SuppressMethod.class, "getObject")).andReturn(expectedReturnValue);
+
+        final SuppressMethod tested = new SuppressMethod();
+        assertEquals(expectedReturnValue, tested.getObject());
+        assertEquals(expectedReturnValue, tested.getObject());
+    }
+
+    @Test
+    public void duckTypeStaticMethodExample() throws Exception {
+        replace(method(SuppressMethod.class, "getObjectStatic")).with(method(StaticAndInstanceDemo.class, "getStaticMessage"));
+
+        assertEquals(SuppressMethod.getObjectStatic(), StaticAndInstanceDemo.getStaticMessage());
+    }
+
+    @Test
+    public void suppressConstructorExample() throws Exception {
+        suppress(constructor(SuppressConstructorHierarchy.class));
+        
+        SuppressConstructorHierarchy tested = new SuppressConstructorHierarchy("message");
+
+        assertEquals(42, tested.getNumber());
+        assertNull(tested.getMessage());
+    }
+
+    @Test
+    public void changingReturnValueExample() throws Exception {
+        replace(method(SuppressMethod.class, "getObjectWithArgument")).with(new ReturnValueChangingInvocationHandler());
+
+        final SuppressMethod tested = new SuppressMethod();
+
+        assertThat(tested.getObjectWithArgument("don't do anything"), is(instanceOf(Object.class)));
+        assertEquals("hello world", tested.getObjectWithArgument("make it a string"));
+    }
+
+    private final class ReturnValueChangingInvocationHandler implements InvocationHandler {
+        public Object invoke(Object object, Method method, Object[] arguments) throws Throwable {
+            if (arguments[0].equals("make it a string")) {
+                return "hello world";
+            } else {
+                return method.invoke(object, arguments);
+            }
+        }
+    }
+}

@@ -17,62 +17,66 @@ package samples.suppressmethod;
 
 public class SuppressMethod extends SuppressMethodParent {
 
-	public static final Object OBJECT = new Object();
+    public static final Object OBJECT = new Object();
 
-	public Object getObject() {
-		return OBJECT;
-	}
+    public Object getObjectWithArgument(String argument) {
+        return OBJECT;
+    }
 
-	public static Object getObjectStatic() {
-		return OBJECT;
-	}
+    public Object getObject() {
+        return OBJECT;
+    }
 
-	public byte getByte() {
-		return Byte.MAX_VALUE;
-	}
+    public static Object getObjectStatic() {
+        return OBJECT;
+    }
 
-	public short getShort() {
-		return Short.MAX_VALUE;
-	}
+    public byte getByte() {
+        return Byte.MAX_VALUE;
+    }
 
-	public int getInt() {
-		return Integer.MAX_VALUE;
-	}
+    public short getShort() {
+        return Short.MAX_VALUE;
+    }
 
-	public long getLong() {
-		return Long.MAX_VALUE;
-	}
+    public int getInt() {
+        return Integer.MAX_VALUE;
+    }
 
-	public boolean getBoolean() {
-		return true;
-	}
+    public long getLong() {
+        return Long.MAX_VALUE;
+    }
 
-	public float getFloat() {
-		return Float.MAX_VALUE;
-	}
+    public boolean getBoolean() {
+        return true;
+    }
 
-	public double getDouble() {
-		return Double.MAX_VALUE;
-	}
+    public float getFloat() {
+        return Float.MAX_VALUE;
+    }
 
-	public double getDouble(double value) {
-		return value;
-	}
+    public double getDouble() {
+        return Double.MAX_VALUE;
+    }
 
-	public void invokeVoid(StringBuilder s) {
-		s.append("This should be suppressed!");
-	}
+    public double getDouble(double value) {
+        return value;
+    }
 
-	@Override
-	public int myMethod() {
-		return 20 + super.myMethod();
-	}
+    public void invokeVoid(StringBuilder s) {
+        s.append("This should be suppressed!");
+    }
 
-	public Object sameName(int i) {
-		return OBJECT;
-	}
+    @Override
+    public int myMethod() {
+        return 20 + super.myMethod();
+    }
 
-	public Object sameName(float f) {
-		return OBJECT;
-	}
+    public Object sameName(int i) {
+        return OBJECT;
+    }
+
+    public Object sameName(float f) {
+        return OBJECT;
+    }
 }

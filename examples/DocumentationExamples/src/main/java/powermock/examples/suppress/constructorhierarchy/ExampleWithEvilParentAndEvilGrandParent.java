@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package powermock.examples.suppress.constructor;
+package powermock.examples.suppress.constructorhierarchy;
 
 /**
- * Example that demonstrates PowerMock's ability to suppress child constructors.
+ * Example that demonstrates PowerMock's ability to suppress constructor hierarchies.
  */
-public class ExampleWithEvilChild extends EvilChild {
+public class ExampleWithEvilParentAndEvilGrandParent extends EvilParent {
 
 	private final String message;
 
-	public ExampleWithEvilChild(String message) {
+	public ExampleWithEvilParentAndEvilGrandParent(String message) {
 		this.message = message;
 	}
 

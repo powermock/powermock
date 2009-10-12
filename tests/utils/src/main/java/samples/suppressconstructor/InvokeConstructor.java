@@ -18,6 +18,6 @@ package samples.suppressconstructor;
 public class InvokeConstructor {
 
 	public String doStuff(String m) {
-		return new SuppressConstructorHierarchyParent(m).getMessage();
+		return new SuppressConstructorHierarchy(m).getMessage();
 	}
 }

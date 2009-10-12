@@ -25,23 +25,24 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
- * Example that demonstrates PowerMock's ability to suppress child constructors.
+ * Example that demonstrates PowerMock's ability to suppress parent
+ * constructors.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(ExampleWithEvilChild.class)
-public class ExampleWithEvilChildTest {
+@PrepareForTest(ExampleWithEvilParent.class)
+public class ExampleWithParentChildTest {
 
-	@Test
-	public void testSuppressConstructorOfEvilChild() throws Exception {
-		suppress(constructor(EvilChild.class));
-		final String message = "myMessage";
-		ExampleWithEvilChild tested = new ExampleWithEvilChild(message);
-		assertEquals(message, tested.getMessage());
-	}
+    @Test
+    public void testSuppressConstructorOfEvilParent() throws Exception {
+        suppress(constructor(EvilParent.class));
+        final String message = "myMessage";
+        ExampleWithEvilParent tested = new ExampleWithEvilParent(message);
+        assertEquals(message, tested.getMessage());
+    }
 
-	@Test(expected = UnsatisfiedLinkError.class)
-	public void testNotSuppressConstructorOfEvilChild() throws Exception {
-		final String message = "myMessage";
-		new ExampleWithEvilChild(message);
-	}
+    @Test(expected = UnsatisfiedLinkError.class)
+    public void testNotSuppressConstructorOfEvilParent() throws Exception {
+        final String message = "myMessage";
+        new ExampleWithEvilParent(message);
+    }
 }
