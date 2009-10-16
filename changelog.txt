@@ -2,6 +2,7 @@ Change log 1.4 (under development)
 ----------------------------------
 * Critial bug resolved in the PowerMock JUnit 4.7 runner: Before tests would not be executed at all if a JUnit rule was used in the test (even though it looked like they were). This has now been resolved an thus support for JUnit 4.7 rules should _really_ work.
 * DeepCloner now supports cloning of one dimensional arrays
+* Test case is now always prepared for test even if no @PrepareForTest annotation is specified
 
 Change log 1.3 (released 2009-10-06)
 ------------------------------------
