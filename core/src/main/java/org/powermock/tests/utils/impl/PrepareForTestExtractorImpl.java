@@ -16,6 +16,7 @@
 package org.powermock.tests.utils.impl;
 
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -27,83 +28,92 @@ import org.powermock.tests.utils.TestClassesExtractor;
 /**
  * Implementation of the {@link TestClassesExtractor} interface that extract
  * classes from the {@link PrepareForTest} or {@link PrepareOnlyThisForTest}
- * annotations.
+ * annotations. It also adds the test case to the array of classes that should
+ * be modified.
  * 
  */
 public class PrepareForTestExtractorImpl extends AbstractTestClassExtractor {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected String[] getClassesToModify(AnnotatedElement element) {
-		Set<String> all = new LinkedHashSet<String>();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String[] getClassesToModify(AnnotatedElement element) {
+        Set<String> all = new LinkedHashSet<String>();
+        addTestCase(all, element);
+        PrepareForTest prepareForTestAnnotation = element.getAnnotation(PrepareForTest.class);
+        PrepareOnlyThisForTest prepareOnlyThisForTestAnnotation = element.getAnnotation(PrepareOnlyThisForTest.class);
+        final boolean prepareForTestAnnotationPresent = prepareForTestAnnotation != null;
+        final boolean prepareOnlyThisForTestAnnotationPresent = prepareOnlyThisForTestAnnotation != null;
 
-		PrepareForTest prepareForTestAnnotation = element.getAnnotation(PrepareForTest.class);
-		PrepareOnlyThisForTest prepareOnlyThisForTestAnnotation = element.getAnnotation(PrepareOnlyThisForTest.class);
-		final boolean prepareForTestAnnotationPresent = prepareForTestAnnotation != null;
-		final boolean prepareOnlyThisForTestAnnotationPresent = prepareOnlyThisForTestAnnotation != null;
+        if (!prepareForTestAnnotationPresent && !prepareOnlyThisForTestAnnotationPresent) {
+            return null;
+        }
 
-		if (!prepareForTestAnnotationPresent && !prepareOnlyThisForTestAnnotationPresent) {
-			return null;
-		}
+        if (prepareForTestAnnotationPresent) {
+            final Class<?>[] classesToMock = prepareForTestAnnotation.value();
+            for (Class<?> classToMock : classesToMock) {
+                if (!classToMock.equals(IndicateReloadClass.class)) {
+                    addClassHierarchy(all, classToMock);
+                }
+            }
 
-		if (prepareForTestAnnotationPresent) {
-			final Class<?>[] classesToMock = prepareForTestAnnotation.value();
-			for (Class<?> classToMock : classesToMock) {
-				if (!classToMock.equals(IndicateReloadClass.class)) {
-					addClassHierarchy(all, classToMock);
-				}
-			}
+            addFullyQualifiedNames(all, prepareForTestAnnotation);
+        }
 
-			addFullyQualifiedNames(all, prepareForTestAnnotation);
-		}
+        if (prepareOnlyThisForTestAnnotationPresent) {
+            final Class<?>[] classesToMock = prepareOnlyThisForTestAnnotation.value();
+            for (Class<?> classToMock : classesToMock) {
+                if (!classToMock.equals(IndicateReloadClass.class)) {
+                    all.add(classToMock.getName());
+                }
+            }
 
-		if (prepareOnlyThisForTestAnnotationPresent) {
-			final Class<?>[] classesToMock = prepareOnlyThisForTestAnnotation.value();
-			for (Class<?> classToMock : classesToMock) {
-				if (!classToMock.equals(IndicateReloadClass.class)) {
-					all.add(classToMock.getName());
-				}
-			}
+            addFullyQualifiedNames(all, prepareOnlyThisForTestAnnotation);
+        }
 
-			addFullyQualifiedNames(all, prepareOnlyThisForTestAnnotation);
-		}
+        return all.toArray(new String[0]);
 
-		return all.toArray(new String[0]);
+    }
 
-	}
+    private void addTestCase(Set<String> all, AnnotatedElement element) {
+        if (element instanceof Class<?>) {
+            all.add(((Class<?>) element).getName());
+        } else if (element instanceof Method) {
+            all.add(((Method) element).getDeclaringClass().getName());
+        }
+    }
 
-	private void addFullyQualifiedNames(Set<String> all, PrepareForTest annotation) {
-		String[] fullyQualifiedNames = annotation.fullyQualifiedNames();
-		addFullyQualifiedNames(all, fullyQualifiedNames);
-	}
+    private void addFullyQualifiedNames(Set<String> all, PrepareForTest annotation) {
+        String[] fullyQualifiedNames = annotation.fullyQualifiedNames();
+        addFullyQualifiedNames(all, fullyQualifiedNames);
+    }
 
-	private void addFullyQualifiedNames(Set<String> all, PrepareOnlyThisForTest annotation) {
-		String[] fullyQualifiedNames = annotation.fullyQualifiedNames();
-		addFullyQualifiedNames(all, fullyQualifiedNames);
-	}
+    private void addFullyQualifiedNames(Set<String> all, PrepareOnlyThisForTest annotation) {
+        String[] fullyQualifiedNames = annotation.fullyQualifiedNames();
+        addFullyQualifiedNames(all, fullyQualifiedNames);
+    }
 
-	private void addFullyQualifiedNames(Set<String> all, String[] fullyQualifiedNames) {
-		for (String string : fullyQualifiedNames) {
-			if (!"".equals(string)) {
-				all.add(string);
-			}
-		}
-	}
+    private void addFullyQualifiedNames(Set<String> all, String[] fullyQualifiedNames) {
+        for (String string : fullyQualifiedNames) {
+            if (!"".equals(string)) {
+                all.add(string);
+            }
+        }
+    }
 
-	private void addClassHierarchy(Set<String> all, Class<?> classToMock) {
-		while (classToMock != null && !classToMock.equals(Object.class)) {
-			addInnerClassesAndInterfaces(all, classToMock);
-			all.add(classToMock.getName());
-			classToMock = classToMock.getSuperclass();
-		}
-	}
+    private void addClassHierarchy(Set<String> all, Class<?> classToMock) {
+        while (classToMock != null && !classToMock.equals(Object.class)) {
+            addInnerClassesAndInterfaces(all, classToMock);
+            all.add(classToMock.getName());
+            classToMock = classToMock.getSuperclass();
+        }
+    }
 
-	private void addInnerClassesAndInterfaces(Set<String> all, Class<?> classToMock) {
-		Class<?>[] declaredClasses = classToMock.getDeclaredClasses();
-		for (Class<?> innerClass : declaredClasses) {
-			all.add(innerClass.getName());
-		}
-	}
+    private void addInnerClassesAndInterfaces(Set<String> all, Class<?> classToMock) {
+        Class<?>[] declaredClasses = classToMock.getDeclaredClasses();
+        for (Class<?> innerClass : declaredClasses) {
+            all.add(innerClass.getName());
+        }
+    }
 }

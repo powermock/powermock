@@ -183,10 +183,6 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
             final String[] suppressStaticClasses = suppressionExtractor.getTestClasses(testClass);
             defaultMockLoader = createNewClassloader(testClass, arrayMerger.mergeArrays(String.class, prepareForTestClasses, suppressStaticClasses),
                     ignorePackages);
-            if (defaultMockLoader instanceof MockClassLoader) {
-                // Test class should always be prepared
-                ((MockClassLoader) defaultMockLoader).addClassesToModify(testClass.getName());
-            }
         }
         registerProxyframework(defaultMockLoader);
         List<Method> currentClassloaderMethods = new LinkedList<Method>();
@@ -220,11 +216,6 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
             });
             MockClassLoader mockClassLoader = (MockClassLoader) mockLoader;
             mockClassLoader.setMockTransformerChain(mockTransformerChain);
-            if (!mockClassLoader.shouldModifyAll()) {
-                // Always prepare test class for testing if not all classes are
-                // prepared
-                mockClassLoader.addClassesToModify(testClass.getName());
-            }
             new MockPolicyInitializerImpl(testClass).initialize(mockLoader);
         }
         return mockLoader;

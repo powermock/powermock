@@ -40,159 +40,179 @@ import org.powermock.tests.utils.MockPolicyInitializer;
  */
 public class MockPolicyInitializerImpl implements MockPolicyInitializer {
 
-	private final PowerMockPolicy[] mockPolicies;
-	private final Class<? extends PowerMockPolicy>[] mockPolicyTypes;
+    private final PowerMockPolicy[] mockPolicies;
+    private final Class<? extends PowerMockPolicy>[] mockPolicyTypes;
+    private final Class<?> testClass;
 
-	public MockPolicyInitializerImpl(Class<? extends PowerMockPolicy>[] mockPolicies) {
-		this(mockPolicies, false);
-	}
+    public MockPolicyInitializerImpl(Class<? extends PowerMockPolicy>[] mockPolicies) {
+        this(mockPolicies, false);
+    }
 
-	public MockPolicyInitializerImpl(Class<?> testClass) {
-		this(getMockPolicies(testClass), false);
-	}
+    public MockPolicyInitializerImpl(Class<?> testClass) {
+        this(getMockPolicies(testClass), testClass, false);
+    }
 
-	private MockPolicyInitializerImpl(Class<? extends PowerMockPolicy>[] mockPolicies, boolean internal) {
-		if (internal) {
-			mockPolicyTypes = null;
-		} else {
-			mockPolicyTypes = mockPolicies;
-		}
-		if (mockPolicies == null) {
-			this.mockPolicies = new PowerMockPolicy[0];
-		} else {
-			this.mockPolicies = new PowerMockPolicy[mockPolicies.length];
-			for (int i = 0; i < mockPolicies.length; i++) {
-				this.mockPolicies[i] = Whitebox.newInstance(mockPolicies[i]);
-			}
-		}
-	}
+    private MockPolicyInitializerImpl(Class<? extends PowerMockPolicy>[] mockPolicies, boolean internal) {
+        this(mockPolicies, null, false);
+    }
 
-	public boolean isPrepared(String fullyQualifiedClassName) {
-		MockPolicyClassLoadingSettings settings = getClassLoadingSettings();
-		final boolean foundInSuppressStaticInitializer = Arrays.binarySearch(settings.getStaticInitializersToSuppress(), fullyQualifiedClassName) < 0;
-		final boolean foundClassesLoadedByMockClassloader = Arrays.binarySearch(settings.getFullyQualifiedNamesOfClassesToLoadByMockClassloader(),
-				fullyQualifiedClassName) < 0;
-		return foundInSuppressStaticInitializer || foundClassesLoadedByMockClassloader;
-	}
+    private MockPolicyInitializerImpl(Class<? extends PowerMockPolicy>[] mockPolicies, Class<?> testClass, boolean internal) {
+        this.testClass = testClass;
+        if (internal) {
+            mockPolicyTypes = null;
+        } else {
+            mockPolicyTypes = mockPolicies;
+        }
+        if (mockPolicies == null) {
+            this.mockPolicies = new PowerMockPolicy[0];
+        } else {
+            this.mockPolicies = new PowerMockPolicy[mockPolicies.length];
+            for (int i = 0; i < mockPolicies.length; i++) {
+                this.mockPolicies[i] = Whitebox.newInstance(mockPolicies[i]);
+            }
+        }
+    }
 
-	public boolean needsInitialization() {
-		MockPolicyClassLoadingSettings settings = getClassLoadingSettings();
-		return settings.getStaticInitializersToSuppress().length > 0 || settings.getFullyQualifiedNamesOfClassesToLoadByMockClassloader().length > 0;
-	}
+    public boolean isPrepared(String fullyQualifiedClassName) {
+        MockPolicyClassLoadingSettings settings = getClassLoadingSettings();
+        final boolean foundInSuppressStaticInitializer = Arrays.binarySearch(settings.getStaticInitializersToSuppress(), fullyQualifiedClassName) < 0;
+        final boolean foundClassesLoadedByMockClassloader = Arrays.binarySearch(settings.getFullyQualifiedNamesOfClassesToLoadByMockClassloader(),
+                fullyQualifiedClassName) < 0;
+        return foundInSuppressStaticInitializer || foundClassesLoadedByMockClassloader;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void initialize(ClassLoader classLoader) {
-		if (classLoader instanceof MockClassLoader) {
-			initialize((MockClassLoader) classLoader);
-		}
-	}
+    public boolean needsInitialization() {
+        MockPolicyClassLoadingSettings settings = getClassLoadingSettings();
+        return settings.getStaticInitializersToSuppress().length > 0 || settings.getFullyQualifiedNamesOfClassesToLoadByMockClassloader().length > 0;
+    }
 
-	/**
-	 * 
-	 * {@inheritDoc}
-	 */
-	private void initialize(MockClassLoader classLoader) {
-		if (mockPolicies.length > 0) {
-			MockPolicyClassLoadingSettings classLoadingSettings = getClassLoadingSettings();
-			String[] fullyQualifiedNamesOfClassesToLoadByMockClassloader = classLoadingSettings
-					.getFullyQualifiedNamesOfClassesToLoadByMockClassloader();
-			classLoader.addClassesToModify(fullyQualifiedNamesOfClassesToLoadByMockClassloader);
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(ClassLoader classLoader) {
+        if (classLoader instanceof MockClassLoader) {
+            initialize((MockClassLoader) classLoader);
+        }
+    }
 
-			for (String string : classLoadingSettings.getStaticInitializersToSuppress()) {
-				classLoader.addClassesToModify(string);
-				MockRepository.addSuppressStaticInitializer(string);
-			}
+    /**
+     * 
+     * {@inheritDoc}
+     */
+    private void initialize(MockClassLoader classLoader) {
+        if (mockPolicies.length > 0) {
+            MockPolicyClassLoadingSettings classLoadingSettings = getClassLoadingSettings();
+            String[] fullyQualifiedNamesOfClassesToLoadByMockClassloader = classLoadingSettings
+                    .getFullyQualifiedNamesOfClassesToLoadByMockClassloader();
+            classLoader.addClassesToModify(fullyQualifiedNamesOfClassesToLoadByMockClassloader);
 
-			invokeInitializeInterceptionSettingsFromClassLoader(classLoader);
-		}
-	}
+            if (testClass == null) {
+                throw new IllegalStateException("Internal error: testClass should never be null when calling initialize on a mock policy");
+            }
 
-	private void invokeInitializeInterceptionSettingsFromClassLoader(MockClassLoader classLoader) {
-		try {
-			final int sizeOfPolicies = mockPolicyTypes.length;
-			Object mockPolicies = Array.newInstance(Class.class, sizeOfPolicies);
-			for (int i = 0; i < sizeOfPolicies; i++) {
-				final Class<?> policyLoadedByClassLoader = Class.forName(mockPolicyTypes[i].getName(), false, classLoader);
-				Array.set(mockPolicies, i, policyLoadedByClassLoader);
-			}
-			final Class<?> thisTypeLoadedByMockClassLoader = Class.forName(this.getClass().getName(), false, classLoader);
-			Object mockPolicyHandler = Whitebox.invokeConstructor(thisTypeLoadedByMockClassLoader, mockPolicies, true);
-			Whitebox.invokeMethod(mockPolicyHandler, "initializeInterceptionSettings");
-		} catch (InvocationTargetException e) {
-			final Throwable targetException = e.getTargetException();
-			if (targetException instanceof RuntimeException) {
-				throw (RuntimeException) targetException;
-			} else if (targetException instanceof Error) {
-				throw (Error) targetException;
-			} else {
-				throw new RuntimeException(e);
-			}
-		} catch (RuntimeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new IllegalStateException("PowerMock internal error: Failed to load class.", e);
-		}
-	}
+            classLoader.addClassesToModify(testClass.getName());
+            Class<?>[] classes = testClass.getDeclaredClasses();
+            for (Class<?> clazz : classes) {
+                classLoader.addClassesToModify(clazz.getName());
+            }
+            Class<?>[] declaredClasses = testClass.getClasses();
+            for (Class<?> clazz : declaredClasses) {
+                classLoader.addClassesToModify(clazz.getName());
+            }
 
-	/*
-	 * This method IS used, but it's invoked using reflection from the
-	 * invokeInitializeInterceptionSettingsFromClassLoader method.
-	 */
-	@SuppressWarnings("unused")
-	private void initializeInterceptionSettings() {
-		MockPolicyInterceptionSettings interceptionSettings = getInterceptionSettings();
+            for (String string : classLoadingSettings.getStaticInitializersToSuppress()) {
+                classLoader.addClassesToModify(string);
+                MockRepository.addSuppressStaticInitializer(string);
+            }
 
-		for (Method method : interceptionSettings.getMethodsToSuppress()) {
-			MockRepository.addMethodToSuppress(method);
-		}
+            invokeInitializeInterceptionSettingsFromClassLoader(classLoader);
+        }
+    }
 
-		for (Entry<Method, InvocationHandler> entry : interceptionSettings.getProxiedMethods().entrySet()) {
-			MockRepository.putMethodProxy(entry.getKey(), entry.getValue());
-		}
+    private void invokeInitializeInterceptionSettingsFromClassLoader(MockClassLoader classLoader) {
+        try {
+            final int sizeOfPolicies = mockPolicyTypes.length;
+            Object mockPolicies = Array.newInstance(Class.class, sizeOfPolicies);
+            for (int i = 0; i < sizeOfPolicies; i++) {
+                final Class<?> policyLoadedByClassLoader = Class.forName(mockPolicyTypes[i].getName(), false, classLoader);
+                Array.set(mockPolicies, i, policyLoadedByClassLoader);
+            }
+            final Class<?> thisTypeLoadedByMockClassLoader = Class.forName(this.getClass().getName(), false, classLoader);
+            Object mockPolicyHandler = Whitebox.invokeConstructor(thisTypeLoadedByMockClassLoader, mockPolicies, true);
+            Whitebox.invokeMethod(mockPolicyHandler, "initializeInterceptionSettings");
+        } catch (InvocationTargetException e) {
+            final Throwable targetException = e.getTargetException();
+            if (targetException instanceof RuntimeException) {
+                throw (RuntimeException) targetException;
+            } else if (targetException instanceof Error) {
+                throw (Error) targetException;
+            } else {
+                throw new RuntimeException(e);
+            }
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IllegalStateException("PowerMock internal error: Failed to load class.", e);
+        }
+    }
 
-		for (Entry<Method, Object> entry : interceptionSettings.getStubbedMethods().entrySet()) {
-			final Method method = entry.getKey();
-			final Object className = entry.getValue();
-			MockRepository.putMethodToStub(method, className);
-		}
+    /*
+     * This method IS used, but it's invoked using reflection from the
+     * invokeInitializeInterceptionSettingsFromClassLoader method.
+     */
+    @SuppressWarnings("unused")
+    private void initializeInterceptionSettings() {
+        MockPolicyInterceptionSettings interceptionSettings = getInterceptionSettings();
 
-		for (Field field : interceptionSettings.getFieldsToSuppress()) {
-			MockRepository.addFieldToSuppress(field);
-		}
+        for (Method method : interceptionSettings.getMethodsToSuppress()) {
+            MockRepository.addMethodToSuppress(method);
+        }
 
-		for (String type : interceptionSettings.getFieldTypesToSuppress()) {
-			MockRepository.addFieldTypeToSuppress(type);
-		}
-	}
+        for (Entry<Method, InvocationHandler> entry : interceptionSettings.getProxiedMethods().entrySet()) {
+            MockRepository.putMethodProxy(entry.getKey(), entry.getValue());
+        }
 
-	private MockPolicyInterceptionSettings getInterceptionSettings() {
-		MockPolicyInterceptionSettings settings = new MockPolicyInterceptionSettingsImpl();
-		for (PowerMockPolicy mockPolicy : mockPolicies) {
-			mockPolicy.applyInterceptionPolicy(settings);
-		}
-		return settings;
-	}
+        for (Entry<Method, Object> entry : interceptionSettings.getStubbedMethods().entrySet()) {
+            final Method method = entry.getKey();
+            final Object className = entry.getValue();
+            MockRepository.putMethodToStub(method, className);
+        }
 
-	private MockPolicyClassLoadingSettings getClassLoadingSettings() {
-		MockPolicyClassLoadingSettings settings = new MockPolicyClassLoadingSettingsImpl();
-		for (PowerMockPolicy mockPolicy : mockPolicies) {
-			mockPolicy.applyClassLoadingPolicy(settings);
-		}
-		return settings;
-	}
+        for (Field field : interceptionSettings.getFieldsToSuppress()) {
+            MockRepository.addFieldToSuppress(field);
+        }
 
-	/**
-	 * Get the mock policies from a test-class.
-	 */
-	@SuppressWarnings("unchecked")
-	private static Class<? extends PowerMockPolicy>[] getMockPolicies(Class<?> testClass) {
-		Class<? extends PowerMockPolicy>[] powerMockPolicies = new Class[0];
-		if (testClass.isAnnotationPresent(MockPolicy.class)) {
-			MockPolicy annotation = testClass.getAnnotation(MockPolicy.class);
-			powerMockPolicies = annotation.value();
-		}
-		return powerMockPolicies;
-	}
+        for (String type : interceptionSettings.getFieldTypesToSuppress()) {
+            MockRepository.addFieldTypeToSuppress(type);
+        }
+    }
+
+    private MockPolicyInterceptionSettings getInterceptionSettings() {
+        MockPolicyInterceptionSettings settings = new MockPolicyInterceptionSettingsImpl();
+        for (PowerMockPolicy mockPolicy : mockPolicies) {
+            mockPolicy.applyInterceptionPolicy(settings);
+        }
+        return settings;
+    }
+
+    private MockPolicyClassLoadingSettings getClassLoadingSettings() {
+        MockPolicyClassLoadingSettings settings = new MockPolicyClassLoadingSettingsImpl();
+        for (PowerMockPolicy mockPolicy : mockPolicies) {
+            mockPolicy.applyClassLoadingPolicy(settings);
+        }
+        return settings;
+    }
+
+    /**
+     * Get the mock policies from a test-class.
+     */
+    @SuppressWarnings("unchecked")
+    private static Class<? extends PowerMockPolicy>[] getMockPolicies(Class<?> testClass) {
+        Class<? extends PowerMockPolicy>[] powerMockPolicies = new Class[0];
+        if (testClass.isAnnotationPresent(MockPolicy.class)) {
+            MockPolicy annotation = testClass.getAnnotation(MockPolicy.class);
+            powerMockPolicies = annotation.value();
+        }
+        return powerMockPolicies;
+    }
 }

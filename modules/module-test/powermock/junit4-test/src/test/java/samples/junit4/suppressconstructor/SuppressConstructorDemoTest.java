@@ -49,35 +49,45 @@ import samples.suppressconstructor.SuppressConstructorSubclassDemo;
 @PrepareForTest(SuppressConstructorDemo.class)
 public class SuppressConstructorDemoTest {
 
-	/**
-	 * This test makes sure that the real parent constructor has never been
-	 * called.
-	 */
-	@Test
-	public void testSuppressParentConstructor() throws Exception {
-		suppress(constructor(SuppressConstructorSubclassDemo.class));
-		final SuppressConstructorDemo tested = new SuppressConstructorDemo("a message");
-		assertNull("Message should have been null since we're skipping the execution of the constructor code.", tested.getMessage());
-	}
+    /**
+     * This test makes sure that the real constructor has never been called.
+     */
+    @Test
+    public void testSuppressConstructor() throws Exception {
+        suppress(constructor(SuppressConstructorDemo.class));
+        final SuppressConstructorDemo tested = new SuppressConstructorDemo("a message");
+        assertNull("Message should have been null since we're skipping the execution of the constructor code.", tested.getMessage());
+    }
 
-	/**
-	 * This test makes sure that it's possible to also mock methods from the
-	 * class under test at the same time as skipping constructor execution.
-	 */
-	@Test
-	public void testPartialMockingAndSuppressParentConstructor() throws Exception {
-		suppress(constructor(SuppressConstructorSubclassDemo.class));
-		final SuppressConstructorDemo tested = createPartialMock(SuppressConstructorDemo.class, "returnAMessage");
-		final String expected = "Hello world!";
-		expectPrivate(tested, "returnAMessage").andReturn(expected);
-		replay(tested);
+    /**
+     * This test makes sure that the real parent constructor has never been
+     * called.
+     */
+    @Test
+    public void testSuppressParentConstructor() throws Exception {
+        suppress(constructor(SuppressConstructorSubclassDemo.class));
+        final SuppressConstructorDemo tested = new SuppressConstructorDemo("a message");
+        assertNull("Message should have been null since we're skipping the execution of the constructor code.", tested.getMessage());
+    }
 
-		final String actual = tested.getMyOwnMessage();
+    /**
+     * This test makes sure that it's possible to also mock methods from the
+     * class under test at the same time as skipping constructor execution.
+     */
+    @Test
+    public void testPartialMockingAndSuppressParentConstructor() throws Exception {
+        suppress(constructor(SuppressConstructorSubclassDemo.class));
+        final SuppressConstructorDemo tested = createPartialMock(SuppressConstructorDemo.class, "returnAMessage");
+        final String expected = "Hello world!";
+        expectPrivate(tested, "returnAMessage").andReturn(expected);
+        replay(tested);
 
-		verify(tested);
+        final String actual = tested.getMyOwnMessage();
 
-		assertEquals(expected, actual);
+        verify(tested);
 
-		assertNull("Message should have been null since we're skipping the execution of the constructor code.", tested.getMessage());
-	}
+        assertEquals(expected, actual);
+
+        assertNull("Message should have been null since we're skipping the execution of the constructor code.", tested.getMessage());
+    }
 }

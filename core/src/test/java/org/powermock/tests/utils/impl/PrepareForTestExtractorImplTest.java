@@ -34,36 +34,42 @@ import org.powermock.reflect.Whitebox;
  */
 public class PrepareForTestExtractorImplTest {
 
-	/**
-	 * Makes sure that issue <a
-	 * href="http://code.google.com/p/powermock/issues/detail?id=81">81</a> is
-	 * solved.
-	 */
-	@Test
-	public void assertThatInterfacesWorks() throws Exception {
-		final PrepareForTestExtractorImpl tested = new PrepareForTestExtractorImpl();
-		final Set<String> hashSet = new HashSet<String>();
-		Whitebox.invokeMethod(tested, "addClassHierarchy", hashSet, Serializable.class);
-		assertEquals(1, hashSet.size());
-		assertEquals(Serializable.class.getName(), hashSet.iterator().next());
-	}
+    /**
+     * Makes sure that issue <a
+     * href="http://code.google.com/p/powermock/issues/detail?id=81">81</a> is
+     * solved.
+     */
+    @Test
+    public void assertThatInterfacesWorks() throws Exception {
+        final PrepareForTestExtractorImpl tested = new PrepareForTestExtractorImpl();
+        final Set<String> hashSet = new HashSet<String>();
+        Whitebox.invokeMethod(tested, "addClassHierarchy", hashSet, Serializable.class);
+        assertEquals(1, hashSet.size());
+        assertEquals(Serializable.class.getName(), hashSet.iterator().next());
+    }
 
-	/**
-	 * Makes sure that issue <a
-	 * href="http://code.google.com/p/powermock/issues/detail?id=111">111</a> is
-	 * solved.
-	 */
-	@Test
-	public void shouldFindClassesToPrepareForTestInTheWholeClassHierarchy() throws Exception {
-		final PrepareForTestExtractorImpl tested = new PrepareForTestExtractorImpl();
-		final String[] classesToPrepare = tested.getTestClasses(PrepareForTestDemoClass.class);
-		assertEquals(5, classesToPrepare.length);
-		final String classPrefix = "Class";
-		final List<String> classesToPrepareList = Arrays.asList(classesToPrepare);
-		for (int i = 0; i < classesToPrepare.length; i++) {
-			assertTrue(classesToPrepareList.contains(classPrefix + (i + 1)));
-		}
-	}
+    /**
+     * Makes sure that issue <a
+     * href="http://code.google.com/p/powermock/issues/detail?id=111">111</a> is
+     * solved.
+     */
+    @Test
+    public void shouldFindClassesToPrepareForTestInTheWholeClassHierarchy() throws Exception {
+        final PrepareForTestExtractorImpl tested = new PrepareForTestExtractorImpl();
+        final String[] classesToPrepare = tested.getTestClasses(PrepareForTestDemoClass.class);
+        assertEquals(8, classesToPrepare.length);
+        final String classPrefix = "Class";
+        final List<String> classesToPrepareList = Arrays.asList(classesToPrepare);
+        final int noOfClassesExplicitlyPrepared = 5;
+        for (int i = 0; i < noOfClassesExplicitlyPrepared; i++) {
+            final String className = classPrefix + (i + 1);
+            assertTrue("Should prepare " + className, classesToPrepareList.contains(className));
+        }
+        // We assert that the implicit classes (the test cases) are also added.
+        assertTrue(classesToPrepareList.contains(PrepareForTestDemoClass.class.getName()));
+        assertTrue(classesToPrepareList.contains(PrepareForTestDemoClassParent.class.getName()));
+        assertTrue(classesToPrepareList.contains(PrepareForTestDemoClassGrandParent.class.getName()));
+    }
 }
 
 @PrepareForTest(fullyQualifiedNames = { "Class1", "Class2" })
