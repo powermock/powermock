@@ -288,6 +288,22 @@ public class WhiteboxImpl {
 		Field foundField = findFieldInHierarchy(object, fieldName);
 		setField(object, value, foundField);
 	}
+	
+	/**
+	 * Set the value of a field using reflection. This method will traverse the
+	 * super class hierarchy until a field with name <tt>fieldName</tt> is
+	 * found.
+	 * 
+	 * @param object
+	 *            the object to modify
+	 * @param fieldName
+	 *            the name of the field
+	 * @param value
+	 *            the new value of the field
+	 */
+	public static void setInternalState(Object object, String fieldName, Object[] value) {
+		setInternalState(object, fieldName, (Object) value);
+	}
 
 	/**
 	 * Set the value of a field using reflection. This method will traverse the

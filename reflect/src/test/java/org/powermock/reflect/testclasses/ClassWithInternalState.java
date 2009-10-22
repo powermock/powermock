@@ -32,6 +32,8 @@ public class ClassWithInternalState {
     private final String finalString = "hello";
 
     private long internalLongState = 17;
+    
+	private String[] stringArray = new String[0];
 
     private Set<String> genericState = new HashSet<String>();
 
@@ -76,4 +78,8 @@ public class ClassWithInternalState {
     public static String methodWithArgument(InputStream inputStream) {
         return "";
     }
+    
+    public String[] getStringArray() {
+		return stringArray;
+	}
 }
