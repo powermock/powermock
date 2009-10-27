@@ -154,8 +154,8 @@ public class DeepCloner {
     }
 
     @SuppressWarnings("unchecked")
-    private static Enum getEnumValue(final Object enumValueOfSourceClassloader, final Class<Object> enumLoadedByTargetCL) {
-        return Enum.valueOf((Class) enumLoadedByTargetCL, ((Enum) enumValueOfSourceClassloader).toString());
+    private static Enum getEnumValue(final Object enumValueOfSourceClassloader, final Class<Object> enumTypeLoadedByTargetCL) {
+        return Enum.valueOf((Class) enumTypeLoadedByTargetCL, ((Enum) enumValueOfSourceClassloader).toString());
     }
 
     private static Object instantiateArray(ClassLoader targetCL, Class<?> arrayClass, Object objectToClone) {
