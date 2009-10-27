@@ -17,6 +17,8 @@ package org.powermock.api.support;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Collection;
 
 import org.powermock.reflect.Whitebox;
 
@@ -34,7 +36,8 @@ public class DeepCloner {
      */
     public static <T> T clone(T objectToClone) {
         assertObjectNotNull(objectToClone);
-        return (T) performClone(getType(objectToClone), objectToClone);
+        final Class<T> objectType = getType(objectToClone);
+        return (T) performClone(objectType.getClassLoader(), objectType, objectToClone);
     }
 
     /**
@@ -42,7 +45,7 @@ public class DeepCloner {
      */
     public static <T> T clone(ClassLoader classloader, T objectToClone) {
         assertObjectNotNull(objectToClone);
-        return performClone(ClassLoaderUtil.loadClassWithClassloader(classloader, getType(objectToClone)), objectToClone);
+        return performClone(classloader, ClassLoaderUtil.loadClassWithClassloader(classloader, getType(objectToClone)), objectToClone);
     }
 
     @SuppressWarnings("unchecked")
@@ -60,54 +63,94 @@ public class DeepCloner {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> T performClone(Class<T> targetClass, Object source) {
-        // TODO Support Enums and primitives and primitive arrays(?)
+    private static <T> T performClone(ClassLoader targetCL, Class<T> targetClass, Object source) {
         Object target = null;
         if (targetClass.isArray()) {
-            target = instantiateArray(targetClass, source);
+            target = instantiateArray(targetCL, targetClass, source);
+        } else if (isCollection(targetClass)) {
+            target = cloneCollection(targetCL, source);
         } else if (targetClass.isPrimitive() || targetClass.getName().startsWith(IGNORED_PACKAGES)) {
             target = source;
         } else if (targetClass.isEnum()) {
-            final Class enumClassLoadedByTargetCL = ClassLoaderUtil.loadClassWithClassloader(targetClass.getClassLoader(), source.getClass());
-            target = getEnumValue(source, enumClassLoadedByTargetCL);
+            target = cloneEnum(targetCL, source);
         } else {
             target = Whitebox.newInstance(targetClass);
         }
-
         if (!targetClass.isEnum()) {
-            Class<?> currentTargetClass = targetClass;
-            while (currentTargetClass != null && !currentTargetClass.getName().startsWith(IGNORED_PACKAGES)) {
-                for (Field field : currentTargetClass.getDeclaredFields()) {
-                    field.setAccessible(true);
-                    try {
-                        final Field declaredField = source.getClass().getDeclaredField(field.getName());
-                        declaredField.setAccessible(true);
-                        final Object object = declaredField.get(source);
-                        final Object instantiatedValue;
-                        final Class<Object> type = getType(object);
-                        if (object == null || type.getName().startsWith(IGNORED_PACKAGES)) {
-                            instantiatedValue = object;
-                        } else {
-                            final Class<Object> typeLoadedByCL = ClassLoaderUtil.loadClassWithClassloader(targetClass.getClassLoader(), type);
-                            if (type.isEnum()) {
-                                instantiatedValue = getEnumValue(object, typeLoadedByCL);
-                            } else {
-                                instantiatedValue = performClone(typeLoadedByCL, object);
-                            }
-                        }
-                        if (!field.isEnumConstant()) {
-                            field.set(target, instantiatedValue);
-                        }
-                    } catch (RuntimeException e) {
-                        throw e;
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                currentTargetClass = currentTargetClass.getSuperclass();
-            }
+            cloneFields(targetCL, targetClass, source, target);
         }
         return (T) target;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Object cloneEnum(ClassLoader targetCL, Object source) {
+        Object target;
+        final Class enumClassLoadedByTargetCL = ClassLoaderUtil.loadClassWithClassloader(targetCL, source.getClass());
+        target = getEnumValue(source, enumClassLoadedByTargetCL);
+        return target;
+    }
+
+    private static <T> void cloneFields(ClassLoader targetCL, Class<T> targetClass, Object source, Object target) {
+        Class<?> currentTargetClass = targetClass;
+        while (currentTargetClass != null && !currentTargetClass.getName().startsWith(IGNORED_PACKAGES)) {
+            for (Field field : currentTargetClass.getDeclaredFields()) {
+                field.setAccessible(true);
+                try {
+                    final Field declaredField = source.getClass().getDeclaredField(field.getName());
+                    declaredField.setAccessible(true);
+                    final Object object = declaredField.get(source);
+                    final Object instantiatedValue;
+                    final Class<Object> type = getType(object);
+                    if (object == null || (type.getName().startsWith(IGNORED_PACKAGES) && !isCollection(object))) {
+                        instantiatedValue = object;
+                    } else {
+                        final Class<Object> typeLoadedByCL = ClassLoaderUtil.loadClassWithClassloader(targetCL, type);
+                        if (type.isEnum()) {
+                            instantiatedValue = getEnumValue(object, typeLoadedByCL);
+                        } else {
+                            instantiatedValue = performClone(targetCL, typeLoadedByCL, object);
+                        }
+                    }
+                    final int modifiers = field.getModifiers();
+                    if (!field.isEnumConstant() && !(Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers))) {
+                        field.set(target, instantiatedValue);
+                    }
+                } catch (RuntimeException e) {
+                    throw e;
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            currentTargetClass = currentTargetClass.getSuperclass();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Object cloneCollection(ClassLoader targetCL, Object source) {
+        Object target;
+        Collection sourceCollection = (Collection) source;
+        final Class<Collection<?>> collectionClass = (Class<Collection<?>>) ClassLoaderUtil.loadClassWithClassloader(targetCL, source.getClass());
+        Collection newInstance = null;
+        try {
+            newInstance = collectionClass.newInstance();
+        } catch (Exception e) {
+            // Should never happen for collections
+            throw new RuntimeException(e);
+        }
+        for (Object collectionValue : sourceCollection) {
+            final Class<? extends Object> typeLoadedByTargetCL = ClassLoaderUtil.loadClassWithClassloader(targetCL, collectionValue.getClass());
+            newInstance.add(performClone(targetCL, typeLoadedByTargetCL, collectionValue));
+        }
+        target = newInstance;
+        return target;
+    }
+
+    private static boolean isCollection(final Object object) {
+        return isCollection(object.getClass());
+    }
+
+    private static boolean isCollection(final Class<?> cls) {
+        return Collection.class.isAssignableFrom(cls);
     }
 
     @SuppressWarnings("unchecked")
@@ -115,12 +158,13 @@ public class DeepCloner {
         return Enum.valueOf((Class) enumLoadedByTargetCL, ((Enum) enumValueOfSourceClassloader).toString());
     }
 
-    private static Object instantiateArray(Class<?> arrayClass, Object objectToClone) {
+    private static Object instantiateArray(ClassLoader targetCL, Class<?> arrayClass, Object objectToClone) {
         final int arrayLength = Array.getLength(objectToClone);
         final Object array = Array.newInstance(arrayClass.getComponentType(), arrayLength);
         for (int i = 0; i < arrayLength; i++) {
             final Object object = Array.get(objectToClone, i);
-            final Object performClone = performClone(ClassLoaderUtil.loadClassWithClassloader(arrayClass.getClassLoader(), getType(object)), object);
+            final Object performClone = performClone(targetCL,
+                    ClassLoaderUtil.loadClassWithClassloader(arrayClass.getClassLoader(), getType(object)), object);
             Array.set(array, i, performClone);
         }
         return array;

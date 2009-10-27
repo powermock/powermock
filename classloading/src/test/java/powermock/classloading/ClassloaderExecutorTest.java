@@ -15,9 +15,12 @@
  */
 package powermock.classloading;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.Callable;
 
@@ -30,9 +33,11 @@ import org.powermock.core.transformers.MockTransformer;
 
 import powermock.classloading.classes.MyArgument;
 import powermock.classloading.classes.MyClass;
+import powermock.classloading.classes.MyCollectionHolder;
 import powermock.classloading.classes.MyEnum;
 import powermock.classloading.classes.MyEnumHolder;
 import powermock.classloading.classes.MyIntegerHolder;
+import powermock.classloading.classes.MyPrimitiveArrayHolder;
 import powermock.classloading.classes.MyReturnValue;
 
 public class ClassloaderExecutorTest {
@@ -93,6 +98,52 @@ public class ClassloaderExecutorTest {
 
         assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void classloaderExecutorLoadsObjectGraphThatIncludesPrimitiveArraysInSpecifiedClassloaderAndReturnsResultInOriginalClassloader()
+            throws Exception {
+        MockClassLoader classloader = createClassloader();
+        final int[] expected = new int[] { 1, 2 };
+        final MyPrimitiveArrayHolder myClass = new MyPrimitiveArrayHolder(expected);
+        int[] actual = new ClassloaderExecutor(classloader).execute(new Callable<int[]>() {
+            public int[] call() throws Exception {
+                assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+                int[] myArray = myClass.getMyArray();
+                assertArrayEquals(expected, myArray);
+                return myArray;
+            }
+        });
+
+        assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void classloaderExecutorLoadsObjectGraphThatIncludesCollectionInSpecifiedClassloaderAndReturnsResultInOriginalClassloader()
+            throws Exception {
+        final MockClassLoader classloader = createClassloader();
+        final Collection<MyReturnValue> expected = new LinkedList<MyReturnValue>();
+        expected.add(new MyReturnValue(new MyArgument("one")));
+        expected.add(new MyReturnValue(new MyArgument("two")));
+        final MyCollectionHolder myClass = new MyCollectionHolder(expected);
+        Collection<?> actual = new ClassloaderExecutor(classloader).execute(new Callable<Collection<?>>() {
+            public Collection<?> call() throws Exception {
+                assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+                Collection<?> myCollection = myClass.getMyCollection();
+                for (Object object : myCollection) {
+                    assertEquals(MockClassLoader.class.getName(), object.getClass().getClassLoader().getClass().getName());
+                }
+                return myCollection;
+            }
+        });
+
+        assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
+        assertEquals(2, actual.size());
+        for (Object object : actual) {
+            final String value = ((MyReturnValue) object).getMyArgument().getValue();
+            assertTrue(value.equals("one") || value.equals("two"));
+        }
     }
 
     private MockClassLoader createClassloader() {
