@@ -30,6 +30,8 @@ import org.powermock.core.transformers.MockTransformer;
 
 import powermock.classloading.classes.MyArgument;
 import powermock.classloading.classes.MyClass;
+import powermock.classloading.classes.MyEnum;
+import powermock.classloading.classes.MyEnumHolder;
 import powermock.classloading.classes.MyIntegerHolder;
 import powermock.classloading.classes.MyReturnValue;
 
@@ -72,6 +74,24 @@ public class ClassloaderExecutorTest {
 
         assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
 
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void classloaderExecutorLoadsObjectGraphThatIncludesEnumsInSpecifiedClassloaderAndReturnsResultInOriginalClassloader() throws Exception {
+        MockClassLoader classloader = createClassloader();
+        final MyEnum expected = MyEnum.MyEnum1;
+        final MyEnumHolder myClass = new MyEnumHolder(expected);
+        MyEnum actual = new ClassloaderExecutor(classloader).execute(new Callable<MyEnum>() {
+            public MyEnum call() throws Exception {
+                assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+                MyEnum myEnum = myClass.getMyEnum();
+                assertEquals(expected, myEnum);
+                return myEnum;
+            }
+        });
+
+        assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
         assertEquals(expected, actual);
     }
 

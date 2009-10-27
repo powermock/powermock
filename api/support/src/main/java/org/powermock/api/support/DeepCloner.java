@@ -67,34 +67,52 @@ public class DeepCloner {
             target = instantiateArray(targetClass, source);
         } else if (targetClass.isPrimitive() || targetClass.getName().startsWith(IGNORED_PACKAGES)) {
             target = source;
+        } else if (targetClass.isEnum()) {
+            final Class enumClassLoadedByTargetCL = ClassLoaderUtil.loadClassWithClassloader(targetClass.getClassLoader(), source.getClass());
+            target = getEnumValue(source, enumClassLoadedByTargetCL);
         } else {
             target = Whitebox.newInstance(targetClass);
         }
-        Class<?> currentTargetClass = targetClass;
-        while (currentTargetClass != null && !currentTargetClass.getName().startsWith(IGNORED_PACKAGES)) {
-            for (Field field : currentTargetClass.getDeclaredFields()) {
-                field.setAccessible(true);
-                try {
-                    final Field declaredField = source.getClass().getDeclaredField(field.getName());
-                    declaredField.setAccessible(true);
-                    final Object object = declaredField.get(source);
-                    final Object instantiatedValue;
-                    if (getType(object).getName().startsWith(IGNORED_PACKAGES) || object == null) {
-                        instantiatedValue = object;
-                    } else {
-                        instantiatedValue = performClone(ClassLoaderUtil.loadClassWithClassloader(targetClass.getClassLoader(), getType(object)),
-                                object);
+
+        if (!targetClass.isEnum()) {
+            Class<?> currentTargetClass = targetClass;
+            while (currentTargetClass != null && !currentTargetClass.getName().startsWith(IGNORED_PACKAGES)) {
+                for (Field field : currentTargetClass.getDeclaredFields()) {
+                    field.setAccessible(true);
+                    try {
+                        final Field declaredField = source.getClass().getDeclaredField(field.getName());
+                        declaredField.setAccessible(true);
+                        final Object object = declaredField.get(source);
+                        final Object instantiatedValue;
+                        final Class<Object> type = getType(object);
+                        if (object == null || type.getName().startsWith(IGNORED_PACKAGES)) {
+                            instantiatedValue = object;
+                        } else {
+                            final Class<Object> typeLoadedByCL = ClassLoaderUtil.loadClassWithClassloader(targetClass.getClassLoader(), type);
+                            if (type.isEnum()) {
+                                instantiatedValue = getEnumValue(object, typeLoadedByCL);
+                            } else {
+                                instantiatedValue = performClone(typeLoadedByCL, object);
+                            }
+                        }
+                        if (!field.isEnumConstant()) {
+                            field.set(target, instantiatedValue);
+                        }
+                    } catch (RuntimeException e) {
+                        throw e;
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
                     }
-                    field.set(target, instantiatedValue);
-                } catch (RuntimeException e) {
-                    throw e;
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
                 }
+                currentTargetClass = currentTargetClass.getSuperclass();
             }
-            currentTargetClass = currentTargetClass.getSuperclass();
         }
         return (T) target;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Enum getEnumValue(final Object enumValueOfSourceClassloader, final Class<Object> enumLoadedByTargetCL) {
+        return Enum.valueOf((Class) enumLoadedByTargetCL, ((Enum) enumValueOfSourceClassloader).toString());
     }
 
     private static Object instantiateArray(Class<?> arrayClass, Object objectToClone) {
