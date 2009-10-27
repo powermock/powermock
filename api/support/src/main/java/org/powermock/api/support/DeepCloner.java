@@ -65,7 +65,7 @@ public class DeepCloner {
         Object target = null;
         if (targetClass.isArray()) {
             target = instantiateArray(targetClass, source);
-        } else if(targetClass.isPrimitive()) {
+        } else if (targetClass.isPrimitive() || targetClass.getName().startsWith(IGNORED_PACKAGES)) {
             target = source;
         } else {
             target = Whitebox.newInstance(targetClass);
