@@ -30,6 +30,7 @@ import org.powermock.core.transformers.MockTransformer;
 
 import powermock.classloading.classes.MyArgument;
 import powermock.classloading.classes.MyClass;
+import powermock.classloading.classes.MyIntegerHolder;
 import powermock.classloading.classes.MyReturnValue;
 
 public class ClassloaderExecutorTest {
@@ -52,6 +53,26 @@ public class ClassloaderExecutorTest {
         final MyReturnValue myReturnValue = actual[0];
         assertEquals(expectedConstructorValue.getMyArgument().getValue(), myReturnValue.getMyArgument().getValue());
         assertEquals(expected.getValue(), actual[1].getMyArgument().getValue());
+    }
+
+    @Test
+    public void classloaderExecutorLoadsObjectGraphThatIncludesPrimitiveValuesInSpecifiedClassloaderAndReturnsResultInOriginalClassloader()
+            throws Exception {
+        MockClassLoader classloader = createClassloader();
+        final Integer expected = 42;
+        final MyIntegerHolder myClass = new MyIntegerHolder(expected);
+        Integer actual = new ClassloaderExecutor(classloader).execute(new Callable<Integer>() {
+            public Integer call() throws Exception {
+                assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+                final int myInteger = myClass.getMyInteger();
+                assertEquals((int) expected, myInteger);
+                return myInteger;
+            }
+        });
+
+        assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
+
+        assertEquals(expected, actual);
     }
 
     private MockClassLoader createClassloader() {

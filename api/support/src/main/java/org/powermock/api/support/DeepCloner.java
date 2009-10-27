@@ -61,7 +61,15 @@ public class DeepCloner {
 
     @SuppressWarnings("unchecked")
     private static <T> T performClone(Class<T> targetClass, Object source) {
-        Object target = targetClass.isArray() ? instantiateArray(targetClass, source) : Whitebox.newInstance(targetClass);
+        // TODO Support Enums and primitives and primitive arrays(?)
+        Object target = null;
+        if (targetClass.isArray()) {
+            target = instantiateArray(targetClass, source);
+        } else if(targetClass.isPrimitive()) {
+            target = source;
+        } else {
+            target = Whitebox.newInstance(targetClass);
+        }
         Class<?> currentTargetClass = targetClass;
         while (currentTargetClass != null && !currentTargetClass.getName().startsWith(IGNORED_PACKAGES)) {
             for (Field field : currentTargetClass.getDeclaredFields()) {
