@@ -1,5 +1,6 @@
 Change log 1.4 (under development)
 ----------------------------------
+* Removed EasyMock maven dependencies from the JUnit legacy runner since they're not needed.
 
 Change log 1.3.1 (released 2009-10-28)
 --------------------------------------
