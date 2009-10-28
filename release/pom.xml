@@ -17,6 +17,7 @@
         <module>src</module>
         <module>with-easymock-dependencies</module>
         <module>with-mockito-dependencies</module>
+        <module>without-mock-framework</module>
     </modules>
 
 </project>

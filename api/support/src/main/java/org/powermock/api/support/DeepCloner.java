@@ -23,8 +23,11 @@ import java.util.Collection;
 import org.powermock.reflect.Whitebox;
 
 /**
- * The purpose of the deep cloner is to create a deep clone of an object.
- * Classes
+ * The purpose of the deep cloner is to create a deep clone of an object. An
+ * object can also be cloned to a different class-loader.
+ * <p>
+ * Note that fields with static <i>and</i> final modifiers cannot be cloned.
+ * 
  */
 public class DeepCloner {
     private static final String IGNORED_PACKAGES = "java.";
@@ -69,13 +72,14 @@ public class DeepCloner {
             target = instantiateArray(targetCL, targetClass, source);
         } else if (isCollection(targetClass)) {
             target = cloneCollection(targetCL, source);
-        } else if (targetClass.isPrimitive() || targetClass.getName().startsWith(IGNORED_PACKAGES)) {
+        } else if (isStandardJavaType(targetClass)) {
             target = source;
         } else if (targetClass.isEnum()) {
             target = cloneEnum(targetCL, source);
         } else {
             target = Whitebox.newInstance(targetClass);
         }
+
         if (!targetClass.isEnum()) {
             cloneFields(targetCL, targetClass, source, target);
         }
@@ -111,8 +115,7 @@ public class DeepCloner {
                             instantiatedValue = performClone(targetCL, typeLoadedByCL, object);
                         }
                     }
-                    final int modifiers = field.getModifiers();
-                    if (!field.isEnumConstant() && !(Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers))) {
+                    if (!field.isEnumConstant() && !isStaticFinalModifier(field)) {
                         field.set(target, instantiatedValue);
                     }
                 } catch (RuntimeException e) {
@@ -123,6 +126,15 @@ public class DeepCloner {
             }
             currentTargetClass = currentTargetClass.getSuperclass();
         }
+    }
+
+    private static <T> boolean isStandardJavaType(Class<T> targetClass) {
+        return targetClass.isPrimitive() || targetClass.getName().startsWith(IGNORED_PACKAGES);
+    }
+
+    private static boolean isStaticFinalModifier(final Field field) {
+        final int modifiers = field.getModifiers();
+        return (Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers));
     }
 
     @SuppressWarnings("unchecked")
@@ -163,8 +175,7 @@ public class DeepCloner {
         final Object array = Array.newInstance(arrayClass.getComponentType(), arrayLength);
         for (int i = 0; i < arrayLength; i++) {
             final Object object = Array.get(objectToClone, i);
-            final Object performClone = performClone(targetCL,
-                    ClassLoaderUtil.loadClassWithClassloader(arrayClass.getClassLoader(), getType(object)), object);
+            final Object performClone = performClone(targetCL, ClassLoaderUtil.loadClassWithClassloader(targetCL, getType(object)), object);
             Array.set(array, i, performClone);
         }
         return array;
