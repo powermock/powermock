@@ -5,6 +5,7 @@ Change log 1.3.1 (under development)
 * Test case is now always prepared for test even if no @PrepareForTest annotation is specified
 * Fixed a bug in Whitebox#setInternalState so that it now works to supply an array when specifying a method name again.
 * Improved javadoc in Whitebox class
+* Upgraded EasyMock extension API to depend on EasyMock 2.5.2 (EasyMock class extensions are still version 2.4 since that's the latest release right now).
 
 Change log 1.3 (released 2009-10-06)
 ------------------------------------

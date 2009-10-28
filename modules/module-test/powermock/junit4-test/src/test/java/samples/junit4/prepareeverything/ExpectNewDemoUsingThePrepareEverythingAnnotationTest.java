@@ -230,7 +230,7 @@ public class ExpectNewDemoUsingThePrepareEverythingAnnotationTest {
             fail("Should throw AssertionError.");
         } catch (AssertionError e) {
             assertEquals("\n  Unexpected constructor call samples.newmocking.MyClass():"
-                    + "\n    samples.newmocking.MyClass(): expected: 2, actual: 2 (+1)", e.getMessage());
+                    + "\n    samples.newmocking.MyClass(): expected: 2, actual: 3", e.getMessage());
         }
     }
 
@@ -252,7 +252,7 @@ public class ExpectNewDemoUsingThePrepareEverythingAnnotationTest {
             fail("Should throw AssertionError.");
         } catch (AssertionError e) {
             assertEquals("\n  Unexpected constructor call samples.newmocking.MyClass():"
-                    + "\n    samples.newmocking.MyClass(): expected: 2, actual: 2 (+1)", e.getMessage());
+                    + "\n    samples.newmocking.MyClass(): expected: 2, actual: 3", e.getMessage());
         }
     }
 
