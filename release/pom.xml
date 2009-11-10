@@ -13,7 +13,7 @@
     <name>powermock-release</name>
 
     <modules>
-        <module>full</module>
+        <module>easymock-extension-api-full</module>
         <module>src</module>
         <module>with-easymock-dependencies</module>
         <module>with-mockito-dependencies</module>

@@ -24,11 +24,6 @@
             <version>${version}</version>
         </dependency>
         <dependency>
-            <groupId>org.powermock.api</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>${version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.powermock.modules</groupId>
             <artifactId>powermock-module-junit4-common</artifactId>
             <version>${version}</version>
