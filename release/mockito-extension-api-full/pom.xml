@@ -8,9 +8,9 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock</groupId>
-    <artifactId>powermock-easymock-release-full</artifactId>
+    <artifactId>powermock-mockito-release-full</artifactId>
     <packaging>pom</packaging>
-    <name>powermock-easymock-single-jar-release-full</name>
+    <name>powermock-mockito-single-jar-release-full</name>
 
     <dependencies>
         <dependency>
@@ -18,9 +18,9 @@
             <artifactId>powermock-core</artifactId>
             <version>${version}</version>
         </dependency>
-        <dependency>
+       <dependency>
             <groupId>org.powermock.api</groupId>
-            <artifactId>powermock-api-easymock</artifactId>
+            <artifactId>powermock-api-mockito</artifactId>
             <version>${version}</version>
         </dependency>
         <dependency>
@@ -68,7 +68,7 @@
         </dependency>
         <dependency>
             <groupId>org.powermock.api</groupId>
-            <artifactId>powermock-api-easymock</artifactId>
+            <artifactId>powermock-api-mockito</artifactId>
             <version>${version}</version>
 	    <classifier>sources</classifier>
         </dependency>
@@ -120,7 +120,7 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <finalName>powermock-easymock-${version}</finalName>
+                    <finalName>powermock-mockito-${version}</finalName>
                     <descriptors>
                         <descriptor>src/assembly/full.xml</descriptor>
                     </descriptors>
