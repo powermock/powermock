@@ -17,6 +17,8 @@ package org.powermock.api.mockito.internal.expectation;
 
 import java.util.List;
 
+import org.mockito.internal.IMockHandler;
+import org.mockito.internal.MockHandler;
 import org.mockito.internal.stubbing.StubberImpl;
 import org.mockito.stubbing.Stubber;
 import org.powermock.api.mockito.expectation.PowerMockitoStubber;
@@ -30,37 +32,41 @@ import org.powermock.reflect.Whitebox;
  */
 public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockitoStubber {
 
-    /**
-     * {@inheritDoc}
-     */
-    public void when(Class<?> classMock) {
-        MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository
-                .getStaticMethodInvocationControl(classMock);
-        addAnswersForStubbing(invocationControl);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void when(Class<?> classMock) {
+		MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository
+				.getStaticMethodInvocationControl(classMock);
+		addAnswersForStubbing(invocationControl);
+	}
 
-    /**
-     * Supports PowerMockito mocks. If <code>mock</code> is not a PowerMockito
-     * mock it will delegate to Mockito.
-     * 
-     * @see Stubber#when(Object)
-     */
-    @Override
-    public <T> T when(T instanceMock) {
-        MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository
-                .getInstanceMethodInvocationControl(instanceMock);
-        final T returnValue;
-        if (invocationControl == null) {
-            returnValue = super.when(instanceMock);
-        } else {
-            addAnswersForStubbing(invocationControl);
-            returnValue = instanceMock;
-        }
-        return returnValue;
-    }
+	/**
+	 * Supports PowerMockito mocks. If <code>mock</code> is not a PowerMockito
+	 * mock it will delegate to Mockito.
+	 * 
+	 * @see Stubber#when(Object)
+	 */
+	@Override
+	public <T> T when(T instanceMock) {
+		MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository
+				.getInstanceMethodInvocationControl(instanceMock);
+		final T returnValue;
+		if (invocationControl == null) {
+			returnValue = super.when(instanceMock);
+		} else {
+			addAnswersForStubbing(invocationControl);
+			returnValue = instanceMock;
+		}
+		return returnValue;
+	}
 
-    @SuppressWarnings("unchecked")
-    private void addAnswersForStubbing(MockitoMethodInvocationControl invocationControl) {
-        invocationControl.getInvocationHandler().getMockHandler().setAnswersForStubbing(Whitebox.getInternalState(this, List.class));
-    }
+	@SuppressWarnings("unchecked")
+	private void addAnswersForStubbing(MockitoMethodInvocationControl invocationControl) {
+		final IMockHandler mockHandler = invocationControl.getInvocationHandler().getMockHandler();
+		if (!(mockHandler instanceof MockHandler<?>)) {
+			throw new RuntimeException("Cannot perform \"when\" because of unknown mockhandler type " + mockHandler.getClass());
+		}
+		((MockHandler<?>) mockHandler).setAnswersForStubbing(Whitebox.getInternalState(this, List.class));
+	}
 }

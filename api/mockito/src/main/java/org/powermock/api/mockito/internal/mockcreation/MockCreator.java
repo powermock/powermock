@@ -75,7 +75,7 @@ public class MockCreator {
         }
         MockHandler<T> mockHandler = new MockHandler<T>(new MockName(mockName, type), Whitebox.getInternalState(Mockito.class,
                 MockingProgress.class), new MatchersBinder(), mockSettings);
-        MethodInterceptorFilter filter = new MethodInterceptorFilter(type, mockHandler);
+        MethodInterceptorFilter filter = new MethodInterceptorFilter(mockHandler, mockSettings);
         final T mock = (T) ClassImposterizer.INSTANCE.imposterise(filter, type);
         final MockitoMethodInvocationControl invocationControl = new MockitoMethodInvocationControl(filter,
                 isSpy && delegator == null ? new Object() : delegator, methods);

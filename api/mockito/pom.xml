@@ -27,4 +27,11 @@
 			<version>${version}</version>
 		</dependency>
 	</dependencies>
+	<!-- TODO: Remove this when Mockito 1.8 is released and available in the maven repo -->
+	<repositories>
+		<repository>
+			<id>powermock-repo</id>
+			<url>http://powermock.googlecode.com/svn/repo/</url>
+		</repository>
+	</repositories>
 </project>
