@@ -41,15 +41,21 @@ public class MockGateway {
      */
     public static final String DONT_MOCK_NEXT_CALL = "DontMockNextCall";
 
+    /**
+     * Tells PowerMock to mock standard methods such as
+     * {@link java.lang.Object#getClass()}.
+     */
+    public static boolean MOCK_STANDARD_METHODS = false;
+
     // used for static methods
     public static synchronized Object methodCall(Class<?> type, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString)
             throws Throwable {
         return doMethodCall(type, methodName, args, sig, returnTypeAsString);
     }
 
-    private static Object doMethodCall(Object object, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString)
-            throws Throwable, NoSuchMethodException {
-        if ((methodName.equals("hashCode") && sig.length == 0) || (methodName.equals("equals") && sig.length == 1)) {
+    private static Object doMethodCall(Object object, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString) throws Throwable,
+            NoSuchMethodException {
+        if (!shouldMockMethod(methodName, sig)) {
             return PROCEED;
         }
         Object returnValue = null;
@@ -118,6 +124,12 @@ public class MockGateway {
         return returnValue;
     }
 
+    private static boolean shouldMockMethod(String methodName, Class<?>[] sig) {
+        return MOCK_STANDARD_METHODS
+                || !((methodName.equals("hashCode") && sig.length == 0) || (methodName.equals("equals") && sig.length == 1) || (methodName
+                        .equals("getClass") && sig.length == 0));
+    }
+
     private static boolean shouldMockThisCall() {
         Object shouldSkipMockingOfNextCall = MockRepository.getAdditionalState(DONT_MOCK_NEXT_CALL);
         final boolean shouldMockThisCall;
@@ -131,8 +143,8 @@ public class MockGateway {
     }
 
     // used for instance methods
-    public static synchronized Object methodCall(Object instance, String methodName, Object[] args, Class<?>[] sig,
-            String returnTypeAsString) throws Throwable {
+    public static synchronized Object methodCall(Object instance, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString)
+            throws Throwable {
         return doMethodCall(instance, methodName, args, sig, returnTypeAsString);
     }
 

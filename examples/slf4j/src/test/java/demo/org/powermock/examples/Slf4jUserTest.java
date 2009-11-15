@@ -1,8 +1,10 @@
 package demo.org.powermock.examples;
 
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
+
+import java.lang.reflect.Proxy;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,11 +29,7 @@ public class Slf4jUserTest {
 
         tested.getMessage();
 
-        /*
-         * Should return null since getClass() is mocked as a nice mock (because
-         * the logger is mocked)
-         */
-        assertNull(Whitebox.getInternalState(Slf4jUser.class, Logger.class).getClass());
+        assertTrue(Proxy.isProxyClass(Whitebox.getInternalState(Slf4jUser.class, Logger.class).getClass()));
         verifyAll();
     }
 }

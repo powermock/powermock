@@ -2,10 +2,11 @@ package demo.org.powermock.examples;
 
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.powermock.api.easymock.PowerMock.createPartialMockAndInvokeDefaultConstructor;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
+import net.sf.cglib.proxy.Enhancer;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -32,11 +33,8 @@ public class Log4jUserTest {
 		replayAll();
 
 		final String actual = tested.mergeMessageWith(otherMessage);
-		/*
-		 * The Logger instance has been nice-proxied by PowerMock and because of
-		 * this the call to getClass returns null.
-		 */
-		assertNull(Whitebox.getInternalState(Log4jUserParent.class, Logger.class).getClass());
+		Class<? extends Logger> class1 = Whitebox.getInternalState(Log4jUserParent.class, Logger.class).getClass();
+		assertTrue(Enhancer.isEnhanced(class1));
 
 		verifyAll();
 
