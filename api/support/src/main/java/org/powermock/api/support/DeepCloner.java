@@ -28,8 +28,6 @@ import sun.misc.Unsafe;
  * The purpose of the deep cloner is to create a deep clone of an object. An
  * object can also be cloned to a different class-loader.
  * <p>
- * Note that fields with static <i>and</i> final modifiers cannot be cloned.
- * 
  */
 public class DeepCloner {
 	private static final String IGNORED_PACKAGES = "java.";
