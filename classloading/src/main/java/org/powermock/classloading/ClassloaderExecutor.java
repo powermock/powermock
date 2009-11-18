@@ -24,35 +24,35 @@ import org.powermock.reflect.Whitebox;
 
 public class ClassloaderExecutor {
 
-    private final ClassLoader classloader;
+	private final ClassLoader classloader;
 
-    public ClassloaderExecutor(ClassLoader classloader) {
-        this.classloader = classloader;
-    }
+	public ClassloaderExecutor(ClassLoader classloader) {
+		this.classloader = classloader;
+	}
 
-    @SuppressWarnings("unchecked")
-    public <T> T execute(Callable<T> callable) {
-        return (T) execute(callable, Whitebox.getMethod(callable.getClass(), "call"));
-    }
+	@SuppressWarnings("unchecked")
+	public <T> T execute(Callable<T> callable) {
+		return (T) execute(callable, Whitebox.getMethod(callable.getClass(), "call"));
+	}
 
-    public void execute(Runnable runnable) {
-        execute(Executors.callable(runnable));
-    }
+	public void execute(Runnable runnable) {
+		execute(Executors.callable(runnable));
+	}
 
-    private Object execute(Object instance, Method method, Object... arguments) {
-        final Object objectLoadedWithClassloader = DeepCloner.clone(classloader, instance);
-        final Object[] argumentsLoadedByClassLoader = new Object[arguments.length];
-        for (int i = 0; i < arguments.length; i++) {
-            final Object argument = arguments[i];
-            argumentsLoadedByClassLoader[i] = DeepCloner.clone(classloader, argument);
-        }
+	private Object execute(Object instance, Method method, Object... arguments) {
+		final Object objectLoadedWithClassloader = DeepCloner.clone(classloader, instance);
+		final Object[] argumentsLoadedByClassLoader = new Object[arguments.length];
+		for (int i = 0; i < arguments.length; i++) {
+			final Object argument = arguments[i];
+			argumentsLoadedByClassLoader[i] = DeepCloner.clone(classloader, argument);
+		}
 
-        final Object result;
-        try {
-            result = Whitebox.invokeMethod(objectLoadedWithClassloader, method.getName(), argumentsLoadedByClassLoader);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return result == null ? null : DeepCloner.clone(Thread.currentThread().getContextClassLoader(), result);
-    }
+		final Object result;
+		try {
+			result = Whitebox.invokeMethod(objectLoadedWithClassloader, method.getName(), argumentsLoadedByClassLoader);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return result == null ? null : DeepCloner.clone(Thread.currentThread().getContextClassLoader(), result);
+	}
 }
