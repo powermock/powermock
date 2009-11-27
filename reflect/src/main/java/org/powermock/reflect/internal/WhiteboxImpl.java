@@ -437,6 +437,7 @@ public class WhiteboxImpl {
 	}
 
 	private static Field findFieldInHierarchy(Object object, FieldMatcherStrategy strategy) {
+		assertObjectInGetInternalStateIsNotNull(object);
 		return findSingleFieldUsingStrategy(strategy, object, true, getType(object));
 	}
 
@@ -445,9 +446,7 @@ public class WhiteboxImpl {
 	}
 
 	private static Field findSingleFieldUsingStrategy(FieldMatcherStrategy strategy, Object object, boolean checkHierarchy, Class<?> startClass) {
-		if (object == null) {
-			throw new IllegalArgumentException("The object containing the field cannot be null");
-		}
+		assertObjectInGetInternalStateIsNotNull(object);
 		Field foundField = null;
 		final Class<?> originalStartClass = startClass;
 		while (startClass != null) {
@@ -475,9 +474,7 @@ public class WhiteboxImpl {
 	}
 
 	private static Set<Field> findAllFieldsUsingStrategy(FieldMatcherStrategy strategy, Object object, boolean checkHierarchy, Class<?> startClass) {
-		if (object == null) {
-			throw new IllegalArgumentException("The object containing the field cannot be null");
-		}
+		assertObjectInGetInternalStateIsNotNull(object);
 		final Set<Field> foundFields = new LinkedHashSet<Field>();
 		while (startClass != null) {
 			final Field[] declaredFields = startClass.getDeclaredFields();
@@ -2024,6 +2021,12 @@ public class WhiteboxImpl {
 				// Should never happen
 				throw new RuntimeException("Internal Error: Failed to get the field value in method setInternalStateFromContext.", e);
 			}
+		}
+	}
+
+	private static void assertObjectInGetInternalStateIsNotNull(Object object) {
+		if (object == null) {
+			throw new IllegalArgumentException("The object containing the field cannot be null");
 		}
 	}
 }

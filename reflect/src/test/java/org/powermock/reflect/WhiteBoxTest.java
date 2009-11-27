@@ -700,6 +700,16 @@ public class WhiteBoxTest {
 		assertArrayEquals(expected, tested.getStringArray());
 	}
 
+	@Test
+	public void getInternalStateThrowsIAEWhenInstanceIsNull() {
+		try {
+			Whitebox.getInternalState(null, String.class);
+			fail("Should throw IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			assertEquals("The object containing the field cannot be null", e.getMessage());
+		}
+	}
+
 	public void testFinalState() {
 		ClassWithInternalState state = new ClassWithInternalState();
 		String expected = "changed";
