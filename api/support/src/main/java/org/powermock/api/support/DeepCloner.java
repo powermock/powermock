@@ -189,8 +189,8 @@ public class DeepCloner {
 	/**
 	 * Most of this code has been copied from the Sun14ReflectionProvider in the
 	 * XStream project. Some changes has been made, namely if the field is
-	 * static final then the deprecated {@link Unsafe#fieldOffset(Field)} method
-	 * is used instead of {@link Unsafe#objectFieldOffset(Field)}.
+	 * static final then the {@link Unsafe#staticFieldOffset(Field)} method is
+	 * used instead of {@link Unsafe#objectFieldOffset(Field)}.
 	 * 
 	 * @author Joe Walnes
 	 * @author Brian Slesinsky
@@ -214,7 +214,6 @@ public class DeepCloner {
 			unsafe = u;
 		}
 
-		@SuppressWarnings("deprecation")
 		public static void write(Field field, Object object, Object value) {
 			if (exception != null) {
 				throw new RuntimeException("Could not set field " + object.getClass() + "." + field.getName(), exception);
@@ -222,7 +221,7 @@ public class DeepCloner {
 			try {
 				final long offset;
 				if (DeepCloner.isStaticFinalModifier(field)) {
-					offset = unsafe.fieldOffset(field);
+					offset = unsafe.staticFieldOffset(field);
 				} else {
 					offset = unsafe.objectFieldOffset(field);
 				}
