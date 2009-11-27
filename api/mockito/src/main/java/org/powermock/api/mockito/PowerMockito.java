@@ -236,15 +236,12 @@ public class PowerMockito extends MemberModifier {
 	 * / never. E.g:
 	 * 
 	 * <pre>
-	 *   verifyStatic(ClassWithStaticMethod.class, times(5));
-	 *   ClassWithStaticMethod.someStaticMethod(&quot;was called five times&quot;);
-	 *   
-	 *   verifyStatic(ClassWithStaticMethod.class, atLeast(2));
-	 *   ClassWithStaticMethod.someStaticMethod(&quot;was called at least two times&quot;);
-	 *   
-	 *   //you can use flexible argument matchers, e.g:
-	 *   verifyStatic(ClassWithStaticMethod.class, atLeastOnce());
-	 *   ClassWithStaticMethod.someMethod(&lt;b&gt;anyString()&lt;/b&gt;);
+	 * verifyNew(ClassWithStaticMethod.class, times(5));
+	 * 
+	 * verifyNew(ClassWithStaticMethod.class, atLeast(2));
+	 * 
+	 * //you can use flexible argument matchers, e.g:
+	 * verifyNew(ClassWithStaticMethod.class, atLeastOnce());
 	 * </pre>
 	 * 
 	 * <b>times(1) is the default</b> and can be omitted
