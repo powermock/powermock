@@ -7,7 +7,7 @@ Change log 1.4 (under development)
 * java.lang.Object#getClass is no longer mockable by default. The reason is that it may lead to an unexpected method invocation exception using EasyMock in some equal implementations. It's possible to override this behavior.
 * DeepCloner should now support cloning of static final fields on SUN JVM.
 * Fixed a minor bug in Whitebox#getInternalState so that a better error message is given when the instance argument is null (issue 205).
-* Fixed some types in the javadoc of PowerMockito#verifyNew (issue 187).
+* Fixed some typos in the javadoc of PowerMockito#verifyNew (issue 187).
 
 Change log 1.3.1 (released 2009-10-28)
 --------------------------------------
