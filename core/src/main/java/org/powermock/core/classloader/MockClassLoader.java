@@ -76,7 +76,6 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 	// TODO Why is this needed!? We need to find a better solution.
 	final private String ignoredClass = "net.sf.cglib.proxy.Enhancer$EnhancerKey$$KeyFactoryByCGLIB$$";
 	final private String ignoredClass2 = "net.sf.cglib.core.MethodWrapper$MethodWrapperKey$$KeyFactoryByCGLIB";
-	final private String ignoredClass3 = "$$EnhancerByMockitoWithCGLIB$$";
 
 	private ClassPool classPool = new ClassPool();
 
@@ -176,7 +175,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
 			 * to make it work. We really need to investigate the real cause of
 			 * this behavior.
 			 */
-			if (name.startsWith(ignoredClass) || name.startsWith(ignoredClass2) || name.contains(ignoredClass3)) {
+			if (name.startsWith(ignoredClass) || name.startsWith(ignoredClass2)) {
 				// ignore
 			} else {
 				final CtClass ctClass = classPool.get(name);
