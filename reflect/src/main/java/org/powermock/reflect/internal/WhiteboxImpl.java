@@ -773,6 +773,12 @@ public class WhiteboxImpl {
 					if (wrappedMethodFound || primitiveMethodFound) {
 						if (potentialMethodToInvoke == null) {
 							potentialMethodToInvoke = method;
+						} else if (potentialMethodToInvoke.getDeclaringClass() != method.getDeclaringClass()) {
+							/*
+							 * If the found method was overridden by the
+							 * previous found method just continue.
+							 */
+							continue;
 						} else {
 							/*
 							 * We've already found a method match before, this

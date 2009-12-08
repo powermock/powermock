@@ -46,6 +46,7 @@ import org.powermock.reflect.spi.ProxyFramework;
 import org.powermock.reflect.testclasses.ClassWithChildThatHasInternalState;
 import org.powermock.reflect.testclasses.ClassWithInternalState;
 import org.powermock.reflect.testclasses.ClassWithList;
+import org.powermock.reflect.testclasses.ClassWithOverriddenMethod;
 import org.powermock.reflect.testclasses.ClassWithPrivateMethods;
 import org.powermock.reflect.testclasses.ClassWithSerializableState;
 import org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameName;
@@ -734,6 +735,11 @@ public class WhiteBoxTest {
 	public void getInternalStateThrowsTooManyFieldsFoundWhenTooManyFieldsMatchTheSuppliedType() {
 		ClassWithInternalState tested = new ClassWithInternalState();
 		assertNotNull(Whitebox.getInternalState(tested, Object.class));
+	}
+
+	@Test
+	public void invokeMethodInvokesOverridenMethods() throws Exception {
+		assertTrue(Whitebox.<Boolean> invokeMethod(new ClassWithOverriddenMethod(), 2.0d));
 	}
 
 	public void testFinalState() {
