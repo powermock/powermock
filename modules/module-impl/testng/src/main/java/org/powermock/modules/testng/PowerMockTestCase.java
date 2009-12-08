@@ -29,93 +29,82 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.ObjectFactory;
 
 /**
- * A PowerMock base class that <i>should</i> be used as a base class for all
- * TestNG test cases that uses PowerMock.
- * <p>
- * Note that the test case might still work without this base class <i>if</i>
- * the test doesn't use any of the following annotations:
- * <ul>
- * <li>org.testng.annotations.BeforeSuite</li>
- * <li>org.testng.annotations.BeforeTest</li>
- * <li>org.testng.annotations.BeforeClass</li>
- * <li>org.testng.annotations.BeforeMethod</li>
- * </ul>
- * It is always recommended to extend from this base class anyway to avoid
- * confusion.
+ * A PowerMock base class that <i>may</i> be used as a base class for all TestNG
+ * test cases that uses PowerMock.
  */
 public class PowerMockTestCase {
 
-    private Object annotationEnabler;
+	private Object annotationEnabler;
 
-    public PowerMockTestCase() {
-        try {
-            Class<?> annotationEnablerClass = Class.forName("org.powermock.api.extension.listener.AnnotationEnabler");
-            annotationEnabler = Whitebox.newInstance(annotationEnablerClass);
-        } catch (ClassNotFoundException e) {
-            annotationEnabler = null;
-        }
-    }
+	public PowerMockTestCase() {
+		try {
+			Class<?> annotationEnablerClass = Class.forName("org.powermock.api.extension.listener.AnnotationEnabler");
+			annotationEnabler = Whitebox.newInstance(annotationEnablerClass);
+		} catch (ClassNotFoundException e) {
+			annotationEnabler = null;
+		}
+	}
 
-    /**
-     * Must be executed before each test method. This method does the following:
-     * <ol>
-     * <li>Injects all mock fields (if they haven't been injected already)</li>
-     * </ol>
-     * 
-     * 
-     * 
-     * @throws Exception
-     *             If something unexpected goes wrong.
-     */
-    @BeforeMethod
-    protected void beforePowerMockTestMethod() throws Exception {
-        injectMocks();
-    }
+	/**
+	 * Must be executed before each test method. This method does the following:
+	 * <ol>
+	 * <li>Injects all mock fields (if they haven't been injected already)</li>
+	 * </ol>
+	 * 
+	 * 
+	 * 
+	 * @throws Exception
+	 *             If something unexpected goes wrong.
+	 */
+	@BeforeMethod
+	protected void beforePowerMockTestMethod() throws Exception {
+		injectMocks();
+	}
 
-    /**
-     * Must be executed after each test method. This method does the following:
-     * <ol>
-     * <li>Clear all injection fields (those annotated with a Mock annotation)</li>
-     * <li>Clears the PowerMock MockRepository</li>
-     * </ol>
-     * 
-     * 
-     * 
-     * @throws Exception
-     *             If something unexpected goes wrong.
-     */
-    @AfterMethod
-    protected void afterPowerMockTestMethod() throws Exception {
-        try {
-            clearMockFields();
-        } finally {
-            MockRepository.clear();
-        }
-    }
+	/**
+	 * Must be executed after each test method. This method does the following:
+	 * <ol>
+	 * <li>Clear all injection fields (those annotated with a Mock annotation)</li>
+	 * <li>Clears the PowerMock MockRepository</li>
+	 * </ol>
+	 * 
+	 * 
+	 * 
+	 * @throws Exception
+	 *             If something unexpected goes wrong.
+	 */
+	@AfterMethod
+	protected void afterPowerMockTestMethod() throws Exception {
+		try {
+			clearMockFields();
+		} finally {
+			MockRepository.clear();
+		}
+	}
 
-    /**
-     * @return The PowerMock object factory.
-     */
-    @ObjectFactory
-    public IObjectFactory create(ITestContext context) {
-        return new PowerMockObjectFactory();
-    }
+	/**
+	 * @return The PowerMock object factory.
+	 */
+	@ObjectFactory
+	public IObjectFactory create(ITestContext context) {
+		return new PowerMockObjectFactory();
+	}
 
-    private void clearMockFields() throws Exception, IllegalAccessException {
-        if (annotationEnabler != null) {
-            final Class<? extends Annotation>[] mockAnnotations = Whitebox.<Class<? extends Annotation>[]> invokeMethod(annotationEnabler,
-                    "getMockAnnotations");
-            Set<Field> mockFields = Whitebox.getFieldsAnnotatedWith(this, mockAnnotations);
-            for (Field field : mockFields) {
-                field.set(this, null);
-            }
-        }
-    }
+	private void clearMockFields() throws Exception, IllegalAccessException {
+		if (annotationEnabler != null) {
+			final Class<? extends Annotation>[] mockAnnotations = Whitebox.<Class<? extends Annotation>[]> invokeMethod(annotationEnabler,
+					"getMockAnnotations");
+			Set<Field> mockFields = Whitebox.getFieldsAnnotatedWith(this, mockAnnotations);
+			for (Field field : mockFields) {
+				field.set(this, null);
+			}
+		}
+	}
 
-    private void injectMocks() throws Exception {
-        if (annotationEnabler != null) {
-            Whitebox.invokeMethod(annotationEnabler, "beforeTestMethod", new Class<?>[] { Object.class, Method.class, Object[].class }, this, null,
-                    null);
-        }
-    }
+	private void injectMocks() throws Exception {
+		if (annotationEnabler != null) {
+			Whitebox.invokeMethod(annotationEnabler, "beforeTestMethod", new Class<?>[] { Object.class, Method.class, Object[].class }, this, null,
+					null);
+		}
+	}
 }

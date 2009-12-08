@@ -47,6 +47,7 @@ import org.powermock.reflect.exceptions.TooManyFieldsFoundException;
 import org.powermock.reflect.exceptions.TooManyMethodsFoundException;
 import org.powermock.reflect.internal.matcherstrategies.AllFieldsMatcherStrategy;
 import org.powermock.reflect.internal.matcherstrategies.AssignableFromFieldTypeMatcherStrategy;
+import org.powermock.reflect.internal.matcherstrategies.AssignableToFieldTypeMatcherStrategy;
 import org.powermock.reflect.internal.matcherstrategies.FieldAnnotationMatcherStrategy;
 import org.powermock.reflect.internal.matcherstrategies.FieldMatcherStrategy;
 import org.powermock.reflect.internal.matcherstrategies.FieldNameMatcherStrategy;
@@ -510,7 +511,7 @@ public class WhiteboxImpl {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getInternalState(Object object, Class<T> fieldType) {
-		Field foundField = findFieldInHierarchy(object, new AssignableFromFieldTypeMatcherStrategy(fieldType));
+		Field foundField = findFieldInHierarchy(object, new AssignableToFieldTypeMatcherStrategy(fieldType));
 		try {
 			return (T) foundField.get(object);
 		} catch (IllegalAccessException e) {

@@ -5,7 +5,6 @@ import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 import org.powermock.api.easymock.annotation.Mock;
-import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -17,27 +16,27 @@ import samples.annotationbased.AnnotationDemo;
  * Verifies that PowerMock test listeners works correctly with before methods in
  * TestNG.
  */
-public class AnnotationDemoWithBeforeMethodTest extends PowerMockTestCase {
+public class AnnotationDemoWithBeforeMethodTest {
 
-    @Mock
-    private Service serviceMock;
+	@Mock
+	private Service serviceMock;
 
-    private AnnotationDemo tested;
+	private AnnotationDemo tested;
 
-    @BeforeMethod
-    public void setup() {
-        tested = new AnnotationDemo(serviceMock);
-    }
+	@BeforeMethod
+	public void setup() {
+		tested = new AnnotationDemo(serviceMock);
+	}
 
-    @Test
-    public void assertInjectionWorked() throws Exception {
-        final String expected = "mock";
-        expect(serviceMock.getServiceMessage()).andReturn(expected);
+	@Test
+	public void assertInjectionWorked() throws Exception {
+		final String expected = "mock";
+		expect(serviceMock.getServiceMessage()).andReturn(expected);
 
-        replayAll();
+		replayAll();
 
-        Assert.assertEquals(expected, tested.getServiceMessage());
+		Assert.assertEquals(expected, tested.getServiceMessage());
 
-        verifyAll();
-    }
+		verifyAll();
+	}
 }

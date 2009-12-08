@@ -114,7 +114,7 @@ class ListMap<K, V> implements Map<K, V> {
 
 
 	public int size() {
-		throw new UnsupportedOperationException();
+		return entries.size();
 	}
 
 	public Collection<V> values() {

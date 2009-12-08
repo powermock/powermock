@@ -17,12 +17,14 @@ package org.powermock.reflect;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Set;
@@ -43,7 +45,9 @@ import org.powermock.reflect.proxyframework.RegisterProxyFramework;
 import org.powermock.reflect.spi.ProxyFramework;
 import org.powermock.reflect.testclasses.ClassWithChildThatHasInternalState;
 import org.powermock.reflect.testclasses.ClassWithInternalState;
+import org.powermock.reflect.testclasses.ClassWithList;
 import org.powermock.reflect.testclasses.ClassWithPrivateMethods;
+import org.powermock.reflect.testclasses.ClassWithSerializableState;
 import org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameName;
 import org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameNameOneWithoutParameters;
 import org.powermock.reflect.testclasses.ClassWithSimpleInternalState;
@@ -708,6 +712,28 @@ public class WhiteBoxTest {
 		} catch (IllegalArgumentException e) {
 			assertEquals("The object containing the field cannot be null", e.getMessage());
 		}
+	}
+
+	@Test
+	public void getInternalStateSupportsObjectArrayWhenSUTContainsSerializable() {
+		ClassWithSerializableState tested = new ClassWithSerializableState();
+		tested.setSerializable(new Serializable() {
+			private static final long serialVersionUID = -1850246005852779087L;
+		});
+		tested.setObjectArray(new Object[0]);
+		assertNotNull(Whitebox.getInternalState(tested, Object[].class));
+	}
+
+	@Test
+	public void getInternalStateUsesAssignableToWhenLookingForObject() {
+		ClassWithList tested = new ClassWithList();
+		assertNotNull(Whitebox.getInternalState(tested, Object.class));
+	}
+
+	@Test(expected = TooManyFieldsFoundException.class)
+	public void getInternalStateThrowsTooManyFieldsFoundWhenTooManyFieldsMatchTheSuppliedType() {
+		ClassWithInternalState tested = new ClassWithInternalState();
+		assertNotNull(Whitebox.getInternalState(tested, Object.class));
 	}
 
 	public void testFinalState() {

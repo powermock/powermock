@@ -8,6 +8,9 @@ Change log 1.4 (under development)
 * DeepCloner should now support cloning of static final fields on SUN JVM.
 * Fixed a minor bug in Whitebox#getInternalState so that a better error message is given when the instance argument is null (issue 205).
 * Fixed some typos in the javadoc of PowerMockito#verifyNew (issue 187).
+* Fixed so that Whitebox#getInternalState(..) now supports passing in super types as field-type critiera (issue 210).
+* Fixed so that Whitebox#getInternalState(..) and Whitebox#setInternalState(..) doesn't cause NPE when too many fields matched the criteria (issue 211).
+* Basic support for TestNG (5.11) implemented.
 
 Change log 1.3.1 (released 2009-10-28)
 --------------------------------------

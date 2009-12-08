@@ -22,28 +22,28 @@ import org.powermock.reflect.internal.primitivesupport.PrimitiveWrapper;
 
 public class AssignableFromFieldTypeMatcherStrategy extends FieldTypeMatcherStrategy {
 
-    private final Class<?> primitiveCounterpart;
+	private final Class<?> primitiveCounterpart;
 
-    public AssignableFromFieldTypeMatcherStrategy(Class<?> fieldType) {
-        super(fieldType);
-        primitiveCounterpart = PrimitiveWrapper.getPrimitiveFromWrapperType(expectedFieldType);
-    }
+	public AssignableFromFieldTypeMatcherStrategy(Class<?> fieldType) {
+		super(fieldType);
+		primitiveCounterpart = PrimitiveWrapper.getPrimitiveFromWrapperType(expectedFieldType);
+	}
 
-    @Override
-    public boolean matches(Field field) {
-        final Class<?> actualFieldType = field.getType();
-        return actualFieldType.isAssignableFrom(expectedFieldType)
-                || (primitiveCounterpart != null && actualFieldType.isAssignableFrom(primitiveCounterpart));
-    }
+	@Override
+	public boolean matches(Field field) {
+		Class<?> actualFieldType = field.getType();
+		return actualFieldType.isAssignableFrom(expectedFieldType)
+				|| (primitiveCounterpart != null && actualFieldType.isAssignableFrom(primitiveCounterpart));
+	}
 
-    @Override
-    public void notFound(Class<?> type, boolean isInstanceField) throws FieldNotFoundException {
-        throw new FieldNotFoundException(String.format("No %s field assignable from \"%s\" could be found in the class hierarchy of %s.",
-                isInstanceField ? "instance" : "static", expectedFieldType.getName(), type.getName()));
-    }
+	@Override
+	public void notFound(Class<?> type, boolean isInstanceField) throws FieldNotFoundException {
+		throw new FieldNotFoundException(String.format("No %s field assignable from \"%s\" could be found in the class hierarchy of %s.",
+				isInstanceField ? "instance" : "static", expectedFieldType.getName(), type.getName()));
+	}
 
-    @Override
-    public String toString() {
-        return "type " + primitiveCounterpart.getName();
-    }
+	@Override
+	public String toString() {
+		return "type " + (primitiveCounterpart == null ? expectedFieldType.getName() : primitiveCounterpart.getName());
+	}
 }
