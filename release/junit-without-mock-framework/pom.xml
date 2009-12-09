@@ -8,80 +8,46 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock</groupId>
-    <artifactId>powermock-release-src</artifactId>
+    <artifactId>powermock-release-junit-without-mock-framework</artifactId>
     <packaging>pom</packaging>
-    <name>powermock-release-src</name>
+    <name>powermock-release-junit-without-mock-framework</name>
 
     <dependencies>
         <dependency>
             <groupId>org.powermock</groupId>
-            <artifactId>powermock-core</artifactId>
+            <artifactId>powermock-release-without-test-and-mock-framework</artifactId>
+	    <type>pom</type>
             <version>${version}</version>
-            <classifier>sources</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock.api</groupId>
-            <artifactId>powermock-api-easymock</artifactId>
-            <version>${version}</version>
-            <classifier>sources</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock.api</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>${version}</version>
-            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.powermock.modules</groupId>
             <artifactId>powermock-module-junit4-common</artifactId>
             <version>${version}</version>
-            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.powermock.modules</groupId>
             <artifactId>powermock-module-junit4</artifactId>
             <version>${version}</version>
-            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.powermock.modules</groupId>
             <artifactId>powermock-module-junit4-legacy</artifactId>
             <version>${version}</version>
-            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.powermock.modules</groupId>
             <artifactId>powermock-module-junit3</artifactId>
             <version>${version}</version>
-            <classifier>sources</classifier>
         </dependency>
-        <dependency>
-            <groupId>org.powermock.reflect</groupId>
-            <artifactId>powermock-reflect</artifactId>
-            <version>${version}</version>
-            <classifier>sources</classifier>
-        </dependency>
-        <dependency>
-	   <groupId>org.powermock.api</groupId>
-	   <artifactId>powermock-api-support</artifactId>
-	   <version>${version}</version>
-           <classifier>sources</classifier>
-	</dependency>
-	<dependency>
-	   <groupId>org.powermock.classloading</groupId>
-           <artifactId>powermock-classloading</artifactId>
-	   <version>${version}</version>
-           <classifier>sources</classifier>
-        </dependency>    
     </dependencies>
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <finalName>powermock-${version}</finalName>
+                    <finalName>powermock-junit-without-mock-framework-${version}</finalName>
                     <descriptors>
-                        <descriptor>src/assembly/src.xml</descriptor>
+                        <descriptor>src/assembly/full.xml</descriptor>
                     </descriptors>
                 </configuration>
                 <executions>

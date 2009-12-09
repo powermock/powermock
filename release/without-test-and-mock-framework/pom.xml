@@ -8,37 +8,40 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock</groupId>
-    <artifactId>powermock-release-with-mockito-dependencies</artifactId>
+    <artifactId>powermock-release-without-test-and-mock-framework</artifactId>
     <packaging>pom</packaging>
-    <name>powermock-release-with-mockito-dependencies</name>
+    <name>powermock-release-without-test-and-mock-framework</name>
 
     <dependencies>
         <dependency>
-            <groupId>org.powermock.api</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>${version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.powermock</groupId>
-	    <artifactId>powermock-release-without-mock-framework</artifactId>
-            <type>pom</type>
+            <artifactId>powermock-core</artifactId>
+            <version>${version}</version>
+        </dependency>        
+        <dependency>
+            <groupId>org.powermock.reflect</groupId>
+            <artifactId>powermock-reflect</artifactId>
             <version>${version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <scope>compile</scope>
+	<dependency>
+	   <groupId>org.powermock.api</groupId>
+	   <artifactId>powermock-api-support</artifactId>
+	   <version>${version}</version>
+	</dependency>
+	<dependency>
+	   <groupId>org.powermock.classloading</groupId>
+           <artifactId>powermock-classloading</artifactId>
+	   <version>${version}</version>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <finalName>powermock-${version}</finalName>
+                    <finalName>powermock-without-test-and-mock-framework-${version}</finalName>
                     <descriptors>
-                        <descriptor>src/assembly/with-mockito-dependencies.xml</descriptor>
+                        <descriptor>src/assembly/full.xml</descriptor>
                     </descriptors>
                 </configuration>
                 <executions>

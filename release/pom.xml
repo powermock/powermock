@@ -15,10 +15,13 @@
     <modules>
         <module>easymock-extension-api-full</module>
         <module>mockito-extension-api-full</module>
-        <module>src</module>
-        <module>with-easymock-dependencies</module>
-        <module>with-mockito-dependencies</module>
-        <module>without-mock-framework</module>
+        <module>with-junit-easymock-dependencies</module>
+        <module>with-junit-mockito-dependencies</module>
+        <module>with-testng-easymock-dependencies</module>
+        <module>with-testng-mockito-dependencies</module>
+        <module>junit-without-mock-framework</module>
+        <module>testng-without-mock-framework</module>
+        <module>without-test-and-mock-framework</module>
     </modules>
 
 </project>

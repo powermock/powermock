@@ -8,50 +8,21 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock</groupId>
-    <artifactId>powermock-release-without-mock-framework</artifactId>
+    <artifactId>powermock-release-testng-without-mock-framework</artifactId>
     <packaging>pom</packaging>
-    <name>powermock-release-without-mock-framework</name>
+    <name>powermock-release-testng-without-mock-framework</name>
 
     <dependencies>
         <dependency>
             <groupId>org.powermock</groupId>
-            <artifactId>powermock-core</artifactId>
+            <artifactId>powermock-release-without-test-and-mock-framework</artifactId>
+	    <type>pom</type>
             <version>${version}</version>
         </dependency>
         <dependency>
             <groupId>org.powermock.modules</groupId>
-            <artifactId>powermock-module-junit4-common</artifactId>
+	    <artifactId>powermock-module-testng</artifactId>
             <version>${version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock.modules</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>${version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock.modules</groupId>
-            <artifactId>powermock-module-junit4-legacy</artifactId>
-            <version>${version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock.modules</groupId>
-            <artifactId>powermock-module-junit3</artifactId>
-            <version>${version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock.reflect</groupId>
-            <artifactId>powermock-reflect</artifactId>
-            <version>${version}</version>
-        </dependency>
-	<dependency>
-	   <groupId>org.powermock.api</groupId>
-	   <artifactId>powermock-api-support</artifactId>
-	   <version>${version}</version>
-	</dependency>
-	<dependency>
-	   <groupId>org.powermock.classloading</groupId>
-           <artifactId>powermock-classloading</artifactId>
-	   <version>${version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -59,7 +30,7 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <finalName>powermock-${version}</finalName>
+                    <finalName>powermock-testng-without-mock-framework-${version}</finalName>
                     <descriptors>
                         <descriptor>src/assembly/full.xml</descriptor>
                     </descriptors>

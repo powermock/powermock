@@ -1,5 +1,4 @@
 <assembly>
-    <id>with-mockito-dependencies</id>
     <formats>
         <format>zip</format>
     </formats>

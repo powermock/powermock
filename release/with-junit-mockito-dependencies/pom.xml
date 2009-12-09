@@ -8,30 +8,25 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock</groupId>
-    <artifactId>powermock-release-with-easymock-dependencies</artifactId>
+    <artifactId>powermock-release-with-junit-mockito-dependencies</artifactId>
     <packaging>pom</packaging>
-    <name>powermock-release-with-easymock-dependencies</name>
+    <name>powermock-release-with-junit-mockito-dependencies</name>
 
     <dependencies>
         <dependency>
             <groupId>org.powermock.api</groupId>
-            <artifactId>powermock-api-easymock</artifactId>
+            <artifactId>powermock-api-mockito</artifactId>
             <version>${version}</version>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
-	    <artifactId>powermock-release-without-mock-framework</artifactId>
+	    <artifactId>powermock-release-junit-without-mock-framework</artifactId>
             <type>pom</type>
             <version>${version}</version>
         </dependency>
-	<dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymockclassextension</artifactId>
-            <scope>compile</scope>
-        </dependency>
         <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -41,9 +36,9 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <finalName>powermock-${version}</finalName>
+                    <finalName>powermock-mockito-junit-${version}</finalName>
                     <descriptors>
-                        <descriptor>src/assembly/with-easymock-dependencies.xml</descriptor>
+                        <descriptor>src/assembly/final.xml</descriptor>
                     </descriptors>
                 </configuration>
                 <executions>
