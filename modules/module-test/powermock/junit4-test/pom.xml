@@ -14,6 +14,16 @@
 	<name>powermock-module-test-junit4</name>
 	<version>1.4-SNAPSHOT</version>
 	<url>http://maven.apache.org</url>
+ <build>
+  <plugins>
+     <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+            <forkMode>pertest</forkMode> 
+        </configuration>
+      </plugin>
+     </plugins>
+  </build>
 	<dependencies>
 		<dependency>
 			<groupId>org.easymock</groupId>
