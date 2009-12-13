@@ -21,6 +21,7 @@ import java.util.List;
 
 import javassist.util.proxy.ProxyFactory;
 
+import org.powermock.core.MockRepository;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.MainMockTransformer;
@@ -38,104 +39,115 @@ import org.testng.IObjectFactory;
 @SuppressWarnings("serial")
 public class PowerMockObjectFactory implements IObjectFactory {
 
-    private final MockClassLoader mockLoader;
+	private final MockClassLoader mockLoader;
 
-    private final TestClassesExtractor testClassesExtractor;
+	private final TestClassesExtractor testClassesExtractor;
 
-    private final IgnorePackagesExtractor ignorePackagesExtractor;
+	private final IgnorePackagesExtractor ignorePackagesExtractor;
 
-    public PowerMockObjectFactory() {
-        List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
-        final MainMockTransformer mainMockTransformer = new MainMockTransformer();
-        mockTransformerChain.add(mainMockTransformer);
+	public PowerMockObjectFactory() {
+		List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
+		final MainMockTransformer mainMockTransformer = new MainMockTransformer();
+		mockTransformerChain.add(mainMockTransformer);
 
-        String[] classesToLoadByMockClassloader = new String[0];
-        String[] packagesToIgnore = new String[0];
-        mockLoader = new MockClassLoader(classesToLoadByMockClassloader, packagesToIgnore);
-        mockLoader.setMockTransformerChain(mockTransformerChain);
-        testClassesExtractor = new PrepareForTestExtractorImpl();
-        ignorePackagesExtractor = new PowerMockIgnorePackagesExtractorImpl();
-    }
+		String[] classesToLoadByMockClassloader = new String[0];
+		String[] packagesToIgnore = new String[0];
+		mockLoader = new MockClassLoader(classesToLoadByMockClassloader, packagesToIgnore);
+		mockLoader.setMockTransformerChain(mockTransformerChain);
+		testClassesExtractor = new PrepareForTestExtractorImpl();
+		ignorePackagesExtractor = new PowerMockIgnorePackagesExtractorImpl();
+	}
 
-    @SuppressWarnings("unchecked")
-    public Object newInstance(Constructor constructor, Object... params) {
-        Class<?> testClass = constructor.getDeclaringClass();
-        mockLoader.addIgnorePackage(ignorePackagesExtractor.getPackagesToIgnore(testClass));
-        mockLoader.addClassesToModify(testClassesExtractor.getTestClasses(testClass));
-        try {
-            registerProxyframework(mockLoader);
-            new MockPolicyInitializerImpl(testClass).initialize(mockLoader);
-            final Class<?> testClassLoadedByMockedClassLoader = createTestClass(testClass);
-            Constructor<?> con = testClassLoadedByMockedClassLoader.getConstructor(constructor.getParameterTypes());
-            final Object testInstance = con.newInstance(params);
-            if (!extendsPowerMockTestCase(testClass)) {
-                setInvocationHandler(testInstance);
-            }
-            return testInstance;
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+	@SuppressWarnings("unchecked")
+	public Object newInstance(Constructor constructor, Object... params) {
+		/*
+		 * For extra safety clear the MockitoRepository on each new
+		 * instantiation of the object factory. This is good in cases where a
+		 * previous test has used e.g. PowerMock#createMock(..) to create a mock
+		 * without using this factory. That means that there's some state left in
+		 * the MockRepository that hasn't been cleared. Currently clearing the
+		 * MockRepository from any classloader will clear the previous state but
+		 * it's not certain that this is always the case.
+		 */
+		MockRepository.clear();
 
-    private void setInvocationHandler(Object testInstance) throws Exception {
-        Class<?> powerMockTestNGMethodHandlerClass = Class.forName(PowerMockTestNGMethodHandler.class.getName(), false, mockLoader);
-        Object powerMockTestNGMethodHandlerInstance = powerMockTestNGMethodHandlerClass.getConstructor(Class.class).newInstance(
-                testInstance.getClass());
-        Whitebox.invokeMethod(testInstance, "setHandler", powerMockTestNGMethodHandlerInstance);
-    }
+		Class<?> testClass = constructor.getDeclaringClass();
+		mockLoader.addIgnorePackage(ignorePackagesExtractor.getPackagesToIgnore(testClass));
+		mockLoader.addClassesToModify(testClassesExtractor.getTestClasses(testClass));
+		try {
+			registerProxyframework(mockLoader);
+			new MockPolicyInitializerImpl(testClass).initialize(mockLoader);
+			final Class<?> testClassLoadedByMockedClassLoader = createTestClass(testClass);
+			Constructor<?> con = testClassLoadedByMockedClassLoader.getConstructor(constructor.getParameterTypes());
+			final Object testInstance = con.newInstance(params);
+			if (!extendsPowerMockTestCase(testClass)) {
+				setInvocationHandler(testInstance);
+			}
+			return testInstance;
+		} catch (RuntimeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-    /**
-     * We proxy the test class in order to be able to clear state after each
-     * test method invocation. It would be much better to be able to register a
-     * testng listener programmtically but I cannot find a way to do so.
-     */
-    private Class<?> createTestClass(Class<?> actualTestClass) throws Exception {
-        final Class<?> testClassLoadedByMockedClassLoader = Class.forName(actualTestClass.getName(), false, mockLoader);
-        if (extendsPowerMockTestCase(actualTestClass)) {
-            return testClassLoadedByMockedClassLoader;
-        } else {
+	private void setInvocationHandler(Object testInstance) throws Exception {
+		Class<?> powerMockTestNGMethodHandlerClass = Class.forName(PowerMockTestNGMethodHandler.class.getName(), false, mockLoader);
+		Object powerMockTestNGMethodHandlerInstance = powerMockTestNGMethodHandlerClass.getConstructor(Class.class).newInstance(
+				testInstance.getClass());
+		Whitebox.invokeMethod(testInstance, "setHandler", powerMockTestNGMethodHandlerInstance);
+	}
 
-            Class<?> proxyFactoryClass = Class.forName(ProxyFactory.class.getName(), false, mockLoader);
-            final Class<?> testNGMethodFilterByMockedClassLoader = Class.forName(TestNGMethodFilter.class.getName(), false, mockLoader);
+	/**
+	 * We proxy the test class in order to be able to clear state after each
+	 * test method invocation. It would be much better to be able to register a
+	 * testng listener programmtically but I cannot find a way to do so.
+	 */
+	private Class<?> createTestClass(Class<?> actualTestClass) throws Exception {
+		final Class<?> testClassLoadedByMockedClassLoader = Class.forName(actualTestClass.getName(), false, mockLoader);
+		if (extendsPowerMockTestCase(actualTestClass)) {
+			return testClassLoadedByMockedClassLoader;
+		} else {
 
-            Object f = proxyFactoryClass.newInstance();
-            Object filter = testNGMethodFilterByMockedClassLoader.newInstance();
-            Whitebox.invokeMethod(f, "setFilter", filter);
-            Whitebox.invokeMethod(f, "setSuperclass", testClassLoadedByMockedClassLoader);
-            Class<?> c = Whitebox.<Class<?>> invokeMethod(f, "createClass");
-            return c;
-        }
-    }
+			Class<?> proxyFactoryClass = Class.forName(ProxyFactory.class.getName(), false, mockLoader);
+			final Class<?> testNGMethodFilterByMockedClassLoader = Class.forName(TestNGMethodFilter.class.getName(), false, mockLoader);
 
-    private boolean extendsPowerMockTestCase(Class<?> actualTestClass) {
-        return PowerMockTestCase.class.isAssignableFrom(actualTestClass);
-    }
+			Object f = proxyFactoryClass.newInstance();
+			Object filter = testNGMethodFilterByMockedClassLoader.newInstance();
+			Whitebox.invokeMethod(f, "setFilter", filter);
+			Whitebox.invokeMethod(f, "setSuperclass", testClassLoadedByMockedClassLoader);
+			Class<?> c = Whitebox.<Class<?>> invokeMethod(f, "createClass");
+			return c;
+		}
+	}
 
-    private void registerProxyframework(ClassLoader classLoader) {
-        Class<?> proxyFrameworkClass = null;
-        try {
-            proxyFrameworkClass = Class.forName("org.powermock.api.extension.proxyframework.ProxyFrameworkImpl", false, classLoader);
-        } catch (ClassNotFoundException e) {
-            throw new IllegalStateException(
-                    "Extension API internal error: org.powermock.api.extension.proxyframework.ProxyFrameworkImpl could not be located in classpath.");
-        }
+	private boolean extendsPowerMockTestCase(Class<?> actualTestClass) {
+		return PowerMockTestCase.class.isAssignableFrom(actualTestClass);
+	}
 
-        Class<?> proxyFrameworkRegistrar = null;
-        try {
-            proxyFrameworkRegistrar = Class.forName(RegisterProxyFramework.class.getName(), false, classLoader);
-        } catch (ClassNotFoundException e) {
-            // Should never happen
-            throw new RuntimeException(e);
-        }
-        try {
-            Whitebox.invokeMethod(proxyFrameworkRegistrar, "registerProxyFramework", Whitebox.newInstance(proxyFrameworkClass));
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+	private void registerProxyframework(ClassLoader classLoader) {
+		Class<?> proxyFrameworkClass = null;
+		try {
+			proxyFrameworkClass = Class.forName("org.powermock.api.extension.proxyframework.ProxyFrameworkImpl", false, classLoader);
+		} catch (ClassNotFoundException e) {
+			throw new IllegalStateException(
+					"Extension API internal error: org.powermock.api.extension.proxyframework.ProxyFrameworkImpl could not be located in classpath.");
+		}
+
+		Class<?> proxyFrameworkRegistrar = null;
+		try {
+			proxyFrameworkRegistrar = Class.forName(RegisterProxyFramework.class.getName(), false, classLoader);
+		} catch (ClassNotFoundException e) {
+			// Should never happen
+			throw new RuntimeException(e);
+		}
+		try {
+			Whitebox.invokeMethod(proxyFrameworkRegistrar, "registerProxyFramework", Whitebox.newInstance(proxyFrameworkClass));
+		} catch (RuntimeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 }

@@ -23,6 +23,7 @@ import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
+import org.powermock.core.MockRepository;
 import org.powermock.modules.junit4.common.internal.JUnit4TestSuiteChunker;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 
@@ -32,6 +33,16 @@ public abstract class AbstractCommonPowerMockRunner extends Runner implements Fi
 
 	public AbstractCommonPowerMockRunner(Class<?> klass, Class<? extends PowerMockJUnitRunnerDelegate> runnerDelegateImplClass) throws Exception {
 		suiteChunker = new JUnit4TestSuiteChunkerImpl(klass, runnerDelegateImplClass);
+		/*
+		 * For extra safety clear the MockitoRepository on each new
+		 * instantiation of the runner. This is good in cases where a previous
+		 * test has used e.g. PowerMock#createMock(..) to create a mock without
+		 * using this runner. That means that there's some state left in the
+		 * MockRepository that hasn't been cleared. Currently clearing the
+		 * MockRepository from any classloader will clear the previous state but
+		 * it's not certain that this is always the case.
+		 */
+		MockRepository.clear();
 	}
 
 	@Override
