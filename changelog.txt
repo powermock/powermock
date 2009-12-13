@@ -1,6 +1,6 @@
 Change log 1.4 (under development)
 ----------------------------------
-
+* Added testng to full release project
 
 Change log 1.3.5 (2009-12-13)
 -----------------------------

@@ -54,6 +54,11 @@
 	   <version>${version}</version>
 	</dependency>
 	<dependency>
+           <groupId>org.powermock.modules</groupId>
+	   <artifactId>powermock-module-testng</artifactId>
+	   <version>${version}</version>
+	</dependency>
+	<dependency>
 	   <groupId>org.powermock.classloading</groupId>
            <artifactId>powermock-classloading</artifactId>
 	   <version>${version}</version>
@@ -96,6 +101,12 @@
             <version>${version}</version>
 	    <classifier>sources</classifier>
         </dependency>
+	<dependency>
+           <groupId>org.powermock.modules</groupId>
+	   <artifactId>powermock-module-testng</artifactId>
+	   <version>${version}</version>
+	   <classifier>sources</classifier>
+	</dependency>
         <dependency>
             <groupId>org.powermock.reflect</groupId>
             <artifactId>powermock-reflect</artifactId>
