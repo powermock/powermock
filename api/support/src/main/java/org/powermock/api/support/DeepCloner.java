@@ -165,7 +165,7 @@ public class DeepCloner {
 			for (Field field : currentTargetClass.getDeclaredFields()) {
 				field.setAccessible(true);
 				try {
-					final Field declaredField = source.getClass().getDeclaredField(field.getName());
+					final Field declaredField = Whitebox.getField(source.getClass(), field.getName());
 					declaredField.setAccessible(true);
 					final Object object = declaredField.get(source);
 					final Object instantiatedValue;

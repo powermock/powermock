@@ -18,6 +18,7 @@ package powermock.classloading;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
@@ -37,6 +38,8 @@ import powermock.classloading.classes.MyClass;
 import powermock.classloading.classes.MyCollectionHolder;
 import powermock.classloading.classes.MyEnum;
 import powermock.classloading.classes.MyEnumHolder;
+import powermock.classloading.classes.MyHierarchicalFieldHolder;
+import powermock.classloading.classes.MyHierarchicalOverloadedFieldHolder;
 import powermock.classloading.classes.MyIntegerHolder;
 import powermock.classloading.classes.MyPrimitiveArrayHolder;
 import powermock.classloading.classes.MyReferenceFieldHolder;
@@ -210,6 +213,42 @@ public class ClassloaderExecutorTest {
 				assertEquals(tested.getMyArgument1(), tested.getMyArgument2());
 				assertSame(tested.getMyArgument1(), tested.getMyArgument2());
 				assertSame(tested.getMyArgument1(), MyReferenceFieldHolder.MY_ARGUMENT);
+			}
+		});
+	}
+
+	@Test
+	public void worksWithObjectHierarchy() throws Exception {
+		final MockClassLoader classloader = createClassloader();
+		final MyHierarchicalFieldHolder tested = new MyHierarchicalFieldHolder();
+		assertSame(tested.getMyArgument1(), tested.getMyArgument2());
+		assertEquals(tested.getMyArgument3(), tested.getMyArgument2());
+		new ClassloaderExecutor(classloader).execute(new Runnable() {
+			public void run() {
+				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+				assertSame(tested.getMyArgument1(), tested.getMyArgument2());
+				assertEquals(tested.getMyArgument3(), tested.getMyArgument2());
+			}
+		});
+	}
+
+	@Test
+	public void worksWithObjectHierarchyAndOverloadedFields() throws Exception {
+		final MockClassLoader classloader = createClassloader();
+		final MyHierarchicalOverloadedFieldHolder tested = new MyHierarchicalOverloadedFieldHolder();
+		assertSame(tested.getMyArgument1(), tested.getMyArgument2());
+		assertEquals(tested.getMyArgument1(), tested.getMyArgument3());
+		assertSame(tested.getMyArgument3(), MyHierarchicalOverloadedFieldHolder.MY_ARGUMENT);
+		assertNotSame(MyReferenceFieldHolder.MY_ARGUMENT, MyHierarchicalOverloadedFieldHolder.MY_ARGUMENT);
+		assertEquals(MyReferenceFieldHolder.MY_ARGUMENT, MyHierarchicalOverloadedFieldHolder.MY_ARGUMENT);
+		new ClassloaderExecutor(classloader).execute(new Runnable() {
+			public void run() {
+				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+				assertSame(tested.getMyArgument1(), tested.getMyArgument2());
+				assertEquals(tested.getMyArgument1(), tested.getMyArgument3());
+				assertSame(tested.getMyArgument3(), MyHierarchicalOverloadedFieldHolder.MY_ARGUMENT);
+				assertNotSame(MyReferenceFieldHolder.MY_ARGUMENT, MyHierarchicalOverloadedFieldHolder.MY_ARGUMENT);
+				assertEquals(MyReferenceFieldHolder.MY_ARGUMENT, MyHierarchicalOverloadedFieldHolder.MY_ARGUMENT);
 			}
 		});
 	}
