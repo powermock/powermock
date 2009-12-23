@@ -15,6 +15,11 @@
  */
 package org.powermock.api.support;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -31,7 +36,6 @@ import sun.misc.Unsafe;
  * <p>
  */
 public class DeepCloner {
-	private static final String IGNORED_PACKAGES = "java.";
 
 	/**
 	 * Clones an object.
@@ -39,18 +43,47 @@ public class DeepCloner {
 	 * @return A deep clone of the object to clone.
 	 */
 	public static <T> T clone(T objectToClone) {
+		return clone(objectToClone, true);
+	}
+
+	/**
+	 * Clones an object.
+	 * 
+	 * @param includeStandardJavaType
+	 *            <code>true</code> also clones standard java types (using
+	 *            simple serialization), <code>false</code> simply reference to
+	 *            these objects (will be same instance).
+	 * @return A deep clone of the object to clone.
+	 */
+	public static <T> T clone(T objectToClone, boolean includeStandardJavaType) {
 		assertObjectNotNull(objectToClone);
 		final Class<T> objectType = getType(objectToClone);
-		return (T) performClone(objectType.getClassLoader(), objectType, objectToClone, new ListMap<Object, Object>());
+		return (T) performClone(objectType.getClassLoader(), objectType, objectToClone, new ListMap<Object, Object>(), includeStandardJavaType);
+	}
+
+	/**
+	 * Clone an object into an object loaded by the supplied classloader. Note
+	 * that standard java classes are not cloned but only referenced to.
+	 * 
+	 * @return A deep clone of the object to clone.
+	 */
+	public static <T> T clone(ClassLoader classloader, T objectToClone) {
+		return clone(classloader, objectToClone, false);
 	}
 
 	/**
 	 * Clone an object into an object loaded by the supplied classloader.
+	 * 
+	 * @param includeStandardJavaType
+	 *            <code>true</code> also clones standard java types (using
+	 *            simple serialization), <code>false</code> simply reference to
+	 *            these objects (will be same instance).
+	 * @return A deep clone of the object to clone.
 	 */
-	public static <T> T clone(ClassLoader classloader, T objectToClone) {
+	public static <T> T clone(ClassLoader classloader, T objectToClone, boolean includeStandardJavaType) {
 		assertObjectNotNull(objectToClone);
 		return performClone(classloader, ClassLoaderUtil.loadClassWithClassloader(classloader, getType(objectToClone)), objectToClone,
-				new ListMap<Object, Object>());
+				new ListMap<Object, Object>(), includeStandardJavaType);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -68,24 +101,53 @@ public class DeepCloner {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T> T performClone(ClassLoader targetCL, Class<T> targetClass, Object source, ListMap<Object, Object> referenceMap) {
+	private static <T> T performClone(ClassLoader targetCL, Class<T> targetClass, Object source, ListMap<Object, Object> referenceMap,
+			boolean shouldCloneStandardJavaTypes) {
 		Object target = null;
 		if (targetClass.isArray()) {
-			target = instantiateArray(targetCL, targetClass, source, referenceMap);
+			target = instantiateArray(targetCL, targetClass, source, referenceMap, shouldCloneStandardJavaTypes);
 		} else if (isCollection(targetClass)) {
-			target = cloneCollection(targetCL, source, referenceMap);
-		} else if (isStandardJavaType(targetClass)) {
+			target = cloneCollection(targetCL, source, referenceMap, shouldCloneStandardJavaTypes);
+		} else if (targetClass.isPrimitive() && !shouldCloneStandardJavaTypes) {
 			target = source;
+		} else if (isStandardJavaType(targetClass)) {
+			target = serializationClone(source);
 		} else if (targetClass.isEnum()) {
 			target = cloneEnum(targetCL, source);
 		} else {
 			target = Whitebox.newInstance(targetClass);
 		}
 
-		if (!targetClass.isEnum()) {
-			cloneFields(targetCL, targetClass, source, target, referenceMap);
+		if (!targetClass.isEnum() && !isStandardJavaType(targetClass) && !targetClass.isPrimitive()) {
+			cloneFields(targetCL, targetClass, source, target, referenceMap, shouldCloneStandardJavaTypes);
 		}
 		return (T) target;
+	}
+
+	/*
+	 * Perform simple serialization
+	 */
+	private static Object serializationClone(Object source) {
+		ObjectOutputStream oos = null;
+		ObjectInputStream ois = null;
+		try {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			oos = new ObjectOutputStream(bos);
+			oos.writeObject(source);
+			oos.flush();
+			ByteArrayInputStream bin = new ByteArrayInputStream(bos.toByteArray());
+			ois = new ObjectInputStream(bin);
+			return ois.readObject();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				oos.close();
+				ois.close();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -96,9 +158,10 @@ public class DeepCloner {
 		return target;
 	}
 
-	private static <T> void cloneFields(ClassLoader targetCL, Class<T> targetClass, Object source, Object target, ListMap<Object, Object> referenceMap) {
+	private static <T> void cloneFields(ClassLoader targetCL, Class<T> targetClass, Object source, Object target,
+			ListMap<Object, Object> referenceMap, boolean cloneStandardJavaTypes) {
 		Class<?> currentTargetClass = targetClass;
-		while (currentTargetClass != null && !currentTargetClass.getName().startsWith(IGNORED_PACKAGES)) {
+		while (currentTargetClass != null) {
 			for (Field field : currentTargetClass.getDeclaredFields()) {
 				field.setAccessible(true);
 				try {
@@ -110,20 +173,21 @@ public class DeepCloner {
 						instantiatedValue = referenceMap.get(object);
 					} else {
 						final Class<Object> type = getType(object);
-						if (object == null || (type.getName().startsWith(IGNORED_PACKAGES) && !isCollection(object))) {
+						if (object == null && !isCollection(object)) {
 							instantiatedValue = object;
 						} else {
 							final Class<Object> typeLoadedByCL = ClassLoaderUtil.loadClassWithClassloader(targetCL, type);
 							if (type.isEnum()) {
 								instantiatedValue = getEnumValue(object, typeLoadedByCL);
 							} else {
-								instantiatedValue = performClone(targetCL, typeLoadedByCL, object, referenceMap);
+								instantiatedValue = performClone(targetCL, typeLoadedByCL, object, referenceMap, cloneStandardJavaTypes);
 							}
 						}
 						referenceMap.put(object, instantiatedValue);
 					}
 
-					if (field.isEnumConstant() || isStaticFinalModifier(field)) {
+					final boolean needsUnsafeWrite = field.isEnumConstant() || isStaticFinalModifier(field);
+					if (needsUnsafeWrite) {
 						UnsafeFieldWriter.write(field, target, instantiatedValue);
 					} else {
 						field.set(target, instantiatedValue);
@@ -139,16 +203,17 @@ public class DeepCloner {
 	}
 
 	private static <T> boolean isStandardJavaType(Class<T> targetClass) {
-		return targetClass.isPrimitive() || targetClass.getName().startsWith(IGNORED_PACKAGES);
+		return targetClass.getName().startsWith("java.");
 	}
 
 	private static boolean isStaticFinalModifier(final Field field) {
 		final int modifiers = field.getModifiers();
-		return (Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers));
+		return Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers) || field.getDeclaringClass().equals(Character.class)
+				&& field.getName().equals("MIN_RADIX");
 	}
 
 	@SuppressWarnings("unchecked")
-	private static Object cloneCollection(ClassLoader targetCL, Object source, ListMap<Object, Object> referenceMap) {
+	private static Object cloneCollection(ClassLoader targetCL, Object source, ListMap<Object, Object> referenceMap, boolean cloneStandardJavaTypes) {
 		Object target;
 		Collection sourceCollection = (Collection) source;
 		final Class<Collection<?>> collectionClass = (Class<Collection<?>>) ClassLoaderUtil.loadClassWithClassloader(targetCL, source.getClass());
@@ -161,7 +226,7 @@ public class DeepCloner {
 		}
 		for (Object collectionValue : sourceCollection) {
 			final Class<? extends Object> typeLoadedByTargetCL = ClassLoaderUtil.loadClassWithClassloader(targetCL, collectionValue.getClass());
-			newInstance.add(performClone(targetCL, typeLoadedByTargetCL, collectionValue, referenceMap));
+			newInstance.add(performClone(targetCL, typeLoadedByTargetCL, collectionValue, referenceMap, cloneStandardJavaTypes));
 		}
 		target = newInstance;
 		return target;
@@ -180,13 +245,14 @@ public class DeepCloner {
 		return Enum.valueOf((Class) enumTypeLoadedByTargetCL, ((Enum) enumValueOfSourceClassloader).toString());
 	}
 
-	private static Object instantiateArray(ClassLoader targetCL, Class<?> arrayClass, Object objectToClone, ListMap<Object, Object> referenceMap) {
+	private static Object instantiateArray(ClassLoader targetCL, Class<?> arrayClass, Object objectToClone, ListMap<Object, Object> referenceMap,
+			boolean cloneStandardJavaTypes) {
 		final int arrayLength = Array.getLength(objectToClone);
 		final Object array = Array.newInstance(arrayClass.getComponentType(), arrayLength);
 		for (int i = 0; i < arrayLength; i++) {
 			final Object object = Array.get(objectToClone, i);
 			final Object performClone = performClone(targetCL, ClassLoaderUtil.loadClassWithClassloader(targetCL, getType(object)), object,
-					referenceMap);
+					referenceMap, cloneStandardJavaTypes);
 			Array.set(array, i, performClone);
 		}
 		return array;
