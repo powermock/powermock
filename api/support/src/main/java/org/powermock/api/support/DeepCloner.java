@@ -123,12 +123,10 @@ public class DeepCloner {
 						referenceMap.put(object, instantiatedValue);
 					}
 
-					if (!field.isEnumConstant()) {
-						if (isStaticFinalModifier(field)) {
-							UnsafeFieldWriter.write(field, target, instantiatedValue);
-						} else {
-							field.set(target, instantiatedValue);
-						}
+					if (field.isEnumConstant() || isStaticFinalModifier(field)) {
+						UnsafeFieldWriter.write(field, target, instantiatedValue);
+					} else {
+						field.set(target, instantiatedValue);
 					}
 				} catch (RuntimeException e) {
 					throw e;
