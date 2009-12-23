@@ -18,6 +18,7 @@ package powermock.classloading;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
@@ -38,6 +39,7 @@ import powermock.classloading.classes.MyEnum;
 import powermock.classloading.classes.MyEnumHolder;
 import powermock.classloading.classes.MyIntegerHolder;
 import powermock.classloading.classes.MyPrimitiveArrayHolder;
+import powermock.classloading.classes.MyReferenceFieldHolder;
 import powermock.classloading.classes.MyReturnValue;
 import powermock.classloading.classes.MyStaticFinalArgumentHolder;
 import powermock.classloading.classes.MyStaticFinalNumberHolder;
@@ -46,7 +48,7 @@ import powermock.classloading.classes.MyStaticFinalPrimitiveHolder;
 public class ClassloaderExecutorTest {
 
 	@Test
-	public void classloaderExecutorLoadsObjectGraphInSpecifiedClassloaderAndReturnsResultInOriginalClassloader() throws Exception {
+	public void loadsObjectGraphInSpecifiedClassloaderAndReturnsResultInOriginalClassloader() throws Exception {
 		MockClassLoader classloader = createClassloader();
 		final MyReturnValue expectedConstructorValue = new MyReturnValue(new MyArgument("first value"));
 		final MyClass myClass = new MyClass(expectedConstructorValue);
@@ -66,8 +68,7 @@ public class ClassloaderExecutorTest {
 	}
 
 	@Test
-	public void classloaderExecutorLoadsObjectGraphThatIncludesPrimitiveValuesInSpecifiedClassloaderAndReturnsResultInOriginalClassloader()
-			throws Exception {
+	public void loadsObjectGraphThatIncludesPrimitiveValuesInSpecifiedClassloaderAndReturnsResultInOriginalClassloader() throws Exception {
 		MockClassLoader classloader = createClassloader();
 		final Integer expected = 42;
 		final MyIntegerHolder myClass = new MyIntegerHolder(expected);
@@ -86,7 +87,7 @@ public class ClassloaderExecutorTest {
 	}
 
 	@Test
-	public void classloaderExecutorLoadsObjectGraphThatIncludesEnumsInSpecifiedClassloaderAndReturnsResultInOriginalClassloader() throws Exception {
+	public void loadsObjectGraphThatIncludesEnumsInSpecifiedClassloaderAndReturnsResultInOriginalClassloader() throws Exception {
 		MockClassLoader classloader = createClassloader();
 		final MyEnum expected = MyEnum.MyEnum1;
 		final MyEnumHolder myClass = new MyEnumHolder(expected);
@@ -104,7 +105,7 @@ public class ClassloaderExecutorTest {
 	}
 
 	@Test
-	public void classloaderExecutorClonesStaticFinalObjectFields() throws Exception {
+	public void clonesStaticFinalObjectFields() throws Exception {
 		MockClassLoader classloader = createClassloader();
 		final MyStaticFinalArgumentHolder expected = new MyStaticFinalArgumentHolder();
 		MyStaticFinalArgumentHolder actual = new ClassloaderExecutor(classloader).execute(new Callable<MyStaticFinalArgumentHolder>() {
@@ -121,7 +122,7 @@ public class ClassloaderExecutorTest {
 	}
 
 	@Test
-	public void classloaderExecutorClonesStaticFinalPrimitiveFields() throws Exception {
+	public void clonesStaticFinalPrimitiveFields() throws Exception {
 		MockClassLoader classloader = createClassloader();
 		final MyStaticFinalPrimitiveHolder expected = new MyStaticFinalPrimitiveHolder();
 		MyStaticFinalPrimitiveHolder actual = new ClassloaderExecutor(classloader).execute(new Callable<MyStaticFinalPrimitiveHolder>() {
@@ -138,7 +139,7 @@ public class ClassloaderExecutorTest {
 	}
 
 	@Test
-	public void classloaderExecutorClonesStaticFinalNumberFields() throws Exception {
+	public void clonesStaticFinalNumberFields() throws Exception {
 		MockClassLoader classloader = createClassloader();
 		final MyStaticFinalNumberHolder expected = new MyStaticFinalNumberHolder();
 		MyStaticFinalNumberHolder actual = new ClassloaderExecutor(classloader).execute(new Callable<MyStaticFinalNumberHolder>() {
@@ -155,8 +156,7 @@ public class ClassloaderExecutorTest {
 	}
 
 	@Test
-	public void classloaderExecutorLoadsObjectGraphThatIncludesPrimitiveArraysInSpecifiedClassloaderAndReturnsResultInOriginalClassloader()
-			throws Exception {
+	public void loadsObjectGraphThatIncludesPrimitiveArraysInSpecifiedClassloaderAndReturnsResultInOriginalClassloader() throws Exception {
 		MockClassLoader classloader = createClassloader();
 		final int[] expected = new int[] { 1, 2 };
 		final MyPrimitiveArrayHolder myClass = new MyPrimitiveArrayHolder(expected);
@@ -174,8 +174,7 @@ public class ClassloaderExecutorTest {
 	}
 
 	@Test
-	public void classloaderExecutorLoadsObjectGraphThatIncludesCollectionInSpecifiedClassloaderAndReturnsResultInOriginalClassloader()
-			throws Exception {
+	public void loadsObjectGraphThatIncludesCollectionInSpecifiedClassloaderAndReturnsResultInOriginalClassloader() throws Exception {
 		final MockClassLoader classloader = createClassloader();
 		final Collection<MyReturnValue> expected = new LinkedList<MyReturnValue>();
 		expected.add(new MyReturnValue(new MyArgument("one")));
@@ -198,6 +197,21 @@ public class ClassloaderExecutorTest {
 			final String value = ((MyReturnValue) object).getMyArgument().getValue();
 			assertTrue(value.equals("one") || value.equals("two"));
 		}
+	}
+
+	@Test
+	public void usesReferenceCloningWhenTwoFieldsPointToSameInstance() throws Exception {
+		final MockClassLoader classloader = createClassloader();
+		final MyReferenceFieldHolder tested = new MyReferenceFieldHolder();
+		assertSame(tested.getMyArgument1(), tested.getMyArgument2());
+		new ClassloaderExecutor(classloader).execute(new Runnable() {
+			public void run() {
+				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+				assertEquals(tested.getMyArgument1(), tested.getMyArgument2());
+				assertSame(tested.getMyArgument1(), tested.getMyArgument2());
+				assertSame(tested.getMyArgument1(), MyReferenceFieldHolder.MY_ARGUMENT);
+			}
+		});
 	}
 
 	private MockClassLoader createClassloader() {

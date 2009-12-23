@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 
+import org.powermock.core.ListMap;
 import org.powermock.reflect.Whitebox;
 
 import sun.misc.Unsafe;
@@ -40,7 +41,7 @@ public class DeepCloner {
 	public static <T> T clone(T objectToClone) {
 		assertObjectNotNull(objectToClone);
 		final Class<T> objectType = getType(objectToClone);
-		return (T) performClone(objectType.getClassLoader(), objectType, objectToClone);
+		return (T) performClone(objectType.getClassLoader(), objectType, objectToClone, new ListMap<Object, Object>());
 	}
 
 	/**
@@ -48,7 +49,8 @@ public class DeepCloner {
 	 */
 	public static <T> T clone(ClassLoader classloader, T objectToClone) {
 		assertObjectNotNull(objectToClone);
-		return performClone(classloader, ClassLoaderUtil.loadClassWithClassloader(classloader, getType(objectToClone)), objectToClone);
+		return performClone(classloader, ClassLoaderUtil.loadClassWithClassloader(classloader, getType(objectToClone)), objectToClone,
+				new ListMap<Object, Object>());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -66,12 +68,12 @@ public class DeepCloner {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T> T performClone(ClassLoader targetCL, Class<T> targetClass, Object source) {
+	private static <T> T performClone(ClassLoader targetCL, Class<T> targetClass, Object source, ListMap<Object, Object> referenceMap) {
 		Object target = null;
 		if (targetClass.isArray()) {
-			target = instantiateArray(targetCL, targetClass, source);
+			target = instantiateArray(targetCL, targetClass, source, referenceMap);
 		} else if (isCollection(targetClass)) {
-			target = cloneCollection(targetCL, source);
+			target = cloneCollection(targetCL, source, referenceMap);
 		} else if (isStandardJavaType(targetClass)) {
 			target = source;
 		} else if (targetClass.isEnum()) {
@@ -81,7 +83,7 @@ public class DeepCloner {
 		}
 
 		if (!targetClass.isEnum()) {
-			cloneFields(targetCL, targetClass, source, target);
+			cloneFields(targetCL, targetClass, source, target, referenceMap);
 		}
 		return (T) target;
 	}
@@ -94,7 +96,7 @@ public class DeepCloner {
 		return target;
 	}
 
-	private static <T> void cloneFields(ClassLoader targetCL, Class<T> targetClass, Object source, Object target) {
+	private static <T> void cloneFields(ClassLoader targetCL, Class<T> targetClass, Object source, Object target, ListMap<Object, Object> referenceMap) {
 		Class<?> currentTargetClass = targetClass;
 		while (currentTargetClass != null && !currentTargetClass.getName().startsWith(IGNORED_PACKAGES)) {
 			for (Field field : currentTargetClass.getDeclaredFields()) {
@@ -104,16 +106,21 @@ public class DeepCloner {
 					declaredField.setAccessible(true);
 					final Object object = declaredField.get(source);
 					final Object instantiatedValue;
-					final Class<Object> type = getType(object);
-					if (object == null || (type.getName().startsWith(IGNORED_PACKAGES) && !isCollection(object))) {
-						instantiatedValue = object;
+					if (referenceMap.containsKey(object)) {
+						instantiatedValue = referenceMap.get(object);
 					} else {
-						final Class<Object> typeLoadedByCL = ClassLoaderUtil.loadClassWithClassloader(targetCL, type);
-						if (type.isEnum()) {
-							instantiatedValue = getEnumValue(object, typeLoadedByCL);
+						final Class<Object> type = getType(object);
+						if (object == null || (type.getName().startsWith(IGNORED_PACKAGES) && !isCollection(object))) {
+							instantiatedValue = object;
 						} else {
-							instantiatedValue = performClone(targetCL, typeLoadedByCL, object);
+							final Class<Object> typeLoadedByCL = ClassLoaderUtil.loadClassWithClassloader(targetCL, type);
+							if (type.isEnum()) {
+								instantiatedValue = getEnumValue(object, typeLoadedByCL);
+							} else {
+								instantiatedValue = performClone(targetCL, typeLoadedByCL, object, referenceMap);
+							}
 						}
+						referenceMap.put(object, instantiatedValue);
 					}
 
 					if (!field.isEnumConstant()) {
@@ -143,7 +150,7 @@ public class DeepCloner {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static Object cloneCollection(ClassLoader targetCL, Object source) {
+	private static Object cloneCollection(ClassLoader targetCL, Object source, ListMap<Object, Object> referenceMap) {
 		Object target;
 		Collection sourceCollection = (Collection) source;
 		final Class<Collection<?>> collectionClass = (Class<Collection<?>>) ClassLoaderUtil.loadClassWithClassloader(targetCL, source.getClass());
@@ -156,7 +163,7 @@ public class DeepCloner {
 		}
 		for (Object collectionValue : sourceCollection) {
 			final Class<? extends Object> typeLoadedByTargetCL = ClassLoaderUtil.loadClassWithClassloader(targetCL, collectionValue.getClass());
-			newInstance.add(performClone(targetCL, typeLoadedByTargetCL, collectionValue));
+			newInstance.add(performClone(targetCL, typeLoadedByTargetCL, collectionValue, referenceMap));
 		}
 		target = newInstance;
 		return target;
@@ -175,12 +182,13 @@ public class DeepCloner {
 		return Enum.valueOf((Class) enumTypeLoadedByTargetCL, ((Enum) enumValueOfSourceClassloader).toString());
 	}
 
-	private static Object instantiateArray(ClassLoader targetCL, Class<?> arrayClass, Object objectToClone) {
+	private static Object instantiateArray(ClassLoader targetCL, Class<?> arrayClass, Object objectToClone, ListMap<Object, Object> referenceMap) {
 		final int arrayLength = Array.getLength(objectToClone);
 		final Object array = Array.newInstance(arrayClass.getComponentType(), arrayLength);
 		for (int i = 0; i < arrayLength; i++) {
 			final Object object = Array.get(objectToClone, i);
-			final Object performClone = performClone(targetCL, ClassLoaderUtil.loadClassWithClassloader(targetCL, getType(object)), object);
+			final Object performClone = performClone(targetCL, ClassLoaderUtil.loadClassWithClassloader(targetCL, getType(object)), object,
+					referenceMap);
 			Array.set(array, i, performClone);
 		}
 		return array;

@@ -17,7 +17,6 @@ package org.powermock.classloading;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
 
 import org.powermock.api.support.DeepCloner;
 import org.powermock.reflect.Whitebox;
@@ -32,11 +31,19 @@ public class ClassloaderExecutor {
 
 	@SuppressWarnings("unchecked")
 	public <T> T execute(Callable<T> callable) {
+		assertArgumentNotNull(callable, "callable");
 		return (T) execute(callable, Whitebox.getMethod(callable.getClass(), "call"));
 	}
 
 	public void execute(Runnable runnable) {
-		execute(Executors.callable(runnable));
+		assertArgumentNotNull(runnable, "runnable");
+		execute(runnable, Whitebox.getMethod(runnable.getClass(), "run"));
+	}
+
+	private void assertArgumentNotNull(Object object, String argumentName) {
+		if (object == null) {
+			throw new IllegalArgumentException(argumentName + " cannot be null.");
+		}
 	}
 
 	private Object execute(Object instance, Method method, Object... arguments) {
@@ -48,10 +55,14 @@ public class ClassloaderExecutor {
 		}
 
 		final Object result;
-		try {
-			result = Whitebox.invokeMethod(objectLoadedWithClassloader, method.getName(), argumentsLoadedByClassLoader);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+		if (Void.TYPE.equals(method.getReturnType())) {
+			result = null;
+		} else {
+			try {
+				result = Whitebox.invokeMethod(objectLoadedWithClassloader, method.getName(), argumentsLoadedByClassLoader);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 		}
 		return result == null ? null : DeepCloner.clone(Thread.currentThread().getContextClassLoader(), result);
 	}

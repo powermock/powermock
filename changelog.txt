@@ -1,6 +1,8 @@
 Change log 1.4 (under development)
 ----------------------------------
 * Added testng to full release project
+* Fixed so that classloader executor supports runnable's
+* DeepCloner now supports reference cloning
 
 Change log 1.3.5 (2009-12-13)
 -----------------------------

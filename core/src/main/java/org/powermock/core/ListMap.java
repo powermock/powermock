@@ -22,12 +22,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-class ListMap<K, V> implements Map<K, V> {
-	
+public class ListMap<K, V> implements Map<K, V> {
+
 	private List<Map.Entry<K, V>> entries = new LinkedList<Entry<K, V>>();
-	
+
 	private static class SimpleEntry<K, V> implements Entry<K, V> {
-		
+
 		private K key;
 		private V value;
 
@@ -49,11 +49,11 @@ class ListMap<K, V> implements Map<K, V> {
 			this.value = value;
 			return old;
 		}
-		
+
 	};
-	
+
 	public V remove(Object key) {
-		for (Iterator<Map.Entry<K, V>> i=entries.iterator(); i.hasNext();) {
+		for (Iterator<Map.Entry<K, V>> i = entries.iterator(); i.hasNext();) {
 			Map.Entry<K, V> entry = i.next();
 			if (entry.getKey() == key) {
 				i.remove();
@@ -68,7 +68,7 @@ class ListMap<K, V> implements Map<K, V> {
 	}
 
 	public V get(Object key) {
-		for (Iterator<Map.Entry<K, V>> i=entries.iterator(); i.hasNext();) {
+		for (Iterator<Map.Entry<K, V>> i = entries.iterator(); i.hasNext();) {
 			Map.Entry<K, V> entry = i.next();
 			if (entry.getKey() == key) {
 				return entry.getValue();
@@ -78,7 +78,7 @@ class ListMap<K, V> implements Map<K, V> {
 	}
 
 	public V put(K key, V value) {
-		for (Iterator<Map.Entry<K, V>> i=entries.iterator(); i.hasNext();) {
+		for (Iterator<Map.Entry<K, V>> i = entries.iterator(); i.hasNext();) {
 			Map.Entry<K, V> entry = i.next();
 			if (entry.getKey() == key) {
 				return entry.setValue(value);
@@ -88,8 +88,9 @@ class ListMap<K, V> implements Map<K, V> {
 		entries.add(entry);
 		return null;
 	}
+
 	public boolean containsKey(Object key) {
-		throw new UnsupportedOperationException();
+		return get(key) != null;
 	}
 
 	public boolean containsValue(Object value) {
@@ -111,7 +112,6 @@ class ListMap<K, V> implements Map<K, V> {
 	public void putAll(Map<? extends K, ? extends V> t) {
 		throw new UnsupportedOperationException();
 	}
-
 
 	public int size() {
 		return entries.size();
