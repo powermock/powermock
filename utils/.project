@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>powermock-utils</name>
+	<comment>PowerMock allows you to unit test code normally regarded as untestable.
+        For instance it is
+        possible to mock static methods, remove static initializers,
+        allow mocking without dependency injection and more.
+        PowerMock works by bytecode manipulation.
+        PowerMock also contain some utilities that gives you easier access to
+        an objects internal state.
+        PowerMock can be used to test otherwise untestable code and also to achieve
+        a cleaner separation between test and production code.</comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+</projectDescription>
