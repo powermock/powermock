@@ -73,7 +73,7 @@ public class SynchronizerTest {
 		await(200, TimeUnit.MILLISECONDS, until(valueCondition(), equalTo(1))).block();
 		assertEquals(1, fakeRepository.getValue());
 	}
-	
+
 	@Test(timeout = 2000, expected = TimeoutException.class)
 	public void conditionBreaksAfterDurationTimeoutWhenUsingAtMost() throws Exception {
 		new Asynch(fakeRepository).perform();
@@ -89,7 +89,7 @@ public class SynchronizerTest {
 	}
 
 	@Test(timeout = 2000, expected = IllegalStateException.class)
-	public void exceptionsInValueConditionArePropagatedToAwaitingThreadAndBreaksForeverBlock() throws Exception {
+	public void exceptionsInConditionsArePropagatedToAwaitingThreadAndBreaksForeverBlock() throws Exception {
 		final ExceptionThrowingFakeRepository repository = new ExceptionThrowingFakeRepository();
 		new Asynch(repository).perform();
 		await(until(new FakeRepositoryValue(repository), equalTo(1))).block();
