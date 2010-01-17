@@ -18,6 +18,7 @@ package org.powermock.utils;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.powermock.utils.Synchronizer.await;
+import static org.powermock.utils.model.synchronizer.SynchronizerOperationOptions.atMost;
 import static org.powermock.utils.model.synchronizer.SynchronizerOperationOptions.until;
 
 import java.util.concurrent.TimeUnit;
@@ -70,6 +71,13 @@ public class SynchronizerTest {
 	public void conditionBreaksAfterDurationTimeout() throws Exception {
 		new Asynch(fakeRepository).perform();
 		await(200, TimeUnit.MILLISECONDS, until(valueCondition(), equalTo(1))).block();
+		assertEquals(1, fakeRepository.getValue());
+	}
+	
+	@Test(timeout = 2000, expected = TimeoutException.class)
+	public void conditionBreaksAfterDurationTimeoutWhenUsingAtMost() throws Exception {
+		new Asynch(fakeRepository).perform();
+		await(atMost(200, TimeUnit.MILLISECONDS), until(valueCondition(), equalTo(1))).block();
 		assertEquals(1, fakeRepository.getValue());
 	}
 

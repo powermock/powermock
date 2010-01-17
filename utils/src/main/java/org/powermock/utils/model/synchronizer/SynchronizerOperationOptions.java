@@ -27,6 +27,10 @@ public class SynchronizerOperationOptions {
 	public static Duration duration(long time, TimeUnit unit) {
 		return new DurationImpl(time, unit);
 	}
+	
+	public static Duration atMost(long time, TimeUnit unit) {
+		return new DurationImpl(time, unit);
+	}
 
 	public static Duration forever() {
 		return new ForeverImpl();
