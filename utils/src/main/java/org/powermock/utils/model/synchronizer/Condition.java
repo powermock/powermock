@@ -15,7 +15,7 @@
  */
 package org.powermock.utils.model.synchronizer;
 
-public interface Condition<T> extends PollSpecification {
+public interface Condition<T> {
 
 	T condition() throws Exception;
 

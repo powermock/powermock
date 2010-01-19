@@ -21,13 +21,18 @@ import org.hamcrest.Matcher;
 import org.powermock.utils.internal.ConditionSpecificationImpl;
 import org.powermock.utils.internal.DurationImpl;
 import org.powermock.utils.internal.ForeverImpl;
+import org.powermock.utils.internal.PollSpecificationImpl;
 
 public class SynchronizerOperationOptions {
+
+	public static PollSpecification withPollInterval(long time, TimeUnit unit) {
+		return new PollSpecificationImpl(time, unit);
+	}
 
 	public static Duration duration(long time, TimeUnit unit) {
 		return new DurationImpl(time, unit);
 	}
-	
+
 	public static Duration atMost(long time, TimeUnit unit) {
 		return new DurationImpl(time, unit);
 	}

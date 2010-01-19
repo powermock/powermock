@@ -16,10 +16,13 @@
 package org.powermock.utils;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertEquals;
 import static org.powermock.utils.Synchronizer.await;
+import static org.powermock.utils.Synchronizer.block;
 import static org.powermock.utils.model.synchronizer.SynchronizerOperationOptions.atMost;
 import static org.powermock.utils.model.synchronizer.SynchronizerOperationOptions.until;
+import static org.powermock.utils.model.synchronizer.SynchronizerOperationOptions.withPollInterval;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -49,35 +52,56 @@ public class SynchronizerTest {
 	@Test(timeout = 2000)
 	public void foreverConditionSpecificationWithDirectBlock() throws Exception {
 		new Asynch(fakeRepository).perform();
-		await(fakeRepositoryValueEqualsOne()).block();
+		await(fakeRepositoryValueEqualsOne()).join();
+		assertEquals(1, fakeRepository.getValue());
+	}
+
+	@Test(timeout = 2000)
+	public void blockOperationBlocksAutomatically() throws Exception {
+		new Asynch(fakeRepository).perform();
+		block(until(fakeRepositoryValueEqualsOne()));
+		assertEquals(1, fakeRepository.getValue());
+	}
+
+	@Test(timeout = 2000)
+	public void blockOperationSupportsSpecifyingPollInteral() throws Exception {
+		new Asynch(fakeRepository).perform();
+		block(until(fakeRepositoryValueEqualsOne()), withPollInterval(20, TimeUnit.MILLISECONDS));
+		assertEquals(1, fakeRepository.getValue());
+	}
+
+	@Test(timeout = 2000)
+	public void awaitOperationSupportsSpecifyingPollInteral() throws Exception {
+		new Asynch(fakeRepository).perform();
+		await(until(valueCondition(), greaterThan(0)), withPollInterval(20, TimeUnit.MILLISECONDS)).join();
 		assertEquals(1, fakeRepository.getValue());
 	}
 
 	@Test(timeout = 2000)
 	public void foreverConditionSpecificationUsingUntilWithDirectBlock() throws Exception {
 		new Asynch(fakeRepository).perform();
-		await(until(fakeRepositoryValueEqualsOne())).block();
+		await(until(fakeRepositoryValueEqualsOne())).join();
 		assertEquals(1, fakeRepository.getValue());
 	}
 
 	@Test(timeout = 2000)
 	public void foreverConditionWithHamcrestMatchersWithDirectBlock() throws Exception {
 		new Asynch(fakeRepository).perform();
-		await(until(valueCondition(), equalTo(1))).block();
+		await(until(valueCondition(), equalTo(1))).join();
 		assertEquals(1, fakeRepository.getValue());
 	}
 
 	@Test(timeout = 2000, expected = TimeoutException.class)
 	public void conditionBreaksAfterDurationTimeout() throws Exception {
 		new Asynch(fakeRepository).perform();
-		await(200, TimeUnit.MILLISECONDS, until(valueCondition(), equalTo(1))).block();
+		await(200, TimeUnit.MILLISECONDS, until(valueCondition(), equalTo(1))).join();
 		assertEquals(1, fakeRepository.getValue());
 	}
 
 	@Test(timeout = 2000, expected = TimeoutException.class)
 	public void conditionBreaksAfterDurationTimeoutWhenUsingAtMost() throws Exception {
 		new Asynch(fakeRepository).perform();
-		await(atMost(200, TimeUnit.MILLISECONDS), until(valueCondition(), equalTo(1))).block();
+		await(atMost(200, TimeUnit.MILLISECONDS), until(valueCondition(), equalTo(1))).join();
 		assertEquals(1, fakeRepository.getValue());
 	}
 
@@ -85,14 +109,14 @@ public class SynchronizerTest {
 	public void uncaughtExceptionsArePropagatedToAwaitingThreadAndBreaksForeverBlockWhenSetToCatchAllUncaughtExceptions() throws Exception {
 		BlockingSupportedOperation operation = await(until(valueCondition(), equalTo(1))).andCatchAllUncaughtExceptions();
 		new ExceptionThrowingAsynch().perform();
-		operation.block();
+		operation.join();
 	}
 
 	@Test(timeout = 2000, expected = IllegalStateException.class)
 	public void exceptionsInConditionsArePropagatedToAwaitingThreadAndBreaksForeverBlock() throws Exception {
 		final ExceptionThrowingFakeRepository repository = new ExceptionThrowingFakeRepository();
 		new Asynch(repository).perform();
-		await(until(new FakeRepositoryValue(repository), equalTo(1))).block();
+		await(until(new FakeRepositoryValue(repository), equalTo(1))).join();
 	}
 
 	private ConditionSpecification fakeRepositoryValueEqualsOne() {

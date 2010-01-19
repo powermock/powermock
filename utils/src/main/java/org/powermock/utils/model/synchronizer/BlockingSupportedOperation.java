@@ -16,5 +16,5 @@
 package org.powermock.utils.model.synchronizer;
 
 public interface BlockingSupportedOperation {
-	void block() throws Exception;
+	void join() throws Exception;
 }

@@ -18,7 +18,6 @@ package org.powermock.utils.internal;
 import org.hamcrest.Matcher;
 import org.powermock.utils.model.synchronizer.Condition;
 import org.powermock.utils.model.synchronizer.ConditionSpecification;
-import org.powermock.utils.model.synchronizer.Duration;
 
 public class ConditionSpecificationImpl<T> implements ConditionSpecification {
 
@@ -38,9 +37,5 @@ public class ConditionSpecificationImpl<T> implements ConditionSpecification {
 
 	public boolean isConditionSatisified() throws Exception {
 		return matcher.matches(condition.condition());
-	}
-
-	public Duration getPollInterval() {
-		return condition.getPollInterval();
 	}
 }

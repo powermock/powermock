@@ -24,6 +24,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.powermock.utils.model.synchronizer.ConditionSpecification;
 import org.powermock.utils.model.synchronizer.Duration;
+import org.powermock.utils.model.synchronizer.PollSpecification;
 import org.powermock.utils.model.synchronizer.SynchronizerOperation;
 
 public class AwaitOperationImpl implements SynchronizerOperation, UncaughtExceptionHandler {
@@ -32,7 +33,7 @@ public class AwaitOperationImpl implements SynchronizerOperation, UncaughtExcept
 	private final CountDownLatch latch;
 	private Exception exception = null;
 
-	public AwaitOperationImpl(final Duration maxWaitTime, final ConditionSpecification specification) {
+	public AwaitOperationImpl(final Duration maxWaitTime, final ConditionSpecification specification, final PollSpecification pollSpecification) {
 		if (maxWaitTime == null) {
 			throw new IllegalArgumentException("You must specify a maximum waiting time (was null).");
 		}
@@ -41,7 +42,7 @@ public class AwaitOperationImpl implements SynchronizerOperation, UncaughtExcept
 		}
 		latch = new CountDownLatch(1);
 		this.maxWaitTime = maxWaitTime;
-		final Duration pollInterval = specification.getPollInterval();
+		final Duration pollInterval = pollSpecification == null ? new DurationImpl(500, TimeUnit.MILLISECONDS) : pollSpecification.getPollInterval();
 		executor.scheduleAtFixedRate(new Runnable() {
 			public void run() {
 				try {
@@ -57,7 +58,7 @@ public class AwaitOperationImpl implements SynchronizerOperation, UncaughtExcept
 
 	}
 
-	public void block() throws Exception {
+	public void join() throws Exception {
 		try {
 			final long timeout = maxWaitTime.getValue();
 			final boolean finishedBeforeTimeout;

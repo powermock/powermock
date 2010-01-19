@@ -15,12 +15,7 @@
  */
 package org.powermock.utils.classes;
 
-import static org.powermock.utils.model.synchronizer.SynchronizerOperationOptions.duration;
-
-import java.util.concurrent.TimeUnit;
-
 import org.powermock.utils.model.synchronizer.ConditionSpecification;
-import org.powermock.utils.model.synchronizer.Duration;
 
 public class FakeRepositoryEqualsOne implements ConditionSpecification {
 
@@ -33,9 +28,5 @@ public class FakeRepositoryEqualsOne implements ConditionSpecification {
 
 	public boolean isConditionSatisified() {
 		return repository.getValue() == 1;
-	}
-
-	public Duration getPollInterval() {
-		return duration(200, TimeUnit.MILLISECONDS);
 	}
 }
