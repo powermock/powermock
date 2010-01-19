@@ -91,6 +91,14 @@ public class SynchronizerTest {
 		assertEquals(1, fakeRepository.getValue());
 	}
 
+	@Test(timeout = 2000)
+	public void specifyingDefaultPollIntervalImpactsAllSubsequentUndefinedPollIntervalStatements() throws Exception {
+		Synchronizer.setDefaultPollInterval(20, TimeUnit.MILLISECONDS);
+		new Asynch(fakeRepository).perform();
+		await(until(valueCondition(), equalTo(1))).join();
+		assertEquals(1, fakeRepository.getValue());
+	}
+
 	@Test(timeout = 2000, expected = TimeoutException.class)
 	public void conditionBreaksAfterDurationTimeout() throws Exception {
 		new Asynch(fakeRepository).perform();

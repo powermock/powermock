@@ -18,6 +18,7 @@ package org.powermock.utils;
 import java.util.concurrent.TimeUnit;
 
 import org.powermock.utils.internal.AwaitOperationImpl;
+import org.powermock.utils.internal.PollSpecificationImpl;
 import org.powermock.utils.model.synchronizer.ConditionSpecification;
 import org.powermock.utils.model.synchronizer.Duration;
 import org.powermock.utils.model.synchronizer.PollSpecification;
@@ -25,6 +26,7 @@ import org.powermock.utils.model.synchronizer.SynchronizerOperation;
 import org.powermock.utils.model.synchronizer.SynchronizerOperationOptions;
 
 public class Synchronizer extends SynchronizerOperationOptions {
+	private static volatile PollSpecification defaultPollSpecfication = null;
 
 	public static void block(ConditionSpecification conditionSpecification) throws Exception {
 		block(forever(), conditionSpecification);
@@ -73,6 +75,13 @@ public class Synchronizer extends SynchronizerOperationOptions {
 	}
 
 	public static SynchronizerOperation await(Duration duration, ConditionSpecification conditionSpecification, PollSpecification pollSpecification) {
+		if (pollSpecification == null && defaultPollSpecfication != null) {
+			pollSpecification = defaultPollSpecfication;
+		}
 		return new AwaitOperationImpl(duration, conditionSpecification, pollSpecification);
+	}
+
+	public static void setDefaultPollInterval(long pollInterval, TimeUnit unit) {
+		defaultPollSpecfication = new PollSpecificationImpl(pollInterval, unit);
 	}
 }
