@@ -1,25 +1,24 @@
-/*
- * Copyright 2010 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.powermock.utils.model.synchronizer;
 
-import java.util.concurrent.TimeUnit;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
-public interface Duration {
+import org.powermock.utils.internal.DurationSpecificationImpl;
 
-	long getValue();
+public enum Duration {
+    ONE_HUNDRED_MILLISECONDS(new DurationSpecificationImpl(100, MILLISECONDS)), TWO_HUNDRED_MILLISECONDS(new DurationSpecificationImpl(200, MILLISECONDS)), FIVE_HUNDRED_MILLISECONDS(
+            new DurationSpecificationImpl(500, MILLISECONDS)), ONE_SECOND(new DurationSpecificationImpl(1, SECONDS)), TWO_SECONDS(new DurationSpecificationImpl(2, SECONDS)), FIVE_SECONDS(
+            new DurationSpecificationImpl(5, SECONDS)), TEN_SECONDS(new DurationSpecificationImpl(10, SECONDS)), ONE_MINUTE(new DurationSpecificationImpl(1, MINUTES)), TWO_MINUTES(
+            new DurationSpecificationImpl(2, MINUTES)), FIVE_MINUTES(new DurationSpecificationImpl(5, MINUTES)), TEN_MINUTES(new DurationSpecificationImpl(110, MINUTES));
 
-	TimeUnit getTimeUnit();
+    private final DurationSpecification duration;
+
+    private Duration(DurationSpecification duration) {
+        this.duration = duration;
+    }
+
+    public DurationSpecification getDurationSpecification() {
+        return duration;
+    }
 }

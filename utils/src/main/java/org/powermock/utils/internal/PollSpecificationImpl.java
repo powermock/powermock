@@ -17,24 +17,24 @@ package org.powermock.utils.internal;
 
 import java.util.concurrent.TimeUnit;
 
-import org.powermock.utils.model.synchronizer.Duration;
+import org.powermock.utils.model.synchronizer.DurationSpecification;
 import org.powermock.utils.model.synchronizer.PollSpecification;
 
 public class PollSpecificationImpl implements PollSpecification {
 
-	private final Duration duration;
+    private final DurationSpecification duration;
 
-	public PollSpecificationImpl(long interval, TimeUnit unit) {
-		if (interval <= 0) {
-			throw new IllegalArgumentException("interval must be > 0");
-		}
-		if (unit == null) {
-			throw new IllegalArgumentException("TimeUnit cannot be null");
-		}
-		this.duration = new DurationImpl(interval, unit);
-	}
+    public PollSpecificationImpl(long interval, TimeUnit unit) {
+        if (interval <= 0) {
+            throw new IllegalArgumentException("interval must be > 0");
+        }
+        if (unit == null) {
+            throw new IllegalArgumentException("TimeUnit cannot be null");
+        }
+        this.duration = new DurationSpecificationImpl(interval, unit);
+    }
 
-	public Duration getPollInterval() {
-		return duration;
-	}
+    public DurationSpecification getPollInterval() {
+        return duration;
+    }
 }

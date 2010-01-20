@@ -23,17 +23,17 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.powermock.utils.model.synchronizer.ConditionSpecification;
-import org.powermock.utils.model.synchronizer.Duration;
+import org.powermock.utils.model.synchronizer.DurationSpecification;
 import org.powermock.utils.model.synchronizer.PollSpecification;
 import org.powermock.utils.model.synchronizer.SynchronizerOperation;
 
 public class AwaitOperationImpl implements SynchronizerOperation, UncaughtExceptionHandler {
-	private final Duration maxWaitTime;
+	private final DurationSpecification maxWaitTime;
 	private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 	private final CountDownLatch latch;
 	private Exception exception = null;
 
-	public AwaitOperationImpl(final Duration maxWaitTime, final ConditionSpecification specification, final PollSpecification pollSpecification) {
+	public AwaitOperationImpl(final DurationSpecification maxWaitTime, final ConditionSpecification specification, final PollSpecification pollSpecification) {
 		if (maxWaitTime == null) {
 			throw new IllegalArgumentException("You must specify a maximum waiting time (was null).");
 		}
@@ -42,7 +42,7 @@ public class AwaitOperationImpl implements SynchronizerOperation, UncaughtExcept
 		}
 		latch = new CountDownLatch(1);
 		this.maxWaitTime = maxWaitTime;
-		final Duration pollInterval = pollSpecification == null ? new DurationImpl(500, TimeUnit.MILLISECONDS) : pollSpecification.getPollInterval();
+		final DurationSpecification pollInterval = pollSpecification == null ? new DurationSpecificationImpl(500, TimeUnit.MILLISECONDS) : pollSpecification.getPollInterval();
 		executor.scheduleAtFixedRate(new Runnable() {
 			public void run() {
 				try {

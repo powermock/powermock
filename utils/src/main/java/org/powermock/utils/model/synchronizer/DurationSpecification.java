@@ -15,6 +15,11 @@
  */
 package org.powermock.utils.model.synchronizer;
 
-public interface PollSpecification {
-	DurationSpecification getPollInterval();
+import java.util.concurrent.TimeUnit;
+
+public interface DurationSpecification {
+
+	long getValue();
+
+	TimeUnit getTimeUnit();
 }

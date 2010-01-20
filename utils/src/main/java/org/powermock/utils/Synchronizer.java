@@ -21,67 +21,125 @@ import org.powermock.utils.internal.AwaitOperationImpl;
 import org.powermock.utils.internal.PollSpecificationImpl;
 import org.powermock.utils.model.synchronizer.ConditionSpecification;
 import org.powermock.utils.model.synchronizer.Duration;
+import org.powermock.utils.model.synchronizer.DurationSpecification;
+import org.powermock.utils.model.synchronizer.PollInterval;
 import org.powermock.utils.model.synchronizer.PollSpecification;
 import org.powermock.utils.model.synchronizer.SynchronizerOperation;
 import org.powermock.utils.model.synchronizer.SynchronizerOperationOptions;
 
 public class Synchronizer extends SynchronizerOperationOptions {
-	private static volatile PollSpecification defaultPollSpecfication = null;
+    private static volatile PollSpecification defaultPollSpecfication = null;
 
-	public static void block(ConditionSpecification conditionSpecification) throws Exception {
-		block(forever(), conditionSpecification);
-	}
+    private static volatile DurationSpecification defaultTimeout = null;
 
-	public static void block(long timeout, TimeUnit unit, ConditionSpecification conditionSpecification) throws Exception {
-		block(duration(timeout, unit), conditionSpecification);
-	}
+    public static void block(ConditionSpecification conditionSpecification) throws Exception {
+        block(defaultTimeout == null ? forever() : defaultTimeout, conditionSpecification);
+    }
 
-	public static void block(Duration duration, ConditionSpecification conditionSpecification) throws Exception {
-		await(duration, conditionSpecification).join();
-	}
+    public static void block(long timeout, TimeUnit unit, ConditionSpecification conditionSpecification) throws Exception {
+        block(duration(timeout, unit), conditionSpecification);
+    }
 
-	public static void block(ConditionSpecification conditionSpecification, PollSpecification pollSpecification) throws Exception {
-		block(forever(), conditionSpecification, pollSpecification);
-	}
+    public static void block(DurationSpecification duration, ConditionSpecification conditionSpecification) throws Exception {
+        block(duration, conditionSpecification, null);
+    }
 
-	public static void block(long timeout, TimeUnit unit, ConditionSpecification conditionSpecification, PollSpecification pollSpecification)
-			throws Exception {
-		block(duration(timeout, unit), conditionSpecification, pollSpecification);
-	}
+    public static void block(Duration duration, ConditionSpecification conditionSpecification) throws Exception {
+        block(duration == null ? null : duration.getDurationSpecification(), conditionSpecification);
+    }
 
-	public static void block(Duration duration, ConditionSpecification conditionSpecification, PollSpecification pollSpecification) throws Exception {
-		await(duration, conditionSpecification, pollSpecification).join();
-	}
+    public static void block(ConditionSpecification conditionSpecification, PollSpecification pollSpecification) throws Exception {
+        block(forever(), conditionSpecification, pollSpecification);
+    }
 
-	public static SynchronizerOperation await(long timeout, TimeUnit unit, ConditionSpecification conditionSpecification) {
-		return await(duration(timeout, unit), conditionSpecification);
-	}
+    public static void block(ConditionSpecification conditionSpecification, PollInterval pollInterval) throws Exception {
+        block(forever(), conditionSpecification, pollInterval == null ? null : pollInterval.getPollSpecification());
+    }
 
-	public static SynchronizerOperation await(ConditionSpecification conditionSpecification) {
-		return await(forever(), conditionSpecification);
-	}
+    public static void block(long timeout, TimeUnit unit, ConditionSpecification conditionSpecification, PollSpecification pollSpecification)
+            throws Exception {
+        block(duration(timeout, unit), conditionSpecification, pollSpecification);
+    }
 
-	public static SynchronizerOperation await(Duration duration, ConditionSpecification conditionSpecification) {
-		return await(duration, conditionSpecification, null);
-	}
+    public static void block(long timeout, TimeUnit unit, ConditionSpecification conditionSpecification, PollInterval pollInterval)
+            throws Exception {
+        block(duration(timeout, unit), conditionSpecification, pollInterval == null ? null : pollInterval.getPollSpecification());
+    }
 
-	public static SynchronizerOperation await(long timeout, TimeUnit unit, ConditionSpecification conditionSpecification,
-			PollSpecification pollSpecification) {
-		return await(duration(timeout, unit), conditionSpecification, pollSpecification);
-	}
+    public static void block(DurationSpecification duration, ConditionSpecification conditionSpecification,
+            PollSpecification pollSpecification) throws Exception {
+        await(duration, conditionSpecification, pollSpecification).join();
+    }
 
-	public static SynchronizerOperation await(ConditionSpecification conditionSpecification, PollSpecification pollSpecification) {
-		return await(forever(), conditionSpecification, pollSpecification);
-	}
+    public static void block(Duration duration, ConditionSpecification conditionSpecification, PollSpecification pollSpecification)
+            throws Exception {
+        await(duration == null ? null : duration.getDurationSpecification(), conditionSpecification, pollSpecification).join();
+    }
 
-	public static SynchronizerOperation await(Duration duration, ConditionSpecification conditionSpecification, PollSpecification pollSpecification) {
-		if (pollSpecification == null && defaultPollSpecfication != null) {
-			pollSpecification = defaultPollSpecfication;
-		}
-		return new AwaitOperationImpl(duration, conditionSpecification, pollSpecification);
-	}
+    public static void block(Duration duration, ConditionSpecification conditionSpecification, PollInterval pollInterval) throws Exception {
+        await(duration == null ? null : duration.getDurationSpecification(), conditionSpecification,
+                pollInterval == null ? null : pollInterval.getPollSpecification()).join();
+    }
 
-	public static void setDefaultPollInterval(long pollInterval, TimeUnit unit) {
-		defaultPollSpecfication = new PollSpecificationImpl(pollInterval, unit);
-	}
+    public static SynchronizerOperation await(long timeout, TimeUnit unit, ConditionSpecification conditionSpecification) {
+        return await(duration(timeout, unit), conditionSpecification);
+    }
+
+    public static SynchronizerOperation await(ConditionSpecification conditionSpecification) {
+        return await(defaultTimeout == null ? forever() : defaultTimeout, conditionSpecification);
+    }
+
+    public static SynchronizerOperation await(DurationSpecification duration, ConditionSpecification conditionSpecification) {
+        return await(duration, conditionSpecification, null);
+    }
+
+    public static SynchronizerOperation await(long timeout, TimeUnit unit, ConditionSpecification conditionSpecification,
+            PollSpecification pollSpecification) {
+        return await(duration(timeout, unit), conditionSpecification, pollSpecification);
+    }
+
+    public static SynchronizerOperation await(long timeout, TimeUnit unit, ConditionSpecification conditionSpecification,
+            PollInterval pollInterval) {
+        return await(duration(timeout, unit), conditionSpecification, pollInterval == null ? null : pollInterval.getPollSpecification());
+    }
+
+    public static SynchronizerOperation await(ConditionSpecification conditionSpecification, PollSpecification pollSpecification) {
+        return await(forever(), conditionSpecification, pollSpecification);
+    }
+
+    public static SynchronizerOperation await(ConditionSpecification conditionSpecification, PollInterval pollInterval) {
+        return await(forever(), conditionSpecification, pollInterval == null ? null : pollInterval.getPollSpecification());
+    }
+
+    public static SynchronizerOperation await(Duration duration, ConditionSpecification conditionSpecification, PollInterval pollInterval) {
+        return await(duration == null ? null : duration.getDurationSpecification(), conditionSpecification, pollInterval == null ? null
+                : pollInterval.getPollSpecification());
+    }
+
+    public static SynchronizerOperation await(DurationSpecification duration, ConditionSpecification conditionSpecification,
+            PollSpecification pollSpecification) {
+        if (pollSpecification == null && defaultPollSpecfication != null) {
+            pollSpecification = defaultPollSpecfication;
+        }
+        if (duration == null && defaultTimeout != null) {
+            duration = defaultTimeout;
+        }
+        return new AwaitOperationImpl(duration, conditionSpecification, pollSpecification);
+    }
+
+    public static void setDefaultPollInterval(long pollInterval, TimeUnit unit) {
+        defaultPollSpecfication = new PollSpecificationImpl(pollInterval, unit);
+    }
+
+    public static void setDefaultPollInterval(PollInterval pollInterval) {
+        if (pollInterval == null) {
+            defaultPollSpecfication = null;
+        } else {
+            defaultPollSpecfication = pollInterval.getPollSpecification();
+        }
+    }
+
+    public static void setDefaultTimeout(DurationSpecification defaultTimeout) {
+        Synchronizer.defaultTimeout = defaultTimeout;
+    }
 }

@@ -19,15 +19,27 @@ import java.util.concurrent.TimeUnit;
 
 import org.powermock.utils.model.synchronizer.DurationSpecification;
 
-public class ForeverImpl implements DurationSpecification {
-	
-	public static final int DURATION_FOREVER = -1;
+public class DurationSpecificationImpl implements DurationSpecification {
+
+	private final long value;
+	private final TimeUnit unit;
+
+	public DurationSpecificationImpl(long value, TimeUnit unit) {
+		if (value <= 0) {
+			throw new IllegalArgumentException("value must be > 0");
+		}
+		if (unit == null) {
+			throw new IllegalArgumentException("TimeUnit cannot be null");
+		}
+		this.value = value;
+		this.unit = unit;
+	}
 
 	public TimeUnit getTimeUnit() {
-		return null;
+		return unit;
 	}
 
 	public long getValue() {
-		return DURATION_FOREVER;
+		return value;
 	}
 }

@@ -19,33 +19,47 @@ import java.util.concurrent.TimeUnit;
 
 import org.hamcrest.Matcher;
 import org.powermock.utils.internal.ConditionSpecificationImpl;
-import org.powermock.utils.internal.DurationImpl;
+import org.powermock.utils.internal.DurationSpecificationImpl;
 import org.powermock.utils.internal.ForeverImpl;
 import org.powermock.utils.internal.PollSpecificationImpl;
 
 public class SynchronizerOperationOptions {
 
-	public static PollSpecification withPollInterval(long time, TimeUnit unit) {
-		return new PollSpecificationImpl(time, unit);
-	}
+    public static PollSpecification withPollInterval(long time, TimeUnit unit) {
+        return new PollSpecificationImpl(time, unit);
+    }
 
-	public static Duration duration(long time, TimeUnit unit) {
-		return new DurationImpl(time, unit);
-	}
+    public static PollSpecification withPollInterval(PollInterval pollInterval) {
+        if (pollInterval == null) {
+            throw new IllegalArgumentException("pollInterval cannot be null");
+        }
+        return pollInterval.getPollSpecification();
+    }
 
-	public static Duration atMost(long time, TimeUnit unit) {
-		return new DurationImpl(time, unit);
-	}
+    public static DurationSpecification duration(long time, TimeUnit unit) {
+        return new DurationSpecificationImpl(time, unit);
+    }
 
-	public static Duration forever() {
-		return new ForeverImpl();
-	}
+    public static DurationSpecification atMost(Duration duration) {
+        if (duration == null) {
+            throw new IllegalArgumentException("duration cannot be null");
+        }
+        return duration.getDurationSpecification();
+    }
 
-	public static <T> ConditionSpecification until(Condition<T> condition, Matcher<T> matcher) {
-		return new ConditionSpecificationImpl<T>(condition, matcher);
-	}
+    public static DurationSpecification atMost(long time, TimeUnit unit) {
+        return new DurationSpecificationImpl(time, unit);
+    }
 
-	public static ConditionSpecification until(ConditionSpecification conditionSpecification) {
-		return conditionSpecification;
-	}
+    public static DurationSpecification forever() {
+        return new ForeverImpl();
+    }
+
+    public static <T> ConditionSpecification until(Condition<T> condition, Matcher<T> matcher) {
+        return new ConditionSpecificationImpl<T>(condition, matcher);
+    }
+
+    public static ConditionSpecification until(ConditionSpecification conditionSpecification) {
+        return conditionSpecification;
+    }
 }
