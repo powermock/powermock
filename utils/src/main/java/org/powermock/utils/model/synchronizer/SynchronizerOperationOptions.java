@@ -29,22 +29,22 @@ public class SynchronizerOperationOptions {
         return new PollSpecificationImpl(time, unit);
     }
 
-    public static PollSpecification withPollInterval(PollInterval pollInterval) {
+    public static PollSpecification withPollInterval(PollSpecification pollInterval) {
         if (pollInterval == null) {
             throw new IllegalArgumentException("pollInterval cannot be null");
         }
-        return pollInterval.getPollSpecification();
+        return pollInterval;
     }
 
     public static DurationSpecification duration(long time, TimeUnit unit) {
         return new DurationSpecificationImpl(time, unit);
     }
 
-    public static DurationSpecification atMost(Duration duration) {
+    public static DurationSpecification atMost(DurationSpecification duration) {
         if (duration == null) {
             throw new IllegalArgumentException("duration cannot be null");
         }
-        return duration.getDurationSpecification();
+        return duration;
     }
 
     public static DurationSpecification atMost(long time, TimeUnit unit) {
