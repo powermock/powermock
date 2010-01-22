@@ -77,11 +77,13 @@ public class PrepareForTestExtractorImpl extends AbstractTestClassExtractor {
     }
 
     private void addTestCase(Set<String> all, AnnotatedElement element) {
+        Class<?> testClass = null;
         if (element instanceof Class<?>) {
-            all.add(((Class<?>) element).getName());
+            testClass = (Class<?>) element;
         } else if (element instanceof Method) {
-            all.add(((Method) element).getDeclaringClass().getName());
+            testClass = ((Method) element).getDeclaringClass();
         }
+        addClassHierarchy(all, testClass);
     }
 
     private void addFullyQualifiedNames(Set<String> all, PrepareForTest annotation) {
