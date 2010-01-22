@@ -16,11 +16,14 @@
 package org.powermock.core;
 
 import java.util.Collection;
+import java.util.Scanner;
 
 /**
  * Implementation borrowed from http://www.adarshr.com/papers/wildcard.
  */
 public class WildcardMatcher {
+
+    private static final String WILDCARD = "*";
 
     /**
      * Performs a wildcard matching for the text and pattern provided.
@@ -39,23 +42,19 @@ public class WildcardMatcher {
         if (text == null) {
             throw new IllegalArgumentException("text cannot be null");
         }
-        // Create the cards by splitting using a RegEx. If more speed
-        // is desired, a simpler character based splitting can be done.
-        String[] cards = pattern.split("\\*");
 
-        // Iterate over the cards.
-        for (String card : cards) {
-            int idx = text.indexOf(card);
-
-            // Card not detected in the text.
-            if (idx == -1) {
-                return false;
-            }
-
-            // Move ahead, towards the right of the text.
-            text = text.substring(idx + card.length());
+        if (!pattern.contains(WILDCARD)) {
+            return text.equals(pattern);
         }
-        return true;
+
+        pattern = pattern.replaceAll("\\*", ".*");
+        Scanner s = new Scanner(text);
+        s.useDelimiter(pattern);
+        boolean matchesWildcard = !s.hasNext();
+        s.close();
+
+        return matchesWildcard;
+
     }
 
     public static boolean matchesAny(Collection<String> collectionOfTextToMatch, String pattern) {
