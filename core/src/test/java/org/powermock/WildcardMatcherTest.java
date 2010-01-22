@@ -37,6 +37,11 @@ public class WildcardMatcherTest {
     public void doesntMatchWildcardPrefix() throws Exception {
         assertFalse(WildcardMatcher.matches("org.mytest.java", ".java*"));
     }
+    
+    @Test
+    public void convertsDotsAndWildcardsToRegExp() throws Exception {
+        assertFalse(WildcardMatcher.matches("javassist.runtime.Desc", "java.*"));
+    }
 
     @Test
     public void noWildcardCardPrefix() throws Exception {

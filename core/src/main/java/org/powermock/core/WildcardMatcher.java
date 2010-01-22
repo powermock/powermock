@@ -47,7 +47,7 @@ public class WildcardMatcher {
             return text.equals(pattern);
         }
 
-        pattern = pattern.replaceAll("\\*", ".*");
+        pattern = pattern.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*");
         Scanner s = new Scanner(text);
         s.useDelimiter(pattern);
         boolean matchesWildcard = !s.hasNext();
