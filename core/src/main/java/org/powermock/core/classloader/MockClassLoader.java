@@ -70,7 +70,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
      * specifies in annotations etc.
      */
     private static final String[] packagesToBeDeferred = new String[] { "org.hamcrest.*", "java.*", "javax.accessibility.*", "sun.*", "org.junit.*",
-            "junit.*", "org.powermock.modules.junit4.common.internal.*", "org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate",
+            "junit.*", "org.powermock.modules.junit4.common.internal.*", "org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate*",
             "org.powermock.core*" };
 
     // TODO Why is this needed!? We need to find a better solution.
