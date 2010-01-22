@@ -7,6 +7,7 @@ Change log 1.4 (under development)
 * DeepCloner now supports cloning standard java types (using simple serialization).
 * DeepCloner now supports cloning fields in a hierarchy.
 * Added a new project called PowerMock Utils. This project includes various utilities that may be useful during testing. The first utility is a "synchronizer" whose purpose is to wait for an asynchronous operation to complete. Example usage: "block(atMost(5, SECONDS), until(repositorySize(), equalsTo(3));"
+* Fixed a serious flaw in the Wildcard matcher which resulted in that classes located in packages containing "junit.", "java.", "sun." in their name was never prepared for test (issue 225).
 
 Change log 1.3.5 (2009-12-13)
 -----------------------------
