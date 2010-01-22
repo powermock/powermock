@@ -16,14 +16,13 @@
 package org.powermock.core;
 
 import java.util.Collection;
-import java.util.Scanner;
 
 /**
- * Implementation borrowed from http://www.adarshr.com/papers/wildcard.
+ * Wildcard matcher.
  */
 public class WildcardMatcher {
 
-    private static final String WILDCARD = "*";
+    private static final char WILDCARD = '*';
 
     /**
      * Performs a wildcard matching for the text and pattern provided.
@@ -37,23 +36,40 @@ public class WildcardMatcher {
      * 
      * @return <tt>true</tt> if a match is found, <tt>false</tt> otherwise.
      */
-
     public static boolean matches(String text, String pattern) {
         if (text == null) {
             throw new IllegalArgumentException("text cannot be null");
         }
 
-        if (!pattern.contains(WILDCARD)) {
-            return text.equals(pattern);
+        text += '\0';
+        pattern += '\0';
+
+        int N = pattern.length();
+
+        boolean[] states = new boolean[N + 1];
+        boolean[] old = new boolean[N + 1];
+        old[0] = true;
+
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            states = new boolean[N + 1]; // initialized to false
+            for (int j = 0; j < N; j++) {
+                char p = pattern.charAt(j);
+
+                // hack to handle *'s that match 0 characters
+                if (old[j] && (p == WILDCARD))
+                    old[j + 1] = true;
+
+                if (old[j] && (p == c))
+                    states[j + 1] = true;
+                if (old[j] && (p == WILDCARD))
+                    states[j] = true;
+                if (old[j] && (p == WILDCARD))
+                    states[j + 1] = true;
+            }
+            old = states;
         }
-
-        pattern = pattern.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*");
-        Scanner s = new Scanner(text);
-        s.useDelimiter(pattern);
-        boolean matchesWildcard = !s.hasNext();
-        s.close();
-
-        return matchesWildcard;
+        return states[N];
 
     }
 
