@@ -73,17 +73,20 @@ public class MockCreator {
         } else {
             mockSettings = (MockSettingsImpl) Mockito.withSettings();
         }
-        MockHandler<T> mockHandler = new MockHandler<T>(new MockName(mockName, type), Whitebox.getInternalState(Mockito.class,
-                MockingProgress.class), new MatchersBinder(), mockSettings);
+        MockHandler<T> mockHandler = new MockHandler<T>(new MockName(mockName, type),
+                Whitebox.getInternalState(Mockito.class, MockingProgress.class), new MatchersBinder(), mockSettings);
         MethodInterceptorFilter filter = new MethodInterceptorFilter(mockHandler, mockSettings);
         final T mock = (T) ClassImposterizer.INSTANCE.imposterise(filter, type);
-        final MockitoMethodInvocationControl invocationControl = new MockitoMethodInvocationControl(filter,
-                isSpy && delegator == null ? new Object() : delegator, methods);
+        final MockitoMethodInvocationControl invocationControl = new MockitoMethodInvocationControl(filter, isSpy && delegator == null ? new Object()
+                : delegator, methods);
         return new MockData<T>(invocationControl, mock);
     }
 
     private static String toInstanceName(Class<?> clazz) {
         String className = clazz.getSimpleName();
+        if (className.length() == 0) {
+            return clazz.getName();
+        }
         // lower case first letter
         return className.substring(0, 1).toLowerCase() + className.substring(1);
     }
