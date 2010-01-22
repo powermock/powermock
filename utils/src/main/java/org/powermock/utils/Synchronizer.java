@@ -97,11 +97,7 @@ public class Synchronizer extends SynchronizerOperationOptions {
     }
 
     public static void setDefaultPollInterval(PollSpecification pollSpecification) {
-        if (pollSpecification == null) {
-            defaultPollSpecfication = null;
-        } else {
-            defaultPollSpecfication = pollSpecification;
-        }
+        defaultPollSpecfication = pollSpecification;
     }
 
     public static void setDefaultTimeout(DurationSpecification defaultTimeout) {
