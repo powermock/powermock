@@ -83,7 +83,6 @@
 		<module>release</module>
 		<module>reflect</module>
     		<module>classloading</module>
-	        <module>utils</module>	
   </modules>
 	<build>
 		<plugins>
