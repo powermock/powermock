@@ -75,9 +75,9 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 			// ///CLOVER:ON
 		}
 
-		MethodInterceptor interceptor = new ClassProxyFactory.MockMethodInterceptor() {
-
-			private Set<Method> mockedMethods;
+		MethodInterceptor interceptor = new ClassProxyFactory.MockMethodInterceptor(handler) {
+            private static final long serialVersionUID = -2764609150597725248L;
+            private Set<Method> mockedMethods;
 
 			public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
 

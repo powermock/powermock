@@ -10,6 +10,7 @@ Change log 1.4 (under development)
 * Fixed so that you can mock anonymous inner classes with the Mockito API extension (issue 227).
 * Nested classes declared inside the test case are automatically prepared for test
 * Minor improvement in the byte-code manipulation; only package private classes are changed to public.
+* Upgraded he EasyMock extension API to use EasyMock class extension 2.5.2 (due to internal changes in EasyMock it's not backward compatible with older versions)
 
 
 Change log 1.3.5 (2009-12-13)

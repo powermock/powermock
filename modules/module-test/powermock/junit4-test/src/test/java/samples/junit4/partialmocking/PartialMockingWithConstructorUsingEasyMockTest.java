@@ -29,7 +29,8 @@ import samples.partialmocking.PartialMockingWithConstructor;
 
 public class PartialMockingWithConstructorUsingEasyMockTest {
 
-	@Ignore("The initialize method is never invoked but is caught by the proxy. This is a possibly a bug in EasyMock class extensions?")
+	@SuppressWarnings("deprecation")
+    @Ignore("The initialize method is never invoked but is caught by the proxy. This is a possibly a bug in EasyMock class extensions?")
 	@Test
 	public void testPartialMock() throws Exception {
 
