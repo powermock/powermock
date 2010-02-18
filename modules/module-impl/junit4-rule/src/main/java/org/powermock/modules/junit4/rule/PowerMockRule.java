@@ -17,6 +17,8 @@ import org.powermock.tests.utils.impl.PowerMockIgnorePackagesExtractorImpl;
 import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
 
 public class PowerMockRule implements MethodRule {
+    
+    private ClassloaderExecutor classloaderExecutor = null;
 
     public Statement apply(Statement base, FrameworkMethod method, Object target) {
         return new PowerMockStatement(base, method, target);

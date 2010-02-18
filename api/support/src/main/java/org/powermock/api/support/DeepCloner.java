@@ -247,7 +247,7 @@ public class DeepCloner {
     }
 
     private static boolean isCollection(final Object object) {
-        return isCollection(object.getClass());
+        return object == null ? false : isCollection(object.getClass());
     }
 
     private static boolean isCollection(final Class<?> cls) {
