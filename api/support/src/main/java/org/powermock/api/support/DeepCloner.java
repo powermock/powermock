@@ -124,7 +124,7 @@ public class DeepCloner {
         }
         return (T) target;
     }
-    
+
     private static boolean isSerializable(Class<?> cls) {
         return Serializable.class.isAssignableFrom(cls);
     }
@@ -170,7 +170,7 @@ public class DeepCloner {
             for (Field field : currentTargetClass.getDeclaredFields()) {
                 field.setAccessible(true);
                 try {
-                    final Field declaredField = Whitebox.getField(source.getClass(), field.getName());
+                    final Field declaredField = Whitebox.getField(getType(source), field.getName());
                     declaredField.setAccessible(true);
                     final Object object = declaredField.get(source);
                     final Object instantiatedValue;
