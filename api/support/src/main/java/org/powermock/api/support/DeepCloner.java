@@ -108,9 +108,7 @@ public class DeepCloner {
     @SuppressWarnings("unchecked")
     private <T> T performClone(Class<T> targetClass, Object source, boolean shouldCloneStandardJavaTypes) {
         Object target = null;
-        if (targetClass.getAnnotation(doNotClone) != null) {
-            target = null;
-        } else if (targetClass.isArray() && !isClass(source)) {
+        if (targetClass.isArray() && !isClass(source)) {
             target = instantiateArray(targetCL, targetClass, source, referenceMap, shouldCloneStandardJavaTypes);
         } else if (isCollection(targetClass)) {
             target = cloneCollection(targetCL, source, referenceMap, shouldCloneStandardJavaTypes);

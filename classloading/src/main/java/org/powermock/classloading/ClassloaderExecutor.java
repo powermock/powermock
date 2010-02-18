@@ -22,9 +22,9 @@ import org.powermock.api.support.DeepCloner;
 import org.powermock.api.support.DoNotClone;
 import org.powermock.reflect.Whitebox;
 
-@DoNotClone
 public class ClassloaderExecutor {
 
+    @DoNotClone
 	private final ClassLoader classloader;
 
 	public ClassloaderExecutor(ClassLoader classloader) {
