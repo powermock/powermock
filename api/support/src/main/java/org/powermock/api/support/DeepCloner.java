@@ -158,7 +158,7 @@ public class DeepCloner {
     @SuppressWarnings("unchecked")
     private static Object cloneEnum(ClassLoader targetCL, Object source) {
         Object target;
-        final Class enumClassLoadedByTargetCL = ClassLoaderUtil.loadClassWithClassloader(targetCL, source.getClass());
+        final Class enumClassLoadedByTargetCL = ClassLoaderUtil.loadClassWithClassloader(targetCL, getType(source));
         target = getEnumValue(source, enumClassLoadedByTargetCL);
         return target;
     }
@@ -221,10 +221,10 @@ public class DeepCloner {
     private static Object cloneCollection(ClassLoader targetCL, Object source, ListMap<Object, Object> referenceMap, boolean cloneStandardJavaTypes) {
         Object target;
         Collection sourceCollection = (Collection) source;
-        final Class<Collection<?>> collectionClass = (Class<Collection<?>>) ClassLoaderUtil.loadClassWithClassloader(targetCL, source.getClass());
+        final Class<Object> collectionClass = ClassLoaderUtil.loadClassWithClassloader(targetCL, getType(source));
         Collection newInstance = null;
         try {
-            newInstance = collectionClass.newInstance();
+            newInstance = (Collection) collectionClass.newInstance();
         } catch (Exception e) {
             // Should never happen for collections
             throw new RuntimeException(e);
