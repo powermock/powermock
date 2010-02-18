@@ -112,7 +112,7 @@ public class DeepCloner {
     private static <T> T performClone(ClassLoader targetCL, Class<T> targetClass, Object source, ListMap<Object, Object> referenceMap,
             boolean shouldCloneStandardJavaTypes) {
         Object target = null;
-        if (targetClass.isArray()) {
+        if (targetClass.isArray() && !isClass(source)) {
             target = instantiateArray(targetCL, targetClass, source, referenceMap, shouldCloneStandardJavaTypes);
         } else if (isCollection(targetClass)) {
             target = cloneCollection(targetCL, source, referenceMap, shouldCloneStandardJavaTypes);
