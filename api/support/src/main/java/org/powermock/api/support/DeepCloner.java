@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -39,37 +38,31 @@ import sun.misc.Unsafe;
  * <p>
  */
 public class DeepCloner {
-	
-	private final ClassLoader targetCL;
-	private final Map<Object, Object> referenceMap = new ListMap<Object, Object>();
-    private final Class<Annotation> doNotClone;
+
+    private final ClassLoader targetCL;
+    private final Map<Object, Object> referenceMap = new ListMap<Object, Object>();
+    private final Class<DoNotClone> doNotClone;
 
     /**
      * Clone using the supplied ClassLoader.
      */
-	public DeepCloner(ClassLoader classLoader) {
-		this.targetCL = classLoader;
-		doNotClone = getDoNotClone(targetCL);
-	}
+    public DeepCloner(ClassLoader classLoader) {
+        this.targetCL = classLoader;
+        doNotClone = getDoNotClone(targetCL);
+    }
 
     /**
      * Clone using the current ContextClassLoader.
      */
     public DeepCloner() {
-    		this(Thread.currentThread().getContextClassLoader());
-	}
+        this(Thread.currentThread().getContextClassLoader());
+    }
 
-	@SuppressWarnings("unchecked")
-	private Class<Annotation> getDoNotClone(ClassLoader targetCL) {
-		try {
-			return (Class<Annotation>) targetCL.loadClass(DoNotClone.class.getName());
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    private Class<DoNotClone> getDoNotClone(ClassLoader targetCL) {
+        return ClassLoaderUtil.loadClassWithClassloader(targetCL, DoNotClone.class);
+    }
 
-
-	/**
+    /**
      * Clones an object.
      * 
      * @return A deep clone of the object to clone.
@@ -88,8 +81,7 @@ public class DeepCloner {
      */
     public <T> T clone(T objectToClone, boolean includeStandardJavaType) {
         assertObjectNotNull(objectToClone);
-        return performClone(ClassLoaderUtil.loadClassWithClassloader(targetCL, getType(objectToClone)), objectToClone,
-                includeStandardJavaType);
+        return performClone(ClassLoaderUtil.loadClassWithClassloader(targetCL, getType(objectToClone)), objectToClone, includeStandardJavaType);
     }
 
     @SuppressWarnings("unchecked")
@@ -114,12 +106,11 @@ public class DeepCloner {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T performClone(Class<T> targetClass, Object source,
-            boolean shouldCloneStandardJavaTypes) {
+    private <T> T performClone(Class<T> targetClass, Object source, boolean shouldCloneStandardJavaTypes) {
         Object target = null;
-		if (targetClass.getAnnotation(doNotClone) != null) {
-			target = null;
-		} else if (targetClass.isArray() && !isClass(source)) {
+        if (targetClass.getAnnotation(doNotClone) != null) {
+            target = null;
+        } else if (targetClass.isArray() && !isClass(source)) {
             target = instantiateArray(targetCL, targetClass, source, referenceMap, shouldCloneStandardJavaTypes);
         } else if (isCollection(targetClass)) {
             target = cloneCollection(targetCL, source, referenceMap, shouldCloneStandardJavaTypes);
@@ -135,11 +126,11 @@ public class DeepCloner {
             target = isClass(source) ? source : Whitebox.newInstance(targetClass);
         }
 
-		if (source != target && target != null) {
-	        if (!targetClass.isEnum() && !isStandardJavaType(targetClass) && !targetClass.isPrimitive() && !isClass(source)) {
-	            cloneFields(targetCL, targetClass, source, target, referenceMap, shouldCloneStandardJavaTypes);
-	        }
-		}
+        if (source != target && target != null) {
+            if (!targetClass.isEnum() && !isStandardJavaType(targetClass) && !targetClass.isPrimitive() && !isClass(source)) {
+                cloneFields(targetCL, targetClass, source, target, referenceMap, shouldCloneStandardJavaTypes);
+            }
+        }
         return (T) target;
     }
 
@@ -181,14 +172,14 @@ public class DeepCloner {
         return target;
     }
 
-    private <T> void cloneFields(ClassLoader targetCL, Class<T> targetClass, Object source, Object target,
-            Map<Object, Object> referenceMap, boolean cloneStandardJavaTypes) {
+    private <T> void cloneFields(ClassLoader targetCL, Class<T> targetClass, Object source, Object target, Map<Object, Object> referenceMap,
+            boolean cloneStandardJavaTypes) {
         Class<?> currentTargetClass = targetClass;
         while (currentTargetClass != null) {
             for (Field field : currentTargetClass.getDeclaredFields()) {
-            		if (field.getAnnotation(doNotClone) != null) {
-            			continue;
-            		}
+                if (field.getAnnotation(doNotClone) != null) {
+                    continue;
+                }
                 field.setAccessible(true);
                 try {
                     final Field declaredField = Whitebox.getField(getType(source), field.getName());
