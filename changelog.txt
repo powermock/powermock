@@ -6,6 +6,7 @@ Change log 1.4 (under development)
 * DeepCloner now supports cloning enum constants.
 * DeepCloner now supports cloning standard java types (using simple serialization).
 * DeepCloner now supports cloning fields in a hierarchy.
+* DeepCloner now supports cloning class fields.
 * Fixed a bug in the Wildcard matcher which resulted in that classes located in packages containing "junit.", "java.", "sun." in their name was never prepared for test (issue 225).
 * Fixed so that you can mock anonymous inner classes with the Mockito API extension (issue 227).
 * Nested classes declared inside the test case are automatically prepared for test

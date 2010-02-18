@@ -88,11 +88,18 @@ public class DeepCloner {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> Class<T> getType(T objectToClone) {
-        if (objectToClone == null) {
+    private static <T> Class<T> getType(T object) {
+        if (object == null) {
             return null;
         }
-        return (Class<T>) (objectToClone instanceof Class ? objectToClone : objectToClone.getClass());
+        return (Class<T>) (object instanceof Class ? object : object.getClass());
+    }
+
+    private static boolean isClass(Object object) {
+        if (object == null) {
+            return false;
+        }
+        return object instanceof Class<?>;
     }
 
     private static void assertObjectNotNull(Object object) {
@@ -115,11 +122,13 @@ public class DeepCloner {
             target = serializationClone(source);
         } else if (targetClass.isEnum()) {
             target = cloneEnum(targetCL, source);
+        } else if (isClass(source)) {
+            target = ClassLoaderUtil.loadClassWithClassloader(targetCL, getType(source));
         } else {
-            target = Whitebox.newInstance(targetClass);
+            target = isClass(source) ? source : Whitebox.newInstance(targetClass);
         }
 
-        if (!targetClass.isEnum() && !isStandardJavaType(targetClass) && !targetClass.isPrimitive()) {
+        if (!targetClass.isEnum() && !isStandardJavaType(targetClass) && !targetClass.isPrimitive() && !isClass(source)) {
             cloneFields(targetCL, targetClass, source, target, referenceMap, shouldCloneStandardJavaTypes);
         }
         return (T) target;
