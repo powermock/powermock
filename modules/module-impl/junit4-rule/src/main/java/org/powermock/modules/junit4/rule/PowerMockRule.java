@@ -26,7 +26,7 @@ public class PowerMockRule implements MethodRule {
     
 	public Statement apply(Statement base, FrameworkMethod method, Object target) {
 		if (classloaderExecutor == null || previousTargetClass != target.getClass()) {
-			classloaderExecutor = PowerMockClassloaderExecutor.forObject(target);
+			classloaderExecutor = PowerMockClassloaderExecutor.forClass(target.getClass());
 			previousTargetClass = target.getClass();
 		}
 		return new PowerMockStatement(base, classloaderExecutor);

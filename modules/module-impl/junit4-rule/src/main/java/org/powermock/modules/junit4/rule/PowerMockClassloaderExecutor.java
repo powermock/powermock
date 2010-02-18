@@ -30,7 +30,7 @@ import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
 
 public class PowerMockClassloaderExecutor {
 
-    public static ClassloaderExecutor forObject(Object target) {
+    public static ClassloaderExecutor forClass(Class<?> testClass) {
         List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
         final MainMockTransformer mainMockTransformer = new MainMockTransformer();
         mockTransformerChain.add(mainMockTransformer);
@@ -42,9 +42,8 @@ public class PowerMockClassloaderExecutor {
         PrepareForTestExtractorImpl testClassesExtractor = new PrepareForTestExtractorImpl();
         PowerMockIgnorePackagesExtractorImpl ignorePackagesExtractor = new PowerMockIgnorePackagesExtractorImpl();
     
-        final Class<? extends Object> testClass = target.getClass();
         mockLoader.addIgnorePackage(ignorePackagesExtractor.getPackagesToIgnore(testClass));
-        mockLoader.addClassesToModify(testClassesExtractor.getTestClasses(target.getClass()));
+        mockLoader.addClassesToModify(testClassesExtractor.getTestClasses(testClass));
         registerProxyframework(mockLoader);
         new MockPolicyInitializerImpl(testClass).initialize(mockLoader);
         return new ClassloaderExecutor(mockLoader);
