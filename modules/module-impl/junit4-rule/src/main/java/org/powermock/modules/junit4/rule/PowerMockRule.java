@@ -18,11 +18,12 @@ import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
 
 public class PowerMockRule implements MethodRule {
     
-    private ClassloaderExecutor classloaderExecutor = null;
-
     public Statement apply(Statement base, FrameworkMethod method, Object target) {
         return new PowerMockStatement(base, method, target);
     }
+
+    private static ClassloaderExecutor classloaderExecutor;
+    private static Class<?> previousTargetClass;
 
     private class PowerMockStatement extends Statement {
         private final Statement fNext;
@@ -33,11 +34,27 @@ public class PowerMockRule implements MethodRule {
             fNext = base;
             this.method = method;
             this.target = target;
+            if (classloaderExecutor == null || previousTargetClass != target.getClass()) {
+            		classloaderExecutor = makeClassloaderExecutor();
+            		previousTargetClass = target.getClass();
+            }
         }
 
         @Override
         public void evaluate() throws Throwable {
-            List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
+            classloaderExecutor.execute(new Runnable() {
+                public void run() {
+                    try {
+                    		fNext.evaluate();
+                    } catch (Throwable e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+        }
+
+		private ClassloaderExecutor makeClassloaderExecutor() {
+			List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
             final MainMockTransformer mainMockTransformer = new MainMockTransformer();
             mockTransformerChain.add(mainMockTransformer);
 
@@ -54,17 +71,8 @@ public class PowerMockRule implements MethodRule {
             registerProxyframework(mockLoader);
             new MockPolicyInitializerImpl(testClass).initialize(mockLoader);
             ClassloaderExecutor classloaderExecutor = new ClassloaderExecutor(mockLoader);
-            classloaderExecutor.execute(new Runnable() {
-                public void run() {
-                    try {
-                        method.invokeExplosively(target);
-                    } catch (Throwable e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
-            // fNext.evaluate();
-        }
+			return classloaderExecutor;
+		}
     }
 
     private void registerProxyframework(ClassLoader classLoader) {

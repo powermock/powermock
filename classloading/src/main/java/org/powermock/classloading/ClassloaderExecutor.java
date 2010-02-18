@@ -19,8 +19,10 @@ import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 
 import org.powermock.api.support.DeepCloner;
+import org.powermock.api.support.DoNotClone;
 import org.powermock.reflect.Whitebox;
 
+@DoNotClone
 public class ClassloaderExecutor {
 
 	private final ClassLoader classloader;
@@ -47,11 +49,12 @@ public class ClassloaderExecutor {
 	}
 
 	private Object execute(Object instance, Method method, Object... arguments) {
-		final Object objectLoadedWithClassloader = DeepCloner.clone(classloader, instance);
+		DeepCloner deepCloner = new DeepCloner(classloader);
+		final Object objectLoadedWithClassloader = deepCloner.clone(instance);
 		final Object[] argumentsLoadedByClassLoader = new Object[arguments.length];
 		for (int i = 0; i < arguments.length; i++) {
 			final Object argument = arguments[i];
-			argumentsLoadedByClassLoader[i] = DeepCloner.clone(classloader, argument);
+			argumentsLoadedByClassLoader[i] = deepCloner.clone(argument);
 		}
 
 		final Object result;
@@ -64,6 +67,6 @@ public class ClassloaderExecutor {
 				throw new RuntimeException(e);
 			}
 		}
-		return result == null ? null : DeepCloner.clone(Thread.currentThread().getContextClassLoader(), result);
+		return result == null ? null : new DeepCloner().clone(result);
 	}
 }

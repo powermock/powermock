@@ -27,7 +27,7 @@ public class DeepClonerTest {
 	@Test
 	public void clonesJavaInstances() throws Exception {
 		final URL original = new URL("http://www.powermock.org");
-		URL clone = DeepCloner.clone(original);
+		URL clone = new DeepCloner().clone(original);
 		assertEquals(clone, original);
 		assertNotSame(clone, original);
 	}
