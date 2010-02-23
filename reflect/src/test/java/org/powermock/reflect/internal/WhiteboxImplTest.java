@@ -43,4 +43,6 @@ public class WhiteboxImplTest {
 		boolean invokeMethod = (Boolean) method.invoke(WhiteboxImpl.class, new Class<?>[] { Class.class }, new Class<?>[] { Class.class });
 		assertTrue(invokeMethod);
 	}
+	
+	// TODO: Add test for getBestCandidateMethod
 }

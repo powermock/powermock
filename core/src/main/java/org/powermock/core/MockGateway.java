@@ -53,8 +53,8 @@ public class MockGateway {
         return doMethodCall(type, methodName, args, sig, returnTypeAsString);
     }
 
-    private static Object doMethodCall(Object object, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString) throws Throwable,
-            NoSuchMethodException {
+    private static Object doMethodCall(Object object, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString)
+            throws Throwable, NoSuchMethodException {
         if (!shouldMockMethod(methodName, sig)) {
             return PROCEED;
         }
@@ -79,7 +79,7 @@ public class MockGateway {
          */
         Method method = null;
         try {
-            method = WhiteboxImpl.getMethod(objectType, methodName, sig);
+            method = WhiteboxImpl.getBestMethodCandidate(objectType, methodName, sig);
         } catch (MethodNotFoundException e) {
             /*
              * Dirty hack to get around issue 110
@@ -143,8 +143,8 @@ public class MockGateway {
     }
 
     // used for instance methods
-    public static synchronized Object methodCall(Object instance, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString)
-            throws Throwable {
+    public static synchronized Object methodCall(Object instance, String methodName, Object[] args, Class<?>[] sig,
+            String returnTypeAsString) throws Throwable {
         return doMethodCall(instance, methodName, args, sig, returnTypeAsString);
     }
 
