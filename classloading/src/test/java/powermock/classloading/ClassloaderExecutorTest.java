@@ -234,7 +234,7 @@ public class ClassloaderExecutorTest {
 	}
 
 	@Test
-	@Ignore("Must fix this test before next release")
+	@Ignore("It seems like this test works on certain JVM's and fails on others. WHY!??!")
 	public void worksWithObjectHierarchyAndOverloadedFields() throws Exception {
 		final MockClassLoader classloader = createClassloader();
 		final MyHierarchicalOverloadedFieldHolder tested = new MyHierarchicalOverloadedFieldHolder();
