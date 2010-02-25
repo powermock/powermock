@@ -23,24 +23,23 @@ import org.powermock.classloading.ClassloaderExecutor;
 public class PowerMockRule implements MethodRule {
     private static ClassloaderExecutor classloaderExecutor;
     private static Class<?> previousTargetClass;
-    
-	public Statement apply(Statement base, FrameworkMethod method, Object target) {
-		if (classloaderExecutor == null || previousTargetClass != target.getClass()) {
-			classloaderExecutor = PowerMockClassloaderExecutor.forClass(target.getClass());
-			previousTargetClass = target.getClass();
-		}
-		return new PowerMockStatement(base, classloaderExecutor);
-	}
 
+    public Statement apply(Statement base, FrameworkMethod method, Object target) {
+        if (classloaderExecutor == null || previousTargetClass != target.getClass()) {
+            classloaderExecutor = PowerMockClassloaderExecutor.forClass(target.getClass());
+            previousTargetClass = target.getClass();
+        }
+        return new PowerMockStatement(base, classloaderExecutor);
+    }
 }
 
 class PowerMockStatement extends Statement {
     private final Statement fNext;
-	private final ClassloaderExecutor classloaderExecutor;
+    private final ClassloaderExecutor classloaderExecutor;
 
     public PowerMockStatement(Statement base, ClassloaderExecutor classloaderExecutor) {
         fNext = base;
-		this.classloaderExecutor = classloaderExecutor;
+        this.classloaderExecutor = classloaderExecutor;
     }
 
     @Override
@@ -48,11 +47,22 @@ class PowerMockStatement extends Statement {
         classloaderExecutor.execute(new Runnable() {
             public void run() {
                 try {
-                		fNext.evaluate();
+                    fNext.evaluate();
                 } catch (Throwable e) {
-                    throw new RuntimeException(e);
+                    safeRethrow(e);
                 }
             }
         });
+    }
+    
+    private static RuntimeException safeRethrow(Throwable t) {
+        PowerMockStatement.<RuntimeException> safeRethrow0(t);
+        return null;
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> void safeRethrow0(Throwable t) throws T {
+        throw (T) t;
     }
 }
