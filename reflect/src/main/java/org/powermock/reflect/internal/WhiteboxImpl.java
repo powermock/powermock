@@ -821,7 +821,6 @@ public class WhiteboxImpl {
         return potentialMethodToInvoke;
     }
 
-    // TODO Filter out to only static or instance methods
     public static Method getBestMethodCandidate(Class<?> cls, String methodName, Class<?>[] signature) {
         final Method foundMethod;
         final Method[] methods = getMethods(cls, methodName, signature);
