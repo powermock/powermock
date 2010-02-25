@@ -55,10 +55,8 @@ class PowerMockStatement extends Statement {
         });
     }
     
-    private static RuntimeException safeRethrow(Throwable t) {
+    private static void safeRethrow(Throwable t) {
         PowerMockStatement.<RuntimeException> safeRethrow0(t);
-        return null;
-
     }
 
     @SuppressWarnings("unchecked")
