@@ -17,7 +17,10 @@ package samples.powermockito.junit4.system;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.times;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.spy;
@@ -129,5 +132,18 @@ public class SystemClassUserTest {
 
         final SystemClassUser systemClassUser = new SystemClassUser();
         assertEquals(systemClassUser.format(string, args), returnValue);
+    }
+
+    @Test
+    public void mockingStaticVoidMethodWorks() throws Exception {
+        mockStatic(Thread.class);
+        doNothing().when(Thread.class);
+        Thread.sleep(anyLong());
+
+        long startTime = System.currentTimeMillis();
+        final SystemClassUser systemClassUser = new SystemClassUser();
+        systemClassUser.threadSleep();
+        long endTime = System.currentTimeMillis();
+        assertTrue(endTime - startTime < 5000);
     }
 }

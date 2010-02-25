@@ -26,31 +26,35 @@ import java.util.List;
  */
 public class SystemClassUser {
 
-	public String performEncode() throws UnsupportedEncodingException {
-		return URLEncoder.encode("string", "enc");
-	}
+    public void threadSleep() throws InterruptedException {
+        Thread.sleep(5000);
+    }
 
-	public Process executeCommand() throws IOException {
-		return Runtime.getRuntime().exec("command");
-	}
+    public String performEncode() throws UnsupportedEncodingException {
+        return URLEncoder.encode("string", "enc");
+    }
 
-	public String getSystemProperty() throws IOException {
-		return System.getProperty("property");
-	}
+    public Process executeCommand() throws IOException {
+        return Runtime.getRuntime().exec("command");
+    }
 
-	public void doMoreComplicatedStuff() throws IOException {
-		System.setProperty("nanoTime", Long.toString(System.nanoTime()));
-	}
+    public String getSystemProperty() throws IOException {
+        return System.getProperty("property");
+    }
 
-	public void copyProperty(String to, String from) throws IOException {
-		System.setProperty(to, System.getProperty(from));
-	}
-	
-	public String format(String one, String args) throws IOException {
-		return String.format(one, args);
-	}
+    public void doMoreComplicatedStuff() throws IOException {
+        System.setProperty("nanoTime", Long.toString(System.nanoTime()));
+    }
 
-	public void shuffleCollection(List<?> list) {
-		Collections.shuffle(list);
-	}
+    public void copyProperty(String to, String from) throws IOException {
+        System.setProperty(to, System.getProperty(from));
+    }
+
+    public String format(String one, String args) throws IOException {
+        return String.format(one, args);
+    }
+
+    public void shuffleCollection(List<?> list) {
+        Collections.shuffle(list);
+    }
 }

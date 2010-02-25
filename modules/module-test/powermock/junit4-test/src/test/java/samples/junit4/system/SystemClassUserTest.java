@@ -15,9 +15,11 @@
  */
 package samples.junit4.system;
 
+import static org.easymock.EasyMock.anyLong;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.expectLastCall;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
@@ -152,6 +154,24 @@ public class SystemClassUserTest {
 
         final SystemClassUser systemClassUser = new SystemClassUser();
         assertEquals(systemClassUser.format(string, args), returnValue);
+
+        verifyAll();
+    }
+
+    @Test
+    public void mockingStaticVoidMethodWorks() throws Exception {
+        mockStatic(Thread.class);
+
+        Thread.sleep(anyLong());
+        expectLastCall().once();
+
+        replayAll();
+
+        long startTime = System.currentTimeMillis();
+        final SystemClassUser systemClassUser = new SystemClassUser();
+        systemClassUser.threadSleep();
+        long endTime = System.currentTimeMillis();
+        assertTrue(endTime - startTime < 5000);
 
         verifyAll();
     }
