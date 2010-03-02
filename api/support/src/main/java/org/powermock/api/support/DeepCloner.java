@@ -17,6 +17,7 @@ package org.powermock.api.support;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -29,6 +30,8 @@ import java.util.Map;
 
 import org.powermock.core.ListMap;
 import org.powermock.reflect.Whitebox;
+
+import com.googlecode.transloader.Transloader;
 
 import sun.misc.Unsafe;
 
@@ -105,16 +108,19 @@ public class DeepCloner {
         }
     }
 
+//    private int count = 0;
+    
     @SuppressWarnings("unchecked")
     private <T> T performClone(Class<T> targetClass, Object source, boolean shouldCloneStandardJavaTypes) {
+//        System.out.println((count++) + "  " + source);
         Object target = null;
         if (targetClass.isArray() && !isClass(source)) {
             target = instantiateArray(targetCL, targetClass, source, referenceMap, shouldCloneStandardJavaTypes);
-        } else if (isCollection(targetClass)) {
-            target = cloneCollection(targetCL, source, referenceMap, shouldCloneStandardJavaTypes);
+//        } else if (isCollection(targetClass)) {
+//            target = cloneCollection(targetCL, source, referenceMap, shouldCloneStandardJavaTypes);
         } else if (targetClass.isPrimitive() && !shouldCloneStandardJavaTypes) {
             target = source;
-        } else if (isStandardJavaType(targetClass) && isSerializable(targetClass)) {
+        } else if (isStandardJavaType(targetClass) && isSerializable(targetClass) && !Map.class.isAssignableFrom(source.getClass()) && !Iterable.class.isAssignableFrom(source.getClass())) {
             target = serializationClone(source);
         } else if (targetClass.isEnum()) {
             target = cloneEnum(targetCL, source);
@@ -153,12 +159,17 @@ public class DeepCloner {
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
-            try {
-                oos.close();
-                ois.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            close(oos);
+            close(ois);
+        }
+    }
+
+    private void close(Closeable closeable) {
+        try {
+            if (closeable != null) {
+                closeable.close();
             }
+        } catch (IOException e) {
         }
     }
 

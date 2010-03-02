@@ -20,7 +20,9 @@ import static org.junit.Assert.assertNotSame;
 
 import java.net.URL;
 
+import org.junit.Ignore;
 import org.junit.Test;
+import org.powermock.core.classloader.MockClassLoader;
 
 public class DeepClonerTest {
 
@@ -31,4 +33,18 @@ public class DeepClonerTest {
 		assertEquals(clone, original);
 		assertNotSame(clone, original);
 	}
+
+	@Ignore
+    @Test
+    public void clonesTheUnclonable() throws Exception {
+        final TheUnclonable original = new TheUnclonable();
+        TheUnclonable clone = new DeepCloner().clone(original);
+        System.out.println("QWEQWE");
+//        assertEquals(clone, original);
+        assertNotSame(clone, original);
+    }
+}
+
+class TheUnclonable {
+    private ClassLoader cl = new MockClassLoader(new String[0]);
 }
