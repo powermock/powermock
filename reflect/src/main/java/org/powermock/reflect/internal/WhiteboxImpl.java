@@ -120,8 +120,8 @@ public class WhiteboxImpl {
         }
 
         if (foundMethods.isEmpty()) {
-            throw new MethodNotFoundException("No method was found with parameter types: [ "
-                    + getArgumentTypesAsString((Object[]) parameterTypes) + " ] in class " + getUnmockedType(type).getName() + ".");
+            throw new MethodNotFoundException("No method was found with parameter types: [ " + getArgumentTypesAsString((Object[]) parameterTypes)
+                    + " ] in class " + getUnmockedType(type).getName() + ".");
         } else {
             throwExceptionWhenMultipleMethodMatchesFound("method name", foundMethods.toArray(new Method[foundMethods.size()]));
         }
@@ -340,8 +340,7 @@ public class WhiteboxImpl {
         setField(object, value, findFieldInHierarchy(object, new AssignableFromFieldTypeMatcherStrategy(getType(value))));
         if (additionalValues != null && additionalValues.length > 0) {
             for (Object additionalValue : additionalValues) {
-                setField(object, additionalValue, findFieldInHierarchy(object, new AssignableFromFieldTypeMatcherStrategy(
-                        getType(additionalValue))));
+                setField(object, additionalValue, findFieldInHierarchy(object, new AssignableFromFieldTypeMatcherStrategy(getType(additionalValue))));
             }
         }
     }
@@ -448,8 +447,7 @@ public class WhiteboxImpl {
         return findSingleFieldUsingStrategy(strategy, object, false, where);
     }
 
-    private static Field findSingleFieldUsingStrategy(FieldMatcherStrategy strategy, Object object, boolean checkHierarchy,
-            Class<?> startClass) {
+    private static Field findSingleFieldUsingStrategy(FieldMatcherStrategy strategy, Object object, boolean checkHierarchy, Class<?> startClass) {
         assertObjectInGetInternalStateIsNotNull(object);
         Field foundField = null;
         final Class<?> originalStartClass = startClass;
@@ -477,8 +475,7 @@ public class WhiteboxImpl {
         return foundField;
     }
 
-    private static Set<Field> findAllFieldsUsingStrategy(FieldMatcherStrategy strategy, Object object, boolean checkHierarchy,
-            Class<?> startClass) {
+    private static Set<Field> findAllFieldsUsingStrategy(FieldMatcherStrategy strategy, Object object, boolean checkHierarchy, Class<?> startClass) {
         assertObjectInGetInternalStateIsNotNull(object);
         final Set<Field> foundFields = new LinkedHashSet<Field>();
         while (startClass != null) {
@@ -686,8 +683,8 @@ public class WhiteboxImpl {
      *             Exception that may occur when invoking this method.
      */
     @SuppressWarnings("unchecked")
-    public static synchronized <T> T invokeMethod(Object object, Class<?> declaringClass, String methodToExecute,
-            Class<?>[] parameterTypes, Object... arguments) throws Exception {
+    public static synchronized <T> T invokeMethod(Object object, Class<?> declaringClass, String methodToExecute, Class<?>[] parameterTypes,
+            Object... arguments) throws Exception {
         if (object == null) {
             throw new IllegalArgumentException("object cannot be null");
         }
@@ -708,8 +705,7 @@ public class WhiteboxImpl {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> T doInvokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments)
-            throws Exception {
+    private static <T> T doInvokeMethod(Object tested, Class<?> declaringClass, String methodToExecute, Object... arguments) throws Exception {
         Method methodToInvoke = findMethodOrThrowException(tested, declaringClass, methodToExecute, arguments);
 
         // Invoke test
@@ -792,8 +788,7 @@ public class WhiteboxImpl {
                              * the same name and the same number of arguments
                              * but one is using wrapper types.
                              */
-                            throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", new Method[] {
-                                    potentialMethodToInvoke, method });
+                            throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", new Method[] { potentialMethodToInvoke, method });
                         }
                     }
                 } else if (isPotentialVarArgsMethod(method, arguments)) {
@@ -807,8 +802,7 @@ public class WhiteboxImpl {
                          * and the same number of arguments but one is using
                          * wrapper types.
                          */
-                        throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", new Method[] { potentialMethodToInvoke,
-                                method });
+                        throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", new Method[] { potentialMethodToInvoke, method });
                     }
                     break;
                 } else if (arguments != null && (paramTypes.length != arguments.length)) {
@@ -878,8 +872,7 @@ public class WhiteboxImpl {
         Set<Constructor<?>> constructors = new HashSet<Constructor<?>>();
         for (Constructor<?> constructor : declaredConstructors) {
             final Class<?>[] parameterTypes = constructor.getParameterTypes();
-            if (parameterTypes.length >= 1
-                    && parameterTypes[parameterTypes.length - 1].getName().equals("org.powermock.core.IndicateReloadClass")) {
+            if (parameterTypes.length >= 1 && parameterTypes[parameterTypes.length - 1].getName().equals("org.powermock.core.IndicateReloadClass")) {
                 continue;
             } else {
                 constructors.add(constructor);
@@ -994,15 +987,14 @@ public class WhiteboxImpl {
             if (methodName != null) {
                 methodNameData = "with name '" + methodName + "' ";
             }
-            throw new MethodNotFoundException("No method found " + methodNameData + "with parameter types: [ "
-                    + getArgumentTypesAsString(arguments) + " ] in class " + getUnmockedType(type).getName() + ".");
+            throw new MethodNotFoundException("No method found " + methodNameData + "with parameter types: [ " + getArgumentTypesAsString(arguments)
+                    + " ] in class " + getUnmockedType(type).getName() + ".");
         }
     }
 
     public static void throwExceptionIfFieldWasNotFound(Class<?> type, String fieldName, Field field) {
         if (field == null) {
-            throw new FieldNotFoundException("No field was found with name '" + fieldName + "' in class " + getUnmockedType(type).getName()
-                    + ".");
+            throw new FieldNotFoundException("No field was found with name '" + fieldName + "' in class " + getUnmockedType(type).getName() + ".");
         }
     }
 
@@ -1146,8 +1138,8 @@ public class WhiteboxImpl {
             // Check if we can find a matching var args constructor.
             constructor = getPotentialVarArgsConstructor(classThatContainsTheConstructorToTest, arguments);
             if (constructor == null) {
-                throw new ConstructorNotFoundException("Failed to find a constructor with parameter types: ["
-                        + getArgumentTypesAsString(arguments) + "]");
+                throw new ConstructorNotFoundException("Failed to find a constructor with parameter types: [" + getArgumentTypesAsString(arguments)
+                        + "]");
             }
         } else if (potentialContstructorPrimitive == null && potentialContstructorWrapped != null) {
             constructor = potentialContstructorWrapped;
@@ -1378,13 +1370,11 @@ public class WhiteboxImpl {
                 }
 
                 if (methodToMock == null) {
-                    WhiteboxImpl.throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", matchingMethodsList
-                            .toArray(new Method[0]));
+                    WhiteboxImpl.throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", matchingMethodsList.toArray(new Method[0]));
                 }
             } else {
                 // We've found several matching methods.
-                WhiteboxImpl.throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", matchingMethodsList
-                        .toArray(new Method[0]));
+                WhiteboxImpl.throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", matchingMethodsList.toArray(new Method[0]));
             }
         }
 
@@ -1435,8 +1425,7 @@ public class WhiteboxImpl {
 
     static void throwExceptionWhenMultipleConstructorMatchesFound(Constructor<?>[] constructors) {
         if (constructors == null || constructors.length < 2) {
-            throw new IllegalArgumentException(
-                    "Internal error: throwExceptionWhenMultipleConstructorMatchesFound needs at least two constructors.");
+            throw new IllegalArgumentException("Internal error: throwExceptionWhenMultipleConstructorMatchesFound needs at least two constructors.");
         }
         StringBuilder sb = new StringBuilder();
         sb

@@ -19,32 +19,63 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.powermock.core.classloader.MockClassLoader;
 
 public class DeepClonerTest {
 
-	@Test
-	public void clonesJavaInstances() throws Exception {
-		final URL original = new URL("http://www.powermock.org");
-		URL clone = new DeepCloner().clone(original);
-		assertEquals(clone, original);
-		assertNotSame(clone, original);
-	}
-
-	@Ignore
     @Test
-    public void clonesTheUnclonable() throws Exception {
-        final TheUnclonable original = new TheUnclonable();
-        TheUnclonable clone = new DeepCloner().clone(original);
-        System.out.println("QWEQWE");
-//        assertEquals(clone, original);
+    public void clonesJavaInstances() throws Exception {
+        final URL original = new URL("http://www.powermock.org");
+        URL clone = new DeepCloner().clone(original);
+        assertEquals(clone, original);
+        assertNotSame(clone, original);
+    }
+
+    @Ignore
+    @Test
+    public void clonesUnmodifiableLists() throws Exception {
+        final UnmodifiableListExample original = new UnmodifiableListExample();
+        UnmodifiableListExample clone = new DeepCloner().clone(original);
+        assertEquals(clone, original);
         assertNotSame(clone, original);
     }
 }
 
-class TheUnclonable {
-    private ClassLoader cl = new MockClassLoader(new String[0]);
+class UnmodifiableListExample {
+    private List<NotSerializable> cl = Collections.unmodifiableList(Arrays.asList(new NotSerializable()));
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((cl == null) ? 0 : cl.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) 
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        UnmodifiableListExample other = (UnmodifiableListExample) obj;
+        if (cl == null) {
+            if (other.cl != null)
+                return false;
+        } else if (!cl.equals(other.cl))
+            return false;
+        return true;
+    }
+}
+
+class NotSerializable {
+    @SuppressWarnings("unused")
+    private static final String state = "Nothing";
 }

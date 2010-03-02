@@ -31,8 +31,6 @@ import java.util.Map;
 import org.powermock.core.ListMap;
 import org.powermock.reflect.Whitebox;
 
-import com.googlecode.transloader.Transloader;
-
 import sun.misc.Unsafe;
 
 /**
@@ -108,16 +106,12 @@ public class DeepCloner {
         }
     }
 
-//    private int count = 0;
     
     @SuppressWarnings("unchecked")
     private <T> T performClone(Class<T> targetClass, Object source, boolean shouldCloneStandardJavaTypes) {
-//        System.out.println((count++) + "  " + source);
         Object target = null;
         if (targetClass.isArray() && !isClass(source)) {
             target = instantiateArray(targetCL, targetClass, source, referenceMap, shouldCloneStandardJavaTypes);
-//        } else if (isCollection(targetClass)) {
-//            target = cloneCollection(targetCL, source, referenceMap, shouldCloneStandardJavaTypes);
         } else if (targetClass.isPrimitive() && !shouldCloneStandardJavaTypes) {
             target = source;
         } else if (isStandardJavaType(targetClass) && isSerializable(targetClass) && !Map.class.isAssignableFrom(source.getClass()) && !Iterable.class.isAssignableFrom(source.getClass())) {
@@ -236,26 +230,6 @@ public class DeepCloner {
         final int modifiers = field.getModifiers();
         return Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers) || field.getDeclaringClass().equals(Character.class)
                 && field.getName().equals("MIN_RADIX");
-    }
-
-    @SuppressWarnings("unchecked")
-    private Object cloneCollection(ClassLoader targetCL, Object source, Map<Object, Object> referenceMap, boolean cloneStandardJavaTypes) {
-        Object target;
-        Collection sourceCollection = (Collection) source;
-        final Class<Object> collectionClass = ClassLoaderUtil.loadClassWithClassloader(targetCL, getType(source));
-        Collection newInstance = null;
-        try {
-            newInstance = (Collection) collectionClass.newInstance();
-        } catch (Exception e) {
-            // Should never happen for collections
-            throw new RuntimeException(e);
-        }
-        for (Object collectionValue : sourceCollection) {
-            final Class<? extends Object> typeLoadedByTargetCL = ClassLoaderUtil.loadClassWithClassloader(targetCL, collectionValue.getClass());
-            newInstance.add(performClone(typeLoadedByTargetCL, collectionValue, cloneStandardJavaTypes));
-        }
-        target = newInstance;
-        return target;
     }
 
     private static boolean isCollection(final Object object) {
