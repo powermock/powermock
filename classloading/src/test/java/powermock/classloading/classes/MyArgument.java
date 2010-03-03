@@ -51,4 +51,9 @@ public class MyArgument {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "MyArgument [value=" + value + "]";
+	}
 }
