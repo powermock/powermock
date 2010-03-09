@@ -110,7 +110,7 @@ public class DeepCloner {
 		Object target = null;
 		if (targetClass.isArray() && !isClass(source)) {
 			return (T) instantiateArray(targetCL, targetClass, source, referenceMap, shouldCloneStandardJavaTypes);
-		} else if (targetClass.isPrimitive() && !shouldCloneStandardJavaTypes) {
+		} else if (targetClass.isPrimitive() || isSunClass(targetClass) || isJavaReflectClass(targetClass)) {
 			return (T) source;
 		} else if (isSerializableCandidate(targetClass, source)) {
 			return (T) serializationClone(source);
@@ -128,9 +128,21 @@ public class DeepCloner {
 		return (T) target;
 	}
 
+	private boolean isSunClass(Class<?> cls) {
+		return cls.getName().startsWith("sun.");
+	}
+
+	private boolean isJavaReflectClass(Class<?> cls) {
+		return cls.getName().startsWith("java.lang.reflect");
+	}
+
 	private <T> boolean isSerializableCandidate(Class<T> targetClass, Object source) {
-		return isStandardJavaType(targetClass) && isSerializable(targetClass) && !Map.class.isAssignableFrom(source.getClass())
-				&& !Iterable.class.isAssignableFrom(source.getClass());
+		return isStandardJavaType(targetClass) && (isSerializable(targetClass) || isImpliticlySerializable(targetClass))
+				&& !Map.class.isAssignableFrom(source.getClass()) && !Iterable.class.isAssignableFrom(source.getClass());
+	}
+
+	private static boolean isImpliticlySerializable(Class<?> cls) {
+		return cls.isPrimitive();
 	}
 
 	private static boolean isSerializable(Class<?> cls) {
@@ -176,6 +188,7 @@ public class DeepCloner {
 		return target;
 	}
 
+	@SuppressWarnings("unchecked")
 	private <T> void cloneFields(ClassLoader targetCL, Class<T> targetClass, Object source, Object target, Map<Object, Object> referenceMap,
 			boolean cloneStandardJavaTypes) {
 		Class<?> currentTargetClass = targetClass;
@@ -189,16 +202,17 @@ public class DeepCloner {
 					final Field declaredField = Whitebox.getField(getType(source), field.getName());
 					declaredField.setAccessible(true);
 					final Object object = declaredField.get(source);
-					if(object.getClass().getName() == "void")
-						return;
 					final Object instantiatedValue;
 					if (referenceMap.containsKey(object)) {
 						instantiatedValue = referenceMap.get(object);
 					} else {
-						final Class<Object> type = getType(object);
 						if (object == null && !isIterable(object)) {
 							instantiatedValue = object;
 						} else {
+							Class<Object> type = getType(object);
+							if (type.getName() == "void") {
+								type = Class.class.cast(Class.class);
+							}
 							final Class<Object> typeLoadedByCL = ClassLoaderUtil.loadClassWithClassloader(targetCL, type);
 							if (type.isEnum()) {
 								instantiatedValue = getEnumValue(object, typeLoadedByCL);
