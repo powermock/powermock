@@ -25,8 +25,8 @@ import java.util.Set;
 import org.hamcrest.Matcher;
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
-import org.mockito.internal.IMockHandler;
 import org.mockito.internal.MockHandler;
+import org.mockito.internal.MockitoInvocationHandler;
 import org.mockito.internal.creation.DelegatingMethod;
 import org.mockito.internal.creation.MethodInterceptorFilter;
 import org.mockito.internal.debugging.Localized;
@@ -40,7 +40,7 @@ import org.mockito.internal.progress.SequenceNumber;
 import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.internal.reporting.PrintSettings;
 import org.mockito.internal.util.ObjectMethodsGuru;
-import org.mockito.internal.verification.api.VerificationMode;
+import org.mockito.verification.VerificationMode;
 import org.powermock.core.MockGateway;
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.MethodInvocationControl;
@@ -171,7 +171,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
 		/*
 		 * FIXME: Replace this work-around with a custom CGLibHacker
 		 */
-		IMockHandler mockHandler = invocationHandler.getMockHandler();
+		MockitoInvocationHandler mockHandler = invocationHandler.getHandler();
 		ObjectMethodsGuru objectMethodsGuru = Whitebox.getInternalState(invocationHandler, ObjectMethodsGuru.class);
 		if (objectMethodsGuru.isEqualsMethod(method)) {
 			return interceptionObject == arguments[0];
@@ -259,7 +259,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
 
 	public void verifyNoMoreInteractions() {
 		try {
-			final IMockHandler mockHandler = methodInterceptorFilter.getMockHandler();
+			final MockitoInvocationHandler mockHandler = methodInterceptorFilter.getHandler();
 			if (mockHandler instanceof MockHandler<?>) {
 				((MockHandler<?>) mockHandler).verifyNoMoreInteractions();
 			} else {

@@ -17,8 +17,8 @@ package org.powermock.api.mockito.internal.expectation;
 
 import java.util.List;
 
-import org.mockito.internal.IMockHandler;
 import org.mockito.internal.MockHandler;
+import org.mockito.internal.MockitoInvocationHandler;
 import org.mockito.internal.stubbing.StubberImpl;
 import org.mockito.stubbing.Stubber;
 import org.powermock.api.mockito.expectation.PowerMockitoStubber;
@@ -63,7 +63,7 @@ public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockito
 
 	@SuppressWarnings("unchecked")
 	private void addAnswersForStubbing(MockitoMethodInvocationControl invocationControl) {
-		final IMockHandler mockHandler = invocationControl.getInvocationHandler().getMockHandler();
+		final MockitoInvocationHandler mockHandler = invocationControl.getInvocationHandler().getHandler();
 		if (!(mockHandler instanceof MockHandler<?>)) {
 			throw new RuntimeException("Cannot perform \"when\" because of unknown mockhandler type " + mockHandler.getClass());
 		}

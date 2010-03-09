@@ -16,8 +16,8 @@
 package org.powermock.api.mockito.internal.verification;
 
 import org.mockito.exceptions.base.MockitoAssertionError;
-import org.powermock.api.mockito.internal.invocationcontrol.MockitoNewInvocationControl;
 import org.powermock.api.mockito.internal.invocationcontrol.InvocationControlAssertionError;
+import org.powermock.api.mockito.internal.invocationcontrol.MockitoNewInvocationControl;
 import org.powermock.api.mockito.verification.ConstructorArgumentsVerification;
 import org.powermock.core.spi.NewInvocationControl;
 

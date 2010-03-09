@@ -21,8 +21,8 @@ import java.lang.reflect.Constructor;
 
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
-import org.mockito.internal.verification.api.VerificationMode;
 import org.mockito.stubbing.OngoingStubbing;
+import org.mockito.verification.VerificationMode;
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.NewInvocationControl;
 import org.powermock.core.spi.support.InvocationSubstitute;
