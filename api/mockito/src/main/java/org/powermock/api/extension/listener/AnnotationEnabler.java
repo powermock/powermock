@@ -22,7 +22,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Set;
 
+import org.mockito.Captor;
 import org.mockito.MockitoAnnotations.Mock;
+import org.mockito.internal.configuration.DefaultAnnotationEngine;
+import org.mockito.internal.configuration.InjectingAnnotationEngine;
+import org.powermock.api.mockito.internal.configuration.PowerMockitoInjectingAnnotationEngine;
 import org.powermock.core.spi.listener.AnnotationEnablerListener;
 import org.powermock.core.spi.support.AbstractPowerMockTestListenerBase;
 import org.powermock.reflect.Whitebox;
@@ -30,7 +34,9 @@ import org.powermock.reflect.Whitebox;
 /**
  * Before each test method all fields annotated with {@link Mock},
  * {@link org.mockito.Mock} or {@link Mock} have mock objects created for them
- * and injected to the fields.
+ * and injected to the fields. It will also delegate to a special implementation
+ * of the {@link InjectingAnnotationEngine} in Mockito which inject's spies,
+ * captors etc.
  * <p>
  * It will only inject to fields that haven't been set before (i.e that are
  * <code>null</code>).
@@ -38,29 +44,48 @@ import org.powermock.reflect.Whitebox;
 @SuppressWarnings("deprecation")
 public class AnnotationEnabler extends AbstractPowerMockTestListenerBase implements AnnotationEnablerListener {
 
-    @Override
-    public void beforeTestMethod(Object testInstance, Method method, Object[] arguments) throws Exception {
-        Set<Field> fields = Whitebox.getFieldsAnnotatedWith(testInstance, getMockAnnotations());
-        for (Field field : fields) {
-            if (field.get(testInstance) != null) {
-                continue;
-            }
-            final Class<?> type = field.getType();
-            if (field.isAnnotationPresent(org.powermock.core.classloader.annotations.Mock.class)) {
-                org.powermock.core.classloader.annotations.Mock annotation = field
-                        .getAnnotation(org.powermock.core.classloader.annotations.Mock.class);
-                final String[] value = annotation.value();
-                if (value.length != 1 || !"".equals(value[0])) {
-                    System.err
-                            .println("PowerMockito deprecation: Use PowerMockito.spy(..) for partial mocking instead. A standard mock will be created instead.");
-                }
-            }
-            field.set(testInstance, mock(type));
-        }
-    }
+	@Override
+	public void beforeTestMethod(Object testInstance, Method method, Object[] arguments) throws Exception {
+		standardInject(testInstance);
+		injectSpiesAndInjectToSetters(testInstance);
+		injectCaptor(testInstance);
+	}
 
-    @SuppressWarnings("unchecked")
-    public Class<? extends Annotation>[] getMockAnnotations() {
-        return new Class[] { org.mockito.Mock.class, Mock.class, org.powermock.core.classloader.annotations.Mock.class };
-    }
+	private void injectSpiesAndInjectToSetters(Object testInstance) {
+		new PowerMockitoInjectingAnnotationEngine().process(testInstance.getClass(), testInstance);
+	}
+
+	private void injectCaptor(Object testInstance) throws Exception {
+		Set<Field> fieldsAnnotatedWithCaptor = Whitebox.getFieldsAnnotatedWith(testInstance, Captor.class);
+		for (Field field : fieldsAnnotatedWithCaptor) {
+			final Object captor = Whitebox.invokeMethod(new DefaultAnnotationEngine(), "processAnnotationOn", field.getAnnotation(Captor.class),
+					field);
+			field.set(testInstance, captor);
+		}
+	}
+
+	private void standardInject(Object testInstance) throws IllegalAccessException {
+		Set<Field> fields = Whitebox.getFieldsAnnotatedWith(testInstance, getMockAnnotations());
+		for (Field field : fields) {
+			if (field.get(testInstance) != null) {
+				continue;
+			}
+			final Class<?> type = field.getType();
+			if (field.isAnnotationPresent(org.powermock.core.classloader.annotations.Mock.class)) {
+				org.powermock.core.classloader.annotations.Mock annotation = field
+						.getAnnotation(org.powermock.core.classloader.annotations.Mock.class);
+				final String[] value = annotation.value();
+				if (value.length != 1 || !"".equals(value[0])) {
+					System.err
+							.println("PowerMockito deprecation: Use PowerMockito.spy(..) for partial mocking instead. A standard mock will be created instead.");
+				}
+			}
+			field.set(testInstance, mock(type));
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public Class<? extends Annotation>[] getMockAnnotations() {
+		return new Class[] { org.mockito.Mock.class, Mock.class, org.powermock.core.classloader.annotations.Mock.class };
+	}
 }

@@ -15,7 +15,7 @@ Change log 1.4 (under development)
 * Upgraded to Objenesis for powermock-reflect to 1.2.
 * Fixed so that MockGateway now finds the correct method to invoke when several overloaded method candidates are found (issue 229).
 * Upgraded to Mockito 1.8.3.
-
+* Added support for Mockito annotations @Spy, @Captor and @InjectMocks.
 
 Change log 1.3.5 (2009-12-13)
 -----------------------------
