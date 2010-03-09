@@ -52,6 +52,7 @@ public class SampleServiceWithoutPowerMockImplTest {
 
 	private ConstructorArgs constructorArgs;
 
+	@SuppressWarnings("deprecation")
 	@Before
 	public void setUp() throws Exception {
 		businessMessagesMock = createMock(BusinessMessages.class);
@@ -79,6 +80,7 @@ public class SampleServiceWithoutPowerMockImplTest {
 		verify(businessMessagesMock, personServiceMock, eventServiceMock, tested);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testCreatePerson() throws Exception {
 		final String firstName = "firstName";
@@ -101,6 +103,7 @@ public class SampleServiceWithoutPowerMockImplTest {
 		verifyAll();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testCreatePerson_error() throws Exception {
 		final String firstName = "firstName";
@@ -127,6 +130,7 @@ public class SampleServiceWithoutPowerMockImplTest {
 		verifyAll();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test(expected = SampleServiceException.class)
 	public void testCreatePerson_illegalName() throws Exception {
 		final String firstName = null;

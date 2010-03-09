@@ -181,6 +181,7 @@ public class ProviderServiceWithoutPowerMockImplTest {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void createPartialMock(final String methodNameToMock) throws NoSuchMethodException {
 		Method getAllServiceProducersMethod = ProviderServiceWithoutPowerMockImpl.class.getDeclaredMethod(methodNameToMock);
 		tested = createMock(ProviderServiceWithoutPowerMockImpl.class, new Method[] { getAllServiceProducersMethod });

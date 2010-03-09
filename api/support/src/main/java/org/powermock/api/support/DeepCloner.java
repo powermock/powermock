@@ -189,6 +189,8 @@ public class DeepCloner {
 					final Field declaredField = Whitebox.getField(getType(source), field.getName());
 					declaredField.setAccessible(true);
 					final Object object = declaredField.get(source);
+					if(object.getClass().getName() == "void")
+						return;
 					final Object instantiatedValue;
 					if (referenceMap.containsKey(object)) {
 						instantiatedValue = referenceMap.get(object);

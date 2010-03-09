@@ -93,6 +93,7 @@ public class ServiceRegistratorTest {
 	 * @throws Exception
 	 *             If an error occurs.
 	 */
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testRegisterService() throws Exception {
 		final String name = "a name";
