@@ -77,7 +77,7 @@ public class DefaultConstructorExpectationSetup<T> implements ConstructorExpecta
 		NewInvocationControl<OngoingStubbing<T>> newInvocationControl = (NewInvocationControl<OngoingStubbing<T>>) MockRepository
 				.getNewInstanceControl(unmockedType);
 		if (newInvocationControl == null) {
-			InvocationSubstitute<T> mock = MockCreator.mock(InvocationSubstitute.class, false, false, null, (Method[]) null);
+			InvocationSubstitute<T> mock = MockCreator.mock(InvocationSubstitute.class, false, false, null, null, (Method[]) null);
 			newInvocationControl = new MockitoNewInvocationControl(mock);
 			MockRepository.putNewInstanceControl(type, newInvocationControl);
 			MockRepository.addObjectsToAutomaticallyReplayAndVerify(WhiteboxImpl.getUnmockedType(type));

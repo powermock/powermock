@@ -17,6 +17,7 @@ Change log 1.4 (under development)
 * Upgraded to Mockito 1.8.3.
 * Added support for Mockito annotations @Spy, @Captor and @InjectMocks.
 * Mockito extension now supports real partial mocking for private (and private final) methods (both static and instance methods) using PowerMockito.doReturn(..), PowerMockito.doThrow(..) etc.
+* Added support for MockSettings and Answers when creating class or instance mocks in Mockito extension, e.g. "FinalClass mock = mock(FinalClass.class, Mockito.RETURNS_MOCKS);".
 
 Change log 1.3.5 (2009-12-13)
 -----------------------------

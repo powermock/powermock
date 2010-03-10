@@ -16,10 +16,12 @@
 package org.powermock.api.mockito;
 
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.withSettings;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
+import org.mockito.MockSettings;
 import org.mockito.Mockito;
 import org.mockito.internal.progress.MockingProgress;
 import org.mockito.internal.stubbing.answers.CallsRealMethods;
@@ -64,7 +66,69 @@ public class PowerMockito extends MemberModifier {
 	 *            the class to enable static mocking
 	 */
 	public static synchronized void mockStatic(Class<?> type) {
-		MockCreator.mock(type, true, false, null, (Method[]) null);
+		MockCreator.mock(type, true, false, null, null, (Method[]) null);
+	}
+
+	/**
+	 * Creates clas mock with a specified strategy for its answers to
+	 * interactions. It's quite advanced feature and typically you don't need it
+	 * to write decent tests. However it can be helpful when working with legacy
+	 * systems.
+	 * <p>
+	 * It is the default answer so it will be used <b>only when you don't</b>
+	 * stub the method call.
+	 * 
+	 * <pre>
+	 * Foo mock = mock(Foo.class, RETURNS_SMART_NULLS);
+	 * Foo mockTwo = mock(Foo.class, new YourOwnAnswer());
+	 * </pre>
+	 * 
+	 * <p>
+	 * See examples in javadoc for {@link Mockito} class
+	 * </p>
+	 * 
+	 * @param classMock
+	 *            class to mock
+	 * @param defaultAnswer
+	 *            default answer for unstubbed methods
+	 * 
+	 * @return mock object
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T mockStatic(Class<T> classMock, Answer defaultAnswer) {
+		return mockStatic(classMock, withSettings().defaultAnswer(defaultAnswer));
+	}
+
+	/**
+	 * Creates a mock with some non-standard settings.
+	 * <p>
+	 * The number of configuration points for a mock grows so we need a fluent
+	 * way to introduce new configuration without adding more and more
+	 * overloaded Mockito.mock() methods. Hence {@link MockSettings}.
+	 * 
+	 * <pre>
+	 *   Listener mock = mock(Listener.class, withSettings()
+	 *     .name(&quot;firstListner&quot;).defaultBehavior(RETURNS_SMART_NULLS));
+	 *   );
+	 * </pre>
+	 * 
+	 * <b>Use it carefully and occasionally</b>. What might be reason your test
+	 * needs non-standard mocks? Is the code under test so complicated that it
+	 * requires non-standard mocks? Wouldn't you prefer to refactor the code
+	 * under test so it is testable in a simple way?
+	 * <p>
+	 * See also {@link Mockito#withSettings()}
+	 * <p>
+	 * See examples in javadoc for {@link Mockito} class
+	 * 
+	 * @param classToMock
+	 *            class to mock
+	 * @param mockSettings
+	 *            additional mock settings
+	 * @return mock object
+	 */
+	public static <T> T mockStatic(Class<T> classToMock, MockSettings mockSettings) {
+		return MockCreator.mock(classToMock, true, false, null, mockSettings, (Method[]) null);
 	}
 
 	/**
@@ -77,7 +141,68 @@ public class PowerMockito extends MemberModifier {
 	 * @return the mock object.
 	 */
 	public static synchronized <T> T mock(Class<T> type) {
-		return MockCreator.mock(type, false, false, null, (Method[]) null);
+		return MockCreator.mock(type, false, false, null, null, (Method[]) null);
+	}
+
+	/**
+	 * Creates mock with a specified strategy for its answers to interactions.
+	 * It's quite advanced feature and typically you don't need it to write
+	 * decent tests. However it can be helpful when working with legacy systems.
+	 * <p>
+	 * It is the default answer so it will be used <b>only when you don't</b>
+	 * stub the method call.
+	 * 
+	 * <pre>
+	 * Foo mock = mock(Foo.class, RETURNS_SMART_NULLS);
+	 * Foo mockTwo = mock(Foo.class, new YourOwnAnswer());
+	 * </pre>
+	 * 
+	 * <p>
+	 * See examples in javadoc for {@link Mockito} class
+	 * </p>
+	 * 
+	 * @param classToMock
+	 *            class or interface to mock
+	 * @param defaultAnswer
+	 *            default answer for unstubbed methods
+	 * 
+	 * @return mock object
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T mock(Class<T> classToMock, Answer defaultAnswer) {
+		return mock(classToMock, withSettings().defaultAnswer(defaultAnswer));
+	}
+
+	/**
+	 * Creates a mock with some non-standard settings.
+	 * <p>
+	 * The number of configuration points for a mock grows so we need a fluent
+	 * way to introduce new configuration without adding more and more
+	 * overloaded Mockito.mock() methods. Hence {@link MockSettings}.
+	 * 
+	 * <pre>
+	 *   Listener mock = mock(Listener.class, withSettings()
+	 *     .name(&quot;firstListner&quot;).defaultBehavior(RETURNS_SMART_NULLS));
+	 *   );
+	 * </pre>
+	 * 
+	 * <b>Use it carefully and occasionally</b>. What might be reason your test
+	 * needs non-standard mocks? Is the code under test so complicated that it
+	 * requires non-standard mocks? Wouldn't you prefer to refactor the code
+	 * under test so it is testable in a simple way?
+	 * <p>
+	 * See also {@link Mockito#withSettings()}
+	 * <p>
+	 * See examples in javadoc for {@link Mockito} class
+	 * 
+	 * @param classToMock
+	 *            class or interface to mock
+	 * @param mockSettings
+	 *            additional mock settings
+	 * @return mock object
+	 */
+	public static <T> T mock(Class<T> classToMock, MockSettings mockSettings) {
+		return MockCreator.mock(classToMock, false, false, null, mockSettings, (Method[]) null);
 	}
 
 	/**
@@ -94,11 +219,21 @@ public class PowerMockito extends MemberModifier {
 	 */
 	@SuppressWarnings("unchecked")
 	public static synchronized <T> T spy(T object) {
-		return MockCreator.mock((Class<T>) Whitebox.getType(object), false, true, null, (Method[]) null);
+		return MockCreator.mock((Class<T>) Whitebox.getType(object), false, true, null, null, (Method[]) null);
 	}
 
+	/**
+	 * Spy on classes (not &quot;spyable&quot; from normal Mockito).
+	 * 
+	 * @see Mockito#spy(Object)
+	 * 
+	 * @param <T>
+	 *            the type of the class mock
+	 * @param type
+	 *            the type of the class mock
+	 */
 	public static synchronized <T> void spy(Class<T> type) {
-		MockCreator.mock(type, true, true, type, (Method[]) null);
+		MockCreator.mock(type, true, true, type, null, (Method[]) null);
 	}
 
 	/**

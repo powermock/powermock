@@ -18,6 +18,7 @@ package org.powermock.api.mockito.internal.mockcreation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import org.mockito.MockSettings;
 import org.mockito.Mockito;
 import org.mockito.internal.MockHandler;
 import org.mockito.internal.creation.MethodInterceptorFilter;
@@ -31,7 +32,7 @@ import org.powermock.core.spi.support.InvocationSubstitute;
 public class MockCreator {
 
 	@SuppressWarnings("unchecked")
-	public static <T> T mock(Class<T> type, boolean isStatic, boolean isSpy, Object delegator, Method... methods) {
+	public static <T> T mock(Class<T> type, boolean isStatic, boolean isSpy, Object delegator, MockSettings mockSettings, Method... methods) {
 		if (type == null) {
 			throw new IllegalArgumentException("The class to mock cannot be null");
 		}
@@ -46,7 +47,7 @@ public class MockCreator {
 			typeToMock = type;
 		}
 
-		MockData<T> mockData = createMethodInvocationControl(mockName, typeToMock, methods, isSpy, (T) delegator);
+		MockData<T> mockData = createMethodInvocationControl(mockName, typeToMock, methods, isSpy, (T) delegator, mockSettings);
 
 		mock = mockData.getMock();
 		if (isStatic) {
@@ -62,14 +63,20 @@ public class MockCreator {
 	}
 
 	private static <T> MockData<T> createMethodInvocationControl(final String mockName, Class<T> type, Method[] methods, boolean isSpy,
-			Object delegator) {
-		final MockSettingsImpl mockSettings = (MockSettingsImpl) Mockito.withSettings();
+			Object delegator, MockSettings mockSettings) {
+		final MockSettingsImpl settings;
+		if (mockSettings == null) {
+			settings = (MockSettingsImpl) Mockito.withSettings();
+		} else {
+			settings = (MockSettingsImpl) mockSettings;
+		}
+
 		if (isSpy) {
 			mockSettings.defaultAnswer(Mockito.CALLS_REAL_METHODS);
 		}
-		
-		MockHandler<T> mockHandler = new MockHandler<T>(mockSettings);
-		MethodInterceptorFilter filter = new MethodInterceptorFilter(mockHandler, mockSettings);
+
+		MockHandler<T> mockHandler = new MockHandler<T>(settings);
+		MethodInterceptorFilter filter = new MethodInterceptorFilter(mockHandler, settings);
 		final T mock = (T) ClassImposterizer.INSTANCE.imposterise(filter, type);
 		final MockitoMethodInvocationControl invocationControl = new MockitoMethodInvocationControl(filter, isSpy && delegator == null ? new Object()
 				: delegator, methods);
