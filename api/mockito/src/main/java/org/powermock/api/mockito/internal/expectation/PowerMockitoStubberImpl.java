@@ -15,6 +15,7 @@
  */
 package org.powermock.api.mockito.internal.expectation;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.mockito.internal.MockHandler;
@@ -22,6 +23,7 @@ import org.mockito.internal.MockitoInvocationHandler;
 import org.mockito.internal.stubbing.StubberImpl;
 import org.mockito.stubbing.Stubber;
 import org.powermock.api.mockito.expectation.PowerMockitoStubber;
+import org.powermock.api.mockito.expectation.PrivatelyExpectedArguments;
 import org.powermock.api.mockito.internal.invocationcontrol.MockitoMethodInvocationControl;
 import org.powermock.core.MockRepository;
 import org.powermock.reflect.Whitebox;
@@ -69,4 +71,56 @@ public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockito
 		}
 		((MockHandler<?>) mockHandler).setAnswersForStubbing(Whitebox.getInternalState(this, List.class));
 	}
+
+	public <T> PrivatelyExpectedArguments when(T mock, Method method) throws Exception {
+		assertNotNull(mock, "mock");
+		assertNotNull(method, "Method");
+		prepareForStubbing(mock);
+		return new DefaultPrivatelyExpectedArguments(mock, method);
+	}
+
+	public <T> void when(T mock, Object... arguments) throws Exception {
+		assertNotNull(mock, "mock");
+		prepareForStubbing(mock);
+		Whitebox.invokeMethod(mock, arguments);
+	}
+
+	public <T> void when(T mock, String methodToExpect, Object... arguments) throws Exception {
+		assertNotNull(mock, "mock");
+		assertNotNull(methodToExpect, "methodToExpect");
+		prepareForStubbing(mock);
+		Whitebox.invokeMethod(mock, methodToExpect, arguments);
+	}
+
+	public <T> void when(Class<T> classMock, Object... arguments) throws Exception {
+		assertNotNull(classMock, "classMock");
+		when(classMock);
+		Whitebox.invokeMethod(classMock, arguments);
+	}
+
+	public <T> void when(Class<T> classMock, String methodToExpect, Object... parameters) throws Exception {
+		assertNotNull(classMock, "classMock");
+		assertNotNull(methodToExpect, "methodToExpect");
+		when(classMock);
+		Whitebox.invokeMethod(classMock, methodToExpect, parameters);
+	}
+
+	public <T> PrivatelyExpectedArguments when(Class<T> classMock, Method method) throws Exception {
+		assertNotNull(classMock, "classMock");
+		assertNotNull(method, "Method");
+		when(classMock);
+		return new DefaultPrivatelyExpectedArguments(classMock, method);
+	}
+
+	private void assertNotNull(Object object, String name) {
+		if (object == null) {
+			throw new IllegalArgumentException(name + " cannot be null");
+		}
+	}
+
+	private <T> void prepareForStubbing(T mock) {
+		MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository.getInstanceMethodInvocationControl(mock);
+		addAnswersForStubbing(invocationControl);
+	}
+
 }

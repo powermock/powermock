@@ -19,6 +19,6 @@ import org.mockito.stubbing.OngoingStubbing;
 
 public interface WithExpectedArguments<T> {
 
-    public abstract OngoingStubbing<T> withArguments(Object firstArgument, Object... additionalArguments) throws Exception;
+	OngoingStubbing<T> withArguments(Object firstArgument, Object... additionalArguments) throws Exception;
 
 }

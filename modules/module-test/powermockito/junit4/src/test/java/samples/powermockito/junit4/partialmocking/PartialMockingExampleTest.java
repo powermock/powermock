@@ -17,7 +17,7 @@ package samples.powermockito.junit4.partialmocking;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.spy;
 
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class PartialMockingExampleTest {
 	public void validatingSpiedObjectGivesCorrectNumberOfExpectedInvocations() throws Exception {
 		final String expected = "TEST VALUE";
 		PartialMockingExample underTest = spy(new PartialMockingExample());
-		when(underTest.methodToMock()).thenReturn(expected);
+		doReturn(expected).when(underTest).methodToMock();
 
 		assertEquals(expected, underTest.methodToTest());
 

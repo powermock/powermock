@@ -25,7 +25,7 @@ public class PartialMockingExample {
 	}
 
 	public String methodToMock() {
-		System.out.println("ikk");
+		System.out.println("If you see this the test is failing!");
 		return "REAL VALUE";
 	}
 }

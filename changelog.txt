@@ -16,6 +16,7 @@ Change log 1.4 (under development)
 * Fixed so that MockGateway now finds the correct method to invoke when several overloaded method candidates are found (issue 229).
 * Upgraded to Mockito 1.8.3.
 * Added support for Mockito annotations @Spy, @Captor and @InjectMocks.
+* Mockito extension now supports real partial mocking for private (and private final) methods (both static and instance methods) using PowerMockito.doReturn(..), PowerMockito.doThrow(..) etc.
 
 Change log 1.3.5 (2009-12-13)
 -----------------------------

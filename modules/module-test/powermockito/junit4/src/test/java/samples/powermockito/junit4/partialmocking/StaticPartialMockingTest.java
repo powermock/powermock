@@ -16,9 +16,10 @@
 package samples.powermockito.junit4.partialmocking;
 
 import static org.junit.Assert.assertEquals;
-
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.times;
+import static org.powermock.api.mockito.PowerMockito.doReturn;
+import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -35,7 +36,7 @@ import samples.singleton.StaticExample;
 public class StaticPartialMockingTest {
 
 	@Test
-	public void partialMockingOfStaticMethodReturningObjectWorks() throws Exception {
+	public void spyingOnStaticMethodReturningObjectWorks() throws Exception {
 		spy(StaticExample.class);
 
 		assertTrue(Object.class.equals(StaticExample.objectMethod().getClass()));
@@ -50,7 +51,22 @@ public class StaticPartialMockingTest {
 	}
 
 	@Test
-	public void partialMockingOfStaticFinalMethodReturningObjectWorks() throws Exception {
+	public void partialMockingOfStaticMethodReturningObjectWorks() throws Exception {
+		spy(StaticExample.class);
+
+		assertTrue(Object.class.equals(StaticExample.objectMethod().getClass()));
+		doReturn("Hello static").when(StaticExample.class, "privateObjectMethod");
+
+		assertEquals("Hello static", StaticExample.objectMethod());
+		/*
+		 * privateObjectMethod should be invoked twice, once at "assertTrue" and
+		 * once above.
+		 */
+		verifyPrivate(StaticExample.class, times(2)).invoke("privateObjectMethod");
+	}
+
+	@Test
+	public void spyingOnStaticFinalMethodReturningObjectWorks() throws Exception {
 		spy(StaticExample.class);
 
 		assertTrue(Object.class.equals(StaticExample.objectFinalMethod().getClass()));
@@ -62,8 +78,21 @@ public class StaticPartialMockingTest {
 		verifyPrivate(StaticExample.class, times(2)).invoke("privateObjectFinalMethod");
 	}
 
+	@Test
+	public void partialMockingOfStaticFinalMethodReturningObjectWorks() throws Exception {
+		spy(StaticExample.class);
+
+		assertTrue(Object.class.equals(StaticExample.objectFinalMethod().getClass()));
+
+		doReturn("Hello static").when(StaticExample.class, "privateObjectFinalMethod");
+
+		assertEquals("Hello static", StaticExample.objectFinalMethod());
+
+		verifyPrivate(StaticExample.class, times(2)).invoke("privateObjectFinalMethod");
+	}
+
 	@Test(expected = ArrayStoreException.class)
-	public void partialMockingOfStaticVoidMethodReturningObjectWorks() throws Exception {
+	public void spyingOnStaticVoidMethodReturningObjectWorks() throws Exception {
 		spy(StaticExample.class);
 
 		StaticExample.voidMethod();
@@ -73,12 +102,32 @@ public class StaticPartialMockingTest {
 	}
 
 	@Test(expected = ArrayStoreException.class)
-	public void partialMockingOfStaticFinalVoidMethodReturningObjectWorks() throws Exception {
+	public void partialMockingOfStaticVoidMethodReturningObjectWorks() throws Exception {
+		spy(StaticExample.class);
+
+		StaticExample.voidMethod();
+
+		doThrow(new ArrayStoreException()).when(StaticExample.class, "privateVoidMethod");
+		StaticExample.voidMethod();
+	}
+
+	@Test(expected = ArrayStoreException.class)
+	public void spyingOnStaticFinalVoidMethodReturningObjectWorks() throws Exception {
 		spy(StaticExample.class);
 
 		StaticExample.voidFinalMethod();
 
 		when(StaticExample.class, "privateVoidFinalMethod").thenThrow(new ArrayStoreException());
+		StaticExample.voidFinalMethod();
+	}
+
+	@Test(expected = ArrayStoreException.class)
+	public void partialMockingOfStaticFinalVoidMethodReturningObjectWorks() throws Exception {
+		spy(StaticExample.class);
+
+		StaticExample.voidFinalMethod();
+
+		doThrow(new ArrayStoreException()).when(StaticExample.class, "privateVoidFinalMethod");
 		StaticExample.voidFinalMethod();
 	}
 }
