@@ -155,7 +155,7 @@ public class ClassReplicaCreator {
     private String getReplicaMethodDelegationCode(Class<?> clazz, CtMethod ctMethod, String classOrInstanceToDelegateTo)
             throws NotFoundException {
         StringBuilder builder = new StringBuilder();
-        builder.append("java.lang.reflect.Method originalMethod = ");
+        builder.append("{java.lang.reflect.Method originalMethod = ");
         builder.append(clazz.getName());
         builder.append(".class.getDeclaredMethod(\"");
         builder.append(ctMethod.getName());

@@ -72,7 +72,7 @@ public class MockCreator {
 		}
 
 		if (isSpy) {
-			mockSettings.defaultAnswer(Mockito.CALLS_REAL_METHODS);
+			settings.defaultAnswer(Mockito.CALLS_REAL_METHODS);
 		}
 
 		MockHandler<T> mockHandler = new MockHandler<T>(settings);
