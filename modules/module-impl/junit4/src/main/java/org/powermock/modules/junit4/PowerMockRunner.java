@@ -23,16 +23,30 @@ import org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegate
 
 public class PowerMockRunner extends AbstractCommonPowerMockRunner {
 
-	public PowerMockRunner(Class<?> klass) throws Exception {
-		super(klass, getJUnitVersion() >= 4.7f ? PowerMockJUnit47RunnerDelegateImpl.class : PowerMockJUnit44RunnerDelegateImpl.class);
-	}
+    public PowerMockRunner(Class<?> klass) throws Exception {
+        super(klass, getJUnitVersion() >= 4.7f ? PowerMockJUnit47RunnerDelegateImpl.class
+                : PowerMockJUnit44RunnerDelegateImpl.class);
+    }
 
-	private static float getJUnitVersion() {
-		try {
-			return Float.parseFloat(Version.id());
-		} catch (NumberFormatException e) {
-			// If this happens we revert to JUnit 4.4 runner
-			return 4.4f;
-		}
-	}
+    private static float getJUnitVersion() {
+        String version = Version.id();
+        int dot = version.indexOf('.');
+        if (dot > 0) {
+            // Make sure that only one dot exists
+            dot = version.indexOf('.', dot + 1);
+            if (dot > 0) {
+                /*
+                 * If minor version such as 4.8.1 then remove the last digit,
+                 * e.g. "4.8.1" becomes "4.8".
+                 */
+                version = version.substring(0, dot);
+            }
+        }
+        try {
+            return Float.parseFloat(version);
+        } catch (NumberFormatException e) {
+            // If this happens we revert to JUnit 4.4 runner
+            return 4.4f;
+        }
+    }
 }

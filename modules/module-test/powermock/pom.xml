@@ -17,5 +17,6 @@
     <module>junit45-test</module>
     <module>testng-test</module>
     <module>junit47-test</module>
+    <module>junit48-test</module>
   </modules>
 </project>
