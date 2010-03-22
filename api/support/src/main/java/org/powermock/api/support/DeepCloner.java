@@ -81,7 +81,8 @@ public class DeepCloner {
 	 */
 	public <T> T clone(T objectToClone, boolean includeStandardJavaType) {
 		assertObjectNotNull(objectToClone);
-		return performClone(ClassLoaderUtil.loadClassWithClassloader(targetCL, getType(objectToClone)), objectToClone, includeStandardJavaType);
+		return performClone(ClassLoaderUtil.loadClassWithClassloader(targetCL, getType(objectToClone)), objectToClone,
+				includeStandardJavaType);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -123,6 +124,7 @@ public class DeepCloner {
 		}
 
 		if (target != null) {
+			referenceMap.put(source, target);
 			cloneFields(targetCL, targetClass, source, target, referenceMap, shouldCloneStandardJavaTypes);
 		}
 		return (T) target;
@@ -137,8 +139,10 @@ public class DeepCloner {
 	}
 
 	private <T> boolean isSerializableCandidate(Class<T> targetClass, Object source) {
-		return isStandardJavaType(targetClass) && (isSerializable(targetClass) || isImpliticlySerializable(targetClass))
-				&& !Map.class.isAssignableFrom(source.getClass()) && !Iterable.class.isAssignableFrom(source.getClass());
+		return isStandardJavaType(targetClass)
+				&& (isSerializable(targetClass) || isImpliticlySerializable(targetClass))
+				&& !Map.class.isAssignableFrom(source.getClass())
+				&& !Iterable.class.isAssignableFrom(source.getClass());
 	}
 
 	private static boolean isImpliticlySerializable(Class<?> cls) {
@@ -189,8 +193,8 @@ public class DeepCloner {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> void cloneFields(ClassLoader targetCL, Class<T> targetClass, Object source, Object target, Map<Object, Object> referenceMap,
-			boolean cloneStandardJavaTypes) {
+	private <T> void cloneFields(ClassLoader targetCL, Class<T> targetClass, Object source, Object target,
+			Map<Object, Object> referenceMap, boolean cloneStandardJavaTypes) {
 		Class<?> currentTargetClass = targetClass;
 		while (currentTargetClass != null) {
 			for (Field field : currentTargetClass.getDeclaredFields()) {
@@ -203,7 +207,9 @@ public class DeepCloner {
 					declaredField.setAccessible(true);
 					final Object object = declaredField.get(source);
 					final Object instantiatedValue;
-					if (referenceMap.containsKey(object)) {
+					if (object == source) {
+						instantiatedValue = target;
+					} else if (referenceMap.containsKey(object)) {
 						instantiatedValue = referenceMap.get(object);
 					} else {
 						if (object == null && !isIterable(object)) {
@@ -213,13 +219,13 @@ public class DeepCloner {
 							if (type.getName() == "void") {
 								type = Class.class.cast(Class.class);
 							}
-							final Class<Object> typeLoadedByCL = ClassLoaderUtil.loadClassWithClassloader(targetCL, type);
+							final Class<Object> typeLoadedByCL = ClassLoaderUtil.loadClassWithClassloader(targetCL,
+									type);
 							if (type.isEnum()) {
 								instantiatedValue = getEnumValue(object, typeLoadedByCL);
 							} else {
 								instantiatedValue = performClone(typeLoadedByCL, object, cloneStandardJavaTypes);
 							}
-							referenceMap.put(object, instantiatedValue);
 						}
 					}
 
@@ -245,8 +251,8 @@ public class DeepCloner {
 
 	private static boolean isStaticFinalModifier(final Field field) {
 		final int modifiers = field.getModifiers();
-		return Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers) || field.getDeclaringClass().equals(Character.class)
-				&& field.getName().equals("MIN_RADIX");
+		return Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers)
+				|| field.getDeclaringClass().equals(Character.class) && field.getName().equals("MIN_RADIX");
 	}
 
 	private static boolean isIterable(final Object object) {
@@ -258,18 +264,19 @@ public class DeepCloner {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static Enum getEnumValue(final Object enumValueOfSourceClassloader, final Class<Object> enumTypeLoadedByTargetCL) {
+	private static Enum getEnumValue(final Object enumValueOfSourceClassloader,
+			final Class<Object> enumTypeLoadedByTargetCL) {
 		return Enum.valueOf((Class) enumTypeLoadedByTargetCL, ((Enum) enumValueOfSourceClassloader).toString());
 	}
 
-	private Object instantiateArray(ClassLoader targetCL, Class<?> arrayClass, Object objectToClone, Map<Object, Object> referenceMap,
-			boolean cloneStandardJavaTypes) {
+	private Object instantiateArray(ClassLoader targetCL, Class<?> arrayClass, Object objectToClone,
+			Map<Object, Object> referenceMap, boolean cloneStandardJavaTypes) {
 		final int arrayLength = Array.getLength(objectToClone);
 		final Object array = Array.newInstance(arrayClass.getComponentType(), arrayLength);
 		for (int i = 0; i < arrayLength; i++) {
 			final Object object = Array.get(objectToClone, i);
-			final Object performClone = performClone(ClassLoaderUtil.loadClassWithClassloader(targetCL, getType(object)), object,
-					cloneStandardJavaTypes);
+			final Object performClone = performClone(ClassLoaderUtil
+					.loadClassWithClassloader(targetCL, getType(object)), object, cloneStandardJavaTypes);
 			Array.set(array, i, performClone);
 		}
 		return array;
@@ -305,7 +312,8 @@ public class DeepCloner {
 
 		public static void write(Field field, Object object, Object value) {
 			if (exception != null) {
-				throw new RuntimeException("Could not set field " + object.getClass() + "." + field.getName(), exception);
+				throw new RuntimeException("Could not set field " + object.getClass() + "." + field.getName(),
+						exception);
 			}
 			try {
 				final long offset;
@@ -333,7 +341,8 @@ public class DeepCloner {
 					} else if (type.equals(Boolean.TYPE)) {
 						unsafe.putBoolean(object, offset, ((Boolean) value).booleanValue());
 					} else {
-						throw new RuntimeException("Could not set field " + object.getClass() + "." + field.getName() + ": Unknown type " + type);
+						throw new RuntimeException("Could not set field " + object.getClass() + "." + field.getName()
+								+ ": Unknown type " + type);
 					}
 				} else {
 					unsafe.putObject(object, offset, value);

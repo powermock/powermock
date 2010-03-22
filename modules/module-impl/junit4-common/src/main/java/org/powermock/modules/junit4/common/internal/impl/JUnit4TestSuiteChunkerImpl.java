@@ -46,14 +46,14 @@ import org.powermock.tests.utils.TestChunk;
 import org.powermock.tests.utils.impl.AbstractTestSuiteChunkerImpl;
 import org.powermock.tests.utils.impl.PowerMockTestNotifierImpl;
 
-public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<PowerMockJUnitRunnerDelegate> implements JUnit4TestSuiteChunker,
-		Filterable, Sortable {
+public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<PowerMockJUnitRunnerDelegate> implements
+		JUnit4TestSuiteChunker, Filterable, Sortable {
 
 	private Description description;
 	private final Class<? extends PowerMockJUnitRunnerDelegate> runnerDelegateImplementationType;
 
-	public JUnit4TestSuiteChunkerImpl(Class<?> testClass, Class<? extends PowerMockJUnitRunnerDelegate> runnerDelegateImplementationType)
-			throws Exception {
+	public JUnit4TestSuiteChunkerImpl(Class<?> testClass,
+			Class<? extends PowerMockJUnitRunnerDelegate> runnerDelegateImplementationType) throws Exception {
 		super(testClass);
 		if (testClass == null) {
 			throw new IllegalArgumentException("You must supply a test class");
@@ -114,16 +114,19 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 			final int ignoreCountForThisPowerMockListener = powerMockListener.getIgnoreCount();
 			failureCount += failureCountForThisPowerMockListener;
 			ignoreCount += ignoreCountForThisPowerMockListener;
-			successCount += delegate.getTestCount() - failureCountForThisPowerMockListener - ignoreCountForThisPowerMockListener;
+			successCount += delegate.getTestCount() - failureCountForThisPowerMockListener
+					- ignoreCountForThisPowerMockListener;
 			notifier.removeListener(powerMockListener);
 		}
 
-		final TestSuiteResult testSuiteResult = new TestSuiteResultImpl(failureCount, successCount, getTestCount(), ignoreCount);
+		final TestSuiteResult testSuiteResult = new TestSuiteResultImpl(failureCount, successCount, getTestCount(),
+				ignoreCount);
 		powerMockTestNotifier.notifyAfterTestSuiteEnded(testClass, allMethodsAsArray, testSuiteResult);
 	}
 
 	public boolean shouldExecuteTestForMethod(Class<?> testClass, Method potentialTestMethod) {
-		return (potentialTestMethod.getName().startsWith("test") && Modifier.isPublic(potentialTestMethod.getModifiers())
+		return (potentialTestMethod.getName().startsWith("test")
+				&& Modifier.isPublic(potentialTestMethod.getModifiers())
 				&& potentialTestMethod.getReturnType().equals(Void.TYPE) && TestCase.class.isAssignableFrom(testClass) || potentialTestMethod
 				.isAnnotationPresent(Test.class));
 	}
@@ -143,9 +146,11 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		 * Array classes cannot be loaded be classloader.loadClass(..) in JDK 6.
 		 * See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6500212.
 		 */
-		final Class<?> powerMockTestListenerArrayType = Class.forName(PowerMockTestListener[].class.getName(), false, classLoader);
+		final Class<?> powerMockTestListenerArrayType = Class.forName(PowerMockTestListener[].class.getName(), false,
+				classLoader);
 		final Class<?> delegateClass = Class.forName(runnerDelegateImplementationType.getName(), false, classLoader);
-		Constructor<?> con = delegateClass.getConstructor(new Class[] { Class.class, String[].class, powerMockTestListenerArrayType });
+		Constructor<?> con = delegateClass.getConstructor(new Class[] { Class.class, String[].class,
+				powerMockTestListenerArrayType });
 		final PowerMockJUnitRunnerDelegate newInstance = (PowerMockJUnitRunnerDelegate) con.newInstance(new Object[] {
 				testClassLoadedByMockedClassLoader, methodNames.toArray(new String[0]),
 				getPowerMockTestListenersLoadedByASpecificClassLoader(testClass, classLoader) });
@@ -165,7 +170,11 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	public Description getDescription() {
 		if (description == null) {
 			if (delegates.size() == 0) {
-				throw new IllegalStateException("Internal error: Run delegates were 0.");
+				/*
+				 * This happens if Test A extends Test B and B uses the @RunWith
+				 * annotation and there are no tests defined in class B.
+				 */
+				return Description.createTestDescription(this.getClass(), "no tests in this class");
 			}
 
 			// Use the first delegator as the base for the description.
