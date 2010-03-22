@@ -1,6 +1,7 @@
 Change log 1.4 (under development)
 ----------------------------------
 * Added support for JUnit 4.8.1 (issue 226)
+* Added support for Mockito 1.8.4
 * Fixed so that a "mock name" is set in the Mockito extension API. Fixes NullPointerException when e.g. toString is invoked on a mock. (issue 239)
 * Changed method signature on "mockStatic" to return void in the Mockito extension API.
 * Fixed the "Internal error: Run delegates were 0" bug when using a test class hierarchy and the PowerMock JUnit runner when no tests are defined in a parent test class (issue 241).

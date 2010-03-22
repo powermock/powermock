@@ -281,7 +281,8 @@ public class PowerMockito extends MemberModifier {
      *            times(x), atLeastOnce() or never()
      */
     public static synchronized void verifyStatic(VerificationMode verificationMode) {
-        Whitebox.getInternalState(Mockito.class, MockingProgress.class).verificationStarted(verificationMode);
+        Whitebox.getInternalState(Mockito.class, MockingProgress.class).verificationStarted(
+                POWERMOCKITO_CORE.wrapInStaticVerificationMode(verificationMode));
     }
 
     /**
@@ -304,7 +305,8 @@ public class PowerMockito extends MemberModifier {
      */
     public static PrivateMethodVerification verifyPrivate(Object object, VerificationMode verificationMode)
             throws Exception {
-        Whitebox.getInternalState(Mockito.class, MockingProgress.class).verificationStarted(verificationMode);
+        Whitebox.getInternalState(Mockito.class, MockingProgress.class).verificationStarted(
+                POWERMOCKITO_CORE.wrapInMockitoSpecificVerificationMode(object, verificationMode));
         return new DefaultPrivateMethodVerification(object);
     }
 
@@ -387,7 +389,8 @@ public class PowerMockito extends MemberModifier {
     @SuppressWarnings("unchecked")
     public static <T> ConstructorArgumentsVerification verifyNew(Class<?> mock, VerificationMode mode) {
         NewInvocationControl<?> invocationControl = MockRepository.getNewInstanceControl(mock);
-        MockRepository.putAdditionalState("VerificationMode", mode);
+        MockRepository.putAdditionalState("VerificationMode", POWERMOCKITO_CORE.wrapInMockitoSpecificVerificationMode(
+                mock, mode));
         try {
             invocationControl.verify();
         } finally {
