@@ -2,13 +2,13 @@
   <parent>
     <artifactId>powermock-modules-powermock-test</artifactId>
     <groupId>org.powermock.modules.powermock.test</groupId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.3.7</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.powermock.modules.test.junit47</groupId>
   <artifactId>powermock-module-test-junit47</artifactId>
   <name>powermock-module-test-junit47</name>
-  <version>1.4-SNAPSHOT</version>
+  <version>1.3.7</version>
   <url>http://maven.apache.org</url>
  <dependencies>
       <dependency>

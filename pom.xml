@@ -4,7 +4,7 @@
 	<groupId>org.powermock</groupId>
 	<artifactId>powermock</artifactId>
 	<packaging>pom</packaging>
-	<version>1.4-SNAPSHOT</version>
+	<version>1.3.7</version>
 	<name>powermock</name>
 	<url>http://www.powermock.org</url>
 	<description>
@@ -45,9 +45,9 @@
 		</developer>
 	</developers>
 	<scm>
-		<connection>scm:svn:https://powermock.googlecode.com/svn/trunk/</connection>
-		<developerConnection>scm:svn:https://powermock.googlecode.com/svn/trunk/</developerConnection>
-		<url>http://code.google.com/p/powermock/source/browse/</url>
+		<connection>scm:svn:https://powermock.googlecode.com/svn/tags/powermock-1.3.7</connection>
+		<developerConnection>scm:svn:https://powermock.googlecode.com/svn/tags/powermock-1.3.7</developerConnection>
+		<url>http://code.google.com/p/powermock/source/browse/tags/powermock-1.3.7</url>
 	</scm>
 	<distributionManagement>
 		<repository>
