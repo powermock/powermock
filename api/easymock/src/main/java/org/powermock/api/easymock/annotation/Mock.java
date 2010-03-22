@@ -6,6 +6,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.powermock.core.classloader.annotations.PowerMockListener;
+
 /**
  * This annotation can be placed on those fields in your test class that should
  * be mocked. This eliminates the need to setup and tear-down mocks manually

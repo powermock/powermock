@@ -16,6 +16,7 @@
 
 package org.powermock.api.support.membermodification;
 
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -33,62 +34,81 @@ import org.powermock.api.support.membermodification.strategy.impl.MethodStubStra
  */
 public class MemberModifier extends MemberMatcher {
 
-	/**
-	 * Suppress a specific method. This works on both instance methods and
-	 * static methods.
-	 */
-	public static void suppress(Method method) {
-		SuppressCode.suppressMethod(method);
-	}
+    /**
+     * Suppress a specific method. This works on both instance methods and
+     * static methods.
+     */
+    public static void suppress(Method method) {
+        SuppressCode.suppressMethod(method);
+    }
 
-	/**
-	 * Suppress multiple methods. This works on both instance methods and static
-	 * methods.
-	 */
-	public static void suppress(Method[] methods) {
-		SuppressCode.suppressMethod(methods);
-	}
+    /**
+     * Suppress multiple methods. This works on both instance methods and static
+     * methods.
+     */
+    public static void suppress(Method[] methods) {
+        SuppressCode.suppressMethod(methods);
+    }
 
-	/**
-	 * Suppress a constructor.
-	 */
-	public static void suppress(Constructor<?> constructor) {
-		SuppressCode.suppressConstructor(constructor);
-	}
+    /**
+     * Suppress a constructor.
+     */
+    public static void suppress(Constructor<?> constructor) {
+        SuppressCode.suppressConstructor(constructor);
+    }
 
-	/**
-	 * Suppress multiple constructors.
-	 */
-	public static void suppress(Constructor<?>[] constructors) {
-		SuppressCode.suppressConstructor(constructors);
-	}
+    /**
+     * Suppress multiple constructors.
+     */
+    public static void suppress(Constructor<?>[] constructors) {
+        SuppressCode.suppressConstructor(constructors);
+    }
 
-	/**
-	 * Suppress a field.
-	 */
-	public static void suppress(Field field) {
-		SuppressCode.suppressField(field);
-	}
+    /**
+     * Suppress a field.
+     */
+    public static void suppress(Field field) {
+        SuppressCode.suppressField(field);
+    }
 
-	/**
-	 * Suppress multiple fields.
-	 */
-	public static void suppress(Field[] fields) {
-		SuppressCode.suppressField(fields);
-	}
+    /**
+     * Suppress multiple fields.
+     */
+    public static void suppress(Field[] fields) {
+        SuppressCode.suppressField(fields);
+    }
 
-	/**
-	 * Add a method that should be intercepted and return another value (i.e.
-	 * the method is stubbed).
-	 */
-	public static <T> MethodStubStrategy<T> stub(Method method) {
-		return new MethodStubStrategyImpl<T>(method);
-	}
+    /**
+     * Suppress an array of accessible objects.
+     */
+    public static void suppress(AccessibleObject[] accessibleObjects) {
+        if (accessibleObjects == null) {
+            throw new IllegalArgumentException("accessibleObjects cannot be null");
+        }
 
-	/**
-	 * Replace a method invocation.
-	 */
-	public static MethodReplaceStrategy replace(Method method) {
-		return new MethodReplaceStrategyImpl(method);
-	}
+        for (AccessibleObject accessibleObject : accessibleObjects) {
+            if (accessibleObject instanceof Constructor<?>) {
+                SuppressCode.suppressConstructor((Constructor<?>) accessibleObject);
+            } else if (accessibleObject instanceof Field) {
+                SuppressCode.suppressField((Field) accessibleObject);
+            } else if (accessibleObject instanceof Method) {
+                SuppressCode.suppressMethod((Method) accessibleObject);
+            }
+        }
+    }
+
+    /**
+     * Add a method that should be intercepted and return another value (i.e.
+     * the method is stubbed).
+     */
+    public static <T> MethodStubStrategy<T> stub(Method method) {
+        return new MethodStubStrategyImpl<T>(method);
+    }
+
+    /**
+     * Replace a method invocation.
+     */
+    public static MethodReplaceStrategy replace(Method method) {
+        return new MethodReplaceStrategyImpl(method);
+    }
 }

@@ -24,8 +24,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit3.PowerMockSuite;
 
 import samples.suppressconstructor.SuppressConstructorHeirarchyEvilGrandParent;
-import samples.suppressconstructor.SuppressConstructorHierarchyParent;
 import samples.suppressconstructor.SuppressConstructorHierarchy;
+import samples.suppressconstructor.SuppressConstructorHierarchyParent;
 
 @PrepareForTest( { SuppressConstructorHierarchy.class, SuppressConstructorHierarchyParent.class,
 		SuppressConstructorHeirarchyEvilGrandParent.class })

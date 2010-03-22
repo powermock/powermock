@@ -20,7 +20,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
+import static org.powermock.api.support.membermodification.MemberMatcher.constructorsDeclaredIn;
+import static org.powermock.api.support.membermodification.MemberMatcher.everythingDeclaredIn;
 import static org.powermock.api.support.membermodification.MemberMatcher.field;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
 import static org.powermock.api.support.membermodification.MemberMatcher.methods;
@@ -39,6 +42,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import samples.staticandinstance.StaticAndInstanceDemo;
 import samples.suppressconstructor.SuppressConstructorHierarchy;
+import samples.suppresseverything.SuppressEverything;
 import samples.suppressfield.SuppressField;
 import samples.suppressmethod.SuppressMethod;
 
@@ -46,7 +50,7 @@ import samples.suppressmethod.SuppressMethod;
  * Demonstrates PowerMock's ability to modify member structures.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest( { SuppressMethod.class, SuppressField.class })
+@PrepareForTest( { SuppressMethod.class, SuppressField.class, SuppressEverything.class })
 public class MemberModificationExampleTest {
 
     @Test
@@ -113,7 +117,8 @@ public class MemberModificationExampleTest {
 
     @Test
     public void duckTypeStaticMethodExample() throws Exception {
-        replace(method(SuppressMethod.class, "getObjectStatic")).with(method(StaticAndInstanceDemo.class, "getStaticMessage"));
+        replace(method(SuppressMethod.class, "getObjectStatic")).with(
+                method(StaticAndInstanceDemo.class, "getStaticMessage"));
 
         assertEquals(SuppressMethod.getObjectStatic(), StaticAndInstanceDemo.getStaticMessage());
     }
@@ -126,6 +131,31 @@ public class MemberModificationExampleTest {
 
         assertThat(tested.getObjectWithArgument("don't do anything"), is(instanceOf(Object.class)));
         assertEquals("hello world", tested.getObjectWithArgument("make it a string"));
+    }
+
+    @Test
+    public void suppressAllConstructors() throws Exception {
+        suppress(constructorsDeclaredIn(SuppressEverything.class));
+
+        SuppressEverything suppressEverything = new SuppressEverything();
+        new SuppressEverything("test");
+
+        try {
+            suppressEverything.something();
+            fail("Should throw ISE");
+        } catch (IllegalStateException e) {
+            assertEquals("error", e.getMessage());
+        }
+    }
+
+    @Test
+    public void suppressEverythingExample() throws Exception {
+        suppress(everythingDeclaredIn(SuppressEverything.class));
+
+        SuppressEverything suppressEverything = new SuppressEverything();
+        new SuppressEverything("test");
+        suppressEverything.something();
+        suppressEverything.somethingElse();
     }
 
     private final class ReturnValueChangingInvocationHandler implements InvocationHandler {

@@ -29,8 +29,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import samples.classhierarchy.ChildA;
 import samples.classhierarchy.Parent;
-import samples.overloading.OverloadingDemo;
 import samples.overloading.OverloadedMethodsExample;
+import samples.overloading.OverloadingDemo;
 
 /**
  * Demonstrates that PowerMock correctly invoke overloaded methods from the
