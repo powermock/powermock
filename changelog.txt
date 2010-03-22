@@ -1,5 +1,8 @@
 Change log 1.4 (under development)
 ----------------------------------
+
+Change log 1.3.7 (2010-03-22)
+-----------------------------
 * Added support for JUnit 4.8.1 (issue 226)
 * Added support for Mockito 1.8.4
 * Fixed so that a "mock name" is set in the Mockito extension API. Fixes NullPointerException when e.g. toString is invoked on a mock. (issue 239)
