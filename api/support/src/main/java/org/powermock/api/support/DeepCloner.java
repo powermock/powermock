@@ -275,8 +275,13 @@ public class DeepCloner {
 		final Object array = Array.newInstance(arrayClass.getComponentType(), arrayLength);
 		for (int i = 0; i < arrayLength; i++) {
 			final Object object = Array.get(objectToClone, i);
-			final Object performClone = performClone(ClassLoaderUtil
+			final Object performClone;
+			if(object==null) {
+			 performClone = null;   
+			} else {
+			performClone = performClone(ClassLoaderUtil
 					.loadClassWithClassloader(targetCL, getType(object)), object, cloneStandardJavaTypes);
+			}
 			Array.set(array, i, performClone);
 		}
 		return array;

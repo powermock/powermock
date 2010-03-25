@@ -15,6 +15,7 @@
  */
 package org.powermock.api.support;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
@@ -24,79 +25,89 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
+
 public class DeepClonerTest {
 
-	@Test
-	public void clonesJavaInstances() throws Exception {
-		final URL original = new URL("http://www.powermock.org");
-		URL clone = new DeepCloner().clone(original);
-		assertEquals(clone, original);
-		assertNotSame(clone, original);
-	}
+    @Test
+    public void clonesJavaInstances() throws Exception {
+        final URL original = new URL("http://www.powermock.org");
+        URL clone = new DeepCloner().clone(original);
+        assertEquals(clone, original);
+        assertNotSame(clone, original);
+    }
 
-	@Test
-	public void clonesUnmodifiableLists() throws Exception {
-		final UnmodifiableListExample original = new UnmodifiableListExample();
-		UnmodifiableListExample clone = new DeepCloner().clone(original);
-		assertEquals(clone, original);
-		assertNotSame(clone, original);
-	}
+    @Test
+    public void clonesUnmodifiableLists() throws Exception {
+        final UnmodifiableListExample original = new UnmodifiableListExample();
+        UnmodifiableListExample clone = new DeepCloner().clone(original);
+        assertEquals(clone, original);
+        assertNotSame(clone, original);
+    }
+
+    @Test
+    public void clonesArraysWithNullValues() throws Exception {
+        Object[] original = new Object[] { "Test", null };
+        Object[] clone = new DeepCloner().clone(original);
+        assertArrayEquals(clone, original);
+        assertNotSame(clone, original);
+    }
+
 }
 
 class UnmodifiableListExample {
-	private List<NotSerializable> cl = Collections.unmodifiableList(Arrays.asList(new NotSerializable()));
+    private List<NotSerializable> cl = Collections.unmodifiableList(Arrays.asList(new NotSerializable()));
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((cl == null) ? 0 : cl.hashCode());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((cl == null) ? 0 : cl.hashCode());
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		UnmodifiableListExample other = (UnmodifiableListExample) obj;
-		if (cl == null) {
-			if (other.cl != null)
-				return false;
-		} else if (!cl.equals(other.cl))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        UnmodifiableListExample other = (UnmodifiableListExample) obj;
+        if (cl == null) {
+            if (other.cl != null)
+                return false;
+        } else if (!cl.equals(other.cl))
+            return false;
+        return true;
+    }
 }
 
 class NotSerializable {
-	private final String state = "Nothing";
+    private final String state = "Nothing";
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((state == null) ? 0 : state.hashCode());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((state == null) ? 0 : state.hashCode());
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		NotSerializable other = (NotSerializable) obj;
-		if (state == null) {
-			if (other.state != null)
-				return false;
-		} else if (!state.equals(other.state))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        NotSerializable other = (NotSerializable) obj;
+        if (state == null) {
+            if (other.state != null)
+                return false;
+        } else if (!state.equals(other.state))
+            return false;
+        return true;
+    }
 }
