@@ -6,7 +6,7 @@
 		<artifactId>powermock-modules</artifactId>
 		<version>1.4-SNAPSHOT</version>
 	</parent>
-	<groupId>org.powermock.modules.junit4.rule</groupId>
+	<groupId>org.powermock.modules</groupId>
 	<artifactId>powermock-module-junit4-rule</artifactId>
 	<version>1.4-SNAPSHOT</version>
 	<name>powermock-module-junit4-rule</name>

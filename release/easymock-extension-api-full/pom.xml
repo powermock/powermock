@@ -33,6 +33,11 @@
             <artifactId>powermock-module-junit4</artifactId>
             <version>${version}</version>
         </dependency>
+	<dependency>
+		<groupId>org.powermock.modules</groupId>
+		<artifactId>powermock-module-junit4-rule</artifactId>
+		<version>${version}</version>
+	</dependency>
         <dependency>
             <groupId>org.powermock.modules</groupId>
             <artifactId>powermock-module-junit4-legacy</artifactId>
@@ -77,6 +82,12 @@
             <version>${version}</version>
 	    <classifier>sources</classifier>
         </dependency>
+	<dependency>
+		<groupId>org.powermock.modules</groupId>
+		<artifactId>powermock-module-junit4-rule</artifactId>
+		<version>${version}</version>
+                <classifier>sources</classifier>
+	</dependency>
         <dependency>
             <groupId>org.powermock.modules</groupId>
             <artifactId>powermock-module-junit4-common</artifactId>
