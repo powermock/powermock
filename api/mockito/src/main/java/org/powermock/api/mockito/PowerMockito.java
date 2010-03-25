@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+s * Copyright 2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,7 @@ import org.powermock.reflect.Whitebox;
  * @see Mockito
  */
 public class PowerMockito extends MemberModifier {
+    private static final String NO_OBJECT_CREATION_ERROR_MESSAGE_TEMPLATE = "No instantiation of class %s was recorded during the test. Note that only expected object creations (e.g. those using whenNew(..)) can be verified.";
     private static final PowerMockitoCore POWERMOCKITO_CORE = new PowerMockitoCore();
 
     /**
@@ -356,10 +357,13 @@ public class PowerMockito extends MemberModifier {
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> ConstructorArgumentsVerification verifyNew(Class<T> mock) {
+        if (mock == null) {
+            throw new IllegalArgumentException("Class to verify cannot be null");
+        }
         NewInvocationControl<?> invocationControl = MockRepository.getNewInstanceControl(mock);
         if (invocationControl == null) {
-            throw new IllegalArgumentException(String.format("A constructor invocation in %s was unexpected.", Whitebox
-                    .getType(mock)));
+            throw new IllegalStateException(String.format(NO_OBJECT_CREATION_ERROR_MESSAGE_TEMPLATE, Whitebox.getType(
+                    mock).getName()));
         }
         invocationControl.verify();
         return new DefaultConstructorArgumentsVerfication<T>((NewInvocationControl<T>) invocationControl, mock);
@@ -388,9 +392,18 @@ public class PowerMockito extends MemberModifier {
      */
     @SuppressWarnings("unchecked")
     public static <T> ConstructorArgumentsVerification verifyNew(Class<?> mock, VerificationMode mode) {
+        if (mock == null) {
+            throw new IllegalArgumentException("Class to verify cannot be null");
+        } else if (mode == null) {
+            throw new IllegalArgumentException("Verify mode cannot be null");
+        }
         NewInvocationControl<?> invocationControl = MockRepository.getNewInstanceControl(mock);
         MockRepository.putAdditionalState("VerificationMode", POWERMOCKITO_CORE.wrapInMockitoSpecificVerificationMode(
                 mock, mode));
+        if (invocationControl == null) {
+            throw new IllegalStateException(String.format(NO_OBJECT_CREATION_ERROR_MESSAGE_TEMPLATE, Whitebox.getType(
+                    mock).getName()));
+        }
         try {
             invocationControl.verify();
         } finally {
