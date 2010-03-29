@@ -17,6 +17,8 @@ package samples.system;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.List;
@@ -56,5 +58,9 @@ public class SystemClassUser {
 
     public void shuffleCollection(List<?> list) {
         Collections.shuffle(list);
+    }
+
+    public URLConnection useURL(URL url) throws IOException {
+        return url.openConnection();
     }
 }

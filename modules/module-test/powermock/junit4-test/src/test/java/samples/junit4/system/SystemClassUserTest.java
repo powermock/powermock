@@ -27,6 +27,8 @@ import static org.powermock.api.easymock.PowerMock.mockStaticPartial;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
 
+import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -173,6 +175,19 @@ public class SystemClassUserTest {
         long endTime = System.currentTimeMillis();
         assertTrue(endTime - startTime < 5000);
 
+        verifyAll();
+    }
+
+    @Test
+    public void mockingInstanceMethodOfFinalSystemClassWorks() throws Exception {
+        URL url = createMock(URL.class);
+        URLConnection urlConnection = createMock(URLConnection.class);
+
+        expect(url.openConnection()).andStubReturn(urlConnection);
+
+        replayAll();
+        final SystemClassUser systemClassUser = new SystemClassUser();
+        assertSame(urlConnection, systemClassUser.useURL(url));
         verifyAll();
     }
 }
