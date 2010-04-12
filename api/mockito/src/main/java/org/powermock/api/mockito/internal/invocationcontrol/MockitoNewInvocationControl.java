@@ -31,8 +31,6 @@ import org.powermock.reflect.internal.WhiteboxImpl;
 public class MockitoNewInvocationControl<T> implements NewInvocationControl<OngoingStubbing<T>> {
     private final InvocationSubstitute<T> substitute;
 
-    private boolean hasVerified;
-
     public MockitoNewInvocationControl(InvocationSubstitute<T> substitute) {
         if (substitute == null) {
             throw new IllegalArgumentException("Internal error: substitute cannot be null.");
@@ -78,22 +76,19 @@ public class MockitoNewInvocationControl<T> implements NewInvocationControl<Ongo
      * {@inheritDoc}
      */
     public synchronized Object verify(Object... mocks) {
-        if (!hasVerified) {
-            final VerificationMode verificationMode;
-            Object mode = MockRepository.getAdditionalState("VerificationMode");
-            if (mode != null) {
-                if (mode instanceof VerificationMode) {
-                    verificationMode = (VerificationMode) mode;
-                } else {
-                    throw new IllegalStateException("Internal error. VerificationMode in MockRepository was not of type "
-                            + VerificationMode.class.getName() + ".");
-                }
+        final VerificationMode verificationMode;
+        Object mode = MockRepository.getAdditionalState("VerificationMode");
+        if (mode != null) {
+            if (mode instanceof VerificationMode) {
+                verificationMode = (VerificationMode) mode;
             } else {
-                verificationMode = times(1);
+                throw new IllegalStateException("Internal error. VerificationMode in MockRepository was not of type "
+                        + VerificationMode.class.getName() + ".");
             }
-            Mockito.verify(substitute, verificationMode);
-            hasVerified = true;
+        } else {
+            verificationMode = times(1);
         }
+        Mockito.verify(substitute, verificationMode);
         return null;
     }
 
@@ -103,7 +98,6 @@ public class MockitoNewInvocationControl<T> implements NewInvocationControl<Ongo
     @SuppressWarnings("unchecked")
     public synchronized Object reset(Object... mocks) {
         Mockito.<InvocationSubstitute<T>> reset(substitute);
-        hasVerified = false;
         return null;
     }
 
