@@ -25,29 +25,29 @@ import org.powermock.reflect.Whitebox;
 @PrepareOnlyThisForTest( { NioDatagramSession.class, NioProcessor.class })
 public class PrepareOnlyThisForTestAnnotationTest {
 
-	@Test(expected = NullPointerException.class)
-	public void assertThatPrepareOnlyThisForTestDoesntModifyClassHierarchy() throws Exception {
-		NioDatagramSession session = createMock(NioDatagramSession.class);
-		expect(session.isConnected()).andReturn(false);
-	}
+    @Test(expected = NullPointerException.class)
+    public void assertThatPrepareOnlyThisForTestDoesntModifyClassHierarchy() throws Exception {
+        NioDatagramSession session = createMock(NioDatagramSession.class);
+        expect(session.isConnected()).andReturn(false);
+    }
 
-	@Test
-	@PrepareOnlyThisForTest( { NioDatagramSession.class, NioProcessor.class, AbstractIoSession.class })
-	public void assertThatPrepareOnlyThisForTestWorks() throws Exception {
-		final String scheduleRemoveMethodName = "scheduleRemove";
+    @Test
+    @PrepareOnlyThisForTest( { NioDatagramSession.class, NioProcessor.class, AbstractIoSession.class })
+    public void assertThatPrepareOnlyThisForTestWorks() throws Exception {
+        final String scheduleRemoveMethodName = "scheduleRemove";
 
-		Executor executor = createMock(Executor.class);
-		NioProcessor objectUnderTest = createPartialMock(NioProcessor.class, new String[] { scheduleRemoveMethodName }, executor);
-		NioDatagramSession session = createMock(NioDatagramSession.class);
+        Executor executor = createMock(Executor.class);
+        NioProcessor objectUnderTest = createPartialMock(NioProcessor.class, new String[] { scheduleRemoveMethodName }, executor);
+        NioDatagramSession session = createMock(NioDatagramSession.class);
 
-		expect(session.isConnected()).andReturn(false);
-		expectPrivate(objectUnderTest, scheduleRemoveMethodName, session).once();
+        expect(session.isConnected()).andReturn(false);
+        expectPrivate(objectUnderTest, scheduleRemoveMethodName, session).once();
 
-		replay(objectUnderTest, executor, session);
+        replay(objectUnderTest, executor, session);
 
-		assertFalse((Boolean) Whitebox.invokeMethod(objectUnderTest, "flushNow", session, 20L));
+        assertFalse(Whitebox.<Boolean> invokeMethod(objectUnderTest, "flushNow", session, 20L));
 
-		verify(objectUnderTest, executor, session);
-	}
+        verify(objectUnderTest, executor, session);
+    }
 
 }

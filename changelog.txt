@@ -6,6 +6,7 @@ Change log 1.4 (under development)
 * verifyNew with arguments no longer throws NullPointerException when missing expectation in the Mockito extension API.
 * EasyMock API extension now supports mock creation of classes whose hashCode implementation depends on constructor initialization.
 * It's now allowed to use verifyNew multiple times just as with verify in standard Mockito (issue 251)
+* Mockito extension API now supports mocking and stubbing equals and hashcode.
 
 Change log 1.3.7 (2010-03-22)
 -----------------------------

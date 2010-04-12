@@ -42,10 +42,16 @@ public class MockGateway {
     public static final String DONT_MOCK_NEXT_CALL = "DontMockNextCall";
 
     /**
-     * Tells PowerMock to mock standard methods such as
+     * Tells PowerMock to mock standard methods. These are
+     * {@link Object#toString()}, {@link Object#hashCode()} and
+     * {@link Object#equals(Object)}. By default this is <code>true</code>.
+     */
+    public static boolean MOCK_STANDARD_METHODS = true;
+    /**
+     * Tells PowerMock whether or not to mock
      * {@link java.lang.Object#getClass()}.
      */
-    public static boolean MOCK_STANDARD_METHODS = false;
+    public static boolean MOCK_GET_CLASS_METHOD = false;
 
     // used for static methods
     public static synchronized Object methodCall(Class<?> type, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString)
@@ -53,8 +59,8 @@ public class MockGateway {
         return doMethodCall(type, methodName, args, sig, returnTypeAsString);
     }
 
-    private static Object doMethodCall(Object object, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString)
-            throws Throwable, NoSuchMethodException {
+    private static Object doMethodCall(Object object, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString) throws Throwable,
+            NoSuchMethodException {
         if (!shouldMockMethod(methodName, sig)) {
             return PROCEED;
         }
@@ -125,9 +131,22 @@ public class MockGateway {
     }
 
     private static boolean shouldMockMethod(String methodName, Class<?>[] sig) {
-        return MOCK_STANDARD_METHODS
-                || !((methodName.equals("hashCode") && sig.length == 0) || (methodName.equals("equals") && sig.length == 1) || (methodName
-                        .equals("getClass") && sig.length == 0));
+        if (isJavaStandardMethod(methodName, sig) && !MOCK_STANDARD_METHODS) {
+            return false;
+        } else if (isGetClassMethod(methodName, sig) && !MOCK_GET_CLASS_METHOD) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private static boolean isJavaStandardMethod(String methodName, Class<?>[] sig) {
+        return (methodName.equals("equals") && sig.length == 1) || (methodName.equals("hashCode") && sig.length == 0)
+                || (methodName.equals("toString") && sig.length == 0);
+    }
+
+    private static boolean isGetClassMethod(String methodName, Class<?>[] sig) {
+        return methodName.equals("getClass") && sig.length == 0;
     }
 
     private static boolean shouldMockThisCall() {
@@ -143,8 +162,8 @@ public class MockGateway {
     }
 
     // used for instance methods
-    public static synchronized Object methodCall(Object instance, String methodName, Object[] args, Class<?>[] sig,
-            String returnTypeAsString) throws Throwable {
+    public static synchronized Object methodCall(Object instance, String methodName, Object[] args, Class<?>[] sig, String returnTypeAsString)
+            throws Throwable {
         return doMethodCall(instance, methodName, args, sig, returnTypeAsString);
     }
 

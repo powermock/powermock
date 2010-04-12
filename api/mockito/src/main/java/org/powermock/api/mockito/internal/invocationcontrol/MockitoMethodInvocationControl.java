@@ -39,7 +39,6 @@ import org.mockito.internal.progress.MockingProgress;
 import org.mockito.internal.progress.SequenceNumber;
 import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.internal.reporting.PrintSettings;
-import org.mockito.internal.util.ObjectMethodsGuru;
 import org.mockito.internal.verification.VerificationDataImpl;
 import org.mockito.internal.verification.VerificationModeFactory;
 import org.mockito.verification.VerificationMode;
@@ -197,16 +196,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
 
     private Object performIntercept(MethodInterceptorFilter invocationHandler, final Object interceptionObject,
             final Method method, Object[] arguments) throws Throwable {
-        /*
-         * FIXME: Replace this work-around with a custom CGLibHacker
-         */
         MockitoInvocationHandler mockHandler = invocationHandler.getHandler();
-        ObjectMethodsGuru objectMethodsGuru = Whitebox.getInternalState(invocationHandler, ObjectMethodsGuru.class);
-        if (objectMethodsGuru.isEqualsMethod(method)) {
-            return interceptionObject == arguments[0];
-        } else if (objectMethodsGuru.isHashCodeMethod(method)) {
-            return System.identityHashCode(interceptionObject);
-        }
 
         final FilteredCGLIBProxyRealMethod cglibProxyRealMethod = new FilteredCGLIBProxyRealMethod(new RealMethod() {
             private static final long serialVersionUID = 4564320968038564170L;

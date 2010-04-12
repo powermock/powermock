@@ -46,13 +46,13 @@ public class EqualsWithGetClassTest {
 
     @Test(expected = AssertionError.class)
     public void callingGetClassOnAMockFailsWhenTheCallWasUnexpectedAndMockStandardMethodsIsSet() throws Exception {
-        MockGateway.MOCK_STANDARD_METHODS = true;
+        MockGateway.MOCK_GET_CLASS_METHOD = true;
         try {
             EqualsWithGetClass mock1 = createMock(EqualsWithGetClass.class);
             replayAll();
             mock1.getClass();
         } finally {
-            MockGateway.MOCK_STANDARD_METHODS = false;
+            MockGateway.MOCK_GET_CLASS_METHOD = false;
         }
     }
 }

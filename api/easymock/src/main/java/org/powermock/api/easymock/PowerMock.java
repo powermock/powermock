@@ -45,6 +45,7 @@ import org.powermock.api.easymock.internal.mockstrategy.impl.StrictMockStrategy;
 import org.powermock.api.support.SuppressCode;
 import org.powermock.api.support.membermodification.MemberModifier;
 import org.powermock.core.ClassReplicaCreator;
+import org.powermock.core.MockGateway;
 import org.powermock.core.MockRepository;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
@@ -63,6 +64,11 @@ import org.powermock.reflect.internal.WhiteboxImpl;
 public class PowerMock extends MemberModifier {
 
 	private static final String NICE_REPLAY_AND_VERIFY_KEY = "PowerMock.niceReplayAndVerify";
+	
+	static {
+	    MockGateway.MOCK_STANDARD_METHODS = false;
+	    MockGateway.MOCK_GET_CLASS_METHOD = false;
+	}
 
 	/**
 	 * Creates a mock object that supports mocking of final and native methods.
