@@ -4,6 +4,7 @@ Change log 1.4 (under development)
 * Changed groupId of the PowerMock JUnit Rule project to org.powermock.modules.
 * Included PowerMock rule in the released artifacts
 * verifyNew with arguments no longer throws NullPointerException when missing expectation in the Mockito extension API.
+* EasyMock API extension now supports mock creation of classes whose hashCode implementation depends on constructor initialization.
 
 Change log 1.3.7 (2010-03-22)
 -----------------------------

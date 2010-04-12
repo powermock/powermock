@@ -35,7 +35,7 @@ import org.powermock.core.spi.NewInvocationControl;
  */
 public class MockRepository {
 
-	private static Set<Object> objectsToAutomaticallyReplayAndVerify = new HashSet<Object>();
+	private static Set<Object> objectsToAutomaticallyReplayAndVerify = new IdentityHashSet<Object>();
 
 	private static Map<Class<?>, NewInvocationControl<?>> newSubstitutions = new HashMap<Class<?>, NewInvocationControl<?>>();
 
