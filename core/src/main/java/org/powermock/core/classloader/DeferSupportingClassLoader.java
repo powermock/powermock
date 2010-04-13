@@ -38,8 +38,10 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
     public void addIgnorePackage(String... packagesToIgnore) {
         if (packagesToIgnore != null && packagesToIgnore.length > 0) {
             final int previousLength = deferPackages.length;
-            deferPackages = new String[previousLength + packagesToIgnore.length];
-            System.arraycopy(packagesToIgnore, 0, deferPackages, previousLength, packagesToIgnore.length);
+            String[] newDeferPackages = new String[previousLength + packagesToIgnore.length];
+            System.arraycopy(deferPackages, 0, newDeferPackages, 0, previousLength);
+            System.arraycopy(packagesToIgnore, 0, newDeferPackages, previousLength, packagesToIgnore.length);
+            deferPackages = newDeferPackages;
         }
     }
 

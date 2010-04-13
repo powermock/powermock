@@ -15,6 +15,7 @@
  */
 package org.powermock.core.classloader;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -64,4 +65,12 @@ public class MockClassLoaderTest {
         assertTrue(Whitebox.<Boolean> invokeMethod(mockClassLoader, "shouldModify", "org.mytest.myclass"));
     }
 
+    @Test
+    public void shouldAddIgnorePackagesToDefer() throws Exception {
+        MockClassLoader mockClassLoader = new MockClassLoader(new String[0]);
+        mockClassLoader.addIgnorePackage("test*");
+        String[] deferPackages = Whitebox.<String[]> getInternalState(mockClassLoader, "deferPackages");
+        assertTrue(deferPackages.length > 1);
+        assertEquals("test*", deferPackages[deferPackages.length - 1]);
+    }
 }
