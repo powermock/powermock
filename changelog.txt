@@ -8,7 +8,7 @@ Change log 1.4 (under development)
 * It's now allowed to use verifyNew multiple times just as with verify in standard Mockito (issue 251)
 * Mockito extension API now supports mocking and stubbing equals and hashcode.
 * Fixed an issue in the core mock classloader that accidentally caused the previous deferred packages to be overwritten when adding new packages to be ignored.
-* Upgraded to Javassist 3.12
+* Upgraded to Javassist 3.12 (issue 254)
 
 Change log 1.3.7 (2010-03-22)
 -----------------------------
