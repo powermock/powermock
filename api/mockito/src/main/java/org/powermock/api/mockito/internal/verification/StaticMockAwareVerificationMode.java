@@ -35,7 +35,7 @@ import org.mockito.verification.VerificationMode;
  * verify(mock).methodToVerify();
  * </pre>
  * 
- * In PowerMock we don't know the clas when calling verifyStatic().
+ * In PowerMock we don't know the class when calling verifyStatic().
  */
 public class StaticMockAwareVerificationMode extends MockAwareVerificationMode {
 
