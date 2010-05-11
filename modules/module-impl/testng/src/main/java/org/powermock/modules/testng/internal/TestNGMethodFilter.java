@@ -20,27 +20,40 @@ import java.lang.reflect.Method;
 import javassist.util.proxy.MethodFilter;
 
 /**
- *Javassist method filter that ignores the toString method otherwise the test
- * output in Maven looks strange.
+ * Javassist method filter that ignores the toString, equals, finalize and
+ * hashCode method otherwise the test output in Maven looks strange and
+ * replayAll/verifyAll doesn't work as expected.
  */
 public class TestNGMethodFilter implements MethodFilter {
-	public boolean isHandled(Method method) {
-		return !isToString(method) && !isHashCode(method) && !isFinalize(method);
-	}
+    public boolean isHandled(Method method) {
+        return !isToString(method) && !isHashCode(method) && !isFinalize(method) && !isEquals(method);
+    }
 
-	private boolean isFinalize(Method method) {
-		return method.getName().equals("finalize") && isZeroArgumentMethod(method);
-	}
+    private boolean isEquals(Method method) {
+        return method.getName().equals("equals") && isOneArgumentMethodOfType(method, Object.class);
+    }
 
-	private boolean isHashCode(Method method) {
-		return method.getName().equals("hashCode") && isZeroArgumentMethod(method);
-	}
+    private boolean isFinalize(Method method) {
+        return method.getName().equals("finalize") && isZeroArgumentMethod(method);
+    }
 
-	private boolean isToString(Method method) {
-		return (method.getName().equals("toString") && isZeroArgumentMethod(method));
-	}
+    private boolean isHashCode(Method method) {
+        return method.getName().equals("hashCode") && isZeroArgumentMethod(method);
+    }
 
-	private boolean isZeroArgumentMethod(Method method) {
-		return method.getParameterTypes().length == 0;
-	}
+    private boolean isToString(Method method) {
+        return (method.getName().equals("toString") && isZeroArgumentMethod(method));
+    }
+
+    private boolean isZeroArgumentMethod(Method method) {
+        return hasArgumentLength(method, 0);
+    }
+
+    private boolean hasArgumentLength(Method method, int length) {
+        return method.getParameterTypes().length == length;
+    }
+
+    private boolean isOneArgumentMethodOfType(Method method, Class<?> type) {
+        return hasArgumentLength(method, 1) && Object.class.equals(method.getParameterTypes()[0]);
+    }
 }

@@ -13,9 +13,8 @@
    <dependencies>
       <dependency>
          <groupId>org.testng</groupId>
-         <artifactId>testng</artifactId>
-         <classifier>jdk15</classifier>
-         <version>5.11</version>
+         <artifactId>testng</artifactId>         
+         <version>5.12.1</version>
          <scope>compile</scope>
       </dependency>
       <dependency>

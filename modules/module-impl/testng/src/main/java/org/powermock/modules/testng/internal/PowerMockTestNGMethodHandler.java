@@ -17,6 +17,7 @@ package org.powermock.modules.testng.internal;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
 
@@ -32,41 +33,46 @@ import org.testng.annotations.Test;
  */
 public class PowerMockTestNGMethodHandler implements MethodHandler {
 
-	private Object annotationEnabler;
+    private Object annotationEnabler;
 
-	public PowerMockTestNGMethodHandler(Class<?> testClass) {
-		try {
-			Class<?> annotationEnablerClass = Class.forName("org.powermock.api.extension.listener.AnnotationEnabler");
-			annotationEnabler = Whitebox.newInstance(annotationEnablerClass);
-		} catch (ClassNotFoundException e) {
-			annotationEnabler = null;
-		}
-	}
+    public PowerMockTestNGMethodHandler(Class<?> testClass) {
+        try {
+            Class<?> annotationEnablerClass = Class.forName("org.powermock.api.extension.listener.AnnotationEnabler");
+            annotationEnabler = Whitebox.newInstance(annotationEnablerClass);
+        } catch (ClassNotFoundException e) {
+            annotationEnabler = null;
+        }
+    }
 
-	public Object invoke(Object self, Method thisMethod, Method proceed, Object[] args) throws Throwable {
-		injectMocksUsingAnnotationEnabler(self);
-		final Object result = proceed.invoke(self, args);
-		if (thisMethod.isAnnotationPresent(Test.class)) {
-			clearMockFields();
-			MockRepository.clear();
-		}
-		return result;
-	}
+    public Object invoke(Object self, Method thisMethod, Method proceed, Object[] args) throws Throwable {
+        System.err.println("METHOD = "+thisMethod);
+        injectMocksUsingAnnotationEnabler(self);
+        try {
+            final Object result = proceed.invoke(self, args);
+            if (thisMethod.isAnnotationPresent(Test.class)) {
+                clearMockFields();
+                MockRepository.clear();
+            }
+            return result;
+        } catch (InvocationTargetException e) {
+            throw e.getTargetException();
+        }
+    }
 
-	private void clearMockFields() throws Exception, IllegalAccessException {
-		if (annotationEnabler != null) {
-			Set<Field> mockFields = Whitebox.getFieldsAnnotatedWith(this, Whitebox.<Class<? extends Annotation>[]> invokeMethod(annotationEnabler,
-					"getMockAnnotations"));
-			for (Field field : mockFields) {
-				field.set(this, null);
-			}
-		}
-	}
+    private void clearMockFields() throws Exception, IllegalAccessException {
+        if (annotationEnabler != null) {
+            Set<Field> mockFields = Whitebox.getFieldsAnnotatedWith(this, Whitebox
+                    .<Class<? extends Annotation>[]> invokeMethod(annotationEnabler, "getMockAnnotations"));
+            for (Field field : mockFields) {
+                field.set(this, null);
+            }
+        }
+    }
 
-	private void injectMocksUsingAnnotationEnabler(Object self) throws Exception {
-		if (annotationEnabler != null) {
-			Whitebox.invokeMethod(annotationEnabler, "beforeTestMethod", new Class<?>[] { Object.class, Method.class, Object[].class }, self, null,
-					null);
-		}
-	}
+    private void injectMocksUsingAnnotationEnabler(Object self) throws Exception {
+        if (annotationEnabler != null) {
+            Whitebox.invokeMethod(annotationEnabler, "beforeTestMethod", new Class<?>[] { Object.class, Method.class,
+                    Object[].class }, self, null, null);
+        }
+    }
 }
