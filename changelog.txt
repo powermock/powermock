@@ -1,7 +1,7 @@
 Change log 1.4 (under development)
 ----------------------------------
 
-Change log 1.3.8 (2010-05-12)
+Change log 1.3.8 (2010-05-13)
 -----------------------------
 * Fixed a bug in DeepCloner which caused a NullPointerException for arrays containing null values.
 * Changed groupId of the PowerMock JUnit Rule project to org.powermock.modules.
