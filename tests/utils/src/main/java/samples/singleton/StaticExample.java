@@ -33,6 +33,14 @@ public class StaticExample {
 
 	private static final void privateVoidFinalMethod() {
 	}
+	
+	public static void staticVoidMethod() {
+	    throw new IllegalArgumentException("This should never happen");
+    }
+	
+	public static final void staticFinalVoidMethod() {
+        throw new IllegalArgumentException("This should never happen");
+    }
 
 	public static Object objectMethod() {
 		return privateObjectMethod();

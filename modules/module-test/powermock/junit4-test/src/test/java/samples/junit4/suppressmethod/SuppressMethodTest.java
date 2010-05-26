@@ -29,12 +29,13 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import samples.singleton.StaticExample;
 import samples.suppressmethod.SuppressMethod;
 import samples.suppressmethod.SuppressMethodExample;
 import samples.suppressmethod.SuppressMethodParent;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest( { SuppressMethod.class, SuppressMethodExample.class })
+@PrepareForTest( { SuppressMethod.class, SuppressMethodExample.class, StaticExample.class })
 public class SuppressMethodTest {
 
     @Test
@@ -58,7 +59,8 @@ public class SuppressMethodTest {
     public void testGetObjectStatic() throws Exception {
         suppress(method(SuppressMethod.class, "getObjectStatic"));
 
-        assertNull("A method returning Object should return null after suppressing method code.", SuppressMethod.getObjectStatic());
+        assertNull("A method returning Object should return null after suppressing method code.", SuppressMethod
+                .getObjectStatic());
     }
 
     @Test
@@ -98,7 +100,8 @@ public class SuppressMethodTest {
         suppress(method(SuppressMethod.class, "getBoolean"));
 
         SuppressMethod tested = new SuppressMethod();
-        assertFalse("A method returning a boolean should return false after suppressing method code.", tested.getBoolean());
+        assertFalse("A method returning a boolean should return false after suppressing method code.", tested
+                .getBoolean());
     }
 
     @Test
@@ -106,7 +109,8 @@ public class SuppressMethodTest {
         suppress(method(SuppressMethod.class, "getFloat"));
 
         SuppressMethod tested = new SuppressMethod();
-        assertEquals("A method returning a float should return 0.0f after suppressing method code.", 0.0f, tested.getFloat(), 0);
+        assertEquals("A method returning a float should return 0.0f after suppressing method code.", 0.0f, tested
+                .getFloat(), 0);
     }
 
     @Test
@@ -114,7 +118,8 @@ public class SuppressMethodTest {
         suppress(method(SuppressMethod.class, "getDouble"));
 
         SuppressMethod tested = new SuppressMethod();
-        assertEquals("A method returning a double should return 0.0d after suppressing method code.", 0.0d, tested.getDouble(), 0);
+        assertEquals("A method returning a double should return 0.0d after suppressing method code.", 0.0d, tested
+                .getDouble(), 0);
     }
 
     @Test
@@ -122,7 +127,8 @@ public class SuppressMethodTest {
         suppress(method(SuppressMethod.class, "getDouble", new Class<?>[] { double.class }));
 
         SuppressMethod tested = new SuppressMethod();
-        assertEquals("A method returning a double should return 0.0d after suppressing method code.", 0.0d, tested.getDouble(8.7d), 0);
+        assertEquals("A method returning a double should return 0.0d after suppressing method code.", 0.0d, tested
+                .getDouble(8.7d), 0);
     }
 
     @Test
@@ -155,6 +161,13 @@ public class SuppressMethodTest {
         assertNull(tested1.getObject());
         assertEquals(0, tested1.getInt());
         assertNull(tested2.getObject());
+    }
+
+    @Test
+    public void suppressPublicStaticMethod() throws Exception {
+        suppress(method(StaticExample.class, "staticVoidMethod"));
+
+        StaticExample.staticVoidMethod();
     }
 
     @Test
