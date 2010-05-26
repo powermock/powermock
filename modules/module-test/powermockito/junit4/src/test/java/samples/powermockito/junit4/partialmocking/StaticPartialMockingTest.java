@@ -158,4 +158,14 @@ public class StaticPartialMockingTest {
 
         StaticExample.staticFinalVoidMethod();
     }
+
+    @Test
+    public void partialMockingOfNonVoidPublicStaticMethodsWorks() throws Exception {
+        spy(StaticExample.class);
+
+        doReturn("something").when(StaticExample.class);
+        StaticExample.staticMethodReturningString();
+
+        assertEquals("something", StaticExample.staticMethodReturningString());
+    }
 }

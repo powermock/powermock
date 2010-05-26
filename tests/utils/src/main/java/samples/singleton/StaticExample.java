@@ -38,6 +38,10 @@ public class StaticExample {
 	    throw new IllegalArgumentException("This should never happen");
     }
 	
+	public static String staticMethodReturningString() {
+        throw new IllegalArgumentException("This should never happen");
+    }
+	
 	public static final void staticFinalVoidMethod() {
         throw new IllegalArgumentException("This should never happen");
     }
