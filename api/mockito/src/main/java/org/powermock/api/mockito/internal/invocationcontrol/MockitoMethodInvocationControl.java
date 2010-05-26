@@ -39,6 +39,7 @@ import org.mockito.internal.progress.MockingProgress;
 import org.mockito.internal.progress.SequenceNumber;
 import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.internal.reporting.PrintSettings;
+import org.mockito.internal.stubbing.InvocationContainer;
 import org.mockito.internal.verification.VerificationDataImpl;
 import org.mockito.internal.verification.VerificationModeFactory;
 import org.mockito.verification.VerificationMode;
@@ -282,8 +283,8 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
         try {
             final MockitoInvocationHandler mockHandler = methodInterceptorFilter.getHandler();
             if (mockHandler instanceof MockHandler<?>) {
-                List<Invocation> invocations = ((MockHandler<?>) mockHandler).getInvocationContainer().getInvocations();
-                VerificationDataImpl data = new VerificationDataImpl(invocations, null);
+                InvocationContainer invocationContainer = ((MockHandler<?>) mockHandler).getInvocationContainer();
+                VerificationDataImpl data = new VerificationDataImpl(invocationContainer, null);
                 VerificationModeFactory.noMoreInteractions().verify(data);
             } else {
                 throw new RuntimeException(
