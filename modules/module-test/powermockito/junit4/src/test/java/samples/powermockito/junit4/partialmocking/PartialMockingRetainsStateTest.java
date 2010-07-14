@@ -23,6 +23,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import samples.partialmocking.MockSelfDemo;
+import samples.partialmocking.MockWithStaticStateDemo;
 
 /**
  * Demonstrates that PowerMockito retains state when spying. This was previously
@@ -37,5 +38,11 @@ public class PartialMockingRetainsStateTest {
 		MockSelfDemo demo = new MockSelfDemo(4);
 		MockSelfDemo spy = PowerMockito.spy(demo);
 		assertEquals(4, spy.getConstructorValue());
+	}
+
+	@Test
+	public void spyingOnAClassRetainsState() throws Exception {
+		PowerMockito.spy(MockWithStaticStateDemo.class);
+		assertEquals(5, MockWithStaticStateDemo.getState());
 	}
 }
