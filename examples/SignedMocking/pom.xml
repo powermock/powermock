@@ -2,13 +2,13 @@
 	<parent>
 		<artifactId>powermock-examples</artifactId>
 		<groupId>org.powermock.examples</groupId>
-		<version>1.4-SNAPSHOT</version>
+		<version>1.3.9</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.powermock.examples</groupId>
 	<artifactId>powermock-examples-signedmocking</artifactId>
 	<name>SignedMocking</name>
-	<version>1.4-SNAPSHOT</version>
+	<version>1.3.9</version>
 	<url>http://www.powermock.org</url>
 	<dependencies>
 		<dependency>
