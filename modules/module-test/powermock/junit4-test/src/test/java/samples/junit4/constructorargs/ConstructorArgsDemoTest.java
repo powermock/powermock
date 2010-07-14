@@ -25,7 +25,7 @@ import static org.powermock.api.easymock.PowerMock.verify;
 
 import java.lang.reflect.Constructor;
 
-import org.easymock.classextension.ConstructorArgs;
+import org.easymock.ConstructorArgs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;

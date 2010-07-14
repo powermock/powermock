@@ -26,8 +26,8 @@ import org.powermock.api.mockito.internal.verification.StaticMockAwareVerificati
 import org.powermock.reflect.Whitebox;
 
 public class PowerMockitoCore {
-    @SuppressWarnings("unchecked")
-    public PowerMockitoStubber doAnswer(Answer answer) {
+    @SuppressWarnings("rawtypes")
+	public PowerMockitoStubber doAnswer(Answer answer) {
         getMockingProgress().stubbingStarted();
         getMockingProgress().resetOngoingStubbing();
         return (PowerMockitoStubber) new PowerMockitoStubberImpl().doAnswer(answer);

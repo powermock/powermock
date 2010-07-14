@@ -40,8 +40,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.easymock</groupId>
-			<artifactId>easymockclassextension</artifactId>
-			<version>2.5.2</version>
+			<artifactId>easymock</artifactId>
+			<version>3.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

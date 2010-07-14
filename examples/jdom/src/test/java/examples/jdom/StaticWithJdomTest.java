@@ -17,7 +17,7 @@ package examples.jdom;
 
 import java.io.StringReader;
 
-import org.easymock.classextension.EasyMock;
+import org.easymock.EasyMock;
 import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
 import org.junit.Assert;

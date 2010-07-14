@@ -58,8 +58,7 @@ public class PowerMockObjectFactory implements IObjectFactory {
 		ignorePackagesExtractor = new PowerMockIgnorePackagesExtractorImpl();
 	}
 
-	@SuppressWarnings("unchecked")
-	public Object newInstance(Constructor constructor, Object... params) {
+	public Object newInstance(@SuppressWarnings("rawtypes") Constructor constructor, Object... params) {
 		/*
 		 * For extra safety clear the MockitoRepository on each new
 		 * instantiation of the object factory. This is good in cases where a

@@ -16,8 +16,8 @@
 package samples.junit3.annotationbased;
 
 import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import junit.framework.TestCase;
 
 import org.powermock.api.easymock.annotation.Mock;

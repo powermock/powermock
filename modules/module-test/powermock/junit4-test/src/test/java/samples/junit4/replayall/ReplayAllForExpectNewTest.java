@@ -26,7 +26,7 @@ import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 import java.io.IOException;
 
-import org.easymock.classextension.EasyMock;
+import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;

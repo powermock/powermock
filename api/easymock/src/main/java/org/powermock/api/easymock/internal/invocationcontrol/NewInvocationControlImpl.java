@@ -18,7 +18,7 @@ package org.powermock.api.easymock.internal.invocationcontrol;
 import java.lang.reflect.Constructor;
 
 import org.easymock.IExpectationSetters;
-import org.easymock.classextension.EasyMock;
+import org.easymock.EasyMock;
 import org.easymock.internal.MocksControl.MockType;
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.NewInvocationControl;

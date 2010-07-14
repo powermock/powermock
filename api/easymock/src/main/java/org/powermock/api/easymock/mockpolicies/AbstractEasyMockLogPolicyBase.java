@@ -15,7 +15,7 @@
  */
 package org.powermock.api.easymock.mockpolicies;
 
-import static org.easymock.classextension.EasyMock.makeThreadSafe;
+import static org.easymock.EasyMock.makeThreadSafe;
 import static org.powermock.api.easymock.PowerMock.createNiceMock;
 
 import java.lang.reflect.Method;

@@ -15,15 +15,15 @@
  */
 package org.powermock.api.easymock.internal.signedsupport;
 
-import org.easymock.classextension.internal.MocksClassControl;
 import org.easymock.internal.IProxyFactory;
+import org.easymock.internal.MocksControl;
 
 /**
  * An extension of the {@link MocksClassControl} that loads the
  * {@link SignedSupportingClassProxyFactory} to allow mocking of signed class
  * files.
  */
-public class SignedSupportingMocksClassControl extends MocksClassControl {
+public class SignedSupportingMocksClassControl extends MocksControl {
 
 	public SignedSupportingMocksClassControl(MockType type) {
 		super(type);

@@ -58,7 +58,7 @@ public class DefaultConstructorExpectationSetup<T> implements ConstructorExpecta
 		return this;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static <T> OngoingStubbing<T> createNewSubsituteMock(Class<T> type, Class<?>[] parameterTypes, Object... arguments) throws Exception {
 		if (type == null) {
 			throw new IllegalArgumentException("type cannot be null");

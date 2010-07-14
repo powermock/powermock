@@ -15,13 +15,13 @@
  */
 package samples.junit4.partialmocking;
 
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 import java.lang.reflect.Method;
 
-import org.easymock.classextension.ConstructorArgs;
+import org.easymock.ConstructorArgs;
 import org.junit.Ignore;
 import org.junit.Test;
 

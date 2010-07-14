@@ -24,11 +24,6 @@
             <type>pom</type>
             <version>${version}</version>
         </dependency>
-	<dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymockclassextension</artifactId>
-            <scope>compile</scope>
-        </dependency>
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>

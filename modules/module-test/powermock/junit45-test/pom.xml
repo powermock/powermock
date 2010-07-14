@@ -22,10 +22,6 @@
          <artifactId>easymock</artifactId>
       </dependency>
       <dependency>
-         <groupId>org.easymock</groupId>
-         <artifactId>easymockclassextension</artifactId>
-      </dependency>
-      <dependency>
          <groupId>org.powermock.tests</groupId>
          <artifactId>powermock-tests-utils</artifactId>
          <version>${version}</version>

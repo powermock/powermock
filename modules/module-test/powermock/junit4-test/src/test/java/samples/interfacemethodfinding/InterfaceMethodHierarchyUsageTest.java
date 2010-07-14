@@ -18,7 +18,7 @@ package samples.interfacemethodfinding;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-import org.easymock.classextension.EasyMock;
+import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;

@@ -84,16 +84,13 @@ public class StaticService {
 		return a + b;
 	}
 
-	@SuppressWarnings("unused")
 	private static String sayPrivateStatic(String string) {
 		return "Hello private static " + string;
 	}
 
-	@SuppressWarnings("unused")
 	private static String sayPrivateFinalStatic(String string) {
 		return "Hello private static " + string;
 	}
 
-	@SuppressWarnings("unused")
 	private static final native String sayPrivateNativeFinalStatic(String string);
 }

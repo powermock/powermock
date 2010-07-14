@@ -91,8 +91,7 @@ public class PowerMockito extends MemberModifier {
      * 
      * @return mock object
      */
-    @SuppressWarnings("unchecked")
-    public static void mockStatic(Class<?> classMock, Answer defaultAnswer) {
+    public static void mockStatic(Class<?> classMock, @SuppressWarnings("rawtypes") Answer defaultAnswer) {
         mockStatic(classMock, withSettings().defaultAnswer(defaultAnswer));
     }
 
@@ -163,8 +162,7 @@ public class PowerMockito extends MemberModifier {
      * 
      * @return mock object
      */
-    @SuppressWarnings("unchecked")
-    public static <T> T mock(Class<T> classToMock, Answer defaultAnswer) {
+    public static <T> T mock(Class<T> classToMock, @SuppressWarnings("rawtypes") Answer defaultAnswer) {
         return mock(classToMock, withSettings().defaultAnswer(defaultAnswer));
     }
 

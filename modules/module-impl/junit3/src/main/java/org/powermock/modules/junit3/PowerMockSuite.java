@@ -79,7 +79,7 @@ public class PowerMockSuite extends TestSuite {
 	/**
 	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addTestSuite(Class testClass) {
 		try {
@@ -108,7 +108,7 @@ public class PowerMockSuite extends TestSuite {
 	/**
 	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Enumeration tests() {
 		return testChunker.tests();

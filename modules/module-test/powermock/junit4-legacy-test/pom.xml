@@ -20,10 +20,6 @@
          <artifactId>easymock</artifactId>
       </dependency>
       <dependency>
-         <groupId>org.easymock</groupId>
-         <artifactId>easymockclassextension</artifactId>
-      </dependency>
-      <dependency>
          <groupId>org.powermock.modules</groupId>
          <artifactId>powermock-module-junit4-legacy
          </artifactId>

@@ -16,10 +16,6 @@
 			<artifactId>easymock</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.easymock</groupId>
-			<artifactId>easymockclassextension</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.powermock.api</groupId>
 			<artifactId>powermock-api-support</artifactId>
 			<version>${version}</version>

@@ -29,10 +29,9 @@ import java.util.Set;
 
 import net.sf.cglib.proxy.Enhancer;
 
+import org.easymock.ConstructorArgs;
 import org.easymock.IExpectationSetters;
 import org.easymock.IMocksControl;
-import org.easymock.classextension.ConstructorArgs;
-import org.easymock.classextension.internal.MocksClassControl;
 import org.easymock.internal.MockInvocationHandler;
 import org.easymock.internal.MocksControl;
 import org.powermock.api.easymock.internal.invocationcontrol.EasyMockMethodInvocationControl;
@@ -1398,14 +1397,14 @@ public class PowerMock extends MemberModifier {
 
 	/**
 	 * This method just delegates to EasyMock class extensions
-	 * {@link org.easymock.classextension.EasyMock#expectLastCall()} method.
+	 * {@link org.easymock.EasyMock#expectLastCall()} method.
 	 * 
-	 * @see org.easymock.classextension.EasyMock#expectLastCall()
+	 * @see org.easymock.EasyMock#expectLastCall()
 	 * 
 	 * @return The expectation setter.
 	 */
 	public static synchronized IExpectationSetters<Object> expectLastCall() {
-		return org.easymock.classextension.EasyMock.expectLastCall();
+		return org.easymock.EasyMock.expectLastCall();
 	}
 
 	/**
@@ -1530,7 +1529,7 @@ public class PowerMock extends MemberModifier {
 							 * no handler registered for this object.
 							 */
 							try {
-								org.easymock.classextension.EasyMock.reset(mock);
+								org.easymock.EasyMock.reset(mock);
 							} catch (RuntimeException e) {
 								throw new RuntimeException(mock + " is not a mock object", e);
 							}
@@ -1599,7 +1598,7 @@ public class PowerMock extends MemberModifier {
 							 * no handler registered for this object.
 							 */
 							try {
-								org.easymock.classextension.EasyMock.replay(mock);
+								org.easymock.EasyMock.replay(mock);
 							} catch (RuntimeException e) {
 								throw new RuntimeException(mock + " is not a mock object", e);
 							}
@@ -1642,7 +1641,7 @@ public class PowerMock extends MemberModifier {
 						 * handler registered for this object.
 						 */
 						try {
-							org.easymock.classextension.EasyMock.verify(mock);
+							org.easymock.EasyMock.verify(mock);
 						} catch (RuntimeException e) {
 							throw new RuntimeException(mock + " is not a mock object", e);
 						}
@@ -2155,18 +2154,18 @@ public class PowerMock extends MemberModifier {
 
 	private static <T> T doCreateMock(Class<T> type, ConstructorArgs constructorArgs, final IMocksControl control, Method... methods) {
 		T mock;
-		MocksClassControl mocksClassControl = ((MocksClassControl) control);
+		MocksControl mocksControl = ((MocksControl) control);
 		if (constructorArgs == null) {
 			if (methods == null) {
-				mock = mocksClassControl.createMock(type);
+				mock = mocksControl.createMock(type);
 			} else {
-				mock = mocksClassControl.createMock(type, methods);
+				mock = mocksControl.createMock(type, methods);
 			}
 		} else {
 			if (methods == null) {
-				mock = mocksClassControl.createMock(type, constructorArgs);
+				mock = mocksControl.createMock(type, constructorArgs);
 			} else {
-				mock = mocksClassControl.createMock(type, constructorArgs, methods);
+				mock = mocksControl.createMock(type, constructorArgs, methods);
 			}
 		}
 		return mock;
@@ -2193,7 +2192,7 @@ public class PowerMock extends MemberModifier {
 	@SuppressWarnings("unchecked")
 	private static <T> IExpectationSetters<T> doExpectPrivate(Object instance, Method methodToExpect, Object... arguments) throws Exception {
 		WhiteboxImpl.performMethodInvocation(instance, methodToExpect, arguments);
-		return (IExpectationSetters<T>) org.easymock.classextension.EasyMock.expectLastCall();
+		return (IExpectationSetters<T>) org.easymock.EasyMock.expectLastCall();
 	}
 
 	private static synchronized void replay(Class<?>... types) {

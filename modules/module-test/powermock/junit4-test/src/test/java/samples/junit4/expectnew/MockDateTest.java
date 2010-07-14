@@ -21,7 +21,7 @@ import java.util.Date;
 import junit.framework.Assert;
 
 import org.easymock.EasyMock;
-import org.easymock.classextension.internal.MocksClassControl;
+import org.easymock.internal.MocksControl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
@@ -50,7 +50,7 @@ public class MockDateTest {
 	@Test
 	public void testMockDateWithEasyMock() throws Exception {
 		Date someDate = new Date();
-		MocksClassControl c = (MocksClassControl) org.easymock.classextension.EasyMock.createControl();
+		MocksControl c = (MocksControl) org.easymock.EasyMock.createControl();
 		Date date = c.createMock(Date.class);
 		EasyMock.expect(date.after(someDate)).andReturn(false);
 
@@ -64,7 +64,7 @@ public class MockDateTest {
 	@Test(expected = IllegalStateException.class)
 	public void testMockDateWithEasyMockFails() {
 		Date someDate = new Date();
-		MocksClassControl c = (MocksClassControl) org.easymock.classextension.EasyMock.createControl();
+		MocksControl c = (MocksControl) org.easymock.EasyMock.createControl();
 		Date date = c.createMock(Date.class, new Method[0]);
 		EasyMock.expect(date.after(someDate)).andReturn(false);
 		Assert.fail("EasyMock with no methods mocked should not be possible to mock");

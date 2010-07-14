@@ -17,7 +17,7 @@ package demo.org.powermock.modules.test.junit45.failure;
 
 import static org.junit.Assert.assertTrue;
 
-import org.easymock.classextension.EasyMock;
+import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.runner.RunWith;
@@ -30,7 +30,7 @@ import org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegate
  * This test asserts that JUnit 4.5 failures works as expected. Previously the
  * {@link PowerMockJUnit44RunnerDelegateImpl} got a {@link NoClassDefFoundError}
  * when trying to load JUnit 4.4's {@link AssumptionViolatedException} which has
- * been moved in JUnit 4.5. Thanks to Manuel Fernández Sánchez de la Blanca for
+ * been moved in JUnit 4.5. Thanks to Manuel Fernï¿½ndez Sï¿½nchez de la Blanca for
  * creating this test case to prove the issue.
  * 
  */

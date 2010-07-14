@@ -196,7 +196,7 @@ public class WhiteboxImpl {
      * @throws FieldNotFoundException
      *             If a field cannot be found in the hierarchy.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static Field getField(Class<?> type, String fieldName) {
         LinkedList<Class<?>> examine = new LinkedList<Class<?>>();
         examine.add(type);

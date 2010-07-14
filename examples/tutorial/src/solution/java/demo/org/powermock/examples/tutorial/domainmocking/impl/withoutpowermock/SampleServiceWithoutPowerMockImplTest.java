@@ -18,15 +18,15 @@ package demo.org.powermock.examples.tutorial.domainmocking.impl.withoutpowermock
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.reportMatcher;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Method;
 
-import org.easymock.classextension.ConstructorArgs;
+import org.easymock.ConstructorArgs;
 import org.easymock.internal.matchers.Equals;
 import org.easymock.internal.matchers.Same;
 import org.junit.After;

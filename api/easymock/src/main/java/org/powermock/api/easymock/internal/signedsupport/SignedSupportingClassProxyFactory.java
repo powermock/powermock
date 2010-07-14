@@ -34,11 +34,11 @@ import net.sf.cglib.proxy.Factory;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
-import org.easymock.classextension.ConstructorArgs;
-import org.easymock.classextension.internal.BridgeMethodResolver;
-import org.easymock.classextension.internal.ClassExtensionHelper;
-import org.easymock.classextension.internal.ClassInstantiatorFactory;
-import org.easymock.classextension.internal.ClassProxyFactory;
+import org.easymock.ConstructorArgs;
+import org.easymock.internal.BridgeMethodResolver;
+import org.easymock.internal.ClassExtensionHelper;
+import org.easymock.internal.ClassInstantiatorFactory;
+import org.easymock.internal.ClassProxyFactory;
 import org.easymock.internal.IProxyFactory;
 import org.easymock.internal.ObjectMethodsFilter;
 
@@ -56,7 +56,7 @@ import org.easymock.internal.ObjectMethodsFilter;
  */
 public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public T createProxy(Class<T> toMock, final InvocationHandler handler) {
 
 		// Dirty trick to fix ObjectMethodsFilter

@@ -184,7 +184,7 @@ public class DeepCloner {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Object cloneEnum(ClassLoader targetCL, Object source) {
 		Object target;
 		final Class enumClassLoadedByTargetCL = ClassLoaderUtil.loadClassWithClassloader(targetCL, getType(source));
@@ -263,7 +263,7 @@ public class DeepCloner {
 		return Iterable.class.isAssignableFrom(cls);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static Enum getEnumValue(final Object enumValueOfSourceClassloader,
 			final Class<Object> enumTypeLoadedByTargetCL) {
 		return Enum.valueOf((Class) enumTypeLoadedByTargetCL, ((Enum) enumValueOfSourceClassloader).toString());

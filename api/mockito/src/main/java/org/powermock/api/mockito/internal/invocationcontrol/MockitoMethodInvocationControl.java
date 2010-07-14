@@ -241,9 +241,8 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
              * "isMockitoMock" returns false is that the mock is not created by
              * the Mockito CGLib Enhancer in case of static methods.
              */
-            @SuppressWarnings("unchecked")
             @Override
-            protected String toString(List<Matcher> matchers, PrintSettings printSettings) {
+            protected String toString(@SuppressWarnings("rawtypes") List<Matcher> matchers, PrintSettings printSettings) {
                 MatchersPrinter matchersPrinter = new MatchersPrinter();
                 String method = Whitebox.getType(getMock()).getName() + "." + getMethodName();
                 String invocation = method + matchersPrinter.getArgumentsLine(matchers, printSettings);
