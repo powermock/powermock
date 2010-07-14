@@ -94,5 +94,8 @@ public class MockSelfDemo {
 	public int timesThree(int anInt) {
 		return anInt * 3;
 	}
-
+	
+	public int getConstructorValue() {
+		return hello;
+	}
 }

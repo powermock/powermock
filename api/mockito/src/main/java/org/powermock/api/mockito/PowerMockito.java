@@ -212,7 +212,7 @@ public class PowerMockito extends MemberModifier {
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> T spy(T object) {
-        return MockCreator.mock((Class<T>) Whitebox.getType(object), false, true, null, null, (Method[]) null);
+        return MockCreator.mock((Class<T>) Whitebox.getType(object), false, true, object, null, (Method[]) null);
     }
 
     /**

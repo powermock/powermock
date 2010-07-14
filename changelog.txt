@@ -1,7 +1,7 @@
 Change log 1.4 (under development)
 ----------------------------------
 * Upgraded the Mockito extension API to support Mockito 1.8.5
-* Upgraded the EasyMock extension API to support EasyMock 3.0
+* Upgraded the EasyMock extension API to support EasyMock 3.0 (issue 259)
 
 Change log 1.3.8 (2010-05-13)
 -----------------------------
