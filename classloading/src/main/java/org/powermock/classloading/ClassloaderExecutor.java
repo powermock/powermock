@@ -20,11 +20,12 @@ import java.util.concurrent.Callable;
 
 import org.powermock.api.support.DeepCloner;
 import org.powermock.api.support.DoNotClone;
+import org.powermock.api.support.SafeExceptionRethrower;
 import org.powermock.reflect.Whitebox;
 
 public class ClassloaderExecutor {
 
-    @DoNotClone
+	@DoNotClone
 	private final ClassLoader classloader;
 
 	public ClassloaderExecutor(ClassLoader classloader) {
@@ -57,15 +58,11 @@ public class ClassloaderExecutor {
 			argumentsLoadedByClassLoader[i] = deepCloner.clone(argument);
 		}
 
-		final Object result;
-		if (Void.TYPE.equals(method.getReturnType())) {
-			result = null;
-		} else {
-			try {
-				result = Whitebox.invokeMethod(objectLoadedWithClassloader, method.getName(), argumentsLoadedByClassLoader);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
+		Object result = null;
+		try {
+			result = Whitebox.invokeMethod(objectLoadedWithClassloader, method.getName(), argumentsLoadedByClassLoader);
+		} catch (Exception e) {
+			SafeExceptionRethrower.safeRethrow(e);
 		}
 		return result == null ? null : new DeepCloner().clone(result);
 	}

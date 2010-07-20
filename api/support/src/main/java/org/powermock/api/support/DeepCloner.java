@@ -24,6 +24,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Map;
 
@@ -111,6 +112,8 @@ public class DeepCloner {
 		Object target = null;
 		if (targetClass.isArray() && !isClass(source)) {
 			return (T) instantiateArray(targetCL, targetClass, source, referenceMap, shouldCloneStandardJavaTypes);
+		} else if (isJavaReflectMethod(targetClass)) {
+			return (T) cloneJavaReflectMethod(source);
 		} else if (targetClass.isPrimitive() || isSunClass(targetClass) || isJavaReflectClass(targetClass)) {
 			return (T) source;
 		} else if (isSerializableCandidate(targetClass, source)) {
@@ -128,6 +131,28 @@ public class DeepCloner {
 			cloneFields(targetCL, targetClass, source, target, referenceMap, shouldCloneStandardJavaTypes);
 		}
 		return (T) target;
+	}
+
+	@SuppressWarnings("unchecked")
+	private Object cloneJavaReflectMethod(Object source) {
+		Method sourceMethod = (Method) source;
+		Class<?> declaringClass = sourceMethod.getDeclaringClass();
+		Class<?> targetClassLoadedWithTargetCL = ClassLoaderUtil.loadClassWithClassloader(targetCL, declaringClass);
+		Method targetMethod = null;
+		try {
+			targetMethod = targetClassLoadedWithTargetCL.getDeclaredMethod(sourceMethod.getName(),
+					sourceMethod.getParameterTypes());
+		} catch (Exception e) {
+			SafeExceptionRethrower.safeRethrow(e);
+		}
+		if (sourceMethod.isAccessible()) {
+			targetMethod.setAccessible(true);
+		}
+		return targetMethod;
+	}
+
+	private boolean isJavaReflectMethod(Class<?> cls) {
+		return cls.getName().equals(Method.class.getName());
 	}
 
 	private boolean isSunClass(Class<?> cls) {
@@ -276,11 +301,11 @@ public class DeepCloner {
 		for (int i = 0; i < arrayLength; i++) {
 			final Object object = Array.get(objectToClone, i);
 			final Object performClone;
-			if(object==null) {
-			 performClone = null;   
+			if (object == null) {
+				performClone = null;
 			} else {
-			performClone = performClone(ClassLoaderUtil
-					.loadClassWithClassloader(targetCL, getType(object)), object, cloneStandardJavaTypes);
+				performClone = performClone(ClassLoaderUtil.loadClassWithClassloader(targetCL, getType(object)),
+						object, cloneStandardJavaTypes);
 			}
 			Array.set(array, i, performClone);
 		}

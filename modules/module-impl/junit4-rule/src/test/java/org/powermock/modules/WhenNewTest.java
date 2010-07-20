@@ -35,6 +35,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -53,6 +54,7 @@ import samples.newmocking.MyClass;
  * 
  */
 @PrepareForTest( { MyClass.class, ExpectNewDemo.class, DataInputStream.class })
+@Ignore
 public class WhenNewTest {
     @Rule
     public PowerMockRule powerMockRule = new PowerMockRule();

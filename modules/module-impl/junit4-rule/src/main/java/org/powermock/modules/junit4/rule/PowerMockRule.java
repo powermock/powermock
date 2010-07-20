@@ -18,49 +18,41 @@ package org.powermock.modules.junit4.rule;
 import org.junit.rules.MethodRule;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
+import org.powermock.api.support.SafeExceptionRethrower;
 import org.powermock.classloading.ClassloaderExecutor;
 
 public class PowerMockRule implements MethodRule {
-    private static ClassloaderExecutor classloaderExecutor;
-    private static Class<?> previousTargetClass;
+	private static ClassloaderExecutor classloaderExecutor;
+	private static Class<?> previousTargetClass;
 
-    public Statement apply(Statement base, FrameworkMethod method, Object target) {
-        if (classloaderExecutor == null || previousTargetClass != target.getClass()) {
-            classloaderExecutor = PowerMockClassloaderExecutor.forClass(target.getClass());
-            previousTargetClass = target.getClass();
-        }
-        return new PowerMockStatement(base, classloaderExecutor);
-    }
+	public Statement apply(Statement base, FrameworkMethod method, Object target) {
+		if (classloaderExecutor == null || previousTargetClass != target.getClass()) {
+			classloaderExecutor = PowerMockClassloaderExecutor.forClass(target.getClass());
+			previousTargetClass = target.getClass();
+		}
+		return new PowerMockStatement(base, classloaderExecutor);
+	}
 }
 
 class PowerMockStatement extends Statement {
-    private final Statement fNext;
-    private final ClassloaderExecutor classloaderExecutor;
+	private final Statement fNext;
+	private final ClassloaderExecutor classloaderExecutor;
 
-    public PowerMockStatement(Statement base, ClassloaderExecutor classloaderExecutor) {
-        fNext = base;
-        this.classloaderExecutor = classloaderExecutor;
-    }
+	public PowerMockStatement(Statement base, ClassloaderExecutor classloaderExecutor) {
+		fNext = base;
+		this.classloaderExecutor = classloaderExecutor;
+	}
 
-    @Override
-    public void evaluate() throws Throwable {
-        classloaderExecutor.execute(new Runnable() {
-            public void run() {
-                try {
-                    fNext.evaluate();
-                } catch (Throwable e) {
-                    safeRethrow(e);
-                }
-            }
-        });
-    }
-    
-    private static void safeRethrow(Throwable t) {
-        PowerMockStatement.<RuntimeException> safeRethrow0(t);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T extends Throwable> void safeRethrow0(Throwable t) throws T {
-        throw (T) t;
-    }
+	@Override
+	public void evaluate() throws Throwable {
+		classloaderExecutor.execute(new Runnable() {
+			public void run() {
+				try {
+					fNext.evaluate();
+				} catch (Throwable e) {
+					SafeExceptionRethrower.safeRethrow(e);
+				}
+			}
+		});
+	}
 }

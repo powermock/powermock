@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -49,6 +50,7 @@ import samples.system.SystemClassUser;
  * </pre>
  */
 @PrepareForTest( { SystemClassUser.class })
+@Ignore
 public class SystemClassUserTest {
     @Rule
     public PowerMockRule powerMockRule = new PowerMockRule();
