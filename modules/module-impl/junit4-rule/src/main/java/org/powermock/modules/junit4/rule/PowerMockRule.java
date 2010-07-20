@@ -20,6 +20,7 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 import org.powermock.api.support.SafeExceptionRethrower;
 import org.powermock.classloading.ClassloaderExecutor;
+import org.powermock.core.MockRepository;
 
 public class PowerMockRule implements MethodRule {
 	private static ClassloaderExecutor classloaderExecutor;
@@ -51,6 +52,9 @@ class PowerMockStatement extends Statement {
 					fNext.evaluate();
 				} catch (Throwable e) {
 					SafeExceptionRethrower.safeRethrow(e);
+				} finally {
+					// Clear the mock repository after each test
+					MockRepository.clear();
 				}
 			}
 		});

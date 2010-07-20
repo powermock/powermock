@@ -133,7 +133,6 @@ public class DeepCloner {
 		return (T) target;
 	}
 
-	@SuppressWarnings("unchecked")
 	private Object cloneJavaReflectMethod(Object source) {
 		Method sourceMethod = (Method) source;
 		Class<?> declaringClass = sourceMethod.getDeclaringClass();

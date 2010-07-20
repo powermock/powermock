@@ -35,7 +35,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -53,11 +52,10 @@ import samples.newmocking.MyClass;
  * Test class to demonstrate new instance mocking using whenConstructionOf(..).
  * 
  */
-@PrepareForTest( { MyClass.class, ExpectNewDemo.class, DataInputStream.class })
-@Ignore
+@PrepareForTest({ MyClass.class, ExpectNewDemo.class, DataInputStream.class })
 public class WhenNewTest {
-    @Rule
-    public PowerMockRule powerMockRule = new PowerMockRule();
+	@Rule
+	public PowerMockRule powerMockRule = new PowerMockRule();
 
 	@Test
 	public void testNewWithCheckedException() throws Exception {
@@ -294,7 +292,8 @@ public class WhenNewTest {
 		verifyNew(DataInputStream.class).withArguments(null);
 
 		assertNotNull("The returned inputstream should not be null.", stream);
-		assertTrue("The returned inputstream should be an instance of ByteArrayInputStream.", stream instanceof ByteArrayInputStream);
+		assertTrue("The returned inputstream should be an instance of ByteArrayInputStream.",
+				stream instanceof ByteArrayInputStream);
 	}
 
 	@Test
@@ -323,7 +322,8 @@ public class WhenNewTest {
 		ExpectNewServiceUser expectNewServiceImplMock = mock(ExpectNewServiceUser.class);
 		Service serviceMock = mock(Service.class);
 
-		whenNew(ExpectNewServiceUser.class).withArguments(serviceMock, numberOfTimes).thenReturn(expectNewServiceImplMock);
+		whenNew(ExpectNewServiceUser.class).withArguments(serviceMock, numberOfTimes).thenReturn(
+				expectNewServiceImplMock);
 		when(expectNewServiceImplMock.useService()).thenReturn(expected);
 
 		assertEquals(expected, tested.newWithArguments(serviceMock, numberOfTimes));
@@ -340,8 +340,8 @@ public class WhenNewTest {
 		ExpectNewServiceUser expectNewServiceImplMock = mock(ExpectNewServiceUser.class);
 		Service serviceMock = mock(Service.class);
 
-		whenNew(ExpectNewServiceUser.class).withParameterTypes(Service.class, int.class).withArguments(serviceMock, numberOfTimes).thenReturn(
-				expectNewServiceImplMock);
+		whenNew(ExpectNewServiceUser.class).withParameterTypes(Service.class, int.class)
+				.withArguments(serviceMock, numberOfTimes).thenReturn(expectNewServiceImplMock);
 		when(expectNewServiceImplMock.useService()).thenReturn(expected);
 
 		assertEquals(expected, tested.newWithArguments(serviceMock, numberOfTimes));
@@ -358,8 +358,8 @@ public class WhenNewTest {
 		ExpectNewServiceUser expectNewServiceImplMock = mock(ExpectNewServiceUser.class);
 		Service serviceMock = mock(Service.class);
 
-		whenNew(constructor(ExpectNewServiceUser.class, Service.class, int.class)).withArguments(serviceMock, numberOfTimes).thenReturn(
-				expectNewServiceImplMock);
+		whenNew(constructor(ExpectNewServiceUser.class, Service.class, int.class)).withArguments(serviceMock,
+				numberOfTimes).thenReturn(expectNewServiceImplMock);
 		when(expectNewServiceImplMock.useService()).thenReturn(expected);
 
 		assertEquals(expected, tested.newWithArguments(serviceMock, numberOfTimes));
@@ -376,7 +376,8 @@ public class WhenNewTest {
 		ExpectNewServiceUser expectNewServiceImplMock = mock(ExpectNewServiceUser.class);
 		Service serviceMock = mock(Service.class);
 
-		whenNew(constructor(ExpectNewServiceUser.class)).withArguments(serviceMock, numberOfTimes).thenReturn(expectNewServiceImplMock);
+		whenNew(constructor(ExpectNewServiceUser.class)).withArguments(serviceMock, numberOfTimes).thenReturn(
+				expectNewServiceImplMock);
 		when(expectNewServiceImplMock.useService()).thenReturn(expected);
 
 		assertEquals(expected, tested.newWithArguments(serviceMock, numberOfTimes));
@@ -392,7 +393,8 @@ public class WhenNewTest {
 		ExpectNewDemo tested = new ExpectNewDemo();
 		VarArgsConstructorDemo varArgsConstructorDemoMock = mock(VarArgsConstructorDemo.class);
 
-		whenNew(VarArgsConstructorDemo.class).withArguments(firstString, secondString).thenReturn(varArgsConstructorDemoMock);
+		whenNew(VarArgsConstructorDemo.class).withArguments(firstString, secondString).thenReturn(
+				varArgsConstructorDemoMock);
 		when(varArgsConstructorDemoMock.getAllMessages()).thenReturn(new String[] { firstString, secondString });
 
 		String[] varArgs = tested.newVarArgs(firstString, secondString);
@@ -410,8 +412,8 @@ public class WhenNewTest {
 			whenNew(VarArgsConstructorDemo.class).withArguments(object);
 			fail("Should throw ConstructorNotFoundException!");
 		} catch (ConstructorNotFoundException e) {
-			assertEquals("No constructor found in class '" + VarArgsConstructorDemo.class.getName() + "' with parameter types: [ "
-					+ object.getClass().getName() + " ].", e.getMessage());
+			assertEquals("No constructor found in class '" + VarArgsConstructorDemo.class.getName()
+					+ "' with parameter types: [ " + object.getClass().getName() + " ].", e.getMessage());
 		}
 	}
 
@@ -428,7 +430,8 @@ public class WhenNewTest {
 			}
 		};
 
-		whenNew(VarArgsConstructorDemo.class).withArguments(serviceSubTypeInstance, serviceMock).thenReturn(varArgsConstructorDemoMock);
+		whenNew(VarArgsConstructorDemo.class).withArguments(serviceSubTypeInstance, serviceMock).thenReturn(
+				varArgsConstructorDemoMock);
 		when(varArgsConstructorDemoMock.getAllServices()).thenReturn(new Service[] { serviceMock });
 
 		Service[] varArgs = tested.newVarArgs(serviceSubTypeInstance, serviceMock);
@@ -445,7 +448,8 @@ public class WhenNewTest {
 
 		final byte[] byteArrayOne = new byte[] { 42 };
 		final byte[] byteArrayTwo = new byte[] { 17 };
-		whenNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(varArgsConstructorDemoMock);
+		whenNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(
+				varArgsConstructorDemoMock);
 		when(varArgsConstructorDemoMock.getByteArrays()).thenReturn(new byte[][] { byteArrayOne });
 
 		byte[][] varArgs = tested.newVarArgs(byteArrayOne, byteArrayTwo);
@@ -462,7 +466,8 @@ public class WhenNewTest {
 
 		final byte[] byteArrayOne = new byte[] { 42 };
 		final byte[] byteArrayTwo = new byte[] { 17 };
-		whenNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(varArgsConstructorDemoMock);
+		whenNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(
+				varArgsConstructorDemoMock);
 		when(varArgsConstructorDemoMock.getByteArrays()).thenReturn(new byte[][] { byteArrayOne });
 
 		byte[][] varArgs = tested.newVarArgsWithMatchers();
@@ -479,7 +484,8 @@ public class WhenNewTest {
 
 		final byte[] byteArrayOne = null;
 		final byte[] byteArrayTwo = new byte[] { 17 };
-		whenNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(varArgsConstructorDemoMock);
+		whenNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(
+				varArgsConstructorDemoMock);
 		when(varArgsConstructorDemoMock.getByteArrays()).thenReturn(new byte[][] { byteArrayTwo });
 
 		byte[][] varArgs = tested.newVarArgs(byteArrayOne, byteArrayTwo);
@@ -496,7 +502,8 @@ public class WhenNewTest {
 
 		final byte[] byteArrayOne = new byte[] { 42 };
 		final byte[] byteArrayTwo = null;
-		whenNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(varArgsConstructorDemoMock);
+		whenNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(
+				varArgsConstructorDemoMock);
 		when(varArgsConstructorDemoMock.getByteArrays()).thenReturn(new byte[][] { byteArrayOne });
 
 		byte[][] varArgs = tested.newVarArgs(byteArrayOne, byteArrayTwo);
@@ -507,14 +514,16 @@ public class WhenNewTest {
 	}
 
 	@Test
-	public void testNewWithArrayVarArgsWhenFirstArgumentIsNullSecondArgumentIsNotNullAndThirdArgumentIsNull() throws Exception {
+	public void testNewWithArrayVarArgsWhenFirstArgumentIsNullSecondArgumentIsNotNullAndThirdArgumentIsNull()
+			throws Exception {
 		ExpectNewDemo tested = new ExpectNewDemo();
 		VarArgsConstructorDemo varArgsConstructorDemoMock = mock(VarArgsConstructorDemo.class);
 
 		final byte[] byteArrayOne = null;
 		final byte[] byteArrayTwo = new byte[] { 42 };
 		final byte[] byteArrayThree = null;
-		whenNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo, byteArrayThree).thenReturn(varArgsConstructorDemoMock);
+		whenNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo, byteArrayThree).thenReturn(
+				varArgsConstructorDemoMock);
 		when(varArgsConstructorDemoMock.getByteArrays()).thenReturn(new byte[][] { byteArrayTwo });
 
 		byte[][] varArgs = tested.newVarArgs(byteArrayOne, byteArrayTwo, byteArrayThree);
@@ -531,7 +540,8 @@ public class WhenNewTest {
 
 		final byte[] byteArrayOne = null;
 		final byte[] byteArrayTwo = null;
-		whenNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(varArgsConstructorDemoMock);
+		whenNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(
+				varArgsConstructorDemoMock);
 		when(varArgsConstructorDemoMock.getByteArrays()).thenReturn(new byte[][] { byteArrayTwo });
 
 		byte[][] varArgs = tested.newVarArgs(byteArrayOne, byteArrayTwo);
@@ -550,7 +560,8 @@ public class WhenNewTest {
 		ExpectNewServiceUser expectNewServiceImplMock = mock(ExpectNewServiceUser.class);
 		Service serviceMock = mock(Service.class);
 
-		whenNew(ExpectNewServiceUser.class).withArguments(serviceMock, numberOfTimes).thenReturn(expectNewServiceImplMock);
+		whenNew(ExpectNewServiceUser.class).withArguments(serviceMock, numberOfTimes).thenReturn(
+				expectNewServiceImplMock);
 		when(expectNewServiceImplMock.useService()).thenReturn(expected);
 
 		assertEquals(expected, tested.newWithWrongArguments(serviceMock, numberOfTimes));
@@ -581,8 +592,9 @@ public class WhenNewTest {
 			verifyNew(MyClass.class).withNoArguments();
 			fail("Should throw AssertionError!");
 		} catch (AssertionError e) {
-			assertEquals("Wanted but not invoked samples.newmocking.MyClass();\nActually, there were zero interactions with this mock.", e
-					.getMessage());
+			assertEquals(
+					"Wanted but not invoked samples.newmocking.MyClass();\nActually, there were zero interactions with this mock.",
+					e.getMessage());
 		}
 	}
 }

@@ -62,7 +62,6 @@ public class SystemClassUserTest {
         when(URLEncoder.encode("string", "enc")).thenReturn("something");
 
         assertEquals("something", new SystemClassUser().performEncode());
-
     }
 
     @Test
