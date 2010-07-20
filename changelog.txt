@@ -1,6 +1,7 @@
 Change log 1.4 (under development)
 ----------------------------------
 * Implemeted support for mocking instance methods of final system classes with the Mockito extension API (issue 169)
+* Mocking instance methods in final system classes for classes not having a default constructor now works in the EasyMock extension API (issue 170)
 
 Change log 1.3.9 (2010-07-14)
 ----------------------------------

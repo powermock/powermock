@@ -22,7 +22,6 @@ import static org.powermock.api.easymock.PowerMock.createPartialMock;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -36,51 +35,52 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest(MockingOfInstanceMethodsInFinalSystemClassTest.class)
 public class MockingOfInstanceMethodsInFinalSystemClassTest {
 
-    @Test
-    public void assertThatMockingOfInstanceMethodsInFinalSystemClassesWorks() throws Exception {
-        Long tested = createMock(Long.class);
-        expect(tested.longValue()).andReturn(22L);
-        replayAll();
+	@Test
+	public void assertThatMockingOfInstanceMethodsInFinalSystemClassesWorks() throws Exception {
+		Long tested = createMock(Long.class);
+		expect(tested.longValue()).andReturn(22L);
+		replayAll();
 
-        assertEquals(22L, tested.longValue());
+		assertEquals(22L, tested.longValue());
 
-        verifyAll();
-    }
+		verifyAll();
+	}
 
-    @Test
-    public void assertThatMockingOfInstanceMethodsInStringWorks() throws Exception {
-        String tested = createMock(String.class);
-        expect(tested.charAt(2)).andReturn('A');
-        replayAll();
+	@Test
+	public void assertThatMockingOfInstanceMethodsInStringWorks() throws Exception {
+		String tested = createMock(String.class);
+		expect(tested.charAt(2)).andReturn('A');
+		replayAll();
 
-        assertEquals('A', tested.charAt(2));
+		assertEquals('A', tested.charAt(2));
 
-        verifyAll();
-    }
+		verifyAll();
+	}
 
-    @Test
-    public void assertThatPartialMockingOfInstanceMethodsInFinalSystemClassesWhenNotInvokingConstructorWorks() throws Exception {
-        Long tested = createPartialMock(Long.class, "doubleValue");
-        expect(tested.doubleValue()).andReturn(54d);
-        replayAll();
+	@Test
+	public void assertThatPartialMockingOfInstanceMethodsInFinalSystemClassesWhenNotInvokingConstructorWorks()
+			throws Exception {
+		Long tested = createPartialMock(Long.class, "doubleValue");
+		expect(tested.doubleValue()).andReturn(54d);
+		replayAll();
 
-        assertEquals(0, tested.longValue());
-        assertEquals(54d, tested.doubleValue(), 0.0d);
+		assertEquals(0, tested.longValue());
+		assertEquals(54d, tested.doubleValue(), 0.0d);
 
-        verifyAll();
-    }
+		verifyAll();
+	}
 
-    @Test
-    @Ignore("Doesn't current work")
-    public void assertThatPartialMockingOfInstanceMethodsInFinalSystemClassesWhenNotInvokingNonDefaultConstructorWorks() throws Exception {
-        Long tested = createPartialMock(Long.class, new String[] { "doubleValue" }, 27L);
-        expect(tested.doubleValue()).andReturn(54d);
-        replayAll();
+	@Test
+	public void assertThatPartialMockingOfInstanceMethodsInFinalSystemClassesWhenNotInvokingNonDefaultConstructorWorks()
+			throws Exception {
+		Long tested = createPartialMock(Long.class, new String[] { "doubleValue" }, 27L);
+		expect(tested.doubleValue()).andReturn(54d);
+		replayAll();
 
-        assertEquals(27L, tested.longValue());
-        assertEquals(54d, tested.doubleValue(), 0.0d);
+		assertEquals(27L, tested.longValue());
+		assertEquals(54d, tested.doubleValue(), 0.0d);
 
-        verifyAll();
-    }
+		verifyAll();
+	}
 
 }
