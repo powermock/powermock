@@ -3,7 +3,7 @@ Change log 1.4 (under development)
 * Implemeted support for mocking instance methods of final system classes with the Mockito extension API (issue 169)
 * Mocking instance methods in final system classes for classes not having a default constructor now works in the EasyMock extension API (issue 170)
 * The deep cloner can now clone java.reflect.Method objects correctly to a different classloader.
-* Fixed a critical bug in the ClassloaderExecutor which prevented it from running methods returning void. This affected the PowerMockRule which prevented it from executing test methods (even though it looked like it did) (issue 268)
+* Fixed a critical bug in the ClassloaderExecutor which prevented it from running methods returning void. This affected the PowerMockRule which prevented it from executing test methods (even though it looked like it did) (issue 268, also closes issue 245)
 * Upgraded to Javassist 3.13 (issue 269)
 
 Change log 1.3.9 (2010-07-14)
