@@ -61,4 +61,35 @@ public class TypeUtils {
 			return null;
 		}
 	}
+
+	/**
+	 * Get the default value of a type with based on its fully-qualified name.
+	 * 
+	 * @param fullyQualifiedTypeName
+	 *            The name of the type whose default value to get.
+	 * @return The default value of <code>fullyQualifiedTypeName</code>.
+	 */
+	public static String getDefaultValueAsString(String fullyQualifiedTypeName) {
+		if (fullyQualifiedTypeName == null) { // Void
+			return "";
+		} else if (fullyQualifiedTypeName.equals(byte.class.getName())) {
+			return "(byte) 0";
+		} else if (fullyQualifiedTypeName.equals(int.class.getName())) {
+			return "0";
+		} else if (fullyQualifiedTypeName.equals(short.class.getName())) {
+			return "(short) 0";
+		} else if (fullyQualifiedTypeName.equals(long.class.getName())) {
+			return "0L";
+		} else if (fullyQualifiedTypeName.equals(float.class.getName())) {
+			return "0.0F";
+		} else if (fullyQualifiedTypeName.equals(double.class.getName())) {
+			return "0.0D";
+		} else if (fullyQualifiedTypeName.equals(boolean.class.getName())) {
+			return "false";
+		} else if (fullyQualifiedTypeName.equals(char.class.getName())) {
+			return "' '";
+		} else {
+			return "null";
+		}
+	}
 }

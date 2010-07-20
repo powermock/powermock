@@ -27,11 +27,13 @@ import org.mockito.internal.creation.jmock.ClassImposterizer;
 import org.mockito.internal.util.reflection.LenientCopyTool;
 import org.powermock.api.mockito.internal.invocationcontrol.MockitoMethodInvocationControl;
 import org.powermock.core.ClassReplicaCreator;
+import org.powermock.core.DefaultFieldValueGenerator;
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.support.InvocationSubstitute;
+import org.powermock.reflect.Whitebox;
 
 public class MockCreator {
-
+	
 	@SuppressWarnings("unchecked")
 	public static <T> T mock(Class<T> type, boolean isStatic, boolean isSpy, Object delegator,
 			MockSettings mockSettings, Method... methods) {
@@ -43,7 +45,7 @@ public class MockCreator {
 		final String mockName = toInstanceName(type);
 
 		final Class<T> typeToMock;
-		if (type.getName().startsWith("java.") && Modifier.isFinal(type.getModifiers())) {
+		if (isFinalJavaSystemClass(type)) {
 			typeToMock = (Class<T>) new ClassReplicaCreator().createClassReplica(type);
 		} else {
 			typeToMock = type;
@@ -53,6 +55,11 @@ public class MockCreator {
 				mockSettings);
 
 		mock = mockData.getMock();
+		if (isFinalJavaSystemClass(type) && !isStatic) {
+			mock = Whitebox.newInstance(type);
+			DefaultFieldValueGenerator.fillWithDefaultValues(mock);
+		}
+
 		if (isStatic) {
 			MockRepository.putStaticMethodInvocationControl(type, mockData.getMethodInvocationControl());
 		} else {
@@ -62,12 +69,16 @@ public class MockCreator {
 		if (mock instanceof InvocationSubstitute == false) {
 			MockRepository.addObjectsToAutomaticallyReplayAndVerify(mock);
 		}
-		
+
 		if (isSpy) {
 			new LenientCopyTool().copyToMock(delegator, mock);
 		}
 
 		return mock;
+	}
+
+	private static <T> boolean isFinalJavaSystemClass(Class<T> type) {
+		return type.getName().startsWith("java.") && Modifier.isFinal(type.getModifiers());
 	}
 
 	private static <T> MockData<T> createMethodInvocationControl(final String mockName, Class<T> type,
