@@ -23,6 +23,11 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+/**
+ * Asserts that <a
+ * href="http://code.google.com/p/powermock/issues/detail?id=267">issue 267</a>
+ * is resolved.
+ */
 @PrepareForTest({ InnerConstructorsAreFoundTest.WorkingObjectUnderTesting.class,
 		InnerConstructorsAreFoundTest.BuggyObjectUnderTesting.class,
 		InnerConstructorsAreFoundTest.StillBuggyObjectUnderTesting.class })
@@ -100,16 +105,7 @@ public class InnerConstructorsAreFoundTest {
 	StillBuggyObjectToMock mockedStillBuggyObject;
 
 	@Test
-	public void shouldInjectNewInstance() throws Exception {
-		whenNew(WorkingObjectToMock.class).withArguments(new AnyInterface[] { new AnyImplementation() }).thenReturn(
-				mockedWorkingObject);
-
-		new WorkingObjectUnderTesting().methodToTest();
-	}
-
-	@Test
-	public void shouldInjectNewInstanceButFails() throws Exception {
-		// this is the same as above and throws same exception
+	public void shouldFindMemberVarArgsCtorWhenPassingArrayToWithArguments() throws Exception {
 		whenNew(BuggyObjectToMock.class).withArguments(new SomeOtherImplementationOfSomethingElse(),
 				(Object[]) new AnyInterface[] { new AnyImplementation() }).thenReturn(mockedBuggyObject);
 
@@ -117,9 +113,9 @@ public class InnerConstructorsAreFoundTest {
 	}
 
 	@Test
-	public void shouldInjectNewInstanceButStillFails() throws Exception {
+	public void shouldFindMemberArrayCtorWhenPassingArrayToWithArguments() throws Exception {
 		whenNew(StillBuggyObjectToMock.class).withArguments(new SomeOtherImplementationOfSomethingElse(),
-				(Object[]) new AnyInterface[] { new AnyImplementation() }).thenReturn(mockedStillBuggyObject);
+				(Object) new AnyInterface[] { new AnyImplementation() }).thenReturn(mockedStillBuggyObject);
 
 		new StillBuggyObjectUnderTesting().methodToTest();
 	}
