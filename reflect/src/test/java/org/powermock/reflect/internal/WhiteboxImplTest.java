@@ -56,7 +56,7 @@ public class WhiteboxImplTest {
 	public void getBestCandidateMethodReturnsMatchingMethodWhenNoOverloading() throws Exception {
 		final Method expectedMethod = ClassWithStandardMethod.class.getDeclaredMethod("myMethod", double.class);
 		final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithStandardMethod.class, "myMethod",
-				new Class<?>[] { double.class });
+				new Class<?>[] { double.class }, false);
 		assertEquals(expectedMethod, actualMethod);
 	}
 
@@ -65,7 +65,7 @@ public class WhiteboxImplTest {
 		final Method expectedMethod = ClassWithOverloadedMethods.class.getDeclaredMethod("overloaded", double.class,
 				Child.class);
 		final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithOverloadedMethods.class, "overloaded",
-				new Class<?>[] { double.class, Child.class });
+				new Class<?>[] { double.class, Child.class }, false);
 		assertEquals(expectedMethod, actualMethod);
 	}
 }
