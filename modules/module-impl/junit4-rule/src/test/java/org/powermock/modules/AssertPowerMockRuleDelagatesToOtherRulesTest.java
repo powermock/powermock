@@ -49,11 +49,11 @@ public class AssertPowerMockRuleDelagatesToOtherRulesTest {
 	public TestName testName = new TestName();
 
 	@Test
-	public void assertThatJUnit47RulesWorks() throws Exception {
+	public void assertPowerMockRuleDelegatesToOtherRules() throws Exception {
 		assertTrue(this.getClass().getClassLoader().getClass().getName().contains(MockClassLoader.class.getName()));
 		assertEquals(1, objects.size());
 		assertSame(BEFORE, objects.get(0));
-		assertEquals("assertThatJUnit47RulesWorks", testName.getMethodName());
+		assertEquals("assertPowerMockRuleDelegatesToOtherRules", testName.getMethodName());
 	}
 
 	private class MyRule implements MethodRule {
