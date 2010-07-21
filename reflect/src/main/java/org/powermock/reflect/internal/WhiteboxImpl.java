@@ -783,20 +783,17 @@ public class WhiteboxImpl {
 						wrappedMethodFound = false;
 					}
 
-					if (!checkIfTypesAreSame(method.isVarArgs(), paramTypes,
-							convertArgumentTypesToPrimitive(paramTypes, arguments))) {
+					if (!checkIfTypesAreSame(method.isVarArgs(),
+							convertArgumentTypesToPrimitive(paramTypes, arguments), paramTypes)) {
 						primitiveMethodFound = false;
 					}
 
 					if (wrappedMethodFound || primitiveMethodFound) {
 						if (potentialMethodToInvoke == null) {
 							potentialMethodToInvoke = method;
-						} else if (potentialMethodToInvoke.getDeclaringClass() != method.getDeclaringClass()) {
-							/*
-							 * If the found method was overridden by the
-							 * previous found method just continue.
-							 */
-							continue;
+						} else if (potentialMethodToInvoke.getName().equals(method.getName())) {
+							// We've found an overloaded method
+							return getBestMethodCandidate(getType(tested), method.getName(), getTypes(arguments));
 						} else {
 							/*
 							 * We've already found a method match before, this
@@ -835,6 +832,14 @@ public class WhiteboxImpl {
 		return potentialMethodToInvoke;
 	}
 
+	private static Class<?>[] getTypes(Object[] arguments) {
+		Class<?>[] classes = new Class<?>[arguments.length];
+		for (int i = 0; i < arguments.length; i++) {
+			classes[i] = getType(arguments[i]);
+		}
+		return classes;
+	}
+
 	public static Method getBestMethodCandidate(Class<?> cls, String methodName, Class<?>[] signature) {
 		final Method foundMethod;
 		final Method[] methods = getMethods(cls, methodName, signature);
@@ -855,8 +860,14 @@ public class WhiteboxImpl {
 						Class<?> type2 = typesMethod2[i];
 						if (!type1.equals(type2)) {
 							if (type1.isAssignableFrom(type2)) {
+								if (!type1.isArray() && type2.isArray()) {
+									return -1;
+								}
 								return 1;
 							} else {
+								if (type1.isArray() && !type2.isArray()) {
+									return 1;
+								}
 								return -1;
 							}
 						}
@@ -943,8 +954,8 @@ public class WhiteboxImpl {
 					wrappedConstructorFound = false;
 				}
 
-				if (!checkIfTypesAreSame(constructor.isVarArgs(), paramTypes,
-						convertArgumentTypesToPrimitive(paramTypes, arguments))) {
+				if (!checkIfTypesAreSame(constructor.isVarArgs(),
+						convertArgumentTypesToPrimitive(paramTypes, arguments), paramTypes)) {
 					primitiveConstructorFound = false;
 				}
 
@@ -1568,7 +1579,10 @@ public class WhiteboxImpl {
 		List<Method> matchingArgumentTypes = new LinkedList<Method>();
 		Method[] methods = getMethods(clazz, methodName);
 		for (Method method : methods) {
-			if (checkIfTypesAreSame(method.isVarArgs(), expectedTypes, method.getParameterTypes())) {
+			final Class<?>[] parameterTypes = method.getParameterTypes();
+			if (checkIfTypesAreSame(method.isVarArgs(), expectedTypes, parameterTypes)
+					|| checkIfTypesAreSame(method.isVarArgs(), convertParameterTypesToPrimitive(expectedTypes),
+							parameterTypes)) {
 				matchingArgumentTypes.add(method);
 			}
 		}
@@ -1950,7 +1964,7 @@ public class WhiteboxImpl {
 			for (int i = 0; i < expectedParameterTypes.length; i++) {
 				final Class<?> actualParameterType = getType(actualParameterTypes[i]);
 				if (isVarArgs && i == expectedParameterTypes.length - 1
-						&& expectedParameterTypes[i].getComponentType().isAssignableFrom(actualParameterType)) {
+						&& actualParameterType.getComponentType().isAssignableFrom(expectedParameterTypes[i])) {
 					return true;
 				} else if (!expectedParameterTypes[i].isAssignableFrom(actualParameterType)) {
 					return false;
@@ -2184,5 +2198,18 @@ public class WhiteboxImpl {
 		if (object == null) {
 			throw new IllegalArgumentException("The object containing the field cannot be null");
 		}
+	}
+
+	private static Class<?>[] convertParameterTypesToPrimitive(Class<?>[] parameterTypes) {
+		Class<?>[] converted = new Class<?>[parameterTypes.length];
+		for (int i = 0; i < parameterTypes.length; i++) {
+			Class<?> primitiveWrapperType = PrimitiveWrapper.getPrimitiveFromWrapperType(parameterTypes[i]);
+			if (primitiveWrapperType == null) {
+				converted[i] = parameterTypes[i];
+			} else {
+				converted[i] = primitiveWrapperType;
+			}
+		}
+		return converted;
 	}
 }

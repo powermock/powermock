@@ -31,34 +31,41 @@ import org.powermock.reflect.testclasses.ClassWithStandardMethod;
  */
 public class WhiteboxImplTest {
 
-    /**
-     * Asserts that a previous bug was fixed.
-     */
-    @Test
-    public void assertThatClassAndNotStringIsNotSameWhenInvokingCheckIfTypesAreSame() throws Exception {
-        Method method = WhiteboxImpl.getMethod(WhiteboxImpl.class, "checkIfTypesAreSame", Class[].class, Class[].class);
-        boolean invokeMethod = (Boolean) method.invoke(WhiteboxImpl.class, new Class<?>[] { Class.class }, new Class<?>[] { String.class });
-        assertFalse(invokeMethod);
-    }
+	/**
+	 * Asserts that a previous bug was fixed.
+	 */
+	@Test
+	public void assertThatClassAndNotStringIsNotSameWhenInvokingCheckIfTypesAreSame() throws Exception {
+		Method method = WhiteboxImpl.getMethod(WhiteboxImpl.class, "checkIfTypesAreSame", boolean.class, Class[].class,
+				Class[].class);
+		boolean invokeMethod = (Boolean) method.invoke(WhiteboxImpl.class, false, new Class<?>[] { Class.class },
+				new Class<?>[] { String.class });
+		assertFalse(invokeMethod);
+	}
 
-    @Test
-    public void assertThatClassAndClassIsSameWhenInvokingCheckIfTypesAreSame() throws Exception {
-        Method method = WhiteboxImpl.getMethod(WhiteboxImpl.class, "checkIfTypesAreSame", Class[].class, Class[].class);
-        boolean invokeMethod = (Boolean) method.invoke(WhiteboxImpl.class, new Class<?>[] { Class.class }, new Class<?>[] { Class.class });
-        assertTrue(invokeMethod);
-    }
+	@Test
+	public void assertThatClassAndClassIsSameWhenInvokingCheckIfTypesAreSame() throws Exception {
+		Method method = WhiteboxImpl.getMethod(WhiteboxImpl.class, "checkIfTypesAreSame", boolean.class, Class[].class,
+				Class[].class);
+		boolean invokeMethod = (Boolean) method.invoke(WhiteboxImpl.class, false, new Class<?>[] { Class.class },
+				new Class<?>[] { Class.class });
+		assertTrue(invokeMethod);
+	}
 
-    @Test
-    public void getBestCandidateMethodReturnsMatchingMethodWhenNoOverloading() throws Exception {
-        final Method expectedMethod = ClassWithStandardMethod.class.getDeclaredMethod("myMethod", double.class);
-        final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithStandardMethod.class, "myMethod", new Class<?>[] { double.class });
-        assertEquals(expectedMethod, actualMethod);
-    }
+	@Test
+	public void getBestCandidateMethodReturnsMatchingMethodWhenNoOverloading() throws Exception {
+		final Method expectedMethod = ClassWithStandardMethod.class.getDeclaredMethod("myMethod", double.class);
+		final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithStandardMethod.class, "myMethod",
+				new Class<?>[] { double.class });
+		assertEquals(expectedMethod, actualMethod);
+	}
 
-    @Test
-    public void getBestCandidateMethodReturnsMatchingMethodWhenOverloading() throws Exception {
-        final Method expectedMethod = ClassWithOverloadedMethods.class.getDeclaredMethod("overloaded", double.class, Child.class);
-        final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithOverloadedMethods.class, "overloaded", new Class<?>[] { double.class, Child.class });
-        assertEquals(expectedMethod, actualMethod);
-    }
+	@Test
+	public void getBestCandidateMethodReturnsMatchingMethodWhenOverloading() throws Exception {
+		final Method expectedMethod = ClassWithOverloadedMethods.class.getDeclaredMethod("overloaded", double.class,
+				Child.class);
+		final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithOverloadedMethods.class, "overloaded",
+				new Class<?>[] { double.class, Child.class });
+		assertEquals(expectedMethod, actualMethod);
+	}
 }

@@ -75,6 +75,7 @@ public class InnerConstructorsAreFoundTest {
 	}
 
 	class BuggyObjectToMock {
+		@SuppressWarnings("unused")
 		private final AnyInterface[] anys;
 
 		public BuggyObjectToMock(SomeOtherImplementationOfSomethingElse other, AnyInterface... anys) {
@@ -83,6 +84,7 @@ public class InnerConstructorsAreFoundTest {
 	}
 
 	class StillBuggyObjectToMock {
+		@SuppressWarnings("unused")
 		private final AnyInterface[] anys;
 
 		public StillBuggyObjectToMock(SomeOtherImplementationOfSomethingElse other, AnyInterface[] anys) {
