@@ -36,8 +36,8 @@ public class WhiteboxImplTest {
 	 */
 	@Test
 	public void assertThatClassAndNotStringIsNotSameWhenInvokingCheckIfTypesAreSame() throws Exception {
-		Method method = WhiteboxImpl.getMethod(WhiteboxImpl.class, "checkIfTypesAreSame", boolean.class, Class[].class,
-				Class[].class);
+		Method method = WhiteboxImpl.getMethod(WhiteboxImpl.class, "checkIfParameterTypesAreSame", boolean.class,
+				Class[].class, Class[].class);
 		boolean invokeMethod = (Boolean) method.invoke(WhiteboxImpl.class, false, new Class<?>[] { Class.class },
 				new Class<?>[] { String.class });
 		assertFalse(invokeMethod);
@@ -45,8 +45,8 @@ public class WhiteboxImplTest {
 
 	@Test
 	public void assertThatClassAndClassIsSameWhenInvokingCheckIfTypesAreSame() throws Exception {
-		Method method = WhiteboxImpl.getMethod(WhiteboxImpl.class, "checkIfTypesAreSame", boolean.class, Class[].class,
-				Class[].class);
+		Method method = WhiteboxImpl.getMethod(WhiteboxImpl.class, "checkIfParameterTypesAreSame", boolean.class,
+				Class[].class, Class[].class);
 		boolean invokeMethod = (Boolean) method.invoke(WhiteboxImpl.class, false, new Class<?>[] { Class.class },
 				new Class<?>[] { Class.class });
 		assertTrue(invokeMethod);

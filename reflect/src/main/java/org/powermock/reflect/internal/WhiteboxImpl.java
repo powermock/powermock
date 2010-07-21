@@ -103,7 +103,7 @@ public class WhiteboxImpl {
 				methodsToTraverse = thisType.getDeclaredMethods();
 			}
 			for (Method method : methodsToTraverse) {
-				if (checkIfTypesAreSame(method.isVarArgs(), parameterTypes, method.getParameterTypes())) {
+				if (checkIfParameterTypesAreSame(method.isVarArgs(), parameterTypes, method.getParameterTypes())) {
 					foundMethods.add(method);
 					if (foundMethods.size() == 1) {
 						method.setAccessible(true);
@@ -168,7 +168,7 @@ public class WhiteboxImpl {
 			}
 			for (Method method : methodsToTraverse) {
 				if (methodName.equals(method.getName())
-						&& checkIfTypesAreSame(method.isVarArgs(), parameterTypes, method.getParameterTypes())) {
+						&& checkIfParameterTypesAreSame(method.isVarArgs(), parameterTypes, method.getParameterTypes())) {
 					method.setAccessible(true);
 					return method;
 				}
@@ -779,11 +779,11 @@ public class WhiteboxImpl {
 					}
 					boolean wrappedMethodFound = true;
 					boolean primitiveMethodFound = true;
-					if (!checkIfTypesAreSame(method.isVarArgs(), paramTypes, arguments)) {
+					if (!checkArgumentTypesMatchParameterTypes(method.isVarArgs(), paramTypes, arguments)) {
 						wrappedMethodFound = false;
 					}
 
-					if (!checkIfTypesAreSame(method.isVarArgs(),
+					if (!checkIfParameterTypesAreSame(method.isVarArgs(),
 							convertArgumentTypesToPrimitive(paramTypes, arguments), paramTypes)) {
 						primitiveMethodFound = false;
 					}
@@ -950,11 +950,11 @@ public class WhiteboxImpl {
 				}
 				boolean wrappedConstructorFound = true;
 				boolean primitiveConstructorFound = true;
-				if (!checkIfTypesAreSame(constructor.isVarArgs(), paramTypes, arguments)) {
+				if (!checkArgumentTypesMatchParameterTypes(constructor.isVarArgs(), paramTypes, arguments)) {
 					wrappedConstructorFound = false;
 				}
 
-				if (!checkIfTypesAreSame(constructor.isVarArgs(),
+				if (!checkIfParameterTypesAreSame(constructor.isVarArgs(),
 						convertArgumentTypesToPrimitive(paramTypes, arguments), paramTypes)) {
 					primitiveConstructorFound = false;
 				}
@@ -1405,7 +1405,7 @@ public class WhiteboxImpl {
 					// If argument types was supplied, make sure that they
 					// match.
 					Class<?>[] paramTypes = method.getParameterTypes();
-					if (!checkIfTypesAreSame(method.isVarArgs(), parameterTypes, paramTypes)) {
+					if (!checkIfParameterTypesAreSame(method.isVarArgs(), parameterTypes, paramTypes)) {
 						continue;
 					}
 				}
@@ -1580,9 +1580,9 @@ public class WhiteboxImpl {
 		Method[] methods = getMethods(clazz, methodName);
 		for (Method method : methods) {
 			final Class<?>[] parameterTypes = method.getParameterTypes();
-			if (checkIfTypesAreSame(method.isVarArgs(), expectedTypes, parameterTypes)
-					|| checkIfTypesAreSame(method.isVarArgs(), convertParameterTypesToPrimitive(expectedTypes),
-							parameterTypes)) {
+			if (checkIfParameterTypesAreSame(method.isVarArgs(), expectedTypes, parameterTypes)
+					|| checkIfParameterTypesAreSame(method.isVarArgs(),
+							convertParameterTypesToPrimitive(expectedTypes), parameterTypes)) {
 				matchingArgumentTypes.add(method);
 			}
 		}
@@ -1752,7 +1752,8 @@ public class WhiteboxImpl {
 	 * @return <code>true</code> if all actual parameter types are assignable
 	 *         from the expected arguments, <code>false</code> otherwise.
 	 */
-	private static boolean checkIfTypesAreSame(boolean isVarArgs, Class<?>[] parameterTypes, Object[] arguments) {
+	private static boolean checkArgumentTypesMatchParameterTypes(boolean isVarArgs, Class<?>[] parameterTypes,
+			Object[] arguments) {
 		if (parameterTypes == null) {
 			throw new IllegalArgumentException("parameter types cannot be null");
 		} else if (parameterTypes.length != arguments.length) {
@@ -1954,7 +1955,7 @@ public class WhiteboxImpl {
 	 * @return <code>true</code> if all actual parameter types are assignable
 	 *         from the expected parameter types, <code>false</code> otherwise.
 	 */
-	private static boolean checkIfTypesAreSame(boolean isVarArgs, Class<?>[] expectedParameterTypes,
+	private static boolean checkIfParameterTypesAreSame(boolean isVarArgs, Class<?>[] expectedParameterTypes,
 			Class<?>[] actualParameterTypes) {
 		if (expectedParameterTypes == null || actualParameterTypes == null) {
 			throw new IllegalArgumentException("parameter types cannot be null");
@@ -1966,7 +1967,7 @@ public class WhiteboxImpl {
 				if (isVarArgs && i == expectedParameterTypes.length - 1
 						&& actualParameterType.getComponentType().isAssignableFrom(expectedParameterTypes[i])) {
 					return true;
-				} else if (!expectedParameterTypes[i].isAssignableFrom(actualParameterType)) {
+				} else if (!actualParameterType.isAssignableFrom(expectedParameterTypes[i])) {
 					return false;
 				}
 			}

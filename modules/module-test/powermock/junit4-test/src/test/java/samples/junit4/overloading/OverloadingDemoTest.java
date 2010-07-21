@@ -39,65 +39,65 @@ import samples.overloading.OverloadingDemo;
  * solved.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest( { OverloadedMethodsExample.class, OverloadingDemo.class })
+@PrepareForTest({ OverloadedMethodsExample.class, OverloadingDemo.class })
 public class OverloadingDemoTest {
 
-    @Test
-    public void mockGatewayFindsBestOverloadedMethodCandidateWhenOnlyOneArgument() throws Exception {
-        final ChildA object = createMock(ChildA.class);
+	@Test
+	public void mockGatewayFindsBestOverloadedMethodCandidateWhenOnlyOneArgument() throws Exception {
+		final Parent object = createMock(ChildA.class);
 
-        mockStatic(OverloadedMethodsExample.class);
+		mockStatic(OverloadedMethodsExample.class);
 
-        OverloadedMethodsExample.overloadedMethodWithOneArgument(object);
-        expectLastCall().once();
+		OverloadedMethodsExample.overloadedMethodWithOneArgument(object);
+		expectLastCall().once();
 
-        expectNew(ChildA.class).andReturn(object);
+		expectNew(ChildA.class).andReturn((ChildA) object);
 
-        replayAll();
+		replayAll();
 
-        final OverloadingDemo demo = new OverloadingDemo();
-        demo.performSingleOverloadedArgumentTest();
+		final OverloadingDemo demo = new OverloadingDemo();
+		demo.performSingleOverloadedArgumentTest();
 
-        verifyAll();
-    }
+		verifyAll();
+	}
 
-    @Test
-    public void mockGatewayFindsBestOverloadedMethodCandidateWhenBothArgumentSame() throws Exception {
-        final ChildA child = createMock(ChildA.class);
+	@Test
+	public void mockGatewayFindsBestOverloadedMethodCandidateWhenBothArgumentSame() throws Exception {
+		final Parent child = createMock(ChildA.class);
 
-        mockStatic(OverloadedMethodsExample.class);
+		mockStatic(OverloadedMethodsExample.class);
 
-        OverloadedMethodsExample.overloadedMethodWithTwoArguments(child, child);
-        expectLastCall().once();
+		OverloadedMethodsExample.overloadedMethodWithTwoArguments(child, child);
+		expectLastCall().once();
 
-        expectNew(ChildA.class).andReturn(child).times(2);
+		expectNew(ChildA.class).andReturn((ChildA) child).times(2);
 
-        replayAll();
+		replayAll();
 
-        final OverloadingDemo demo = new OverloadingDemo();
-        demo.performMethodOverloadTestWhenBothArgumentSame();
+		final OverloadingDemo demo = new OverloadingDemo();
+		demo.performMethodOverloadTestWhenBothArgumentSame();
 
-        verifyAll();
-    }
+		verifyAll();
+	}
 
-    @Test
-    public void mockGatewayFindsBestOverloadedMethodCandidateWhenOneArgumentSameAndOneDifferent() throws Exception {
-        final ChildA child = createMock(ChildA.class);
-        final Parent parent = createMock(Parent.class);
+	@Test
+	public void mockGatewayFindsBestOverloadedMethodCandidateWhenOneArgumentSameAndOneDifferent() throws Exception {
+		final Parent child = createMock(ChildA.class);
+		final Parent parent = createMock(Parent.class);
 
-        mockStatic(OverloadedMethodsExample.class);
+		mockStatic(OverloadedMethodsExample.class);
 
-        OverloadedMethodsExample.overloadedMethodWithTwoArguments(parent, child);
-        expectLastCall().once();
+		OverloadedMethodsExample.overloadedMethodWithTwoArguments(parent, child);
+		expectLastCall().once();
 
-        expectNew(ChildA.class).andReturn(child);
-        expectNew(Parent.class).andReturn(parent);
+		expectNew(ChildA.class).andReturn((ChildA) child);
+		expectNew(Parent.class).andReturn(parent);
 
-        replayAll();
+		replayAll();
 
-        final OverloadingDemo demo = new OverloadingDemo();
-        demo.performMethodOverloadTestWithOneArgumentSameAndOneDiffernt();
+		final OverloadingDemo demo = new OverloadingDemo();
+		demo.performMethodOverloadTestWithOneArgumentSameAndOneDiffernt();
 
-        verifyAll();
-    }
+		verifyAll();
+	}
 }
