@@ -2174,7 +2174,8 @@ public class WhiteboxImpl {
 				final boolean assignableFrom;
 				final Class<?> argumentType = getType(argument);
 				if (isVarArgs && i == parameterTypes.length - 1) {
-					assignableFrom = parameterTypes[i].getComponentType().isAssignableFrom(argumentType);
+					assignableFrom = parameterTypes[i].getComponentType().isAssignableFrom(
+							argumentType.isArray() ? argumentType.getComponentType() : argumentType);
 				} else {
 					assignableFrom = parameterTypes[i].isAssignableFrom(argumentType);
 				}

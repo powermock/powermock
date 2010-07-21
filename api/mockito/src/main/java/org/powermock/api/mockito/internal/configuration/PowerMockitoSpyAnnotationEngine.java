@@ -50,8 +50,9 @@ public class PowerMockitoSpyAnnotationEngine extends SpyAnnotationEngine {
 				try {
 					Object instance = field.get(testClass);
 					if (instance == null) {
-						throw new MockitoException("Cannot create a @Spy for '" + field.getName() + "' field because the *instance* is missing\n"
-								+ "Example of correct usage of @Spy:\n" + "   @Spy List mock = new LinkedList();\n");
+						throw new MockitoException("Cannot create a @Spy for '" + field.getName()
+								+ "' field because the *instance* is missing\n" + "Example of correct usage of @Spy:\n"
+								+ "   @Spy List mock = new LinkedList();\n");
 					}
 					field.set(testClass, PowerMockito.spy(instance));
 				} catch (IllegalAccessException e) {

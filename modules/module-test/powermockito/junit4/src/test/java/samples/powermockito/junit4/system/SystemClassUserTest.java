@@ -27,7 +27,6 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -162,13 +161,5 @@ public class SystemClassUserTest {
 		URLConnection openConnection = url.openConnection();
 
 		assertSame(openConnection, urlConnectionMock);
-	}
-
-	@Test
-	public void testname() throws Exception {
-		File url = mock(File.class);
-		when(url.canRead()).thenReturn(true);
-		
-		System.out.println(url.canRead());
 	}
 }
