@@ -31,7 +31,8 @@ public abstract class AbstractCommonPowerMockRunner extends Runner implements Fi
 
 	private JUnit4TestSuiteChunker suiteChunker;
 
-	public AbstractCommonPowerMockRunner(Class<?> klass, Class<? extends PowerMockJUnitRunnerDelegate> runnerDelegateImplClass) throws Exception {
+	public AbstractCommonPowerMockRunner(Class<?> klass,
+			Class<? extends PowerMockJUnitRunnerDelegate> runnerDelegateImplClass) throws Exception {
 		suiteChunker = new JUnit4TestSuiteChunkerImpl(klass, runnerDelegateImplClass);
 		/*
 		 * For extra safety clear the MockitoRepository on each new
@@ -52,7 +53,11 @@ public abstract class AbstractCommonPowerMockRunner extends Runner implements Fi
 
 	@Override
 	public void run(RunNotifier notifier) {
-		suiteChunker.run(notifier);
+		try {
+			suiteChunker.run(notifier);
+		} finally {
+			suiteChunker = null; // To avoid out of memory errors!
+		}
 	}
 
 	@Override

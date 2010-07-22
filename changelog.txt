@@ -7,6 +7,7 @@ Change log 1.4 (under development)
 * Upgraded to Javassist 3.13 (issue 269)
 * Fixed some problems with Withbox regarding invocation of var args member class constructors and methods (issue 267).
 * Partial mocking of public static methods now works in Mockito (issue 261)
+* Better clean-up in test runner which fixes some java.lang.OutOfMemoryError errors in large test suites.
 
 Change log 1.3.9 (2010-07-14)
 ----------------------------------
