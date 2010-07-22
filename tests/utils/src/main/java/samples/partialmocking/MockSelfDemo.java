@@ -94,8 +94,18 @@ public class MockSelfDemo {
 	public int timesThree(int anInt) {
 		return anInt * 3;
 	}
-	
+
 	public int getConstructorValue() {
 		return hello;
+	}
+
+	public static int getSomething() {
+		int retVal = methodToBeStubbed();
+		retVal = retVal * 2;
+		return retVal;
+	}
+
+	public static int methodToBeStubbed() {
+		return 6;
 	}
 }

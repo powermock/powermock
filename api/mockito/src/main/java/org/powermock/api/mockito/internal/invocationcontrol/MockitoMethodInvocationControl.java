@@ -157,8 +157,9 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
 		 * invocation and thus we should delegate the call to the Mockito proxy.
 		 */
 		final Object returnValue;
-		if (hasDelegator() && !Modifier.isPrivate(method.getModifiers()) && !Modifier.isFinal(method.getModifiers())
-				&& hasBeenCaughtByMockitoProxy()) {
+		final int methodModifiers = method.getModifiers();
+		if (hasDelegator() && !Modifier.isPrivate(methodModifiers) && !Modifier.isFinal(methodModifiers)
+				&& !Modifier.isStatic(methodModifiers) && hasBeenCaughtByMockitoProxy()) {
 			returnValue = MockGateway.PROCEED;
 		} else {
 			boolean inVerificationMode = isInVerificationMode();
@@ -217,6 +218,8 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
 				final Class<?> type = Whitebox.getType(interceptionObject);
 				final boolean isFinalSystemClass = type.getName().startsWith("java.")
 						&& Modifier.isFinal(type.getModifiers());
+				final boolean isPublicStaticMethod = Modifier.isPublic(method.getModifiers())
+						&& Modifier.isStatic(method.getModifiers());
 				if (!isFinalSystemClass) {
 					MockRepository.putAdditionalState(MockGateway.DONT_MOCK_NEXT_CALL, true);
 				}
