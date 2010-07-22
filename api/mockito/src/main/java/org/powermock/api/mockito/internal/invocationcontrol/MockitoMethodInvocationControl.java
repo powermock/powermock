@@ -167,7 +167,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
 				handleStaticVerification((Class<?>) obj);
 			}
 			returnValue = performIntercept(methodInterceptorFilter, obj, method, arguments);
-			if (returnValue == null && inVerificationMode) {
+			if (returnValue == null) {
 				return MockGateway.SUPPRESS;
 			}
 		}
@@ -218,8 +218,6 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
 				final Class<?> type = Whitebox.getType(interceptionObject);
 				final boolean isFinalSystemClass = type.getName().startsWith("java.")
 						&& Modifier.isFinal(type.getModifiers());
-				final boolean isPublicStaticMethod = Modifier.isPublic(method.getModifiers())
-						&& Modifier.isStatic(method.getModifiers());
 				if (!isFinalSystemClass) {
 					MockRepository.putAdditionalState(MockGateway.DONT_MOCK_NEXT_CALL, true);
 				}

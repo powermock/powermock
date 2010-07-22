@@ -182,7 +182,6 @@ public class StaticPartialMockingTest {
 	}
 	
 	@Test
-	@Ignore
 	public void partialMockingOfPublicStaticMethodsWorksWhenUsingDoReturn() throws Exception {
 		spy(MockSelfDemo.class);
 		
