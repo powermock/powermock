@@ -1,7 +1,8 @@
 Change log 1.5 (under development)
 ----------------------------------
+* The EasyMock API extension should now work when testing Eclipse plugins and running the tests as PDE (JUnit Plugin) tests (issue 264)
 * Deprecated "andReturn" in the stubber API and added "toReturn" instead. The API now reads e.g. "stub(method("methodName")).toReturn(new Object())"
-* Added the "toThrow" method to the stubber API. You can now do e.g. "stub(method("methodName")).toThrow(new Exception())".
+* Added the "toThrow" method to the stubber API. You can now do e.g. "stub(method("methodName")).toThrow(new Exception())" (issue 182).
 
 Change log 1.4 (2010-07-22)
 ---------------------------

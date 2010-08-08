@@ -56,7 +56,7 @@ import org.easymock.internal.ObjectMethodsFilter;
  */
 public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings( { "unchecked", "rawtypes" })
 	public T createProxy(Class<T> toMock, final InvocationHandler handler) {
 
 		// Dirty trick to fix ObjectMethodsFilter
@@ -76,8 +76,8 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 		}
 
 		MethodInterceptor interceptor = new ClassProxyFactory.MockMethodInterceptor(handler) {
-            private static final long serialVersionUID = -2764609150597725248L;
-            private Set<Method> mockedMethods;
+			private static final long serialVersionUID = -2764609150597725248L;
+			private Set<Method> mockedMethods;
 
 			public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
 
@@ -93,31 +93,6 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 					return handler.invoke(obj, method, args);
 				}
 
-				// Class<?> superclass =
-				// method.getDeclaringClass().getSuperclass();
-				// if (superclass != null && mockedMethods != null &&
-				// !mockedMethods.contains(method)) {
-				// /*
-				// * Added the following if statement to allow partial mocking
-				// * class hierarchy
-				// */
-				// Method superClassMethod = null;
-				// try {
-				// superClassMethod = WhiteboxImpl.getMethod(superclass,
-				// method.getName(), method.getParameterTypes());
-				// } catch (MethodNotFoundException e) {
-				// // OK
-				// }
-				// boolean contains = mockedMethods.contains(superClassMethod);
-				// if (superclass == null || superclass.equals(Object.class) ||
-				// superClassMethod == null || !contains) {
-				// return proxy.invokeSuper(obj, args);
-				// } else {
-				// return handler.invoke(obj, superClassMethod, args);
-				// }
-				// }
-				//
-				// return handler.invoke(obj, method, args);
 				if (mockedMethods != null && !mockedMethods.contains(method)) {
 					return proxy.invokeSuper(obj, args);
 				}
@@ -150,6 +125,10 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 			enhancer.setNamingPolicy(SignedSupportingNamingPolicy.getInstance());
 		}
 		enhancer.setSuperclass(toMock);
+		// This is required to make (cglib + eclipse plugins testing) happy. See
+		// issue 264
+		enhancer.setClassLoader(ClassProxyFactory.class.getClassLoader());
+		
 		enhancer.setCallbackType(interceptor.getClass());
 
 		Class mockClass = enhancer.createClass();
@@ -189,7 +168,8 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 				} else if (targetException instanceof Error) {
 					throw (Error) targetException;
 				} else {
-					throw new RuntimeException("Failed to instantiate mock calling constructor: Exception in constructor", e);
+					throw new RuntimeException(
+							"Failed to instantiate mock calling constructor: Exception in constructor", e);
 				}
 			}
 			return mock;
@@ -201,7 +181,8 @@ public class SignedSupportingClassProxyFactory<T> implements IProxyFactory<T> {
 				mock = (Factory) ClassInstantiatorFactory.getInstantiator().newInstance(mockClass);
 			} catch (InstantiationException e) {
 				// ///CLOVER:OFF
-				throw new RuntimeException("Fail to instantiate mock for " + toMock + " on " + ClassInstantiatorFactory.getJVM() + " JVM");
+				throw new RuntimeException("Fail to instantiate mock for " + toMock + " on "
+						+ ClassInstantiatorFactory.getJVM() + " JVM");
 				// ///CLOVER:ON
 			}
 
