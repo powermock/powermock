@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,16 @@ import java.util.Map;
  * The purpose of this context is that it should define fields not available in
  * the target object to where the state is supposed to be copied.
  */
-public class FieldsNotInTargetContext {
+public class ClassFieldsNotInTargetContext {
+	private static long something = 42L;
 
-    private Map<?, ?> map = new HashMap<Object, Object>();
+	private static Map<?, ?> map = new HashMap<Object, Object>();
 
-    public Map<?, ?> getMap() {
-        return map;
-    }
+	public static long getLong() {
+		return something;
+	}
+
+	public static Map<?, ?> getMap() {
+		return map;
+	}
 }

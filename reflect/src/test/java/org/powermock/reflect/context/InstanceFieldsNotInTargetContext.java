@@ -14,20 +14,25 @@
  * limitations under the License.
  */
 
-package org.powermock.reflect.testclasses;
+package org.powermock.reflect.context;
 
-public class ClassWithStaticAndInstanceInternalStateOfSameType {
+import java.util.HashMap;
+import java.util.Map;
 
-    private String stringState = "String state";
-    
+/**
+ * The purpose of this context is that it should define fields not available in
+ * the target object to where the state is supposed to be copied.
+ */
+public class InstanceFieldsNotInTargetContext {
+	private String something = "something";
 
-    private static String staticStringState = "Static String state";
+	private Map<?, ?> map = new HashMap<Object, Object>();
 
-    public String getStaticStringState() {
-        return staticStringState;
-    }
+	public String getString() {
+		return something;
+	}
 
-    public String getStringState() {
-        return stringState;
-    }
+	public Map<?, ?> getMap() {
+		return map;
+	}
 }

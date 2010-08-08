@@ -18,21 +18,29 @@ package org.powermock.reflect.testclasses;
 
 public class ClassWithSimpleInternalState {
 
-    private int someIntState = -1;
+	private int someIntState = -1;
 
-    private String someStringState = "-1";
+	private String someStringState = "-1";
 
-    private static long someStaticLongState = -1L;
+	private static long someStaticLongState = -1L;
 
-    public long getSomeStaticLongState() {
-        return someStaticLongState;
-    }
+	public static long getLong() {
+		return someStaticLongState;
+	}
 
-    public int getSomeIntState() {
-        return someIntState;
-    }
+	public long getSomeStaticLongState() {
+		return someStaticLongState;
+	}
 
-    public String getSomeStringState() {
-        return someStringState;
-    }
+	public int getSomeIntState() {
+		return someIntState;
+	}
+
+	public String getSomeStringState() {
+		return someStringState;
+	}
+
+	public static void setLong(long state) {
+		someStaticLongState = state;
+	}
 }

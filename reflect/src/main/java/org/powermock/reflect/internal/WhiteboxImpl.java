@@ -54,6 +54,7 @@ import org.powermock.reflect.internal.matcherstrategies.FieldAnnotationMatcherSt
 import org.powermock.reflect.internal.matcherstrategies.FieldMatcherStrategy;
 import org.powermock.reflect.internal.matcherstrategies.FieldNameMatcherStrategy;
 import org.powermock.reflect.internal.primitivesupport.PrimitiveWrapper;
+import org.powermock.reflect.matching.FieldMatchingStrategy;
 import org.powermock.reflect.spi.ProxyFramework;
 
 /**
@@ -121,8 +122,8 @@ public class WhiteboxImpl {
 					+ getArgumentTypesAsString((Object[]) parameterTypes) + " ] in class "
 					+ getUnmockedType(type).getName() + ".");
 		} else {
-			throwExceptionWhenMultipleMethodMatchesFound("method name",
-					foundMethods.toArray(new Method[foundMethods.size()]));
+			throwExceptionWhenMultipleMethodMatchesFound("method name", foundMethods.toArray(new Method[foundMethods
+					.size()]));
 		}
 		// Will never happen
 		return null;
@@ -189,7 +190,7 @@ public class WhiteboxImpl {
 	 *            The method names.
 	 * @return A .
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings( { "unchecked", "rawtypes" })
 	public static Field getField(Class<?> type, String fieldName) {
 		LinkedList<Class<?>> examine = new LinkedList<Class<?>>();
 		examine.add(type);
@@ -336,11 +337,8 @@ public class WhiteboxImpl {
 				findFieldInHierarchy(object, new AssignableFromFieldTypeMatcherStrategy(getType(value))));
 		if (additionalValues != null && additionalValues.length > 0) {
 			for (Object additionalValue : additionalValues) {
-				setField(
-						object,
-						additionalValue,
-						findFieldInHierarchy(object, new AssignableFromFieldTypeMatcherStrategy(
-								getType(additionalValue))));
+				setField(object, additionalValue, findFieldInHierarchy(object,
+						new AssignableFromFieldTypeMatcherStrategy(getType(additionalValue))));
 			}
 		}
 	}
@@ -949,8 +947,8 @@ public class WhiteboxImpl {
 						wrappedMethodFound = false;
 					}
 
-					if (!checkIfParameterTypesAreSame(method.isVarArgs(),
-							convertArgumentTypesToPrimitive(paramTypes, arguments), paramTypes)) {
+					if (!checkIfParameterTypesAreSame(method.isVarArgs(), convertArgumentTypesToPrimitive(paramTypes,
+							arguments), paramTypes)) {
 						primitiveMethodFound = false;
 					}
 
@@ -1152,8 +1150,8 @@ public class WhiteboxImpl {
 					wrappedConstructorFound = false;
 				}
 
-				if (!checkIfParameterTypesAreSame(constructor.isVarArgs(),
-						convertArgumentTypesToPrimitive(paramTypes, arguments), paramTypes)) {
+				if (!checkIfParameterTypesAreSame(constructor.isVarArgs(), convertArgumentTypesToPrimitive(paramTypes,
+						arguments), paramTypes)) {
 					primitiveConstructorFound = false;
 				}
 
@@ -1305,9 +1303,8 @@ public class WhiteboxImpl {
 					Class<?>[] argumentArray = (Class<?>[]) argument;
 					if (argumentArray.length > 0) {
 						for (int j = 0; j < argumentArray.length; j++) {
-							appendArgument(argumentsAsString, j,
-									argumentArray[j] == null ? "null" : getType(argumentArray[j]).getName(),
-									argumentArray);
+							appendArgument(argumentsAsString, j, argumentArray[j] == null ? "null" : getType(
+									argumentArray[j]).getName(), argumentArray);
 						}
 						return argumentsAsString.toString();
 					} else {
@@ -1834,9 +1831,10 @@ public class WhiteboxImpl {
 					"Internal error: throwExceptionWhenMultipleConstructorMatchesFound needs at least two constructors.");
 		}
 		StringBuilder sb = new StringBuilder();
-		sb.append("Several matching constructors found, please specify the argument parameter types so that PowerMock can determine which method you're refering to.\n");
-		sb.append("Matching constructors in class ").append(constructors[0].getDeclaringClass().getName())
-				.append(" were:\n");
+		sb
+				.append("Several matching constructors found, please specify the argument parameter types so that PowerMock can determine which method you're refering to.\n");
+		sb.append("Matching constructors in class ").append(constructors[0].getDeclaringClass().getName()).append(
+				" were:\n");
 
 		for (Constructor<?> constructor : constructors) {
 			sb.append(constructor.getName()).append("( ");
@@ -2564,7 +2562,8 @@ public class WhiteboxImpl {
 		if (object != null) {
 			final Class<?> firstArgumentType = getType(object);
 			final Class<?> firstArgumentTypeAsPrimitive = PrimitiveWrapper.hasPrimitiveCounterPart(firstArgumentType) ? PrimitiveWrapper
-					.getPrimitiveFromWrapperType(firstArgumentType) : firstArgumentType;
+					.getPrimitiveFromWrapperType(firstArgumentType)
+					: firstArgumentType;
 			return firstArgumentTypeAsPrimitive;
 		}
 		return null;
@@ -2608,17 +2607,19 @@ public class WhiteboxImpl {
 	 *            Optionally more additional contexts.
 	 */
 	public static void setInternalStateFromContext(Object object, Object context, Object[] additionalContexts) {
-		if (!isClass(context)) {
-			copyState(object, context);
-		}
-		copyState(object, getType(object));
+		setInternalStateFromContext(object, context, FieldMatchingStrategy.MATCHING);
 		if (additionalContexts != null && additionalContexts.length > 0) {
 			for (Object additionContext : additionalContexts) {
-				if (!isClass(additionContext)) {
-					copyState(object, additionContext);
-				}
-				copyState(object, getType(additionContext));
+				setInternalStateFromContext(object, additionContext, FieldMatchingStrategy.MATCHING);
 			}
+		}
+	}
+
+	public static void setInternalStateFromContext(Object object, Object context, FieldMatchingStrategy strategy) {
+		if (isClass(context)) {
+			copyState(object, getType(context), strategy);
+		} else {
+			copyState(object, context, strategy);
 		}
 	}
 
@@ -2660,10 +2661,10 @@ public class WhiteboxImpl {
 	 *            Optionally more additional contexts.
 	 */
 	public static void setInternalStateFromContext(Object object, Class<?> context, Class<?>[] additionalContexts) {
-		copyState(object, context);
+		setInternalStateFromContext(object, context, FieldMatchingStrategy.MATCHING);
 		if (additionalContexts != null && additionalContexts.length > 0) {
 			for (Class<?> additionContext : additionalContexts) {
-				copyState(object, additionContext);
+				setInternalStateFromContext(object, additionContext, FieldMatchingStrategy.MATCHING);
 			}
 		}
 	}
@@ -2675,12 +2676,16 @@ public class WhiteboxImpl {
 	 *            the object
 	 * @param context
 	 *            the context
+	 * @param strategy
+	 *            The field matching strategy.
 	 */
-	static void copyState(Object object, Object context) {
+	static void copyState(Object object, Object context, FieldMatchingStrategy strategy) {
 		if (object == null) {
 			throw new IllegalArgumentException("object to set state cannot be null");
 		} else if (context == null) {
 			throw new IllegalArgumentException("context cannot be null");
+		} else if (strategy == null) {
+			throw new IllegalArgumentException("strategy cannot be null");
 		}
 
 		Set<Field> allFields = isClass(context) ? getAllStaticFields(getType(context)) : getAllInstanceFields(context);
@@ -2688,6 +2693,10 @@ public class WhiteboxImpl {
 			try {
 				final boolean isStaticField = Modifier.isStatic(field.getModifiers());
 				setInternalState(isStaticField ? getType(object) : object, field.getType(), field.get(context));
+			} catch (FieldNotFoundException e) {
+				if (strategy == FieldMatchingStrategy.STRICT) {
+					throw e;
+				}
 			} catch (IllegalAccessException e) {
 				// Should never happen
 				throw new RuntimeException(

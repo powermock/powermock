@@ -1,8 +1,9 @@
 Change log 1.5 (under development)
 ----------------------------------
 * The EasyMock API extension should now work when testing Eclipse plugins and running the tests as PDE (JUnit Plugin) tests (issue 264)
-* Deprecated "andReturn" in the stubber API and added "toReturn" instead. The API now reads e.g. "stub(method("methodName")).toReturn(new Object())"
-* Added the "toThrow" method to the stubber API. You can now do e.g. "stub(method("methodName")).toThrow(new Exception())" (issue 182).
+* Deprecated "andReturn" in the stubber API and added "toReturn" instead. The API now reads e.g. "stub(method("methodName")).toReturn(new Object());"
+* Added the "toThrow" method to the stubber API. You can now do e.g. "stub(method("methodName")).toThrow(new Exception());" (issue 182).
+* Whitebox#setInternalStateFromContext now support field matching strategies. By default all context fields that matches a field in the target class or instance is copied to the instance. If the strategy is changed from MATCHING to STRICT then an exception will be thrown if the context contains a field that cannot be copied to the target  (issue 221).
 
 Change log 1.4 (2010-07-22)
 ---------------------------
