@@ -35,7 +35,7 @@ public class HashCodeTest {
 
     @Test
     public void shouldStubHashCode() throws Exception {
-        stub(method(InitialContext.class, "hashCode")).andReturn(EXPECTED_HASH);
+        stub(method(InitialContext.class, "hashCode")).toReturn(EXPECTED_HASH);
         final InitialContext context = new InitialContext();
 
         assertEquals(EXPECTED_HASH, context.hashCode());

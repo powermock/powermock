@@ -34,7 +34,7 @@ public class EqualsMockingTest {
 
     @Test
     public void shouldStubEquals() throws Exception {
-        stub(method(InitialContext.class, "equals")).andReturn(true);
+        stub(method(InitialContext.class, "equals")).toReturn(true);
         final InitialContext context = new InitialContext();
 
         assertTrue(context.equals(new Object()));

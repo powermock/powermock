@@ -108,7 +108,7 @@ public class MemberModificationExampleTest {
     @Test
     public void stubSingleMethodExample() throws Exception {
         final String expectedReturnValue = "new";
-        stub(method(SuppressMethod.class, "getObject")).andReturn(expectedReturnValue);
+        stub(method(SuppressMethod.class, "getObject")).toReturn(expectedReturnValue);
 
         final SuppressMethod tested = new SuppressMethod();
         assertEquals(expectedReturnValue, tested.getObject());

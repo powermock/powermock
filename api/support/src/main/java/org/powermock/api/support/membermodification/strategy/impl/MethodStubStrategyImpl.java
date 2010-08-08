@@ -33,17 +33,22 @@ public class MethodStubStrategyImpl<T> implements MethodStubStrategy<T> {
 		this.method = method;
 	}
 
+	@Deprecated
 	public void andReturn(T returnValue) {
-		Stubber.stubMethod(method, returnValue);
+		toReturn(returnValue);
 	}
 
 	public void toThrow(final Throwable throwable) {
 		InvocationHandler throwingInvocationHandler = new InvocationHandler() {
-			
+
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 				throw throwable;
 			}
 		};
 		MethodProxy.proxy(method, throwingInvocationHandler);
+	}
+
+	public void toReturn(T returnValue) {
+		Stubber.stubMethod(method, returnValue);
 	}
 }

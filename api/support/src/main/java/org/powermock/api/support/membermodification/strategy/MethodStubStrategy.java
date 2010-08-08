@@ -27,8 +27,19 @@ public interface MethodStubStrategy<T> {
 	 *            The type of the return value.
 	 * @param returnValue
 	 *            The value that will be returned.
+	 * @deprecated Since version 1.4.1, use {@link #toReturn(Object)} instead.
 	 */
 	void andReturn(T returnValue);
+
+	/**
+	 * Stubs the method to return the specified returnValue.
+	 * 
+	 * @param <T>
+	 *            The type of the return value.
+	 * @param returnValue
+	 *            The value that will be returned.
+	 */
+	void toReturn(T returnValue);
 
 	/**
 	 * Stubs the method to throw the specified throwable.

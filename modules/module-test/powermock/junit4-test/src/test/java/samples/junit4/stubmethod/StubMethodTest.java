@@ -36,7 +36,7 @@ public class StubMethodTest {
 	@Test
 	public void whenStubbingInstanceMethodTheMethodReturnsTheStubbedValue() throws Exception {
 		String expectedValue = "Hello";
-		stub(method(SuppressMethod.class, "getObject")).andReturn(expectedValue);
+		stub(method(SuppressMethod.class, "getObject")).toReturn(expectedValue);
 
 		SuppressMethod tested = new SuppressMethod();
 
@@ -47,7 +47,7 @@ public class StubMethodTest {
 	@Test
 	public void whenStubbingStaticMethodTheMethodReturnsTheStubbedValue() throws Exception {
 		String expectedValue = "Hello";
-		stub(method(SuppressMethod.class, "getObjectStatic")).andReturn(expectedValue);
+		stub(method(SuppressMethod.class, "getObjectStatic")).toReturn(expectedValue);
 
 		assertEquals(expectedValue, SuppressMethod.getObjectStatic());
 		assertEquals(expectedValue, SuppressMethod.getObjectStatic());
@@ -56,7 +56,7 @@ public class StubMethodTest {
 	@Test
 	public void whenStubbingInstanceMethodWithPrimiteValueTheMethodReturnsTheStubbedValue() throws Exception {
 		float expectedValue = 4;
-		stub(method(SuppressMethod.class, "getFloat")).andReturn(expectedValue);
+		stub(method(SuppressMethod.class, "getFloat")).toReturn(expectedValue);
 
 		SuppressMethod tested = new SuppressMethod();
 
@@ -77,7 +77,7 @@ public class StubMethodTest {
 	@Test
 	public void whenStubbingInstanceMethodByPassingTheMethodTheMethodReturnsTheStubbedValue() throws Exception {
 		String expected = "Hello";
-		stub(method(SuppressMethod.class, "getObject")).andReturn(expected);
+		stub(method(SuppressMethod.class, "getObject")).toReturn(expected);
 
 		SuppressMethod tested = new SuppressMethod();
 
@@ -88,7 +88,7 @@ public class StubMethodTest {
 	@Test
 	public void whenStubbingStaticMethodByPassingTheMethodTheMethodReturnsTheStubbedValue() throws Exception {
 		String expected = "Hello";
-		stub(method(SuppressMethod.class, "getObjectStatic")).andReturn(expected);
+		stub(method(SuppressMethod.class, "getObjectStatic")).toReturn(expected);
 
 		assertEquals(expected, SuppressMethod.getObjectStatic());
 		assertEquals(expected, SuppressMethod.getObjectStatic());
@@ -97,7 +97,7 @@ public class StubMethodTest {
 	@Test(expected = ClassCastException.class)
 	public void whenStubbingInstanceMethodWithWrongReturnTypeThenClasscastExceptionIsThrown() throws Exception {
 		String illegalReturnType = "Hello";
-		stub(method(SuppressMethod.class, "getFloat")).andReturn(illegalReturnType);
+		stub(method(SuppressMethod.class, "getFloat")).toReturn(illegalReturnType);
 		SuppressMethod tested = new SuppressMethod();
 		tested.getFloat();
 	}

@@ -1,5 +1,6 @@
 Change log 1.5 (under development)
 ----------------------------------
+* Deprecated "andReturn" in the stubber API and added "toReturn" instead. The API now reads e.g. "stub(method("methodName")).toReturn(new Object())"
 * Added the "toThrow" method to the stubber API. You can now do e.g. "stub(method("methodName")).toThrow(new Exception())".
 
 Change log 1.4 (2010-07-22)
