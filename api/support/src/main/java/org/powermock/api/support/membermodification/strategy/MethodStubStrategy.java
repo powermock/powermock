@@ -29,4 +29,12 @@ public interface MethodStubStrategy<T> {
 	 *            The value that will be returned.
 	 */
 	void andReturn(T returnValue);
+
+	/**
+	 * Stubs the method to throw the specified throwable.
+	 * 
+	 * @param throwable
+	 *            the throwable
+	 */
+	void toThrow(Throwable throwable);
 }

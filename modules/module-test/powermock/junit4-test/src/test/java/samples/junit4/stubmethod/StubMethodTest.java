@@ -15,6 +15,7 @@
  */
 package samples.junit4.stubmethod;
 
+import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
 import static org.powermock.api.support.membermodification.MemberModifier.stub;
@@ -100,4 +101,32 @@ public class StubMethodTest {
 		SuppressMethod tested = new SuppressMethod();
 		tested.getFloat();
 	}
+
+	@Test
+	public void whenStubbingInstanceMethodToThrowExceptionTheMethodThrowsTheStubbedException() throws Exception {
+		Exception expected = new Exception("message");
+		stub(method(SuppressMethod.class, "getObject")).toThrow(expected);
+
+		SuppressMethod tested = new SuppressMethod();
+
+		try {
+			tested.getObject();
+			fail();
+		} catch (Exception e) {
+			assertEquals("message", e.getMessage());
+		}
+	}
+
+	@Test
+	public void whenStubbingStaticMethodToThrowExceptionTheMethodThrowsTheStubbedException() throws Exception {
+		Exception expected = new Exception("message");
+		stub(method(SuppressMethod.class, "getObjectStatic")).toThrow(expected);
+		try {
+			SuppressMethod.getObjectStatic();
+			fail();
+		} catch (Exception e) {
+			assertEquals("message", e.getMessage());
+		}
+	}
+
 }
