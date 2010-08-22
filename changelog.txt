@@ -3,8 +3,9 @@ Change log 1.5 (under development)
 * The EasyMock API extension should now work when testing Eclipse plugins and running the tests as PDE (JUnit Plugin) tests (issue 264)
 * Deprecated "andReturn" in the stubber API and added "toReturn" instead. The API now reads e.g. "stub(method("methodName")).toReturn(new Object());"
 * Added the "toThrow" method to the stubber API. You can now do e.g. "stub(method("methodName")).toThrow(new Exception());" (issue 182)
-* Whitebox#setInternalStateFromContext now support field matching strategies. By default all context fields that matches a field in the target class or instance is copied to the instance. If the strategy is changed from MATCHING to STRICT then an exception will be thrown if the context contains a field that cannot be copied to the target. Note that this change may cause backward incompatibility. (issue 221)
+* Whitebox#setInternalStateFromContext now support field matching strategies. By default all context fields that matches a field in the target class or instance is copied to the instance. If the strategy is changed from MATCHING to STRICT then an exception will be thrown if the context contains a field that cannot be copied to the target. Note that this change may cause backward incompatibility if you're currently using setInternalStateFromContext in your code. (issue 221)
 * Fixed an issue that was introduced in version 1.4 when support for partial mocking of instance methods in final system classes not having a default constructor was added. The bug caused an javassist.CannotCompileException exception when mocking certain classes such as java.lang.Console (issue X).
+* Removed PowerMock specific classes to support mocking of signed classes in the EasyMock extension API since nowadays EasyMock supports this out of the box. This makes PowerMock less dependent on a specific EasyMock version and fixes and patches in EasyMock automatically applies to PowerMock in the future as well. (issue Y)
 
 Change log 1.4 (2010-07-22)
 ---------------------------

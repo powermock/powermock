@@ -4,7 +4,6 @@ import org.easymock.IMocksControl;
 import org.easymock.internal.MocksControl;
 import org.easymock.internal.MocksControl.MockType;
 import org.powermock.api.easymock.internal.mockstrategy.MockStrategy;
-import org.powermock.api.easymock.internal.signedsupport.SignedSupportingMocksClassControl;
 
 /**
  * Base class that should be used by all mock strategies. Enables mocking of
@@ -22,12 +21,6 @@ public abstract class AbstractMockStrategyBase implements MockStrategy {
 	}
 
 	public IMocksControl createMockControl(Class<?> type) {
-		IMocksControl control = null;
-		if (type.isInterface()) {
-			control = new MocksControl(mockType);
-		} else {
-			control = new SignedSupportingMocksClassControl(mockType);
-		}
-		return control;
+		return new MocksControl(mockType);
 	}
 }
