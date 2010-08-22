@@ -19,9 +19,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javassist.ClassPool;
 import javassist.CtClass;
+import javassist.CtConstructor;
 import javassist.CtMethod;
 import javassist.CtNewMethod;
 import javassist.Modifier;
+import javassist.NotFoundException;
 
 /**
  * This class takes care of creating a concrete sub-class implementing all
@@ -58,10 +60,28 @@ public class ConcreteClassGenerator {
 							ctMethod.getExceptionTypes(), code, newClass);
 				}
 			}
+			if (!hasInheritableConstructor(originalClassAsCtClass)) {
+				return null;
+			}
 			return newClass.toClass(this.getClass().getClassLoader(), this.getClass().getProtectionDomain());
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private boolean hasInheritableConstructor(CtClass cls) throws NotFoundException {
+		CtConstructor[] constructors = cls.getDeclaredConstructors();
+		if (constructors.length == 0) {
+			return true;
+		}
+		for (CtConstructor ctConstructor : constructors) {
+			int modifiers = ctConstructor.getModifiers();
+			if (!Modifier.isPackage(modifiers) && !Modifier.isPrivate(modifiers)) {
+				return true;
+			}
+		}
+		return false;
+
 	}
 
 	private String getReturnCode(CtClass returnType) {

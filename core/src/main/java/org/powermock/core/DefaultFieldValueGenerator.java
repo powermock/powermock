@@ -17,15 +17,31 @@ package org.powermock.core;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.net.Inet4Address;
 import java.net.InetAddress;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import org.powermock.reflect.Whitebox;
 
+/**
+ * Fills the fields with default not-null values. If a field type is an
+ * interface a proxy returning default values for each method will be created.
+ * If it's an abstract class a new concrete implementation of that type will
+ * created and instantiated at run-time.
+ * <p>
+ * There are two scenarios where a field-type cannot possibly be assigned.
+ * <ol>
+ * <li>
+ * When a class contains a field of it's own type, which would lead to infinite
+ * recursion, <code>null</code> is assigned.</li>
+ * <li>When the field type is an abstract Java system class with no visible
+ * constructor (package-private) <code>null</code> is assigned.</li>
+ * </ol>
+ */
 public class DefaultFieldValueGenerator {
 	public static <T> T fillWithDefaultValues(T object) {
 		if (object == null) {
@@ -34,9 +50,11 @@ public class DefaultFieldValueGenerator {
 		Set<Field> allInstanceFields = Whitebox.getAllInstanceFields(object);
 		for (Field field : allInstanceFields) {
 			Object defaultValue = TypeUtils.getDefaultValue(field.getType());
-			if (defaultValue == null) {
+			if (defaultValue == null && field.getType() != object.getClass()) {
 				defaultValue = instantiateFieldType(field);
-				fillWithDefaultValues(defaultValue);
+				if (defaultValue != null) {
+					fillWithDefaultValues(defaultValue);
+				}
 			}
 			try {
 				field.set(object, defaultValue);
@@ -52,8 +70,16 @@ public class DefaultFieldValueGenerator {
 		Object defaultValue;
 		if (fieldType.isArray()) {
 			defaultValue = Array.newInstance(fieldType.getComponentType(), 0);
+		} else if (Modifier.isInterface(fieldType.getModifiers())) {
+			defaultValue = Proxy.newProxyInstance(DefaultFieldValueGenerator.class.getClassLoader(),
+					new Class<?>[] { fieldType }, new InvocationHandler() {
+						public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+							return TypeUtils.getDefaultValue(method.getReturnType());
+						}
+					});
 		} else if (Modifier.isAbstract(fieldType.getModifiers())) {
-			defaultValue = Whitebox.newInstance(new ConcreteClassGenerator().createConcreteSubClass(fieldType));
+			Class<?> createConcreteSubClass = new ConcreteClassGenerator().createConcreteSubClass(fieldType);
+			defaultValue = createConcreteSubClass == null ? null : Whitebox.newInstance(createConcreteSubClass);
 		} else {
 			fieldType = substituteKnownProblemTypes(fieldType);
 			defaultValue = Whitebox.newInstance(fieldType);
@@ -85,5 +111,4 @@ public class DefaultFieldValueGenerator {
 		}
 		return fieldType;
 	}
-
 }
