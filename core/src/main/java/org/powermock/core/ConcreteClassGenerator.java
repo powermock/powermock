@@ -17,6 +17,8 @@ package org.powermock.core;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.powermock.reflect.internal.TypeUtils;
+
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;

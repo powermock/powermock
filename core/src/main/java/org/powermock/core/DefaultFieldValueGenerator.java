@@ -15,17 +15,14 @@
  */
 package org.powermock.core;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.Set;
 
 import org.powermock.reflect.Whitebox;
+import org.powermock.reflect.internal.TypeUtils;
 
 /**
  * Fills the fields with default not-null values. If a field type is an
@@ -68,16 +65,8 @@ public class DefaultFieldValueGenerator {
 	private static Object instantiateFieldType(Field field) {
 		Class<?> fieldType = field.getType();
 		Object defaultValue;
-		if (fieldType.isArray()) {
-			defaultValue = Array.newInstance(fieldType.getComponentType(), 0);
-		} else if (Modifier.isInterface(fieldType.getModifiers())) {
-			defaultValue = Proxy.newProxyInstance(DefaultFieldValueGenerator.class.getClassLoader(),
-					new Class<?>[] { fieldType }, new InvocationHandler() {
-						public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-							return TypeUtils.getDefaultValue(method.getReturnType());
-						}
-					});
-		} else if (Modifier.isAbstract(fieldType.getModifiers())) {
+		int modifiers = fieldType.getModifiers();
+		if (Modifier.isAbstract(modifiers) && !Modifier.isInterface(modifiers) && !fieldType.isArray()) {
 			Class<?> createConcreteSubClass = new ConcreteClassGenerator().createConcreteSubClass(fieldType);
 			defaultValue = createConcreteSubClass == null ? null : Whitebox.newInstance(createConcreteSubClass);
 		} else {

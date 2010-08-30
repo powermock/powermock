@@ -23,6 +23,7 @@ import java.lang.reflect.Modifier;
 import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.core.spi.NewInvocationControl;
 import org.powermock.reflect.exceptions.MethodNotFoundException;
+import org.powermock.reflect.internal.TypeUtils;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
 /**

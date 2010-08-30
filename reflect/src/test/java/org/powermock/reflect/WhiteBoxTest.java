@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Set;
 
 import org.junit.Ignore;
@@ -46,6 +47,8 @@ import org.powermock.reflect.internal.WhiteboxImpl;
 import org.powermock.reflect.matching.FieldMatchingStrategy;
 import org.powermock.reflect.proxyframework.RegisterProxyFramework;
 import org.powermock.reflect.spi.ProxyFramework;
+import org.powermock.reflect.testclasses.AbstractClass;
+import org.powermock.reflect.testclasses.AnInterface;
 import org.powermock.reflect.testclasses.ClassWithChildThatHasInternalState;
 import org.powermock.reflect.testclasses.ClassWithInternalState;
 import org.powermock.reflect.testclasses.ClassWithList;
@@ -91,8 +94,10 @@ public class WhiteBoxTest {
 			WhiteboxImpl.findMethodOrThrowException(ClassWithSeveralMethodsWithSameName.class, "getDouble");
 			fail("Should throw runtime exception!");
 		} catch (RuntimeException e) {
-			assertTrue("Error message did not match", e.getMessage().contains(
-					"Several matching methods found, please specify the argument parameter types"));
+			assertTrue(
+					"Error message did not match",
+					e.getMessage().contains(
+							"Several matching methods found, please specify the argument parameter types"));
 		}
 	}
 
@@ -243,8 +248,10 @@ public class WhiteBoxTest {
 
 	@Test
 	public void testMethodWithPrimitiveAndWrappedInt_primtive_wrapped() throws Exception {
-		assertEquals(17, Whitebox.invokeMethod(new ClassWithPrivateMethods(), "methodWithPrimitiveAndWrappedInt",
-				new Class[] { int.class, Integer.class }, 9, Integer.valueOf(8)));
+		assertEquals(
+				17,
+				Whitebox.invokeMethod(new ClassWithPrivateMethods(), "methodWithPrimitiveAndWrappedInt", new Class[] {
+						int.class, Integer.class }, 9, Integer.valueOf(8)));
 	}
 
 	@Test
@@ -339,8 +346,8 @@ public class WhiteBoxTest {
 	@Test
 	public void testInvokePrivateMethodWithAClassArgument() throws Exception {
 		ClassWithPrivateMethods tested = new ClassWithPrivateMethods();
-		assertEquals(ClassWithChildThatHasInternalState.class, Whitebox.invokeMethod(tested, "methodWithClassArgument",
-				ClassWithChildThatHasInternalState.class));
+		assertEquals(ClassWithChildThatHasInternalState.class,
+				Whitebox.invokeMethod(tested, "methodWithClassArgument", ClassWithChildThatHasInternalState.class));
 	}
 
 	@Test
@@ -392,8 +399,8 @@ public class WhiteBoxTest {
 		Whitebox.setInternalState(tested, int.class, value);
 		assertEquals(value, (int) Whitebox.getInternalState(tested, int.class));
 		assertEquals(value, Whitebox.getInternalState(tested, "anotherInternalState"));
-		assertEquals(value, Whitebox.getInternalState(tested, "anotherInternalState",
-				ClassWithChildThatHasInternalState.class));
+		assertEquals(value,
+				Whitebox.getInternalState(tested, "anotherInternalState", ClassWithChildThatHasInternalState.class));
 	}
 
 	@Test
@@ -625,8 +632,8 @@ public class WhiteBoxTest {
 	public void testSetInternalStateFromContext_contextIsAClass() throws Exception {
 		ClassWithSimpleInternalState tested = new ClassWithSimpleInternalState();
 		Whitebox.setInternalStateFromContext(tested, MyContext.class);
-		assertEquals((Long) Whitebox.getInternalState(MyContext.class, long.class), (Long) tested
-				.getSomeStaticLongState());
+		assertEquals((Long) Whitebox.getInternalState(MyContext.class, long.class),
+				(Long) tested.getSomeStaticLongState());
 	}
 
 	@Test
@@ -654,8 +661,8 @@ public class WhiteBoxTest {
 			throws Exception {
 		ClassWithStaticAndInstanceInternalStateOfSameType tested = new ClassWithStaticAndInstanceInternalStateOfSameType();
 		Whitebox.setInternalStateFromContext(tested, OneInstanceAndOneStaticFieldOfSameTypeContext.class);
-		assertEquals(OneInstanceAndOneStaticFieldOfSameTypeContext.getMyStaticStringState(), tested
-				.getStaticStringState());
+		assertEquals(OneInstanceAndOneStaticFieldOfSameTypeContext.getMyStaticStringState(),
+				tested.getStaticStringState());
 		assertEquals("String state", tested.getStringState());
 	}
 
@@ -827,6 +834,23 @@ public class WhiteBoxTest {
 	@Test
 	public void invokeMethodInvokesOverridenMethods() throws Exception {
 		assertTrue(Whitebox.<Boolean> invokeMethod(new ClassWithOverriddenMethod(), 2.0d));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void newInstanceThrowsIAEWhenClassIsAbstract() throws Exception {
+		Whitebox.newInstance(AbstractClass.class);
+	}
+	
+	@Test
+	public void newInstanceReturnsJavaProxyWhenInterface() throws Exception {
+		AnInterface instance = Whitebox.newInstance(AnInterface.class);
+		assertTrue(Proxy.isProxyClass(instance.getClass()));
+	}
+	
+	@Test
+	public void newInstanceCreatesAnEmptyArrayWhenClassIsArray() throws Exception {
+		byte[] newInstance = Whitebox.newInstance(byte[].class);
+		assertEquals(0, newInstance.length);
 	}
 
 	public void testFinalState() {

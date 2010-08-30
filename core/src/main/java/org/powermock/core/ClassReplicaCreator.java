@@ -95,7 +95,8 @@ public class ClassReplicaCreator {
 
             CtMethod[] declaredMethods = originalClassAsCtClass.getDeclaredMethods();
             for (CtMethod ctMethod : declaredMethods) {
-                final String code = getReplicaMethodDelegationCode(delegator.getClass(), ctMethod, POWERMOCK_INSTANCE_DELEGATOR_FIELD_NAME);
+                @SuppressWarnings("unused")
+				final String code = getReplicaMethodDelegationCode(delegator.getClass(), ctMethod, POWERMOCK_INSTANCE_DELEGATOR_FIELD_NAME);
                 // CtMethod make = CtNewMethod.make(ctMethod.getReturnType(),
                 // ctMethod.getName(), ctMethod.getParameterTypes(), ctMethod
                 // .getExceptionTypes(), code, newClass);

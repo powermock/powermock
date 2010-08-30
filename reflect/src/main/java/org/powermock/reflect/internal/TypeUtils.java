@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.core;
+package org.powermock.reflect.internal;
 
 /**
  * Utilities for types.
