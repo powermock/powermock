@@ -4,11 +4,11 @@
 	<parent>
 		<groupId>org.powermock.modules</groupId>
 		<artifactId>powermock-modules</artifactId>
-		<version>1.4.5</version>
+		<version>1.5-SNAPSHOT</version>
 	</parent>
 	<groupId>org.powermock.modules</groupId>
 	<artifactId>powermock-module-junit4-rule</artifactId>
-	<version>1.4.5</version>
+	<version>1.5-SNAPSHOT</version>
 	<name>powermock-module-junit4-rule</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
