@@ -36,7 +36,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.stubbing.OngoingStubbing;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -155,8 +154,7 @@ public class SystemClassUserTest {
 		URL url = mock(URL.class);
 		URLConnection urlConnectionMock = mock(URLConnection.class);
 
-		OngoingStubbing<URLConnection> when = when(url.openConnection());
-		when.thenReturn(urlConnectionMock);
+		when(url.openConnection()).thenReturn(urlConnectionMock);
 
 		URLConnection openConnection = url.openConnection();
 
