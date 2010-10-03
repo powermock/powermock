@@ -47,14 +47,4 @@
          <scope>test</scope>
       </dependency>
    </dependencies>
-   <repositories>
-      <repository>
-         <id>Maven repository</id>
-         <name>The Maven Repository</name>
-         <url>http://repo1.maven.org/maven2</url>
-         <snapshots>
-            <enabled>true</enabled>
-         </snapshots>
-      </repository>
-   </repositories>
 </project>

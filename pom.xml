@@ -70,15 +70,6 @@
 			</site>
 		-->
 	</distributionManagement>
-    <repositories>
-        <repository>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <id>jboss-release-repo</id>
-            <url>https://repository.jboss.org/nexus/content/repositories/releases</url>
-        </repository>
-    </repositories>
 	<issueManagement>
 		<system>Google Code</system>
 		<url>http://code.google.com/p/powermock/issues/list</url>

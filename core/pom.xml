@@ -22,23 +22,12 @@
 			<version>${version}</version>
 		</dependency>
 		<dependency>
-			<groupId>javassist</groupId>
+			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>3.13.0.GA</version>
+			<version>3.13.0-GA</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
-	<repositories>
-		<repository>
-			<id>javassist-repo</id>
-			<url>http://repository.jboss.org/maven2/</url>
-		</repository>
-		<!-- Remove when Javassist 3.13 is available at the JBoss repo -->
-		<repository>
-			<id>powermock-repo</id>
-			<url>http://powermock.googlecode.com/svn/repo/</url>
-		</repository>
-	</repositories>
 	<build>
 		<plugins>
 			<plugin>
