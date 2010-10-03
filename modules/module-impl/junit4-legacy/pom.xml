@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<artifactId>powermock-modules</artifactId>
-		<groupId>org.powermock.modules</groupId>
+		<groupId>org.powermock</groupId>
 		<version>1.5-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.powermock.modules</groupId>
+	<groupId>org.powermock</groupId>
 	<artifactId>powermock-module-junit4-legacy</artifactId>
 	<name>powermock-module-junit4-legacy</name>
 	<url>http://maven.apache.org</url>
@@ -17,13 +17,13 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.powermock.tests</groupId>
+			<groupId>org.powermock</groupId>
 			<artifactId>powermock-tests-utils</artifactId>
 			<version>${version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.powermock.modules</groupId>
+			<groupId>org.powermock</groupId>
 			<artifactId>powermock-module-junit4-common</artifactId>
 			<version>${version}</version>
 		</dependency>

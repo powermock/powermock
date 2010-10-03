@@ -2,11 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.powermock.modules</groupId>
+		<groupId>org.powermock</groupId>
 		<artifactId>powermock-modules</artifactId>
 		<version>1.5-SNAPSHOT</version>
 	</parent>
-	<groupId>org.powermock.modules</groupId>
+	<groupId>org.powermock</groupId>
 	<artifactId>powermock-module-junit4-rule</artifactId>
 	<version>1.5-SNAPSHOT</version>
 	<name>powermock-module-junit4-rule</name>
@@ -24,18 +24,18 @@
 			<version>${version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.powermock.classloading</groupId>
+			<groupId>org.powermock</groupId>
 			<artifactId>powermock-classloading</artifactId>
 			<version>${version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.powermock.tests</groupId>
+			<groupId>org.powermock</groupId>
 			<artifactId>powermock-tests-utils</artifactId>
 			<version>${version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.powermock.api</groupId>
+			<groupId>org.powermock</groupId>
 			<artifactId>powermock-api-mockito</artifactId>
 			<version>${version}</version>
 			<scope>test</scope>

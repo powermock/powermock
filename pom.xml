@@ -31,16 +31,16 @@
 			<id>johanhaleby</id>
 			<name>Johan Haleby</name>
 			<organization>Jayway</organization>
-			<organizationUrl>http://www.jayway.se</organizationUrl>
-			<email>johan.haleby at jayway.se</email>
+			<organizationUrl>http://www.jayway.com</organizationUrl>
+			<email>johan.haleby at jayway.com</email>
 			<timezone>+1</timezone>
 		</developer>
 		<developer>
 			<id>jakr</id>
 			<name>Jan Kronquist</name>
 			<organization>Jayway</organization>
-			<organizationUrl>http://www.jayway.se</organizationUrl>
-			<email>jan.kronquist at jayway.se</email>
+			<organizationUrl>http://www.jayway.com</organizationUrl>
+			<email>jan.kronquist at jayway.com</email>
 			<timezone>+1</timezone>
 		</developer>
 	</developers>

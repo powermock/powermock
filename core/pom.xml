@@ -17,7 +17,7 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.powermock.reflect</groupId>
+			<groupId>org.powermock</groupId>
 			<artifactId>powermock-reflect</artifactId>
 			<version>${version}</version>
 		</dependency>

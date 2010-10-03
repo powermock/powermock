@@ -20,7 +20,7 @@
             <version>${version}</version>
         </dependency>
         <dependency>
-            <groupId>org.powermock.modules</groupId>
+            <groupId>org.powermock</groupId>
 	    <artifactId>powermock-module-testng</artifactId>
             <version>${version}</version>
         </dependency>

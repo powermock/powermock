@@ -1,3 +1,7 @@
+Change log next version
+-----------------------
+* Changed project structure, all group id's are now "org.powermock" but most artifact id's are the same. There are two exceptions, artifact module-test-powermock is renamed to module-test-easymock and module-test-powermockito is renamed to module-test-mockito (issue 234).
+
 Change log 1.4.5 (2010-08-30)
 -----------------------------
 * The EasyMock API extension should now work when testing Eclipse plugins and running the tests as PDE (JUnit Plugin) tests (issue 264)

@@ -14,7 +14,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.powermock.api</groupId>
+            <groupId>org.powermock</groupId>
             <artifactId>powermock-api-easymock</artifactId>
             <version>${version}</version>
         </dependency>

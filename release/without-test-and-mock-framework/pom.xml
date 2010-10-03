@@ -19,17 +19,17 @@
             <version>${version}</version>
         </dependency>        
         <dependency>
-            <groupId>org.powermock.reflect</groupId>
+            <groupId>org.powermock</groupId>
             <artifactId>powermock-reflect</artifactId>
             <version>${version}</version>
         </dependency>
 	<dependency>
-	   <groupId>org.powermock.api</groupId>
+	   <groupId>org.powermock</groupId>
 	   <artifactId>powermock-api-support</artifactId>
 	   <version>${version}</version>
 	</dependency>
 	<dependency>
-	   <groupId>org.powermock.classloading</groupId>
+	   <groupId>org.powermock</groupId>
            <artifactId>powermock-classloading</artifactId>
 	   <version>${version}</version>
         </dependency>

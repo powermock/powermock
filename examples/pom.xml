@@ -5,7 +5,7 @@
     <version>1.5-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.powermock.examples</groupId>
+  <groupId>org.powermock</groupId>
   <artifactId>powermock-examples</artifactId>
   <packaging>pom</packaging>
   <name>powermock-examples</name>
@@ -33,7 +33,7 @@
             <scope>test</scope>
          </dependency>
          <dependency>
-            <groupId>org.powermock.modules</groupId>
+            <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
             <version>${version}</version>
             <scope>test</scope>

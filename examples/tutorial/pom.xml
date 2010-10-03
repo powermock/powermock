@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.powermock.examples.tutorial</groupId>
+	<groupId>org.powermock</groupId>
 	<artifactId>powermock-examples-tutorial</artifactId>
 	<packaging>jar</packaging>
 	<version>1.5-SNAPSHOT</version>
@@ -22,7 +22,7 @@
 	</distributionManagement>
 	<dependencies>
 		<dependency>
-			<groupId>org.powermock.api</groupId>
+			<groupId>org.powermock</groupId>
 			<artifactId>powermock-api-easymock</artifactId>
 			<version>${version}</version>
 		</dependency>
@@ -33,7 +33,7 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.powermock.modules</groupId>
+			<groupId>org.powermock</groupId>
 			<artifactId>powermock-module-junit4</artifactId>
 			<version>${version}</version>
 			<scope>test</scope>

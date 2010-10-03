@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
-    <artifactId>powermock</artifactId>
+    <artifactId>powermock-modules-test</artifactId>
     <groupId>org.powermock</groupId>
     <version>1.5-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.powermock.modules.powermock.test</groupId>
-  <artifactId>powermock-modules-powermock-test</artifactId>
+  <groupId>org.powermock</groupId>
+  <artifactId>powermock-modules-easymock-test</artifactId>
   <packaging>pom</packaging>
-  <name>powermock-modules-powermock-test</name>
+  <name>powermock-modules-easymock-test</name>
   <modules>              
     <module>junit3-test</module>
     <module>junit4-legacy-test</module>

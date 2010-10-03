@@ -1,24 +1,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <parent>
-      <artifactId>powermock-modules-powermock-test
-      </artifactId>
-      <groupId>org.powermock.modules.powermock.test
-      </groupId>
+       <artifactId>powermock-modules-easymock-test</artifactId>
+    <groupId>org.powermock</groupId>
       <version>1.5-SNAPSHOT</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
-   <groupId>org.powermock.modules.test.junit3
+   <groupId>org.powermock
    </groupId>
-   <artifactId>powermock-module-test-junit3
+   <artifactId>powermock-module-test-easymock-testng
    </artifactId>
-   <name>powermock-module-test-junit3</name>
+   <name>powermock-module-test-easymock-testng</name>
    <version>1.5-SNAPSHOT</version>
    <url>http://maven.apache.org</url>
    <dependencies>
       <dependency>
-         <groupId>junit</groupId>
-         <artifactId>junit</artifactId>
-         <version>3.8.1</version>
+         <groupId>org.testng</groupId>
+         <artifactId>testng</artifactId>
+         <version>5.13.1</version>
          <scope>test</scope>
       </dependency>
       <dependency>
@@ -31,19 +29,19 @@
          <version>${version}</version>
       </dependency>
       <dependency>
-         <groupId>org.powermock.modules</groupId>
-         <artifactId>powermock-module-junit3
+         <groupId>org.powermock</groupId>
+         <artifactId>powermock-module-testng
          </artifactId>
          <version>${version}</version>
          <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>org.powermock.api</groupId>
+         <groupId>org.powermock</groupId>
          <artifactId>powermock-api-easymock</artifactId>
          <version>${version}</version>
       </dependency>
       <dependency>
-         <groupId>org.powermock.tests</groupId>
+         <groupId>org.powermock</groupId>
          <artifactId>powermock-tests-utils</artifactId>
          <version>${version}</version>
       </dependency>
@@ -54,10 +52,9 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
-               <excludes>
-                  <exclude>**/StupidPrivateFinalTest.java
-                  </exclude>
-               </excludes>
+              <suiteXmlFiles>
+                <suiteXmlFile>suite.xml</suiteXmlFile>
+              </suiteXmlFiles>
             </configuration>
          </plugin>
       </plugins>

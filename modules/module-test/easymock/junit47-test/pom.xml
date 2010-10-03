@@ -1,20 +1,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
-    <artifactId>powermock-modules-powermock-test</artifactId>
-    <groupId>org.powermock.modules.powermock.test</groupId>
+    <artifactId>powermock-modules-easymock-test</artifactId>
+    <groupId>org.powermock</groupId>
     <version>1.5-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.powermock.modules.test.junit45</groupId>
-  <artifactId>powermock-module-test-junit45</artifactId>
-  <name>powermock-module-test-junit45</name>
+  <groupId>org.powermock</groupId>
+  <artifactId>powermock-module-test-easymock-junit47</artifactId>
+  <name>powermock-module-test-easymock-junit47</name>
   <version>1.5-SNAPSHOT</version>
   <url>http://maven.apache.org</url>
-   <dependencies>
+ <dependencies>
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
-         <version>4.5</version>
+         <version>4.7</version>
          <scope>test</scope>
       </dependency>
       <dependency>
@@ -22,18 +22,18 @@
          <artifactId>easymock</artifactId>
       </dependency>
       <dependency>
-         <groupId>org.powermock.tests</groupId>
+         <groupId>org.powermock</groupId>
          <artifactId>powermock-tests-utils</artifactId>
          <version>${version}</version>
          <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>org.powermock.api</groupId>
+         <groupId>org.powermock</groupId>
          <artifactId>powermock-api-easymock</artifactId>
          <version>${version}</version>
       </dependency>
       <dependency>
-         <groupId>org.powermock.modules</groupId>
+         <groupId>org.powermock</groupId>
          <artifactId>powermock-module-junit4
          </artifactId>
          <version>${version}</version>
