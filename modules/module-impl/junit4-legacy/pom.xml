@@ -22,7 +22,7 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.powermock</groupId>
+			<groupId>org.powermock.tests</groupId>
 			<artifactId>powermock-tests-utils</artifactId>
 			<version>${version}</version>
 			<scope>test</scope>

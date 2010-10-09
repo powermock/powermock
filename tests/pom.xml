@@ -5,7 +5,7 @@
     <version>1.5-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.powermock</groupId>
+  <groupId>org.powermock.tests</groupId>
   <artifactId>powermock-tests</artifactId>
   <packaging>pom</packaging>
   <name>powermock-tests</name>
