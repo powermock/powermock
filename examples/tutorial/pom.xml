@@ -5,7 +5,24 @@
 	<packaging>jar</packaging>
 	<version>1.5-SNAPSHOT</version>
 	<name>tutorial</name>
-	<url>http://maven.apache.org</url>
+	<url>http://www.powermock.org</url>
+
+	<description>
+		Code examples used in the PowerMock tutorial.
+	</description>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<scm>
+		<connection>scm:svn:https://powermock.googlecode.com/svn/trunk/examples/tutorial</connection>
+		<developerConnection>scm:svn:https://powermock.googlecode.com/svn/trunk/examples/tutorial</developerConnection>
+		<url>http://code.google.com/p/powermock/source/browse/trunk/examples/tutorial</url>
+	</scm>
 	<distributionManagement>
 		<repository>
 			<uniqueVersion>false</uniqueVersion>

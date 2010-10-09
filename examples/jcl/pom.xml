@@ -9,7 +9,11 @@
   <artifactId>powermock-examples-jcl</artifactId>
   <name>jcl</name>
   <version>1.5-SNAPSHOT</version>
-  <url>http://maven.apache.org</url>
+
+  <description>
+    Example of using JclMockPolicy.
+  </description>
+
   <dependencies>
       <dependency>
          <groupId>org.powermock</groupId>

@@ -10,7 +10,11 @@
    </artifactId>
    <name>log4j</name>
    <version>1.5-SNAPSHOT</version>
-   <url>http://maven.apache.org</url>
+
+   <description>
+      Example of using Log4jMockPolicy.
+   </description>
+
    <dependencies>
       <dependency>
          <groupId>org.powermock</groupId>

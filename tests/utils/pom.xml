@@ -10,6 +10,12 @@
    <packaging>jar</packaging>
    <name>powermock-tests-utils</name>
    <url>http://www.powermock.org</url>
+
+   <description>
+     Common set of classes to test PowerMock features in
+     mocking framework modules.
+   </description>
+
    <dependencies>
       <dependency>
          <groupId>org.powermock</groupId>

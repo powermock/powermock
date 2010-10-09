@@ -10,6 +10,11 @@
   <name>powermock-modules-test-mockito</name>
   <version>1.5-SNAPSHOT</version>
   <packaging>pom</packaging>
+
+  <description>
+    Tests for Mockito module.
+  </description>
+
   <dependencies>
     <dependency>
        <groupId>org.powermock</groupId>

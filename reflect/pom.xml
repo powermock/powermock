@@ -9,7 +9,11 @@
 	<artifactId>powermock-reflect</artifactId>
 	<name>powermock-reflect</name>
 	<version>1.5-SNAPSHOT</version>
-	<url>http://maven.apache.org</url>
+
+	<description>
+		Various utilities for accessing internals of a class.
+	</description>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

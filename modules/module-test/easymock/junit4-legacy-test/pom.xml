@@ -11,7 +11,11 @@
    <name>powermock-module-test-easymock-junit4-legacy
    </name>
    <version>1.5-SNAPSHOT</version>
-   <url>http://maven.apache.org</url>
+
+	<description>
+		Tests for EasyMock module with JUnit 4.0-4.3.
+	</description>
+
    <dependencies>
       <dependency>
          <groupId>org.easymock</groupId>

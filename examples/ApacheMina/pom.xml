@@ -9,7 +9,11 @@
 	<artifactId>powermock-examples-apachemina</artifactId>
 	<name>ApacheMina</name>
 	<version>1.5-SNAPSHOT</version>
-	<url>http://maven.apache.org</url>
+
+	<description>
+		Examples showing PowerMock used to test NIO.
+	</description>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.mina</groupId>

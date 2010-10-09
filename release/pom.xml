@@ -12,6 +12,11 @@
     <packaging>pom</packaging>
     <name>powermock-release</name>
 
+    <description>
+        Convenience distributions containing various combinations of
+        modules.
+    </description>
+
     <modules>
         <module>easymock-extension-api-full</module>
         <module>mockito-extension-api-full</module>

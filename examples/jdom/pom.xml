@@ -9,7 +9,11 @@
 	<artifactId>powermock-examples-jdom</artifactId>
 	<name>powermock-examples-jdom</name>
 	<version>1.5-SNAPSHOT</version>
-	<url>http://maven.apache.org</url>
+
+	<description>
+		Example showing PowerMock used with jDom and static classes.
+	</description>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.jdom</groupId>

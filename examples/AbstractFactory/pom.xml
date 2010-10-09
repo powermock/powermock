@@ -8,6 +8,11 @@
    <groupId>org.powermock</groupId>
    <artifactId>powermock-examples-abstractfactory</artifactId>
    <name>AbstractFactory</name>
+
+   <description>
+      Example demonstrating how to mock a static call.
+   </description>
+
    <dependencies>
       <dependency>
          <groupId>org.easymock</groupId>

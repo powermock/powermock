@@ -8,6 +8,11 @@
 	<groupId>org.powermock</groupId>
 	<artifactId>powermock-examples-dom4j</artifactId>
 	<name>powermock-examples-dom4j</name>
+
+	<description>
+		Example showing how to suppress static initializers.
+	</description>
+
 	<dependencies>
 		<dependency>
 			<groupId>dom4j</groupId>

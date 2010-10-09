@@ -9,7 +9,11 @@
    <artifactId>powermock-examples-documentationexamples</artifactId>
    <name>DocumentationExamples</name>
    <version>1.5-SNAPSHOT</version>
-   <url>http://maven.apache.org</url>
+
+   <description>
+      Examples used to document various PowerMock features.
+   </description>
+
    <reporting>
       <plugins>
          <plugin>

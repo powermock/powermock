@@ -9,7 +9,11 @@
 	<artifactId>powermock-api-easymock</artifactId>
 	<name>powermock-api-easymock</name>
 	<version>1.5-SNAPSHOT</version>
-	<url>http://maven.apache.org</url>
+
+	<description>
+		PowerMock API for EasyMock.
+	</description>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.easymock</groupId>

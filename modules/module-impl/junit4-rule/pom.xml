@@ -5,12 +5,17 @@
 		<groupId>org.powermock</groupId>
 		<artifactId>powermock-modules</artifactId>
 		<version>1.5-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<groupId>org.powermock</groupId>
 	<artifactId>powermock-module-junit4-rule</artifactId>
 	<version>1.5-SNAPSHOT</version>
 	<name>powermock-module-junit4-rule</name>
-	<url>http://maven.apache.org</url>
+
+	<description>
+		PowerMock support module for JUnit 4.x rules.
+	</description>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

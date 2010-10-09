@@ -10,6 +10,11 @@
   <artifactId>powermock-api</artifactId>
   <packaging>pom</packaging>
   <name>powermock-api</name>
+
+  <description>
+    The mocking framework-specific interfaces to PowerMock.
+  </description>
+
   <modules>
     <module>easymock</module>
     <module>mockito</module>

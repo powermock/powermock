@@ -9,6 +9,11 @@
 	<artifactId>powermock-core</artifactId>
 	<name>powermock-core</name>
 	<url>http://www.powermock.org</url>
+
+	<description>
+		PowerMock core functionality.
+	</description>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

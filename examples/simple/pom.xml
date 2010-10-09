@@ -8,6 +8,11 @@
 	<groupId>org.powermock</groupId>
 	<artifactId>powermock-examples-simple</artifactId>
 	<name>Simple Demo how to use PowerMock</name>
+
+	<description>
+		Example showing simple PowerMock usage.
+	</description>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.powermock</groupId>

@@ -10,7 +10,11 @@
 	<artifactId>powermock-classloading</artifactId>
 	<name>powermock-classloading</name>
 	<version>1.5-SNAPSHOT</version>
-	<url>http://maven.apache.org</url>
+
+	<description>
+		Utilities for loading and executing classes.
+	</description>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

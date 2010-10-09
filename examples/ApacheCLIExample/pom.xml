@@ -9,7 +9,11 @@
 	<artifactId>powermock-examples-apachecli</artifactId>
 	<name>ApacheCLIExample</name>
 	<version>1.5-SNAPSHOT</version>
-	<url>http://maven.apache.org</url>
+
+	<description>
+		Example showing PowerMock testing classes that extend Object.
+	</description>
+
 	<dependencies>
 		<dependency>
 			<groupId>commons-cli</groupId>

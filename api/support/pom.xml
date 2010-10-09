@@ -10,7 +10,11 @@
 	<artifactId>powermock-api-support</artifactId>
 	<name>powermock-api-support</name>
 	<version>1.5-SNAPSHOT</version>
-	<url>http://maven.apache.org</url>
+
+	<description>
+		Utility classes.
+	</description>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.powermock</groupId>

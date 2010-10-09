@@ -10,6 +10,11 @@
   <artifactId>powermock-modules-easymock-test</artifactId>
   <packaging>pom</packaging>
   <name>powermock-modules-easymock-test</name>
+
+  <description>
+    Tests for EasyMock module with various test frameworks.
+  </description>
+
   <modules>              
     <module>junit3-test</module>
     <module>junit4-legacy-test</module>

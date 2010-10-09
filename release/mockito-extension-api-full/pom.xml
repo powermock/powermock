@@ -4,6 +4,7 @@
         <groupId>org.powermock</groupId>
         <artifactId>powermock</artifactId>
         <version>1.5-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -11,6 +12,11 @@
     <artifactId>powermock-mockito-release-full</artifactId>
     <packaging>pom</packaging>
     <name>powermock-mockito-single-jar-release-full</name>
+
+    <description>
+        Single jar containing source and binaries for PowerMock core and all
+        modules.
+    </description>
 
     <dependencies>
         <dependency>

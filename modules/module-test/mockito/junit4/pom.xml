@@ -14,7 +14,11 @@
 	<name>powermock-module-test-mockito-junit4
    </name>
 	<version>1.5-SNAPSHOT</version>
-	<url>http://maven.apache.org</url>
+
+	<description>
+		Tests for Mockito module with JUnit 4.x.
+	</description>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.powermock</groupId>

@@ -9,7 +9,11 @@
   <artifactId>powermock-tests</artifactId>
   <packaging>pom</packaging>
   <name>powermock-tests</name>
-  <url>http://maven.apache.org</url>
+
+  <description>
+    Common tests for PowerMock core and modules for mocking frameworks.
+  </description>
+
   <modules>
     <module>utils</module>
   </modules>

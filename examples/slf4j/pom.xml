@@ -9,7 +9,11 @@
   <artifactId>powermock-examples-slf4j</artifactId>
   <name>slf4j</name>
   <version>1.5-SNAPSHOT</version>
-  <url>http://maven.apache.org</url>
+
+  <description>
+    Example of using Slf4jMockPolicy.
+  </description>
+
    <dependencies>
       <dependency>
          <groupId>org.slf4j</groupId>

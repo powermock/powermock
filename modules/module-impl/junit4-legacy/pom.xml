@@ -3,12 +3,17 @@
 		<artifactId>powermock-modules</artifactId>
 		<groupId>org.powermock</groupId>
 		<version>1.5-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.powermock</groupId>
 	<artifactId>powermock-module-junit4-legacy</artifactId>
 	<name>powermock-module-junit4-legacy</name>
-	<url>http://maven.apache.org</url>
+
+	<description>
+		PowerMock support module for JUnit 4.0-4.3.
+	</description>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

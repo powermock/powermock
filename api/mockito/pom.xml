@@ -9,7 +9,11 @@
 	<artifactId>powermock-api-mockito</artifactId>
 	<name>powermock-api-mockito</name>
 	<version>1.5-SNAPSHOT</version>
-	<url>http://maven.apache.org</url>
+
+	<description>
+		PowerMock API for Mockito.
+	</description>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.mockito</groupId>

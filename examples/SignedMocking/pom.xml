@@ -10,6 +10,11 @@
 	<name>SignedMocking</name>
 	<version>1.5-SNAPSHOT</version>
 	<url>http://www.powermock.org</url>
+
+	<description>
+		Examples showing PowerMock used to mock classes in signed jars.
+	</description>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.powermock</groupId>

@@ -4,6 +4,7 @@
         <groupId>org.powermock</groupId>
         <artifactId>powermock</artifactId>
         <version>1.5-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -11,6 +12,10 @@
     <artifactId>powermock-release-junit-without-mock-framework</artifactId>
     <packaging>pom</packaging>
     <name>powermock-release-junit-without-mock-framework</name>
+
+    <description>
+        Single jar containing binaries for PowerMock core and JUnit module.
+    </description>
 
     <dependencies>
         <dependency>

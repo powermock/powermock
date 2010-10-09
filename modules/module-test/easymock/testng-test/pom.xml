@@ -11,7 +11,11 @@
    </artifactId>
    <name>powermock-module-test-easymock-testng</name>
    <version>1.5-SNAPSHOT</version>
-   <url>http://maven.apache.org</url>
+
+   <description>
+      Tests for EasyMock module with TestNG.
+   </description>
+
    <dependencies>
       <dependency>
          <groupId>org.testng</groupId>

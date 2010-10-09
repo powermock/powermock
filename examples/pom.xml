@@ -9,6 +9,11 @@
   <artifactId>powermock-examples</artifactId>
   <packaging>pom</packaging>
   <name>powermock-examples</name>
+
+  <description>
+    Examples of specific uses of PowerMock.
+  </description>
+
   <modules>
     <module>dom4j</module>
     <module>simple</module>

@@ -3,6 +3,7 @@
       <artifactId>powermock-modules</artifactId>
       <groupId>org.powermock</groupId>
       <version>1.5-SNAPSHOT</version>
+      <relativePath>../../pom.xml</relativePath>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.powermock</groupId>
@@ -10,6 +11,11 @@
    <packaging>jar</packaging>
    <name>powermock-module-junit3</name>
    <url>http://www.powermock.org</url>
+
+   <description>
+      PowerMock support module for JUnit 3.x.
+   </description>
+
    <dependencies>
       <dependency>
          <groupId>junit</groupId>

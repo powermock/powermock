@@ -10,7 +10,11 @@
   <artifactId>powermock-module-test-easymock-junit48</artifactId>
   <version>1.5-SNAPSHOT</version>
   <name>powermock-module-test-easymock-junit48</name>
-  <url>http://maven.apache.org</url>
+
+	<description>
+		Tests for EasyMock module with JUnit 4.8.
+	</description>
+
   <dependencies>
     <dependency>
          <groupId>junit</groupId>

@@ -9,7 +9,11 @@
 	<artifactId>powermock-examples-hamcrestexample</artifactId>
 	<name>HamcrestExample</name>
 	<version>1.5-SNAPSHOT</version>
-	<url>http://maven.apache.org</url>
+
+	<description>
+		Examples showing PowerMock used with Hamcrest matchers.
+	</description>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
