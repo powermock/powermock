@@ -4,6 +4,7 @@ Change log next version
 * Removed all third-party repositories from the pom's to allow for Maven central syncing.
 * PowerMock can now be built with Maven 3 (issue 283).
 * Prepared pom's for Maven central synching.
+* Upgraded the TestNG module to version 5.14 (issue 275).
 
 Change log 1.4.5 (2010-08-30)
 -----------------------------

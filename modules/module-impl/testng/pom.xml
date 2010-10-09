@@ -20,7 +20,7 @@
       <dependency>
          <groupId>org.testng</groupId>
          <artifactId>testng</artifactId>         
-         <version>5.13.1</version>
+         <version>5.14</version>
          <scope>compile</scope>
       </dependency>
       <dependency>
