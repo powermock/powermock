@@ -49,22 +49,7 @@ import org.powermock.reflect.internal.WhiteboxImpl;
 import org.powermock.reflect.matching.FieldMatchingStrategy;
 import org.powermock.reflect.proxyframework.RegisterProxyFramework;
 import org.powermock.reflect.spi.ProxyFramework;
-import org.powermock.reflect.testclasses.AbstractClass;
-import org.powermock.reflect.testclasses.AnInterface;
-import org.powermock.reflect.testclasses.ClassWithAMethod;
-import org.powermock.reflect.testclasses.ClassWithChildThatHasInternalState;
-import org.powermock.reflect.testclasses.ClassWithInternalState;
-import org.powermock.reflect.testclasses.ClassWithList;
-import org.powermock.reflect.testclasses.ClassWithOverriddenMethod;
-import org.powermock.reflect.testclasses.ClassWithPrivateMethods;
-import org.powermock.reflect.testclasses.ClassWithSerializableState;
-import org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameName;
-import org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameNameOneWithoutParameters;
-import org.powermock.reflect.testclasses.ClassWithSimpleInternalState;
-import org.powermock.reflect.testclasses.ClassWithStaticAndInstanceInternalStateOfSameType;
-import org.powermock.reflect.testclasses.ClassWithUniquePrivateMethods;
-import org.powermock.reflect.testclasses.ClassWithVarArgsConstructor;
-import org.powermock.reflect.testclasses.ClassWithVarArgsConstructor2;
+import org.powermock.reflect.testclasses.*;
 
 /**
  * Tests the WhiteBox's functionality.
@@ -857,6 +842,13 @@ public class WhiteBoxTest {
 		ClassWithAMethod classWithAMethod = new ClassWithAMethod();
 		Connection connection = null;
 		Whitebox.invokeMethod(classWithAMethod, "connect", connection);
+	}
+
+	@Test(expected = MethodNotFoundException.class)
+	public void invokeOverriddenMethodWithNullParameterThrowsIAE() throws Exception {
+		ClassWithOverloadedMethods tested = new ClassWithOverloadedMethods();
+        Child child = null;
+		Whitebox.invokeMethod(tested, "overloaded", 2, child);
 	}
 
 	public void testFinalState() {

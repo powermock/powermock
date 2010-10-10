@@ -30,169 +30,179 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.exceptions.ConstructorNotFoundException;
 
 import samples.partialmocking.MockSelfDemo;
 import samples.partialmocking.MockSelfWithNoDefaultConstructorDemo;
 
+import java.sql.Connection;
+
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(MockSelfDemo.class)
 public class MockSelfDemoTest {
 
-	private MockSelfDemo tested;
+    private MockSelfDemo tested;
 
-	@Test
-	public void testMockMultiple_ok() throws Exception {
-		tested = createPartialMock(MockSelfDemo.class, "aMethod2", "getString");
+    @Test
+    public void testMockMultiple_ok() throws Exception {
+        tested = createPartialMock(MockSelfDemo.class, "aMethod2", "getString");
 
-		tested.aMethod2();
-		expectLastCall().times(1);
+        tested.aMethod2();
+        expectLastCall().times(1);
 
-		final String expected = "Hello altered world";
-		expect(tested.getString("world")).andReturn(expected);
+        final String expected = "Hello altered world";
+        expect(tested.getString("world")).andReturn(expected);
 
-		replay(tested);
+        replay(tested);
 
-		String actual = tested.aMethod();
+        String actual = tested.aMethod();
 
-		verify(tested);
+        verify(tested);
 
-		assertEquals("Result ought to be \"Hello altered world\".", expected, actual);
-	}
+        assertEquals("Result ought to be \"Hello altered world\".", expected, actual);
+    }
 
-	@Test
-	public void testMockMultiple_sameName() throws Exception {
-		tested = createPartialMock(MockSelfDemo.class, "getString");
+    @Test
+    public void testMockMultiple_sameName() throws Exception {
+        tested = createPartialMock(MockSelfDemo.class, "getString");
 
-		final String firstString = "A message: ";
-		expectPrivate(tested, "getString").andReturn(firstString);
+        final String firstString = "A message: ";
+        expectPrivate(tested, "getString").andReturn(firstString);
 
-		final String secondString = "altered world";
-		expect(tested.getString("world2")).andReturn(secondString);
-		final String expected = firstString + secondString;
+        final String secondString = "altered world";
+        expect(tested.getString("world2")).andReturn(secondString);
+        final String expected = firstString + secondString;
 
-		replay(tested);
+        replay(tested);
 
-		String actual = tested.getTwoStrings();
+        String actual = tested.getTwoStrings();
 
-		verify(tested);
+        verify(tested);
 
-		assertEquals("Result ought to be \"A message:Hello altered world\".", expected, actual);
-	}
+        assertEquals("Result ought to be \"A message:Hello altered world\".", expected, actual);
+    }
 
-	@Test
-	public void testMockSingleMethod() throws Exception {
-		tested = createPartialMock(MockSelfDemo.class, "timesTwo", int.class);
+    @Test
+    public void testMockSingleMethod() throws Exception {
+        tested = createPartialMock(MockSelfDemo.class, "timesTwo", int.class);
 
-		final int expectedInt = 2;
-		final int expectedInteger = 8;
-		expect(tested.timesTwo(4)).andReturn(expectedInt);
+        final int expectedInt = 2;
+        final int expectedInteger = 8;
+        expect(tested.timesTwo(4)).andReturn(expectedInt);
 
-		replay(tested);
+        replay(tested);
 
-		int actualInt = tested.timesTwo(4);
-		int actualInteger = tested.timesTwo(new Integer(4));
+        int actualInt = tested.timesTwo(4);
+        int actualInteger = tested.timesTwo(new Integer(4));
 
-		verify(tested);
+        verify(tested);
 
-		assertEquals(expectedInt, actualInt);
-		assertEquals(expectedInteger, actualInteger);
-	}
+        assertEquals(expectedInt, actualInt);
+        assertEquals(expectedInteger, actualInteger);
+    }
 
-	@Test
-	public void testMockAllExcept_parametersDefined() throws Exception {
-		tested = createPartialMockForAllMethodsExcept(MockSelfDemo.class, "getString2", String.class);
+    @Test
+    public void testMockAllExcept_parametersDefined() throws Exception {
+        tested = createPartialMockForAllMethodsExcept(MockSelfDemo.class, "getString2", String.class);
 
-		final String expected = "Hello altered world";
-		expect(tested.getString2()).andReturn(expected);
+        final String expected = "Hello altered world";
+        expect(tested.getString2()).andReturn(expected);
 
-		replay(tested);
-		assertEquals(expected, tested.getString2());
-		assertEquals("Hello string", tested.getString2("string"));
-		verify(tested);
-	}
+        replay(tested);
+        assertEquals(expected, tested.getString2());
+        assertEquals("Hello string", tested.getString2("string"));
+        verify(tested);
+    }
 
-	@Test
-	public void testMockAllExcept_single() throws Exception {
-		tested = createPartialMockForAllMethodsExcept(MockSelfDemo.class, "aMethod");
-		tested.aMethod2();
-		expectLastCall().times(1);
+    @Test
+    public void testMockAllExcept_single() throws Exception {
+        tested = createPartialMockForAllMethodsExcept(MockSelfDemo.class, "aMethod");
+        tested.aMethod2();
+        expectLastCall().times(1);
 
-		final String expected = "Hello altered world";
-		expect(tested.getString("world")).andReturn(expected);
+        final String expected = "Hello altered world";
+        expect(tested.getString("world")).andReturn(expected);
 
-		replay(tested);
+        replay(tested);
 
-		String actual = tested.aMethod();
+        String actual = tested.aMethod();
 
-		verify(tested);
+        verify(tested);
 
-		assertEquals("Result ought to be \"Hello altered world\".", expected, actual);
-	}
+        assertEquals("Result ought to be \"Hello altered world\".", expected, actual);
+    }
 
-	@Test
-	public void testMockAllExcept_multiple() throws Exception {
-		tested = createPartialMockForAllMethodsExcept(MockSelfDemo.class, "timesTwo", "timesThree");
+    @Test
+    public void testMockAllExcept_multiple() throws Exception {
+        tested = createPartialMockForAllMethodsExcept(MockSelfDemo.class, "timesTwo", "timesThree");
 
-		final String expected = "A new value";
-		expect(tested.getString2()).andReturn(expected);
+        final String expected = "A new value";
+        expect(tested.getString2()).andReturn(expected);
 
-		replay(tested);
+        replay(tested);
 
-		assertEquals(4, tested.timesTwo(2));
-		assertEquals(4, tested.timesTwo(new Integer(2)));
-		assertEquals(6, tested.timesThree(2));
-		assertEquals(expected, tested.getString2());
+        assertEquals(4, tested.timesTwo(2));
+        assertEquals(4, tested.timesTwo(new Integer(2)));
+        assertEquals(6, tested.timesThree(2));
+        assertEquals(expected, tested.getString2());
 
-		verify(tested);
-	}
+        verify(tested);
+    }
 
-	@Test
-	public void testCreatePartialMockAndInvokeObjectConstructor() throws Exception {
-		tested = createPartialMock(MockSelfDemo.class, new String[] { "aMethod2", "getString" }, new Object());
+    @Test
+    public void testCreatePartialMockAndInvokeObjectConstructor() throws Exception {
+        tested = createPartialMock(MockSelfDemo.class, new String[] { "aMethod2", "getString" }, new Object());
 
-		tested.aMethod2();
-		expectLastCall().times(1);
+        tested.aMethod2();
+        expectLastCall().times(1);
 
-		final String expected = "Hello altered world";
-		expect(tested.getString("world")).andReturn(expected);
+        final String expected = "Hello altered world";
+        expect(tested.getString("world")).andReturn(expected);
 
-		replay(tested);
+        replay(tested);
 
-		String actual = tested.aMethod();
+        String actual = tested.aMethod();
 
-		verify(tested);
+        verify(tested);
 
-		assertEquals("Result ought to be \"Hello altered world\".", expected, actual);
-	}
+        assertEquals("Result ought to be \"Hello altered world\".", expected, actual);
+    }
 
-	@Test
-	public void testCreatePartialMockAndInvokeDefaultConstructor() throws Exception {
-		tested = createPartialMockAndInvokeDefaultConstructor(MockSelfDemo.class, "aMethod2", "getString");
+    @Test
+    public void testCreatePartialMockAndInvokeDefaultConstructor() throws Exception {
+        tested = createPartialMockAndInvokeDefaultConstructor(MockSelfDemo.class, "aMethod2", "getString");
 
-		tested.aMethod2();
-		expectLastCall().times(1);
+        tested.aMethod2();
+        expectLastCall().times(1);
 
-		final String expected = "Hello altered world";
-		expect(tested.getString("world")).andReturn(expected);
+        final String expected = "Hello altered world";
+        expect(tested.getString("world")).andReturn(expected);
 
-		replay(tested);
+        replay(tested);
 
-		String actual = tested.aMethod();
+        String actual = tested.aMethod();
 
-		verify(tested);
+        verify(tested);
 
-		assertEquals("Result ought to be \"Hello altered world\".", expected, actual);
-	}
+        assertEquals("Result ought to be \"Hello altered world\".", expected, actual);
+    }
 
-	@PrepareForTest(MockSelfWithNoDefaultConstructorDemo.class)
-	@Test
-	public void testCreatePartialMockAndInvokeDefaultConstructor_noDefaultConstructorFound() throws Exception {
-		try {
-			createPartialMockAndInvokeDefaultConstructor(MockSelfWithNoDefaultConstructorDemo.class, "aMethod2");
-			fail("Should throw ConstructorNotFoundException!");
-		} catch (ConstructorNotFoundException e) {
-			assertEquals("Failed to lookup constructor with parameter types [ <none> ] in class samples.partialmocking.MockSelfWithNoDefaultConstructorDemo.", e.getMessage());
-		}
-	}
+    @Test
+    public void partialMockingWithNullArgumentWorks() throws Exception {
+        final MockSelfDemo tested = createPartialMock(MockSelfDemo.class, "establishConnection");
+        Connection conn=null;
+        Whitebox.invokeMethod(tested, "establishConnection", conn);
+    }
+
+    @PrepareForTest(MockSelfWithNoDefaultConstructorDemo.class)
+    @Test
+    public void testCreatePartialMockAndInvokeDefaultConstructor_noDefaultConstructorFound() throws Exception {
+        try {
+            createPartialMockAndInvokeDefaultConstructor(MockSelfWithNoDefaultConstructorDemo.class, "aMethod2");
+            fail("Should throw ConstructorNotFoundException!");
+        } catch (ConstructorNotFoundException e) {
+            assertEquals("Failed to lookup constructor with parameter types [ <none> ] in class samples.partialmocking.MockSelfWithNoDefaultConstructorDemo.", e.getMessage());
+        }
+    }
 }
