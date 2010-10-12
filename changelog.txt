@@ -1,10 +1,11 @@
-Change log next version
------------------------
+Change log 1.4.6 (2010-10-12)
+-----------------------------
 * Changed project structure, all group id's are now "org.powermock" but most artifact id's are the same. There are two exceptions, org.powermock.tests and org.powermock.examples. Artifact module-test-powermock has been renamed to module-test-easymock and module-test-powermockito has been renamed to module-test-mockito (issue 234).
 * Removed all third-party repositories from the pom's to allow for Maven central syncing.
 * PowerMock can now be built with Maven 3 (issue 283).
 * Prepared pom's for Maven central synching.
 * Upgraded the TestNG module to version 5.14 (issue 275).
+* Fixed a bug in Whitebox which caused some overriden methods to be treated as overloaded (issue 276).
 
 Change log 1.4.5 (2010-08-30)
 -----------------------------
