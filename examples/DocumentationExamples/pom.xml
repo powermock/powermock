@@ -2,13 +2,13 @@
    <parent>
       <artifactId>powermock-examples</artifactId>
       <groupId>org.powermock.examples</groupId>
-      <version>1.5-SNAPSHOT</version>
+      <version>1.4.6</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.powermock.examples</groupId>
    <artifactId>powermock-examples-documentationexamples</artifactId>
    <name>DocumentationExamples</name>
-   <version>1.5-SNAPSHOT</version>
+   <version>1.4.6</version>
 
    <description>
       Examples used to document various PowerMock features.
