@@ -3,13 +3,13 @@
 	<parent>
 		<artifactId>powermock-api</artifactId>
 		<groupId>org.powermock</groupId>
-		<version>1.4.6</version>
+		<version>1.5-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.powermock</groupId>
 	<artifactId>powermock-api-support</artifactId>
 	<name>powermock-api-support</name>
-	<version>1.4.6</version>
+	<version>1.5-SNAPSHOT</version>
 
 	<description>
 		Utility classes.
