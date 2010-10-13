@@ -54,22 +54,6 @@
         <developerConnection>scm:svn:https://powermock.googlecode.com/svn/trunk/</developerConnection>
         <url>http://code.google.com/p/powermock/source/browse/</url>
     </scm>
-    <distributionManagement>
-        <repository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>file</id>
-            <name>Local file Repository</name>
-            <url>file:./../../repo</url>
-            <layout>default</layout>
-        </repository>
-        <!--
-              Provide username and such in your local settings.xml, as described
-              in: http://maven.apache.org/maven-settings/settings.html <site>
-              <id>powermock-website</id> <name>SourceForge Site</name> <url>
-              scp://shell.sourceforge.net/home/groups/p/po/powermock/htdocs/ </url>
-              </site>
-          -->
-    </distributionManagement>
     <issueManagement>
         <system>Google Code</system>
         <url>http://code.google.com/p/powermock/issues/list</url>
