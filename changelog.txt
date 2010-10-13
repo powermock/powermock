@@ -1,4 +1,4 @@
-Change log 1.4.6 (2010-10-12)
+Change log 1.4.6 (2010-10-13)
 -----------------------------
 * Changed project structure, all group id's are now "org.powermock" but most artifact id's are the same. There are two exceptions, org.powermock.tests and org.powermock.examples. Artifact module-test-powermock has been renamed to module-test-easymock and module-test-powermockito has been renamed to module-test-mockito (issue 234).
 * Removed all third-party repositories from the pom's to allow for Maven central syncing.

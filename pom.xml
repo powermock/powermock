@@ -62,11 +62,6 @@
             <url>file:./../../repo</url>
             <layout>default</layout>
         </repository>
-        <site>
-            <id>powermock-local</id>
-            <name>Local Site</name>
-            <url>target/site</url>
-        </site>
         <!--
               Provide username and such in your local settings.xml, as described
               in: http://maven.apache.org/maven-settings/settings.html <site>
