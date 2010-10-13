@@ -9,7 +9,7 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock</artifactId>
     <packaging>pom</packaging>
-    <version>1.4.6</version>
+    <version>1.5-SNAPSHOT</version>
     <name>powermock</name>
     <url>http://www.powermock.org</url>
     <description>
@@ -50,9 +50,9 @@
         </developer>
     </developers>
     <scm>
-        <connection>scm:svn:https://powermock.googlecode.com/svn/tags/powermock-1.4.6</connection>
-        <developerConnection>scm:svn:https://powermock.googlecode.com/svn/tags/powermock-1.4.6</developerConnection>
-        <url>http://code.google.com/p/powermock/source/browse/tags/powermock-1.4.6</url>
+        <connection>scm:svn:https://powermock.googlecode.com/svn/trunk/</connection>
+        <developerConnection>scm:svn:https://powermock.googlecode.com/svn/trunk/</developerConnection>
+        <url>http://code.google.com/p/powermock/source/browse/</url>
     </scm>
     <issueManagement>
         <system>Google Code</system>
