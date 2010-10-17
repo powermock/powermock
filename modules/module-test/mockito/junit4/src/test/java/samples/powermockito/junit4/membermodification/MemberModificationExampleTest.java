@@ -124,6 +124,28 @@ public class MemberModificationExampleTest {
     }
 
     @Test
+    public void whenReplacingMethodWithAMethodOfIncorrectReturnTypeThenAnIAEIsThrown() throws Exception {
+        try {
+            replace(method(SuppressMethod.class, "getObjectStatic")).with(
+                    method(StaticAndInstanceDemo.class, "aVoidMethod"));
+            fail("Should thow IAE");
+        } catch (Exception e) {
+            assertEquals("The replacing method (public static void samples.staticandinstance.StaticAndInstanceDemo.aVoidMethod()) needs to return java.lang.Object and not void.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void whenReplacingMethodWithAMethodOfWithIncorrectParametersThenAnIAEIsThrown() throws Exception {
+        try {
+            replace(method(SuppressMethod.class, "getObjectStatic")).with(
+                    method(StaticAndInstanceDemo.class, "aMethod2"));
+            fail("Should thow IAE");
+        } catch (Exception e) {
+            assertEquals("The replacing method, \"public static java.lang.Object samples.staticandinstance.StaticAndInstanceDemo.aMethod2(java.lang.String)\", needs to have the same number of parameters of the same type as as method \"public static java.lang.Object samples.suppressmethod.SuppressMethod.getObjectStatic()\".", e.getMessage());
+        }
+    }
+
+    @Test
     public void changingReturnValueExample() throws Exception {
         replace(method(SuppressMethod.class, "getObjectWithArgument")).with(new ReturnValueChangingInvocationHandler());
 

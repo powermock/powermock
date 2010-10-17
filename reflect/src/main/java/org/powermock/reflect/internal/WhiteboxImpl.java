@@ -2410,7 +2410,7 @@ public class WhiteboxImpl {
      * @return if all actual parameter types are assignable from the expected
      *         parameter types, otherwise.
      */
-    private static boolean checkIfParameterTypesAreSame(boolean isVarArgs, Class<?>[] expectedParameterTypes,
+    public static boolean checkIfParameterTypesAreSame(boolean isVarArgs, Class<?>[] expectedParameterTypes,
                                                         Class<?>[] actualParameterTypes) {
         if (expectedParameterTypes == null || actualParameterTypes == null) {
             throw new IllegalArgumentException("parameter types cannot be null");

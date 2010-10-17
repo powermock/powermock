@@ -17,20 +17,27 @@ package samples.staticandinstance;
 
 /**
  * Demonstrates how to mock both instance and static methods in the same test
- * 
+ *
  * @author Johan Haleby
  */
 public class StaticAndInstanceDemo {
 
-	public String getMessage() {
-		return getPrivateMessage() + StaticAndInstanceDemo.getStaticMessage();
-	}
+    public String getMessage() {
+        return getPrivateMessage() + StaticAndInstanceDemo.getStaticMessage();
+    }
 
-	private String getPrivateMessage() {
-		return "Private ";
-	}
+    private String getPrivateMessage() {
+        return "Private ";
+    }
 
-	public static final String getStaticMessage() {
-		return "hello world!";
-	}
+    public static final String getStaticMessage() {
+        return "hello world!";
+    }
+
+    public static void aVoidMethod() {
+    }
+
+    public static Object aMethod2(String aString) {
+        return null;
+    }
 }

@@ -1,3 +1,7 @@
+Change log next version
+-----------------------
+* The MemberModifier API now checks that the replacing method returns the same type and have the same number of parameters as the original method otherwise an IllegalArgumentException is thrown (issue 285).
+
 Change log 1.4.6 (2010-10-13)
 -----------------------------
 * Changed project structure, all group id's are now "org.powermock" but most artifact id's are the same. There are two exceptions, org.powermock.tests and org.powermock.examples. Artifact module-test-powermock has been renamed to module-test-easymock and module-test-powermockito has been renamed to module-test-mockito (issue 234).
