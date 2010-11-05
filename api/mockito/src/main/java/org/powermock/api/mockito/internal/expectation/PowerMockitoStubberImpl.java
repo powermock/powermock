@@ -46,7 +46,7 @@ public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockito
 	/**
 	 * Supports PowerMockito mocks. If <code>mock</code> is not a PowerMockito
 	 * mock it will delegate to Mockito.
-	 * 
+	 *
 	 * @see Stubber#when(Object)
 	 */
 	@Override

@@ -17,6 +17,7 @@ package samples.system;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -62,5 +63,9 @@ public class SystemClassUser {
 
     public URLConnection useURL(URL url) throws IOException {
         return url.openConnection();
+    }
+     
+    public InetAddress getLocalHost() throws IOException {
+        return InetAddress.getLocalHost();
     }
 }

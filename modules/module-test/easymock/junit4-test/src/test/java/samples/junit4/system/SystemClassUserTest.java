@@ -27,6 +27,7 @@ import static org.powermock.api.easymock.PowerMock.mockStaticPartial;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
 
+import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -204,4 +205,19 @@ public class SystemClassUserTest {
 		
 		verifyAll();
 	}
+
+    @Test
+    public void mockingInetAddressWorks() throws Exception {
+        final InetAddress mock = createMock(InetAddress.class);
+        mockStatic(InetAddress.class);
+
+        expect(InetAddress.getLocalHost()).andReturn(mock);
+
+        replayAll();
+
+        final SystemClassUser systemClassUser = new SystemClassUser();
+        assertSame(mock, systemClassUser.getLocalHost());
+
+        verifyAll();
+    }
 }
