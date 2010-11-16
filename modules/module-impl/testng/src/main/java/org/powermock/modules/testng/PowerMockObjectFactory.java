@@ -115,7 +115,7 @@ public class PowerMockObjectFactory implements IObjectFactory {
 			Object filter = testNGMethodFilterByMockedClassLoader.newInstance();
 			Whitebox.invokeMethod(f, "setFilter", filter);
 			Whitebox.invokeMethod(f, "setSuperclass", testClassLoadedByMockedClassLoader);
-			Class<?> c = Whitebox.<Class<?>> invokeMethod(f, "createClass");
+			Class<?> c = Whitebox.invokeMethod(f, "createClass");
 			return c;
 		}
 	}
