@@ -47,11 +47,11 @@ import samples.system.SystemClassUser;
  * To mock a system class you need to prepare the calling class for testing.
  * I.e. let's say you're testing class A which interacts with URLEncoder then
  * you would do:
- * 
+ *
  * <pre>
- * 
+ *
  * &#064;PrepareForTest({A.class})
- * 
+ *
  * </pre>
  */
 @RunWith(PowerMockRunner.class)
@@ -191,20 +191,20 @@ public class SystemClassUserTest {
         assertSame(urlConnection, systemClassUser.useURL(url));
         verifyAll();
     }
-    
-    @Test
-	public void mockingURLWorks() throws Exception {
-		URL url = createMock(URL.class);
-		URLConnection urlConnectionMock = createMock(URLConnection.class);
 
-		expect(url.openConnection()).andReturn(urlConnectionMock);
-		
-		replayAll();
-		
-		assertSame(url.openConnection(), urlConnectionMock);
-		
-		verifyAll();
-	}
+    @Test
+    public void mockingURLWorks() throws Exception {
+        URL url = createMock(URL.class);
+        URLConnection urlConnectionMock = createMock(URLConnection.class);
+
+        expect(url.openConnection()).andReturn(urlConnectionMock);
+
+        replayAll();
+
+        assertSame(url.openConnection(), urlConnectionMock);
+
+        verifyAll();
+    }
 
     @Test
     public void mockingInetAddressWorks() throws Exception {

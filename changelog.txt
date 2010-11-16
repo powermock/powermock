@@ -1,6 +1,7 @@
 Change log next version
 -----------------------
 * The MemberModifier API now checks that the replacing method returns the same type and have the same number of parameters as the original method otherwise an IllegalArgumentException is thrown (issue 285).
+* Fixed a bug which made it impossible to mock private methods with multiple arguments (issue 289).
 
 Change log 1.4.6 (2010-10-13)
 -----------------------------

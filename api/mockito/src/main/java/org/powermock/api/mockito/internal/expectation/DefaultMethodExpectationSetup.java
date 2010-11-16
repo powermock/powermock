@@ -23,31 +23,39 @@ import org.powermock.api.mockito.expectation.WithOrWithoutExpectedArguments;
 
 public class DefaultMethodExpectationSetup<T> implements WithOrWithoutExpectedArguments<T> {
 
-	private final Object object;
-	private final Method method;
+    private final Object object;
 
-	public DefaultMethodExpectationSetup(Object object, Method method) {
-		if (object == null) {
-			throw new IllegalArgumentException("object to expect cannot be null");
-		} else if (method == null) {
-			throw new IllegalArgumentException("method to expect cannot be null");
-		}
-		this.object = object;
-		this.method = method;
-		this.method.setAccessible(true);
-	}
+    private final Method method;
 
-	@SuppressWarnings("unchecked")
-	public OngoingStubbing<T> withArguments(Object firstArgument, Object... additionalArguments) throws Exception {
-		if (additionalArguments == null || additionalArguments.length == 0) {
-			return (OngoingStubbing<T>) Mockito.when(method.invoke(object, firstArgument));
-		} else {
-			return (OngoingStubbing<T>) Mockito.when(method.invoke(object, firstArgument, additionalArguments));
-		}
-	}
+    public DefaultMethodExpectationSetup(Object object, Method method) {
+        if (object == null) {
+            throw new IllegalArgumentException("object to expect cannot be null");
+        } else if (method == null) {
+            throw new IllegalArgumentException("method to expect cannot be null");
+        }
+        this.object = object;
+        this.method = method;
+        this.method.setAccessible(true);
+    }
 
-	@SuppressWarnings("unchecked")
-	public OngoingStubbing<T> withNoArguments() throws Exception {
-		return (OngoingStubbing<T>) Mockito.when(method.invoke(object));
-	}
+    @SuppressWarnings("unchecked")
+    public OngoingStubbing<T> withArguments(Object firstArgument, Object... additionalArguments) throws Exception {
+        if (additionalArguments == null || additionalArguments.length == 0) {
+            return (OngoingStubbing<T>) Mockito.when(method.invoke(object, firstArgument));
+        } else {
+            return (OngoingStubbing<T>) Mockito.when(method.invoke(object, join(firstArgument, additionalArguments)));
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public OngoingStubbing<T> withNoArguments() throws Exception {
+        return (OngoingStubbing<T>) Mockito.when(method.invoke(object));
+    }
+
+    private static Object[] join(Object o, Object[] array) {
+        Object[] res = new Object[array.length + 1];
+        res[0] = o;
+        System.arraycopy(array, 0, res, 1, array.length);
+        return res;
+    }
 }
