@@ -45,7 +45,6 @@ public class PowerMockTestNGMethodHandler implements MethodHandler {
     }
 
     public Object invoke(Object self, Method thisMethod, Method proceed, Object[] args) throws Throwable {
-        System.err.println("METHOD = "+thisMethod);
         injectMocksUsingAnnotationEnabler(self);
         try {
             final Object result = proceed.invoke(self, args);
