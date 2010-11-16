@@ -7,6 +7,7 @@
             <class name="samples.testng.MockStaticExtendsPowerMockTestCaseTest"/>
             <class name="samples.testng.PartialMockingWithBeforeClassTest"/>
             <class name="samples.testng.PrivateFinalTest"/>
+            <class name="samples.testng.SystemClassUserTest" />
         </classes>
     </test>
 </suite>
