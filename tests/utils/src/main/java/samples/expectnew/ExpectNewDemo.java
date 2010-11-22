@@ -145,6 +145,9 @@ public class ExpectNewDemo {
 	public Service[] newVarArgs(Service... services) {
 		return new VarArgsConstructorDemo(services).getAllServices();
 	}
+    public int[] newVarArgs(float myFloat, int ... ints) {
+		return new VarArgsConstructorDemo(myFloat, ints).getInts();
+	}
 
 	public byte[][] newVarArgs(byte[]... bytes) {
 		return new VarArgsConstructorDemo(bytes).getByteArrays();

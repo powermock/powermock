@@ -928,8 +928,8 @@ public class WhiteboxImpl {
      * @param arguments
      *            The arguments of the methods.
      * @return A single method.
-     *         {@link WhiteboxImpl#throwExceptionIfMethodWasNotFound(Object, String, Method, Object...)}
-     *         .
+     * @throws  {@link org.powermock.reflect.exceptions.MethodNotFoundException} if no method was found
+     * @throws  {@link org.powermock.reflect.exceptions.TooManyMethodsFoundException} if too methods matched
      */
     public static Method findMethodOrThrowException(Object tested, Class<?> declaringClass, String methodToExecute,
                                                     Object[] arguments) {
@@ -957,24 +957,14 @@ public class WhiteboxImpl {
         Method potentialMethodToInvoke = null;
         for (Method method : methods) {
             if (methodToExecute == null || method.getName().equals(methodToExecute)) {
-                    Class<?>[] paramTypes = method.getParameterTypes();
+                Class<?>[] paramTypes = method.getParameterTypes();
                 if ((arguments != null && (paramTypes.length == arguments.length))) {
                     if (paramTypes.length == 0) {
                         potentialMethodToInvoke = method;
                         break;
                     }
-                    boolean wrappedMethodFound = true;
-                    boolean primitiveMethodFound = true;
-                    if (!checkArgumentTypesMatchParameterTypes(method.isVarArgs(), paramTypes, arguments)) {
-                        wrappedMethodFound = false;
-                    }
-
-                    if (!checkIfParameterTypesAreSame(method.isVarArgs(),
-                            convertArgumentTypesToPrimitive(paramTypes, arguments), paramTypes)) {
-                        primitiveMethodFound = false;
-                    }
-
-                    if (wrappedMethodFound || primitiveMethodFound) {
+                    boolean methodFound = checkArgumentTypesMatchParameterTypes(method.isVarArgs(), paramTypes, arguments);
+                    if (methodFound) {
                         if (potentialMethodToInvoke == null) {
                             potentialMethodToInvoke = method;
                         } else if (potentialMethodToInvoke.getName().equals(method.getName())) {
@@ -1103,8 +1093,7 @@ public class WhiteboxImpl {
      * @param type
      *            The type where the constructor should be located.
      * @return The found constructor.
-     *         {@link Whitebox#throwExceptionIfConstructorWasNotFound(Class, Object...)
-     *         .
+     * @throws {@link org.powermock.reflect.exceptions.TooManyConstructorsFoundException} if too many constructors was found. 
      */
     public static Constructor<?> findConstructorOrThrowException(Class<?> type) {
         final Constructor<?>[] declaredConstructors = filterPowerMockConstructor(type.getDeclaredConstructors());
@@ -1145,8 +1134,8 @@ public class WhiteboxImpl {
      * @param arguments
      *            The arguments passed to the constructor.
      * @return The found constructor.
-     *         {@link Whitebox#throwExceptionIfConstructorWasNotFound(Class, Object...)
-     *         .
+     * @throws  {@link org.powermock.reflect.exceptions.ConstructorNotFoundException} if no constructor was found
+     * @throws  {@link org.powermock.reflect.exceptions.TooManyConstructorsFoundException} if too constructors matched
      */
     public static Constructor<?> findUniqueConstructorOrThrowException(Class<?> type, Object... arguments) {
         if (type == null) {
@@ -1171,18 +1160,8 @@ public class WhiteboxImpl {
                     potentialConstructor = constructor;
                     break;
                 }
-                boolean wrappedConstructorFound = true;
-                boolean primitiveConstructorFound = true;
-                if (!checkArgumentTypesMatchParameterTypes(constructor.isVarArgs(), paramTypes, arguments)) {
-                    wrappedConstructorFound = false;
-                }
-
-                if (!checkIfParameterTypesAreSame(constructor.isVarArgs(),
-                        convertArgumentTypesToPrimitive(paramTypes, arguments), paramTypes)) {
-                    primitiveConstructorFound = false;
-                }
-
-                if (wrappedConstructorFound || primitiveConstructorFound) {
+                boolean constructorFound = checkArgumentTypesMatchParameterTypes(constructor.isVarArgs(), paramTypes, arguments);
+                if (constructorFound) {
                     if (potentialConstructor == null) {
                         potentialConstructor = constructor;
                     } else {
@@ -1506,19 +1485,17 @@ public class WhiteboxImpl {
     @SuppressWarnings("unchecked")
     private static <T> Constructor<T> getPotentialVarArgsConstructor(Class<T> classThatContainsTheConstructorToTest,
                                                                      Object... arguments) {
-        if (areAllArgumentsOfSameType(arguments)) {
-            Constructor<T>[] declaredConstructors = (Constructor<T>[]) classThatContainsTheConstructorToTest
-                    .getDeclaredConstructors();
-            for (Constructor<T> possibleVarArgsConstructor : declaredConstructors) {
-                if (possibleVarArgsConstructor.isVarArgs()) {
-                    if (arguments == null || arguments.length == 0) {
+        Constructor<T>[] declaredConstructors = (Constructor<T>[]) classThatContainsTheConstructorToTest
+                .getDeclaredConstructors();
+        for (Constructor<T> possibleVarArgsConstructor : declaredConstructors) {
+            if (possibleVarArgsConstructor.isVarArgs()) {
+                if (arguments == null || arguments.length == 0) {
+                    return possibleVarArgsConstructor;
+                } else {
+                    Class<?>[] parameterTypes = possibleVarArgsConstructor.getParameterTypes();
+                    if (parameterTypes[parameterTypes.length - 1].getComponentType().isAssignableFrom(
+                            getType(arguments[0]))) {
                         return possibleVarArgsConstructor;
-                    } else {
-                        Class<?>[] parameterTypes = possibleVarArgsConstructor.getParameterTypes();
-                        if (parameterTypes[parameterTypes.length - 1].getComponentType().isAssignableFrom(
-                                getType(arguments[0]))) {
-                            return possibleVarArgsConstructor;
-                        }
                     }
                 }
             }
@@ -2188,22 +2165,33 @@ public class WhiteboxImpl {
                                                                  Object[] arguments) {
         if (parameterTypes == null) {
             throw new IllegalArgumentException("parameter types cannot be null");
-        } else if (parameterTypes.length != arguments.length) {
+        } else if (!isVarArgs && arguments.length != parameterTypes.length) {
             return false;
         }
-        for (int i = 0; i < parameterTypes.length; i++) {
+        for (int i = 0; i < arguments.length; i++) {
             Object argument = arguments[i];
             if (argument == null) {
-                continue;
-            } else {
-                final boolean assignableFrom;
-                final Class<?> argumentType = getType(argument);
-                if (isVarArgs && i == parameterTypes.length - 1) {
-                    assignableFrom = parameterTypes[i].getComponentType().isAssignableFrom(
-                            argumentType.isArray() ? argumentType.getComponentType() : argumentType);
+                final int index;
+                if(i >= parameterTypes.length) {
+                    index = parameterTypes.length -1;
                 } else {
-                    assignableFrom = parameterTypes[i].isAssignableFrom(argumentType);
+                    index = i;
                 }
+                final Class<?> type = parameterTypes[index];
+                if((type.isArray() ? type.getComponentType() : type).isPrimitive()) {
+                    // Primitives cannot be null
+                    return false;
+                } else {
+                    continue;
+                }
+            } else if(i >= parameterTypes.length) {
+                if(isAssignableFrom(parameterTypes[parameterTypes.length -1], getType(argument))) {
+                    continue;
+                } else {
+                    return false;
+                }
+            } else {
+                boolean assignableFrom = isAssignableFrom(parameterTypes[i],  getType(argument));
                 final boolean isClass = parameterTypes[i].equals(Class.class) && isClass(argument);
                 if (!assignableFrom && !isClass) {
                     return false;
@@ -2211,6 +2199,28 @@ public class WhiteboxImpl {
             }
         }
         return true;
+    }
+
+    private static boolean isAssignableFrom(Class<?> type, Class<?> from) {
+        boolean assignableFrom;
+        Class<?> theType = getComponentType(type);
+        Class<?> theFrom = getComponentType(from);
+        assignableFrom = theType.isAssignableFrom(theFrom);
+        if(!assignableFrom && PrimitiveWrapper.hasPrimitiveCounterPart(theFrom)) {
+            final Class<?> primitiveFromWrapperType = PrimitiveWrapper.getPrimitiveFromWrapperType(theFrom);
+            if(primitiveFromWrapperType != null) {
+                assignableFrom = theType.isAssignableFrom(primitiveFromWrapperType);
+            }
+        }
+        return assignableFrom;
+    }
+
+    private static Class<?> getComponentType(Class<?> type) {
+        Class<?> theType = type;
+        while(theType.isArray()) {
+            theType = theType.getComponentType();
+        }
+        return theType;
     }
 
     /**
@@ -2411,7 +2421,7 @@ public class WhiteboxImpl {
      *         parameter types, otherwise.
      */
     public static boolean checkIfParameterTypesAreSame(boolean isVarArgs, Class<?>[] expectedParameterTypes,
-                                                        Class<?>[] actualParameterTypes) {
+                                                       Class<?>[] actualParameterTypes) {
         if (expectedParameterTypes == null || actualParameterTypes == null) {
             throw new IllegalArgumentException("parameter types cannot be null");
         } else if (expectedParameterTypes.length != actualParameterTypes.length) {
@@ -2567,12 +2577,12 @@ public class WhiteboxImpl {
             final Class<?> componentType = parameterTypes[parameterTypes.length - 1].getComponentType();
             final Object lastArgument = arguments[arguments.length - 1];
             if (lastArgument != null) {
-                final Class<?> firstArgumentTypeAsPrimitive = getTypeAsPrimitiveIfWrapped(lastArgument);
+                final Class<?> lastArgumentTypeAsPrimitive = getTypeAsPrimitiveIfWrapped(lastArgument);
                 final Class<?> varArgsParameterTypeAsPrimitive = getTypeAsPrimitiveIfWrapped(componentType);
-                isVarArgs = isVarArgs && varArgsParameterTypeAsPrimitive.isAssignableFrom(firstArgumentTypeAsPrimitive);
+                isVarArgs = varArgsParameterTypeAsPrimitive.isAssignableFrom(lastArgumentTypeAsPrimitive);
             }
         }
-        return isVarArgs && areAllArgumentsOfSameType(arguments);
+        return isVarArgs && checkArgumentTypesMatchParameterTypes(isVarArgs, parameterTypes, arguments);
     }
 
     /**

@@ -3,6 +3,9 @@ Change log next version
 * The MemberModifier API now checks that the replacing method returns the same type and have the same number of parameters as the original method otherwise an IllegalArgumentException is thrown (issue 285).
 * Fixed a bug which made it impossible to mock private methods with multiple arguments (issue 289).
 * Removed some unwanted debug messages from the TestNG module.
+* Updated javadoc in Whitebox and WhiteboxImpl.
+* EasyMock and Mockito extension API now supports mocking new invocations with var args parameters when var args paramters is not the first parameter (issue 163).
+* Various improvements to var args handling for both methods and constructors.
 
 Change log 1.4.6 (2010-10-13)
 -----------------------------

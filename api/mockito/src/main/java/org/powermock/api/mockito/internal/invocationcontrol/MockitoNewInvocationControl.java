@@ -17,6 +17,7 @@ package org.powermock.api.mockito.internal.invocationcontrol;
 
 import static org.mockito.Mockito.times;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 
 import org.mockito.Mockito;
@@ -41,11 +42,14 @@ public class MockitoNewInvocationControl<T> implements NewInvocationControl<Ongo
 	public Object invoke(Class<?> type, Object[] args, Class<?>[] sig) throws Exception {
 		Constructor<?> constructor = WhiteboxImpl.getConstructor(type, sig);
 		if (constructor.isVarArgs()) {
-			/*
-			 * Get the first argument because this contains the actual varargs
-			 * arguments.
-			 */
-			args = (Object[]) args[args.length - 1];
+			Object varArgs =  args[args.length - 1];
+            final int varArgsLength = Array.getLength(varArgs);
+            Object[] oldArgs = args;
+            args = new Object[args.length + varArgsLength - 1];
+            System.arraycopy(oldArgs, 0, args, 0, oldArgs.length - 1);
+            for (int i = oldArgs.length - 1, j=0; i < args.length; i++, j++) {
+                args[i] = Array.get(varArgs, j);                                     
+            }
 		}
 		try {
 			return substitute.performSubstitutionLogic(args);

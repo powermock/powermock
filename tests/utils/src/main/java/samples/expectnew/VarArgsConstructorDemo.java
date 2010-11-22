@@ -22,21 +22,32 @@ public class VarArgsConstructorDemo {
 	private final String[] strings;
 	private final Service[] services;
 	private final byte[][] byteArrays;
+    private final int[] ints;
 
-	public VarArgsConstructorDemo(String... strings) {
+    public VarArgsConstructorDemo(String... strings) {
 		this.strings = strings;
-		services = new Service[0];
-		byteArrays = new byte[0][0];
+		this.services = new Service[0];
+		this.byteArrays = new byte[0][0];
+        this.ints = new int[0];
 	}
 
 	public VarArgsConstructorDemo(byte[]... byteArrays) {
 		this.byteArrays = byteArrays;
-		services = new Service[0];
-		strings = new String[0];
+		this.services = new Service[0];
+		this.strings = new String[0];
+        this.ints = new int[0];
 	}
 
 	public VarArgsConstructorDemo(Service... services) {
 		this.services = services;
+		this.strings = new String[0];
+		this.byteArrays = new byte[0][0];
+        this.ints = new int[0];
+	}
+
+    public VarArgsConstructorDemo(float myFloat, int... ints) {
+        this.ints = ints;
+        this.services = new Service[0];
 		strings = new String[0];
 		byteArrays = new byte[0][0];
 	}
@@ -52,4 +63,8 @@ public class VarArgsConstructorDemo {
 	public byte[][] getByteArrays() {
 		return byteArrays;
 	}
+
+    public int[] getInts() {
+        return ints;
+    }
 }

@@ -844,12 +844,12 @@ public class Whitebox {
 	 * specified in <code>MyContext</code>.
 	 *<p>
 	 * 
-	 * @param classOrInstance
+	 * @param instance
 	 *            The object or class whose fields to set.
 	 * @param context
 	 *            The context where the fields are defined.
-	 * @param additionalContexts
-	 *            Optionally more additional contexts.
+	 * @param strategy
+     *              Which field matching strategy to use.
 	 */
 	public static void setInternalStateFromContext(Object instance, Class<?> context, FieldMatchingStrategy strategy) {
 		WhiteboxImpl.setInternalStateFromContext(instance, context, strategy);

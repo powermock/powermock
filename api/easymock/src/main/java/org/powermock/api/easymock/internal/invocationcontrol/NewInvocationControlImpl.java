@@ -26,82 +26,83 @@ import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
 public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpectationSetters<T>> {
-	private final InvocationSubstitute<T> substitute;
-	private final Class<T> subsitutionType;
-	private boolean hasReplayed;
-	private boolean hasVerified;
+    private final InvocationSubstitute<T> substitute;
+    private final Class<T> subsitutionType;
+    private boolean hasReplayed;
+    private boolean hasVerified;
 
-	public NewInvocationControlImpl(InvocationSubstitute<T> substitute, Class<T> type) {
-		if (substitute == null) {
-			throw new IllegalArgumentException("Internal error: substitute cannot be null.");
-		}
-		this.subsitutionType = type;
-		this.substitute = substitute;
-	}
+    public NewInvocationControlImpl(InvocationSubstitute<T> substitute, Class<T> type) {
+        if (substitute == null) {
+            throw new IllegalArgumentException("Internal error: substitute cannot be null.");
+        }
+        this.subsitutionType = type;
+        this.substitute = substitute;
+    }
 
-	public Object invoke(Class<?> type, Object[] args, Class<?>[] sig) throws Exception {
-		Constructor<?> constructor = WhiteboxImpl.getConstructor(type, sig);
-		if (constructor.isVarArgs()) {
-			/*
-			 * Get the first argument because this contains the actual varargs
-			 * arguments.
-			 */
-			args = (Object[]) args[0];
-		}
-		try {
-			final MockType mockType = ((EasyMockMethodInvocationControl<?>) MockRepository.getInstanceMethodInvocationControl(substitute))
-					.getMockType();
-			Object result = substitute.performSubstitutionLogic(args);
+    public Object invoke(Class<?> type, Object[] args, Class<?>[] sig) throws Exception {
+        Constructor<?> constructor = WhiteboxImpl.getConstructor(type, sig);
+        if (constructor.isVarArgs()) {
+            /*
+             * Get the last argument because this contains the actual varargs
+             * arguments.
+             */
+            int length = constructor.getParameterTypes().length;
+            args = (Object[]) args[length-1];
+        }
+        try {
+            final MockType mockType = ((EasyMockMethodInvocationControl<?>) MockRepository.getInstanceMethodInvocationControl(substitute))
+                    .getMockType();
+            Object result = substitute.performSubstitutionLogic(args);
 
-			if (result == null) {
-				if (mockType == MockType.NICE) {
-					result = EasyMock.createNiceMock(subsitutionType);
-				} else {
-					throw new IllegalStateException("Must replay class " + type.getName() + " to get configured expectation.");
-				}
-			}
-			return result;
-		} catch (AssertionError e) {
-			NewInvocationControlAssertionError.throwAssertionErrorForNewSubstitutionFailure(e, type);
-		}
+            if (result == null) {
+                if (mockType == MockType.NICE) {
+                    result = EasyMock.createNiceMock(subsitutionType);
+                } else {
+                    throw new IllegalStateException("Must replay class " + type.getName() + " to get configured expectation.");
+                }
+            }
+            return result;
+        } catch (AssertionError e) {
+            NewInvocationControlAssertionError.throwAssertionErrorForNewSubstitutionFailure(e, type);
+        }
 
-		// Won't happen
-		return null;
-	}
+        // Won't happen
+        return null;
+    }
 
-	public IExpectationSetters<T> expectSubstitutionLogic(Object... arguments) throws Exception {
-		return EasyMock.expect(substitute.performSubstitutionLogic(arguments));
-	}
+    public IExpectationSetters<T> expectSubstitutionLogic(Object... arguments) throws Exception {
+        return EasyMock.expect(substitute.performSubstitutionLogic(arguments));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public synchronized Object replay(Object... mocks) {
-		if (!hasReplayed) {
-			EasyMock.replay(substitute);
-			hasReplayed = true;
-		}
-		return null;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public synchronized Object replay(Object... mocks) {
+        if (!hasReplayed) {
+            EasyMock.replay(substitute);
+            hasReplayed = true;
+        }
+        return null;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public synchronized Object verify(Object... mocks) {
-		if (!hasVerified) {
-			EasyMock.verify(substitute);
-			hasVerified = true;
-		}
-		return null;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public synchronized Object verify(Object... mocks) {
+        if (!hasVerified) {
+            EasyMock.verify(substitute);
+            hasVerified = true;
+        }
+        return null;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public synchronized Object reset(Object... mocks) {
-		EasyMock.reset(substitute);
-		hasReplayed = false;
-		hasVerified = false;
-		return null;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public synchronized Object reset(Object... mocks) {
+        EasyMock.reset(substitute);
+        hasReplayed = false;
+        hasVerified = false;
+        return null;
+    }
 }
