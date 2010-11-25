@@ -29,7 +29,7 @@
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>3.13.0-GA</version>
+			<version>3.14.0-GA</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

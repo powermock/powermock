@@ -6,6 +6,7 @@ Change log next version
 * Updated javadoc in Whitebox and WhiteboxImpl.
 * EasyMock and Mockito extension API now supports mocking new invocations with var args parameters when var args paramters is not the first parameter (issue 163).
 * Various improvements to var args handling for both methods and constructors.
+* Upgraded to Javassist 3.14 (issue 295).
 
 Change log 1.4.6 (2010-10-13)
 -----------------------------
