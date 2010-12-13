@@ -93,6 +93,11 @@ public class MockRepository {
 	 */
 	private static final Set<String> suppressFieldTypes = new HashSet<String>();
 
+    /**
+     * Set of runnables that will be executed after the test (method) is completed.
+	 */
+	private static final Set<Runnable> afterMethodRunners = new HashSet<Runnable>();
+
 	/**
 	 * Clear all state of the mock repository except for static initializers.
 	 * The reason for not clearing static initializers is that when running in a
@@ -116,6 +121,10 @@ public class MockRepository {
 		suppressField.clear();
 		suppressFieldTypes.clear();
 		methodProxies.clear();
+        for (Runnable runnable : afterMethodRunners) {
+            runnable.run();
+        }
+        afterMethodRunners.clear();
 	}
 
 	/**
@@ -363,4 +372,11 @@ public class MockRepository {
 		return methodProxies.put(method, invocationHandler);
 	}
 
+    /**
+     * Add a {@link Runnable} that will be executed after each
+     * @param runnable
+     */
+    public static synchronized void addAfterMethodRunner(Runnable runnable) {
+        afterMethodRunners.add(runnable);
+    }
 }

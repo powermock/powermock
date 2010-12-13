@@ -32,6 +32,7 @@ import net.sf.cglib.proxy.Enhancer;
 import org.easymock.ConstructorArgs;
 import org.easymock.IExpectationSetters;
 import org.easymock.IMocksControl;
+import org.easymock.internal.LastControl;
 import org.easymock.internal.MockInvocationHandler;
 import org.easymock.internal.MocksControl;
 import org.powermock.api.easymock.internal.invocationcontrol.EasyMockMethodInvocationControl;
@@ -2123,6 +2124,15 @@ public class PowerMock extends MemberModifier {
 		if (type == null) {
 			throw new IllegalArgumentException("The class to mock cannot be null");
 		}
+
+        /*
+         * Clear the EasyMock state after the test method is executed.
+         */
+        MockRepository.addAfterMethodRunner(new Runnable() {
+            public void run() {
+                LastControl.reportLastControl(null);
+            }
+        });
 
 		IMocksControl control = mockStrategy.createMockControl(type);
 		T mock = null;
