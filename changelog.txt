@@ -8,7 +8,7 @@ Change log next version
 * Various improvements to var args handling for both methods and constructors.
 * Upgraded to Javassist 3.14 (issue 295).
 * Upgraded junit module to use JUnit 4.8.2 (issue 296).
-* You no longer need to prepare system classes that are not final and those methods are not static, final or native in a special way (by prepare the class calling the system class method) (issue 300).
+* You no longer need to prepare system classes that are not final and whose methods are not static, final or native in a special way (by prepare the class calling the system class method) (issue 300).
 * Added method "defaultConstructorIn" to the MemberMatcher API so that you can e.g. suppress a default constructor using suppress(defaultConstructorIn(SomeClass.class)) (issue 302).
 
 Change log 1.4.6 (2010-10-13)
