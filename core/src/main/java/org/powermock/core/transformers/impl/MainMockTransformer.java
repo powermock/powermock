@@ -240,8 +240,7 @@ public class MainMockTransformer implements MockTransformer {
                 final CtMethod method = m.getMethod();
                 final CtClass declaringClass = method.getDeclaringClass();
                 if (declaringClass != null) {
-                    final String className = declaringClass.getName();
-                    if (className.startsWith("java.")) {
+                    if (shouldTreatAsSystemClassCall(method, declaringClass)) {
                         StringBuilder code = new StringBuilder();
                         code.append("{Object classOrInstance = null; if($0!=null){classOrInstance = $0;} else { classOrInstance = $class;}");
                         code.append("Object value =  ").append(MockGateway.class.getName()).append(".methodCall(").append("classOrInstance,\"")
@@ -260,6 +259,26 @@ public class MainMockTransformer implements MockTransformer {
             } catch (NotFoundException e) {
                 throw new RuntimeException(e);
             }
+        }
+
+        private boolean shouldTreatAsSystemClassCall(CtMethod method, CtClass declaringClass) throws NotFoundException {
+            final String className = declaringClass.getName();
+            if(!className.startsWith("java.")) {
+                return false;
+            }
+            final int methodModifiers = method.getModifiers();
+            final boolean requiredByModifier = Modifier.isFinal(declaringClass.getModifiers()) ||
+                    Modifier.isFinal(methodModifiers) ||
+                    Modifier.isStatic(methodModifiers) ||
+                    Modifier.isNative(methodModifiers);
+            return requiredByModifier || isJavaStandardMethod(method);
+        }
+
+        private  boolean isJavaStandardMethod(CtMethod method) throws NotFoundException {
+            final String methodName = method.getName();
+            final CtClass[] sig = method.getParameterTypes();
+            return (methodName.equals("equals") && sig.length == 1) || (methodName.equals("hashCode") && sig.length == 0)
+                    || (methodName.equals("toString") && sig.length == 0);
         }
 
         @Override
@@ -312,7 +331,7 @@ public class MainMockTransformer implements MockTransformer {
         /**
          * Create a defer constructor in the class which will be called when the
          * constructor is suppressed.
-         * 
+         *
          * @param clazz
          *            The class whose super constructor will get a new defer
          *            constructor if it doesn't already have one.

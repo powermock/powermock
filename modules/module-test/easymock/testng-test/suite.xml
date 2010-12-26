@@ -8,6 +8,7 @@
             <class name="samples.testng.PartialMockingWithBeforeClassTest"/>
             <class name="samples.testng.PrivateFinalTest"/>
             <class name="samples.testng.SystemClassUserTest" />
+            <class name="samples.testng.SampleServletTest" />
         </classes>
     </test>
 </suite>
