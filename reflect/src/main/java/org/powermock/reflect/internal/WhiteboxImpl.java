@@ -1087,13 +1087,36 @@ public class WhiteboxImpl {
     }
 
     /**
-     * Finds and returns a certain constructor. If the constructor couldn't be
-     * found this method delegates to
+     * Finds and returns the default constructor. If the constructor couldn't be
+     * found this method delegates to {@link #throwExceptionWhenMultipleConstructorMatchesFound(java.lang.reflect.Constructor[])}.
      *
      * @param type
      *            The type where the constructor should be located.
      * @return The found constructor.
      * @throws {@link org.powermock.reflect.exceptions.TooManyConstructorsFoundException} if too many constructors was found. 
+     */
+    public static Constructor<?> findDefaultConstructorOrThrowException(Class<?> type) {
+        if(type == null) {
+            throw new IllegalArgumentException("type cannot be null");
+        }
+
+        final Constructor<?> declaredConstructor;
+        try {
+            declaredConstructor = type.getDeclaredConstructor();
+        } catch (NoSuchMethodException e) {
+            throw new ConstructorNotFoundException(String.format("Couldn't find a default constructor in %s.", type.getName()));
+        }
+        return declaredConstructor;
+    }
+
+    /**
+     * Finds and returns any constructor. If the constructor couldn't be
+     * found this method delegates to {@link #throwExceptionWhenMultipleConstructorMatchesFound(java.lang.reflect.Constructor[])}.
+     *
+     * @param type
+     *            The type where the constructor should be located.
+     * @return The found constructor.
+     * @throws {@link org.powermock.reflect.exceptions.TooManyConstructorsFoundException} if too many constructors was found.
      */
     public static Constructor<?> findConstructorOrThrowException(Class<?> type) {
         final Constructor<?>[] declaredConstructors = filterPowerMockConstructor(type.getDeclaredConstructors());

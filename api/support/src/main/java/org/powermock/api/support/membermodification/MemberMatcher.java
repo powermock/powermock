@@ -262,7 +262,8 @@ public class MemberMatcher {
     }
 
     /**
-     * Returns the default constructor specified in declaringClass.
+     * Returns any one constructor specified in declaringClass. Is is useful when you only have ONE constructor
+     * declared in <code>declaringClass</code> but you don't care which parameters it take.
      * 
      * @param declaringClass
      *            The declaringClass of the class where the constructor is
@@ -275,6 +276,21 @@ public class MemberMatcher {
     @SuppressWarnings("unchecked")
     public static <T> Constructor<T> constructor(Class<T> declaringClass) {
         return (Constructor<T>) WhiteboxImpl.findConstructorOrThrowException(declaringClass);
+    }
+
+    /**
+     * Returns the default constructor in <code>declaringClass</code>
+     *
+     * @param declaringClass
+     *            The declaringClass of the class where the constructor is
+     *            located.
+     * @return A <code>java.lang.reflect.Constructor</code>.
+     * @throws ConstructorNotFoundException
+     *             If no default constructor was found in  <code>declaringClass</code>
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Constructor<T> defaultConstructorIn(Class<T> declaringClass) {
+        return (Constructor<T>) WhiteboxImpl.findDefaultConstructorOrThrowException(declaringClass);
     }
 
     /**
