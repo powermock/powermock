@@ -1647,7 +1647,7 @@ public class PowerMock extends MemberModifier {
 	 * Switches the mocks or classes to verify mode. Note that you must use this
 	 * method when using PowerMock!
 	 * 
-	 * @param mocks
+	 * @param objects
 	 *            mock objects or classes loaded by PowerMock.
 	 */
 	public static synchronized void verify(Object... objects) {
@@ -1988,7 +1988,7 @@ public class PowerMock extends MemberModifier {
 	/**
 	 * Suppress all constructors in the given class.
 	 * 
-	 * @param classes
+	 * @param clazz
 	 *            The classes whose constructors will be suppressed.
 	 * @param excludePrivateConstructors
 	 *            optionally keep code in private constructors
@@ -2021,7 +2021,7 @@ public class PowerMock extends MemberModifier {
 	/**
 	 * Suppress multiple methods for a class.
 	 * 
-	 * @param classes
+	 * @param clazz
 	 *            The class whose methods will be suppressed.
 	 * @param fieldNames
 	 *            The names of the methods that'll be suppressed. If field names
@@ -2099,7 +2099,7 @@ public class PowerMock extends MemberModifier {
 	/**
 	 * suSuppress all methods for this class.
 	 * 
-	 * @param classes
+	 * @param clazz
 	 *            The class which methods will be suppressed.
 	 * @param excludePrivateMethods
 	 *            optionally not suppress private methods
