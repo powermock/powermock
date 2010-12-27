@@ -20,12 +20,17 @@ import java.lang.reflect.Modifier;
 
 import org.mockito.MockSettings;
 import org.mockito.Mockito;
+import org.mockito.configuration.IMockitoConfiguration;
 import org.mockito.internal.MockHandler;
+import org.mockito.internal.configuration.GlobalConfiguration;
 import org.mockito.internal.creation.MethodInterceptorFilter;
 import org.mockito.internal.creation.MockSettingsImpl;
 import org.mockito.internal.creation.jmock.ClassImposterizer;
+import org.mockito.internal.progress.MockingProgress;
+import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.internal.util.reflection.LenientCopyTool;
 import org.powermock.api.mockito.internal.invocationcontrol.MockitoMethodInvocationControl;
+import org.powermock.api.support.ClassLoaderUtil;
 import org.powermock.core.ClassReplicaCreator;
 import org.powermock.core.DefaultFieldValueGenerator;
 import org.powermock.core.MockRepository;
@@ -44,6 +49,8 @@ public class MockCreator {
 		T mock = null;
 		final String mockName = toInstanceName(type);
 
+        MockRepository.addAfterMethodRunner(new MockitoStateCleaner());
+
 		final Class<T> typeToMock;
 		if (isFinalJavaSystemClass(type)) {
 			typeToMock = (Class<T>) new ClassReplicaCreator().createClassReplica(type);
@@ -51,7 +58,7 @@ public class MockCreator {
 			typeToMock = type;
 		}
 
-		MockData<T> mockData = createMethodInvocationControl(mockName, typeToMock, methods, isSpy, (T) delegator,
+		final MockData<T> mockData = createMethodInvocationControl(mockName, typeToMock, methods, isSpy, (T) delegator,
 				mockSettings);
 
 		mock = mockData.getMock();
@@ -64,10 +71,6 @@ public class MockCreator {
 			MockRepository.putStaticMethodInvocationControl(type, mockData.getMethodInvocationControl());
 		} else {
 			MockRepository.putInstanceMethodInvocationControl(mock, mockData.getMethodInvocationControl());
-		}
-
-		if (mock instanceof InvocationSubstitute == false) {
-			MockRepository.addObjectsToAutomaticallyReplayAndVerify(mock);
 		}
 
 		if (isSpy) {
@@ -134,4 +137,28 @@ public class MockCreator {
 			return mock;
 		}
 	}
+
+    /**
+     * Clear state in Mockito that retains memory between tests
+     */
+    private static class MockitoStateCleaner implements Runnable {
+        public void run() {
+            clearMockProgress();
+            clearConfiguration();
+        }
+
+        private void clearMockProgress() {
+            clearThreadLocalIn(ThreadSafeMockingProgress.class);
+        }
+
+        private void clearConfiguration() {
+            clearThreadLocalIn(GlobalConfiguration.class);
+        }
+
+        private void clearThreadLocalIn(Class<?> cls) {
+            Whitebox.getInternalState(cls, ThreadLocal.class).set(null);
+            final Class<?> clazz = ClassLoaderUtil.loadClassWithClassloader(ClassLoader.getSystemClassLoader(), cls);
+            Whitebox.getInternalState(clazz, ThreadLocal.class).set(null);
+        }
+    }
 }
