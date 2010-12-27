@@ -2295,10 +2295,10 @@ public class PowerMock extends MemberModifier {
         public void run() {
             LastControl.reportLastControl(null);
             // Also clear state from system classloader.
-            invokeReportLastControlFromBaseCL();
+            invokeReportLastControlFromSystemCL();
         }
 
-        private void invokeReportLastControlFromBaseCL() {
+        private void invokeReportLastControlFromSystemCL() {
             final ClassLoader classLoader = ClassLoader.getSystemClassLoader();
             try {
                 final Class<?> lastControlClassBySystemCL = Class.forName(LastControl.class.getName(), false, classLoader);
