@@ -12,6 +12,7 @@ Change log next version
 * Added method "defaultConstructorIn" to the MemberMatcher API so that you can e.g. suppress a default constructor using suppress(defaultConstructorIn(SomeClass.class)) (issue 302).
 * PowerMock now cleans up EasyMock state after each test case which significantly decreases memory consumption.
 * PowerMock now cleans up most Mockito state after each test case which decreases memory consumption.
+* Major refactoring of the classloading module. It has been split up in a way that allows for different object deep-cloning mechanisms. The previous implementation is now called powermock-classloading-objenesis and there's also a new one called powermock-classload-xstream. The latter uses X-Stream for deep-cloning. This means that if you're using the PowerMock JUnit Rule you must also depend on one of the two deep-cloner implementations.
 
 Change log 1.4.6 (2010-10-13)
 -----------------------------
