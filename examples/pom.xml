@@ -28,6 +28,7 @@
     <module>slf4j</module>
     <module>jcl</module>
     <module>jdom</module>
+    <module>jmock</module>
     <module>spring-mockito</module>
   </modules>
     <dependencyManagement>

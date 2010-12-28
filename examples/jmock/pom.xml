@@ -1,0 +1,67 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>powermock-examples</artifactId>
+        <groupId>org.powermock.examples</groupId>
+        <version>1.5-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.powermock.examples</groupId>
+    <artifactId>powermock-examples-jmock</artifactId>
+    <name>JMock Example</name>
+    <version>1.5-SNAPSHOT</version>
+     <properties>
+        <jmock.version>2.5.1</jmock.version>
+    </properties>
+
+    <description>
+        Examples showing PowerMock with JMock
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jmock</groupId>
+            <artifactId>jmock-junit4</artifactId>
+            <version>${jmock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jmock</groupId>
+            <artifactId>jmock-legacy</artifactId>
+            <version>${jmock.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-support</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!--
+            We depend on the EasyMock API but exclude the EasyMock dependency. The reason
+            is that PowerMock Whitebox needs a "org.powermock.reflect.spi.ProxyFramework"
+            implementation in order to work correctly. This implementation is provided by
+            the extension API:s. Since JMock uses CGLib it can reuse the
+            "org.powermock.api.extension.proxyframework.ProxyFrameworkImpl" in the
+            PowerMock EasyMock API. An alternative to depend on this class would be to simply copy
+            the class it into your code (remember that the class must be named
+            org.powermock.api.extension.proxyframework.ProxyFrameworkImpl).
+        -->
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-easymock</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.easymock</groupId>
+                    <artifactId>easymock</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+</project>
