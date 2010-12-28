@@ -75,7 +75,7 @@ public class ClassloaderExecutor {
         try {
             return constructor.newInstance(classLoader);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to instantiate DeepCloner. The DeepCloner implementation must have a one-arg constructor taking a Classloader as parameter.");
+            throw new RuntimeException("Failed to instantiate DeepCloner. The DeepCloner implementation must have a one-arg constructor taking a Classloader as parameter.", e);
         }
     }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.modules;
+package org.powermock.modules.test.junit4.rule.objenesis;
 
 import org.junit.Rule;
 import org.junit.Test;

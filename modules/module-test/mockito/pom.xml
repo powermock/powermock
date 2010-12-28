@@ -30,5 +30,7 @@
   </dependencies>
   <modules>
     <module>junit4</module>
-  </modules>              
+    <module>junit4-rule-objenesis</module>
+    <module>junit4-rule-xstream</module>
+  </modules>
 </project>

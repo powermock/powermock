@@ -20,23 +20,23 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.7</version>
-			<scope>compile</scope>
+			<version>4.8.2</version>
+			<scope>provided</scope>
+		</dependency>
+        <dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-classloading-base</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-core</artifactId>
-			<version>${version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-classloading-objenesis</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.powermock.tests</groupId>
 			<artifactId>powermock-tests-utils</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

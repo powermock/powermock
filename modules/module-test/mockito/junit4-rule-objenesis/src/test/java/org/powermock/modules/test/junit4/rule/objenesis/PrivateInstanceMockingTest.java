@@ -1,4 +1,4 @@
-package org.powermock.modules;
+package org.powermock.modules.test.junit4.rule.objenesis;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
