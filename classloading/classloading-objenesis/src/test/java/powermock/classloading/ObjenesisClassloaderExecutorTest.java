@@ -52,7 +52,7 @@ import powermock.classloading.classes.MyStaticFinalNumberHolder;
 import powermock.classloading.classes.MyStaticFinalPrimitiveHolder;
 import powermock.classloading.classes.ReflectionMethodInvoker;
 
-public class ClassloaderExecutorTest {
+public class ObjenesisClassloaderExecutorTest {
 
 	@Test
 	public void loadsObjectGraphInSpecifiedClassloaderAndReturnsResultInOriginalClassloader() throws Exception {

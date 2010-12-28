@@ -29,7 +29,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
-public class DeepClonerTest {
+public class ObjenesisDeepClonerTest {
 
     @Test
     public void clonesJavaInstances() throws Exception {

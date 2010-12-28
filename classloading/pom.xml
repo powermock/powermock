@@ -17,5 +17,6 @@
     <modules>
         <module>classloading-base</module>
         <module>classloading-objenesis</module>
+        <module>classloading-xstream</module>
     </modules>
 </project>
