@@ -1,8 +1,8 @@
 Change log next version
 -----------------------
 
-Change 1.4.7 (2010-12-27)
--------------------------
+Change log 1.4.7 (2010-12-27)
+-----------------------------
 * The MemberModifier API now checks that the replacing method returns the same type and have the same number of parameters as the original method otherwise an IllegalArgumentException is thrown (issue 285).
 * Fixed a bug which made it impossible to mock private methods with multiple arguments (issue 289).
 * Removed some unwanted debug messages from the TestNG module.
