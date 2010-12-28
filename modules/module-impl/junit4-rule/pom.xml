@@ -30,7 +30,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.powermock</groupId>
-			<artifactId>powermock-classloading</artifactId>
+			<artifactId>powermock-classloading-objenesis</artifactId>
 			<version>${version}</version>
 		</dependency>
 		<dependency>

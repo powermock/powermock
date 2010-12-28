@@ -20,13 +20,11 @@ import java.lang.reflect.Modifier;
 
 import org.mockito.MockSettings;
 import org.mockito.Mockito;
-import org.mockito.configuration.IMockitoConfiguration;
 import org.mockito.internal.MockHandler;
 import org.mockito.internal.configuration.GlobalConfiguration;
 import org.mockito.internal.creation.MethodInterceptorFilter;
 import org.mockito.internal.creation.MockSettingsImpl;
 import org.mockito.internal.creation.jmock.ClassImposterizer;
-import org.mockito.internal.progress.MockingProgress;
 import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.internal.util.reflection.LenientCopyTool;
 import org.powermock.api.mockito.internal.invocationcontrol.MockitoMethodInvocationControl;
@@ -34,7 +32,6 @@ import org.powermock.api.support.ClassLoaderUtil;
 import org.powermock.core.ClassReplicaCreator;
 import org.powermock.core.DefaultFieldValueGenerator;
 import org.powermock.core.MockRepository;
-import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.reflect.Whitebox;
 
 public class MockCreator {
@@ -157,7 +154,7 @@ public class MockCreator {
 
         private void clearThreadLocalIn(Class<?> cls) {
             Whitebox.getInternalState(cls, ThreadLocal.class).set(null);
-            final Class<?> clazz = ClassLoaderUtil.loadClassWithClassloader(ClassLoader.getSystemClassLoader(), cls);
+            final Class<?> clazz = ClassLoaderUtil.loadClass(cls, ClassLoader.getSystemClassLoader());
             Whitebox.getInternalState(clazz, ThreadLocal.class).set(null);
         }
     }

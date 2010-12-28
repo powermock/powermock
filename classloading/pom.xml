@@ -1,42 +1,21 @@
-<?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<parent>
-		<artifactId>powermock</artifactId>
-		<groupId>org.powermock</groupId>
-		<version>1.5-SNAPSHOT</version>
-	</parent>
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.powermock</groupId>
-	<artifactId>powermock-classloading</artifactId>
-	<name>powermock-classloading</name>
-	<version>1.5-SNAPSHOT</version>
+    <parent>
+        <artifactId>powermock</artifactId>
+        <groupId>org.powermock</groupId>
+        <version>1.5-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.powermock</groupId>
+    <artifactId>powermock-classloading-module</artifactId>
+    <packaging>pom</packaging>
+    <name>powermock-classloading-module</name>
 
-	<description>
-		Utilities for loading and executing classes.
-	</description>
+    <description>
+        PowerMock Classloading Module
+    </description>
 
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.7</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-api-support</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-reflect</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-core</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+    <modules>
+        <module>classloading-base</module>
+        <module>classloading-objenesis</module>
+    </modules>
 </project>

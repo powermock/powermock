@@ -154,8 +154,8 @@ public class Whitebox {
 	 * @throws ConstructorNotFoundException
 	 *             if the constructor cannot be found.
 	 */
-	public static Constructor<?> getConstructor(Class<?> type, Class<?>... parameterTypes) {
-		return WhiteboxImpl.getConstructor(type, parameterTypes);
+	public static <T> Constructor<T> getConstructor(Class<?> type, Class<?>... parameterTypes) {
+		return (Constructor<T>) WhiteboxImpl.getConstructor(type, parameterTypes);
 	}
 
 	/**

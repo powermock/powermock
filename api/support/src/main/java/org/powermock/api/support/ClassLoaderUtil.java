@@ -22,9 +22,32 @@ public class ClassLoaderUtil {
      * {@link ClassNotFoundException} in a runtime exeception.
      */
     @SuppressWarnings("unchecked")
-    public static <T> Class<T> loadClassWithClassloader(ClassLoader classloader, Class<T> type) {
+    public static <T> Class<T> loadClass(Class<T> type, ClassLoader classloader) {
+            return loadClass(type.getName(), classloader);
+    }
+
+    /**
+     * Loads a class from the current classloader
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> loadClass(String className) {
+        return loadClass(className, ClassLoaderUtil.class.getClassLoader());
+    }
+
+    /**
+     * Load a class from a specific classloader
+     */
+    public static <T> Class<T> loadClass(String className, ClassLoader classloader) {
+        if(className == null) {
+            throw new IllegalArgumentException("className cannot be null");
+        }
+
+        if(classloader == null) {
+            throw new IllegalArgumentException("classloader cannot be null");
+        }
+
         try {
-            return (Class<T>) Class.forName(type.getName(), false, classloader);
+            return (Class<T>) Class.forName(className, false, classloader);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
