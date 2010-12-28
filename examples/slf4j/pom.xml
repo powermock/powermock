@@ -2,13 +2,13 @@
   <parent>
     <artifactId>powermock-examples</artifactId>
     <groupId>org.powermock.examples</groupId>
-    <version>1.4.7</version>
+    <version>1.5-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.powermock.examples</groupId>
   <artifactId>powermock-examples-slf4j</artifactId>
   <name>slf4j</name>
-  <version>1.4.7</version>
+  <version>1.5-SNAPSHOT</version>
 
   <description>
     Example of using Slf4jMockPolicy.

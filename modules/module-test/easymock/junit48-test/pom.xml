@@ -4,11 +4,11 @@
   <parent>
     <artifactId>powermock-modules-easymock-test</artifactId>
     <groupId>org.powermock</groupId>
-    <version>1.4.7</version>
+    <version>1.5-SNAPSHOT</version>
   </parent>
   <groupId>org.powermock</groupId>
   <artifactId>powermock-module-test-easymock-junit48</artifactId>
-  <version>1.4.7</version>
+  <version>1.5-SNAPSHOT</version>
   <name>powermock-module-test-easymock-junit48</name>
 
 	<description>
