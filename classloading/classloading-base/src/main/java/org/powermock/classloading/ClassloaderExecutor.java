@@ -25,6 +25,39 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 
+/**
+ * A ClassLoaderExecutor can run any code in any classloader. E.g. assume you have a classloader
+ * called myClassloader and you want to execute a (void) method called myMethod in myObject using this CL:
+ * <pre>
+ *     ClassloaderExecutor cle = new ClassloaderExecutor(myClassloader);
+ *     cle.execute(new Runnable() {
+ *          public void run() {
+ *             myObject.myMethod();
+ *          }
+ *     });
+ * </pre>
+ *
+ * What happens is that the entire object graph of myObject is deep-cloned into the <code>myClassloader</code> classloader
+ * and then the <code>myObject.myMethod()</code> is executed.
+ * <p>
+ * You can also execute methods that return something:
+ * <pre>
+ *     ClassloaderExecutor cle = new ClassloaderExecutor(myClassloader);
+ *     MyResult result = cle.execute(new Callable<MyResult>() {
+ *          public MyResult call() throws Exception {
+ *             return myObject.myMethod();
+ *          }
+ *     });
+ * </pre>
+ * Here we imagine that <code>myObject.myMethod()</code> returns an object of type <code>MyResult</code>. Again the entire
+ * state will be deep-cloned to  <code>myClassloader</code> and then the <code>myObject.myMethod()</code> is executed.
+ * The result of the method call is deep-cloned back into the original classloader (the one that made the call to
+ * <code>cle.execute(..)</code>) and is ready for use.
+ * </p>
+ * <p>
+ * Note that the ClassloaderExecutor requries a deep cloner implementing the {@link DeepClonerSPI} present in the class-path.
+ * </p>
+ */
 public class ClassloaderExecutor {
 
 	@DoNotClone
