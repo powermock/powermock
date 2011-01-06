@@ -24,7 +24,7 @@ public class PrimitiveAndWrapperDemoTest {
 			fail("Should throw TooManyConstructorsFoundException");
 		} catch (TooManyConstructorsFoundException e) {
 			assertEquals(
-					"Several matching constructors found, please specify the argument parameter types so that PowerMock can determine which method you're refering to."
+					"Several matching constructors found, please specify the argument parameter types so that PowerMock can determine which method you're referring to."
 							+ "\nMatching constructors in class samples.expectnew.PrimitiveAndWrapperDemo were:\n"
 							+ "samples.expectnew.PrimitiveAndWrapperDemo( java.lang.Integer.class )\n"
 							+ "samples.expectnew.PrimitiveAndWrapperDemo( int.class )\n", e.getMessage());

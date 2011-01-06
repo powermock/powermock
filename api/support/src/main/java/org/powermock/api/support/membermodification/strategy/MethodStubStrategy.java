@@ -23,8 +23,6 @@ public interface MethodStubStrategy<T> {
 	/**
 	 * Stubs the method to return the specified returnValue.
 	 * 
-	 * @param <T>
-	 *            The type of the return value.
 	 * @param returnValue
 	 *            The value that will be returned.
 	 * @deprecated Since version 1.4.1, use {@link #toReturn(Object)} instead.
@@ -33,9 +31,7 @@ public interface MethodStubStrategy<T> {
 
 	/**
 	 * Stubs the method to return the specified returnValue.
-	 * 
-	 * @param <T>
-	 *            The type of the return value.
+     *
 	 * @param returnValue
 	 *            The value that will be returned.
 	 */

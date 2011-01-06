@@ -1832,7 +1832,7 @@ public class WhiteboxImpl {
         StringBuilder sb = new StringBuilder();
         sb.append("Several matching methods found, please specify the ");
         sb.append(helpInfo);
-        sb.append(" so that PowerMock can determine which method you're refering to.\n");
+        sb.append(" so that PowerMock can determine which method you're referring to.\n");
         sb.append("Matching methods in class ").append(methods[0].getDeclaringClass().getName()).append(" were:\n");
 
         for (Method method : methods) {
@@ -1859,7 +1859,7 @@ public class WhiteboxImpl {
                     "Internal error: throwExceptionWhenMultipleConstructorMatchesFound needs at least two constructors.");
         }
         StringBuilder sb = new StringBuilder();
-        sb.append("Several matching constructors found, please specify the argument parameter types so that PowerMock can determine which method you're refering to.\n");
+        sb.append("Several matching constructors found, please specify the argument parameter types so that PowerMock can determine which method you're referring to.\n");
         sb.append("Matching constructors in class ").append(constructors[0].getDeclaringClass().getName())
                 .append(" were:\n");
 

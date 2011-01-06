@@ -55,7 +55,7 @@ import java.util.concurrent.Callable;
  * <code>cle.execute(..)</code>) and is ready for use.
  * </p>
  * <p>
- * Note that the ClassloaderExecutor requries a deep cloner implementing the {@link DeepClonerSPI} present in the class-path.
+ * Note that the ClassloaderExecutor requires a deep cloner implementing the {@link DeepClonerSPI} present in the class-path.
  * </p>
  */
 public class ClassloaderExecutor {

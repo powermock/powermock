@@ -531,7 +531,7 @@ public class WhiteBoxTest {
 			assertTrue(e
 					.getMessage()
 					.contains(
-							"Several matching methods found, please specify the method name so that PowerMock can determine which method you're refering to"));
+							"Several matching methods found, please specify the method name so that PowerMock can determine which method you're referring to"));
 		}
 	}
 
