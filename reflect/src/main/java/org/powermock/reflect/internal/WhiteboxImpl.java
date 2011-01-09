@@ -1004,6 +1004,8 @@ public class WhiteboxImpl {
                     break;
                 } else if (arguments != null && (paramTypes.length != arguments.length)) {
                     continue;
+                } else if(arguments == null && paramTypes.length == 1 && !paramTypes[0].isPrimitive()) {
+                    potentialMethodToInvoke = method;
                 }
             }
         }
@@ -2201,7 +2203,7 @@ public class WhiteboxImpl {
                     index = i;
                 }
                 final Class<?> type = parameterTypes[index];
-                if((type.isArray() ? type.getComponentType() : type).isPrimitive()) {
+                if(type.isPrimitive()) {
                     // Primitives cannot be null
                     return false;
                 } else {

@@ -851,6 +851,16 @@ public class WhiteBoxTest {
 		Whitebox.invokeMethod(tested, "overloaded", 2, child);
 	}
 
+    @Test
+    public void canPassNullParamToPrivateStaticMethod() throws Exception {
+        assertEquals("hello", Whitebox.invokeMethod(ClassWithStaticMethod.class, "aStaticMethod", null));
+    }
+
+    @Test
+    public void canPassNullPrimitiveArraysToAPrivateStaticMethod() throws Exception {
+        assertEquals("hello", Whitebox.invokeMethod(ClassWithStaticMethod.class, "aStaticMethod", (byte[]) null));
+    }
+
 	public void testFinalState() {
 		ClassWithInternalState state = new ClassWithInternalState();
 		String expected = "changed";
