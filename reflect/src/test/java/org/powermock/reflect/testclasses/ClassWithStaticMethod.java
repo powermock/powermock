@@ -22,4 +22,7 @@ public class ClassWithStaticMethod {
         return "hello";
     }
 
+    private static String anotherStaticMethod(Object object, byte[] something) {
+        return object+" "+something;
+    }
 }

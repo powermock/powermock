@@ -861,6 +861,11 @@ public class WhiteBoxTest {
         assertEquals("hello", Whitebox.invokeMethod(ClassWithStaticMethod.class, "aStaticMethod", (byte[]) null));
     }
 
+    @Test
+    public void canPassMultipleNullValuesToStaticMethod() throws Exception {
+        assertEquals("null null", Whitebox.invokeMethod(ClassWithStaticMethod.class, "anotherStaticMethod", (Object) null, (byte[]) null));
+    }
+
 	public void testFinalState() {
 		ClassWithInternalState state = new ClassWithInternalState();
 		String expected = "changed";
