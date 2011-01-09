@@ -857,6 +857,11 @@ public class WhiteBoxTest {
     }
 
     @Test
+    public void canPassNullParamToPrivateStaticMethodWhenDefiningParameterTypes() throws Exception {
+        assertEquals("hello", Whitebox.invokeMethod(ClassWithStaticMethod.class, "aStaticMethod", new Class<?>[]{byte[].class},null));
+    }
+
+    @Test
     public void canPassNullPrimitiveArraysToAPrivateStaticMethod() throws Exception {
         assertEquals("hello", Whitebox.invokeMethod(ClassWithStaticMethod.class, "aStaticMethod", (byte[]) null));
     }

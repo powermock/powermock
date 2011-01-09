@@ -18,10 +18,12 @@ package org.powermock.reflect.testclasses;
 
 public class ClassWithStaticMethod {
 
+    @SuppressWarnings({"UnusedDeclaration"})
     private static String aStaticMethod(byte[] something) {
         return "hello";
     }
 
+    @SuppressWarnings({"UnusedDeclaration"})
     private static String anotherStaticMethod(Object object, byte[] something) {
         return object+" "+something;
     }
