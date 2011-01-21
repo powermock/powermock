@@ -1,7 +1,7 @@
 Change log next version
 -----------------------
 * Fixed a bug in Whitebox which prevented passing null parameters to methods.
-* PowerMock now supports mocking final inner classes and member Enums (issue 95). 
+* PowerMock now supports mocking static final inner classes and member Enums (issue 95). 
 
 
 Change log 1.4.7 (2010-12-27)
