@@ -24,7 +24,10 @@ import javassist.CtMethod;
 import javassist.CtNewConstructor;
 import javassist.Modifier;
 import javassist.NotFoundException;
+import javassist.bytecode.AttributeInfo;
+import javassist.bytecode.ClassFile;
 import javassist.bytecode.DuplicateMemberException;
+import javassist.bytecode.InnerClassesAttribute;
 import javassist.expr.ConstructorCall;
 import javassist.expr.ExprEditor;
 import javassist.expr.FieldAccess;
@@ -106,6 +109,22 @@ public class MainMockTransformer implements MockTransformer {
     private void removeFinalModifierFromClass(final CtClass clazz) {
         if (Modifier.isFinal(clazz.getModifiers())) {
             clazz.setModifiers(clazz.getModifiers() ^ Modifier.FINAL);
+        }
+        
+        ClassFile classFile = clazz.getClassFile2();
+        AttributeInfo attribute = classFile.getAttribute(InnerClassesAttribute.tag);
+        if (attribute != null && attribute instanceof InnerClassesAttribute) {
+            InnerClassesAttribute ica = (InnerClassesAttribute) attribute;
+            String name = classFile.getName();
+            int n = ica.tableLength();
+            for (int i = 0; i < n; ++i) {
+                if (name.equals(ica.innerClass(i))) {
+                    int accessFlags = ica.accessFlags(i);
+                    if (Modifier.isFinal(accessFlags)) {
+                        ica.setAccessFlags(i, accessFlags ^ Modifier.FINAL);
+                    }
+                }
+            }
         }
     }
 
