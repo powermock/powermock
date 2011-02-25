@@ -98,8 +98,8 @@ public class MockCreator {
 		MockHandler<T> mockHandler = new MockHandler<T>(settings);
 		MethodInterceptorFilter filter = new MethodInterceptorFilter(mockHandler, settings);
 		final T mock = (T) ClassImposterizer.INSTANCE.imposterise(filter, type);
-		final MockitoMethodInvocationControl invocationControl = new MockitoMethodInvocationControl(filter, isSpy
-				&& delegator == null ? new Object() : delegator, methods);
+		final MockitoMethodInvocationControl invocationControl = new MockitoMethodInvocationControl(filter,
+                isSpy && delegator == null ? new Object() : delegator, mock, methods);
 
 		return new MockData<T>(invocationControl, mock);
 	}

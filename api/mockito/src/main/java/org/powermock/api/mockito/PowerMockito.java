@@ -206,8 +206,8 @@ public class PowerMockito extends MemberModifier {
      * 
      * @param <T>
      *            the type of the mock object
-     * @param type
-     *            the type of the mock object
+     * @param object
+     *            the object to spy on
      * @return the spy object.
      */
     @SuppressWarnings("unchecked")
@@ -276,7 +276,7 @@ public class PowerMockito extends MemberModifier {
      * <b>times(1) is the default</b> and can be omitted
      * <p>
      * 
-     * @param mode
+     * @param verificationMode
      *            times(x), atLeastOnce() or never()
      */
     public static synchronized void verifyStatic(VerificationMode verificationMode) {
@@ -514,8 +514,6 @@ public class PowerMockito extends MemberModifier {
      * @param fullyQualifiedName
      *            The fully-qualified name of the inner/local/anonymous type to
      *            expect.
-     * @param arguments
-     *            Optional number of arguments.
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> ConstructorExpectationSetup<T> whenNew(String fullyQualifiedName) throws Exception {
