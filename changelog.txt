@@ -3,7 +3,7 @@ Change log 1.4.8 (2011-02-26)
 * Fixed a bug in Whitebox which prevented passing null parameters to methods.
 * PowerMock now supports mocking static final inner classes and member Enums (issue 95). 
 * Fixed a bug in PowerMockito that sometimes caused the finalize method to be called instead of the expecting method when setting up expectations (issue 308).
-
+* Upgraded TestNG module to TestNG 5.14.6
 
 Change log 1.4.7 (2010-12-27)
 -----------------------------
