@@ -1,3 +1,7 @@
+Change log next version
+-----------------------
+* Fixed an issue when mocking system classes containing fields of type Class or Classloader and synthetic fields such as java.util.ServiceLoader.
+
 Change log 1.4.8 (2011-02-26)
 -----------------------------
 * Fixed a bug in Whitebox which prevented passing null parameters to methods.
