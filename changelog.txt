@@ -1,7 +1,8 @@
 Change log next version
 -----------------------
-* Fixed an issue when mocking system classes containing fields of type Class or Classloader and synthetic fields such as java.util.ServiceLoader.
+* Fixed an issue when mocking system classes containing fields of type Class, Classloader or synthetic fields such as java.util.ServiceLoader.
 * TestNG PowerMockObjectFactory now sets the thread context classloader to the PowerMock mock classloader (issue 315).
+* Upgraded TestNG module to TestNG 6.0.1 (issue 316).
 
 Change log 1.4.8 (2011-02-26)
 -----------------------------
