@@ -76,7 +76,7 @@ public interface PowerMockTestListener {
 	 * 
 	 * @param testClass
 	 *            The type of the test to be executed.
-	 * @param testMethods
+	 * @param methods
 	 *            The test methods that were executed during the test.
 	 * @param testResult
 	 *            The outcome of the test suite.

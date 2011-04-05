@@ -86,7 +86,7 @@ public class PowerMockJUnit47RunnerDelegateImpl extends PowerMockJUnit44RunnerDe
                          * No rule could handle the exception thus we need to
                          * add it as a failure.
                          */
-                        super.handleException(testMethod, potentialTestFailure);
+                        super.handleException(testMethod, potentialTestFailure == null ? e : potentialTestFailure);
                     }
                 }
             }
