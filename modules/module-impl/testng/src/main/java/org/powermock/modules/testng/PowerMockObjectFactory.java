@@ -70,6 +70,10 @@ public class PowerMockObjectFactory implements IObjectFactory {
 		 */
 		MockRepository.clear();
 
+		final Thread currentThread = Thread.currentThread();
+		currentThread.setContextClassLoader(mockLoader);
+
+
 		Class<?> testClass = constructor.getDeclaringClass();
 		mockLoader.addIgnorePackage(ignorePackagesExtractor.getPackagesToIgnore(testClass));
 		mockLoader.addClassesToModify(testClassesExtractor.getTestClasses(testClass));
