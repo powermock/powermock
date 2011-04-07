@@ -2,6 +2,7 @@ Change log next version
 -----------------------
 * Fixed an issue when mocking system classes containing fields of type Class, Classloader or synthetic fields such as java.util.ServiceLoader.
 * TestNG PowerMockObjectFactory now sets the thread context classloader to the PowerMock mock classloader (issue 315).
+* TestNG PowerMockObjectFactory now only uses PowerMock classloader and byte-code manipulation if the test class or a method declared in this method is annotated with @PrepareForTest or @SuppressStaticInitializerFor. This introduce a non-backward compatible change that you're currently using mock injection (e.g. annotating a field with @Mock) you must now also use @PrepareForTest or @SuppressStaticInitializerFor for the mocks to be injected (issue 299).
 * Upgraded TestNG module to TestNG 6.0.1 (issue 316).
 * Fixed an issue with the PowerMock JUnit runner that prevented a JUnit Rule to throw an exception failing the test (issue 311).
 

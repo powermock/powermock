@@ -5,6 +5,7 @@ import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -14,16 +15,15 @@ import samples.annotationbased.AnnotationDemo;
 /**
  * Verifies that PowerMock test listeners works correctly in TestNG.
  */
+@PrepareForTest
 public class AnnotationDemoTest {
 
     @Mock
     private Service serviceMock;
 
-    private AnnotationDemo tested;
-
     @Test
     public void assertInjectionWorked() throws Exception {
-        tested = new AnnotationDemo(serviceMock);
+        AnnotationDemo tested = new AnnotationDemo(serviceMock);
         final String expected = "mock";
         expect(serviceMock.getServiceMessage()).andReturn(expected);
 

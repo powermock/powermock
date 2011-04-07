@@ -5,6 +5,7 @@ import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -29,6 +30,7 @@ public class AnnotationDemoWithBeforeMethodTest {
 	}
 
 	@Test
+    @PrepareForTest
 	public void assertInjectionWorked() throws Exception {
 		final String expected = "mock";
 		expect(serviceMock.getServiceMessage()).andReturn(expected);

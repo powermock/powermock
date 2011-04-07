@@ -9,6 +9,7 @@
             <class name="samples.testng.PrivateFinalTest"/>
             <class name="samples.testng.SystemClassUserTest" />
             <class name="samples.testng.SampleServletTest" />
+            <class name="samples.testng.NotAnnotatedWithPrepareForTest" />
         </classes>
     </test>
 </suite>
