@@ -2294,21 +2294,39 @@ public class PowerMock extends MemberModifier {
 
         public void run() {
             LastControl.reportLastControl(null);
-            // Also clear state from system classloader.
-            invokeReportLastControlFromSystemCL();
+            // Also clear state from system or thread context classloader.
+            invokeReportLastControlFromOtherCL();
         }
 
-        private void invokeReportLastControlFromSystemCL() {
-            final ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+        private void invokeReportLastControlFromOtherCL() {
+            final ClassLoader cl = determineClassloaderToClearState();
             try {
-                final Class<?> lastControlClassBySystemCL = Class.forName(LastControl.class.getName(), false, classLoader);
-                final Class<?> mocksControlClassBySystemCL = Class.forName(MocksControl.class.getName(), false, classLoader);
-                final Method reportLastControl = lastControlClassBySystemCL.getMethod("reportLastControl", mocksControlClassBySystemCL);
-                reportLastControl.invoke(lastControlClassBySystemCL, new Object[]{null});
+                final Class<?> lastControlClassByCL = Class.forName(LastControl.class.getName(), false, cl);
+                final Class<?> mocksControlClassByCL = Class.forName(MocksControl.class.getName(), false, cl);
+                final Method reportLastControl = lastControlClassByCL.getMethod("reportLastControl", mocksControlClassByCL);
+                reportLastControl.invoke(lastControlClassByCL, new Object[]{null});
             } catch (Exception e) {
                 // Should never happen
                 throw new RuntimeException("Failed to clean up state", e);
 
+            }
+        }
+
+        private ClassLoader determineClassloaderToClearState() {
+            final ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+            if(classFoundInClassloader(LastControl.class, systemClassLoader)) {
+                return systemClassLoader;
+            } else {
+                return Thread.currentThread().getContextClassLoader();
+            }
+        }
+
+        private boolean classFoundInClassloader(Class<?> cls, ClassLoader classLoader) {
+            try {
+                Class.forName(cls.getName(), false, classLoader);
+                return true;
+            } catch (ClassNotFoundException e) {
+                return false;
             }
         }
     }

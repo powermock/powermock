@@ -5,6 +5,7 @@ Change log next version
 * TestNG PowerMockObjectFactory now only uses PowerMock classloader and byte-code manipulation if the test class or a method declared in this method is annotated with @PrepareForTest or @SuppressStaticInitializerFor. This introduce a non-backward compatible change that you're currently using mock injection (e.g. annotating a field with @Mock) you must now also use @PrepareForTest or @SuppressStaticInitializerFor for the mocks to be injected (issue 299).
 * Upgraded TestNG module to TestNG 6.0.1 (issue 316).
 * Fixed an issue with the PowerMock JUnit runner that prevented a JUnit Rule to throw an exception failing the test (issue 311).
+* Fixed an issue with test state clearing while running a PowerMock enabled test as an Eclipse PDE test (issue 309).
 
 Change log 1.4.8 (2011-02-26)
 -----------------------------
