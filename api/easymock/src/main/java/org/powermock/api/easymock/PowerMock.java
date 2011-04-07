@@ -2300,6 +2300,10 @@ public class PowerMock extends MemberModifier {
 
         private void invokeReportLastControlFromOtherCL() {
             final ClassLoader cl = determineClassloaderToClearState();
+            if(cl == null) {
+                // We cannot find a classloader that loaded LastControl thus we skip clearing the state
+                return;
+            }
             try {
                 final Class<?> lastControlClassByCL = Class.forName(LastControl.class.getName(), false, cl);
                 final Class<?> mocksControlClassByCL = Class.forName(MocksControl.class.getName(), false, cl);
@@ -2314,10 +2318,13 @@ public class PowerMock extends MemberModifier {
 
         private ClassLoader determineClassloaderToClearState() {
             final ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+            final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
             if(classFoundInClassloader(LastControl.class, systemClassLoader)) {
                 return systemClassLoader;
+            } else if(classFoundInClassloader(LastControl.class, contextClassLoader)) {
+                return contextClassLoader;
             } else {
-                return Thread.currentThread().getContextClassLoader();
+                return null;
             }
         }
 
