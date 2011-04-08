@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Premain-Class: org.powermock.modules.agent.PowerMockAgent
+Agent-Class: org.powermock.modules.agent.PowerMockAgent
+Can-Retransform-Classes: true
+Can-Redefine-Classes: true
