@@ -15,9 +15,6 @@
  */
 package org.powermock.modules.junit4.rule;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.powermock.classloading.ClassloaderExecutor;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.transformers.MockTransformer;
@@ -27,6 +24,10 @@ import org.powermock.reflect.proxyframework.RegisterProxyFramework;
 import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
 import org.powermock.tests.utils.impl.PowerMockIgnorePackagesExtractorImpl;
 import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
+import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PowerMockClassloaderExecutor {
 
@@ -40,10 +41,12 @@ public class PowerMockClassloaderExecutor {
         MockClassLoader mockLoader = new MockClassLoader(classesToLoadByMockClassloader, packagesToIgnore);
         mockLoader.setMockTransformerChain(mockTransformerChain);
         PrepareForTestExtractorImpl testClassesExtractor = new PrepareForTestExtractorImpl();
+        StaticConstructorSuppressExtractorImpl staticInitializationExtractor = new StaticConstructorSuppressExtractorImpl();
         PowerMockIgnorePackagesExtractorImpl ignorePackagesExtractor = new PowerMockIgnorePackagesExtractorImpl();
     
         mockLoader.addIgnorePackage(ignorePackagesExtractor.getPackagesToIgnore(testClass));
         mockLoader.addClassesToModify(testClassesExtractor.getTestClasses(testClass));
+        mockLoader.addClassesToModify(staticInitializationExtractor.getTestClasses(testClass));
         registerProxyframework(mockLoader);
         new MockPolicyInitializerImpl(testClass).initialize(mockLoader);
         return new ClassloaderExecutor(mockLoader);

@@ -6,6 +6,7 @@ Change log next version
 * Upgraded TestNG module to TestNG 6.0.1 (issue 316).
 * Fixed an issue with the PowerMock JUnit runner that prevented a JUnit Rule to throw an exception failing the test (issue 311).
 * Fixed an issue with test state clearing while running a PowerMock enabled test as an Eclipse PDE test (issue 309).
+* Classloader based PowerMock JUnit Rules now supports suppressing static initializers
 
 Change log 1.4.8 (2011-02-26)
 -----------------------------
