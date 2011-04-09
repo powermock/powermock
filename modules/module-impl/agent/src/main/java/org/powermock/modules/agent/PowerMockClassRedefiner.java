@@ -37,4 +37,12 @@ public class PowerMockClassRedefiner {
             throw new RuntimeException(e);
         }
     }
+
+    public static void redefine(String className) {
+        try {
+            redefine(Class.forName(className));
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

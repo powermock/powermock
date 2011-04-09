@@ -32,6 +32,6 @@
     <module>junit4</module>
     <module>junit4-rule-objenesis</module>
     <module>junit4-rule-xstream</module>
-    <module>agent</module>
+    <module>junit4-agent</module>
   </modules>
 </project>

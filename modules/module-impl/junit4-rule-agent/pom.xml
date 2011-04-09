@@ -2,17 +2,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>powermock-modules-test-mockito</artifactId>
         <groupId>org.powermock</groupId>
+        <artifactId>powermock-modules</artifactId>
         <version>1.4.9-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
     <groupId>org.powermock</groupId>
-    <artifactId>powermock-module-javaagent-test</artifactId>
+    <artifactId>powermock-module-junit4-rule-agent</artifactId>
     <version>1.4.9-SNAPSHOT</version>
-    <name>powermock-module-javaagent-test</name>
+    <name>powermock-module-junit4-rule-agent</name>
 
     <description>
-        Tests for PowerMock Java agent
+        PowerMock support module for JUnit 4.x rules with Java agent
     </description>
 
     <dependencies>
@@ -20,18 +21,28 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.8.2</version>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-javaagent</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.powermock.tests</groupId>
             <artifactId>powermock-tests-utils</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>${version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

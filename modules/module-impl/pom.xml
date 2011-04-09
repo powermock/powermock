@@ -22,6 +22,7 @@
     <module>junit4-common</module>
     <module>junit4-legacy</module>
     <module>junit4-rule</module>
+    <module>junit4-rule-agent</module>
     <module>testng</module>
     <module>agent</module>
   </modules>

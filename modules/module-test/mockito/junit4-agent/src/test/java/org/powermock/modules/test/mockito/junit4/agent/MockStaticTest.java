@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.modules.test.agent;
+package org.powermock.modules.test.mockito.junit4.agent;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.exceptions.verification.TooLittleActualInvocations;
 import org.mockito.exceptions.verification.junit.ArgumentsAreDifferent;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.agent.PowerMockAgent;
-import org.powermock.modules.agent.PowerMockClassRedefiner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import samples.singleton.StaticHelper;
 import samples.singleton.StaticService;
 
@@ -38,9 +38,8 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 @PrepareForTest( { StaticService.class, StaticHelper.class })
 public class MockStaticTest {
 
-    static {
-        PowerMockClassRedefiner.redefine(StaticService.class);
-    }
+    @Rule
+    public PowerMockRule powerMockRule = new PowerMockRule();
 
 	@Test
 	public void testMockStaticNoExpectations() throws Exception {
