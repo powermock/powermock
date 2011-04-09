@@ -25,7 +25,7 @@ public class PowerMockRule implements MethodRule {
 
     static {
         if(PowerMockRule.class.getClassLoader() != ClassLoader.getSystemClassLoader()) {
-            throw new IllegalStateException("PowerMockRule can only be used with the system classloader but was loaded by"+PowerMockRule.class.getClassLoader());
+            throw new IllegalStateException("PowerMockRule can only be used with the system classloader but was loaded by "+PowerMockRule.class.getClassLoader());
         }
         PowerMockAgent.initializeIfPossible();
     }
