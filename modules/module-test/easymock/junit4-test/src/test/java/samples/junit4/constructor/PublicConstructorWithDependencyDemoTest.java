@@ -15,19 +15,16 @@
  */
 package samples.junit4.constructor;
 
-import static org.easymock.EasyMock.createMock;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
-import static org.powermock.api.easymock.PowerMock.createPartialMock;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.powermock.reflect.exceptions.ConstructorNotFoundException;
-
 import samples.Service;
 import samples.constructor.PublicConstructorWithDependencyDemo;
+
+import static org.easymock.EasyMock.createMock;
+import static org.junit.Assert.*;
+import static org.powermock.api.easymock.PowerMock.createPartialMock;
 
 /**
  * Verifies that error messages are correct when the constructor cannot be found

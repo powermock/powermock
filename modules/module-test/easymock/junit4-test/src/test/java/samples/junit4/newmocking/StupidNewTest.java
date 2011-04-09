@@ -15,20 +15,17 @@
  */
 package samples.junit4.newmocking;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.junit.Assert.assertEquals;
-import static org.powermock.api.easymock.PowerMock.createMockAndExpectNew;
-import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.verify;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.newmocking.MyClass;
 import samples.newmocking.StupidNew;
+
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.junit.Assert.assertEquals;
+import static org.powermock.api.easymock.PowerMock.*;
 
 /**
  * Test class to demonstrate new instance mocking.

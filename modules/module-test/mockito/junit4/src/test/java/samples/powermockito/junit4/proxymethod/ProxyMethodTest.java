@@ -15,6 +15,17 @@
  */
 package samples.powermockito.junit4.proxymethod;
 
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import samples.suppressmethod.SuppressMethod;
+import samples.suppressmethod.SuppressMethodExample;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.verify;
@@ -22,18 +33,6 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
 import static org.powermock.api.support.membermodification.MemberModifier.replace;
-
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import samples.suppressmethod.SuppressMethod;
-import samples.suppressmethod.SuppressMethodExample;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(SuppressMethod.class)

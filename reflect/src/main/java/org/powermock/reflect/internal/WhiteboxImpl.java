@@ -15,48 +15,20 @@
  */
 package org.powermock.reflect.internal;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 import org.objenesis.instantiator.ObjectInstantiator;
-import org.powermock.reflect.Whitebox;
-import org.powermock.reflect.exceptions.ConstructorNotFoundException;
-import org.powermock.reflect.exceptions.FieldNotFoundException;
-import org.powermock.reflect.exceptions.MethodInvocationException;
-import org.powermock.reflect.exceptions.MethodNotFoundException;
-import org.powermock.reflect.exceptions.TooManyConstructorsFoundException;
-import org.powermock.reflect.exceptions.TooManyFieldsFoundException;
-import org.powermock.reflect.exceptions.TooManyMethodsFoundException;
-import org.powermock.reflect.internal.matcherstrategies.AllFieldsMatcherStrategy;
-import org.powermock.reflect.internal.matcherstrategies.AssignableFromFieldTypeMatcherStrategy;
-import org.powermock.reflect.internal.matcherstrategies.AssignableToFieldTypeMatcherStrategy;
-import org.powermock.reflect.internal.matcherstrategies.FieldAnnotationMatcherStrategy;
-import org.powermock.reflect.internal.matcherstrategies.FieldMatcherStrategy;
-import org.powermock.reflect.internal.matcherstrategies.FieldNameMatcherStrategy;
+import org.powermock.reflect.exceptions.*;
+import org.powermock.reflect.internal.matcherstrategies.*;
 import org.powermock.reflect.internal.primitivesupport.PrimitiveWrapper;
 import org.powermock.reflect.matching.FieldMatchingStrategy;
 import org.powermock.reflect.spi.ProxyFramework;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.*;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.*;
 
 /**
  * Various utilities for accessing internals of a class. Basically a simplified

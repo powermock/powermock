@@ -15,14 +15,13 @@
  */
 package samples.junit4.staticinitializer;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.staticinitializer.InterfaceComputation;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
 @SuppressStaticInitializationFor( { "samples.staticinitializer.InterfaceA", "samples.staticinitializer.InterfaceB",

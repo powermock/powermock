@@ -25,7 +25,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import samples.stress.ClassWithStatic;
 import samples.stress.StressSample;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 /**
  * Test that asserts that <a href="http://code.google.com/p/powermock/issues/detail?id=308">issue 308</a> is resolved.

@@ -15,9 +15,6 @@
  */
 package samples.interfacemethodfinding;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-
 import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +22,9 @@ import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.internal.WhiteboxImpl;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 /**
  * There was a bug in PowerMock 1.2 and its predecessors that made PowerMock

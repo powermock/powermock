@@ -15,15 +15,14 @@
  */
 package powermock.examples.mockpolicy.policy;
 
-import java.lang.reflect.Method;
-
 import org.powermock.core.spi.PowerMockPolicy;
 import org.powermock.mockpolicies.MockPolicyClassLoadingSettings;
 import org.powermock.mockpolicies.MockPolicyInterceptionSettings;
 import org.powermock.reflect.Whitebox;
-
 import powermock.examples.mockpolicy.nontest.Dependency;
 import powermock.examples.mockpolicy.nontest.domain.DataObject;
+
+import java.lang.reflect.Method;
 
 /**
  * A simple mock policy whose purpose is to intercept calls to

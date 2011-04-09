@@ -15,10 +15,10 @@
  */
 package samples.interfacemethodfinding;
 
+import org.powermock.reflect.internal.WhiteboxImpl;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-
-import org.powermock.reflect.internal.WhiteboxImpl;
 
 /**
  * There was a bug in PowerMock 1.2 and its predecessors that made PowerMock

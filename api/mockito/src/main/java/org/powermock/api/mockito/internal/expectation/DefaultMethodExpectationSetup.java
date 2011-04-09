@@ -15,11 +15,11 @@
  */
 package org.powermock.api.mockito.internal.expectation;
 
-import java.lang.reflect.Method;
-
 import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;
 import org.powermock.api.mockito.expectation.WithOrWithoutExpectedArguments;
+
+import java.lang.reflect.Method;
 
 public class DefaultMethodExpectationSetup<T> implements WithOrWithoutExpectedArguments<T> {
 

@@ -15,15 +15,14 @@
  */
 package samples.junit4.mockpolicy.frameworkexample;
 
-import java.lang.reflect.Method;
-
 import org.powermock.core.spi.PowerMockPolicy;
 import org.powermock.mockpolicies.MockPolicyClassLoadingSettings;
 import org.powermock.mockpolicies.MockPolicyInterceptionSettings;
 import org.powermock.reflect.Whitebox;
-
 import samples.mockpolicy.frameworkexample.NativeResult;
 import samples.mockpolicy.frameworkexample.SimpleFramework;
+
+import java.lang.reflect.Method;
 
 public class SimpleFrameworkMockPolicy implements PowerMockPolicy {
 

@@ -15,10 +15,6 @@
  */
 package org.powermock.modules.junit4.internal.impl;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Set;
-
 import org.junit.Rule;
 import org.junit.internal.runners.InitializationError;
 import org.junit.internal.runners.TestMethod;
@@ -29,6 +25,10 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.reflect.Whitebox;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Set;
 
 /**
  * Extends the functionality of {@link PowerMockJUnit44RunnerDelegateImpl} to

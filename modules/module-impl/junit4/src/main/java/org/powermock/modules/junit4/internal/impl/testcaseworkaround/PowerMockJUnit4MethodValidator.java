@@ -15,20 +15,19 @@
  */
 package org.powermock.modules.junit4.internal.impl.testcaseworkaround;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.LinkedList;
-import java.util.List;
-
 import junit.framework.TestCase;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.internal.runners.MethodValidator;
 import org.junit.internal.runners.TestClass;
 import org.powermock.reflect.Whitebox;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A custom {@link MethodValidator} that makes sure that test methods not

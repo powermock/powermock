@@ -17,7 +17,6 @@ package samples.junit4.testhierarchy;
 
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-
 import samples.finalmocking.FinalDemo;
 
 //@RunWith(PowerMockRunner.class)

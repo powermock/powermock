@@ -16,7 +16,6 @@
 package org.powermock.modules.junit4;
 
 import junit.runner.Version;
-
 import org.powermock.modules.junit4.common.internal.impl.AbstractCommonPowerMockRunner;
 import org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl;
 import org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl;

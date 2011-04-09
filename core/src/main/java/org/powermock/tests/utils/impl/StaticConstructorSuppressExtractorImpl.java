@@ -15,13 +15,13 @@
  */
 package org.powermock.tests.utils.impl;
 
-import java.lang.reflect.AnnotatedElement;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.powermock.core.MockRepository;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.tests.utils.TestClassesExtractor;
+
+import java.lang.reflect.AnnotatedElement;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Implementation of the {@link TestClassesExtractor} interface for classes that

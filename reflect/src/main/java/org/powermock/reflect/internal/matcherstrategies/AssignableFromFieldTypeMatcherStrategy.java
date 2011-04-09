@@ -15,10 +15,10 @@
  */
 package org.powermock.reflect.internal.matcherstrategies;
 
-import java.lang.reflect.Field;
-
 import org.powermock.reflect.exceptions.FieldNotFoundException;
 import org.powermock.reflect.internal.primitivesupport.PrimitiveWrapper;
+
+import java.lang.reflect.Field;
 
 public class AssignableFromFieldTypeMatcherStrategy extends FieldTypeMatcherStrategy {
 

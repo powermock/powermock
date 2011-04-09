@@ -15,18 +15,7 @@
  */
 package demo.org.powermock.examples.tutorial.hellopower;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.powermock.api.easymock.PowerMock.mockStatic;
-import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.verify;
-
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import demo.org.powermock.examples.tutorial.domainmocking.impl.SampleServiceImpl;
 
 /**
  * The purpose of this test is to get 100% coverage of the {@link HelloWorld}

@@ -1,11 +1,11 @@
 package samples.junit48.rules.impl;
 
-import static org.easymock.EasyMock.createControl;
-
 import org.easymock.IMocksControl;
 import org.junit.rules.MethodRule;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
+
+import static org.easymock.EasyMock.createControl;
 
 /**
  * A JUnit rule that resets all mocks before each test and verifies the mocks after the test

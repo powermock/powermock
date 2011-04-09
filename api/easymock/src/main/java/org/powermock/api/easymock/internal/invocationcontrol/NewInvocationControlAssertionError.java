@@ -1,8 +1,8 @@
 package org.powermock.api.easymock.internal.invocationcontrol;
 
-import java.util.regex.Matcher;
-
 import org.powermock.core.spi.support.InvocationSubstitute;
+
+import java.util.regex.Matcher;
 
 public class NewInvocationControlAssertionError {
     public static void throwAssertionErrorForNewSubstitutionFailure(AssertionError oldError, Class<?> type) {

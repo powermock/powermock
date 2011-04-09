@@ -15,17 +15,16 @@
  */
 package org.powermock.modules.junit3.internal.impl;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Vector;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
-
 import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Vector;
 
 @SuppressWarnings("unchecked")
 public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements PowerMockJUnit3RunnerDelegate {

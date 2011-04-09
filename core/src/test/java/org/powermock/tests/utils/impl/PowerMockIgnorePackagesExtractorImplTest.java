@@ -15,10 +15,10 @@
  */
 package org.powermock.tests.utils.impl;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
+
+import static org.junit.Assert.assertEquals;
 
 public class PowerMockIgnorePackagesExtractorImplTest {
 

@@ -15,14 +15,13 @@
  */
 package org.powermock.modules.junit3.internal;
 
-import java.lang.reflect.Method;
-import java.util.Enumeration;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
-
 import org.powermock.tests.utils.TestSuiteChunker;
+
+import java.lang.reflect.Method;
+import java.util.Enumeration;
 
 public interface JUnit3TestSuiteChunker extends TestSuiteChunker {
 	

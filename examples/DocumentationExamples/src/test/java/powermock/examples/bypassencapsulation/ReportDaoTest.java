@@ -15,23 +15,15 @@
  */
 package powermock.examples.bypassencapsulation;
 
-import static org.powermock.api.easymock.PowerMock.createMock;
-import static org.powermock.api.easymock.PowerMock.createPartialMock;
-import static org.powermock.api.easymock.PowerMock.expectLastCall;
-import static org.powermock.api.easymock.PowerMock.expectPrivate;
-import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.replayAll;
-import static org.powermock.api.easymock.PowerMock.verify;
-import static org.powermock.api.easymock.PowerMock.verifyAll;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
-
 import powermock.examples.bypassencapsulation.nontest.Cache;
 import powermock.examples.bypassencapsulation.nontest.Report;
+
+import static org.powermock.api.easymock.PowerMock.*;
 
 /**
  * Unit tests for the {@link ReportDao} class. This demonstrates one basic usage

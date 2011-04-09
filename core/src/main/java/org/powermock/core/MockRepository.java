@@ -15,18 +15,14 @@
  */
 package org.powermock.core;
 
+import org.powermock.core.spi.MethodInvocationControl;
+import org.powermock.core.spi.NewInvocationControl;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.powermock.core.spi.MethodInvocationControl;
-import org.powermock.core.spi.NewInvocationControl;
+import java.util.*;
 
 /**
  * Hold mock objects that should be used instead of the concrete implementation.

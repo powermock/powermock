@@ -15,27 +15,23 @@
  */
 package powermock.examples;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.powermock.api.easymock.PowerMock.createMock;
-import static org.powermock.api.easymock.PowerMock.mockStatic;
-import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.verify;
-
-import java.util.HashSet;
-import java.util.Set;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import powermock.examples.dependencymanagement.DependencyManager;
 import powermock.examples.domain.Person;
 import powermock.examples.service.MyService;
 import powermock.examples.service.impl.MyServiceImpl;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.powermock.api.easymock.PowerMock.*;
 
 /**
  * This is an example unit test using JUnit 4.4 for the

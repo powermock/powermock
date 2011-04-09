@@ -15,15 +15,15 @@
  */
 package demo.org.powermock.examples.tutorial.partialmocking.service.impl;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 import demo.org.powermock.examples.tutorial.common.annotation.Inject;
 import demo.org.powermock.examples.tutorial.partialmocking.dao.ProviderDao;
 import demo.org.powermock.examples.tutorial.partialmocking.dao.domain.impl.ServiceArtifact;
 import demo.org.powermock.examples.tutorial.partialmocking.domain.ServiceProducer;
 import demo.org.powermock.examples.tutorial.partialmocking.service.ProviderService;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A simple implementation of the providers service. This is the class that's

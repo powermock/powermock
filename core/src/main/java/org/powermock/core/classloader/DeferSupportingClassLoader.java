@@ -15,12 +15,12 @@
  */
 package org.powermock.core.classloader;
 
+import org.powermock.core.WildcardMatcher;
+import org.powermock.reflect.Whitebox;
+
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.powermock.core.WildcardMatcher;
-import org.powermock.reflect.Whitebox;
 
 /**
  * Defers classloading of system classes to a delegate.

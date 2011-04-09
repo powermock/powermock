@@ -15,14 +15,13 @@
  */
 package org.powermock.modules.junit3.internal.impl;
 
-import java.lang.reflect.Method;
-
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestListener;
 import junit.runner.TestRunListener;
-
 import org.powermock.core.MockRepository;
+
+import java.lang.reflect.Method;
 
 /**
  * An implementation of the {@link TestRunListener} interface that performs

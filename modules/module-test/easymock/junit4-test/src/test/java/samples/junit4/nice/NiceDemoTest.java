@@ -1,14 +1,11 @@
 package samples.junit4.nice;
 
-import static org.powermock.api.easymock.PowerMock.createNicePartialMock;
-import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.verify;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.nice.NiceDemo;
+
+import static org.powermock.api.easymock.PowerMock.*;
 
 /**
  * This is a simple test case for the {@link NiceDemo} class that demonstrates

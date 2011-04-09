@@ -1,10 +1,10 @@
 package org.powermock.modules.junit4.legacy.internal.impl.testcaseworkaround;
 
-import java.lang.reflect.Method;
-
 import org.junit.Test;
 import org.junit.Test.None;
 import org.junit.internal.runners.TestIntrospector;
+
+import java.lang.reflect.Method;
 
 /**
  * A custom {@link TestIntrospector} that supports methods not annotated by the

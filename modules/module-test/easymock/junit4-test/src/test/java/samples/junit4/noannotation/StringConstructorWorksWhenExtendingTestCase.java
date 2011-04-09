@@ -15,18 +15,15 @@
  */
 package samples.junit4.noannotation;
 
-import static org.easymock.EasyMock.expect;
-import static org.powermock.api.easymock.PowerMock.mockStatic;
-import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.verify;
 import junit.framework.TestCase;
-
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.singleton.StaticHelper;
 import samples.singleton.StaticService;
+
+import static org.easymock.EasyMock.expect;
+import static org.powermock.api.easymock.PowerMock.*;
 
 /**
  * Demonstrates that the PowerMock JUnit runner works with single-arg string

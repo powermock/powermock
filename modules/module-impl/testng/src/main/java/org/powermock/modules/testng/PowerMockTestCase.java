@@ -15,11 +15,6 @@
  */
 package org.powermock.modules.testng;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Set;
-
 import org.powermock.core.MockRepository;
 import org.powermock.reflect.Whitebox;
 import org.testng.IObjectFactory;
@@ -27,6 +22,11 @@ import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.ObjectFactory;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Set;
 
 /**
  * A PowerMock base class that <i>may</i> be used as a base class for all TestNG

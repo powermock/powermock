@@ -15,12 +15,6 @@ s * Copyright 2008 the original author or authors.
  */
 package org.powermock.api.mockito;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.withSettings;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-
 import org.mockito.MockSettings;
 import org.mockito.Mockito;
 import org.mockito.internal.progress.MockingProgress;
@@ -48,6 +42,12 @@ import org.powermock.api.support.membermodification.MemberModifier;
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.NewInvocationControl;
 import org.powermock.reflect.Whitebox;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.withSettings;
 
 /**
  * PowerMockito extends Mockito functionality with several new features such as

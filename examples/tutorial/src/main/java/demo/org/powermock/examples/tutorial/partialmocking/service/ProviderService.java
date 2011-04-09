@@ -15,9 +15,9 @@
  */
 package demo.org.powermock.examples.tutorial.partialmocking.service;
 
-import java.util.Set;
-
 import demo.org.powermock.examples.tutorial.partialmocking.domain.ServiceProducer;
+
+import java.util.Set;
 
 /**
  * A simple interface that manages persons.

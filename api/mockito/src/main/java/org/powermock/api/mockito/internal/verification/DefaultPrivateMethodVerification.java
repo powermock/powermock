@@ -15,11 +15,11 @@
  */
 package org.powermock.api.mockito.internal.verification;
 
-import java.lang.reflect.Method;
-
 import org.powermock.api.mockito.verification.PrivateMethodVerification;
 import org.powermock.api.mockito.verification.WithOrWithoutVerifiedArguments;
 import org.powermock.reflect.Whitebox;
+
+import java.lang.reflect.Method;
 
 public class DefaultPrivateMethodVerification implements PrivateMethodVerification {
 

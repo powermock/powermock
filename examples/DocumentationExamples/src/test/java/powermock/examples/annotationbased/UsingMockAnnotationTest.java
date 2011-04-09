@@ -15,18 +15,17 @@
  */
 package powermock.examples.annotationbased;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertSame;
-import static org.powermock.api.easymock.PowerMock.replayAll;
-import static org.powermock.api.easymock.PowerMock.verifyAll;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import powermock.examples.annotationbased.dao.SomeDao;
+
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertSame;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 /**
  * Test of the {@link SomeService} when using the {@link Mock} annotation to

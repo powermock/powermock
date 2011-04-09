@@ -15,14 +15,11 @@
  */
 package samples.junit4.partialmocking;
 
-import static org.powermock.api.easymock.PowerMock.createPartialMockAndInvokeDefaultConstructor;
-import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.verify;
-
 import org.junit.Ignore;
 import org.junit.Test;
-
 import samples.partialmocking.PartialMockingWithConstructor;
+
+import static org.powermock.api.easymock.PowerMock.*;
 
 public class PartialMockingWithConstructorTest {
 

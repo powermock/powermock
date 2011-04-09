@@ -15,13 +15,13 @@
  */
 package demo.org.powermock.examples.tutorial.staticmocking.impl;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import demo.org.powermock.examples.tutorial.common.annotation.Inject;
 import demo.org.powermock.examples.tutorial.staticmocking.IServiceRegistrator;
 import demo.org.powermock.examples.tutorial.staticmocking.osgi.BundleContext;
 import demo.org.powermock.examples.tutorial.staticmocking.osgi.ServiceRegistration;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * An "OSGi"-ish implementation of the {@link IServiceRegistrator} interface.

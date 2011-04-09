@@ -15,12 +15,22 @@
  */
 package samples.powermockito.junit4.membermodification;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import samples.staticandinstance.StaticAndInstanceDemo;
+import samples.suppressconstructor.SuppressConstructorHierarchy;
+import samples.suppresseverything.SuppressEverything;
+import samples.suppressfield.SuppressField;
+import samples.suppressmethod.SuppressMethod;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
 import static org.powermock.api.support.membermodification.MemberMatcher.constructorsDeclaredIn;
 import static org.powermock.api.support.membermodification.MemberMatcher.everythingDeclaredIn;
@@ -28,23 +38,7 @@ import static org.powermock.api.support.membermodification.MemberMatcher.field;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
 import static org.powermock.api.support.membermodification.MemberMatcher.methods;
 import static org.powermock.api.support.membermodification.MemberMatcher.methodsDeclaredIn;
-import static org.powermock.api.support.membermodification.MemberModifier.replace;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
-import static org.powermock.api.support.membermodification.MemberModifier.suppress;
-
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import samples.staticandinstance.StaticAndInstanceDemo;
-import samples.suppressconstructor.SuppressConstructorHierarchy;
-import samples.suppresseverything.SuppressEverything;
-import samples.suppressfield.SuppressField;
-import samples.suppressmethod.SuppressMethod;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 /**
  * Demonstrates PowerMock's ability to modify member structures.

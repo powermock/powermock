@@ -15,15 +15,15 @@
  */
 package org.powermock.api.easymock.internal.invocationcontrol;
 
-import java.lang.reflect.Constructor;
-
-import org.easymock.IExpectationSetters;
 import org.easymock.EasyMock;
+import org.easymock.IExpectationSetters;
 import org.easymock.internal.MocksControl.MockType;
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.NewInvocationControl;
 import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.reflect.internal.WhiteboxImpl;
+
+import java.lang.reflect.Constructor;
 
 public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpectationSetters<T>> {
     private final InvocationSubstitute<T> substitute;

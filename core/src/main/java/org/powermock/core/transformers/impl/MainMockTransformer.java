@@ -15,25 +15,12 @@
  */
 package org.powermock.core.transformers.impl;
 
-import javassist.CannotCompileException;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtConstructor;
-import javassist.CtField;
-import javassist.CtMethod;
-import javassist.CtNewConstructor;
-import javassist.Modifier;
-import javassist.NotFoundException;
+import javassist.*;
 import javassist.bytecode.AttributeInfo;
 import javassist.bytecode.ClassFile;
 import javassist.bytecode.DuplicateMemberException;
 import javassist.bytecode.InnerClassesAttribute;
-import javassist.expr.ConstructorCall;
-import javassist.expr.ExprEditor;
-import javassist.expr.FieldAccess;
-import javassist.expr.MethodCall;
-import javassist.expr.NewExpr;
-
+import javassist.expr.*;
 import org.powermock.core.IndicateReloadClass;
 import org.powermock.core.MockGateway;
 import org.powermock.core.transformers.MockTransformer;

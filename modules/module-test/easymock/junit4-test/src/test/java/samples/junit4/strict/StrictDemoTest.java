@@ -1,17 +1,12 @@
 package samples.junit4.strict;
 
-import static org.powermock.api.easymock.PowerMock.createPartialMock;
-import static org.powermock.api.easymock.PowerMock.createStrictPartialMock;
-import static org.powermock.api.easymock.PowerMock.expectPrivate;
-import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.verify;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.strict.StrictDemo;
+
+import static org.powermock.api.easymock.PowerMock.*;
 
 /**
  * This is a simple test case for the {@link StrictDemo} class that demonstrates

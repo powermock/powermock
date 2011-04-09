@@ -15,9 +15,9 @@
  */
 package powermock.examples.service;
 
-import java.util.Set;
-
 import powermock.examples.domain.Person;
+
+import java.util.Set;
 
 public interface MyService {
 

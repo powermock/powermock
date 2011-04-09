@@ -15,8 +15,6 @@
  */
 package examples.jdom;
 
-import java.io.StringReader;
-
 import org.easymock.EasyMock;
 import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
@@ -26,6 +24,8 @@ import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.io.StringReader;
 
 /**
  * Thanks to Manuel Fern�ndez S�nchez de la Blanca for this example.

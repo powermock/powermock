@@ -15,9 +15,9 @@
  */
 package org.powermock.tests.utils.impl;
 
-import java.util.List;
-
 import org.powermock.tests.utils.TestChunk;
+
+import java.util.List;
 
 /**
  * A test case entry consists of a test class and a list of test chunks that

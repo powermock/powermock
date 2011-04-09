@@ -15,12 +15,12 @@
  */
 package powermock.examples.suppress.staticinitializer;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * This test demonstrates the ability for PowerMock to remove static

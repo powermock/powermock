@@ -15,27 +15,19 @@
  */
 package demo.org.powermock.examples.tutorial.partialmocking.service.impl.withoutpowermock;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import demo.org.powermock.examples.tutorial.partialmocking.dao.ProviderDao;
+import demo.org.powermock.examples.tutorial.partialmocking.dao.domain.impl.ServiceArtifact;
+import demo.org.powermock.examples.tutorial.partialmocking.domain.ServiceProducer;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import demo.org.powermock.examples.tutorial.partialmocking.dao.ProviderDao;
-import demo.org.powermock.examples.tutorial.partialmocking.dao.domain.impl.ServiceArtifact;
-import demo.org.powermock.examples.tutorial.partialmocking.domain.ServiceProducer;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 /**
  * Unit test for the {@link ProviderServiceWithoutPowerMockImpl} class.

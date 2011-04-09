@@ -15,36 +15,22 @@
  */
 package org.powermock.tests.utils.impl;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.Map.Entry;
-
 import org.powermock.core.classloader.MockClassLoader;
-import org.powermock.core.classloader.annotations.MockPolicy;
-import org.powermock.core.classloader.annotations.PowerMockListener;
-import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
-import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
+import org.powermock.core.classloader.annotations.*;
 import org.powermock.core.spi.PowerMockPolicy;
 import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.MainMockTransformer;
 import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.proxyframework.RegisterProxyFramework;
-import org.powermock.tests.utils.ArrayMerger;
-import org.powermock.tests.utils.IgnorePackagesExtractor;
-import org.powermock.tests.utils.TestChunk;
-import org.powermock.tests.utils.TestClassesExtractor;
-import org.powermock.tests.utils.TestSuiteChunker;
+import org.powermock.tests.utils.*;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Abstract base class for test suite chunking, i.e. a suite is chunked into

@@ -15,17 +15,10 @@
  */
 package org.powermock.core;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
+import javassist.*;
 import org.powermock.reflect.internal.TypeUtils;
 
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtConstructor;
-import javassist.CtMethod;
-import javassist.CtNewMethod;
-import javassist.Modifier;
-import javassist.NotFoundException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * This class takes care of creating a concrete sub-class implementing all

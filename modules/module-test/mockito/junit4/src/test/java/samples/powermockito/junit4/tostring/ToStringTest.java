@@ -15,15 +15,15 @@
  */
 package samples.powermockito.junit4.tostring;
 
-import static org.junit.Assert.assertNotNull;
-
-import javax.crypto.Cipher;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import javax.crypto.Cipher;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Test that demonstrates that <a

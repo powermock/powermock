@@ -15,15 +15,14 @@
  */
 package samples.powermockito.junit4.partialmocking;
 
-import static junit.framework.Assert.assertEquals;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.partialmocking.MockSelfDemo;
 import samples.partialmocking.MockWithStaticStateDemo;
+
+import static junit.framework.Assert.assertEquals;
 
 /**
  * Demonstrates that PowerMockito retains state when spying. This was previously

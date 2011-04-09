@@ -15,8 +15,6 @@
  */
 package org.powermock.api.mockito.internal.configuration;
 
-import java.lang.reflect.Field;
-
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -24,6 +22,8 @@ import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.configuration.SpyAnnotationEngine;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
+
+import java.lang.reflect.Field;
 
 /**
  * More or less a copy of the {@link SpyAnnotationEngine} but it uses

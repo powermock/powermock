@@ -15,12 +15,11 @@
  */
 package samples.junit4.suppressconstructor;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
-
 import samples.suppressconstructor.SuppressNonParentConstructorDemo;
+
+import static org.junit.Assert.assertEquals;
 
 public class SuppressNonParentConstructorDemoTest {
 

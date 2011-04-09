@@ -16,16 +16,16 @@
 
 package org.powermock.api.support.membermodification;
 
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
 import org.powermock.api.support.SuppressCode;
 import org.powermock.api.support.membermodification.strategy.MethodReplaceStrategy;
 import org.powermock.api.support.membermodification.strategy.MethodStubStrategy;
 import org.powermock.api.support.membermodification.strategy.impl.MethodReplaceStrategyImpl;
 import org.powermock.api.support.membermodification.strategy.impl.MethodStubStrategyImpl;
+
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * Contains various utilities for modifying members of classes such as

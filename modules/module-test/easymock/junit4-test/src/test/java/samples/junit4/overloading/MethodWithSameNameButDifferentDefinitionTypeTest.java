@@ -15,22 +15,16 @@
  */
 package samples.junit4.overloading;
 
-import static org.powermock.api.easymock.PowerMock.createMock;
-import static org.powermock.api.easymock.PowerMock.expectLastCall;
-import static org.powermock.api.easymock.PowerMock.expectNew;
-import static org.powermock.api.easymock.PowerMock.mockStatic;
-import static org.powermock.api.easymock.PowerMock.replayAll;
-import static org.powermock.api.easymock.PowerMock.verifyAll;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.classhierarchy.ChildA;
 import samples.classhierarchy.Parent;
 import samples.overloading.StaticAndInstanceMethodWithSameName;
 import samples.overloading.StaticAndInstanceMethodWithSameNameUser;
+
+import static org.powermock.api.easymock.PowerMock.*;
 
 /**
  * Demonstrates that PowerMock correctly methods that seam to be overloaded but

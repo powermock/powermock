@@ -15,11 +15,11 @@
  */
 package powermock.examples;
 
-import java.util.Set;
-
 import powermock.examples.dependencymanagement.DependencyManager;
 import powermock.examples.domain.Person;
 import powermock.examples.service.MyService;
+
+import java.util.Set;
 
 /**
  * A simple service class that uses the {@link DependencyManager} to get the

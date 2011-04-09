@@ -15,32 +15,9 @@
  */
 package org.powermock.reflect;
 
-import static junit.framework.Assert.assertFalse;
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.InputStream;
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.sql.Connection;
-import java.util.Set;
-
 import org.junit.Ignore;
 import org.junit.Test;
-import org.powermock.reflect.context.ClassFieldsNotInTargetContext;
-import org.powermock.reflect.context.InstanceFieldsNotInTargetContext;
-import org.powermock.reflect.context.MyContext;
-import org.powermock.reflect.context.MyIntContext;
-import org.powermock.reflect.context.MyStringContext;
-import org.powermock.reflect.context.OneInstanceAndOneStaticFieldOfSameTypeContext;
+import org.powermock.reflect.context.*;
 import org.powermock.reflect.exceptions.FieldNotFoundException;
 import org.powermock.reflect.exceptions.MethodNotFoundException;
 import org.powermock.reflect.exceptions.TooManyFieldsFoundException;
@@ -50,6 +27,17 @@ import org.powermock.reflect.matching.FieldMatchingStrategy;
 import org.powermock.reflect.proxyframework.RegisterProxyFramework;
 import org.powermock.reflect.spi.ProxyFramework;
 import org.powermock.reflect.testclasses.*;
+
+import java.io.InputStream;
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.sql.Connection;
+import java.util.Set;
+
+import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 /**
  * Tests the WhiteBox's functionality.

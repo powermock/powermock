@@ -15,16 +15,13 @@
  */
 package powermock.examples.privatemocking;
 
-import static org.junit.Assert.assertTrue;
-import static org.powermock.api.easymock.PowerMock.createPartialMock;
-import static org.powermock.api.easymock.PowerMock.expectPrivate;
-import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.verify;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import static org.junit.Assert.assertTrue;
+import static org.powermock.api.easymock.PowerMock.*;
 
 /**
  * Unit tests for the {@link DataService} class. This demonstrates one basic

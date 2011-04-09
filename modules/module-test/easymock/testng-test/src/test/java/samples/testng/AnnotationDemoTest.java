@@ -1,16 +1,15 @@
 package samples.testng;
 
-import static org.easymock.EasyMock.expect;
-import static org.powermock.api.easymock.PowerMock.replayAll;
-import static org.powermock.api.easymock.PowerMock.verifyAll;
-
 import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
 import samples.Service;
 import samples.annotationbased.AnnotationDemo;
+
+import static org.easymock.EasyMock.expect;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 /**
  * Verifies that PowerMock test listeners works correctly in TestNG.

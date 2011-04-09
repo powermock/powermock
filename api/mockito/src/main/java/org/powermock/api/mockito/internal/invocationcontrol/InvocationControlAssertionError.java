@@ -15,11 +15,11 @@
  */
 package org.powermock.api.mockito.internal.invocationcontrol;
 
-import java.util.regex.Matcher;
-
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.reflect.Whitebox;
+
+import java.util.regex.Matcher;
 
 public class InvocationControlAssertionError {
     private static final String AT = "at";

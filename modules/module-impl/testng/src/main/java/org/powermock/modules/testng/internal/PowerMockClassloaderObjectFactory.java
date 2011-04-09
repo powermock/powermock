@@ -21,8 +21,6 @@ import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.MainMockTransformer;
 import org.powermock.modules.testng.PowerMockTestCase;
-import org.powermock.modules.testng.internal.PowerMockTestNGMethodHandler;
-import org.powermock.modules.testng.internal.TestNGMethodFilter;
 import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.proxyframework.RegisterProxyFramework;
 import org.powermock.tests.utils.IgnorePackagesExtractor;

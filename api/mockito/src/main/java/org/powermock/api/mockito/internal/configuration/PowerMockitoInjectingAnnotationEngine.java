@@ -15,13 +15,13 @@
  */
 package org.powermock.api.mockito.internal.configuration;
 
-import java.lang.reflect.Field;
-
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.internal.configuration.InjectingAnnotationEngine;
 import org.powermock.reflect.Whitebox;
+
+import java.lang.reflect.Field;
 
 /**
  * The same as {@link InjectingAnnotationEngine} with the exception that it

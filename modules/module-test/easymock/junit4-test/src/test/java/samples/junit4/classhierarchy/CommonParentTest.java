@@ -15,18 +15,17 @@
  */
 package samples.junit4.classhierarchy;
 
-import static org.junit.Assert.assertEquals;
-
 import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.classhierarchy.ChildA;
 import samples.classhierarchy.ChildB;
 import samples.classhierarchy.Parent;
+
+import static org.junit.Assert.assertEquals;
 
 
 @RunWith(PowerMockRunner.class)

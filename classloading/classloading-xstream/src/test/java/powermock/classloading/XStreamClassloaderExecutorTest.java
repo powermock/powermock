@@ -16,41 +16,19 @@
 
 package powermock.classloading;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import javassist.CtClass;
+import org.junit.Test;
+import org.powermock.classloading.ClassloaderExecutor;
+import org.powermock.core.classloader.MockClassLoader;
+import org.powermock.core.transformers.MockTransformer;
+import powermock.classloading.classes.*;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.Callable;
 
-import javassist.CtClass;
-
-import org.junit.Ignore;
-import org.junit.Test;
-import org.powermock.classloading.ClassloaderExecutor;
-import org.powermock.core.classloader.MockClassLoader;
-import org.powermock.core.transformers.MockTransformer;
-
-import powermock.classloading.classes.MyArgument;
-import powermock.classloading.classes.MyClass;
-import powermock.classloading.classes.MyCollectionHolder;
-import powermock.classloading.classes.MyEnum;
-import powermock.classloading.classes.MyEnumHolder;
-import powermock.classloading.classes.MyHierarchicalFieldHolder;
-import powermock.classloading.classes.MyHierarchicalOverloadedFieldHolder;
-import powermock.classloading.classes.MyIntegerHolder;
-import powermock.classloading.classes.MyPrimitiveArrayHolder;
-import powermock.classloading.classes.MyReferenceFieldHolder;
-import powermock.classloading.classes.MyReturnValue;
-import powermock.classloading.classes.MyStaticFinalArgumentHolder;
-import powermock.classloading.classes.MyStaticFinalNumberHolder;
-import powermock.classloading.classes.MyStaticFinalPrimitiveHolder;
-import powermock.classloading.classes.ReflectionMethodInvoker;
+import static org.junit.Assert.*;
 
 public class XStreamClassloaderExecutorTest {
 

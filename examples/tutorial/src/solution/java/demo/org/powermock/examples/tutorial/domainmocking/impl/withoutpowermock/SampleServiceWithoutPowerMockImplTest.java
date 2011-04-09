@@ -15,17 +15,11 @@
  */
 package demo.org.powermock.examples.tutorial.domainmocking.impl.withoutpowermock;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.reportMatcher;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.lang.reflect.Method;
-
+import demo.org.powermock.examples.tutorial.domainmocking.EventService;
+import demo.org.powermock.examples.tutorial.domainmocking.PersonService;
+import demo.org.powermock.examples.tutorial.domainmocking.domain.BusinessMessages;
+import demo.org.powermock.examples.tutorial.domainmocking.domain.Person;
+import demo.org.powermock.examples.tutorial.domainmocking.domain.SampleServiceException;
 import org.easymock.ConstructorArgs;
 import org.easymock.internal.matchers.Equals;
 import org.easymock.internal.matchers.Same;
@@ -33,11 +27,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import demo.org.powermock.examples.tutorial.domainmocking.EventService;
-import demo.org.powermock.examples.tutorial.domainmocking.PersonService;
-import demo.org.powermock.examples.tutorial.domainmocking.domain.BusinessMessages;
-import demo.org.powermock.examples.tutorial.domainmocking.domain.Person;
-import demo.org.powermock.examples.tutorial.domainmocking.domain.SampleServiceException;
+import java.lang.reflect.Method;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * This test demonstrates how to test the refactored SampleService without

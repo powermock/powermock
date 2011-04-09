@@ -29,7 +29,6 @@ import java.util.List;
 
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 
 /**
  * This test demonstrates that the PowerMockRule delegates to other rules.

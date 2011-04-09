@@ -24,10 +24,15 @@
  */
 package com.sun.tools.attach.spi;
 
-import java.io.*;
-import java.util.*;
+import com.sun.tools.attach.AttachNotSupportedException;
+import com.sun.tools.attach.VirtualMachine;
+import com.sun.tools.attach.VirtualMachineDescriptor;
 
-import com.sun.tools.attach.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.ServiceLoader;
 
 /**
  * Attach provider class for attaching to a Java virtual machine.

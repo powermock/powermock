@@ -15,9 +15,9 @@
  */
 package org.powermock.mockpolicies.support;
 
-import java.lang.reflect.Method;
-
 import org.powermock.reflect.Whitebox;
+
+import java.lang.reflect.Method;
 
 /**
  * A support class for mock policies dealing with logging frameworks.

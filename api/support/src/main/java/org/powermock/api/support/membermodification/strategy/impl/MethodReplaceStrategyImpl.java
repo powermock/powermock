@@ -15,14 +15,13 @@
  */
 package org.powermock.api.support.membermodification.strategy.impl;
 
+import org.powermock.api.support.MethodProxy;
+import org.powermock.api.support.membermodification.strategy.MethodReplaceStrategy;
+import org.powermock.reflect.internal.WhiteboxImpl;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-
-import org.powermock.api.support.MethodProxy;
-import org.powermock.api.support.membermodification.strategy.MethodReplaceStrategy;
-import org.powermock.reflect.Whitebox;
-import org.powermock.reflect.internal.WhiteboxImpl;
 
 public class MethodReplaceStrategyImpl implements MethodReplaceStrategy {
 

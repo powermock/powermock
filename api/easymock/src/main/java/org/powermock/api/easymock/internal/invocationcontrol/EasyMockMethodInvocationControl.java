@@ -15,13 +15,13 @@
  */
 package org.powermock.api.easymock.internal.invocationcontrol;
 
-import java.lang.reflect.Method;
-import java.util.Set;
-
 import org.easymock.internal.MockInvocationHandler;
 import org.easymock.internal.MocksControl.MockType;
 import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.reflect.internal.WhiteboxImpl;
+
+import java.lang.reflect.Method;
+import java.util.Set;
 
 /**
  * The default implementation of the {@link MethodInvocationControl} interface.

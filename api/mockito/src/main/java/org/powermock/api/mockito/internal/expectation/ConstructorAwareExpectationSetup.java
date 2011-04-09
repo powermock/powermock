@@ -15,10 +15,10 @@
  */
 package org.powermock.api.mockito.internal.expectation;
 
-import java.lang.reflect.Constructor;
-
 import org.mockito.stubbing.OngoingStubbing;
 import org.powermock.api.mockito.expectation.WithOrWithoutExpectedArguments;
+
+import java.lang.reflect.Constructor;
 
 public class ConstructorAwareExpectationSetup<T> implements WithOrWithoutExpectedArguments<T> {
 

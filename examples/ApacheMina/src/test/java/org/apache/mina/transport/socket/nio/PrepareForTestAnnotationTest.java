@@ -1,20 +1,16 @@
 package org.apache.mina.transport.socket.nio;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertFalse;
-import static org.powermock.api.easymock.PowerMock.createMock;
-import static org.powermock.api.easymock.PowerMock.createPartialMock;
-import static org.powermock.api.easymock.PowerMock.expectPrivate;
-import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.verify;
-
-import java.util.concurrent.Executor;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
+
+import java.util.concurrent.Executor;
+
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertFalse;
+import static org.powermock.api.easymock.PowerMock.*;
 
 /**
  * This test validates that the {@link PrepareForTest} annotation modifies the

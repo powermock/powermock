@@ -15,10 +15,10 @@
  */
 package org.powermock.tests.utils;
 
-import java.lang.reflect.Method;
-
 import org.powermock.core.spi.testresult.TestMethodResult;
 import org.powermock.core.spi.testresult.TestSuiteResult;
+
+import java.lang.reflect.Method;
 
 /**
  * Implementors of this interface that must provide the ability to notify

@@ -21,7 +21,6 @@ import javassist.CtClass;
 import org.powermock.core.transformers.impl.MainMockTransformer;
 
 import java.lang.instrument.ClassDefinition;
-import java.lang.instrument.Instrumentation;
 
 public class PowerMockClassRedefiner {
 

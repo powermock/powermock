@@ -15,17 +15,16 @@
  */
 package samples.junit4.privatefield;
 
-import static org.easymock.EasyMock.expect;
+import org.junit.Test;
+import samples.Service;
+import samples.privatefield.SimplePrivateFieldServiceClass;
+
 import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.powermock.api.easymock.PowerMock.replay;
 import static org.powermock.api.easymock.PowerMock.verify;
 import static org.powermock.reflect.Whitebox.setInternalState;
-
-import org.junit.Test;
-
-import samples.Service;
-import samples.privatefield.SimplePrivateFieldServiceClass;
 
 /**
  * A test class that demonstrate how to test class that uses a private field for

@@ -15,9 +15,9 @@
  */
 package org.powermock.core.spi.listener;
 
-import java.lang.annotation.Annotation;
-
 import org.powermock.core.spi.PowerMockTestListener;
+
+import java.lang.annotation.Annotation;
 
 public interface AnnotationEnablerListener extends PowerMockTestListener {
 

@@ -15,33 +15,12 @@
  */
 package org.powermock.modules.junit4.internal.impl;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import org.junit.internal.runners.ClassRoadie;
-import org.junit.internal.runners.InitializationError;
-import org.junit.internal.runners.JUnit4ClassRunner;
-import org.junit.internal.runners.MethodRoadie;
-import org.junit.internal.runners.MethodValidator;
-import org.junit.internal.runners.TestClass;
-import org.junit.internal.runners.TestMethod;
+import org.junit.internal.runners.*;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
-import org.junit.runner.manipulation.Filter;
-import org.junit.runner.manipulation.Filterable;
-import org.junit.runner.manipulation.NoTestsRemainException;
-import org.junit.runner.manipulation.Sortable;
-import org.junit.runner.manipulation.Sorter;
+import org.junit.runner.manipulation.*;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.powermock.core.classloader.annotations.MockPolicy;
@@ -55,6 +34,12 @@ import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
 import org.powermock.tests.utils.impl.PowerMockTestNotifierImpl;
 import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
 import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * A JUnit4 test runner that only runs a specified set of test methods in a test

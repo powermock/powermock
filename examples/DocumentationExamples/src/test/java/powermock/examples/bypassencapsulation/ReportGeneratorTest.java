@@ -15,17 +15,13 @@
  */
 package powermock.examples.bypassencapsulation;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
-
 import powermock.examples.bypassencapsulation.nontest.Report;
 import powermock.examples.bypassencapsulation.nontest.ReportTemplateService;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit test for the {@link ReportGenerator} class. Demonstrates the ability for

@@ -15,9 +15,9 @@
  */
 package org.powermock.reflect.internal.matcherstrategies;
 
-import java.lang.reflect.Field;
-
 import org.powermock.reflect.exceptions.FieldNotFoundException;
+
+import java.lang.reflect.Field;
 
 public class AllFieldsMatcherStrategy extends FieldMatcherStrategy {
 

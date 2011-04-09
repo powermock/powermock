@@ -1,18 +1,17 @@
 package samples.junit4.suppressfield;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.powermock.api.support.membermodification.MemberMatcher.field;
-import static org.powermock.api.support.membermodification.MemberMatcher.fields;
-import static org.powermock.api.support.membermodification.MemberModifier.suppress;
-
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.suppressfield.SuppressField;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.powermock.api.support.membermodification.MemberMatcher.field;
+import static org.powermock.api.support.membermodification.MemberMatcher.fields;
+import static org.powermock.api.support.membermodification.MemberModifier.suppress;
 
 /**
  * Unit tests that asserts that field suppression works.

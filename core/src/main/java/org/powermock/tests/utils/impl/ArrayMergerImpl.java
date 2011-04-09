@@ -15,9 +15,9 @@
  */
 package org.powermock.tests.utils.impl;
 
-import java.lang.reflect.Array;
-
 import org.powermock.tests.utils.ArrayMerger;
+
+import java.lang.reflect.Array;
 
 /**
  * The default implementation of the {@link ArrayMerger} interface.

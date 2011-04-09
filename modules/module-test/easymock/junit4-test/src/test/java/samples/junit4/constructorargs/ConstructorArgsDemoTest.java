@@ -15,24 +15,19 @@
  */
 package samples.junit4.constructorargs;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.powermock.api.easymock.PowerMock.createMock;
-import static org.powermock.api.easymock.PowerMock.createPartialMock;
-import static org.powermock.api.easymock.PowerMock.expectPrivate;
-import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.verify;
-
-import java.lang.reflect.Constructor;
-
 import org.easymock.ConstructorArgs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
-
 import samples.constructorargs.ConstructorArgsDemo;
+
+import java.lang.reflect.Constructor;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.powermock.api.easymock.PowerMock.*;
 
 /**
  * This test demonstrates the ability to invoke a specific constructor after

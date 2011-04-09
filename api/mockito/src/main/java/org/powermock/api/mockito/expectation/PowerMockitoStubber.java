@@ -15,11 +15,11 @@
  */
 package org.powermock.api.mockito.expectation;
 
-import java.lang.reflect.Method;
-
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.Stubber;
+
+import java.lang.reflect.Method;
 
 /**
  * Setup stubbing for private or void methods in final class, final void

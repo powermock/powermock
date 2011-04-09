@@ -15,10 +15,11 @@
  */
 package org.powermock.modules.agent;
 
-import java.io.*;
-import java.net.*;
-import java.security.*;
-import java.util.regex.*;
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.CodeSource;
+import java.util.regex.Pattern;
 
 final class AgentInitialization
 {

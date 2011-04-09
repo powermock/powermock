@@ -15,10 +15,10 @@
  */
 package org.powermock.tests.utils.impl;
 
+import org.powermock.tests.utils.TestChunk;
+
 import java.lang.reflect.Method;
 import java.util.List;
-
-import org.powermock.tests.utils.TestChunk;
 
 /**
  * A test chunk consists of a list of methods that should be executed by a

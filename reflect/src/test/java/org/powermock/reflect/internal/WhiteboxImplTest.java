@@ -15,16 +15,14 @@
  */
 package org.powermock.reflect.internal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.lang.reflect.Method;
-
 import org.junit.Test;
 import org.powermock.reflect.testclasses.Child;
 import org.powermock.reflect.testclasses.ClassWithOverloadedMethods;
 import org.powermock.reflect.testclasses.ClassWithStandardMethod;
+
+import java.lang.reflect.Method;
+
+import static org.junit.Assert.*;
 
 /**
  * Unit tests specific to the WhiteboxImpl.

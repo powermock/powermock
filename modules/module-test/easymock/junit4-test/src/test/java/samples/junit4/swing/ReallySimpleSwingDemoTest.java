@@ -1,18 +1,14 @@
 package samples.junit4.swing;
 
-import static org.powermock.api.easymock.PowerMock.expectLastCall;
-import static org.powermock.api.easymock.PowerMock.mockStatic;
-import static org.powermock.api.easymock.PowerMock.replayAll;
-import static org.powermock.api.easymock.PowerMock.verifyAll;
-
-import javax.swing.JOptionPane;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.swing.ReallySimpleSwingDemo;
+
+import javax.swing.*;
+
+import static org.powermock.api.easymock.PowerMock.*;
 
 /**
  * Unit test that makes sure that PowerMock works with Swing components.

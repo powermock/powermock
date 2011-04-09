@@ -15,10 +15,10 @@
  */
 package org.powermock.modules.junit3.internal;
 
-import java.util.Enumeration;
-
 import junit.framework.Test;
 import junit.framework.TestResult;
+
+import java.util.Enumeration;
 
 public interface PowerMockJUnit3RunnerDelegate {
 

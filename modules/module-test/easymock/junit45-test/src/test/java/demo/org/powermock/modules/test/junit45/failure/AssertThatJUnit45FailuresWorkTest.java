@@ -15,8 +15,6 @@
  */
 package demo.org.powermock.modules.test.junit45.failure;
 
-import static org.junit.Assert.assertTrue;
-
 import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.internal.AssumptionViolatedException;
@@ -25,6 +23,8 @@ import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * This test asserts that JUnit 4.5 failures works as expected. Previously the

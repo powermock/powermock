@@ -15,14 +15,12 @@
  */
 package powermock.examples.bypassencapsulation;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.powermock.reflect.Whitebox.getInternalState;
+import org.junit.Test;
 
 import java.util.Set;
 
-import org.junit.Test;
+import static org.junit.Assert.*;
+import static org.powermock.reflect.Whitebox.getInternalState;
 
 /**
  * Unit tests for the {@link ServiceHolder} class.

@@ -15,29 +15,20 @@
  */
 package demo.org.powermock.examples.tutorial.staticmocking.impl.withoutpowermock;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import demo.org.powermock.examples.tutorial.staticmocking.impl.ServiceRegistrator;
+import demo.org.powermock.examples.tutorial.staticmocking.osgi.BundleContext;
+import demo.org.powermock.examples.tutorial.staticmocking.osgi.ServiceRegistration;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import demo.org.powermock.examples.tutorial.staticmocking.impl.ServiceRegistrator;
-import demo.org.powermock.examples.tutorial.staticmocking.osgi.BundleContext;
-import demo.org.powermock.examples.tutorial.staticmocking.osgi.ServiceRegistration;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 /**
  * Unit test for the {@link ServiceRegistrator} class.

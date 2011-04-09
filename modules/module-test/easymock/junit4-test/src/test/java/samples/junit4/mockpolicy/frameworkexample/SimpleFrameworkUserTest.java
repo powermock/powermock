@@ -15,14 +15,13 @@
  */
 package samples.junit4.mockpolicy.frameworkexample;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.MockPolicy;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.mockpolicy.frameworkexample.SimpleFrameworkUser;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
 @MockPolicy(SimpleFrameworkMockPolicy.class)

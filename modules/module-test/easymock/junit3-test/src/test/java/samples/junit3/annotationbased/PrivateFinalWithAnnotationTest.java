@@ -15,15 +15,12 @@
  */
 package samples.junit3.annotationbased;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
 import junit.framework.TestCase;
-
 import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-
 import samples.privateandfinal.PrivateFinal;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * Test class will demonstrate annotation support for JUnit 3 when this feature

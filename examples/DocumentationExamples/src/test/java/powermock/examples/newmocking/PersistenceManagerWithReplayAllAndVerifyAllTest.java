@@ -15,21 +15,17 @@
  */
 package powermock.examples.newmocking;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertTrue;
-import static org.powermock.api.easymock.PowerMock.createMock;
-import static org.powermock.api.easymock.PowerMock.createMockAndExpectNew;
-import static org.powermock.api.easymock.PowerMock.expectNew;
-import static org.powermock.api.easymock.PowerMock.replayAll;
-import static org.powermock.api.easymock.PowerMock.verifyAll;
-
-import java.io.File;
-
 import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.io.File;
+
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertTrue;
+import static org.powermock.api.easymock.PowerMock.*;
 
 /**
  * Unit test for the {@link PersistenceManager} class that demonstrates

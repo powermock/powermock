@@ -1,7 +1,6 @@
 package samples.junit4.legacy.noannotation;
 
 import junit.framework.TestCase;
-
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.legacy.PowerMockRunner;
 

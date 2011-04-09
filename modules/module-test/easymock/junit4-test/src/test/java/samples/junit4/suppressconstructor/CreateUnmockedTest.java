@@ -15,17 +15,16 @@
  */
 package samples.junit4.suppressconstructor;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
-
 import samples.suppressconstructor.SuppressConstructorDemo;
 import samples.suppressconstructor.SuppressSpecificConstructorDemo;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @RunWith(PowerMockRunner.class)
 public class CreateUnmockedTest {

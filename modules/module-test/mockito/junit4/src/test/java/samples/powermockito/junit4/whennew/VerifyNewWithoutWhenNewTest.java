@@ -1,17 +1,16 @@
 package samples.powermockito.junit4.whennew;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.expectnew.ExpectNewDemo;
 import samples.newmocking.MyClass;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.powermock.api.mockito.PowerMockito.verifyNew;
 
 @PrepareForTest(ExpectNewDemo.class)
 @RunWith(PowerMockRunner.class)

@@ -15,17 +15,16 @@
  */
 package samples.powermockito.junit4.annotationbased;
 
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.finalmocking.FinalDemo;
 import samples.injectmocks.DependencyHolder;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Asserts that {@link @InjectMocks} with PowerMock.

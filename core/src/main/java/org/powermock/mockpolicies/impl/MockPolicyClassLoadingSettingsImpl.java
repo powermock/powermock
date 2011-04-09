@@ -15,10 +15,10 @@
  */
 package org.powermock.mockpolicies.impl;
 
+import org.powermock.mockpolicies.MockPolicyClassLoadingSettings;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
-
-import org.powermock.mockpolicies.MockPolicyClassLoadingSettings;
 
 /**
  * The default implementation of the {@link MockPolicyClassLoadingSettings}

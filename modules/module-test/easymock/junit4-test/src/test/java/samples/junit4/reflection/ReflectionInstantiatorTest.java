@@ -15,15 +15,14 @@
  */
 package samples.junit4.reflection;
 
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.reflection.ReflectionInstantiator;
 import samples.reflection.UseMe;
+
+import static org.junit.Assert.assertTrue;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { UseMe.class })

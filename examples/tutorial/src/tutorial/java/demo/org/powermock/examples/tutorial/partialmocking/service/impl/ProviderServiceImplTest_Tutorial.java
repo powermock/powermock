@@ -15,34 +15,10 @@
  */
 package demo.org.powermock.examples.tutorial.partialmocking.service.impl;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.powermock.api.easymock.PowerMock.createMock;
-import static org.powermock.api.easymock.PowerMock.expectPrivate;
-import static org.powermock.api.easymock.PowerMock.createPartialMock;
-import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.verify;
-import static org.powermock.reflect.Whitebox.invokeMethod;
-import static org.powermock.reflect.Whitebox.setInternalState;
-
-import java.util.HashSet;
-import java.util.Set;
-
+import demo.org.powermock.examples.tutorial.partialmocking.dao.ProviderDao;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import demo.org.powermock.examples.tutorial.domainmocking.impl.SampleServiceImpl;
-import demo.org.powermock.examples.tutorial.partialmocking.dao.ProviderDao;
-import demo.org.powermock.examples.tutorial.partialmocking.dao.domain.impl.ServiceArtifact;
-import demo.org.powermock.examples.tutorial.partialmocking.domain.ServiceProducer;
 
 /**
  * The purpose of this test is to get 100% coverage of the

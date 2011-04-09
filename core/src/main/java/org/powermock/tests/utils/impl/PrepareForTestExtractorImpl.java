@@ -15,15 +15,15 @@
  */
 package org.powermock.tests.utils.impl;
 
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Method;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.powermock.core.IndicateReloadClass;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.tests.utils.TestClassesExtractor;
+
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Implementation of the {@link TestClassesExtractor} interface that extract

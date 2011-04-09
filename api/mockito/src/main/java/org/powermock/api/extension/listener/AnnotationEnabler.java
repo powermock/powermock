@@ -15,13 +15,6 @@
  */
 package org.powermock.api.extension.listener;
 
-import static org.powermock.api.mockito.PowerMockito.mock;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Set;
-
 import org.mockito.Captor;
 import org.mockito.MockitoAnnotations.Mock;
 import org.mockito.internal.configuration.DefaultAnnotationEngine;
@@ -30,6 +23,13 @@ import org.powermock.api.mockito.internal.configuration.PowerMockitoInjectingAnn
 import org.powermock.core.spi.listener.AnnotationEnablerListener;
 import org.powermock.core.spi.support.AbstractPowerMockTestListenerBase;
 import org.powermock.reflect.Whitebox;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Set;
+
+import static org.powermock.api.mockito.PowerMockito.mock;
 
 /**
  * Before each test method all fields annotated with {@link Mock},

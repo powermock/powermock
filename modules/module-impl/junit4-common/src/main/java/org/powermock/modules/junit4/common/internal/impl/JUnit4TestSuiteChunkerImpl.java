@@ -15,26 +15,10 @@
  */
 package org.powermock.modules.junit4.common.internal.impl;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
 import junit.framework.TestCase;
-
 import org.junit.Test;
 import org.junit.runner.Description;
-import org.junit.runner.manipulation.Filter;
-import org.junit.runner.manipulation.Filterable;
-import org.junit.runner.manipulation.NoTestsRemainException;
-import org.junit.runner.manipulation.Sortable;
-import org.junit.runner.manipulation.Sorter;
+import org.junit.runner.manipulation.*;
 import org.junit.runner.notification.RunNotifier;
 import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.core.spi.testresult.TestSuiteResult;
@@ -45,6 +29,12 @@ import org.powermock.tests.utils.PowerMockTestNotifier;
 import org.powermock.tests.utils.TestChunk;
 import org.powermock.tests.utils.impl.AbstractTestSuiteChunkerImpl;
 import org.powermock.tests.utils.impl.PowerMockTestNotifierImpl;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<PowerMockJUnitRunnerDelegate> implements
 		JUnit4TestSuiteChunker, Filterable, Sortable {

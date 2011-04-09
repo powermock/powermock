@@ -15,12 +15,12 @@
  */
 package org.powermock.api.support.membermodification.strategy.impl;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-
 import org.powermock.api.support.MethodProxy;
 import org.powermock.api.support.Stubber;
 import org.powermock.api.support.membermodification.strategy.MethodStubStrategy;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 
 public class MethodStubStrategyImpl<T> implements MethodStubStrategy<T> {
 

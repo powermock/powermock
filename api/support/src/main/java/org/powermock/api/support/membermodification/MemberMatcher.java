@@ -15,7 +15,10 @@
  */
 package org.powermock.api.support.membermodification;
 
-import static java.util.Arrays.asList;
+import org.powermock.reflect.Whitebox;
+import org.powermock.reflect.exceptions.*;
+import org.powermock.reflect.internal.WhiteboxImpl;
+import org.powermock.tests.utils.impl.ArrayMergerImpl;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
@@ -25,14 +28,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.powermock.reflect.Whitebox;
-import org.powermock.reflect.exceptions.ConstructorNotFoundException;
-import org.powermock.reflect.exceptions.FieldNotFoundException;
-import org.powermock.reflect.exceptions.MethodNotFoundException;
-import org.powermock.reflect.exceptions.TooManyConstructorsFoundException;
-import org.powermock.reflect.exceptions.TooManyMethodsFoundException;
-import org.powermock.reflect.internal.WhiteboxImpl;
-import org.powermock.tests.utils.impl.ArrayMergerImpl;
+import static java.util.Arrays.asList;
 
 /**
  * Finds members in classes.

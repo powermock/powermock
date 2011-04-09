@@ -24,10 +24,12 @@
  */
 package com.sun.tools.attach;
 
-import java.io.*;
-import java.util.*;
+import com.sun.tools.attach.spi.AttachProvider;
 
-import com.sun.tools.attach.spi.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * A Java virtual machine.

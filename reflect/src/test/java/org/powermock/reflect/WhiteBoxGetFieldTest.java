@@ -15,12 +15,11 @@
  */
 package org.powermock.reflect;
 
-import java.lang.reflect.Field;
-
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.powermock.reflect.internal.WhiteboxImpl;
+
+import java.lang.reflect.Field;
 
 /**
  * A test case to demonstrate an issue

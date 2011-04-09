@@ -15,16 +15,12 @@
  */
 package samples.junit4.nativemocking;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
-
 import samples.nativemocking.NativeMockingSample;
 import samples.nativemocking.NativeService;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * This test demonstrates that it's possible to mock native methods using plain

@@ -15,9 +15,6 @@
  */
 package org.powermock.api.mockito.internal.mockcreation;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-
 import org.mockito.MockSettings;
 import org.mockito.Mockito;
 import org.mockito.internal.MockHandler;
@@ -33,6 +30,9 @@ import org.powermock.core.ClassReplicaCreator;
 import org.powermock.core.DefaultFieldValueGenerator;
 import org.powermock.core.MockRepository;
 import org.powermock.reflect.Whitebox;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 public class MockCreator {
 	

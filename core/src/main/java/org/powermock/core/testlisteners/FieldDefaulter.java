@@ -15,14 +15,14 @@
  */
 package org.powermock.core.testlisteners;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Set;
-
 import org.powermock.core.spi.support.AbstractPowerMockTestListenerBase;
 import org.powermock.core.spi.testresult.TestMethodResult;
 import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.internal.TypeUtils;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Set;
 
 /**
  * A test listener that automatically set all instance fields to their default

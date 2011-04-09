@@ -15,11 +15,11 @@
  */
 package org.powermock.tests.utils.impl;
 
+import org.powermock.tests.utils.TestClassesExtractor;
+
 import java.lang.reflect.AnnotatedElement;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.powermock.tests.utils.TestClassesExtractor;
 
 /**
  * Base class for all test class extractors.

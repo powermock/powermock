@@ -1,10 +1,6 @@
 package org.powermock.modules.junit4.legacy.internal.impl.testcaseworkaround;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import junit.framework.TestCase;
-
 import org.junit.internal.runners.BeforeAndAfterRunner;
 import org.junit.internal.runners.TestIntrospector;
 import org.junit.internal.runners.TestMethodRunner;
@@ -12,6 +8,9 @@ import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.powermock.reflect.Whitebox;
 import org.powermock.tests.utils.PowerMockTestNotifier;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * This class is needed because the test method runner creates a new instance of

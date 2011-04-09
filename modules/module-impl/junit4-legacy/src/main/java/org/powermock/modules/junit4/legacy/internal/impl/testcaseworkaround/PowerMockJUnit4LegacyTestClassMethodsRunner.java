@@ -1,12 +1,6 @@
 package org.powermock.modules.junit4.legacy.internal.impl.testcaseworkaround;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.LinkedList;
-import java.util.List;
-
 import junit.framework.TestCase;
-
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.internal.runners.TestClassMethodsRunner;
@@ -17,6 +11,11 @@ import org.powermock.reflect.Whitebox;
 import org.powermock.tests.utils.PowerMockTestNotifier;
 import org.powermock.tests.utils.impl.PowerMockTestNotifierImpl;
 import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Since {@link TestClassMethodsRunner} creates a new instance of

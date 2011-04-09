@@ -15,17 +15,16 @@
  */
 package samples.junit4.equalswithgetclass;
 
-import static org.junit.Assert.assertTrue;
-import static org.powermock.api.easymock.PowerMock.createMock;
-import static org.powermock.api.easymock.PowerMock.replayAll;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.MockGateway;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.equalswithgetclass.EqualsWithGetClass;
+
+import static org.junit.Assert.assertTrue;
+import static org.powermock.api.easymock.PowerMock.createMock;
+import static org.powermock.api.easymock.PowerMock.replayAll;
 
 /**
  * Demonstrates that PowerMock ignores the call to getClass by default.

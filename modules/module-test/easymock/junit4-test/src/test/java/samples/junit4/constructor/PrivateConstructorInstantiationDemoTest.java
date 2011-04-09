@@ -15,12 +15,11 @@
  */
 package samples.junit4.constructor;
 
+import org.junit.Test;
+import samples.constructor.PrivateConstructorInstantiationDemo;
+
 import static org.junit.Assert.assertEquals;
 import static org.powermock.reflect.Whitebox.invokeConstructor;
-
-import org.junit.Test;
-
-import samples.constructor.PrivateConstructorInstantiationDemo;
 
 
 public class PrivateConstructorInstantiationDemoTest {

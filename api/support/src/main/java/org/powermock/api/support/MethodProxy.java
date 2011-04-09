@@ -15,13 +15,13 @@
  */
 package org.powermock.api.support;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-
 import org.powermock.core.MockRepository;
 import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.exceptions.MethodNotFoundException;
 import org.powermock.reflect.exceptions.TooManyMethodsFoundException;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 
 public class MethodProxy {
 	/**

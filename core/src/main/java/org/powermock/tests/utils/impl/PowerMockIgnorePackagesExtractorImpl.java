@@ -16,12 +16,12 @@
 
 package org.powermock.tests.utils.impl;
 
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.tests.utils.IgnorePackagesExtractor;
+
 import java.lang.reflect.AnnotatedElement;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.tests.utils.IgnorePackagesExtractor;
 
 public class PowerMockIgnorePackagesExtractorImpl implements IgnorePackagesExtractor {
 

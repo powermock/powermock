@@ -15,9 +15,9 @@
  */
 package org.powermock.modules.testng.internal;
 
-import java.lang.reflect.Method;
-
 import javassist.util.proxy.MethodFilter;
+
+import java.lang.reflect.Method;
 
 /**
  * Javassist method filter that ignores the toString, equals, finalize and

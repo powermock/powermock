@@ -18,7 +18,6 @@ package samples.junit4;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-
 import samples.junit4.constructorargs.ConstructorArgsDemoTest;
 import samples.junit4.expectvoid.ExpectVoidDemoTest;
 import samples.junit4.finalmocking.FinalDemoTest;

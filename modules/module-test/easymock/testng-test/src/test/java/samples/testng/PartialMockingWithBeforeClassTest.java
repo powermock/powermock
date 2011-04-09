@@ -15,18 +15,17 @@
  */
 package samples.testng;
 
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.powermock.api.easymock.PowerMock.createPartialMock;
-import static org.powermock.api.easymock.PowerMock.expectPrivate;
-
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
 import samples.privateandfinal.PrivateFinal;
+
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.powermock.api.easymock.PowerMock.createPartialMock;
+import static org.powermock.api.easymock.PowerMock.expectPrivate;
 
 /**
  * Test class to demonstrate private+final method mocking.

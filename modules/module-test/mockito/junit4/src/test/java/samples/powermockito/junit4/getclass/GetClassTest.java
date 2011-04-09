@@ -15,18 +15,15 @@
  */
 package samples.powermockito.junit4.getclass;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.powermock.api.mockito.PowerMockito.mock;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.MockGateway;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.expectnew.ExpectNewDemo;
+
+import static org.junit.Assert.*;
+import static org.powermock.api.mockito.PowerMockito.mock;
 
 /**
  * Assert that "getClass" on an object works correctly on objects

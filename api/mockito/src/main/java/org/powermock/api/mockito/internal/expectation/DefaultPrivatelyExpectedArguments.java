@@ -14,9 +14,9 @@
  * limitations under the License.
  */package org.powermock.api.mockito.internal.expectation;
 
-import java.lang.reflect.Method;
-
 import org.powermock.api.mockito.expectation.PrivatelyExpectedArguments;
+
+import java.lang.reflect.Method;
 
 public class DefaultPrivatelyExpectedArguments implements PrivatelyExpectedArguments {
 

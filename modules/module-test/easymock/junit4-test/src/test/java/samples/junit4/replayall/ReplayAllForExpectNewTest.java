@@ -15,27 +15,21 @@
  */
 package samples.junit4.replayall;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.powermock.api.easymock.PowerMock.createMock;
-import static org.powermock.api.easymock.PowerMock.expectNew;
-import static org.powermock.api.easymock.PowerMock.replayAll;
-import static org.powermock.api.easymock.PowerMock.verifyAll;
-
-import java.io.IOException;
-
 import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.Service;
 import samples.expectnew.ExpectNewDemo;
 import samples.expectnew.ExpectNewServiceUser;
 import samples.newmocking.MyClass;
+
+import java.io.IOException;
+
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.*;
+import static org.powermock.api.easymock.PowerMock.*;
 
 /**
  * The purpose of this test is to try-out the replay all functionality in

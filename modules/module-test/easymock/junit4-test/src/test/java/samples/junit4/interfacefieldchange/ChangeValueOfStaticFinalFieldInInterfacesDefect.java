@@ -16,15 +16,14 @@
 
 package samples.junit4.interfacefieldchange;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
-
 import samples.interfacefieldchange.InterfaceWithStaticFinalField;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * This test asserts that it's possible for PowerMock to modify static final

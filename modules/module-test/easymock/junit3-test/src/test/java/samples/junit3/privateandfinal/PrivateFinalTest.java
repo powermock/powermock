@@ -15,17 +15,16 @@
  */
 package samples.junit3.privateandfinal;
 
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit3.PowerMockSuite;
+import samples.privateandfinal.PrivateFinal;
+
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.powermock.api.easymock.PowerMock.createPartialMock;
 import static org.powermock.api.easymock.PowerMock.expectPrivate;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit3.PowerMockSuite;
-
-import samples.privateandfinal.PrivateFinal;
 
 /**
  * Test class to demonstrate private+final method mocking.

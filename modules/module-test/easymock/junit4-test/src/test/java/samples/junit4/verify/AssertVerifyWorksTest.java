@@ -1,18 +1,14 @@
 package samples.junit4.verify;
 
-import static org.easymock.EasyMock.expectLastCall;
-import static org.powermock.api.easymock.PowerMock.mockStatic;
-import static org.powermock.api.easymock.PowerMock.mockStaticPartial;
-import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.verify;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.singleton.StaticHelper;
 import samples.singleton.StaticService;
+
+import static org.easymock.EasyMock.expectLastCall;
+import static org.powermock.api.easymock.PowerMock.*;
 
 /**
  * This test asserts that the

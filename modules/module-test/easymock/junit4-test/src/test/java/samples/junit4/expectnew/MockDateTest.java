@@ -15,11 +15,7 @@
  */
 package samples.junit4.expectnew;
 
-import java.lang.reflect.Method;
-import java.util.Date;
-
 import junit.framework.Assert;
-
 import org.easymock.EasyMock;
 import org.easymock.internal.MocksControl;
 import org.junit.Test;
@@ -27,8 +23,10 @@ import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.expectnew.ExpectNewDemo;
+
+import java.lang.reflect.Method;
+import java.util.Date;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { ExpectNewDemo.class })

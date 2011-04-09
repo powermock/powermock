@@ -15,15 +15,14 @@
  */
 package powermock.examples.mockpolicy;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.MockPolicy;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import powermock.examples.mockpolicy.nontest.domain.DataObject;
 import powermock.examples.mockpolicy.policy.MyCustomMockPolicy;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test that makes sure that {@link MyCustomMockPolicy} works.

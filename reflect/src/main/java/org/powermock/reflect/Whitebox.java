@@ -15,18 +15,18 @@
  */
 package org.powermock.reflect;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Set;
-
 import org.powermock.reflect.exceptions.ConstructorNotFoundException;
 import org.powermock.reflect.exceptions.FieldNotFoundException;
 import org.powermock.reflect.exceptions.MethodNotFoundException;
 import org.powermock.reflect.exceptions.TooManyMethodsFoundException;
 import org.powermock.reflect.internal.WhiteboxImpl;
 import org.powermock.reflect.matching.FieldMatchingStrategy;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Set;
 
 /**
  * Various utilities for accessing internals of a class. Basically a simplified

@@ -15,18 +15,13 @@
  */
 package samples.junit4.resetmock;
 
-import static org.powermock.api.easymock.PowerMock.expectLastCall;
-import static org.powermock.api.easymock.PowerMock.mockStatic;
-import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.reset;
-import static org.powermock.api.easymock.PowerMock.verify;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.singleton.StaticService;
+
+import static org.powermock.api.easymock.PowerMock.*;
 
 /**
  * Asserts that it works to reset mocks for static methods even after verify has

@@ -15,15 +15,14 @@
  */
 package org.powermock.modules.junit3;
 
-import java.util.Enumeration;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
-
 import org.powermock.modules.junit3.internal.JUnit3TestSuiteChunker;
 import org.powermock.modules.junit3.internal.impl.JUnit3TestSuiteChunkerImpl;
+
+import java.util.Enumeration;
 
 /**
  * A custom JUnit 3 Suite that must be used to run PowerMock tests under JUnit3.

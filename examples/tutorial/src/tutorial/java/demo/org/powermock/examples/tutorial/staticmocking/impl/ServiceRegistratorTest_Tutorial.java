@@ -15,32 +15,11 @@
  */
 package demo.org.powermock.examples.tutorial.staticmocking.impl;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.powermock.api.easymock.PowerMock.createMock;
-import static org.powermock.api.easymock.PowerMock.mockStatic;
-import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.verify;
-import static org.powermock.reflect.Whitebox.getInternalState;
-import static org.powermock.reflect.Whitebox.setInternalState;
-
-import java.util.HashMap;
-import java.util.Map;
-
+import demo.org.powermock.examples.tutorial.staticmocking.osgi.BundleContext;
+import demo.org.powermock.examples.tutorial.staticmocking.osgi.ServiceRegistration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import demo.org.powermock.examples.tutorial.partialmocking.service.impl.ProviderServiceImpl;
-import demo.org.powermock.examples.tutorial.staticmocking.osgi.BundleContext;
-import demo.org.powermock.examples.tutorial.staticmocking.osgi.ServiceRegistration;
 
 /**
  * The purpose of this test is to get 100% coverage of the

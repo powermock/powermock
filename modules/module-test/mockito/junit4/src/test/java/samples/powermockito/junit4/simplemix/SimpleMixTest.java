@@ -16,17 +16,6 @@
 
 package samples.powermockito.junit4.simplemix;
 
-import static org.junit.Assert.assertEquals;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockListener;
@@ -34,11 +23,14 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.testlisteners.FieldDefaulter;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
-
 import samples.simplemix.SimpleMix;
 import samples.simplemix.SimpleMixCollaborator;
 import samples.simplemix.SimpleMixConstruction;
 import samples.simplemix.SimpleMixUtilities;
+
+import static org.junit.Assert.assertEquals;
+import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
 
 /**
  * Demonstrates PowerMockito features such as static mocking, final mocking,

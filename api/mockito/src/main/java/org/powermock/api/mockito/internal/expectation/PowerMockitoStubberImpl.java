@@ -15,9 +15,6 @@
  */
 package org.powermock.api.mockito.internal.expectation;
 
-import java.lang.reflect.Method;
-import java.util.List;
-
 import org.mockito.internal.MockHandler;
 import org.mockito.internal.MockitoInvocationHandler;
 import org.mockito.internal.stubbing.StubberImpl;
@@ -27,6 +24,9 @@ import org.powermock.api.mockito.expectation.PrivatelyExpectedArguments;
 import org.powermock.api.mockito.internal.invocationcontrol.MockitoMethodInvocationControl;
 import org.powermock.core.MockRepository;
 import org.powermock.reflect.Whitebox;
+
+import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * Extension of the standard Mocktio stubber implementation that also support

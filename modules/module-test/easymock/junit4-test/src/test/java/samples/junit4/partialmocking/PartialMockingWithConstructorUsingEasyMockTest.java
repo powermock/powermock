@@ -15,17 +15,14 @@
  */
 package samples.junit4.partialmocking;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-
-import java.lang.reflect.Method;
-
 import org.easymock.ConstructorArgs;
 import org.junit.Ignore;
 import org.junit.Test;
-
 import samples.partialmocking.PartialMockingWithConstructor;
+
+import java.lang.reflect.Method;
+
+import static org.easymock.EasyMock.*;
 
 public class PartialMockingWithConstructorUsingEasyMockTest {
 

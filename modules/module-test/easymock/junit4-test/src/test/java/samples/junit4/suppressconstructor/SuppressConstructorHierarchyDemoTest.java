@@ -15,19 +15,16 @@
  */
 package samples.junit4.suppressconstructor;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
-import static org.powermock.api.support.membermodification.MemberModifier.suppress;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.suppressconstructor.InvokeConstructor;
 import samples.suppressconstructor.SuppressConstructorHierarchy;
+
+import static org.junit.Assert.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
+import static org.powermock.api.support.membermodification.MemberModifier.suppress;
 
 @PrepareForTest(SuppressConstructorHierarchy.class)
 @RunWith(PowerMockRunner.class)

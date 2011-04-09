@@ -15,20 +15,19 @@
  */
 package org.powermock.core.classloader;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
-
 import org.powermock.core.ClassReplicaCreator;
 import org.powermock.core.WildcardMatcher;
 import org.powermock.core.spi.PowerMockPolicy;
 import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.core.transformers.MockTransformer;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Mock all classes except system classes.

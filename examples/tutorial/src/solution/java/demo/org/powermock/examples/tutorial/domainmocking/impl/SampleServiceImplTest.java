@@ -15,16 +15,11 @@
  */
 package demo.org.powermock.examples.tutorial.domainmocking.impl;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.powermock.api.easymock.PowerMock.createMock;
-import static org.powermock.api.easymock.PowerMock.createMockAndExpectNew;
-import static org.powermock.api.easymock.PowerMock.expectLastCall;
-import static org.powermock.api.easymock.PowerMock.expectNew;
-import static org.powermock.api.easymock.PowerMock.replayAll;
-import static org.powermock.api.easymock.PowerMock.verifyAll;
-
+import demo.org.powermock.examples.tutorial.domainmocking.EventService;
+import demo.org.powermock.examples.tutorial.domainmocking.PersonService;
+import demo.org.powermock.examples.tutorial.domainmocking.domain.BusinessMessages;
+import demo.org.powermock.examples.tutorial.domainmocking.domain.Person;
+import demo.org.powermock.examples.tutorial.domainmocking.domain.SampleServiceException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,11 +27,10 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import demo.org.powermock.examples.tutorial.domainmocking.EventService;
-import demo.org.powermock.examples.tutorial.domainmocking.PersonService;
-import demo.org.powermock.examples.tutorial.domainmocking.domain.BusinessMessages;
-import demo.org.powermock.examples.tutorial.domainmocking.domain.Person;
-import demo.org.powermock.examples.tutorial.domainmocking.domain.SampleServiceException;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.powermock.api.easymock.PowerMock.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { SampleServiceImpl.class, BusinessMessages.class, Person.class })

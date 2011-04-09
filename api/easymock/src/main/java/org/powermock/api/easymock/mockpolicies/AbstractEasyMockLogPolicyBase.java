@@ -15,15 +15,15 @@
  */
 package org.powermock.api.easymock.mockpolicies;
 
-import static org.easymock.EasyMock.makeThreadSafe;
-import static org.powermock.api.easymock.PowerMock.createNiceMock;
-
-import java.lang.reflect.Method;
-
 import org.powermock.core.spi.PowerMockPolicy;
 import org.powermock.mockpolicies.MockPolicyClassLoadingSettings;
 import org.powermock.mockpolicies.MockPolicyInterceptionSettings;
 import org.powermock.mockpolicies.support.LogPolicySupport;
+
+import java.lang.reflect.Method;
+
+import static org.easymock.EasyMock.makeThreadSafe;
+import static org.powermock.api.easymock.PowerMock.createNiceMock;
 
 /**
  * A base class for EasyMock log policies.

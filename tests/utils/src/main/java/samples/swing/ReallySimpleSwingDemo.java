@@ -1,6 +1,6 @@
 package samples.swing;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 public class ReallySimpleSwingDemo {
 

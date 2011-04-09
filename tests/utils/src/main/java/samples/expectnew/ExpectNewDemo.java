@@ -15,17 +15,11 @@
  */
 package samples.expectnew;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.util.Date;
-
 import samples.Service;
 import samples.newmocking.MyClass;
+
+import java.io.*;
+import java.util.Date;
 
 public class ExpectNewDemo {
 

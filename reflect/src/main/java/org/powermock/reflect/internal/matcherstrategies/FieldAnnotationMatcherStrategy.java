@@ -15,10 +15,10 @@
  */
 package org.powermock.reflect.internal.matcherstrategies;
 
+import org.powermock.reflect.exceptions.FieldNotFoundException;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-
-import org.powermock.reflect.exceptions.FieldNotFoundException;
 
 public class FieldAnnotationMatcherStrategy extends FieldMatcherStrategy {
 

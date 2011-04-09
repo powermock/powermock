@@ -1,7 +1,6 @@
 package org.powermock.api.extension.proxyframework;
 
 import net.sf.cglib.proxy.Enhancer;
-
 import org.powermock.reflect.spi.ProxyFramework;
 
 /**

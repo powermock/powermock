@@ -15,17 +15,16 @@
  */
 package org.powermock.modules.testng.internal;
 
+import javassist.util.proxy.MethodHandler;
+import org.powermock.core.MockRepository;
+import org.powermock.reflect.Whitebox;
+import org.testng.annotations.Test;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
-
-import javassist.util.proxy.MethodHandler;
-
-import org.powermock.core.MockRepository;
-import org.powermock.reflect.Whitebox;
-import org.testng.annotations.Test;
 
 /*
  * Javassist handler that takes care of cleaning up {@link MockRepository} state

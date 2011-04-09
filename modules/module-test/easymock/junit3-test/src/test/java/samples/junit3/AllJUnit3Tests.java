@@ -17,9 +17,7 @@ package samples.junit3;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.powermock.modules.junit3.PowerMockSuite;
-
 import samples.junit3.privateandfinal.PrivateFinalTest;
 import samples.junit3.privateandfinal.StupidPrivateFinalTest;
 import samples.junit3.singleton.MockStaticTest;

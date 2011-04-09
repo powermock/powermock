@@ -15,27 +15,20 @@
  */
 package org.powermock.classloading;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Map;
-
 import org.powermock.api.support.ClassLoaderUtil;
 import org.powermock.api.support.SafeExceptionRethrower;
 import org.powermock.classloading.spi.DeepClonerSPI;
 import org.powermock.classloading.spi.DoNotClone;
 import org.powermock.core.ListMap;
 import org.powermock.reflect.Whitebox;
-
 import sun.misc.Unsafe;
+
+import java.io.*;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Map;
 
 /**
  * The purpose of the deep cloner is to create a deep clone of an object. An

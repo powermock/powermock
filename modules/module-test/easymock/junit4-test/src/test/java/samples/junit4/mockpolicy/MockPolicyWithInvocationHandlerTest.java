@@ -16,13 +16,6 @@
 
 package samples.junit4.mockpolicy;
 
-import static org.junit.Assert.assertEquals;
-import static org.powermock.api.easymock.PowerMock.verifyAll;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.MockPolicy;
@@ -31,9 +24,15 @@ import org.powermock.mockpolicies.MockPolicyClassLoadingSettings;
 import org.powermock.mockpolicies.MockPolicyInterceptionSettings;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
-
 import samples.mockpolicy.ResultCalculator;
 import samples.mockpolicy.SimpleClassWithADependency;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+
+import static org.junit.Assert.assertEquals;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
 
 @RunWith(PowerMockRunner.class)
 @MockPolicy(MockPolicyInvocationHandlerExample.class)

@@ -15,20 +15,19 @@
  */
 package samples.powermockito.junit4.withsettings;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import samples.finalmocking.FinalDemo;
+import samples.finalmocking.HoldingFinalDemo;
+import samples.finalmocking.StaticHoldingFinalDemo;
+
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.withSettings;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import samples.finalmocking.FinalDemo;
-import samples.finalmocking.HoldingFinalDemo;
-import samples.finalmocking.StaticHoldingFinalDemo;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { StaticHoldingFinalDemo.class, HoldingFinalDemo.class, FinalDemo.class })

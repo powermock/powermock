@@ -1,19 +1,15 @@
 package samples.junit4.expectnew;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.powermock.api.easymock.PowerMock.createNiceMockAndExpectNew;
-import static org.powermock.api.easymock.PowerMock.createStrictMockAndExpectNew;
-import static org.powermock.api.easymock.PowerMock.replayAll;
-import static org.powermock.api.easymock.PowerMock.verifyAll;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import samples.expectnew.PrimitiveAndWrapperDemo;
 import samples.expectnew.PrimitiveAndWrapperUser;
+
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.powermock.api.easymock.PowerMock.*;
 
 /**
  * Unit test for the {@link PrimitiveAndWrapperUser} class.

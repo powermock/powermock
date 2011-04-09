@@ -18,7 +18,6 @@ package samples.junit4.legacy;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-
 import samples.junit4.legacy.noannotation.NoAnnotationUsageTest;
 import samples.junit4.legacy.singleton.MockStaticTest;
 import samples.junit4.legacy.suppressconstructor.SuppressConstructorHierarchyDemoTest;

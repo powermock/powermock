@@ -1,11 +1,12 @@
 package samples.junit3.annotationbased;
 
-import static org.easymock.EasyMock.expect;
-import static org.powermock.api.easymock.PowerMock.replayAll;
-import static org.powermock.api.easymock.PowerMock.verifyAll;
 import junit.framework.TestCase;
 import samples.Service;
 import samples.annotationbased.AnnotationDemo;
+
+import static org.easymock.EasyMock.expect;
+import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 /**
  * Verifies that PowerMock test listeners works correctly with setup methods

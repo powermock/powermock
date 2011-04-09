@@ -15,13 +15,7 @@
  */
 package org.powermock.core;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ListMap<K, V> implements Map<K, V> {
 

@@ -15,13 +15,13 @@
  */
 package samples.junit4.console;
 
-import static org.powermock.api.easymock.PowerMock.createMock;
-
-import java.io.Console;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.io.Console;
+
+import static org.powermock.api.easymock.PowerMock.createMock;
 
 /**
  * Asserts that PowerMock can mock the Console class. This failed in version 1.4

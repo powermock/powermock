@@ -15,6 +15,17 @@
  */
 package org.powermock.modules.junit3.internal.impl;
 
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestResult;
+import junit.framework.TestSuite;
+import org.powermock.core.spi.PowerMockTestListener;
+import org.powermock.modules.junit3.internal.JUnit3TestSuiteChunker;
+import org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate;
+import org.powermock.tests.utils.TestChunk;
+import org.powermock.tests.utils.impl.AbstractTestSuiteChunkerImpl;
+import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -22,18 +33,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestResult;
-import junit.framework.TestSuite;
-
-import org.powermock.core.spi.PowerMockTestListener;
-import org.powermock.modules.junit3.internal.JUnit3TestSuiteChunker;
-import org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate;
-import org.powermock.tests.utils.TestChunk;
-import org.powermock.tests.utils.impl.AbstractTestSuiteChunkerImpl;
-import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
 
 public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<PowerMockJUnit3RunnerDelegate> implements
 		JUnit3TestSuiteChunker {

@@ -15,9 +15,9 @@
  */
 package org.powermock.api.mockito.verification;
 
-import java.lang.reflect.Method;
-
 import org.mockito.Mockito;
+
+import java.lang.reflect.Method;
 
 public interface PrivateMethodVerification {
 

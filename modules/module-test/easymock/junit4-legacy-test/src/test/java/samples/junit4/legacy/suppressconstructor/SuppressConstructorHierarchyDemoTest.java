@@ -15,20 +15,17 @@
  */
 package samples.junit4.legacy.suppressconstructor;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
-import static org.powermock.api.support.membermodification.MemberModifier.suppress;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.legacy.PowerMockRunner;
-
 import samples.suppressconstructor.SuppressConstructorHeirarchyEvilGrandParent;
 import samples.suppressconstructor.SuppressConstructorHierarchy;
 import samples.suppressconstructor.SuppressConstructorHierarchyParent;
+
+import static org.junit.Assert.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
+import static org.powermock.api.support.membermodification.MemberModifier.suppress;
 
 @PrepareForTest( { SuppressConstructorHierarchy.class, SuppressConstructorHierarchyParent.class,
 		SuppressConstructorHeirarchyEvilGrandParent.class })

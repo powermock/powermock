@@ -15,11 +15,6 @@
  */
 package org.powermock.api.mockito.internal.invocationcontrol;
 
-import static org.mockito.Mockito.times;
-
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.stubbing.OngoingStubbing;
@@ -28,6 +23,11 @@ import org.powermock.core.MockRepository;
 import org.powermock.core.spi.NewInvocationControl;
 import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.reflect.internal.WhiteboxImpl;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+
+import static org.mockito.Mockito.times;
 
 public class MockitoNewInvocationControl<T> implements NewInvocationControl<OngoingStubbing<T>> {
 	private final InvocationSubstitute<T> substitute;

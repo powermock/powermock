@@ -15,8 +15,6 @@
  */
 package org.powermock.tests.utils.impl;
 
-import java.lang.reflect.Method;
-
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.core.spi.testresult.Result;
@@ -25,6 +23,8 @@ import org.powermock.core.spi.testresult.TestSuiteResult;
 import org.powermock.core.spi.testresult.impl.TestMethodResultImpl;
 import org.powermock.tests.utils.Keys;
 import org.powermock.tests.utils.PowerMockTestNotifier;
+
+import java.lang.reflect.Method;
 
 /**
  * Utility class that may be used by PowerMock test runners to notify listeners.

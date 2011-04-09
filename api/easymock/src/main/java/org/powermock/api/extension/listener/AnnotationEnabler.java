@@ -15,21 +15,19 @@
  */
 package org.powermock.api.extension.listener;
 
-import static org.powermock.api.easymock.PowerMock.createMock;
-import static org.powermock.api.easymock.PowerMock.createNiceMock;
-import static org.powermock.api.easymock.PowerMock.createStrictMock;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Set;
-
 import org.powermock.api.easymock.annotation.MockNice;
 import org.powermock.api.easymock.annotation.MockStrict;
 import org.powermock.core.classloader.annotations.Mock;
 import org.powermock.core.spi.listener.AnnotationEnablerListener;
 import org.powermock.core.spi.support.AbstractPowerMockTestListenerBase;
 import org.powermock.reflect.Whitebox;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Set;
+
+import static org.powermock.api.easymock.PowerMock.*;
 
 /**
  * Before each test method all fields annotated with {@link Mock},

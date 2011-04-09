@@ -24,10 +24,14 @@
  */
 package sun.tools.attach;
 
-import java.io.*;
+import com.sun.tools.attach.AgentLoadException;
+import com.sun.tools.attach.AttachNotSupportedException;
+import com.sun.tools.attach.spi.AttachProvider;
 
-import com.sun.tools.attach.*;
-import com.sun.tools.attach.spi.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Linux implementation of HotSpotVirtualMachine.

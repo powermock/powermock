@@ -15,14 +15,13 @@
  */
 package samples.junit4.whitebox;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import org.powermock.reflect.internal.WhiteboxImpl;
+import samples.whitebox.ClassWithPowerMockGeneratedConstructor;
 
 import java.lang.reflect.Constructor;
 
-import org.junit.Test;
-import org.powermock.reflect.internal.WhiteboxImpl;
-
-import samples.whitebox.ClassWithPowerMockGeneratedConstructor;
+import static org.junit.Assert.assertEquals;
 
 public class PowerMockConstructorFiltrationTest {
 	@Test

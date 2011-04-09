@@ -24,11 +24,14 @@
  */
 package sun.tools.attach;
 
-import java.io.*;
-import java.util.*;
+import com.sun.tools.attach.AgentInitializationException;
+import com.sun.tools.attach.AgentLoadException;
+import com.sun.tools.attach.VirtualMachine;
+import com.sun.tools.attach.spi.AttachProvider;
 
-import com.sun.tools.attach.*;
-import com.sun.tools.attach.spi.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * The HotSpot implementation of com.sun.tools.attach.VirtualMachine.

@@ -1,17 +1,15 @@
 package org.powermock.examples;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertSame;
-import static org.powermock.api.easymock.PowerMock.createMock;
-import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.verify;
-
 import org.acegisecurity.acl.basic.BasicAclEntry;
 import org.acegisecurity.acl.basic.cache.NullAclEntryCache;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertSame;
+import static org.powermock.api.easymock.PowerMock.*;
 
 /**
  * Unit tests that demonstrates PowerMock's ability to mock classes in signed

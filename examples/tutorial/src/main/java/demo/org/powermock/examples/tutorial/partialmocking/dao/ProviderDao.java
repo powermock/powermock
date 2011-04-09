@@ -15,9 +15,9 @@
  */
 package demo.org.powermock.examples.tutorial.partialmocking.dao;
 
-import java.util.Set;
-
 import demo.org.powermock.examples.tutorial.partialmocking.dao.domain.impl.ServiceArtifact;
+
+import java.util.Set;
 
 public interface ProviderDao {
 
