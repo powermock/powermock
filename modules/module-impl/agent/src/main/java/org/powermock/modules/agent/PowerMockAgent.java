@@ -16,11 +16,10 @@
 package org.powermock.modules.agent;
 
 import java.io.IOException;
-import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 
 /**
- * This is the "agent class" that initializes the JMockit "Java agent". It is not intended for use in client code.
+ * This is the "agent class" that initializes the PowerMock "Java agent". It is not intended for use in client code.
  * It must be public, however, so the JVM can call the {@code premain} method, which as the name implies is called
  * <em>before</em> the {@code main} method.
  *
@@ -39,22 +38,8 @@ public final class PowerMockAgent
 
     /**
      * This method must only be called by the JVM, to provide the instrumentation object.
-     * In order for this to occur, the JVM must be started with "-javaagent:jmockit.jar" as a command line parameter
+     * In order for this to occur, the JVM must be started with "-javaagent:powermock-module-javaagent-nnn.jar" as a command line parameter
      * (assuming the jar file is in the current directory).
-     * <p/>
-     * It is also possible to load other <em>instrumentation tools</em> at this time, according to any agent
-     * arguments provided as "-javaagent:jmockit.jar=agentArgs" in the JVM command line.
-     * There are two types of instrumentation tools:
-     * <ol>
-     * <li>A {@link ClassFileTransformer class file transformer}, which will be instantiated and added to the JVM
-     * instrumentation service. Such a class must be public and have a public constructor accepting two parameters: the
-     * first of type {@code Map&lt;String, byte[]>}, which will receive a map for storing the transformed classes; and
-     * the second of type {@code String}, which will receive any tool arguments.</li>
-     * <li>An <em>external mock</em>, which can be any class with a public no-args constructor.
-     * Such a class will be used to redefine one or more real classes.
-     * The real classes can be specified in one of two ways: by providing a regular expression matching class names as
-     * the tool arguments, or by annotating the external mock class with {@link mockit.MockClass}.</li>
-     * </ol>
      *
      * @param agentArgs zero or more <em>instrumentation tool specifications</em> (separated by semicolons if more than
      *                  one); each tool specification must be expressed as "&lt;tool class name>[=tool arguments]", with

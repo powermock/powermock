@@ -28,17 +28,23 @@ public class PowerMockClassRedefiner {
 
 
     public static void redefine(Class<?> cls) {
+        if(cls == null) {
+            throw new IllegalArgumentException("Class to redefine cannot be null");
+        }
         try {
             CtClass ctClass = ClassPool.getDefault().get(cls.getName());
             ctClass = mainMockTransformer.transform(ctClass);
             final ClassDefinition classDefinition = new ClassDefinition(cls, ctClass.toBytecode());
             PowerMockAgent.instrumentation().redefineClasses(classDefinition);
         } catch(Exception e){
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to redefine class "+cls.getName(), e);
         }
     }
 
     public static void redefine(String className) {
+        if(className == null) {
+            throw new IllegalArgumentException("Class name to redefine cannot be null");
+        }
         try {
             redefine(Class.forName(className));
         } catch (ClassNotFoundException e) {

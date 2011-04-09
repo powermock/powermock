@@ -22,7 +22,7 @@ import java.util.regex.*;
 
 final class AgentInitialization
 {
-    private static final Pattern JAR_REGEX = Pattern.compile(".*powermock-module-javaagent[-.\\d]*.jar");
+    private static final Pattern JAR_REGEX = Pattern.compile(".*powermock-module-javaagent[-]?[.\\d+]*[-]?[A-Z]*.jar");
 
     void initializeAccordingToJDKVersion()  {
         String jarFilePath = discoverPathToJarFile();
@@ -32,11 +32,11 @@ final class AgentInitialization
         }
         else if ("1.5".equals(PowerMockAgent.javaSpecVersion)) {
             throw new IllegalStateException(
-                    "JMockit has not been initialized. Check that your Java 5 VM has been started with the -javaagent:" +
+                    "PowerMock has not been initialized. Check that your Java 5 VM has been started with the -javaagent:" +
                             jarFilePath + " command line option.");
         }
         else {
-            throw new IllegalStateException("JMockit requires a Java 5 VM or later.");
+            throw new IllegalStateException("PowerMock requires a Java 5 VM or later.");
         }
     }
 
@@ -54,7 +54,7 @@ final class AgentInitialization
         }
 
         throw new IllegalStateException(
-                "No jar file with name ending in \"jmockit.jar\" or \"jmockit-nnn.jar\" (where \"nnn\" is a version number) " +
+                "No jar file with name ending in \"powermock-module-javaagent.jar\" or \"powermock-module-javaagent-nnn.jar\" (where \"nnn\" is a version number) " +
                         "found in the classpath");
     }
 
