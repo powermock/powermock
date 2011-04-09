@@ -59,8 +59,7 @@ public final class PowerMockAgent
         instrumentation = inst;
     }
 
-    public static Instrumentation instrumentation()
-    {
+    public static Instrumentation instrumentation()  {
         verifyInitialization();
         return instrumentation;
     }

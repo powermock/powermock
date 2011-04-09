@@ -42,6 +42,16 @@ public class MainMockTransformer implements MockTransformer {
 
     private static final String VOID = "";
 
+    private final boolean agentSupport;
+
+    public MainMockTransformer() {
+        this(false);
+    }
+
+    public MainMockTransformer(boolean agentSupport) {
+        this.agentSupport = agentSupport;
+    }
+
     public CtClass transform(final CtClass clazz) throws Exception {
         if (clazz.isFrozen()) {
             clazz.defrost();
@@ -67,8 +77,11 @@ public class MainMockTransformer implements MockTransformer {
         // Convert all constructors to public
         setAllConstructorsToPublic(clazz);
 
-        // Remove final from all static final fields
-        removeFinalModifierFromAllStaticFinalFields(clazz);
+
+        if(!agentSupport) {
+            // Remove final from all static final fields. Not possible if using a java agent.
+            removeFinalModifierFromAllStaticFinalFields(clazz);
+        }
 
         clazz.instrument(new PowerMockExpressionEditor(clazz));
 
@@ -110,7 +123,7 @@ public class MainMockTransformer implements MockTransformer {
         if (Modifier.isFinal(clazz.getModifiers())) {
             clazz.setModifiers(clazz.getModifiers() ^ Modifier.FINAL);
         }
-        
+
         ClassFile classFile = clazz.getClassFile2();
         AttributeInfo attribute = classFile.getAttribute(InnerClassesAttribute.tag);
         if (attribute != null && attribute instanceof InnerClassesAttribute) {
@@ -311,7 +324,7 @@ public class MainMockTransformer implements MockTransformer {
              * ConstructorCall. This means that we need to handle
              * "suppressConstructorCode" both here and in NewExpr.
              */
-            if (!c.getClassName().startsWith("java.lang")) {
+            if (!agentSupport && !c.getClassName().startsWith("java.lang")) {
                 CtClass superclass = null;
                 try {
                     superclass = clazz.getSuperclass();
@@ -332,8 +345,7 @@ public class MainMockTransformer implements MockTransformer {
                 code.append("if (value != ").append(MockGateway.class.getName()).append(".PROCEED){");
 
                 /*
-                 * TODO Suppress and lazy inject field (when this feature is
-                 * ready).
+                 * TODO Suppress and lazy inject field (when this feature is ready).
                  */
                 if (superclass.getName().equals(Object.class.getName())) {
                     code.append(" super();");

@@ -21,10 +21,11 @@ import javassist.CtClass;
 import org.powermock.core.transformers.impl.MainMockTransformer;
 
 import java.lang.instrument.ClassDefinition;
+import java.lang.instrument.Instrumentation;
 
 public class PowerMockClassRedefiner {
 
-    private static final MainMockTransformer mainMockTransformer = new MainMockTransformer();
+    private static final MainMockTransformer mainMockTransformer = new MainMockTransformer(true);
 
 
     public static void redefine(Class<?> cls) {
