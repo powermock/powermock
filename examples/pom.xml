@@ -31,6 +31,7 @@
     <module>jmock</module>
     <module>spring-mockito</module>
     <module>spring-mockito-agent</module>
+    <module>spring-mockito-xml</module>
   </modules>
     <dependencyManagement>
       <dependencies>
