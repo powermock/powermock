@@ -1,4 +1,4 @@
-package samples.testng;
+package samples.testng.agent;
 
 import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -16,7 +16,7 @@ import static org.powermock.api.easymock.PowerMock.verifyAll;
  * Verifies that PowerMock test listeners works correctly in TestNG.
  */
 @PrepareForTest
-public class AnnotationDemoTest {
+public class AnnotationDemoTest extends PowerMockTestCase {
 
     @Mock
     private Service serviceMock;

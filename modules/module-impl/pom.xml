@@ -24,6 +24,8 @@
     <module>junit4-rule</module>
     <module>junit4-rule-agent</module>
     <module>testng</module>
+    <module>testng-agent</module>
+    <module>testng-common</module>
     <module>agent</module>
   </modules>
 </project>

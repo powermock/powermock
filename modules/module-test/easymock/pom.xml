@@ -21,6 +21,7 @@
     <module>junit4-test</module>
     <module>junit45-test</module>
     <module>testng-test</module>
+    <module>testng-agent-test</module>
     <module>junit47-test</module>
     <module>junit48-test</module>
   </modules>

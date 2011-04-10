@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.modules.junit4.rule;
+package org.powermock.modules.agent.support;
 
+import org.powermock.core.MockRepository;
 import org.powermock.modules.agent.PowerMockClassRedefiner;
 import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.proxyframework.RegisterProxyFramework;
@@ -22,12 +23,17 @@ import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
 import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
 import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
 
-class PowerMockRuleAgentSetup {
+public class PowerMockAgentTestInitializer {
 
     private static final String JAVA = "java.";
     private static final SimpleClassCache CACHE = new SimpleClassCache(100);
 
     public static void initialize(Class<?> testClass) {
+        /*
+		 * For extra safety clear the MockitoRepository.
+		 */
+        MockRepository.clear();
+
         PrepareForTestExtractorImpl testClassesExtractor = new PrepareForTestExtractorImpl();
         StaticConstructorSuppressExtractorImpl suppressExtractor = new StaticConstructorSuppressExtractorImpl();
         final String[] classesToPrepare = testClassesExtractor.getTestClasses(testClass);

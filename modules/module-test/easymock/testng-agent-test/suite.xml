@@ -1,0 +1,15 @@
+<suite name="dgf" verbose="10" object-factory="org.powermock.modules.testng.PowerMockObjectFactory">
+    <test name="dgf">
+        <classes>
+            <class name="samples.testng.agent.AnnotationDemoTest"/>
+        	<class name="samples.testng.agent.AnnotationDemoWithBeforeMethodTest"/>
+            <class name="samples.testng.agent.PrivateFinalTest"/>
+            <class name="samples.testng.agent.MockStaticExtendsPowerMockTestCaseTest"/>
+            <class name="samples.testng.agent.PartialMockingWithBeforeClassTest"/>
+            <class name="samples.testng.agent.PrivateFinalTest"/>
+            <class name="samples.testng.agent.SystemClassUserTest" />
+            <class name="samples.testng.agent.SampleServletTest" />
+            <class name="samples.testng.agent.NotAnnotatedWithPrepareForTest" />
+        </classes>
+    </test>
+</suite>

@@ -1,10 +1,7 @@
-package org.powermock.modules.junit4.rule;
+package org.powermock.modules.agent.support;
 
 import java.util.LinkedList;
 
-/**
- * Not thread-safe
- */
 class SimpleClassCache {
     private final LinkedList<String> cache = new LinkedList<String>();
     private final int cacheSize;
@@ -13,7 +10,7 @@ class SimpleClassCache {
         this.cacheSize = cacheSize;
     }
 
-    public boolean addIfNotCached(String className) {
+    public synchronized boolean addIfNotCached(String className) {
         if(cache.contains(className)) {
             return false;
         }

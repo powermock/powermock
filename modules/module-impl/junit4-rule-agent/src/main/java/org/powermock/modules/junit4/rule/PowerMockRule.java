@@ -20,6 +20,7 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 import org.powermock.core.MockRepository;
 import org.powermock.modules.agent.PowerMockAgent;
+import org.powermock.modules.agent.support.PowerMockAgentTestInitializer;
 
 public class PowerMockRule implements MethodRule {
 
@@ -32,7 +33,7 @@ public class PowerMockRule implements MethodRule {
 
 
     public Statement apply(Statement base, FrameworkMethod method, Object target) {
-        PowerMockRuleAgentSetup.initialize(target.getClass());
+        PowerMockAgentTestInitializer.initialize(target.getClass());
         return new PowerMockStatement(base);
     }
 }

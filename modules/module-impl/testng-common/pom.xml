@@ -7,9 +7,9 @@
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.powermock</groupId>
-   <artifactId>powermock-module-testng</artifactId>
+   <artifactId>powermock-module-testng-common</artifactId>
    <packaging>jar</packaging>
-   <name>powermock-module-testng</name>
+   <name>powermock-module-testng-common</name>
    <url>http://www.powermock.org</url>
 
    <description>
@@ -27,11 +27,11 @@
          <groupId>org.powermock</groupId>
          <artifactId>powermock-core</artifactId>
          <version>${version}</version>
+      </dependency>        
+      <dependency>
+         <groupId>org.powermock</groupId>
+         <artifactId>powermock-reflect</artifactId>
+         <version>${version}</version>
       </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-testng-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
    </dependencies>
 </project>

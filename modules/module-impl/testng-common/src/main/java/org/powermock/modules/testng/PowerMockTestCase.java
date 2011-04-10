@@ -20,6 +20,7 @@ import org.powermock.reflect.Whitebox;
 import org.testng.IObjectFactory;
 import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.ObjectFactory;
 
@@ -44,6 +45,12 @@ public class PowerMockTestCase {
 			annotationEnabler = null;
 		}
 	}
+
+    @BeforeClass
+    protected void beforePowerMockTestClass() throws Exception {
+        // To make sure that the mock repository is not in an incorrect state when the test begins
+        MockRepository.clear();
+    }
 
 	/**
 	 * Must be executed before each test method. This method does the following:
@@ -87,8 +94,15 @@ public class PowerMockTestCase {
 	 */
 	@ObjectFactory
 	public IObjectFactory create(ITestContext context) {
-		return new PowerMockObjectFactory();
-	}
+        try {
+            final Class<?> powerMockObjectFactory = Class.forName("org.powermock.modules.testng.PowerMockObjectFactory");
+            return (IObjectFactory) powerMockObjectFactory.newInstance();
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("Missing org.powermock.modules.testng.PowerMockObjectFactory in classpath.");
+        } catch (Exception e) {
+            throw new RuntimeException("PowerMock internal error", e);
+        }
+    }
 
 	private void clearMockFields() throws Exception, IllegalAccessException {
 		if (annotationEnabler != null) {

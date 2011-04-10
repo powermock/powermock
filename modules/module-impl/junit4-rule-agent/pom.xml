@@ -32,18 +32,6 @@
             <groupId>org.powermock</groupId>
             <artifactId>powermock-core</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock.tests</groupId>
-            <artifactId>powermock-tests-utils</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>${version}</version>
-            <scope>test</scope>
-        </dependency>
+        </dependency>        
     </dependencies>
 </project>
