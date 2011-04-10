@@ -30,6 +30,7 @@
     <module>jdom</module>
     <module>jmock</module>
     <module>spring-mockito</module>
+    <module>spring-mockito-agent</module>
   </modules>
     <dependencyManagement>
       <dependencies>
