@@ -22,8 +22,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock.examples</groupId>
-    <artifactId>powermock-examples-spring-mockito-agent</artifactId>
-    <name>powermock-examples-spring-mockito-agent</name>
+    <artifactId>powermock-examples-spring-mockito-xml-agent</artifactId>
+    <name>powermock-examples-spring-mockito-xml-agent</name>
     <properties>
         <spring.version>3.0.5.RELEASE</spring.version>
     </properties>
