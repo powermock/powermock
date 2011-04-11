@@ -62,7 +62,9 @@ public class MainMockTransformer implements MockTransformer {
         allowMockingOfStaticAndFinalAndNativeMethods(clazz);
 
         // Convert all constructors to public
-        setAllConstructorsToPublic(clazz);
+        if(!agentSupport) {
+            setAllConstructorsToPublic(clazz);
+        }
 
 
         if(!agentSupport) {
