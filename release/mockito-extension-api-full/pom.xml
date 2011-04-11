@@ -24,7 +24,7 @@
             <artifactId>powermock-core</artifactId>
             <version>${version}</version>
         </dependency>
-       <dependency>
+        <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
             <version>${version}</version>
@@ -49,98 +49,93 @@
             <artifactId>powermock-module-junit3</artifactId>
             <version>${version}</version>
         </dependency>
-	<dependency>
-		<groupId>org.powermock</groupId>
-		<artifactId>powermock-module-junit4-rule</artifactId>
-		<version>${version}</version>
-	</dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-reflect</artifactId>
             <version>${version}</version>
         </dependency>
-	<dependency>
-	   <groupId>org.powermock</groupId>
-	   <artifactId>powermock-api-support</artifactId>
-	   <version>${version}</version>
-	</dependency>
-	<dependency>
-           <groupId>org.powermock</groupId>
-	   <artifactId>powermock-module-testng</artifactId>
-	   <version>${version}</version>
-	</dependency>
-	<dependency>
-	   <groupId>org.powermock</groupId>
-           <artifactId>powermock-classloading-base</artifactId>
-	   <version>${version}</version>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-support</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-testng</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-classloading-base</artifactId>
+            <version>${version}</version>
         </dependency>
 
-	<!-- Sources -->
+        <!-- Sources -->
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-core</artifactId>
             <version>${version}</version>
-	    <classifier>sources</classifier>
+            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
             <version>${version}</version>
-	    <classifier>sources</classifier>
+            <classifier>sources</classifier>
         </dependency>
-	<dependency>
-		<groupId>org.powermock</groupId>
-		<artifactId>powermock-module-junit4-rule</artifactId>
-		<version>${version}</version>
-                <classifier>sources</classifier>
-	</dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4-rule</artifactId>
+            <version>${version}</version>
+            <classifier>sources</classifier>
+        </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4-common</artifactId>
             <version>${version}</version>
-	    <classifier>sources</classifier>
+            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
             <version>${version}</version>
-	    <classifier>sources</classifier>
+            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4-legacy</artifactId>
             <version>${version}</version>
-	    <classifier>sources</classifier>
+            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit3</artifactId>
             <version>${version}</version>
-	    <classifier>sources</classifier>
+            <classifier>sources</classifier>
         </dependency>
-	<dependency>
-           <groupId>org.powermock</groupId>
-	   <artifactId>powermock-module-testng</artifactId>
-	   <version>${version}</version>
- 	   <classifier>sources</classifier>
-	</dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-testng</artifactId>
+            <version>${version}</version>
+            <classifier>sources</classifier>
+        </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-reflect</artifactId>
             <version>${version}</version>
-	    <classifier>sources</classifier>
+            <classifier>sources</classifier>
         </dependency>
-	<dependency>
-	   <groupId>org.powermock</groupId>
-	   <artifactId>powermock-api-support</artifactId>
-	   <version>${version}</version>
-	    <classifier>sources</classifier>
-	</dependency>
-	<dependency>
-	   <groupId>org.powermock</groupId>
-           <artifactId>powermock-classloading-base</artifactId>
-	   <version>${version}</version>
-	    <classifier>sources</classifier>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-support</artifactId>
+            <version>${version}</version>
+            <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-classloading-base</artifactId>
+            <version>${version}</version>
+            <classifier>sources</classifier>
         </dependency>
     </dependencies>
     <build>
