@@ -57,7 +57,9 @@ public class MainMockTransformer implements MockTransformer {
         }
 
         // This should probably be configurable
-        removeFinalModifierFromClass(clazz);
+        if(!agentSupport) {
+            removeFinalModifierFromClass(clazz);
+        }
 
         allowMockingOfStaticAndFinalAndNativeMethods(clazz);
 

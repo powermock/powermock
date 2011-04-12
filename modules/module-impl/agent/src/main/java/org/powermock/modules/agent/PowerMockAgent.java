@@ -15,8 +15,17 @@
  */
 package org.powermock.modules.agent;
 
+import javassist.ByteArrayClassPath;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.Modifier;
+import org.powermock.core.transformers.impl.MainMockTransformer;
+
 import java.io.IOException;
+import java.lang.instrument.ClassFileTransformer;
+import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
+import java.security.ProtectionDomain;
 
 /**
  * This is the "agent class" that initializes the PowerMock "Java agent". It is not intended for use in client code.
@@ -57,6 +66,33 @@ public final class PowerMockAgent
 
     private static void initialize(String agentArgs, Instrumentation inst) throws IOException {
         instrumentation = inst;
+        inst.addTransformer(new ClassFileTransformer() {
+            private MainMockTransformer mainMockTransformer = new MainMockTransformer();
+            public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
+                if (loader == null || className.startsWith("org/powermock") ||
+                        className.startsWith("org/junit") || className.startsWith("org/mockito") ||
+                        className.startsWith("javassist/") || className.startsWith("org/objenesis") ||
+                        className.startsWith("junit/") || className.startsWith("org/hamcrest") ||
+                        className.startsWith("sun/") || className.startsWith("$Proxy") ||
+                        className.contains("WithCGLIB$$")) {
+                    return classfileBuffer;
+                }
+                try {
+                    final String fullyQualifiedClassName = className.replaceAll("/", "\\.");
+                    ClassPool cp = ClassPool.getDefault();
+                    cp.insertClassPath(new ByteArrayClassPath(fullyQualifiedClassName, classfileBuffer));
+                    CtClass ctClass  = cp.get(fullyQualifiedClassName);
+                        if (Modifier.isFinal(ctClass.getModifiers())) {
+                            ctClass.setModifiers(ctClass.getModifiers() ^ Modifier.FINAL);
+                        }
+//                    ctClass = mainMockTransformer.transform(ctClass);
+                    return ctClass.toBytecode();
+                } catch(Exception e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("Failed to redefine class "+className, e);
+                }
+            }
+        });
     }
 
     public static Instrumentation instrumentation()  {

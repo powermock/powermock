@@ -1,6 +1,7 @@
 <suite name="dgf" verbose="10" object-factory="org.powermock.modules.testng.PowerMockObjectFactory">
     <test name="dgf">
         <classes>
+            <class name="samples.testng.agent.FinalDemoTest"/>
             <class name="samples.testng.agent.AnnotationDemoTest"/>
         	<class name="samples.testng.agent.AnnotationDemoWithBeforeMethodTest"/>
             <class name="samples.testng.agent.PrivateFinalTest"/>
