@@ -24,19 +24,23 @@ import javassist.expr.*;
 import org.powermock.core.IndicateReloadClass;
 import org.powermock.core.MockGateway;
 import org.powermock.core.transformers.MockTransformer;
+import org.powermock.core.transformers.TransformStrategy;
+
+import static org.powermock.core.transformers.TransformStrategy.*;
+import static org.powermock.core.transformers.TransformStrategy.INST_REDEFINE;
 
 public class MainMockTransformer implements MockTransformer {
 
     private static final String VOID = "";
 
-    private final boolean agentSupport;
+    private TransformStrategy strategy;
 
     public MainMockTransformer() {
-        this(false);
+        this(CLASSLOADER);
     }
 
-    public MainMockTransformer(boolean agentSupport) {
-        this.agentSupport = agentSupport;
+    public MainMockTransformer(TransformStrategy strategy) {
+        this.strategy = strategy;
     }
 
     public CtClass transform(final CtClass clazz) throws Exception {
@@ -57,24 +61,19 @@ public class MainMockTransformer implements MockTransformer {
         }
 
         // This should probably be configurable
-        if(!agentSupport) {
-            removeFinalModifierFromClass(clazz);
-        }
+        removeFinalModifierFromClass(clazz);
 
         allowMockingOfStaticAndFinalAndNativeMethods(clazz);
 
         // Convert all constructors to public
-        if(!agentSupport) {
-            setAllConstructorsToPublic(clazz);
+        setAllConstructorsToPublic(clazz);
+
+        // Remove final from all static final fields. Not possible if using a java agent.
+        removeFinalModifierFromAllStaticFinalFields(clazz);
+
+        if(strategy != INST_TRANSFORM) {
+            clazz.instrument(new PowerMockExpressionEditor(clazz));
         }
-
-
-        if(!agentSupport) {
-            // Remove final from all static final fields. Not possible if using a java agent.
-            removeFinalModifierFromAllStaticFinalFields(clazz);
-        }
-
-        clazz.instrument(new PowerMockExpressionEditor(clazz));
 
         /*
          * ClassPool may cause huge memory consumption if the number of CtClass
@@ -90,42 +89,48 @@ public class MainMockTransformer implements MockTransformer {
 
     private String allowMockingOfPackagePrivateClasses(final CtClass clazz) {
         final String name = clazz.getName();
-        try {
-            final int modifiers = clazz.getModifiers();
-            if (Modifier.isPackage(modifiers)) {
-                if (!name.startsWith("java.") && !(clazz.isInterface() && clazz.getDeclaringClass() != null)) {
-                    clazz.setModifiers(Modifier.setPublic(modifiers));
+        if(strategy != INST_REDEFINE) {
+            try {
+                final int modifiers = clazz.getModifiers();
+                if (Modifier.isPackage(modifiers)) {
+                    if (!name.startsWith("java.") && !(clazz.isInterface() && clazz.getDeclaringClass() != null)) {
+                        clazz.setModifiers(Modifier.setPublic(modifiers));
+                    }
                 }
+            } catch (NotFoundException e) {
+                // OK, continue
             }
-        } catch (NotFoundException e) {
-            // OK, continue
         }
         return name;
     }
 
     private void suppressStaticInitializerIfRequested(final CtClass clazz, final String name) throws CannotCompileException {
-        if (MockGateway.staticConstructorCall(name) != MockGateway.PROCEED) {
-            CtConstructor classInitializer = clazz.makeClassInitializer();
-            classInitializer.setBody("{}");
+        if(strategy == CLASSLOADER) {
+            if (MockGateway.staticConstructorCall(name) != MockGateway.PROCEED) {
+                CtConstructor classInitializer = clazz.makeClassInitializer();
+                classInitializer.setBody("{}");
+            }
         }
     }
 
     private void removeFinalModifierFromClass(final CtClass clazz) {
-        if (Modifier.isFinal(clazz.getModifiers())) {
-            clazz.setModifiers(clazz.getModifiers() ^ Modifier.FINAL);
-        }
+        if(strategy != INST_REDEFINE) {
+            if (Modifier.isFinal(clazz.getModifiers())) {
+                clazz.setModifiers(clazz.getModifiers() ^ Modifier.FINAL);
+            }
 
-        ClassFile classFile = clazz.getClassFile2();
-        AttributeInfo attribute = classFile.getAttribute(InnerClassesAttribute.tag);
-        if (attribute != null && attribute instanceof InnerClassesAttribute) {
-            InnerClassesAttribute ica = (InnerClassesAttribute) attribute;
-            String name = classFile.getName();
-            int n = ica.tableLength();
-            for (int i = 0; i < n; ++i) {
-                if (name.equals(ica.innerClass(i))) {
-                    int accessFlags = ica.accessFlags(i);
-                    if (Modifier.isFinal(accessFlags)) {
-                        ica.setAccessFlags(i, accessFlags ^ Modifier.FINAL);
+            ClassFile classFile = clazz.getClassFile2();
+            AttributeInfo attribute = classFile.getAttribute(InnerClassesAttribute.tag);
+            if (attribute != null && attribute instanceof InnerClassesAttribute) {
+                InnerClassesAttribute ica = (InnerClassesAttribute) attribute;
+                String name = classFile.getName();
+                int n = ica.tableLength();
+                for (int i = 0; i < n; ++i) {
+                    if (name.equals(ica.innerClass(i))) {
+                        int accessFlags = ica.accessFlags(i);
+                        if (Modifier.isFinal(accessFlags)) {
+                            ica.setAccessFlags(i, accessFlags ^ Modifier.FINAL);
+                        }
                     }
                 }
             }
@@ -133,25 +138,31 @@ public class MainMockTransformer implements MockTransformer {
     }
 
     private void allowMockingOfStaticAndFinalAndNativeMethods(final CtClass clazz) throws NotFoundException, CannotCompileException {
-        for (CtMethod m : clazz.getDeclaredMethods()) {
-            modifyMethod(m);
+        if(strategy != INST_TRANSFORM) {
+            for (CtMethod m : clazz.getDeclaredMethods()) {
+                modifyMethod(m);
+            }
         }
     }
 
     private void removeFinalModifierFromAllStaticFinalFields(final CtClass clazz) {
-        for (CtField f : clazz.getDeclaredFields()) {
-            final int modifiers = f.getModifiers();
-            if (Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers)) {
-                f.setModifiers(modifiers ^ Modifier.FINAL);
+        if(strategy != INST_REDEFINE) {
+            for (CtField f : clazz.getDeclaredFields()) {
+                final int modifiers = f.getModifiers();
+                if (Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers)) {
+                    f.setModifiers(modifiers ^ Modifier.FINAL);
+                }
             }
         }
     }
 
     private void setAllConstructorsToPublic(final CtClass clazz) {
-        for (CtConstructor c : clazz.getDeclaredConstructors()) {
-            final int modifiers = c.getModifiers();
-            if (!Modifier.isPublic(modifiers)) {
-                c.setModifiers(Modifier.setPublic(modifiers));
+        if(strategy == CLASSLOADER) {
+            for (CtConstructor c : clazz.getDeclaredConstructors()) {
+                final int modifiers = c.getModifiers();
+                if (!Modifier.isPublic(modifiers)) {
+                    c.setModifiers(Modifier.setPublic(modifiers));
+                }
             }
         }
     }
@@ -315,7 +326,7 @@ public class MainMockTransformer implements MockTransformer {
              * ConstructorCall. This means that we need to handle
              * "suppressConstructorCode" both here and in NewExpr.
              */
-            if (!agentSupport && !c.getClassName().startsWith("java.lang")) {
+            if (strategy != INST_REDEFINE && !c.getClassName().startsWith("java.lang")) {
                 CtClass superclass = null;
                 try {
                     superclass = clazz.getSuperclass();

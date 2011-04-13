@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.powermock.modules.test.mockito.junit4.agent;
+package powermock.modules.test.mockito.junit4.agent;
 
 import org.junit.Rule;
 import org.junit.Test;

@@ -18,16 +18,22 @@ package org.powermock.modules.agent;
 
 import javassist.ClassPool;
 import javassist.CtClass;
+import org.powermock.core.transformers.TransformStrategy;
 import org.powermock.core.transformers.impl.MainMockTransformer;
 
 import java.lang.instrument.ClassDefinition;
 
 public class PowerMockClassRedefiner {
 
-    private static final MainMockTransformer mainMockTransformer = new MainMockTransformer(true);
+    private static final MainMockTransformer mainMockTransformer = new MainMockTransformer(TransformStrategy.INST_REDEFINE);
 
 
     public static void redefine(Class<?> cls) {
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
         if(cls == null) {
             throw new IllegalArgumentException("Class to redefine cannot be null");
         }
@@ -36,7 +42,9 @@ public class PowerMockClassRedefiner {
             ctClass = mainMockTransformer.transform(ctClass);
             final ClassDefinition classDefinition = new ClassDefinition(cls, ctClass.toBytecode());
             PowerMockAgent.instrumentation().redefineClasses(classDefinition);
+
         } catch(Exception e){
+            e.printStackTrace();
             throw new RuntimeException("Failed to redefine class "+cls.getName(), e);
         }
     }

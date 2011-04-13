@@ -15,17 +15,8 @@
  */
 package org.powermock.modules.agent;
 
-import javassist.ByteArrayClassPath;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.Modifier;
-import org.powermock.core.transformers.impl.MainMockTransformer;
-
 import java.io.IOException;
-import java.lang.instrument.ClassFileTransformer;
-import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
-import java.security.ProtectionDomain;
 
 /**
  * This is the "agent class" that initializes the PowerMock "Java agent". It is not intended for use in client code.
@@ -50,10 +41,6 @@ public final class PowerMockAgent
      * In order for this to occur, the JVM must be started with "-javaagent:powermock-module-javaagent-nnn.jar" as a command line parameter
      * (assuming the jar file is in the current directory).
      *
-     * @param agentArgs zero or more <em>instrumentation tool specifications</em> (separated by semicolons if more than
-     *                  one); each tool specification must be expressed as "&lt;tool class name>[=tool arguments]", with
-     *                  fully qualified class names for classes available in the classpath; tool arguments are optional
-     * @param inst      the instrumentation service provided by the JVM
      */
     public static void premain(String agentArgs, Instrumentation inst) throws Exception {
         initialize(agentArgs, inst);
@@ -66,33 +53,7 @@ public final class PowerMockAgent
 
     private static void initialize(String agentArgs, Instrumentation inst) throws IOException {
         instrumentation = inst;
-        inst.addTransformer(new ClassFileTransformer() {
-            private MainMockTransformer mainMockTransformer = new MainMockTransformer();
-            public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
-                if (loader == null || className.startsWith("org/powermock") ||
-                        className.startsWith("org/junit") || className.startsWith("org/mockito") ||
-                        className.startsWith("javassist/") || className.startsWith("org/objenesis") ||
-                        className.startsWith("junit/") || className.startsWith("org/hamcrest") ||
-                        className.startsWith("sun/") || className.startsWith("$Proxy") ||
-                        className.contains("WithCGLIB$$")) {
-                    return classfileBuffer;
-                }
-                try {
-                    final String fullyQualifiedClassName = className.replaceAll("/", "\\.");
-                    ClassPool cp = ClassPool.getDefault();
-                    cp.insertClassPath(new ByteArrayClassPath(fullyQualifiedClassName, classfileBuffer));
-                    CtClass ctClass  = cp.get(fullyQualifiedClassName);
-                        if (Modifier.isFinal(ctClass.getModifiers())) {
-                            ctClass.setModifiers(ctClass.getModifiers() ^ Modifier.FINAL);
-                        }
-//                    ctClass = mainMockTransformer.transform(ctClass);
-                    return ctClass.toBytecode();
-                } catch(Exception e) {
-                    e.printStackTrace();
-                    throw new RuntimeException("Failed to redefine class "+className, e);
-                }
-            }
-        });
+        inst.addTransformer(new PowerMockClassTransformer());
     }
 
     public static Instrumentation instrumentation()  {
