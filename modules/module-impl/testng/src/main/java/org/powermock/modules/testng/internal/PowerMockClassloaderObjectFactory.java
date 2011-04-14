@@ -67,11 +67,6 @@ public class PowerMockClassloaderObjectFactory implements IObjectFactory {
 		 * it's not certain that this is always the case.
 		 */
 		MockRepository.clear();
-
-		final Thread currentThread = Thread.currentThread();
-		currentThread.setContextClassLoader(mockLoader);
-
-
 		Class<?> testClass = constructor.getDeclaringClass();
 		mockLoader.addIgnorePackage(ignorePackagesExtractor.getPackagesToIgnore(testClass));
 		mockLoader.addClassesToModify(testClassesExtractor.getTestClasses(testClass));
@@ -150,5 +145,4 @@ public class PowerMockClassloaderObjectFactory implements IObjectFactory {
 			throw new RuntimeException(e);
 		}
 	}
-
 }

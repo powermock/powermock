@@ -4,6 +4,7 @@
             <class name="samples.testng.AnnotationDemoTest"/>
         	<class name="samples.testng.AnnotationDemoWithBeforeMethodTest"/>
             <class name="samples.testng.PrivateFinalTest"/>
+            <class name="samples.testng.DocumentBuilderFactoryTest" />
             <class name="samples.testng.MockStaticExtendsPowerMockTestCaseTest"/>
             <class name="samples.testng.PartialMockingWithBeforeClassTest"/>
             <class name="samples.testng.PrivateFinalTest"/>

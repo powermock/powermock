@@ -16,13 +16,11 @@
 package org.powermock.modules.testng;
 
 import org.powermock.core.MockRepository;
+import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.reflect.Whitebox;
 import org.testng.IObjectFactory;
 import org.testng.ITestContext;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.ObjectFactory;
+import org.testng.annotations.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -35,65 +33,80 @@ import java.util.Set;
  */
 public class PowerMockTestCase {
 
-	private Object annotationEnabler;
+    private Object annotationEnabler;
 
-	public PowerMockTestCase() {
-		try {
-			Class<?> annotationEnablerClass = Class.forName("org.powermock.api.extension.listener.AnnotationEnabler");
-			annotationEnabler = Whitebox.newInstance(annotationEnablerClass);
-		} catch (ClassNotFoundException e) {
-			annotationEnabler = null;
-		}
-	}
+    private ClassLoader previousCl = null;
+
+    public PowerMockTestCase() {
+        try {
+            Class<?> annotationEnablerClass = Class.forName("org.powermock.api.extension.listener.AnnotationEnabler");
+            annotationEnabler = Whitebox.newInstance(annotationEnablerClass);
+        } catch (ClassNotFoundException e) {
+            annotationEnabler = null;
+        }
+    }
 
     @BeforeClass
     protected void beforePowerMockTestClass() throws Exception {
         // To make sure that the mock repository is not in an incorrect state when the test begins
         MockRepository.clear();
+        if(isLoadedByPowerMockClassloader()) {
+            final Thread thread = Thread.currentThread();
+            previousCl = thread.getContextClassLoader();
+            thread.setContextClassLoader(this.getClass().getClassLoader());
+        }
     }
 
-	/**
-	 * Must be executed before each test method. This method does the following:
-	 * <ol>
-	 * <li>Injects all mock fields (if they haven't been injected already)</li>
-	 * </ol>
-	 * 
-	 * 
-	 * 
-	 * @throws Exception
-	 *             If something unexpected goes wrong.
-	 */
-	@BeforeMethod
-	protected void beforePowerMockTestMethod() throws Exception {
-		injectMocks();
-	}
+    @AfterClass
+    protected void afterPowerMockTestClass() throws Exception {
+        if(previousCl != null) {
+            Thread.currentThread().setContextClassLoader(previousCl);
+        }
+    }
 
-	/**
-	 * Must be executed after each test method. This method does the following:
-	 * <ol>
-	 * <li>Clear all injection fields (those annotated with a Mock annotation)</li>
-	 * <li>Clears the PowerMock MockRepository</li>
-	 * </ol>
-	 * 
-	 * 
-	 * 
-	 * @throws Exception
-	 *             If something unexpected goes wrong.
-	 */
-	@AfterMethod
-	protected void afterPowerMockTestMethod() throws Exception {
-		try {
-			clearMockFields();
-		} finally {
-			MockRepository.clear();
-		}
-	}
 
-	/**
-	 * @return The PowerMock object factory.
-	 */
-	@ObjectFactory
-	public IObjectFactory create(ITestContext context) {
+    /**
+     * Must be executed before each test method. This method does the following:
+     * <ol>
+     * <li>Injects all mock fields (if they haven't been injected already)</li>
+     * </ol>
+     *
+     *
+     *
+     * @throws Exception
+     *             If something unexpected goes wrong.
+     */
+    @BeforeMethod
+    protected void beforePowerMockTestMethod() throws Exception {
+        injectMocks();
+    }
+
+    /**
+     * Must be executed after each test method. This method does the following:
+     * <ol>
+     * <li>Clear all injection fields (those annotated with a Mock annotation)</li>
+     * <li>Clears the PowerMock MockRepository</li>
+     * </ol>
+     *
+     *
+     *
+     * @throws Exception
+     *             If something unexpected goes wrong.
+     */
+    @AfterMethod
+    protected void afterPowerMockTestMethod() throws Exception {
+        try {
+            clearMockFields();
+        } finally {
+            MockRepository.clear();
+        }
+    }
+
+    /**
+     * @return The PowerMock object factory.
+     */
+    @ObjectFactory
+    public IObjectFactory create(ITestContext context) {
         try {
             final Class<?> powerMockObjectFactory = Class.forName("org.powermock.modules.testng.PowerMockObjectFactory");
             return (IObjectFactory) powerMockObjectFactory.newInstance();
@@ -104,21 +117,29 @@ public class PowerMockTestCase {
         }
     }
 
-	private void clearMockFields() throws Exception, IllegalAccessException {
-		if (annotationEnabler != null) {
-			final Class<? extends Annotation>[] mockAnnotations = Whitebox.<Class<? extends Annotation>[]> invokeMethod(annotationEnabler,
-					"getMockAnnotations");
-			Set<Field> mockFields = Whitebox.getFieldsAnnotatedWith(this, mockAnnotations);
-			for (Field field : mockFields) {
-				field.set(this, null);
-			}
-		}
-	}
+    private void clearMockFields() throws Exception, IllegalAccessException {
+        if (annotationEnabler != null) {
+            final Class<? extends Annotation>[] mockAnnotations = Whitebox.<Class<? extends Annotation>[]> invokeMethod(annotationEnabler,
+                    "getMockAnnotations");
+            Set<Field> mockFields = Whitebox.getFieldsAnnotatedWith(this, mockAnnotations);
+            for (Field field : mockFields) {
+                field.set(this, null);
+            }
+        }
+    }
 
-	private void injectMocks() throws Exception {
-		if (annotationEnabler != null) {
-			Whitebox.invokeMethod(annotationEnabler, "beforeTestMethod", new Class<?>[] { Object.class, Method.class, Object[].class }, this, null,
-					null);
-		}
-	}
+    private void injectMocks() throws Exception {
+        if (annotationEnabler != null) {
+            Whitebox.invokeMethod(annotationEnabler, "beforeTestMethod", new Class<?>[] { Object.class, Method.class, Object[].class }, this, null,
+                    null);
+        }
+    }
+
+    private boolean isLoadedByPowerMockClassloader() {
+        if(this.getClass().getClassLoader() instanceof MockClassLoader) {
+            return true;
+        }
+        return false;
+    }
+
 }
