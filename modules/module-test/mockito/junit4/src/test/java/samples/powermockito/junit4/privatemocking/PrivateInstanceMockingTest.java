@@ -21,93 +21,102 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @PrepareForTest( { PrivateMethodDemo.class })
 public class PrivateInstanceMockingTest {
 
-	@Test
-	public void expectationsWorkWhenSpyingOnPrivateMethods() throws Exception {
-		PrivateMethodDemo tested = spy(new PrivateMethodDemo());
-		assertEquals("Hello Temp, you are 50 old.", tested.sayYear("Temp", 50));
+    @Test
+    public void expectationsWorkWhenSpyingOnPrivateMethods() throws Exception {
+        PrivateMethodDemo tested = spy(new PrivateMethodDemo());
+        assertEquals("Hello Temp, you are 50 old.", tested.sayYear("Temp", 50));
 
-		when(tested, "doSayYear", 12, "test").thenReturn("another");
+        when(tested, "doSayYear", 12, "test").thenReturn("another");
 
-		assertEquals("Hello Johan, you are 29 old.", tested.sayYear("Johan", 29));
-		assertEquals("another", tested.sayYear("test", 12));
+        assertEquals("Hello Johan, you are 29 old.", tested.sayYear("Johan", 29));
+        assertEquals("another", tested.sayYear("test", 12));
 
-		verifyPrivate(tested).invoke("doSayYear", 12, "test");
-	}
+        verifyPrivate(tested).invoke("doSayYear", 12, "test");
+    }
 
-	@Test
-	public void expectationsWorkWithArgumentMatchersWhenSpyingOnPrivateMethods() throws Exception {
-		PrivateMethodDemo tested = spy(new PrivateMethodDemo());
-		assertEquals("Hello Temp, you are 50 old.", tested.sayYear("Temp", 50));
+    @Test
+    public void verifyPrivateMethodWhenNoExpectationForTheMethodHasBeenMade() throws Exception {
+        PrivateMethodDemo tested = spy(new PrivateMethodDemo());
 
-		when(tested, "doSayYear", Mockito.anyInt(), Mockito.anyString()).thenReturn("another");
+        assertEquals("Hello Johan, you are 29 old.", tested.sayYear("Johan", 29));
 
-		assertEquals("another", tested.sayYear("Johan", 29));
-		assertEquals("another", tested.sayYear("test", 12));
+        verifyPrivate(tested).invoke("doSayYear", 29, "Johan");
+    }
 
-		verifyPrivate(tested).invoke("doSayYear", 29, "Johan");
-		verifyPrivate(tested).invoke("doSayYear", 12, "test");
-		verifyPrivate(tested).invoke("doSayYear", 50, "Temp");
-	}
+    @Test
+    public void expectationsWorkWithArgumentMatchersWhenSpyingOnPrivateMethods() throws Exception {
+        PrivateMethodDemo tested = spy(new PrivateMethodDemo());
+        assertEquals("Hello Temp, you are 50 old.", tested.sayYear("Temp", 50));
 
-	@Test
-	public void errorousVerificationOnPrivateMethodGivesFilteredErrorMessage() throws Exception {
-		PrivateMethodDemo tested = spy(new PrivateMethodDemo());
-		assertEquals("Hello Temp, you are 50 old.", tested.sayYear("Temp", 50));
+        when(tested, "doSayYear", Mockito.anyInt(), Mockito.anyString()).thenReturn("another");
 
-		when(tested, "doSayYear", Mockito.anyInt(), Mockito.anyString()).thenReturn("another");
+        assertEquals("another", tested.sayYear("Johan", 29));
+        assertEquals("another", tested.sayYear("test", 12));
 
-		assertEquals("another", tested.sayYear("Johan", 29));
-		assertEquals("another", tested.sayYear("test", 12));
+        verifyPrivate(tested).invoke("doSayYear", 29, "Johan");
+        verifyPrivate(tested).invoke("doSayYear", 12, "test");
+        verifyPrivate(tested).invoke("doSayYear", 50, "Temp");
+    }
 
-		try {
-			verifyPrivate(tested, never()).invoke("doSayYear", 50, "Temp");
-			fail("Should throw assertion error");
-		} catch (MockitoAssertionError e) {
-			assertEquals("\nsamples.privatemocking.PrivateMethodDemo.doSayYear(\n    50,\n    \"Temp\"\n);\nNever wanted  but invoked .", e
-					.getMessage());
-		}
-	}
+    @Test
+    public void errorousVerificationOnPrivateMethodGivesFilteredErrorMessage() throws Exception {
+        PrivateMethodDemo tested = spy(new PrivateMethodDemo());
+        assertEquals("Hello Temp, you are 50 old.", tested.sayYear("Temp", 50));
 
-	@Test(expected = ArrayStoreException.class)
-	public void expectationsWorkWhenSpyingOnPrivateVoidMethods() throws Exception {
-		PrivateMethodDemo tested = spy(new PrivateMethodDemo());
+        when(tested, "doSayYear", Mockito.anyInt(), Mockito.anyString()).thenReturn("another");
 
-		tested.doObjectStuff(new Object());
+        assertEquals("another", tested.sayYear("Johan", 29));
+        assertEquals("another", tested.sayYear("test", 12));
 
-		when(tested, "doObjectInternal", isA(Object.class)).thenThrow(new ArrayStoreException());
+        try {
+            verifyPrivate(tested, never()).invoke("doSayYear", 50, "Temp");
+            fail("Should throw assertion error");
+        } catch (MockitoAssertionError e) {
+            assertEquals("\nsamples.privatemocking.PrivateMethodDemo.doSayYear(\n    50,\n    \"Temp\"\n);\nNever wanted  but invoked .", e
+                    .getMessage());
+        }
+    }
 
-		tested.doObjectStuff(new Object());
-	}
+    @Test(expected = ArrayStoreException.class)
+    public void expectationsWorkWhenSpyingOnPrivateVoidMethods() throws Exception {
+        PrivateMethodDemo tested = spy(new PrivateMethodDemo());
 
-	@Test
-	public void answersWorkWhenSpyingOnPrivateVoidMethods() throws Exception {
-		PrivateMethodDemo tested = spy(new PrivateMethodDemo());
+        tested.doObjectStuff(new Object());
 
-		tested.doObjectStuff(new Object());
+        when(tested, "doObjectInternal", isA(Object.class)).thenThrow(new ArrayStoreException());
 
-		when(tested, "doObjectInternal", isA(String.class)).thenAnswer(new Answer<Void>() {
-			private static final long serialVersionUID = 20645008237481667L;
+        tested.doObjectStuff(new Object());
+    }
 
-			public Void answer(InvocationOnMock invocation) throws Throwable {
-				assertEquals("Testing", invocation.getArguments()[0]);
-				return null;
-			}
-		});
-		tested.doObjectStuff(new Object());
-		tested.doObjectStuff("Testing");
-	}
+    @Test
+    public void answersWorkWhenSpyingOnPrivateVoidMethods() throws Exception {
+        PrivateMethodDemo tested = spy(new PrivateMethodDemo());
 
-	@Test
-	public void spyingOnPrivateFinalMethodsWorksWhenClassIsNotFinal() throws Exception {
-		PrivateFinal tested = spy(new PrivateFinal());
+        tested.doObjectStuff(new Object());
 
-		final String name = "test";
-		tested.say(name);
-		assertEquals("Hello " + name, tested.say(name));
+        when(tested, "doObjectInternal", isA(String.class)).thenAnswer(new Answer<Void>() {
+            private static final long serialVersionUID = 20645008237481667L;
 
-		when(tested, "sayIt", name).thenReturn("First", "Second");
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                assertEquals("Testing", invocation.getArguments()[0]);
+                return null;
+            }
+        });
+        tested.doObjectStuff(new Object());
+        tested.doObjectStuff("Testing");
+    }
 
-		assertEquals("First", tested.say(name));
-		assertEquals("Second", tested.say(name));
-	}
+    @Test
+    public void spyingOnPrivateFinalMethodsWorksWhenClassIsNotFinal() throws Exception {
+        PrivateFinal tested = spy(new PrivateFinal());
+
+        final String name = "test";
+        tested.say(name);
+        assertEquals("Hello " + name, tested.say(name));
+
+        when(tested, "sayIt", name).thenReturn("First", "Second");
+
+        assertEquals("First", tested.say(name));
+        assertEquals("Second", tested.say(name));
+    }
 }
