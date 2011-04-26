@@ -22,7 +22,7 @@ public class ExpectNewServiceUser {
 	private final Service service;
 	private final int times;
 
-	public ExpectNewServiceUser(Service service, int times) {
+	ExpectNewServiceUser(Service service, int times) {
 		this.service = service;
 		this.times = times;
 	}

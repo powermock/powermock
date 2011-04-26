@@ -32,6 +32,6 @@
             <groupId>org.powermock</groupId>
             <artifactId>powermock-core</artifactId>
             <version>${project.version}</version>
-        </dependency>        
+        </dependency>
     </dependencies>
 </project>

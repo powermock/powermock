@@ -29,11 +29,6 @@ public class PowerMockClassRedefiner {
 
 
     public static void redefine(Class<?> cls) {
-        try {
-            Thread.sleep(1000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
         if(cls == null) {
             throw new IllegalArgumentException("Class to redefine cannot be null");
         }
@@ -44,7 +39,6 @@ public class PowerMockClassRedefiner {
             PowerMockAgent.instrumentation().redefineClasses(classDefinition);
 
         } catch(Exception e){
-            e.printStackTrace();
             throw new RuntimeException("Failed to redefine class "+cls.getName(), e);
         }
     }

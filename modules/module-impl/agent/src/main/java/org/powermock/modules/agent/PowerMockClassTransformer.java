@@ -16,10 +16,8 @@
 
 package org.powermock.modules.agent;
 
-import javassist.ByteArrayClassPath;
-import javassist.ClassPool;
-import javassist.CtClass;
-import org.powermock.core.transformers.impl.MainMockTransformer;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
@@ -27,10 +25,7 @@ import java.security.ProtectionDomain;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.powermock.core.transformers.TransformStrategy.INST_TRANSFORM;
-
 class PowerMockClassTransformer implements ClassFileTransformer {
-    private final MainMockTransformer mainMockTransformer = new MainMockTransformer(INST_TRANSFORM);
 
     private static final List<String> STARTS_WITH_IGNORED = new LinkedList<String>();
     private static final List<String> CONTAINS_IGNORED = new LinkedList<String>();
@@ -55,12 +50,10 @@ class PowerMockClassTransformer implements ClassFileTransformer {
             return classfileBuffer;
         }
         try {
-            final String fullyQualifiedClassName = className.replaceAll("/", "\\.");
-            ClassPool cp = ClassPool.getDefault();
-            cp.insertClassPath(new ByteArrayClassPath(fullyQualifiedClassName, classfileBuffer));
-            CtClass ctClass  = cp.get(fullyQualifiedClassName);
-            ctClass = mainMockTransformer.transform(ctClass);
-            return ctClass.toBytecode();
+            final ClassReader reader = new ClassReader(classfileBuffer);
+            final ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+            reader.accept(new PowerMockClassVisitor(writer), ClassReader.SKIP_FRAMES);
+            return writer.toByteArray();
         } catch(Exception e) {
             throw new RuntimeException("Failed to redefine class "+className, e);
         }

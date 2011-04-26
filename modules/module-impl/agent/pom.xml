@@ -31,7 +31,7 @@
                     <archive>
                         <addMavenDescriptor>false</addMavenDescriptor>
                         <forced/>
-                        <manifestFile>META-INF/MANIFEST.MF</manifestFile>
+                        <manifestFile>${project.basedir}/META-INF/MANIFEST.MF</manifestFile>
                     </archive>
                 </configuration>
             </plugin>
