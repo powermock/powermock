@@ -10,6 +10,7 @@ Change log next version
 * Improved state clean-up in TestNG module when extending from PowerMockTestCase.
 * Automatic creation and injection of mocks to a field annotated with @Mock does no longer work if you're not extending from PowerMockTestCase in the TestNG classloading module (side-effect of issue 299).
 * Removed the classloading version of PowerMockRule from the powermock-easymock-full and powermock-mockito-full release jars. You need to download the rule implementations manually since there are now two different implementations to choose from. (issue 318)
+* Implemented experimental support for bootstrapping PowerMock using a Java agent. With the agent you won't run into classloading issues that you may with the standard way of bootstrapping. The new project is called junit4-rule-agent for JUnit and testng-agent for TestNG.
 
 Change log 1.4.8 (2011-02-26)
 -----------------------------
