@@ -25,7 +25,7 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock</artifactId>
     <packaging>pom</packaging>
-    <version>1.4.9-SNAPSHOT</version>
+    <version>1.4.9</version>
     <name>powermock</name>
     <url>http://www.powermock.org</url>
     <description>
@@ -66,9 +66,9 @@
         </developer>
     </developers>
     <scm>
-        <connection>scm:svn:https://powermock.googlecode.com/svn/trunk/</connection>
-        <developerConnection>scm:svn:https://powermock.googlecode.com/svn/trunk/</developerConnection>
-        <url>http://code.google.com/p/powermock/source/browse/</url>
+        <connection>scm:svn:https://powermock.googlecode.com/svn/tags/powermock-1.4.9</connection>
+        <developerConnection>scm:svn:https://powermock.googlecode.com/svn/tags/powermock-1.4.9</developerConnection>
+        <url>http://code.google.com/p/powermock/source/browse/tags/powermock-1.4.9</url>
     </scm>
     <issueManagement>
         <system>Google Code</system>

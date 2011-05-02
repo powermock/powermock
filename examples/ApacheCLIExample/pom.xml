@@ -2,13 +2,13 @@
 	<parent>
 		<artifactId>powermock-examples</artifactId>
 		<groupId>org.powermock.examples</groupId>
-		<version>1.4.9-SNAPSHOT</version>
+		<version>1.4.9</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.powermock.examples</groupId>
 	<artifactId>powermock-examples-apachecli</artifactId>
 	<name>ApacheCLIExample</name>
-	<version>1.4.9-SNAPSHOT</version>
+	<version>1.4.9</version>
 
 	<description>
 		Example showing PowerMock testing classes that extend Object.
