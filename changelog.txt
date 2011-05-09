@@ -1,3 +1,7 @@
+Change log next version
+-----------------------
+* Added missing class, PowerMockTestCase, to testng full release jar (issue 327).
+
 Change log 1.4.9 (2011-05-02)
 -----------------------------
 * Fixed an issue when mocking system classes containing fields of type Class, Classloader or synthetic fields such as java.util.ServiceLoader.
