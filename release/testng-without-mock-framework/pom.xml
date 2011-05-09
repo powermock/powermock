@@ -29,6 +29,11 @@
 	    <artifactId>powermock-module-testng</artifactId>
             <version>${version}</version>
         </dependency>
+	<dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-testng-common</artifactId>
+            <version>${version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
