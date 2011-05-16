@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <company>
 	<employee>
-		<firstname>Tom</firstname>
-		<lastname>Cruise</lastname>
+		<firstname>John</firstname>
+		<lastname>Doe</lastname>
 	</employee>
 	<employee>
 		<firstname>Paul</firstname>
-		<lastname>Enderson</lastname>
+		<lastname>Anderson</lastname>
 	</employee>
 	<employee>
-		<firstname>George</firstname>
-		<lastname>Bush</lastname>
+		<firstname>Jane</firstname>
+		<lastname>Doe</lastname>
 	</employee>
 </company>

@@ -57,7 +57,7 @@ public class SpringExampleTest {
 
         // Then
         assertEquals(expectedId, message.getId());
-        assertEquals("Tom Cruise, Paul Enderson, George Bush", message.getContent());
+        assertEquals("John Doe, Paul Anderson, Jane Doe", message.getContent());
     }
 
     @Test
@@ -72,7 +72,7 @@ public class SpringExampleTest {
 
         // Then
         assertEquals(expectedId, message.getId());
-        assertEquals("Tom Cruise, Paul Enderson, George Bush", message.getContent());
+        assertEquals("John Doe, Paul Anderson, Jane Doe", message.getContent());
         verifyStatic(); IdGenerator.generateNewId();
     }
 
@@ -87,7 +87,7 @@ public class SpringExampleTest {
 
         // Then
         assertEquals(expectedId, message.getId());
-        assertEquals("Tom Cruise, Paul Enderson, George Bush", message.getContent());
+        assertEquals("John Doe, Paul Anderson, Jane Doe", message.getContent());
     }
 
     @Test
@@ -100,7 +100,7 @@ public class SpringExampleTest {
 
         // Then
         assertEquals(0L, message.getId());
-        assertEquals("Tom Cruise, Paul Enderson, George Bush", message.getContent());
+        assertEquals("John Doe, Paul Anderson, Jane Doe", message.getContent());
     }
 
 }
