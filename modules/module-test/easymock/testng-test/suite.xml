@@ -11,6 +11,7 @@
             <class name="samples.testng.SystemClassUserTest" />
             <class name="samples.testng.SampleServletTest" />
             <class name="samples.testng.NotAnnotatedWithPrepareForTest" />
+            <class name="samples.testng.FinalTest" />
         </classes>
     </test>
 </suite>
