@@ -13,7 +13,7 @@ import static org.testng.Assert.assertEquals;
 public class FinalTest extends PowerMockTestCase {
 
     @Test
-    public void test() throws Exception {
+    public void mockingFinalClassesAndMethodsWorkWithTestNGAndEasyMock() throws Exception {
         final FinalDemo finalDemo = createMock(FinalDemo.class);
 
         expect(finalDemo.say("something")).andReturn("something else");
