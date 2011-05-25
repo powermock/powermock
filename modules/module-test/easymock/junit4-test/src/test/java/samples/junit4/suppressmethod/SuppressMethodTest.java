@@ -166,7 +166,7 @@ public class SuppressMethodTest {
     }
 
     @Test
-    public void suppressMethodOverridingMethod() throws Exception {
+    public void suppressOverridingMethod() throws Exception {
         suppress(method(SuppressMethod.class, "myMethod"));
 
         SuppressMethod tested = new SuppressMethod();
