@@ -166,6 +166,14 @@ public class SuppressMethodTest {
     }
 
     @Test
+    public void suppressMethodOverridingMethod() throws Exception {
+        suppress(method(SuppressMethod.class, "myMethod"));
+
+        SuppressMethod tested = new SuppressMethod();
+        assertEquals(0, tested.myMethod());
+    }
+
+    @Test
     @Ignore("Doesn't work atm")
     public void testSuppressMethodInParentOnly() throws Exception {
         suppress(method(SuppressMethodParent.class, "myMethod"));
