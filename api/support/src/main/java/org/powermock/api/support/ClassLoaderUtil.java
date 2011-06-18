@@ -23,7 +23,7 @@ public class ClassLoaderUtil {
      */
     @SuppressWarnings("unchecked")
     public static <T> Class<T> loadClass(Class<T> type, ClassLoader classloader) {
-            return loadClass(type.getName(), classloader);
+        return loadClass(type.getName(), classloader);
     }
 
     /**
@@ -32,6 +32,22 @@ public class ClassLoaderUtil {
     @SuppressWarnings("unchecked")
     public static <T> Class<T> loadClass(String className) {
         return loadClass(className, ClassLoaderUtil.class.getClassLoader());
+    }
+
+    /**
+     * Check whether a classloader can load the given class.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> boolean hasClass(Class<T> type, ClassLoader classloader) {
+        try {
+            loadClass(type.getName(), classloader);
+            return true;
+        } catch (RuntimeException e) {
+            if(e.getCause() instanceof ClassNotFoundException) {
+                return false;
+            }
+            throw e;
+        }
     }
 
     /**
