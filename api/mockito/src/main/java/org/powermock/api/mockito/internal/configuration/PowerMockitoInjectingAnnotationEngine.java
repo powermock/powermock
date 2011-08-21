@@ -37,18 +37,20 @@ public class PowerMockitoInjectingAnnotationEngine extends InjectingAnnotationEn
 		new PowerMockitoSpyAnnotationEngine().process(context, testClass);
 
 		// this injects mocks
-		Field[] fields = context.getDeclaredFields();
-		for (Field field : fields) {
-			if (field.isAnnotationPresent(InjectMocks.class)) {
-				try {
-					Whitebox.invokeMethod(this, "assertNoAnnotations", field, new Class<?>[] { Mock.class, org.mockito.MockitoAnnotations.Mock.class,
-							Captor.class });
-				} catch (RuntimeException e) {
-					throw e;
-				} catch (Exception e) {
-					throw new RuntimeException(e);
+		for (Class<?> cls = context; cls != Object.class; cls = cls.getSuperclass()) {
+			Field[] fields = cls.getDeclaredFields();
+			for (Field field : fields) {
+				if (field.isAnnotationPresent(InjectMocks.class)) {
+					try {
+						Whitebox.invokeMethod(this, "assertNoAnnotations", field, new Class<?>[] { Mock.class, org.mockito.MockitoAnnotations.Mock.class,
+								Captor.class });
+					} catch (RuntimeException e) {
+						throw e;
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
+					injectMocks(testClass);
 				}
-				injectMocks(testClass);
 			}
 		}
 	}
