@@ -5,6 +5,7 @@ Change log next version
 * Upgraded to Javassist 3.15 GA (issue 338).
 * Upgraded TestNG module to TestNG 6.1.1.
 * Mockito @InjectMocks annotations on superclasses of test class are no longer ignored (issue 343).
+* MockClassloader now defers the loading of classes in "org.pitest.*" to the system classloader. This means that you should be able to use PIT (http://pitest.org) without adding @PowerMockIgnore("org.pitest.*") to each test method (issue 337).
 
 Change log 1.4.9 (2011-05-02)
 -----------------------------
