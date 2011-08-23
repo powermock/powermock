@@ -4,11 +4,11 @@
     <parent>
         <artifactId>powermock-modules-test-mockito</artifactId>
         <groupId>org.powermock</groupId>
-        <version>1.4.10</version>
+        <version>1.4.11-SNAPSHOT</version>
     </parent>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-junit4-rule-objenesis-test</artifactId>
-    <version>1.4.10</version>
+    <version>1.4.11-SNAPSHOT</version>
     <name>powermock-junit4-rule-objenesis-test</name>
 
     <description>

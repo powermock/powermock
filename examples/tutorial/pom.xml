@@ -3,7 +3,7 @@
 	<groupId>org.powermock.examples</groupId>
 	<artifactId>powermock-examples-tutorial</artifactId>
 	<packaging>jar</packaging>
-	<version>1.4.10</version>
+	<version>1.4.11-SNAPSHOT</version>
 	<name>tutorial</name>
 	<url>http://www.powermock.org</url>
 
@@ -19,9 +19,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:svn:https://powermock.googlecode.com/svn/tags/powermock-1.4.10/examples/tutorial</connection>
-		<developerConnection>scm:svn:https://powermock.googlecode.com/svn/tags/powermock-1.4.10/examples/tutorial</developerConnection>
-		<url>http://code.google.com/p/powermock/source/browse/tags/powermock-1.4.10/examples/tutorial</url>
+		<connection>scm:svn:https://powermock.googlecode.com/svn/trunk/examples/tutorial</connection>
+		<developerConnection>scm:svn:https://powermock.googlecode.com/svn/trunk/examples/tutorial</developerConnection>
+		<url>http://code.google.com/p/powermock/source/browse/trunk/examples/tutorial</url>
 	</scm>
 	<distributionManagement>
 		<repository>

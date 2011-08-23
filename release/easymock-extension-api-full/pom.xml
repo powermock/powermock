@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.powermock</groupId>
         <artifactId>powermock</artifactId>
-        <version>1.4.10</version>
+        <version>1.4.11-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
