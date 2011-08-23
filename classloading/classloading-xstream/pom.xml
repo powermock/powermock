@@ -3,14 +3,14 @@
     <parent>
         <groupId>org.powermock</groupId>
         <artifactId>powermock-classloading-module</artifactId>
-        <version>1.4.10-SNAPSHOT</version>
+        <version>1.4.10</version>
     </parent>
     <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-classloading-xstream</artifactId>
     <name>powermock-classloading-xstream</name>
-    <version>1.4.10-SNAPSHOT</version>
+    <version>1.4.10</version>
 
     <description>
         Performs classloader deep-cloning using X-Stream

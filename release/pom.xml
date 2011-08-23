@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.powermock</groupId>
         <artifactId>powermock</artifactId>
-        <version>1.4.10-SNAPSHOT</version>
+        <version>1.4.10</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>

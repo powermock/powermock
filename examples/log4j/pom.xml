@@ -2,14 +2,14 @@
    <parent>
       <artifactId>powermock-examples</artifactId>
       <groupId>org.powermock.examples</groupId>
-      <version>1.4.10-SNAPSHOT</version>
+      <version>1.4.10</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.powermock.examples</groupId>
    <artifactId>powermock-examples-log4j
    </artifactId>
    <name>log4j</name>
-   <version>1.4.10-SNAPSHOT</version>
+   <version>1.4.10</version>
 
    <description>
       Example of using Log4jMockPolicy.
