@@ -1,5 +1,5 @@
-Change log next version
------------------------
+Change log 1.4.9 (2011-08-23)
+-----------------------------
 * Added missing class, PowerMockTestCase, to testng full release jar (issue 327).
 * Fixed test initialization error when using PowerMock Mockito API in Ant (issue 333).
 * Upgraded to Javassist 3.15 GA (issue 338).
