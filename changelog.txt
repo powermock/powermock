@@ -3,7 +3,7 @@ Change log next version
 * Added missing class, PowerMockTestCase, to testng full release jar (issue 327).
 * Fixed test initialization error when using PowerMock Mockito API in Ant (issue 333).
 * Upgraded to Javassist 3.15 GA (issue 338).
-* Upgraded TestNG module to TestNG 6.1.1.
+* Upgraded TestNG module to TestNG 6.2.
 * Mockito @InjectMocks annotations on superclasses of test class are no longer ignored (issue 343).
 * MockClassloader now defers the loading of classes in "org.pitest.*" to the system classloader. This means that you should be able to use PIT (http://pitest.org) without adding @PowerMockIgnore("org.pitest.*") to each test class (issue 337).
 * PowerMockito now supports for Mockito 1.9-rc1 but will not include the new artifact by default because it's still rc (issue 339).
