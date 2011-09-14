@@ -25,47 +25,48 @@ import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate
 
 public abstract class AbstractCommonPowerMockRunner extends Runner implements Filterable, Sortable {
 
-	private JUnit4TestSuiteChunker suiteChunker;
+    private JUnit4TestSuiteChunker suiteChunker;
 
-	public AbstractCommonPowerMockRunner(Class<?> klass,
-			Class<? extends PowerMockJUnitRunnerDelegate> runnerDelegateImplClass) throws Exception {
-		suiteChunker = new JUnit4TestSuiteChunkerImpl(klass, runnerDelegateImplClass);
-		/*
-		 * For extra safety clear the MockitoRepository on each new
-		 * instantiation of the runner. This is good in cases where a previous
-		 * test has used e.g. PowerMock#createMock(..) to create a mock without
-		 * using this runner. That means that there's some state left in the
-		 * MockRepository that hasn't been cleared. Currently clearing the
-		 * MockRepository from any classloader will clear the previous state but
-		 * it's not certain that this is always the case.
-		 */
-		MockRepository.clear();
-	}
+    public AbstractCommonPowerMockRunner(Class<?> klass,
+                                         Class<? extends PowerMockJUnitRunnerDelegate> runnerDelegateImplClass) throws Exception {
+        suiteChunker = new JUnit4TestSuiteChunkerImpl(klass, runnerDelegateImplClass);
+        /*
+           * For extra safety clear the MockitoRepository on each new
+           * instantiation of the runner. This is good in cases where a previous
+           * test has used e.g. PowerMock#createMock(..) to create a mock without
+           * using this runner. That means that there's some state left in the
+           * MockRepository that hasn't been cleared. Currently clearing the
+           * MockRepository from any classloader will clear the previous state but
+           * it's not certain that this is always the case.
+           */
+        MockRepository.clear();
+    }
 
-	@Override
-	public Description getDescription() {
-		return suiteChunker.getDescription();
-	}
+    @Override
+    public Description getDescription() {
+        return suiteChunker.getDescription();
+    }
 
-	@Override
-	public void run(RunNotifier notifier) {
-		try {
-			suiteChunker.run(notifier);
-		} finally {
-			suiteChunker = null; // To avoid out of memory errors!
-		}
-	}
+    @Override
+    public void run(RunNotifier notifier) {
+        try {
+            suiteChunker.run(notifier);
+        } finally {
+            // To avoid out of memory errors!
+            suiteChunker = null;
+        }
+    }
 
-	@Override
-	public synchronized int testCount() {
-		return suiteChunker.getTestCount();
-	}
+    @Override
+    public synchronized int testCount() {
+        return suiteChunker.getTestCount();
+    }
 
-	public void filter(Filter filter) throws NoTestsRemainException {
-		suiteChunker.filter(filter);
-	}
+    public void filter(Filter filter) throws NoTestsRemainException {
+        suiteChunker.filter(filter);
+    }
 
-	public void sort(Sorter sorter) {
-		suiteChunker.sort(sorter);
-	}
+    public void sort(Sorter sorter) {
+        suiteChunker.sort(sorter);
+    }
 }
