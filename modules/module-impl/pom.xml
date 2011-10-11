@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
-    <artifactId>powermock</artifactId>
+    <parent>
+        <artifactId>powermock</artifactId>
+        <groupId>org.powermock</groupId>
+        <version>1.4.11-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock</groupId>
-    <version>1.4.11-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
-  </parent>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.powermock</groupId>
-  <artifactId>powermock-modules-impl</artifactId>
-  <packaging>pom</packaging>
-  <name>powermock-modules-impl</name>
+    <artifactId>powermock-modules-impl</artifactId>
+    <packaging>pom</packaging>
+    <name>powermock-modules-impl</name>
 
-  <description>
+    <description>
     PowerMock support modules for JUnit and TestNG.
-  </description>
+    </description>
 
-  <modules>
-    <module>junit3</module>   
-    <module>junit4</module>
-    <module>junit4-common</module>
-    <module>junit4-legacy</module>
-    <module>junit4-rule</module>
-    <module>junit4-rule-agent</module>
-    <module>testng</module>
-    <module>testng-agent</module>
-    <module>testng-common</module>
-    <module>agent</module>
-  </modules>
+    <modules>
+        <module>junit3</module>
+        <module>junit4</module>
+        <module>junit4-common</module>
+        <module>junit4-legacy</module>
+        <module>junit4-rule</module>
+        <module>junit4-rule-agent</module>
+        <module>testng</module>
+        <module>testng-agent</module>
+        <module>testng-common</module>
+        <module>agent</module>
+    </modules>
 </project>

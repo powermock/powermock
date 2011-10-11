@@ -1,21 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
-    <artifactId>powermock</artifactId>
+    <parent>
+        <artifactId>powermock</artifactId>
+        <groupId>org.powermock</groupId>
+        <version>1.4.11-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock</groupId>
-    <version>1.4.11-SNAPSHOT</version>
-  </parent>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.powermock</groupId>
-  <artifactId>powermock-modules</artifactId>
-  <packaging>pom</packaging>
-  <name>powermock-modules</name>
+    <artifactId>powermock-modules</artifactId>
+    <packaging>pom</packaging>
+    <name>powermock-modules</name>
 
-  <description>
+    <description>
     Aggregator for building PowerMock implementation and test modules.
-  </description>
+    </description>
 
-  <modules>
-    <module>module-impl</module>
-    <module>module-test</module>
-  </modules>
+    <modules>
+        <module>module-impl</module>
+        <module>module-test</module>
+    </modules>
 </project>

@@ -1,36 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<parent>
-		<artifactId>powermock-modules</artifactId>
-		<groupId>org.powermock</groupId>
-		<version>1.4.11-SNAPSHOT</version>
-		<relativePath>../../pom.xml</relativePath>
-	</parent>
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.powermock</groupId>
-	<artifactId>powermock-module-junit4-legacy</artifactId>
-	<name>powermock-module-junit4-legacy</name>
+    <parent>
+        <artifactId>powermock-modules</artifactId>
+        <groupId>org.powermock</groupId>
+        <version>1.4.11-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.powermock</groupId>
+    <artifactId>powermock-module-junit4-legacy</artifactId>
+    <name>powermock-module-junit4-legacy</name>
 
-	<description>
+    <description>
 		PowerMock support module for JUnit 4.0-4.3.
-	</description>
+    </description>
 
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.3</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.powermock.tests</groupId>
-			<artifactId>powermock-tests-utils</artifactId>
-			<version>${version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-module-junit4-common</artifactId>
-			<version>${version}</version>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock.tests</groupId>
+            <artifactId>powermock-tests-utils</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>
