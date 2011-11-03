@@ -369,7 +369,7 @@ public class MockRepository {
 	}
 
     /**
-     * Add a {@link Runnable} that will be executed after each
+     * Add a {@link Runnable} that will be executed after each test
      * @param runnable
      */
     public static synchronized void addAfterMethodRunner(Runnable runnable) {

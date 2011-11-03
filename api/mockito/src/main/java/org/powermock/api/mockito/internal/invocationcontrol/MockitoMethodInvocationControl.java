@@ -18,6 +18,7 @@ package org.powermock.api.mockito.internal.invocationcontrol;
 import org.hamcrest.Matcher;
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
+import org.mockito.exceptions.misusing.NotAMockException;
 import org.mockito.internal.MockHandler;
 import org.mockito.internal.MockitoInvocationHandler;
 import org.mockito.internal.creation.DelegatingMethod;
@@ -289,6 +290,12 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
         };
         try {
             return mockHandler.handle(invocation);
+        } catch (NotAMockException e) {
+            if(invocation.getMock().getClass().getName().startsWith("java.") &&  MockRepository.getInstanceMethodInvocationControl(invocation.getMock()) != null) {
+                return invocation.callRealMethod();
+            } else {
+                throw e;
+            }
         } catch (MockitoAssertionError e) {
             InvocationControlAssertionError.updateErrorMessageForMethodInvocation(e);
             throw e;

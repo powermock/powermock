@@ -23,6 +23,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Class used to demonstrate PowerMock's ability to mock system classes.
@@ -68,4 +69,11 @@ public class SystemClassUser {
     public InetAddress getLocalHost() throws IOException {
         return InetAddress.getLocalHost();
     }
+
+    public String generatePerishableToken() {
+        final UUID uuid = UUID.randomUUID();
+        final String toString = uuid.toString();
+        final String result = toString.replaceAll("-", "");
+        return result;
+	}
 }

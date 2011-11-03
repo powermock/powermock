@@ -27,8 +27,10 @@ import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -152,4 +154,18 @@ public class SystemClassUserTest {
 
 		assertSame(openConnection, urlConnectionMock);
 	}
+
+    @Test
+    public void mockingUUIDWorks() throws Exception {
+        // given
+        final UUID mock = mock(UUID.class);
+        mockStatic(UUID.class);
+        given(UUID.randomUUID()).willReturn(mock);
+
+		// when
+		String actual = new SystemClassUser().generatePerishableToken();
+
+		// then
+		assertEquals("00000000000000000000000000000000", actual);
+    }
 }
