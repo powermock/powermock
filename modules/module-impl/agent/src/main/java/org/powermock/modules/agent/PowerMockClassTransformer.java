@@ -61,10 +61,6 @@ class PowerMockClassTransformer extends AbstractClassTransformer implements Clas
             
             return null;           
         } catch(Exception e) {
-            //any exception escaping from here will just be treated as a return of null. So printing to sys.err is better than keeping silent.
-            //System.err.println("Failed to redefine class "+className);
-            //e.printStackTrace();
-            //return null;
             throw new RuntimeException("Failed to redefine class "+className, e);
         }
         
