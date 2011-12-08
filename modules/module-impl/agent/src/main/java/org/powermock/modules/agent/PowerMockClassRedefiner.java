@@ -16,28 +16,19 @@
 
 package org.powermock.modules.agent;
 
-import javassist.ClassPool;
-import javassist.CtClass;
-import org.powermock.core.transformers.TransformStrategy;
-import org.powermock.core.transformers.impl.MainMockTransformer;
-
-import java.lang.instrument.ClassDefinition;
+import java.util.Arrays;
 
 public class PowerMockClassRedefiner {
-
-    private static final MainMockTransformer mainMockTransformer = new MainMockTransformer(TransformStrategy.INST_REDEFINE);
-
 
     public static void redefine(Class<?> cls) {
         if(cls == null) {
             throw new IllegalArgumentException("Class to redefine cannot be null");
         }
-        try {
-            CtClass ctClass = ClassPool.getDefault().get(cls.getName());
-            ctClass = mainMockTransformer.transform(ctClass);
-            final ClassDefinition classDefinition = new ClassDefinition(cls, ctClass.toBytecode());
-            PowerMockAgent.instrumentation().redefineClasses(classDefinition);
-
+        
+        PowerMockAgent.getClasstransformer().setClassesToTransform(Arrays.asList(cls.getName()));
+        
+        try {            
+            PowerMockAgent.instrumentation().retransformClasses(cls);
         } catch(Exception e){
             throw new RuntimeException("Failed to redefine class "+cls.getName(), e);
         }
@@ -51,6 +42,22 @@ public class PowerMockClassRedefiner {
             redefine(Class.forName(className));
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
+        }
+    }
+    
+    public static void redefine(String[] classes) {
+        PowerMockAgent.getClasstransformer().setClassesToTransform(Arrays.asList(classes));
+        
+        for (int i = classes.length - 1; i >= 0 ; i--) {
+            String className = classes[i];
+            Class<?> clazz;
+            try {
+                clazz = Class.forName(className);
+                
+                PowerMockAgent.instrumentation().retransformClasses(clazz);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

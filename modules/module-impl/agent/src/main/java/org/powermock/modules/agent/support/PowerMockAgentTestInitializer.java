@@ -46,11 +46,7 @@ public class PowerMockAgentTestInitializer {
     }
 
     private static void redefine(String[] classes) {
-        for (String classToRedefine : classes) {
-            if(CACHE.addIfNotCached(classToRedefine) && !classToRedefine.startsWith(JAVA)) {
-                PowerMockClassRedefiner.redefine(classToRedefine);
-            }
-        }
+        PowerMockClassRedefiner.redefine(classes);
     }
 
     private static void registerProxyframework(ClassLoader classLoader) {

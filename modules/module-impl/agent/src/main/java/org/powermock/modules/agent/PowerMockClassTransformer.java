@@ -16,61 +16,58 @@
 
 package org.powermock.modules.agent;
 
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
-
+import java.io.ByteArrayInputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-class PowerMockClassTransformer implements ClassFileTransformer {
+import javassist.ClassPool;
+import javassist.CtClass;
 
-    private static final List<String> STARTS_WITH_IGNORED = new LinkedList<String>();
-    private static final List<String> CONTAINS_IGNORED = new LinkedList<String>();
+import org.powermock.core.transformers.TransformStrategy;
+import org.powermock.core.transformers.impl.MainMockTransformer;
 
-    static {
-        STARTS_WITH_IGNORED.add("org/powermock");
-        STARTS_WITH_IGNORED.add("org/junit");
-        STARTS_WITH_IGNORED.add("org/mockito");
-        STARTS_WITH_IGNORED.add("javassist");
-        STARTS_WITH_IGNORED.add("org/objenesis");
-        STARTS_WITH_IGNORED.add("junit");
-        STARTS_WITH_IGNORED.add("org/hamcrest");
-        STARTS_WITH_IGNORED.add("sun/");
-        STARTS_WITH_IGNORED.add("$Proxy");
+class PowerMockClassTransformer extends AbstractClassTransformer implements ClassFileTransformer {
 
-        CONTAINS_IGNORED.add("CGLIB$$");
-        CONTAINS_IGNORED.add("$$PowerMock");
+	private volatile Set<String> classesToTransform;
+    
+    public void setClassesToTransform(Collection<String> classesToTransform) {
+    	this.classesToTransform = new HashSet<String>(classesToTransform);
     }
+    
+    private static final MainMockTransformer mainMockTransformer = new MainMockTransformer(TransformStrategy.INST_REDEFINE);
 
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
         if (loader == null || shouldIgnore(className)) {
-            return classfileBuffer;
+            return null;
         }
-        try {
-            final ClassReader reader = new ClassReader(classfileBuffer);
-            final ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-            reader.accept(new PowerMockClassVisitor(writer), ClassReader.SKIP_FRAMES);
-            return writer.toByteArray();
+        try {            
+            if (classesToTransform != null && classesToTransform.contains(className.replace("/", "."))) {            
+                ByteArrayInputStream is = new ByteArrayInputStream(classfileBuffer);
+                CtClass ctClass = null;
+                try {
+                    ctClass = ClassPool.getDefault().makeClass(is);                               
+                } finally {
+                    is.close();
+                }
+                
+                ctClass = mainMockTransformer.transform(ctClass);
+                
+                return ctClass.toBytecode();                      
+            } 
+            
+            return null;           
         } catch(Exception e) {
+            //any exception escaping from here will just be treated as a return of null. So printing to sys.err is better than keeping silent.
+            //System.err.println("Failed to redefine class "+className);
+            //e.printStackTrace();
+            //return null;
             throw new RuntimeException("Failed to redefine class "+className, e);
         }
-    }
+        
 
-    private boolean shouldIgnore(String className) {
-        for (String ignore : STARTS_WITH_IGNORED) {
-            if(className.startsWith(ignore)) {
-                return true;
-            }
-        }
-
-        for (String ignore : CONTAINS_IGNORED) {
-            if(className.contains(ignore)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

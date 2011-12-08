@@ -249,12 +249,21 @@ public class MainMockTransformer implements MockTransformer {
 
         @Override
         public void edit(FieldAccess f) throws CannotCompileException {
-            if (f.isReader()) {
+            if (f.isReader()) {                
                 CtClass returnTypeAsCtClass;
+
                 try {
                     returnTypeAsCtClass = f.getField().getType();
                 } catch (NotFoundException e) {
-                    throw new RuntimeException("PowerMock internal error when modifying field.", e);
+                    if (strategy != INST_REDEFINE) {
+                        throw new RuntimeException("PowerMock internal error when modifying field.", e);
+                    } else {
+                        /*
+                         * If multiple java agents are active, the types implicitly loaded by javassist from disk 
+                         * might differ from the types available in memory. Thus, this error might occur. 
+                         */                        
+                        return;
+                    }
                 }
                 StringBuilder code = new StringBuilder();
                 code.append("{Object value =  ").append(MockGateway.class.getName()).append(".fieldCall(").append("$0,$class,\"").append(
@@ -270,7 +279,7 @@ public class MainMockTransformer implements MockTransformer {
 
         @Override
         public void edit(MethodCall m) throws CannotCompileException {
-            try {
+            try {                
                 final CtMethod method = m.getMethod();
                 final CtClass declaringClass = method.getDeclaringClass();
                 if (declaringClass != null) {
@@ -291,7 +300,15 @@ public class MainMockTransformer implements MockTransformer {
                     }
                 }
             } catch (NotFoundException e) {
-                throw new RuntimeException(e);
+                if (strategy != INST_REDEFINE) {
+                    throw new RuntimeException("PowerMock internal error when modifying method.", e);
+                } else {
+                    /*
+                     * If multiple java agents are active, the types implicitly loaded by javassist from disk 
+                     * might differ from the types available in memory. Thus, this error might occur. 
+                     */                        
+                    return;
+                }
             }
         }
 

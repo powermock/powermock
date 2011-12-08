@@ -35,9 +35,12 @@ import java.lang.instrument.Instrumentation;
  */
 public final class PowerMockAgent
 {
-    static final String javaSpecVersion = System.getProperty("java.specification.version");
+
+	static final String javaSpecVersion = System.getProperty("java.specification.version");
     static final boolean jdk6OrLater = "1.6".equals(javaSpecVersion) || "1.7".equals(javaSpecVersion);
 
+    private static final PowerMockClassTransformer classTransformer = new PowerMockClassTransformer();
+    
     private static Instrumentation instrumentation;
 
     private PowerMockAgent() {}
@@ -61,8 +64,13 @@ public final class PowerMockAgent
 
     private static void initialize(String agentArgs, Instrumentation inst) throws IOException {
         instrumentation = inst;
-        inst.addTransformer(new PowerMockClassTransformer());
+        inst.addTransformer(new DefinalizingClassTransformer(), false);
+        inst.addTransformer(classTransformer, true);
     }
+    
+    public static PowerMockClassTransformer getClasstransformer() {
+		return classTransformer;
+	}
 
     public static Instrumentation instrumentation()  {
         verifyInitialization();
