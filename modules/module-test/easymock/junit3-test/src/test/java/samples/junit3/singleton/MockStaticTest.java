@@ -58,7 +58,7 @@ public class MockStaticTest extends TestCase {
 			StaticService.say("world");
 			fail("Should throw AssertionError!");
 		} catch (AssertionError e) {
-			assertEquals("\n  Unexpected method call say(\"world\"):", e.getMessage());
+			assertEquals("\n  Unexpected method call StaticService.say(\"world\"):", e.getMessage());
 		}
 	}
 
@@ -78,7 +78,7 @@ public class MockStaticTest extends TestCase {
 			StaticService.sayFinal("world");
 			fail("Should throw AssertionError!");
 		} catch (AssertionError e) {
-			assertEquals("\n  Unexpected method call sayFinal(\"world\"):", e.getMessage());
+			assertEquals("\n  Unexpected method call StaticService.sayFinal(\"world\"):", e.getMessage());
 		}
 	}
 

@@ -35,7 +35,7 @@ public class SimpleStaticServiceTest {
             SimpleStaticService.say("world");
             fail("Should throw AssertionError!");
         } catch (final AssertionError e) {
-            assertEquals("\n  Unexpected method call say(\"world\"):", e.getMessage());
+            assertEquals("\n  Unexpected method call SimpleStaticService.say(\"world\"):", e.getMessage());
         }
     }
 }

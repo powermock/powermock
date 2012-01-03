@@ -57,7 +57,7 @@ public class NoDuplicateTest {
 			tested.say("world");
 			fail("Should throw AssertionError!");
 		} catch (AssertionError e) {
-			assertEquals("\n  Unexpected method call say(\"world\"):", e.getMessage());
+			assertEquals("\n  Unexpected method call FinalDemo.say(\"world\"):", e.getMessage());
 		}
 	}
 }

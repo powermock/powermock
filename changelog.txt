@@ -6,6 +6,7 @@ Change log next version
 * Added work-around to stub some final system classes (such as java.util.UUID) (issue 354).
 * Improved the PowerMock Java agent support. It should now work together with multiple java agents (thanks to Magnus Jungsbluth for the patch) (issue 357).
 * Upgraded TestNG module to 6.3.1.
+* Upgraded EasyMock extension API to use version 3.1 of EasyMock. This version should fix a couple of OutOfMemory issues.
 
 Change log 1.4.10 (2011-08-23)
 ------------------------------

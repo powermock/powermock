@@ -56,7 +56,7 @@ public class StringConstructorWorksWhenExtendingTestCase extends TestCase {
             StaticService.say("world");
             fail("Should throw AssertionError!");
         } catch (AssertionError e) {
-            assertEquals("\n  Unexpected method call say(\"world\"):", e.getMessage());
+            assertEquals("\n  Unexpected method call StaticService.say(\"world\"):", e.getMessage());
         }
     }
 }

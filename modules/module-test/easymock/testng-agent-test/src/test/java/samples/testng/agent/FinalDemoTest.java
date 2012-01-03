@@ -50,7 +50,7 @@ public class FinalDemoTest extends PowerMockTestCase {
 			tested.say("world");
 			fail("Should throw AssertionError!");
 		} catch (AssertionError e) {
-			assertEquals("\n  Unexpected method call say(\"world\"):", e.getMessage());
+			assertEquals("\n  Unexpected method call FinalDemo.say(\"world\"):", e.getMessage());
 		}
 
 	}
@@ -72,7 +72,7 @@ public class FinalDemoTest extends PowerMockTestCase {
 			tested.sayFinalNative("world");
 			fail("Should throw AssertionError!");
 		} catch (AssertionError e) {
-			assertEquals("\n  Unexpected method call sayFinalNative(\"world\"):", e.getMessage());
+			assertEquals("\n  Unexpected method call FinalDemo.sayFinalNative(\"world\"):", e.getMessage());
 		}
 	}
 }

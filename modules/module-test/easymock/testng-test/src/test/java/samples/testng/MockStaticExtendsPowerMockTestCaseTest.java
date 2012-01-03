@@ -52,7 +52,7 @@ public class MockStaticExtendsPowerMockTestCaseTest extends PowerMockTestCase {
             StaticService.say("world");
             Assert.fail("Should throw AssertionError!");
         } catch (AssertionError e) {
-            Assert.assertEquals("\n  Unexpected method call say(\"world\"):", e.getMessage());
+            Assert.assertEquals("\n  Unexpected method call StaticService.say(\"world\"):", e.getMessage());
         }
     }
 
@@ -73,7 +73,7 @@ public class MockStaticExtendsPowerMockTestCaseTest extends PowerMockTestCase {
             StaticService.sayFinal("world");
             Assert.fail("Should throw AssertionError!");
         } catch (AssertionError e) {
-            Assert.assertEquals("\n  Unexpected method call sayFinal(\"world\"):", e.getMessage());
+            Assert.assertEquals("\n  Unexpected method call StaticService.sayFinal(\"world\"):", e.getMessage());
         }
     }
 }

@@ -14,7 +14,8 @@ public class NewInvocationControlAssertionError {
          */
         String message = oldError.getMessage();
         final String newSubsitutionMethodName = InvocationSubstitute.class.getDeclaredMethods()[0].getName();
-        message = message.replaceAll(newSubsitutionMethodName, Matcher.quoteReplacement(type.getName()));
+        final String className = InvocationSubstitute.class.getSimpleName();
+        message = message.replaceAll(className+"."+newSubsitutionMethodName, Matcher.quoteReplacement(type.getName()));
         message = message.replaceAll("method", "constructor");
 
         throw new AssertionError(message);

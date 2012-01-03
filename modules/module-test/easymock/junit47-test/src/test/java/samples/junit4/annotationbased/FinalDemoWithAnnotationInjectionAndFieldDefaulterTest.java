@@ -63,7 +63,7 @@ public class FinalDemoWithAnnotationInjectionAndFieldDefaulterTest {
 			tested.say("world");
 			fail("Should throw AssertionError!");
 		} catch (AssertionError e) {
-			assertEquals("\n  Unexpected method call say(\"world\"):", e.getMessage());
+			assertEquals("\n  Unexpected method call FinalDemo.say(\"world\"):", e.getMessage());
 		}
 	}
 
@@ -83,7 +83,7 @@ public class FinalDemoWithAnnotationInjectionAndFieldDefaulterTest {
 			tested.sayFinalNative("world");
 			fail("Should throw AssertionError!");
 		} catch (AssertionError e) {
-			assertEquals("\n  Unexpected method call sayFinalNative(\"world\"):", e.getMessage());
+			assertEquals("\n  Unexpected method call FinalDemo.sayFinalNative(\"world\"):", e.getMessage());
 		}
 	}
 }
