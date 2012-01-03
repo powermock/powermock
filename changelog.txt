@@ -5,6 +5,7 @@ Change log next version
 * Replaced ${version} to ${project.version} in all pom files (thanks to pvdissel for the patch) (issue 287).
 * Added work-around to stub some final system classes (such as java.util.UUID) (issue 354).
 * Improved the PowerMock Java agent support. It should now work together with multiple java agents (thanks to Magnus Jungsbluth for the patch) (issue 357).
+* Upgraded TestNG module to 6.3.1.
 
 Change log 1.4.10 (2011-08-23)
 ------------------------------
