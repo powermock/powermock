@@ -67,6 +67,11 @@
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-testng-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
             <artifactId>powermock-classloading-base</artifactId>
             <version>${project.version}</version>
         </dependency>

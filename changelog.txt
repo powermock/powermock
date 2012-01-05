@@ -1,3 +1,7 @@
+Change log next version
+-----------------------
+* Really added missing class, PowerMockTestCase, to testng full release jar (issue 327). 
+
 Change log 1.4.11 (2012-01-05)
 ------------------------------
 * Fixed an OutOfMemory issue in PowerMockRunner (issue 346).
