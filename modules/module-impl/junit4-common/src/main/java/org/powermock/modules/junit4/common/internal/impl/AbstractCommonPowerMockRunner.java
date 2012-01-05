@@ -22,9 +22,6 @@ import org.junit.runner.notification.RunNotifier;
 import org.powermock.core.MockRepository;
 import org.powermock.modules.junit4.common.internal.JUnit4TestSuiteChunker;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
-import org.powermock.reflect.Whitebox;
-
-import java.lang.annotation.Annotation;
 
 public abstract class AbstractCommonPowerMockRunner extends Runner implements Filterable, Sortable {
 
@@ -56,7 +53,6 @@ public abstract class AbstractCommonPowerMockRunner extends Runner implements Fi
             suiteChunker.run(notifier);
         } finally {
             // To avoid out of memory errors!
-            Whitebox.setInternalState(suiteChunker.getDescription(), "fAnnotations", new Annotation[]{});
             suiteChunker = null;
         }
     }

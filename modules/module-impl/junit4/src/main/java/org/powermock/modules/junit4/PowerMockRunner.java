@@ -16,15 +16,33 @@
 package org.powermock.modules.junit4;
 
 import junit.runner.Version;
+import org.junit.runner.Description;
+import org.junit.runner.notification.RunNotifier;
 import org.powermock.modules.junit4.common.internal.impl.AbstractCommonPowerMockRunner;
 import org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl;
 import org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl;
+import org.powermock.reflect.Whitebox;
+
+import java.lang.annotation.Annotation;
 
 public class PowerMockRunner extends AbstractCommonPowerMockRunner {
 
     public PowerMockRunner(Class<?> klass) throws Exception {
         super(klass, getJUnitVersion() >= 4.7f ? PowerMockJUnit47RunnerDelegateImpl.class
                 : PowerMockJUnit44RunnerDelegateImpl.class);
+    }
+
+    /**
+     * Clean up some state to avoid OOM issues
+     */
+    @Override
+    public void run(RunNotifier notifier) {
+        Description description = getDescription();
+        try {
+            super.run(notifier);
+        } finally {
+            Whitebox.setInternalState(description, "fAnnotations", new Annotation[]{});
+        }
     }
 
     private static float getJUnitVersion() {
