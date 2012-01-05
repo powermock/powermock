@@ -1,5 +1,5 @@
-Change log next version
------------------------
+Change log 1.4.11 (2012-01-05)
+------------------------------
 * Fixed an OutOfMemory issue in PowerMockRunner (issue 346).
 * Added Sfl4jMockPolicy to the Mockito extension API, thanks to Alexandre Normand for the patch.
 * Replaced ${version} to ${project.version} in all pom files (thanks to pvdissel for the patch) (issue 287).
