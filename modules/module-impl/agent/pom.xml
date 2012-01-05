@@ -4,12 +4,12 @@
     <parent>
         <groupId>org.powermock</groupId>
         <artifactId>powermock-modules</artifactId>
-        <version>1.4.11-SNAPSHOT</version>
+        <version>1.4.11</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-module-javaagent</artifactId>
-    <version>1.4.11-SNAPSHOT</version>
+    <version>1.4.11</version>
     <name>powermock-module-javaagent</name>
 
     <description>
