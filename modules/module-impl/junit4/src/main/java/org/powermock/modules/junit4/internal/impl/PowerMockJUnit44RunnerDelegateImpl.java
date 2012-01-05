@@ -17,6 +17,7 @@ package org.powermock.modules.junit4.internal.impl;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.junit.Before;
 import org.junit.internal.runners.*;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -29,6 +30,7 @@ import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.powermock.modules.junit4.internal.impl.testcaseworkaround.PowerMockJUnit4MethodValidator;
 import org.powermock.reflect.Whitebox;
+import org.powermock.reflect.internal.WhiteboxImpl;
 import org.powermock.tests.utils.PowerMockTestNotifier;
 import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
 import org.powermock.tests.utils.impl.PowerMockTestNotifierImpl;
@@ -302,7 +304,10 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
             try {
                 try {
                     if (extendsFromTestCase) {
-                        Whitebox.invokeMethod(testInstance, "setUp");
+                        final Method setUp = Whitebox.getMethod(testInstance.getClass(), "setUp");
+                        if(!setUp.isAnnotationPresent(Before.class)) {
+                            Whitebox.invokeMethod(testInstance, "setUp");
+                        }
                     }
                     testMethod.invoke(testInstance);
                     if ((Boolean) Whitebox.invokeMethod(testMethod, "expectsException")) {
