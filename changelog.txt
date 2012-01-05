@@ -9,6 +9,7 @@ Change log next version
 * Upgraded EasyMock extension API to use version 3.1 of EasyMock. This version should fix a couple of OutOfMemory issues.
 * PowerMockito is updated to use Mockito 1.9.0
 * setUp-method with @Before annotation is no longer executed twice when extending TestCase (issue 356)
+* Upgraded classloader xstream deepcloner to XStream 1.4.2 (issue 345)
 
 Change log 1.4.10 (2011-08-23)
 ------------------------------
