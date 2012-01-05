@@ -4,11 +4,11 @@
     <parent>
         <artifactId>powermock-modules-test-mockito</artifactId>
         <groupId>org.powermock</groupId>
-        <version>1.4.11</version>
+        <version>1.4.12-SNAPSHOT</version>
     </parent>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-module-test-mockito-junit4-agent</artifactId>
-    <version>1.4.11</version>
+    <version>1.4.12-SNAPSHOT</version>
     <name>powermock-module-test-mockito-junit4-agent</name>
 
     <description>
