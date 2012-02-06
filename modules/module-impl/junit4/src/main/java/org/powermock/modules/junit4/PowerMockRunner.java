@@ -15,10 +15,10 @@
  */
 package org.powermock.modules.junit4;
 
-import junit.runner.Version;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.powermock.modules.junit4.common.internal.impl.AbstractCommonPowerMockRunner;
+import org.powermock.modules.junit4.common.internal.impl.VersionCompatibility;
 import org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl;
 import org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl;
 import org.powermock.reflect.Whitebox;
@@ -28,7 +28,7 @@ import java.lang.annotation.Annotation;
 public class PowerMockRunner extends AbstractCommonPowerMockRunner {
 
     public PowerMockRunner(Class<?> klass) throws Exception {
-        super(klass, getJUnitVersion() >= 4.7f ? PowerMockJUnit47RunnerDelegateImpl.class
+        super(klass, VersionCompatibility.getJUnitVersion().isGreaterOrEquals( 4, 7 ) ? PowerMockJUnit47RunnerDelegateImpl.class
                 : PowerMockJUnit44RunnerDelegateImpl.class);
     }
 
@@ -42,28 +42,6 @@ public class PowerMockRunner extends AbstractCommonPowerMockRunner {
             super.run(notifier);
         } finally {
             Whitebox.setInternalState(description, "fAnnotations", new Annotation[]{});
-        }
-    }
-
-    private static float getJUnitVersion() {
-        String version = Version.id();
-        int dot = version.indexOf('.');
-        if (dot > 0) {
-            // Make sure that only one dot exists
-            dot = version.indexOf('.', dot + 1);
-            if (dot > 0) {
-                /*
-                 * If minor version such as 4.8.1 then remove the last digit,
-                 * e.g. "4.8.1" becomes "4.8".
-                 */
-                version = version.substring(0, dot);
-            }
-        }
-        try {
-            return Float.parseFloat(version);
-        } catch (NumberFormatException e) {
-            // If this happens we revert to JUnit 4.4 runner
-            return 4.4f;
         }
     }
 }

@@ -24,5 +24,6 @@
     <module>testng-agent-test</module>
     <module>junit47-test</module>
     <module>junit48-test</module>
+    <module>junit410-test</module>
   </modules>
 </project>
