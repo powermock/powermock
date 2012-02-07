@@ -35,7 +35,7 @@ import java.lang.reflect.Method;
  *
  * @author Alexandre Normand <alexandre.normand@gmail.com>
  */
-public class Sfl4jMockPolicy implements PowerMockPolicy {
+public class Slf4jMockPolicy implements PowerMockPolicy {
 
     private static final String LOGGER_FACTORY_CLASS_NAME = "org.slf4j.LoggerFactory";
     private static final String LOGGER_FACTORY_METHOD_NAME = "getLogger";
