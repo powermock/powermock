@@ -18,7 +18,9 @@ package org.powermock.core.classloader;
 import org.powermock.core.WildcardMatcher;
 import org.powermock.reflect.Whitebox;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -125,6 +127,15 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+	protected Enumeration<URL> findResources(String name) throws IOException {
+        try {
+            return Whitebox.<Enumeration<URL>> invokeMethod(deferTo, "findResources", name);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+	}
 
     protected boolean shouldModify(Iterable<String> packages, String name) {
         return !shouldIgnore(packages, name);

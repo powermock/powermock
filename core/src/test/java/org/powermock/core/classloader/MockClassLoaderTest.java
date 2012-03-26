@@ -21,6 +21,9 @@ import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.MainMockTransformer;
 import org.powermock.reflect.Whitebox;
 
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -69,5 +72,46 @@ public class MockClassLoaderTest {
         String[] deferPackages = Whitebox.<String[]> getInternalState(mockClassLoader, "deferPackages");
         assertTrue(deferPackages.length > 1);
         assertEquals("test*", deferPackages[deferPackages.length - 1]);
+    }
+    
+    @Test
+    public void canFindResource() throws Exception {
+        final MockClassLoader mockClassLoader = new MockClassLoader(new String[0]);
+        List<MockTransformer> list = new LinkedList<MockTransformer>();
+        list.add(new MainMockTransformer());
+        mockClassLoader.setMockTransformerChain(list);
+
+        // Force a ClassLoader that can find 'foo/bar/baz/test.txt' into
+        // mockClassLoader.deferTo.
+        URL fooRoot = this.getClass().getClassLoader().getResource("org/powermock/core/classloader/");
+        mockClassLoader.deferTo = new URLClassLoader(new URL[] { fooRoot });;
+		
+        // MockClassLoader will only be able to find 'foo/bar/baz/test.txt' if it
+        // properly defers the resource lookup to its deferTo ClassLoader.
+        URL resource = mockClassLoader.getResource("foo/bar/baz/test.txt");
+        Assert.assertNotNull(resource);
+        Assert.assertTrue(resource.getPath().endsWith("test.txt"));
+    }
+
+    @Test
+    public void canFindResources() throws Exception {
+        final MockClassLoader mockClassLoader = new MockClassLoader(new String[0]);
+        List<MockTransformer> list = new LinkedList<MockTransformer>();
+        list.add(new MainMockTransformer());
+        mockClassLoader.setMockTransformerChain(list);
+
+        // Force a ClassLoader that can find 'foo/bar/baz/test.txt' into
+        // mockClassLoader.deferTo.
+        URL fooRoot = this.getClass().getClassLoader().getResource("org/powermock/core/classloader/");
+        mockClassLoader.deferTo = new URLClassLoader(new URL[] { fooRoot });;
+		
+        // MockClassLoader will only be able to find 'foo/bar/baz/test.txt' if it
+        // properly defers the resources lookup to its deferTo ClassLoader.
+        Enumeration<URL> resources = mockClassLoader.getResources("foo/bar/baz/test.txt");
+        Assert.assertNotNull(resources);
+        Assert.assertTrue(resources.hasMoreElements());
+        URL resource = resources.nextElement();
+        Assert.assertTrue(resource.getPath().endsWith("test.txt"));
+        Assert.assertFalse(resources.hasMoreElements());
     }
 }
