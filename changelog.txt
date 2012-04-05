@@ -4,6 +4,7 @@ Change log next version
 * PowerMock JUnit module now works with JUnit 4.10 (thanks to Diego Coronel for the patch) (issue 367)
 * Changed name from org.powermock.api.mockito.mockpolicies.Slf4jMockPolicy to org.powermock.api.mockito.mockpolicies.Slf4jMockPolicy in the Mockito extension API.
 * Upgraded Javassist to version 3.16.1.GA.
+* DeferSupportingClassLoader now overrides ClassLoader.findResources() which enables classes loaded by MockClassLoader to be to find resources via ClassLoader.findResources(...). Thanks to wrussellmorris for the patch (issue 380).
 
 Change log 1.4.11 (2012-01-05)
 ------------------------------
