@@ -1,5 +1,5 @@
-Change log next version
------------------------
+Change log 1.4.12 (2012-04-05)
+------------------------------
 * Really added missing class, PowerMockTestCase, to testng full release jar (issue 327). 
 * PowerMock JUnit module now works with JUnit 4.10 (thanks to Diego Coronel for the patch) (issue 367)
 * Changed name from org.powermock.api.mockito.mockpolicies.Slf4jMockPolicy to org.powermock.api.mockito.mockpolicies.Slf4jMockPolicy in the Mockito extension API.
