@@ -3,14 +3,14 @@
     <parent>
         <groupId>org.powermock</groupId>
         <artifactId>powermock-classloading-module</artifactId>
-        <version>1.4.12</version>
+        <version>1.4.13-SNAPSHOT</version>
     </parent>
     <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-classloading-objenesis</artifactId>
     <name>powermock-classloading-objenesis</name>
-    <version>1.4.12</version>
+    <version>1.4.13-SNAPSHOT</version>
 
     <description>
         Performs classloader deep-cloning using Objenesis

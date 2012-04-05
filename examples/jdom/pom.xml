@@ -3,13 +3,13 @@
     <parent>
         <artifactId>powermock-examples</artifactId>
         <groupId>org.powermock.examples</groupId>
-        <version>1.4.12</version>
+        <version>1.4.13-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock.examples</groupId>
     <artifactId>powermock-examples-jdom</artifactId>
     <name>powermock-examples-jdom</name>
-    <version>1.4.12</version>
+    <version>1.4.13-SNAPSHOT</version>
 
     <description>
 		Example showing PowerMock used with jDom and static classes.
