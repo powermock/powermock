@@ -22,6 +22,7 @@ import org.mockito.exceptions.verification.TooLittleActualInvocations;
 import org.mockito.exceptions.verification.junit.ArgumentsAreDifferent;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import samples.singleton.SimpleStaticService;
 import samples.singleton.StaticHelper;
 import samples.singleton.StaticService;
 
@@ -36,7 +37,7 @@ import static org.powermock.api.mockito.PowerMockito.spy;
  * Test class to demonstrate static mocking with PowerMockito.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest( { StaticService.class, StaticHelper.class })
+@PrepareForTest( { StaticService.class, SimpleStaticService.class })
 public class MockStaticTest {
 
 	@Test
@@ -171,5 +172,22 @@ public class MockStaticTest {
 
 		assertEquals(expectedMockValue, StaticService.say("world"));
 		assertEquals("Hello world2", StaticService.say("world2"));
+	}
+
+    @Test
+	public void mockStatic_uses_var_args_to_create_multiple_static_mocks() throws Exception {
+        mockStatic(StaticService.class, SimpleStaticService.class);
+
+        when(SimpleStaticService.say("Something")).thenReturn("other");
+
+        StaticService.sayHello();
+        final String said = SimpleStaticService.say("Something");
+
+        verifyStatic();
+        StaticService.sayHello();
+        verifyStatic();
+        SimpleStaticService.say("Something");
+
+        assertEquals(said, "other");
 	}
 }
