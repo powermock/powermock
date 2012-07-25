@@ -121,7 +121,7 @@ public class MockGateway {
 				MockRepository.putMethodProxy(method, invocationHandler);
 			}
 
-		} else if (MockRepository.shouldSuppressMethod(method)) {
+		} else if (MockRepository.shouldSuppressMethod(method, objectType)) {
 			returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
 		} else if (MockRepository.shouldStubMethod(method)) {
 			returnValue = MockRepository.getMethodToStub(method);

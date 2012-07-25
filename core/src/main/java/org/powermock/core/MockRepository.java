@@ -306,8 +306,20 @@ public class MockRepository {
 	/**
 	 * @return <code>true</code> if the <tt>method</tt> should be suppressed.
 	 */
-	public static synchronized boolean shouldSuppressMethod(Method method) {
-		return suppressMethod.contains(method);
+	public static synchronized boolean shouldSuppressMethod(Method method,
+			Class<?> objectType) throws ClassNotFoundException {
+		for (Method suppressedMethod : suppressMethod) {
+			Class<?> suppressedMethodClass = suppressedMethod
+					.getDeclaringClass();
+			if (suppressedMethodClass.getClass().isAssignableFrom(
+					objectType.getClass())
+					&& suppressedMethod.getName().equals(method.getName())
+					&& ClassLocator.getCallerClass().getName()
+							.equals(suppressedMethodClass.getName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
