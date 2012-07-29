@@ -8,30 +8,24 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.powermock</groupId>
-	<artifactId>powermock-module-test-mockito-junit49</artifactId>
-	<name>powermock-module-test-mockito-junit49</name>
+	<artifactId>powermock-module-mockito-junit49-test</artifactId>
+	<name>powermock-module-mockito-junit49-test</name>
 	<version>1.4.13-SNAPSHOT</version>
 
 	<description>
-		Tests for Mockito module with JUnit 4.9 ff.
+		Tests for Mockito module with JUnit 4.9.
 	</description>
 	
-	<properties>
-        <junit.version>4.9</junit.version>
-    </properties>
-	
-
 	<dependencies>
-	
 		<dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
+            <version>4.9</version>
         </dependency>
         <dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-module-junit4</artifactId>
-			<version>${project.version}</version>
+			<version>1.4.13-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

@@ -35,11 +35,10 @@ public class PowerMockRunner extends AbstractCommonPowerMockRunner {
     
     private final static Class<? extends PowerMockJUnitRunnerDelegate> getRunnerDelegateImplClass( VersionCompatibility versionCompatibility) {
         Class<? extends PowerMockJUnitRunnerDelegate> concreteClass = PowerMockJUnit44RunnerDelegateImpl.class;
-        if( VersionCompatibility.getJUnitVersion().isGreaterOrEquals( 4, 7 ) ) {
-            concreteClass = PowerMockJUnit47RunnerDelegateImpl.class;
-        }
         if( VersionCompatibility.getJUnitVersion().isGreaterOrEquals( 4, 9 ) ) {
-            concreteClass = PowerMockJUnit49RunnerDelegateImpl.class;
+                   concreteClass = PowerMockJUnit49RunnerDelegateImpl.class;
+        } else if( VersionCompatibility.getJUnitVersion().isGreaterOrEquals( 4, 7 ) ) {
+            concreteClass = PowerMockJUnit47RunnerDelegateImpl.class;
         }
         return concreteClass;
     }

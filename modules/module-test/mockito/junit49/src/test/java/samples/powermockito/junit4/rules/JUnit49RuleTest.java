@@ -15,14 +15,25 @@
  */
 package samples.powermockito.junit4.rules;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.MethodRule;
+import org.junit.rules.TestName;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.junit.runners.model.FrameworkMethod;
+import org.junit.runners.model.Statement;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * JUnit 4.9 changed the implementation/execution of Rules.
@@ -34,13 +45,33 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest( { JUnit49RuleTest.class })
 public class JUnit49RuleTest {
 
-    @Rule
-    public ExpectedException expected = ExpectedException.none();
+    private static Object BEFORE = new Object();
 
-   
+    private List<Object> objects = new LinkedList<Object>();
+
+    @Rule
+    public MyRule rule = new MyRule();
+
+    @Rule
+    public TestName testName = new TestName();
+
     @Test
-    public void usingRuleAnnotationWorks() {
-        assertTrue(true);
+    public void assertThatJUnit47RulesWorks() throws Exception {
+        assertEquals(1, objects.size());
+        assertSame(BEFORE, objects.get(0));
+        assertEquals("assertThatJUnit47RulesWorks", testName.getMethodName());
     }
 
+    private class MyRule implements TestRule {
+
+        public Statement apply(final Statement statement, Description description) {
+            return new Statement() {
+                @Override
+                public void evaluate() throws Throwable {
+                    objects.add(BEFORE);
+                    statement.evaluate();
+                }
+            };
+        }
+    }
 }
