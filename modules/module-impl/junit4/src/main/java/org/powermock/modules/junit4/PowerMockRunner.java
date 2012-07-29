@@ -15,21 +15,33 @@
  */
 package org.powermock.modules.junit4;
 
+import java.lang.annotation.Annotation;
+
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
+import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.powermock.modules.junit4.common.internal.impl.AbstractCommonPowerMockRunner;
 import org.powermock.modules.junit4.common.internal.impl.VersionCompatibility;
 import org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl;
 import org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl;
+import org.powermock.modules.junit4.internal.impl.PowerMockJUnit49RunnerDelegateImpl;
 import org.powermock.reflect.Whitebox;
-
-import java.lang.annotation.Annotation;
 
 public class PowerMockRunner extends AbstractCommonPowerMockRunner {
 
     public PowerMockRunner(Class<?> klass) throws Exception {
-        super(klass, VersionCompatibility.getJUnitVersion().isGreaterOrEquals( 4, 7 ) ? PowerMockJUnit47RunnerDelegateImpl.class
-                : PowerMockJUnit44RunnerDelegateImpl.class);
+        super(klass, getRunnerDelegateImplClass( VersionCompatibility.getJUnitVersion() ));
+    }
+    
+    private final static Class<? extends PowerMockJUnitRunnerDelegate> getRunnerDelegateImplClass( VersionCompatibility versionCompatibility) {
+        Class<? extends PowerMockJUnitRunnerDelegate> concreteClass = PowerMockJUnit44RunnerDelegateImpl.class;
+        if( VersionCompatibility.getJUnitVersion().isGreaterOrEquals( 4, 7 ) ) {
+            concreteClass = PowerMockJUnit47RunnerDelegateImpl.class;
+        }
+        if( VersionCompatibility.getJUnitVersion().isGreaterOrEquals( 4, 9 ) ) {
+            concreteClass = PowerMockJUnit49RunnerDelegateImpl.class;
+        }
+        return concreteClass;
     }
 
     /**
