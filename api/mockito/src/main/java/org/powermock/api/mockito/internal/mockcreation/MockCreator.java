@@ -17,14 +17,16 @@ package org.powermock.api.mockito.internal.mockcreation;
 
 import org.mockito.MockSettings;
 import org.mockito.Mockito;
-import org.mockito.internal.MockHandler;
+import org.mockito.internal.InternalMockHandler;
 import org.mockito.internal.configuration.GlobalConfiguration;
 import org.mockito.internal.creation.MethodInterceptorFilter;
 import org.mockito.internal.creation.MockSettingsImpl;
 import org.mockito.internal.creation.jmock.ClassImposterizer;
+import org.mockito.internal.handler.MockHandlerFactory;
 import org.mockito.internal.progress.ThreadSafeMockingProgress;
+import org.mockito.internal.util.MockNameImpl;
 import org.mockito.internal.util.reflection.LenientCopyTool;
-import org.powermock.api.mockito.internal.invocationcontrol.MockitoMethodInvocationControl;
+import org.powermock.api.mockito.internal.invocation.MockitoMethodInvocationControl;
 import org.powermock.api.support.ClassLoaderUtil;
 import org.powermock.core.ClassReplicaCreator;
 import org.powermock.core.DefaultFieldValueGenerator;
@@ -85,7 +87,15 @@ public class MockCreator {
                                                                  Method[] methods, boolean isSpy, Object delegator, MockSettings mockSettings) {
         final MockSettingsImpl settings;
         if (mockSettings == null) {
-            settings = (MockSettingsImpl) Mockito.withSettings();
+            // We change the context classloader to the current CL in order for the Mockito
+            // framework to load it's plugins (such as MockMaker) correctly.
+            final ClassLoader originalCL = Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().setContextClassLoader(MockCreator.class.getClassLoader());
+            try {
+                settings = (MockSettingsImpl) Mockito.withSettings();
+            } finally {
+                Thread.currentThread().setContextClassLoader(originalCL);
+            }
         } else {
             settings = (MockSettingsImpl) mockSettings;
         }
@@ -94,8 +104,8 @@ public class MockCreator {
             settings.defaultAnswer(Mockito.CALLS_REAL_METHODS);
         }
 
-        settings.initiateMockName(type);
-        MockHandler<T> mockHandler = new MockHandler<T>(settings);
+        settings.setMockName(new MockNameImpl(mockName));
+        InternalMockHandler mockHandler = new MockHandlerFactory().create(settings);
         MethodInterceptorFilter filter = new MethodInterceptorFilter(mockHandler, settings);
         final T mock = (T) ClassImposterizer.INSTANCE.imposterise(filter, type);
         final MockitoMethodInvocationControl invocationControl = new MockitoMethodInvocationControl(filter,

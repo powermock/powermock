@@ -62,7 +62,16 @@ public class PowerMockJUnit49RunnerDelegateImpl extends PowerMockJUnit44RunnerDe
 
         @Override
         public void executeTest( final Method method, final Object testInstance, final Runnable test ) {
-            final Set<Field> rules = Whitebox.getFieldsAnnotatedWith( testInstance, Rule.class );
+            // We change the context classloader to the current CL in order for the Mockito
+            // framework to load it's plugins (such as MockMaker) correctly.
+            final ClassLoader originalCL = Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+            final Set<Field> rules;
+            try {
+                rules = Whitebox.getFieldsAnnotatedWith( testInstance, Rule.class );
+            } finally {
+               Thread.currentThread().setContextClassLoader(originalCL);
+            }
             hasRules = !rules.isEmpty();
             if( !hasRules ) {
                 executeTestInSuper( method, testInstance, test );

@@ -15,9 +15,24 @@
  */
 package org.powermock.api.mockito.internal.verification;
 
-import org.mockito.internal.MockHandler;
+import org.mockito.exceptions.base.MockitoAssertionError;
+import org.mockito.exceptions.misusing.NotAMockException;
+import org.mockito.internal.InternalMockHandler;
+import org.mockito.internal.creation.MockSettingsImpl;
+import org.mockito.internal.stubbing.InvocationContainer;
+import org.mockito.internal.util.MockUtil;
 import org.mockito.internal.verification.MockAwareVerificationMode;
+import org.mockito.internal.verification.api.VerificationData;
+import org.mockito.invocation.Invocation;
+import org.mockito.invocation.MockHandler;
+import org.mockito.mock.MockCreationSettings;
+import org.mockito.plugins.MockMaker;
+import org.mockito.stubbing.Answer;
+import org.mockito.stubbing.VoidMethodStubbable;
 import org.mockito.verification.VerificationMode;
+import org.powermock.reflect.Whitebox;
+
+import java.util.List;
 
 /**
  * A custom extension of {@link MockAwareVerificationMode} for static method
@@ -30,11 +45,11 @@ import org.mockito.verification.VerificationMode;
  * able to specify the class a later state then verification start. I.e. in
  * standard Mockito they always know the mock object when doing verify before
  * calling the method to verify:
- * 
+ *
  * <pre>
  * verify(mock).methodToVerify();
  * </pre>
- * 
+ *
  * In PowerMock we don't know the class when calling verifyStatic().
  */
 public class StaticMockAwareVerificationMode extends MockAwareVerificationMode {
@@ -47,6 +62,11 @@ public class StaticMockAwareVerificationMode extends MockAwareVerificationMode {
 
     public void setClassMock(Class<?> clsMock) {
         this.clsMock = clsMock;
+    }
+
+    @Override
+    public void verify(VerificationData data) {
+        super.verify(data);
     }
 
     @Override

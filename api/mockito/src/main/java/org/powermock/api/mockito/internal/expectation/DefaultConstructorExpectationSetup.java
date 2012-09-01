@@ -18,7 +18,7 @@ package org.powermock.api.mockito.internal.expectation;
 import org.mockito.stubbing.OngoingStubbing;
 import org.powermock.api.mockito.expectation.ConstructorExpectationSetup;
 import org.powermock.api.mockito.expectation.WithExpectedArguments;
-import org.powermock.api.mockito.internal.invocationcontrol.MockitoNewInvocationControl;
+import org.powermock.api.mockito.internal.invocation.MockitoNewInvocationControl;
 import org.powermock.api.mockito.internal.mockcreation.MockCreator;
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.NewInvocationControl;

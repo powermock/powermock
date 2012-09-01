@@ -15,11 +15,9 @@
  */
 package org.powermock.api.mockito.internal.configuration;
 
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.internal.configuration.InjectingAnnotationEngine;
-import org.powermock.reflect.Whitebox;
 
 import java.lang.reflect.Field;
 
@@ -37,21 +35,6 @@ public class PowerMockitoInjectingAnnotationEngine extends InjectingAnnotationEn
 		new PowerMockitoSpyAnnotationEngine().process(context, testClass);
 
 		// this injects mocks
-		for (Class<?> cls = context; cls != Object.class; cls = cls.getSuperclass()) {
-			Field[] fields = cls.getDeclaredFields();
-			for (Field field : fields) {
-				if (field.isAnnotationPresent(InjectMocks.class)) {
-					try {
-						Whitebox.invokeMethod(this, "assertNoAnnotations", field, new Class<?>[] { Mock.class, org.mockito.MockitoAnnotations.Mock.class,
-								Captor.class });
-					} catch (RuntimeException e) {
-						throw e;
-					} catch (Exception e) {
-						throw new RuntimeException(e);
-					}
-					injectMocks(testClass);
-				}
-			}
-		}
+        injectMocks(testClass);
 	}
 }

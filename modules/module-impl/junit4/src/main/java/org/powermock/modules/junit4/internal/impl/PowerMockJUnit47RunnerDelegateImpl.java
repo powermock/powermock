@@ -52,7 +52,7 @@ public class PowerMockJUnit47RunnerDelegateImpl extends PowerMockJUnit44RunnerDe
 
     @Override
     protected PowerMockJUnit44MethodRunner createPowerMockRunner(final Object testInstance, final TestMethod testMethod, RunNotifier notifier,
-            Description description, final boolean extendsFromTestCase) {
+                                                                 Description description, final boolean extendsFromTestCase) {
         return new PowerMockJUnit47MethodRunner(testInstance, testMethod, notifier, description, extendsFromTestCase);
     }
 
@@ -61,13 +61,22 @@ public class PowerMockJUnit47RunnerDelegateImpl extends PowerMockJUnit44RunnerDe
         private Throwable potentialTestFailure;
 
         protected PowerMockJUnit47MethodRunner(Object testInstance, TestMethod method, RunNotifier notifier, Description description,
-                boolean extendsFromTestCase) {
+                                               boolean extendsFromTestCase) {
             super(testInstance, method, notifier, description, extendsFromTestCase);
         }
 
         @Override
         public void executeTest(final Method method, final Object testInstance, final Runnable test) {
-            final Set<Field> rules = Whitebox.getFieldsAnnotatedWith(testInstance, Rule.class);
+            // We change the context classloader to the current CL in order for the Mockito
+            // framework to load it's plugins (such as MockMaker) correctly.
+            final ClassLoader originalCL = Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+            final Set<Field> rules;
+            try {
+                rules = Whitebox.getFieldsAnnotatedWith( testInstance, Rule.class );
+            } finally {
+                Thread.currentThread().setContextClassLoader(originalCL);
+            }
             hasRules = !rules.isEmpty();
             if (!hasRules) {
                 executeTestInSuper(method, testInstance, test);
@@ -79,7 +88,7 @@ public class PowerMockJUnit47RunnerDelegateImpl extends PowerMockJUnit44RunnerDe
                         MethodRule rule = (MethodRule) field.get(testInstance);
                         Statement statement = rule.apply(
                                 new LastRuleTestExecutorStatement(processedFields, rules.size(), test, testInstance, method), new FrameworkMethod(
-                                        method), testInstance);
+                                method), testInstance);
                         statement.evaluate();
                     } catch (Throwable e) {
                         /*

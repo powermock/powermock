@@ -99,6 +99,7 @@ public class MockStaticTest {
 	}
 
 	@Test(expected = ArgumentsAreDifferent.class)
+    // TODO Fix error message!!
 	public void testMockStaticVerificationFails() throws Exception {
 		mockStatic(StaticService.class);
 		assertNull(StaticService.say("hello"));

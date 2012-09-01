@@ -16,8 +16,8 @@
 package org.powermock.api.mockito.internal.verification;
 
 import org.mockito.Mockito;
-import org.powermock.api.mockito.internal.invocationcontrol.MockitoMethodInvocationControl;
-import org.powermock.api.mockito.internal.invocationcontrol.MockitoNewInvocationControl;
+import org.powermock.api.mockito.internal.invocation.MockitoMethodInvocationControl;
+import org.powermock.api.mockito.internal.invocation.MockitoNewInvocationControl;
 import org.powermock.core.MockRepository;
 
 /**

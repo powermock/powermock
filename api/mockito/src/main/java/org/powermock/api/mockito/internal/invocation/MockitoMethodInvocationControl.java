@@ -13,29 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.api.mockito.internal.invocationcontrol;
+package org.powermock.api.mockito.internal.invocation;
 
-import org.hamcrest.Matcher;
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.exceptions.misusing.NotAMockException;
-import org.mockito.internal.MockHandler;
-import org.mockito.internal.MockitoInvocationHandler;
+import org.mockito.internal.InternalMockHandler;
 import org.mockito.internal.creation.DelegatingMethod;
 import org.mockito.internal.creation.MethodInterceptorFilter;
 import org.mockito.internal.debugging.Localized;
 import org.mockito.internal.exceptions.base.StackTraceFilter;
-import org.mockito.internal.invocation.Invocation;
+import org.mockito.internal.invocation.InvocationImpl;
+import org.mockito.internal.invocation.MatchersBinder;
 import org.mockito.internal.invocation.realmethod.FilteredCGLIBProxyRealMethod;
 import org.mockito.internal.invocation.realmethod.RealMethod;
-import org.mockito.internal.matchers.MatchersPrinter;
 import org.mockito.internal.progress.MockingProgress;
 import org.mockito.internal.progress.SequenceNumber;
 import org.mockito.internal.progress.ThreadSafeMockingProgress;
-import org.mockito.internal.reporting.PrintSettings;
 import org.mockito.internal.stubbing.InvocationContainer;
 import org.mockito.internal.verification.VerificationDataImpl;
 import org.mockito.internal.verification.VerificationModeFactory;
+import org.mockito.invocation.Invocation;
+import org.mockito.invocation.MockHandler;
 import org.mockito.verification.VerificationMode;
 import org.powermock.api.mockito.internal.verification.StaticMockAwareVerificationMode;
 import org.powermock.api.support.SafeExceptionRethrower;
@@ -50,7 +49,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -225,7 +223,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
 
     private Object performIntercept(MethodInterceptorFilter invocationHandler, final Object interceptionObject,
                                     final Method method, Object[] arguments) throws Throwable {
-        MockitoInvocationHandler mockHandler = invocationHandler.getHandler();
+        MockHandler mockHandler = invocationHandler.getHandler();
 
         final FilteredCGLIBProxyRealMethod cglibProxyRealMethod = new FilteredCGLIBProxyRealMethod(new RealMethod() {
             private static final long serialVersionUID = 4564320968038564170L;
@@ -241,8 +239,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
                      * never caught by the Mockito proxy.
                      */
                 final Class<?> type = Whitebox.getType(interceptionObject);
-                final boolean isFinalSystemClass = type.getName().startsWith("java.")
-                        && Modifier.isFinal(type.getModifiers());
+                final boolean isFinalSystemClass = type.getName().startsWith("java.") && Modifier.isFinal(type.getModifiers());
                 if (!isFinalSystemClass) {
                     MockRepository.putAdditionalState(MockGateway.DONT_MOCK_NEXT_CALL, true);
                 }
@@ -254,42 +251,18 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
                 return null;
             }
         });
-        // }
-        Invocation invocation = new Invocation(interceptionObject, new DelegatingMethod(method), arguments,
+
+        Invocation invocation = new InvocationImpl(interceptionObject, new DelegatingMethod(method), arguments,
                 SequenceNumber.next(), cglibProxyRealMethod) {
             private static final long serialVersionUID = -3679957412502758558L;
 
-            /**
-             * We need to override this method because normally the String
-             * "method" is assembled by calling the "qualifiedName" method but
-             * this is not possible in our case. The reason is that the
-             * qualifiedName method does
-             *
-             * <pre>
-             * new MockUtil().getMockName(mock)
-             * </pre>
-             *
-             * which later will call the "isMockitoMock" method which will
-             * return false and an exception will be thrown. The reason why
-             * "isMockitoMock" returns false is that the mock is not created by
-             * the Mockito CGLib Enhancer in case of static methods.
-             */
-            @Override
-            protected String toString(@SuppressWarnings("rawtypes") List<Matcher> matchers, PrintSettings printSettings) {
-                MatchersPrinter matchersPrinter = new MatchersPrinter();
-                String method = Whitebox.getType(getMock()).getName() + "." + getMethodName();
-                String invocation = method + matchersPrinter.getArgumentsLine(matchers, printSettings);
-                if (printSettings.isMultiline()
-                        || (!matchers.isEmpty() && invocation.length() > Whitebox.<Integer> getInternalState(
-                        Invocation.class, "MAX_LINE_LENGTH"))) {
-                    return method + matchersPrinter.getArgumentsBlock(matchers, printSettings);
-                } else {
-                    return invocation;
-                }
+            public String toString() {
+                return new ToStringGenerator().generate(getMock(), getMethod(), getArguments());
             }
         };
+
         try {
-            return mockHandler.handle(invocation);
+            return replaceMatchersBinderIfNeeded(mockHandler).handle(invocation);
         } catch (NotAMockException e) {
             if(invocation.getMock().getClass().getName().startsWith("java.") &&  MockRepository.getInstanceMethodInvocationControl(invocation.getMock()) != null) {
                 return invocation.callRealMethod();
@@ -300,6 +273,16 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
             InvocationControlAssertionError.updateErrorMessageForMethodInvocation(e);
             throw e;
         }
+    }
+
+    private MockHandler replaceMatchersBinderIfNeeded(MockHandler mockHandler) {
+        if(!Whitebox.getFieldsOfType(mockHandler, MatchersBinder.class).isEmpty()) {
+            Whitebox.setInternalState(mockHandler, new PowerMockMatchersBinder());
+        } else if(!Whitebox.getFieldsOfType(mockHandler, InternalMockHandler.class).isEmpty()) {
+            final MockHandler internalMockHandler = Whitebox.getInternalState(mockHandler, MockHandler.class);
+            return replaceMatchersBinderIfNeeded(internalMockHandler);
+        }
+        return mockHandler;
     }
 
     public Object replay(Object... mocks) {
@@ -319,9 +302,9 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
 
     public void verifyNoMoreInteractions() {
         try {
-            final MockitoInvocationHandler mockHandler = methodInterceptorFilter.getHandler();
-            if (mockHandler instanceof MockHandler<?>) {
-                InvocationContainer invocationContainer = ((MockHandler<?>) mockHandler).getInvocationContainer();
+            final MockHandler mockHandler = methodInterceptorFilter.getHandler();
+            if (mockHandler instanceof MockHandler) {
+                InvocationContainer invocationContainer = Whitebox.<InvocationContainer>invokeMethod(mockHandler, "getInvocationContainer");
                 VerificationDataImpl data = new VerificationDataImpl(invocationContainer, null);
                 VerificationModeFactory.noMoreInteractions().verify(data);
             } else {
@@ -332,6 +315,8 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
         } catch (MockitoAssertionError e) {
             InvocationControlAssertionError.updateErrorMessageForVerifyNoMoreInteractions(e);
             throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("PowerMock internal error",e);
         }
     }
 

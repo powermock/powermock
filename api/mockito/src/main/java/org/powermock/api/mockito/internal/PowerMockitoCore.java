@@ -27,8 +27,16 @@ import org.powermock.reflect.Whitebox;
 
 public class PowerMockitoCore {
     @SuppressWarnings("rawtypes")
-	public PowerMockitoStubber doAnswer(Answer answer) {
-        getMockingProgress().stubbingStarted();
+    public PowerMockitoStubber doAnswer(Answer answer) {
+        // We change the context classloader to the current CL in order for the Mockito
+        // framework to load it's plugins (such as MockMaker) correctly.
+        final ClassLoader originalCL = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+        try {
+            getMockingProgress().stubbingStarted();
+        } finally {
+            Thread.currentThread().setContextClassLoader(originalCL);
+        }
         getMockingProgress().resetOngoingStubbing();
         return (PowerMockitoStubber) new PowerMockitoStubberImpl().doAnswer(answer);
     }
@@ -40,7 +48,7 @@ public class PowerMockitoCore {
     public MockAwareVerificationMode wrapInMockitoSpecificVerificationMode(Object mock, VerificationMode mode) {
         return new MockAwareVerificationMode(mock, mode);
     }
-    
+
     public MockAwareVerificationMode wrapInStaticVerificationMode(VerificationMode mode) {
         return new StaticMockAwareVerificationMode(mode);
     }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.api.mockito.internal.invocationcontrol;
+package org.powermock.api.mockito.internal.invocation;
 
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.spi.support.InvocationSubstitute;

@@ -60,7 +60,6 @@ public class PowerMockito extends MemberModifier {
     private static final String NO_OBJECT_CREATION_ERROR_MESSAGE_TEMPLATE = "No instantiation of class %s was recorded during the test. Note that only expected object creations (e.g. those using whenNew(..)) can be verified.";
     private static final PowerMockitoCore POWERMOCKITO_CORE = new PowerMockitoCore();
 
-
     /**
      * Enable static mocking for all methods of a class.
      *
