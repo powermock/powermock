@@ -22,7 +22,7 @@ import org.mockito.internal.InternalMockHandler;
 import org.mockito.internal.creation.DelegatingMethod;
 import org.mockito.internal.creation.MethodInterceptorFilter;
 import org.mockito.internal.debugging.Localized;
-import org.mockito.internal.exceptions.base.StackTraceFilter;
+import org.mockito.internal.exceptions.stacktrace.StackTraceFilter;
 import org.mockito.internal.invocation.InvocationImpl;
 import org.mockito.internal.invocation.MatchersBinder;
 import org.mockito.internal.invocation.realmethod.FilteredCGLIBProxyRealMethod;
@@ -208,17 +208,12 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         StackTraceFilter filter = new StackTraceFilter();
         /*
-           * We loop through all stack trace elements and see if it's "bad". Bad
-           * means that the stack trance is cluttered with Mockito proxy
-           * invocations which is why we know that the invocation has been caught
-           * by the proxy if isBad returns true.
-           */
-        for (StackTraceElement stackTraceElement : stackTrace) {
-            if (filter.isBad(stackTraceElement)) {
-                return true;
-            }
-        }
-        return false;
+        * We filter the stack-trace to check if "Mockito" exists as a stack trace element. (The filter method
+        * remove all Mocktio stack trace elements). If the filtered stack trace length is not equal to the original stack trace length
+        * this means that the call has been caught by Mockito.
+        */
+        final StackTraceElement[] filteredStackTrace = filter.filter(stackTrace, true);
+        return filteredStackTrace.length != stackTrace.length;
     }
 
     private Object performIntercept(MethodInterceptorFilter invocationHandler, final Object interceptionObject,
