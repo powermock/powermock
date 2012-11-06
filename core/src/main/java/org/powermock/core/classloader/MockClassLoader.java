@@ -31,13 +31,13 @@ import java.util.Set;
 
 /**
  * Mock all classes except system classes.
- * 
+ *
  * Notice that there are two different types of classes that are not mocked:
  * <ol>
  * <li>system classes are deferred to another classloader</li>
  * <li>testing framework classes are loaded, but not modified</li>
  * </ol>
- * 
+ *
  * @author Johan Haleby
  * @author Jan Kronquist
  */
@@ -81,7 +81,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
     /**
      * Creates a new instance of the {@link MockClassLoader} based on the
      * following parameters:
-     * 
+     *
      * @param classesToMock
      *            The classes that must be modified to prepare for testability.
      * @param packagesToDefer
@@ -111,7 +111,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
     /**
      * Creates a new instance of the {@link MockClassLoader} based on the
      * following parameters:
-     * 
+     *
      * @param classesToMock
      *            The classes that must be modified to prepare for testability.
      */
@@ -122,8 +122,10 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
     /**
      * Add classes that will be loaded by the mock classloader, i.e. these
      * classes will be byte-code manipulated to allow for testing. Any classes
-     * contained in the {@link #packagesToBeDeferred} will be ignored.
-     * 
+     * contained in the {@link #packagesToBeDeferred} will be ignored. How ever
+     * classes added here have precedence over additionally deferred (ignored)
+     * packages (those ignored by the user using @PrepareForTest).
+     *
      * @param classes
      *            The fully qualified name of the classes that will be appended
      *            to the list of classes that will be byte-code modified to
@@ -149,8 +151,18 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
         return loadedClass;
     }
 
-    private boolean shouldModify(String s) {
-        return (shouldModifyAll() || WildcardMatcher.matchesAny(modify, s)) && !shouldIgnore(deferPackages, s);
+    private boolean shouldModify(String className) {
+        final boolean shouldIgnoreClass = shouldIgnore(deferPackages, className);
+        final boolean shouldModifyAll = shouldModifyAll();
+        if(shouldModifyAll) {
+            return !shouldIgnoreClass;
+        } else {
+            /* Never mind if we should ignore the class here since
+             * classes added by prepared for test should (i.e. those added in "modify")
+             * have precedence over ignored packages.
+             */
+            return WildcardMatcher.matchesAny(modify, className);
+        }
     }
 
     public boolean shouldModifyAll() {

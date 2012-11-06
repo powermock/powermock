@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.powermock.core.classloader.MockClassLoader.MODIFY_ALL_CLASSES;
 
 public class MockClassLoaderTest {
     @Test
@@ -53,8 +54,22 @@ public class MockClassLoaderTest {
     }
 
     @Test
-    public void powerMockIgnoreAnnotatedPackagesAreIgnored() throws Exception {
+    public void prepareForTestHasPrecedenceOverPowerMockIgnoreAnnotatedPackages() throws Exception {
         MockClassLoader mockClassLoader = new MockClassLoader(new String[] { "org.mytest.myclass" });
+        Whitebox.setInternalState(mockClassLoader, new String[] { "*mytest*" }, DeferSupportingClassLoader.class);
+        assertTrue(Whitebox.<Boolean>invokeMethod(mockClassLoader, "shouldModify", "org.mytest.myclass"));
+    }
+
+    @Test
+    public void powerMockIgnoreAnnotatedPackagesAreIgnored() throws Exception {
+        MockClassLoader mockClassLoader = new MockClassLoader(new String[] { "org.ikk.Jux" });
+        Whitebox.setInternalState(mockClassLoader, new String[] { "*mytest*" }, DeferSupportingClassLoader.class);
+        assertFalse(Whitebox.<Boolean> invokeMethod(mockClassLoader, "shouldModify", "org.mytest.myclass"));
+    }
+
+    @Test
+    public void powerMockIgnoreAnnotatedPackagesHavePrecedenceOverPrepareEverythingForTest() throws Exception {
+        MockClassLoader mockClassLoader = new MockClassLoader(new String[] { MODIFY_ALL_CLASSES });
         Whitebox.setInternalState(mockClassLoader, new String[] { "*mytest*" }, DeferSupportingClassLoader.class);
         assertFalse(Whitebox.<Boolean> invokeMethod(mockClassLoader, "shouldModify", "org.mytest.myclass"));
     }

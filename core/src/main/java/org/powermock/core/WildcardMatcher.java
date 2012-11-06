@@ -73,27 +73,27 @@ public class WildcardMatcher {
 
     }
 
-    public static boolean matchesAny(Collection<String> collectionOfTextToMatch, String pattern) {
-        for (String string : collectionOfTextToMatch) {
-            if (matches(pattern, string)) {
+    public static boolean matchesAny(Collection<String> patterns, String text) {
+        for (String pattern : patterns) {
+            if (matches(text, pattern)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean matchesAny(Iterable<String> collectionOfTextToMatch, String pattern) {
-        for (String string : collectionOfTextToMatch) {
-            if (matches(pattern, string)) {
+    public static boolean matchesAny(Iterable<String> patterns, String text) {
+        for (String string : patterns) {
+            if (matches(text, string)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean matchesAny(String[] collectionOfTextToMatch, String pattern) {
-        for (String string : collectionOfTextToMatch) {
-            if (matches(pattern, string)) {
+    public static boolean matchesAny(String[] patterns, String text) {
+        for (String string : patterns) {
+            if (matches(text, string)) {
                 return true;
             }
         }
