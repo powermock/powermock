@@ -4,7 +4,8 @@ Change log next version
   mockStatic(A.class, B.class, C.class);
 * Suppression is now working for overridden methods (issue  364, 51). Thanks to  hpbeem for the patch.
 * PowerMock junit module now supports JUnit rules for version 4.9+ (issue 344). Thanks to Andreas Kutschera for the patch.
-* Mockito extension API now uses Mockito 1.9.5-rc1 (issue 398) 
+* Fixed is with PowerMock JUnit runner that failed to parse JUnit versions including characters such as 4.9b2. (issue 381).
+* Mockito extension API now uses Mockito 1.9.5 (issue 398) 
 * Updated TestNG dependency to version 6.7
 
 Change log 1.4.12 (2012-04-05)
