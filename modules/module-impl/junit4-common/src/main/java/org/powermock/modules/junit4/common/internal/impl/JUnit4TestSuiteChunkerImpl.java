@@ -93,21 +93,20 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		int successCount = 0;
 		int ignoreCount = 0;
 
-		for (int i = 0; i < delegates.size(); i++) {
-			TestChunk next = iterator.next();
-			final ClassLoader key = next.getClassLoader();
-			PowerMockJUnit4RunListener powerMockListener = new PowerMockJUnit4RunListener(key, powerMockTestNotifier);
-			notifier.addListener(powerMockListener);
-			final PowerMockJUnitRunnerDelegate delegate = delegates.get(i);
-			delegate.run(notifier);
-			final int failureCountForThisPowerMockListener = powerMockListener.getFailureCount();
-			final int ignoreCountForThisPowerMockListener = powerMockListener.getIgnoreCount();
-			failureCount += failureCountForThisPowerMockListener;
-			ignoreCount += ignoreCountForThisPowerMockListener;
-			successCount += delegate.getTestCount() - failureCountForThisPowerMockListener
-					- ignoreCountForThisPowerMockListener;
-			notifier.removeListener(powerMockListener);
-		}
+        for (PowerMockJUnitRunnerDelegate delegate : delegates) {
+            TestChunk next = iterator.next();
+            final ClassLoader key = next.getClassLoader();
+            PowerMockJUnit4RunListener powerMockListener = new PowerMockJUnit4RunListener(key, powerMockTestNotifier);
+            notifier.addListener(powerMockListener);
+            delegate.run(notifier);
+            final int failureCountForThisPowerMockListener = powerMockListener.getFailureCount();
+            final int ignoreCountForThisPowerMockListener = powerMockListener.getIgnoreCount();
+            failureCount += failureCountForThisPowerMockListener;
+            ignoreCount += ignoreCountForThisPowerMockListener;
+            successCount += delegate.getTestCount() - failureCountForThisPowerMockListener
+                    - ignoreCountForThisPowerMockListener;
+            notifier.removeListener(powerMockListener);
+        }
 
 		final TestSuiteResult testSuiteResult = new TestSuiteResultImpl(failureCount, successCount, getTestCount(),
 				ignoreCount);

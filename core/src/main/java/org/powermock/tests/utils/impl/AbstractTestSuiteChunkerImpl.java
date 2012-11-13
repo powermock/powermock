@@ -63,7 +63,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
     protected final Set<Class<?>> delegatesCreatedForTheseClasses = new LinkedHashSet<Class<?>>();
 
     // A list of junit delegates.
-    protected final List<T> delegates = new LinkedList<T>();
+    protected final List<T> delegates = new ArrayList<T>();
 
     /*
      * Maps the list of test indexes that is assigned to a specific test suite
