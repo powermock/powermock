@@ -17,6 +17,7 @@ package samples.powermockito.junit4.whennew;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.stubbing.OngoingStubbing;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
@@ -24,6 +25,7 @@ import org.powermock.reflect.exceptions.ConstructorNotFoundException;
 import samples.Service;
 import samples.expectnew.ExpectNewDemo;
 import samples.expectnew.ExpectNewServiceUser;
+import samples.expectnew.ExpectNewWithMultipleCtorDemo;
 import samples.expectnew.VarArgsConstructorDemo;
 import samples.newmocking.MyClass;
 
@@ -580,7 +582,7 @@ public class WhenNewTest {
         final int one = 1;
         final int two = 2;
         final float myFloat = 3.0f;
-        
+
         ExpectNewDemo tested = new ExpectNewDemo();
         VarArgsConstructorDemo varArgsConstructorDemoMock = mock(VarArgsConstructorDemo.class);
 
@@ -595,4 +597,38 @@ public class WhenNewTest {
         verifyNew(VarArgsConstructorDemo.class).withArguments(myFloat, one, two);
     }
 
+    @Test
+    public void whenNewAnyArgumentsWorksInClassesWithSingleCtor() throws Exception {
+        ExpectNewDemo tested = new ExpectNewDemo();
+
+        MyClass myClassMock = mock(MyClass.class);
+
+        whenNew(MyClass.class).withAnyArguments().thenReturn(myClassMock);
+
+        when(myClassMock.getMessage()).thenReturn("Hello");
+
+        final String actual = tested.multipleNew();
+
+        verify(myClassMock, times(2)).getMessage();
+        verifyNew(MyClass.class, times(2)).withNoArguments();
+
+        assertEquals("HelloHello", actual);
+    }
+
+    @Test
+    public void whenNewAnyArgumentsWorksInClassesWithMultipleCtors() throws Exception {
+        ExpectNewWithMultipleCtorDemo mock1 = mock(ExpectNewWithMultipleCtorDemo.class);
+        Service mock2 = mock(Service.class);
+
+        whenNew(ExpectNewWithMultipleCtorDemo.class).withAnyArguments().thenReturn(mock1);
+        when(mock1.useService()).thenReturn("message");
+
+        // When
+        final String message1 = new ExpectNewWithMultipleCtorDemo(mock2).useService();
+        final String message2 = new ExpectNewWithMultipleCtorDemo(mock2, 5).useService();
+
+
+        assertEquals(message1, "message");
+        assertEquals(message2, "message");
+    }
 }

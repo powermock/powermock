@@ -15,6 +15,10 @@
  */
 package org.powermock.api.mockito.expectation;
 
-public interface ConstructorExpectationSetup<T> extends WithOrWithoutExpectedArguments<T>, WithExpectedParameterTypes<T>, WithAnyArguments<T> {
+import org.mockito.stubbing.OngoingStubbing;
+
+public interface WithAnyArguments<T> {
+
+    OngoingStubbing<T> withAnyArguments() throws Exception;
 
 }
