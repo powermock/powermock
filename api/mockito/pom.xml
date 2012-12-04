@@ -3,13 +3,13 @@
     <parent>
         <artifactId>powermock-api</artifactId>
         <groupId>org.powermock</groupId>
-        <version>1.5</version>
+        <version>1.5.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-api-mockito</artifactId>
     <name>powermock-api-mockito</name>
-    <version>1.5</version>
+    <version>1.5.1-SNAPSHOT</version>
 
     <description>
 		PowerMock API for Mockito.
