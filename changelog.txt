@@ -1,5 +1,5 @@
-Change log next version
------------------------
+Change log 1.5 (2012-12-04)
+---------------------------
 * Added var-args to mockStatic in the PowerMockito API. You can now do: 
   mockStatic(A.class, B.class, C.class);
 * Suppression is now working for overridden methods (issue  364, 51). Thanks to  hpbeem for the patch.
