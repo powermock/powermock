@@ -3,13 +3,13 @@
     <parent>
         <artifactId>powermock</artifactId>
         <groupId>org.powermock</groupId>
-        <version>1.4.13-SNAPSHOT</version>
+        <version>1.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-reflect</artifactId>
     <name>powermock-reflect</name>
-    <version>1.4.13-SNAPSHOT</version>
+    <version>1.5</version>
 
     <description>
 		Various utilities for accessing internals of a class.
