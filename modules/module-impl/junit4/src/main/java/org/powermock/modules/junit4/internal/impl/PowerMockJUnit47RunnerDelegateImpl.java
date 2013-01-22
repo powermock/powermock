@@ -85,10 +85,9 @@ public class PowerMockJUnit47RunnerDelegateImpl extends PowerMockJUnit44RunnerDe
                 for (Field field : rules) {
                     processedFields++;
                     try {
-                        MethodRule rule = (MethodRule) field.get(testInstance);
-                        Statement statement = rule.apply(
-                                new LastRuleTestExecutorStatement(processedFields, rules.size(), test, testInstance, method), new FrameworkMethod(
-                                method), testInstance);
+                        LastRuleTestExecutorStatement lastStatement = new LastRuleTestExecutorStatement(processedFields, rules.size(), test, testInstance, method);
+                        Statement statement = applyRuleToLastStatement(method,
+                                testInstance, field, lastStatement);
                         statement.evaluate();
                     } catch (Throwable e) {
                         /*
@@ -99,6 +98,13 @@ public class PowerMockJUnit47RunnerDelegateImpl extends PowerMockJUnit44RunnerDe
                     }
                 }
             }
+        }
+
+        protected Statement applyRuleToLastStatement(final Method method, final Object testInstance, Field field,
+                                                     final LastRuleTestExecutorStatement lastStatement) throws IllegalAccessException {
+            MethodRule rule = (MethodRule) field.get(testInstance);
+            Statement statement = rule.apply(lastStatement, new FrameworkMethod(method), testInstance);
+            return statement;
         }
 
         /**
@@ -121,7 +127,7 @@ public class PowerMockJUnit47RunnerDelegateImpl extends PowerMockJUnit44RunnerDe
             super.executeTest(method, testInstance, test);
         }
 
-        private final class LastRuleTestExecutorStatement extends Statement {
+        protected final class LastRuleTestExecutorStatement extends Statement {
             private final Runnable test;
             private final Object testInstance;
             private final Method method;
