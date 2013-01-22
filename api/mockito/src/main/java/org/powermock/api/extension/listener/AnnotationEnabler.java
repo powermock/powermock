@@ -19,7 +19,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.MockitoAnnotations.Mock;
 import org.mockito.exceptions.base.MockitoException;
-import org.mockito.internal.configuration.DefaultAnnotationEngine;
 import org.mockito.internal.configuration.InjectingAnnotationEngine;
 import org.mockito.internal.util.reflection.GenericMaster;
 import org.powermock.api.mockito.internal.configuration.PowerMockitoInjectingAnnotationEngine;

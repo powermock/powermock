@@ -15,11 +15,8 @@
  */
 package org.powermock.api.mockito.internal.configuration;
 
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.internal.configuration.InjectingAnnotationEngine;
-
-import java.lang.reflect.Field;
 
 /**
  * The same as {@link InjectingAnnotationEngine} with the exception that it
