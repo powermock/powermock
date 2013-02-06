@@ -15,16 +15,16 @@
  */
 package org.powermock.core;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+
 import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.core.spi.NewInvocationControl;
 import org.powermock.reflect.exceptions.MethodNotFoundException;
 import org.powermock.reflect.internal.TypeUtils;
 import org.powermock.reflect.internal.WhiteboxImpl;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 /**
  * All mock invocations are routed through this gateway. This includes method
@@ -176,14 +176,16 @@ public class MockGateway {
 			 * specifically. For example when new is invoked on an inner class
 			 * it seems like null is passed as an argument even though it
 			 * shouldn't. We correct this here.
+			 * 
+			 * Seems with Javassist 3.17.1-GA & Java 7, the 'null' is passed as the last argument.
 			 */
 			if (type.isMemberClass() && Modifier.isStatic(type.getModifiers())) {
-				if (args.length > 0 && args[0] == null && sig.length > 0) {
-					args = copyArgumentsForInnerOrLocalOrAnonymousClass(args);
+				if (args.length > 0 && (args[0] == null || args[args.length -1] == null) && sig.length > 0) {
+					args = copyArgumentsForInnerOrLocalOrAnonymousClass(args, false);
 				}
 			} else if (type.isLocalClass() || type.isAnonymousClass() || type.isMemberClass()) {
 				if (args.length > 0 && sig.length > 0 && sig[0].equals(type.getEnclosingClass())) {
-					args = copyArgumentsForInnerOrLocalOrAnonymousClass(args);
+					args = copyArgumentsForInnerOrLocalOrAnonymousClass(args, true);
 				}
 			}
 			return newInvocationControl.invoke(type, args, sig);
@@ -222,11 +224,25 @@ public class MockGateway {
 	 * The first parameter of an inner, local or anonymous inner class is
 	 * <code>null</code> or the enclosing instance. This should not be included
 	 * in the substitute invocation since it is never expected by the user.
+	 * <p>
+	 * Seems with Javassist 3.17.1-GA & Java 7, the '<code>null</code>' is passed as the last argument.
 	 */
-	private static Object[] copyArgumentsForInnerOrLocalOrAnonymousClass(Object[] args) {
+	private static Object[] copyArgumentsForInnerOrLocalOrAnonymousClass(Object[] args, boolean excludeEnclosingInstance) {
 		Object[] newArgs = new Object[args.length - 1];
-		for (int i = 1; i < args.length; i++) {
-			newArgs[i - 1] = args[i];
+		int start = 0;
+		int end = 0;
+		int j = 0;
+		
+		if (args[0] == null || excludeEnclosingInstance) {
+			start = 1;
+			end = args.length;
+		} else {
+			start = 0;
+			end = args.length - 1;
+		}
+		
+		for (int i = start; i < end; i++) {
+			newArgs[j++] = args[i];
 		}
 		args = newArgs;
 		return args;

@@ -2,6 +2,7 @@ Change log next version
 -----------------------
 * Maven no longer adds classpath to jar manifests when building PowerMock (issue 413).
 * PowerMockRunner now supports both MethodRules and TestRules to comply with JUnit 4.11 (thanks to "Boris Code" for the patch) (issue 419).
+* Fixed an issue when "whenNew" failed to match private constructor (with args) of a static inner class (thanks to Oliver Hernandez for the patch) (issue 422).
 
 Change log 1.5 (2012-12-04)
 ---------------------------
