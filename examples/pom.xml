@@ -27,6 +27,7 @@
         <module>ApacheMina</module>
         <module>log4j</module>
         <module>slf4j</module>
+        <module>slf4j-mockito</module>
         <module>jcl</module>
         <module>jdom</module>
         <module>jmock</module>

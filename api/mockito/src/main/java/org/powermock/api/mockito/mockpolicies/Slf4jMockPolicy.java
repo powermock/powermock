@@ -68,7 +68,21 @@ public class Slf4jMockPolicy implements PowerMockPolicy {
         Class<?> loggerClass = getLoggerClass(logPolicySupport);
 
         if (threadLogger.get() == null) {
-            threadLogger.set(Mockito.mock(loggerClass));
+            /*
+             * When mocking with Mockito we need to change the context CL to the same CL that is loading Mockito
+             * otherwise the Mockito plugin mechanism will load the PowerMockMaker from the wrong classloader.
+             */
+            final ClassLoader originalCl = Thread.currentThread().getContextClassLoader();
+            final ClassLoader classLoader = Mockito.class.getClassLoader();
+            Thread.currentThread().setContextClassLoader(classLoader);
+            final Object mock;
+            try {
+                 mock = Mockito.mock(loggerClass);
+            } finally {
+                Thread.currentThread().setContextClassLoader(originalCl);
+            }
+
+            threadLogger.set(mock);
         }
     }
 
