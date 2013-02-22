@@ -55,7 +55,7 @@ public class MockGateway {
 	public static boolean MOCK_GET_CLASS_METHOD = false;
 
 	// used for static methods
-	public static synchronized Object methodCall(Class<?> type, String methodName, Object[] args, Class<?>[] sig,
+	public static Object methodCall(Class<?> type, String methodName, Object[] args, Class<?>[] sig,
 			String returnTypeAsString) throws Throwable {
 		return doMethodCall(type, methodName, args, sig, returnTypeAsString);
 	}
