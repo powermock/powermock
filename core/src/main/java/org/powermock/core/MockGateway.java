@@ -163,12 +163,12 @@ public class MockGateway {
 	}
 
 	// used for instance methods
-	public static synchronized Object methodCall(Object instance, String methodName, Object[] args, Class<?>[] sig,
+	public static Object methodCall(Object instance, String methodName, Object[] args, Class<?>[] sig,
 			String returnTypeAsString) throws Throwable {
 		return doMethodCall(instance, methodName, args, sig, returnTypeAsString);
 	}
 
-	public static synchronized Object newInstanceCall(Class<?> type, Object[] args, Class<?>[] sig) throws Throwable {
+	public static Object newInstanceCall(Class<?> type, Object[] args, Class<?>[] sig) throws Throwable {
 		final NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceControl(type);
 		if (newInvocationControl != null) {
 			/*
@@ -197,7 +197,7 @@ public class MockGateway {
 		return PROCEED;
 	}
 
-	public static synchronized Object fieldCall(Object instanceOrClassContainingTheField, Class<?> classDefiningField,
+	public static Object fieldCall(Object instanceOrClassContainingTheField, Class<?> classDefiningField,
 			String fieldName, Class<?> fieldType) {
 		if (MockRepository.shouldSuppressField(WhiteboxImpl.getField(classDefiningField, fieldName))) {
 			return TypeUtils.getDefaultValue(fieldType);
@@ -205,14 +205,14 @@ public class MockGateway {
 		return PROCEED;
 	}
 
-	public static synchronized Object staticConstructorCall(String className) {
+	public static Object staticConstructorCall(String className) {
 		if (MockRepository.shouldSuppressStaticInitializerFor(className)) {
 			return "suppress";
 		}
 		return PROCEED;
 	}
 
-	public static synchronized Object constructorCall(Class<?> type, Object[] args, Class<?>[] sig) throws Throwable {
+	public static Object constructorCall(Class<?> type, Object[] args, Class<?>[] sig) throws Throwable {
 		final Constructor<?> constructor = WhiteboxImpl.getConstructor(type, sig);
 		if (MockRepository.shouldSuppressConstructor(constructor)) {
 			return null;
