@@ -17,13 +17,14 @@ package samples.powermockito.junit4.staticmocking;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.exceptions.verification.TooLittleActualInvocations;
 import org.mockito.exceptions.verification.junit.ArgumentsAreDifferent;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import samples.singleton.SimpleStaticService;
-import samples.singleton.StaticHelper;
 import samples.singleton.StaticService;
 
 import static org.junit.Assert.*;
@@ -191,4 +192,18 @@ public class MockStaticTest {
 
         assertEquals(said, "other");
 	}
+
+    @Test
+    public void spyingUsingArgumentCaptor() throws Exception {
+        // Given
+        mockStatic(StaticService.class);
+        final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+
+        StaticService.say("something");
+
+        verifyStatic();
+        StaticService.say(captor.capture());
+
+        assertEquals("something", captor.getValue());
+    }
 }
