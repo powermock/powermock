@@ -199,6 +199,20 @@ public class SystemClassUserTest {
     }
 
     @Test
+    public void mockingFinalMethodsInSystemClassesWorks() throws Exception {
+        ClassLoader cl1 = createMock(ClassLoader.class);
+        ClassLoader cl2 = createMock(ClassLoader.class);
+
+        expect(cl1.getParent()).andReturn(cl2);
+
+        replayAll();
+
+        assertSame(cl1.getParent(), cl2);
+
+        verifyAll();
+    }
+
+    @Test
     public void mockingInetAddressWorks() throws Exception {
         final InetAddress mock = createMock(InetAddress.class);
         mockStatic(InetAddress.class);
