@@ -30,7 +30,6 @@ import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.powermock.modules.junit4.internal.impl.testcaseworkaround.PowerMockJUnit4MethodValidator;
 import org.powermock.reflect.Whitebox;
-import org.powermock.reflect.internal.WhiteboxImpl;
 import org.powermock.tests.utils.PowerMockTestNotifier;
 import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
 import org.powermock.tests.utils.impl.PowerMockTestNotifierImpl;
@@ -46,8 +45,8 @@ import java.util.*;
 /**
  * A JUnit4 test runner that only runs a specified set of test methods in a test
  * class.
- * 
- * <p>
+ * <p/>
+ * <p/>
  * Many parts of this class are essentially a rip off from
  * {@link JUnit4ClassRunner} used in JUnit 4.4. It does however not extend this
  * class because we cannot let it perform the stuff it does in its constructor.
@@ -55,9 +54,8 @@ import java.util.*;
  * add a tip to error message asking the user if they've not forgot to add a
  * class to test. Yet another difference is that this runner notifies the
  * PowerMock listeners of certain events.
- * 
+ *
  * @see JUnit4ClassRunner
- * 
  */
 @SuppressWarnings("deprecation")
 public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filterable, Sortable, PowerMockJUnitRunnerDelegate {
@@ -210,7 +208,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
     }
 
     protected PowerMockJUnit44MethodRunner createPowerMockRunner(final Object testInstance, final TestMethod testMethod, RunNotifier notifier,
-            Description description, final boolean extendsFromTestCase) {
+                                                                 Description description, final boolean extendsFromTestCase) {
         return new PowerMockJUnit44MethodRunner(testInstance, testMethod, notifier, description, extendsFromTestCase);
     }
 
@@ -237,7 +235,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
     }
 
     public void filter(Filter filter) throws NoTestsRemainException {
-        for (Iterator<Method> iter = testMethods.iterator(); iter.hasNext();) {
+        for (Iterator<Method> iter = testMethods.iterator(); iter.hasNext(); ) {
             Method method = iter.next();
             if (!filter.shouldRun(methodDescription(method)))
                 iter.remove();
@@ -272,7 +270,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
         protected final TestMethod testMethod;
 
         protected PowerMockJUnit44MethodRunner(Object testInstance, TestMethod method, RunNotifier notifier, Description description,
-                boolean extendsFromTestCase) {
+                                               boolean extendsFromTestCase) {
             super(testInstance, method, notifier, description);
             this.testInstance = testInstance;
             this.extendsFromTestCase = extendsFromTestCase;
@@ -305,7 +303,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
                 try {
                     if (extendsFromTestCase) {
                         final Method setUp = Whitebox.getMethod(testInstance.getClass(), "setUp");
-                        if(!setUp.isAnnotationPresent(Before.class)) {
+                        if (!setUp.isAnnotationPresent(Before.class)) {
                             Whitebox.invokeMethod(testInstance, "setUp");
                         }
                     }
@@ -341,7 +339,10 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 
         protected void handleException(final TestMethod testMethod, Throwable actualFailure) {
             try {
-                if (!(Boolean) Whitebox.invokeMethod(testMethod, "expectsException")) {
+                final String throwableName = actualFailure.getClass().getName();
+                if (throwableName.equals("org.junit.internal.AssumptionViolatedException") || throwableName.startsWith("org.junit.Assume$AssumptionViolatedException")) {
+                    return;
+                } else if (!(Boolean) Whitebox.invokeMethod(testMethod, "expectsException")) {
                     final String className = actualFailure.getStackTrace()[0].getClassName();
                     final Class<?> testClassAsJavaClass = testClass.getJavaClass();
                     if (actualFailure instanceof NullPointerException
@@ -352,7 +353,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
                             && !new PrepareForTestExtractorImpl().isPrepared(testClassAsJavaClass, className)
                             && !testClassAsJavaClass.isAnnotationPresent(PrepareEverythingForTest.class)
                             && !new MockPolicyInitializerImpl(testClassAsJavaClass.isAnnotationPresent(MockPolicy.class) ? testClassAsJavaClass
-                                    .getAnnotation(MockPolicy.class).value() : null).isPrepared(className)) {
+                            .getAnnotation(MockPolicy.class).value() : null).isPrepared(className)) {
                         Whitebox.setInternalState(actualFailure, "detailMessage", "Perhaps the class " + className + " must be prepared for test?",
                                 Throwable.class);
                     }
