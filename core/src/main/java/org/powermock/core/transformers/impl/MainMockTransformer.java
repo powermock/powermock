@@ -311,25 +311,13 @@ public class MainMockTransformer implements MockTransformer {
                 }
             }
         }
-
+        
         private boolean shouldTreatAsSystemClassCall(CtMethod method, CtClass declaringClass) throws NotFoundException {
             final String className = declaringClass.getName();
-            if(!className.startsWith("java.")) {
-                return false;
+            if(className.startsWith("java.")) {
+                return true;
             }
-            final int methodModifiers = method.getModifiers();
-            final boolean requiredByModifier = Modifier.isFinal(declaringClass.getModifiers()) ||
-                    Modifier.isFinal(methodModifiers) ||
-                    Modifier.isStatic(methodModifiers) ||
-                    Modifier.isNative(methodModifiers);
-            return requiredByModifier || isJavaStandardMethod(method);
-        }
-
-        private  boolean isJavaStandardMethod(CtMethod method) throws NotFoundException {
-            final String methodName = method.getName();
-            final CtClass[] sig = method.getParameterTypes();
-            return (methodName.equals("equals") && sig.length == 1) || (methodName.equals("hashCode") && sig.length == 0)
-                    || (methodName.equals("toString") && sig.length == 0);
+            return false;
         }
 
         @Override

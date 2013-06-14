@@ -17,6 +17,8 @@ package samples.powermockito.junit4.system;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import samples.system.SystemClassUser;
@@ -167,5 +169,17 @@ public class SystemClassUserTest {
 
 		// then
 		assertEquals("00000000000000000000000000000000", actual);
+    }
+    
+    @Test(expected = IllegalStateException.class)
+    public void triggerMockedCallFromInterfaceTypeInsteadOfConcreteType() throws Exception
+    {
+    	StringBuilder builder = mock(StringBuilder.class);
+        when(builder.length()).then(new Answer<StringBuilder>(){
+            public StringBuilder answer(InvocationOnMock invocation) throws Throwable{
+                throw new IllegalStateException("Can't really happen");
+            }
+        });
+        new SystemClassUser().lengthOf(builder);
     }
 }

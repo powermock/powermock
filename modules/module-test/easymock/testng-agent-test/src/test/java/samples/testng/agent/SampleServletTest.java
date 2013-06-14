@@ -29,7 +29,7 @@ import java.io.PrintWriter;
 import static org.easymock.EasyMock.expect;
 import static org.powermock.api.easymock.PowerMock.*;
 
-@PrepareForTest
+@PrepareForTest(SampleServlet.class)
 public class SampleServletTest {
 
     @Test

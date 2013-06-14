@@ -47,13 +47,16 @@ public class PowerMockTestNGMethodHandler implements MethodHandler {
         injectMocksUsingAnnotationEnabler(self);
         try {
             final Object result = proceed.invoke(self, args);
+            return result;
+        } catch (InvocationTargetException e) {
+            throw e.getTargetException();
+        }
+        finally
+        {
             if (thisMethod.isAnnotationPresent(Test.class)) {
                 clearMockFields();
                 MockRepository.clear();
             }
-            return result;
-        } catch (InvocationTargetException e) {
-            throw e.getTargetException();
         }
     }
 

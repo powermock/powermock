@@ -29,7 +29,7 @@ import static org.easymock.EasyMock.expect;
 import static org.powermock.api.easymock.PowerMock.*;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest
+@PrepareForTest(SampleServlet.class)
 public class SampleServletTest {
 
     @Test
