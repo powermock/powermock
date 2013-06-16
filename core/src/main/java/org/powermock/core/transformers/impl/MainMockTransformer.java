@@ -27,7 +27,6 @@ import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.TransformStrategy;
 
 import static org.powermock.core.transformers.TransformStrategy.*;
-import static org.powermock.core.transformers.TransformStrategy.INST_REDEFINE;
 
 public class MainMockTransformer implements MockTransformer {
 
@@ -71,7 +70,7 @@ public class MainMockTransformer implements MockTransformer {
         // Remove final from all static final fields. Not possible if using a java agent.
         removeFinalModifierFromAllStaticFinalFields(clazz);
 
-        if(strategy != INST_TRANSFORM) {
+        if (strategy != INST_TRANSFORM) {
             clazz.instrument(new PowerMockExpressionEditor(clazz));
         }
 
@@ -89,7 +88,7 @@ public class MainMockTransformer implements MockTransformer {
 
     private String allowMockingOfPackagePrivateClasses(final CtClass clazz) {
         final String name = clazz.getName();
-        if(strategy != INST_REDEFINE) {
+        if (strategy != INST_REDEFINE) {
             try {
                 final int modifiers = clazz.getModifiers();
                 if (Modifier.isPackage(modifiers)) {
@@ -105,7 +104,7 @@ public class MainMockTransformer implements MockTransformer {
     }
 
     private void suppressStaticInitializerIfRequested(final CtClass clazz, final String name) throws CannotCompileException {
-        if(strategy == CLASSLOADER) {
+        if (strategy == CLASSLOADER) {
             if (MockGateway.staticConstructorCall(name) != MockGateway.PROCEED) {
                 CtConstructor classInitializer = clazz.makeClassInitializer();
                 classInitializer.setBody("{}");
@@ -114,7 +113,7 @@ public class MainMockTransformer implements MockTransformer {
     }
 
     private void removeFinalModifierFromClass(final CtClass clazz) {
-        if(strategy != INST_REDEFINE) {
+        if (strategy != INST_REDEFINE) {
             if (Modifier.isFinal(clazz.getModifiers())) {
                 clazz.setModifiers(clazz.getModifiers() ^ Modifier.FINAL);
             }
@@ -138,7 +137,7 @@ public class MainMockTransformer implements MockTransformer {
     }
 
     private void allowMockingOfStaticAndFinalAndNativeMethods(final CtClass clazz) throws NotFoundException, CannotCompileException {
-        if(strategy != INST_TRANSFORM) {
+        if (strategy != INST_TRANSFORM) {
             for (CtMethod m : clazz.getDeclaredMethods()) {
                 modifyMethod(m);
             }
@@ -146,7 +145,7 @@ public class MainMockTransformer implements MockTransformer {
     }
 
     private void removeFinalModifierFromAllStaticFinalFields(final CtClass clazz) {
-        if(strategy != INST_REDEFINE) {
+        if (strategy != INST_REDEFINE) {
             for (CtField f : clazz.getDeclaredFields()) {
                 final int modifiers = f.getModifiers();
                 if (Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers)) {
@@ -157,7 +156,7 @@ public class MainMockTransformer implements MockTransformer {
     }
 
     private void setAllConstructorsToPublic(final CtClass clazz) {
-        if(strategy == CLASSLOADER) {
+        if (strategy == CLASSLOADER) {
             for (CtConstructor c : clazz.getDeclaredConstructors()) {
                 final int modifiers = c.getModifiers();
                 if (!Modifier.isPublic(modifiers)) {
@@ -249,21 +248,20 @@ public class MainMockTransformer implements MockTransformer {
 
         @Override
         public void edit(FieldAccess f) throws CannotCompileException {
-            if (f.isReader()) {                
+            if (f.isReader()) {
                 CtClass returnTypeAsCtClass;
 
                 try {
                     returnTypeAsCtClass = f.getField().getType();
                 } catch (NotFoundException e) {
-                    if (strategy != INST_REDEFINE) {
-                        throw new RuntimeException("PowerMock internal error when modifying field.", e);
-                    } else {
                         /*
-                         * If multiple java agents are active, the types implicitly loaded by javassist from disk 
-                         * might differ from the types available in memory. Thus, this error might occur. 
-                         */                        
-                        return;
-                    }
+                         * If multiple java agents are active (in INST_REDEFINE mode), the types implicitly loaded by javassist from disk
+                         * might differ from the types available in memory. Thus, this error might occur.
+                         *
+                         * It may also happen if PowerMock is modifying an SPI where the SPI require some classes to be available in the classpath
+                         * at runtime but they are not! This is valid in some cases such as slf4j.
+                         */
+                    return;
                 }
                 StringBuilder code = new StringBuilder();
                 code.append("{Object value =  ").append(MockGateway.class.getName()).append(".fieldCall(").append("$0,$class,\"").append(
@@ -279,7 +277,7 @@ public class MainMockTransformer implements MockTransformer {
 
         @Override
         public void edit(MethodCall m) throws CannotCompileException {
-            try {                
+            try {
                 final CtMethod method = m.getMethod();
                 final CtClass declaringClass = method.getDeclaringClass();
                 if (declaringClass != null) {
@@ -300,21 +298,19 @@ public class MainMockTransformer implements MockTransformer {
                     }
                 }
             } catch (NotFoundException e) {
-                if (strategy != INST_REDEFINE) {
-                    throw new RuntimeException("PowerMock internal error when modifying method.", e);
-                } else {
                     /*
-                     * If multiple java agents are active, the types implicitly loaded by javassist from disk 
-                     * might differ from the types available in memory. Thus, this error might occur. 
-                     */                        
-                    return;
-                }
+                     * If multiple java agents are active (in INST_REDEFINE mode), the types implicitly loaded by javassist from disk
+                     * might differ from the types available in memory. Thus, this error might occur.
+                     *
+                     * It may also happen if PowerMock is modifying an SPI where the SPI require some classes to be available in the classpath
+                     * at runtime but they are not! This is valid in some cases such as slf4j.
+                     */
             }
         }
-        
+
         private boolean shouldTreatAsSystemClassCall(CtMethod method, CtClass declaringClass) throws NotFoundException {
             final String className = declaringClass.getName();
-            if(className.startsWith("java.")) {
+            if (className.startsWith("java.")) {
                 return true;
             }
             return false;
@@ -370,11 +366,9 @@ public class MainMockTransformer implements MockTransformer {
          * Create a defer constructor in the class which will be called when the
          * constructor is suppressed.
          *
-         * @param clazz
-         *            The class whose super constructor will get a new defer
-         *            constructor if it doesn't already have one.
-         * @throws CannotCompileException
-         *             If an unexpected compilation error occurs.
+         * @param clazz The class whose super constructor will get a new defer
+         *              constructor if it doesn't already have one.
+         * @throws CannotCompileException If an unexpected compilation error occurs.
          */
         private void addNewDeferConstructor(final CtClass clazz) throws CannotCompileException {
             CtClass superClass = null;
@@ -401,14 +395,14 @@ public class MainMockTransformer implements MockTransformer {
             clazz.defrost();
             if (superClass.getName().equals(Object.class.getName())) {
                 try {
-                    clazz.addConstructor(CtNewConstructor.make(new CtClass[] { constructorType }, new CtClass[0], "{super();}", clazz));
+                    clazz.addConstructor(CtNewConstructor.make(new CtClass[]{constructorType}, new CtClass[0], "{super();}", clazz));
                 } catch (DuplicateMemberException e) {
                     // OK, the constructor has already been added.
                 }
             } else {
                 addNewDeferConstructor(superClass);
                 try {
-                    clazz.addConstructor(CtNewConstructor.make(new CtClass[] { constructorType }, new CtClass[0], "{super($$);}", clazz));
+                    clazz.addConstructor(CtNewConstructor.make(new CtClass[]{constructorType}, new CtClass[0], "{super($$);}", clazz));
                 } catch (DuplicateMemberException e) {
                     // OK, the constructor has already been added.
                 }
@@ -433,5 +427,4 @@ public class MainMockTransformer implements MockTransformer {
             e.replace(code.toString());
         }
     }
-
 }

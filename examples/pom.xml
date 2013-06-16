@@ -28,6 +28,7 @@
         <module>log4j</module>
         <module>slf4j</module>
         <module>slf4j-mockito</module>
+        <module>slf4j-noimpl</module>
         <module>jcl</module>
         <module>jdom</module>
         <module>jmock</module>
