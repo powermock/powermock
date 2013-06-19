@@ -7,6 +7,9 @@ Change log next version
 * The PowerMock runner for JUnit now supports assumeTrue(..) statements (issue 408).
 * Mocked system classes are now invoked when it's casted into another (non-final) type (thanks to Jonatan Jonsson for the patch) (issue 445).
 * TestNG state is cleaned up in a better way when a test fails (thanks to Jonatan Jonsson for the patch).
+* PowerMock byte-code manipulation transformers now ignores classes it cannot load. This means that PowerMock works with better SPI's that have compile-time dependencies that are not available at runtime.
+* Upgraded Javassist to version 1.8.0-GA.
+* Upgraded to TestNG 6.8.5
 
 Change log 1.5 (2012-12-04)
 ---------------------------
