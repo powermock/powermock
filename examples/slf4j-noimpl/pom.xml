@@ -3,13 +3,13 @@
     <parent>
         <artifactId>powermock-examples</artifactId>
         <groupId>org.powermock.examples</groupId>
-        <version>1.5.1</version>
+        <version>1.5.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock.examples</groupId>
     <artifactId>powermock-examples-slf4j-no-impl</artifactId>
     <name>slf4j-mockito</name>
-    <version>1.5.1</version>
+    <version>1.5.2-SNAPSHOT</version>
 
     <description>
     Example of using Slf4jMockPolicy with no slf4j implementation (only API).
