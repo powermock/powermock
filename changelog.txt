@@ -1,5 +1,5 @@
-Change log next version
------------------------
+Change log 1.5.1 (2013-06-19)
+-----------------------------
 * Maven no longer adds classpath to jar manifests when building PowerMock (issue 413).
 * PowerMockRunner now supports both MethodRules and TestRules to comply with JUnit 4.11 (thanks to "Boris Code" for the patch) (issue 419).
 * Slf4j MockPolicy in Mockito now works again (issue 431).
