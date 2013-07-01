@@ -1,6 +1,6 @@
 Change log next version
 -----------------------
-* Fixed PowerMock OOM (OutOfMemory) issues with Mockito (big thanks to Henrik Karlsson for the patch)
+* Fixed PowerMock OOM (OutOfMemory) issues with Mockito (big thanks to Henrik Karlsson for the patch).
 
 Change log 1.5.1 (2013-06-19)
 -----------------------------
