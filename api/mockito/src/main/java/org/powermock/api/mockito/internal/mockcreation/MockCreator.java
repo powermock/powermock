@@ -48,7 +48,7 @@ public class MockCreator {
         T mock = null;
         final String mockName = toInstanceName(type);
 
-        MockRepository.addAfterMethodRunner(new MockitoStateCleaner());
+        MockRepository.addAfterMethodRunner(new MockitoStateCleanerRunnable());
 
         final Class<T> typeToMock;
         if (isFinalJavaSystemClass(type)) {
@@ -106,7 +106,8 @@ public class MockCreator {
 
         settings.setMockName(new MockNameImpl(mockName));
         InternalMockHandler mockHandler = new MockHandlerFactory().create(settings);
-        MethodInterceptorFilter filter = new MethodInterceptorFilter(mockHandler, settings);
+        MethodInterceptorFilter filter = new PowerMockMethodInterceptorFilter(
+                mockHandler, settings);
         final T mock = (T) ClassImposterizer.INSTANCE.imposterise(filter, type);
         final MockitoMethodInvocationControl invocationControl = new MockitoMethodInvocationControl(filter,
                 isSpy && delegator == null ? new Object() : delegator, mock, methods);
@@ -148,29 +149,12 @@ public class MockCreator {
     /**
      * Clear state in Mockito that retains memory between tests
      */
-    private static class MockitoStateCleaner implements Runnable {
+    private static class MockitoStateCleanerRunnable implements Runnable {
         public void run() {
-            clearMockProgress();
-            clearConfiguration();
+            MockitoStateCleaner cleaner = new MockitoStateCleaner();
+            cleaner.clearConfiguration();
+            cleaner.clearMockProgress();
         }
 
-        private void clearMockProgress() {
-            clearThreadLocalIn(ThreadSafeMockingProgress.class);
-        }
-
-        private void clearConfiguration() {
-            clearThreadLocalIn(GlobalConfiguration.class);
-        }
-
-        private void clearThreadLocalIn(Class<?> cls) {
-            Whitebox.getInternalState(cls, ThreadLocal.class).set(null);
-            final Class<?> clazz;
-            if(ClassLoaderUtil.hasClass(cls, ClassLoader.getSystemClassLoader())) {
-                clazz = ClassLoaderUtil.loadClass(cls, ClassLoader.getSystemClassLoader());
-            } else {
-                clazz = ClassLoaderUtil.loadClass(cls, cls.getClassLoader());
-            }
-            Whitebox.getInternalState(clazz, ThreadLocal.class).set(null);
-        }
     }
 }
