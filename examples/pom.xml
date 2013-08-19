@@ -16,6 +16,7 @@
     </description>
 
     <modules>
+        <module>easymock31</module>
         <module>dom4j</module>
         <module>simple</module>
         <module>AbstractFactory</module>

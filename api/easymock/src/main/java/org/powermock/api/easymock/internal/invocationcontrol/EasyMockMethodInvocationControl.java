@@ -15,8 +15,9 @@
  */
 package org.powermock.api.easymock.internal.invocationcontrol;
 
+import org.easymock.MockType;
 import org.easymock.internal.MockInvocationHandler;
-import org.easymock.internal.MocksControl.MockType;
+import org.easymock.internal.MocksControl;
 import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
@@ -28,108 +29,119 @@ import java.util.Set;
  */
 public class EasyMockMethodInvocationControl<T> implements MethodInvocationControl {
 
-	private MockInvocationHandler invocationHandler;
+    private MockInvocationHandler invocationHandler;
 
-	private Set<Method> mockedMethods;
+    private Set<Method> mockedMethods;
 
-	private T mockInstance;
+    private T mockInstance;
 
-	private boolean hasReplayed;
-	private boolean hasVerified;
+    private boolean hasReplayed;
+    private boolean hasVerified;
 
-	/**
-	 * Initializes internal state.
-	 * 
-	 * @param invocationHandler
-	 *            The mock invocation handler to be associated with this
-	 *            instance.
-	 * @param methodsToMock
-	 *            The methods that are mocked for this instance. If
-	 *            <code>methodsToMock</code> is null all methods for the
-	 *            <code>invocationHandler</code> are considered to be mocked.
-	 * @param mockInstance
-	 *            The actual mock instance. May be <code>null</code>. Even
-	 *            though the mock instance may not be used it's needed to keep a
-	 *            reference to this object otherwise it may be garbage collected
-	 *            in some situations. For example when mocking static methods we
-	 *            don't return the mock object and thus it will be garbage
-	 *            collected (and thus the finalize method will be invoked which
-	 *            will be caught by the proxy and the test will fail because we
-	 *            haven't setup expectations for this method) because then that
-	 *            object has no reference. In order to avoid this we keep a
-	 *            reference to this instance here.
-	 */
-	public EasyMockMethodInvocationControl(MockInvocationHandler invocationHandler, Set<Method> methodsToMock, T mockInstance) {
-		if (invocationHandler == null) {
-			throw new IllegalArgumentException("Invocation Handler cannot be null.");
-		}
+    /**
+     * Initializes internal state.
+     *
+     * @param invocationHandler The mock invocation handler to be associated with this
+     *                          instance.
+     * @param methodsToMock     The methods that are mocked for this instance. If
+     *                          <code>methodsToMock</code> is null all methods for the
+     *                          <code>invocationHandler</code> are considered to be mocked.
+     * @param mockInstance      The actual mock instance. May be <code>null</code>. Even
+     *                          though the mock instance may not be used it's needed to keep a
+     *                          reference to this object otherwise it may be garbage collected
+     *                          in some situations. For example when mocking static methods we
+     *                          don't return the mock object and thus it will be garbage
+     *                          collected (and thus the finalize method will be invoked which
+     *                          will be caught by the proxy and the test will fail because we
+     *                          haven't setup expectations for this method) because then that
+     *                          object has no reference. In order to avoid this we keep a
+     *                          reference to this instance here.
+     */
+    public EasyMockMethodInvocationControl(MockInvocationHandler invocationHandler, Set<Method> methodsToMock, T mockInstance) {
+        if (invocationHandler == null) {
+            throw new IllegalArgumentException("Invocation Handler cannot be null.");
+        }
 
-		this.invocationHandler = invocationHandler;
-		this.mockedMethods = methodsToMock;
-		this.mockInstance = mockInstance;
-	}
+        this.invocationHandler = invocationHandler;
+        this.mockedMethods = methodsToMock;
+        this.mockInstance = mockInstance;
+    }
 
-	/**
-	 * Initializes internal state.
-	 * 
-	 * @param invocationHandler
-	 *            The mock invocation handler to be associated with this
-	 *            instance.
-	 * @param methodsToMock
-	 *            The methods that are mocked for this instance. If
-	 *            <code>methodsToMock</code> is null all methods for the
-	 *            <code>invocationHandler</code> are considered to be mocked.
-	 */
-	public EasyMockMethodInvocationControl(MockInvocationHandler invocationHandler, Set<Method> methodsToMock) {
-		this(invocationHandler, methodsToMock, null);
-	}
+    /**
+     * Initializes internal state.
+     *
+     * @param invocationHandler The mock invocation handler to be associated with this
+     *                          instance.
+     * @param methodsToMock     The methods that are mocked for this instance. If
+     *                          <code>methodsToMock</code> is null all methods for the
+     *                          <code>invocationHandler</code> are considered to be mocked.
+     */
+    public EasyMockMethodInvocationControl(MockInvocationHandler invocationHandler, Set<Method> methodsToMock) {
+        this(invocationHandler, methodsToMock, null);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isMocked(Method method) {
-		return mockedMethods == null || (mockedMethods != null && mockedMethods.contains(method));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isMocked(Method method) {
+        return mockedMethods == null || (mockedMethods != null && mockedMethods.contains(method));
+    }
 
-	public Object invoke(Object proxy, Method method, Object[] arguments) throws Throwable {
-		return invocationHandler.invoke(mockInstance == null ? proxy : mockInstance, method, arguments);
-	}
+    public Object invoke(Object proxy, Method method, Object[] arguments) throws Throwable {
+        return invocationHandler.invoke(mockInstance == null ? proxy : mockInstance, method, arguments);
+    }
 
-	public MockType getMockType() {
-		return WhiteboxImpl.getInternalState(invocationHandler.getControl(), MockType.class);
-	}
+    public MocksControl.MockType getMockType() {
+        final MocksControl control = invocationHandler.getControl();
+        if (WhiteboxImpl.getFieldsOfType(control, MocksControl.MockType.class).isEmpty()) {
+            // EasyMock is of version 3.2+
+            final MockType mockType = WhiteboxImpl.getInternalState(control, MockType.class);
+            switch (mockType) {
+                case DEFAULT:
+                    return MocksControl.MockType.DEFAULT;
+                case NICE:
+                    return MocksControl.MockType.NICE;
+                case STRICT:
+                    return MocksControl.MockType.STRICT;
+                default:
+                    throw new IllegalStateException("PowerMock doesn't seem to work with the used EasyMock version. Please report to the PowerMock mailing list");
+            }
+        } else {
+            return WhiteboxImpl.getInternalState(control, MocksControl.MockType.class);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public synchronized Object replay(Object... mocks) {
-		// Silently ignore replay if someone has replayed the mock before.
-		if (!hasReplayed) {
-			invocationHandler.getControl().replay();
-			hasReplayed = true;
-		}
-		return null;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public synchronized Object replay(Object... mocks) {
+        // Silently ignore replay if someone has replayed the mock before.
+        if (!hasReplayed) {
+            invocationHandler.getControl().replay();
+            hasReplayed = true;
+        }
+        return null;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public synchronized Object verify(Object... mocks) {
-		// Silently ignore verify if someone has verified the mock before.
-		if (!hasVerified) {
-			invocationHandler.getControl().verify();
-			hasVerified = true;
-		}
-		return null;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public synchronized Object verify(Object... mocks) {
+        // Silently ignore verify if someone has verified the mock before.
+        if (!hasVerified) {
+            invocationHandler.getControl().verify();
+            hasVerified = true;
+        }
+        return null;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public synchronized Object reset(Object... mocks) {
-		invocationHandler.getControl().reset();
-		hasReplayed = false;
-		hasVerified = false;
-		return null;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public synchronized Object reset(Object... mocks) {
+        invocationHandler.getControl().reset();
+        hasReplayed = false;
+        hasVerified = false;
+        return null;
+    }
 }

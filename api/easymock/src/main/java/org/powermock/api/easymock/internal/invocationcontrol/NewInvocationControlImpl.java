@@ -17,7 +17,7 @@ package org.powermock.api.easymock.internal.invocationcontrol;
 
 import org.easymock.EasyMock;
 import org.easymock.IExpectationSetters;
-import org.easymock.internal.MocksControl.MockType;
+import org.easymock.internal.MocksControl;
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.NewInvocationControl;
 import org.powermock.core.spi.support.InvocationSubstitute;
@@ -50,12 +50,12 @@ public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpect
             args = (Object[]) args[length-1];
         }
         try {
-            final MockType mockType = ((EasyMockMethodInvocationControl<?>) MockRepository.getInstanceMethodInvocationControl(substitute))
+            final MocksControl.MockType mockType = ((EasyMockMethodInvocationControl<?>) MockRepository.getInstanceMethodInvocationControl(substitute))
                     .getMockType();
             Object result = substitute.performSubstitutionLogic(args);
 
             if (result == null) {
-                if (mockType == MockType.NICE) {
+                if (mockType == MocksControl.MockType.NICE) {
                     result = EasyMock.createNiceMock(subsitutionType);
                 } else {
                     throw new IllegalStateException("Must replay class " + type.getName() + " to get configured expectation.");
