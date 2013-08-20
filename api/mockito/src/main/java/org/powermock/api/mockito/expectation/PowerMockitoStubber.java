@@ -33,7 +33,7 @@ public interface PowerMockitoStubber extends Stubber {
 	 * Example:
 	 * 
 	 * <pre>
-	 * doThrow(new RuntimeException()).when();
+	 * doThrow(new RuntimeException()).when(StaticList.class);
 	 * StaticList.clear();
 	 * 
 	 * //following throws RuntimeException:
