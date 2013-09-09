@@ -8,6 +8,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 import samples.privateandfinal.PrivateFinal;
 import samples.privatemocking.PrivateMethodDemo;
 
@@ -32,6 +33,30 @@ public class PrivateInstanceMockingTest {
         assertEquals("another", tested.sayYear("test", 12));
 
         verifyPrivate(tested).invoke("doSayYear", 12, "test");
+    }
+
+    @Test
+    public void expectationsWorkWhenSpyingOnPrivateMethodsUsingDoReturn() throws Exception {
+        PrivateMethodDemo tested = spy(new PrivateMethodDemo());
+        assertEquals("Hello Temp, you are 50 old.", tested.sayYear("Temp", 50));
+
+        doReturn("another").when(tested, "doSayYear", 12, "test");
+
+        assertEquals("Hello Johan, you are 29 old.", tested.sayYear("Johan", 29));
+        assertEquals("another", tested.sayYear("test", 12));
+
+        verifyPrivate(tested).invoke("doSayYear", 12, "test");
+    }
+
+    @Test
+    public void expectationsWorkWhenSpyingOnPrivateMethodsUsingDoReturnWhenMethodDoesntHaveAnyArguments() throws Exception {
+        PrivateMethodDemo tested = spy(new PrivateMethodDemo());
+
+        doReturn("another").when(tested, "sayIt");
+
+        assertEquals("another", Whitebox.invokeMethod(tested, "sayIt"));
+
+        verifyPrivate(tested).invoke("sayIt");
     }
 
     @Test

@@ -19,7 +19,6 @@ import java.util.List;
 
 public class ArgumentMatcherDemo {
 
-
     public List<String> findByNamedQuery(String argument, List<String> someList) {
         someList.add("one");
         return someList;
