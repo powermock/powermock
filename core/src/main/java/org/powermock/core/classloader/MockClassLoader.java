@@ -31,7 +31,7 @@ import java.util.Set;
 
 /**
  * Mock all classes except system classes.
- *
+ * <p/>
  * Notice that there are two different types of classes that are not mocked:
  * <ol>
  * <li>system classes are deferred to another classloader</li>
@@ -49,6 +49,9 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
      */
     public static final String MODIFY_ALL_CLASSES = "*";
 
+    private static final String CGLIB_ENHANCER = "net.sf.cglib.proxy.Enhancer$EnhancerKey$$KeyFactoryByCGLIB$$";
+    private static final String CGLIB_METHOD_WRAPPER = "net.sf.cglib.core.MethodWrapper$MethodWrapperKey$$KeyFactoryByCGLIB";
+
     private List<MockTransformer> mockTransformerChain;
 
     private Set<String> modify = Collections.synchronizedSet(new HashSet<String>());
@@ -57,24 +60,20 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
      * Classes not deferred but loaded by the mock class loader but they're not
      * modified.
      */
-    private final String[] packagesToLoadButNotModify = new String[] { "org.junit.", "junit.", "org.easymock.", "net.sf.cglib.", "javassist.",
+    private final String[] packagesToLoadButNotModify = new String[]{"org.junit.", "junit.", "org.easymock.", "net.sf.cglib.", "javassist.",
             "org.powermock.modules.junit4.internal.", "org.powermock.modules.junit4.legacy.internal.", "org.powermock.modules.junit3.internal.",
-            "org.powermock" };
+            "org.powermock"};
 
-    private final String[] specificClassesToLoadButNotModify = new String[] { InvocationSubstitute.class.getName(), PowerMockPolicy.class.getName(),
-            ClassReplicaCreator.class.getName() };
+    private final String[] specificClassesToLoadButNotModify = new String[]{InvocationSubstitute.class.getName(), PowerMockPolicy.class.getName(),
+            ClassReplicaCreator.class.getName()};
 
     /*
      * Classes that should always be deferred regardless of what the user
      * specifies in annotations etc.
      */
-    private static final String[] packagesToBeDeferred = new String[] { "org.hamcrest.*", "java.*", "javax.accessibility.*", "sun.*", "org.junit.*",
+    private static final String[] packagesToBeDeferred = new String[]{"org.hamcrest.*", "java.*", "javax.accessibility.*", "sun.*", "org.junit.*",
             "junit.*", "org.pitest.*", "org.powermock.modules.junit4.common.internal.*", "org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate*",
-            "org.powermock.core*", "org.jacoco.agent.rt.*" };
-
-    // TODO Why is this needed!? We need to find a better solution.
-    final private String ignoredClass = "net.sf.cglib.proxy.Enhancer$EnhancerKey$$KeyFactoryByCGLIB$$";
-    final private String ignoredClass2 = "net.sf.cglib.core.MethodWrapper$MethodWrapperKey$$KeyFactoryByCGLIB";
+            "org.powermock.core*", "org.jacoco.agent.rt.*"};
 
     private ClassPool classPool = new ClassPool();
 
@@ -82,11 +81,9 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
      * Creates a new instance of the {@link MockClassLoader} based on the
      * following parameters:
      *
-     * @param classesToMock
-     *            The classes that must be modified to prepare for testability.
-     * @param packagesToDefer
-     *            Classes in these packages will be defered to the system
-     *            class-loader.
+     * @param classesToMock   The classes that must be modified to prepare for testability.
+     * @param packagesToDefer Classes in these packages will be defered to the system
+     *                        class-loader.
      */
     public MockClassLoader(String[] classesToMock, String[] packagesToDefer) {
         super(MockClassLoader.class.getClassLoader(), getPackagesToDefer(packagesToDefer));
@@ -112,8 +109,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
      * Creates a new instance of the {@link MockClassLoader} based on the
      * following parameters:
      *
-     * @param classesToMock
-     *            The classes that must be modified to prepare for testability.
+     * @param classesToMock The classes that must be modified to prepare for testability.
      */
     public MockClassLoader(String[] classesToMock) {
         this(classesToMock, new String[0]);
@@ -126,10 +122,9 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
      * classes added here have precedence over additionally deferred (ignored)
      * packages (those ignored by the user using @PrepareForTest).
      *
-     * @param classes
-     *            The fully qualified name of the classes that will be appended
-     *            to the list of classes that will be byte-code modified to
-     *            enable testability.
+     * @param classes The fully qualified name of the classes that will be appended
+     *                to the list of classes that will be byte-code modified to
+     *                enable testability.
      */
     public void addClassesToModify(String... classes) {
         for (String clazz : classes) {
@@ -154,7 +149,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
     private boolean shouldModify(String className) {
         final boolean shouldIgnoreClass = shouldIgnore(deferPackages, className);
         final boolean shouldModifyAll = shouldModifyAll();
-        if(shouldModifyAll) {
+        if (shouldModifyAll) {
             return !shouldIgnoreClass;
         } else {
             /* Never mind if we should ignore the class here since
@@ -186,9 +181,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
              * to make it work. We really need to investigate the real cause of
              * this behavior.
              */
-            if (name.startsWith(ignoredClass) || name.startsWith(ignoredClass2)) {
-                // ignore
-            } else {
+            if (!name.startsWith(CGLIB_ENHANCER) && !name.startsWith(CGLIB_METHOD_WRAPPER)) {
                 final CtClass ctClass = classPool.get(name);
                 if (ctClass.isFrozen()) {
                     ctClass.defrost();
