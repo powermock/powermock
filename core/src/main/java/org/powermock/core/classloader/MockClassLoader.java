@@ -70,7 +70,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
      */
     private static final String[] packagesToBeDeferred = new String[] { "org.hamcrest.*", "java.*", "javax.accessibility.*", "sun.*", "org.junit.*",
             "junit.*", "org.pitest.*", "org.powermock.modules.junit4.common.internal.*", "org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate*",
-            "org.powermock.core*" };
+            "org.powermock.core*", "org.jacoco.agent.rt.*" };
 
     // TODO Why is this needed!? We need to find a better solution.
     final private String ignoredClass = "net.sf.cglib.proxy.Enhancer$EnhancerKey$$KeyFactoryByCGLIB$$";
