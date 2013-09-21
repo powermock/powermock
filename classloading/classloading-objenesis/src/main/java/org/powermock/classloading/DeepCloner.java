@@ -108,7 +108,7 @@ public class DeepCloner implements DeepClonerSPI {
 	private <T> T performClone(Class<T> targetClass, Object source, boolean shouldCloneStandardJavaTypes) {
 		Object target = null;
 		if (targetClass.isArray() && !isClass(source)) {
-			return (T) instantiateArray(targetCL, targetClass, source, referenceMap, shouldCloneStandardJavaTypes);
+			return (T) instantiateArray(targetCL, targetClass, source, shouldCloneStandardJavaTypes);
 		} else if (isJavaReflectMethod(targetClass)) {
 			return (T) cloneJavaReflectMethod(source);
 		} else if (targetClass.isPrimitive() || isSunClass(targetClass) || isJavaReflectClass(targetClass)) {
@@ -237,7 +237,7 @@ public class DeepCloner implements DeepClonerSPI {
 							instantiatedValue = object;
 						} else {
 							Class<Object> type = getType(object);
-							if (type.getName() == "void") {
+							if (type.getName().equals("void")) {
 								type = Class.class.cast(Class.class);
 							}
 							final Class<Object> typeLoadedByCL = ClassLoaderUtil.loadClass(type, targetCL
@@ -277,7 +277,7 @@ public class DeepCloner implements DeepClonerSPI {
 	}
 
 	private static boolean isIterable(final Object object) {
-		return object == null ? false : isIterable(object.getClass());
+		return object != null && isIterable(object.getClass());
 	}
 
 	private static boolean isIterable(final Class<?> cls) {
@@ -291,7 +291,7 @@ public class DeepCloner implements DeepClonerSPI {
 	}
 
 	private Object instantiateArray(ClassLoader targetCL, Class<?> arrayClass, Object objectToClone,
-			Map<Object, Object> referenceMap, boolean cloneStandardJavaTypes) {
+                                    boolean cloneStandardJavaTypes) {
 		final int arrayLength = Array.getLength(objectToClone);
 		final Object array = Array.newInstance(arrayClass.getComponentType(), arrayLength);
 		for (int i = 0; i < arrayLength; i++) {
