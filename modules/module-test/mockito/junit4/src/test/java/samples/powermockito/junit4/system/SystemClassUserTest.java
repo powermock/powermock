@@ -170,6 +170,19 @@ public class SystemClassUserTest {
 		// then
 		assertEquals("00000000000000000000000000000000", actual);
     }
+
+    @Test
+    public void mockingNewURLWorks() throws Exception {
+        // Given
+        final URL url = mock(URL.class);
+        whenNew(URL.class).withArguments("some_url").thenReturn(url);
+
+        // When
+        final URL actual = new SystemClassUser().newURL("some_url");
+
+        // Then
+        assertSame(url, actual);
+    }
     
     @Test(expected = IllegalStateException.class)
     public void triggerMockedCallFromInterfaceTypeInsteadOfConcreteType() throws Exception

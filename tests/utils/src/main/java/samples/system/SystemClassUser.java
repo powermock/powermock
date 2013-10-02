@@ -17,10 +17,7 @@ package samples.system;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
+import java.net.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -56,6 +53,10 @@ public class SystemClassUser {
 
     public String format(String one, String args) throws IOException {
         return String.format(one, args);
+    }
+
+    public URL newURL(String anUrl) throws MalformedURLException {
+        return new URL(anUrl);
     }
 
     public void shuffleCollection(List<?> list) {
