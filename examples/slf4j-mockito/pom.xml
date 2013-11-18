@@ -3,13 +3,13 @@
     <parent>
         <artifactId>powermock-examples</artifactId>
         <groupId>org.powermock.examples</groupId>
-        <version>1.5.2-SNAPSHOT</version>
+        <version>1.5.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock.examples</groupId>
     <artifactId>powermock-examples-slf4j-mockito</artifactId>
     <name>slf4j-mockito</name>
-    <version>1.5.2-SNAPSHOT</version>
+    <version>1.5.2</version>
 
     <description>
     Example of using Slf4jMockPolicy with Mockito.
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
-            <version>1.5.2-SNAPSHOT</version>
+            <version>1.5.2</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
-            <version>1.5.2-SNAPSHOT</version>
+            <version>1.5.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
