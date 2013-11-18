@@ -1,5 +1,5 @@
-Change log next version
------------------------
+Change log 1.5.2 (2013-11-18)
+-----------------------------
 * Fixed PowerMock OOM (OutOfMemory) issues with Mockito (big thanks to Henrik Karlsson for the patch).
 * PowerMock EasyMock extension API now supports EasyMock version 3.2.
 * Added jacoco agent to be deferred by the PowerMock classloader
