@@ -3,13 +3,13 @@
     <parent>
         <artifactId>powermock-examples</artifactId>
         <groupId>org.powermock.examples</groupId>
-        <version>1.5.3-SNAPSHOT</version>
+        <version>1.5.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock.examples</groupId>
     <artifactId>powermock-examples-jcl</artifactId>
     <name>jcl</name>
-    <version>1.5.3-SNAPSHOT</version>
+    <version>1.5.2-SNAPSHOT</version>
 
     <description>
     Example of using JclMockPolicy.

@@ -4,7 +4,7 @@
     <groupId>org.powermock.examples</groupId>
     <artifactId>powermock-examples-tutorial</artifactId>
     <packaging>jar</packaging>
-    <version>1.5.3-SNAPSHOT</version>
+    <version>1.5.2-SNAPSHOT</version>
     <name>tutorial</name>
     <url>http://www.powermock.org</url>
 
