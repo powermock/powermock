@@ -1,6 +1,6 @@
 Changelog next version
 ----------------------
-* Added OSGi metadata to manifest files (issue 204)
+* Added OSGi metadata to manifest files (issue 204) (thanks to Gabor Liptak for patch)
 
 Change log 1.5.2 (2013-11-18)
 -----------------------------
