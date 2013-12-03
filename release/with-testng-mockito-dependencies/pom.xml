@@ -28,7 +28,7 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-release-testng-without-mock-framework</artifactId>
-            <type>pom</type>
+            <type>jar</type>
             <version>${project.version}</version>
         </dependency>
         <dependency>

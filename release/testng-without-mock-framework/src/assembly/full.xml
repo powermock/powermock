@@ -1,7 +1,7 @@
 <assembly>
     <id>full</id>
     <formats>
-        <format>jar</format>
+        <format>dir</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
     <dependencySets>
@@ -9,6 +9,13 @@
             <outputDirectory></outputDirectory>
             <outputFileNameMapping></outputFileNameMapping>
             <unpack>true</unpack>
+			<unpackOptions>
+				<excludes>
+					<exclude>META-INF/*</exclude>
+					<exclude>META-INF/**/*</exclude>
+					<exclude>META-INF</exclude>
+				</excludes>
+			</unpackOptions>     
             <useTransitiveDependencies>false</useTransitiveDependencies>
         </dependencySet>
     </dependencySets>
