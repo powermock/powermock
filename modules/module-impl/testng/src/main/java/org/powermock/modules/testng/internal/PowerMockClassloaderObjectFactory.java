@@ -43,6 +43,8 @@ public class PowerMockClassloaderObjectFactory implements IObjectFactory {
 
 	private final IgnorePackagesExtractor ignorePackagesExtractor;
 
+        private final ExpectedExceptionsExtractor expectedExceptionsExtractor;
+
 	public PowerMockClassloaderObjectFactory() {
 		List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
 		final MainMockTransformer mainMockTransformer = new MainMockTransformer();
@@ -54,6 +56,7 @@ public class PowerMockClassloaderObjectFactory implements IObjectFactory {
 		mockLoader.setMockTransformerChain(mockTransformerChain);
 		testClassesExtractor = new PrepareForTestExtractorImpl();
 		ignorePackagesExtractor = new PowerMockIgnorePackagesExtractorImpl();
+                expectedExceptionsExtractor = new PowerMockExpectedExceptionsExtractorImpl();
 	}
 
 	public Object newInstance(@SuppressWarnings("rawtypes") Constructor constructor, Object... params) {
@@ -69,6 +72,7 @@ public class PowerMockClassloaderObjectFactory implements IObjectFactory {
 		MockRepository.clear();
 		Class<?> testClass = constructor.getDeclaringClass();
 		mockLoader.addIgnorePackage(ignorePackagesExtractor.getPackagesToIgnore(testClass));
+                mockLoader.addIgnorePackage(expectedExceptionsExtractor.getPackagesToIgnore(testClass));
 		mockLoader.addClassesToModify(testClassesExtractor.getTestClasses(testClass));
 		try {
 			registerProxyframework(mockLoader);
