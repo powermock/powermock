@@ -1,5 +1,5 @@
-Changelog next version
-----------------------
+Change log 1.5.3 (2014-01-10)
+-----------------------------
 * Added OSGi metadata to manifest files (issue 204) (thanks to Gabor Liptak for patch)
 * Upgraded to Javassist 3.18.1-GA.
 * Test case with expectedExceptions no longer fails when using PowerMock with TestNG (issue 366) (thanks to majorpetya for the patch).
