@@ -98,7 +98,13 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
             final ClassLoader key = next.getClassLoader();
             PowerMockJUnit4RunListener powerMockListener = new PowerMockJUnit4RunListener(key, powerMockTestNotifier);
             notifier.addListener(powerMockListener);
-            delegate.run(notifier);
+            final ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().setContextClassLoader(key);
+            try {
+                delegate.run(notifier);
+            } finally {
+                Thread.currentThread().setContextClassLoader(originalClassLoader);
+            }
             final int failureCountForThisPowerMockListener = powerMockListener.getFailureCount();
             final int ignoreCountForThisPowerMockListener = powerMockListener.getIgnoreCount();
             failureCount += failureCountForThisPowerMockListener;
