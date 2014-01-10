@@ -1,3 +1,7 @@
+Change log next version
+-----------------------
+* Removed OSGi metadata because they didn't work properly
+
 Change log 1.5.3 (2014-01-10)
 -----------------------------
 * Added OSGi metadata to manifest files (issue 204) (thanks to Gabor Liptak for patch)

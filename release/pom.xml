@@ -44,4 +44,5 @@
         <module>testng-without-mock-framework</module>
         <module>without-test-and-mock-framework</module>
     </modules>
+
 </project>

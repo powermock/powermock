@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-mockito-release-full</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <name>powermock-mockito-single-jar-release-full</name>
 
     <description>
@@ -143,16 +143,15 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
+                    <finalName>powermock-mockito-${project.version}</finalName>
                     <descriptors>
                         <descriptor>src/assembly/full.xml</descriptor>
                     </descriptors>
-					<finalName>classes</finalName>
-					<appendAssemblyId>false</appendAssemblyId>
                 </configuration>
                 <executions>
                     <execution>
                         <id>make-assembly</id>
-                        <phase>process-resources</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>attached</goal>
                         </goals>

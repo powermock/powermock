@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-release-junit-without-mock-framework</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <name>powermock-release-junit-without-mock-framework</name>
 
     <description>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-release-without-test-and-mock-framework</artifactId>
-            <type>jar</type>
+            <type>pom</type>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -51,16 +51,15 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
+                    <finalName>powermock-junit-without-mock-framework-${project.version}</finalName>
                     <descriptors>
                         <descriptor>src/assembly/full.xml</descriptor>
                     </descriptors>
-					<finalName>classes</finalName>
-					<appendAssemblyId>false</appendAssemblyId>
-				</configuration>
+                </configuration>
                 <executions>
                     <execution>
                         <id>make-assembly</id>
-                        <phase>process-resources</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>attached</goal>
                         </goals>
