@@ -4,6 +4,7 @@ Changelog next version
 * Upgraded to Javassist 3.18.1-GA.
 * Test case with expectedExceptions no longer fails when using PowerMock with TestNG (issue 366) (thanks to majorpetya for the patch).
 * Fixed a classloading issue with the JUnit4TestSuiteChunkerImpl (thanks to Robert Gay for the patch)
+* Updated objenesis to version 2.1
 
 Change log 1.5.2 (2013-11-18)
 -----------------------------
