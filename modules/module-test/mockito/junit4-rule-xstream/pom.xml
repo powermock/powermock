@@ -4,11 +4,11 @@
     <parent>
         <artifactId>powermock-modules-test-mockito</artifactId>
         <groupId>org.powermock</groupId>
-        <version>1.5.3</version>
+        <version>1.5.4-SNAPSHOT</version>
     </parent>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-junit4-rule-xstream-test</artifactId>
-    <version>1.5.3</version>
+    <version>1.5.4-SNAPSHOT</version>
     <name>powermock-junit4-rule-xstream-test</name>
 
     <description>
