@@ -12,14 +12,18 @@ import org.powermock.reflect.Whitebox;
 import samples.privateandfinal.PrivateFinal;
 import samples.privatemocking.PrivateMethodDemo;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import javax.activation.FileDataSource;
+import java.io.File;
+import java.io.StringReader;
+
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.never;
 import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest( { PrivateMethodDemo.class })
+@PrepareForTest({PrivateMethodDemo.class})
 public class PrivateInstanceMockingTest {
 
     @Test
@@ -143,5 +147,19 @@ public class PrivateInstanceMockingTest {
 
         assertEquals("First", tested.say(name));
         assertEquals("Second", tested.say(name));
+    }
+
+    @Test
+    public void usingMultipleArgumentsOnPrivateMethodWorks() throws Exception {
+        File file = mock(File.class);
+        FileDataSource fileDataSource = mock(FileDataSource.class);
+        StringReader expected = new StringReader("Some string");
+
+        PrivateMethodDemo tested = mock(PrivateMethodDemo.class);
+        doReturn(expected).when(tested, method(PrivateMethodDemo.class, "createReader", File.class, FileDataSource.class)).withArguments(file, fileDataSource);
+
+        StringReader actual = Whitebox.invokeMethod(tested, "createReader", file, fileDataSource);
+
+        assertSame(expected, actual);
     }
 }

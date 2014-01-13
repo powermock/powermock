@@ -21,24 +21,29 @@ import java.lang.reflect.Method;
 
 public class DefaultPrivatelyExpectedArguments implements PrivatelyExpectedArguments {
 
-	private final Method method;
-	private final Object mock;
+    private final Method method;
+    private final Object mock;
 
-	public DefaultPrivatelyExpectedArguments(Object mock, Method method) {
-		this.mock = mock;
-		this.method = method;
-		method.setAccessible(true);
-	}
+    public DefaultPrivatelyExpectedArguments(Object mock, Method method) {
+        this.mock = mock;
+        this.method = method;
+        method.setAccessible(true);
+    }
 
-	public <T> void withArguments(Object firstArgument, Object... additionalArguments) throws Exception {
-		if (additionalArguments == null || additionalArguments.length == 0) {
-			method.invoke(mock, firstArgument);
-		} else {
-			method.invoke(mock, firstArgument, additionalArguments);
-		}
-	}
+    public <T> void withArguments(Object firstArgument, Object... additionalArguments) throws Exception {
+        if (additionalArguments == null || additionalArguments.length == 0) {
+            method.invoke(mock, firstArgument);
+        } else {
+            Object[] allArgs = new Object[additionalArguments.length + 1];
+            allArgs[0] = firstArgument;
+            if (additionalArguments.length > 0) {
+                System.arraycopy(additionalArguments, 0, allArgs, 1, additionalArguments.length);
+            }
+            method.invoke(mock, allArgs);
+        }
+    }
 
-	public <T> void withNoArguments() throws Exception {
-		method.invoke(mock);
-	}
+    public <T> void withNoArguments() throws Exception {
+        method.invoke(mock);
+    }
 }

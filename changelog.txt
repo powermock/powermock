@@ -1,6 +1,7 @@
 Change log next version
 -----------------------
 * Removed OSGi metadata because they didn't work properly
+* Fixed an issue when setting up private method expectations with multiple arguments in Mockito.
 
 Change log 1.5.3 (2014-01-10)
 -----------------------------
