@@ -37,7 +37,7 @@ public final class PowerMockAgent
 {
 
 	static final String javaSpecVersion = System.getProperty("java.specification.version");
-    static final boolean jdk6OrLater = "1.6".equals(javaSpecVersion) || "1.7".equals(javaSpecVersion);
+    static final boolean jdk6OrLater = "1.6".equals(javaSpecVersion) || "1.7".equals(javaSpecVersion) || "1.8".equals(javaSpecVersion);
 
     private static final PowerMockClassTransformer classTransformer = new PowerMockClassTransformer();
     
