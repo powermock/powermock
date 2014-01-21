@@ -127,9 +127,11 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
      *                enable testability.
      */
     public void addClassesToModify(String... classes) {
-        for (String clazz : classes) {
-            if (!shouldDefer(packagesToBeDeferred, clazz)) {
-                modify.add(clazz);
+        if (classes != null) {
+            for (String clazz : classes) {
+                if (!shouldDefer(packagesToBeDeferred, clazz)) {
+                    modify.add(clazz);
+                }
             }
         }
     }

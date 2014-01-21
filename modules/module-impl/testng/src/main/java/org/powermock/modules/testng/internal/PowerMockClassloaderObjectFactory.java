@@ -33,6 +33,7 @@ import org.testng.IObjectFactory;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
+import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
 
 @SuppressWarnings("serial")
 public class PowerMockClassloaderObjectFactory implements IObjectFactory {
@@ -42,6 +43,8 @@ public class PowerMockClassloaderObjectFactory implements IObjectFactory {
 	private final TestClassesExtractor testClassesExtractor;
 
 	private final IgnorePackagesExtractor ignorePackagesExtractor;
+
+        private final StaticConstructorSuppressExtractorImpl staticConstructorSuppressExtractor;
 
         private final ExpectedExceptionsExtractor expectedExceptionsExtractor;
 
@@ -57,6 +60,7 @@ public class PowerMockClassloaderObjectFactory implements IObjectFactory {
 		testClassesExtractor = new PrepareForTestExtractorImpl();
 		ignorePackagesExtractor = new PowerMockIgnorePackagesExtractorImpl();
                 expectedExceptionsExtractor = new PowerMockExpectedExceptionsExtractorImpl();
+                staticConstructorSuppressExtractor = new StaticConstructorSuppressExtractorImpl();
 	}
 
 	public Object newInstance(@SuppressWarnings("rawtypes") Constructor constructor, Object... params) {
@@ -74,6 +78,7 @@ public class PowerMockClassloaderObjectFactory implements IObjectFactory {
 		mockLoader.addIgnorePackage(ignorePackagesExtractor.getPackagesToIgnore(testClass));
                 mockLoader.addIgnorePackage(expectedExceptionsExtractor.getPackagesToIgnore(testClass));
 		mockLoader.addClassesToModify(testClassesExtractor.getTestClasses(testClass));
+                mockLoader.addClassesToModify(staticConstructorSuppressExtractor.getClassesToModify(testClass));
 		try {
 			registerProxyframework(mockLoader);
 			new MockPolicyInitializerImpl(testClass).initialize(mockLoader);
