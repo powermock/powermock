@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.objectweb.asm;
+package org.powermock.objectweb.asm;
 
 /**
  * A visitor to visit a Java method. The methods of this interface must be
@@ -245,7 +245,7 @@ public interface MethodVisitor {
      *        INVOKEINTERFACE or INVOKEDYNAMIC.
      * @param owner the internal name of the method's owner class (see {@link
      *        Type#getInternalName() getInternalName})
-     *        or {@link org.objectweb.asm.Opcodes#INVOKEDYNAMIC_OWNER}.
+     *        or {@link org.powermock.objectweb.asm.Opcodes#INVOKEDYNAMIC_OWNER}.
      * @param name the method's name.
      * @param desc the method's descriptor (see {@link Type Type}).
      */

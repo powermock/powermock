@@ -20,8 +20,8 @@ import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
+import org.powermock.objectweb.asm.ClassReader;
+import org.powermock.objectweb.asm.ClassWriter;
 
 public class DefinalizingClassTransformer extends AbstractClassTransformer implements ClassFileTransformer {
 

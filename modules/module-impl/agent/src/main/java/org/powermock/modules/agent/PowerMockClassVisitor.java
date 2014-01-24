@@ -1,9 +1,9 @@
 package org.powermock.modules.agent;
 
-import org.objectweb.asm.ClassAdapter;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
+import org.powermock.objectweb.asm.ClassAdapter;
+import org.powermock.objectweb.asm.ClassVisitor;
+import org.powermock.objectweb.asm.MethodVisitor;
+import org.powermock.objectweb.asm.Opcodes;
 
 import java.lang.reflect.Modifier;
 
