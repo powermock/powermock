@@ -4,7 +4,7 @@ Change log next version
 * Fixed an issue when setting up private method expectations with multiple arguments in Mockito.
 * Added support for suppressing static initializers using TestNG (issue 256) (thanks to majorpetya for the patch).
 * PowerMock Java agent works in Java 8 (issue 475) (thanks to iirekm for help).
-* Moved bundle asm packages into the powermock package for the PowerMock Java Agent module to avoid classloading issues.
+* Moved bundled asm packages into the powermock package for the PowerMock Java Agent module to avoid classloading issues.
 
 Change log 1.5.3 (2014-01-10)
 -----------------------------
