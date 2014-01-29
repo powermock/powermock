@@ -1,5 +1,5 @@
-Change log next version
------------------------
+Change log 1.5.4 (2014-01-29)
+-----------------------------
 * Removed OSGi metadata because they didn't work properly
 * Fixed an issue when setting up private method expectations with multiple arguments in Mockito.
 * Added support for suppressing static initializers using TestNG (issue 256) (thanks to majorpetya for the patch).
