@@ -4,12 +4,12 @@
     <parent>
         <groupId>org.powermock</groupId>
         <artifactId>powermock-modules</artifactId>
-        <version>1.5.4</version>
+        <version>1.5.5-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-module-junit4-rule</artifactId>
-    <version>1.5.4</version>
+    <version>1.5.5-SNAPSHOT</version>
     <name>powermock-module-junit4-rule</name>
 
     <description>
