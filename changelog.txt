@@ -1,3 +1,7 @@
+Change log next version
+-----------------------
+* Updated OSGi metadata
+
 Change log 1.5.4 (2014-01-29)
 -----------------------------
 * Removed OSGi metadata because they didn't work properly

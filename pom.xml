@@ -83,6 +83,10 @@
         <module>reflect</module>
         <module>classloading</module>
     </modules>
+	<properties>
+		<easymock.version>3.2</easymock.version>
+		<mockito.version>1.9.5</mockito.version>
+	</properties>
     <build>
         <plugins>
             <plugin>
@@ -141,6 +145,38 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>rat-maven-plugin</artifactId>
             </plugin>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+				<archive>
+					<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+				</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>bundle-manifest</id>
+						<phase>process-classes</phase>
+						<goals>    
+							<goal>manifest</goal>
+						</goals>   
+					</execution>
+				</executions>
+				<configuration>
+					<instructions>
+						<Export-Package>*</Export-Package>
+						<Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+						<!--Letting powermock bundles to see all exported packages anywhere. Eclipse specific manifest entry. See http://www.eclipsezone.com/articles/eclipse-vms/?source=archives -->
+						<Eclipse-BuddyPolicy>global,app,ext,boot</Eclipse-BuddyPolicy>
+						<!--Letting powermock bundles to see all exported packages anywhere. OSGI standard entry. See http://wiki.osgi.org/wiki/DynamicImport-Package -->						
+						<DynamicImport-Package>*</DynamicImport-Package>
+						<Bundle-Description>${project.description}</Bundle-Description>
+					</instructions>
+				</configuration>
+			</plugin>
         </plugins>
     </build>
     <reporting>
@@ -238,13 +274,13 @@
             <dependency>
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
-                <version>3.2</version>
+                <version>${easymock.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-all</artifactId>
-                <version>1.9.5</version>
+                <version>${mockito.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.objenesis</groupId>
