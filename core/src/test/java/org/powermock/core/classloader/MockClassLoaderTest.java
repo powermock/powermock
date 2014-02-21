@@ -129,4 +129,21 @@ public class MockClassLoaderTest {
         Assert.assertTrue(resource.getPath().endsWith("test.txt"));
         Assert.assertFalse(resources.hasMoreElements());
     }
+    
+    @Test
+    public void resourcesNotDoubled() throws Exception {
+        final MockClassLoader mockClassLoader = new MockClassLoader(new String[0]);
+        List<MockTransformer> list = new LinkedList<MockTransformer>();
+        list.add(new MainMockTransformer());
+        mockClassLoader.setMockTransformerChain(list);
+        
+        // MockClassLoader will only be able to find 'foo/bar/baz/test.txt' if it
+        // properly defers the resources lookup to its deferTo ClassLoader.
+        Enumeration<URL> resources = mockClassLoader.getResources("org/powermock/core/classloader/foo/bar/baz/test.txt");
+        Assert.assertNotNull(resources);
+        Assert.assertTrue(resources.hasMoreElements());
+        URL resource = resources.nextElement();
+        Assert.assertTrue(resource.getPath().endsWith("test.txt"));
+        Assert.assertFalse(resources.hasMoreElements());
+    }
 }

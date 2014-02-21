@@ -136,6 +136,15 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
             throw new RuntimeException(e);
         }
 	}
+    
+    @Override
+    public Enumeration<URL> getResources(String name) throws IOException {
+    	// If deferTo is already the parent, then we'd end up returning two copies of each resource...
+    	if(deferTo.equals(getParent()))
+    		return deferTo.getResources(name);
+    	else
+    		return super.getResources(name);
+    }
 
     protected boolean shouldModify(Iterable<String> packages, String name) {
         return !shouldIgnore(packages, name);
