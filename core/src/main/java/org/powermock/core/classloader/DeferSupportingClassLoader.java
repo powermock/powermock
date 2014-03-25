@@ -19,6 +19,7 @@ import org.powermock.core.WildcardMatcher;
 import org.powermock.reflect.Whitebox;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -119,25 +120,30 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
      * @return a <code>URL</code> for the resource, or <code>null</code> if the
      *         resource could not be found.
      */
-    @Override
     protected URL findResource(String name) {
         try {
-            return Whitebox.<URL> invokeMethod(deferTo, "findResource", name);
+            return Whitebox.invokeMethod(deferTo, "findResource", name);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    @Override
 	protected Enumeration<URL> findResources(String name) throws IOException {
         try {
-            return Whitebox.<Enumeration<URL>> invokeMethod(deferTo, "findResources", name);
+            return Whitebox.invokeMethod(deferTo, "findResources", name);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 	}
-    
-    @Override
+
+    public URL getResource(String s) {
+        return deferTo.getResource(s);
+    }
+
+    public InputStream getResourceAsStream(String s) {
+        return deferTo.getResourceAsStream(s);
+    }
+
     public Enumeration<URL> getResources(String name) throws IOException {
     	// If deferTo is already the parent, then we'd end up returning two copies of each resource...
     	if(deferTo.equals(getParent()))
