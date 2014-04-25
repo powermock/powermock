@@ -195,9 +195,10 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
             List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
             final MainMockTransformer mainMockTransformer = new MainMockTransformer();
             mockTransformerChain.add(mainMockTransformer);
+            final UseClassPathAdjuster useClassPathAdjuster = testClass.getAnnotation(UseClassPathAdjuster.class);
             mockLoader = AccessController.doPrivileged(new PrivilegedAction<MockClassLoader>() {
                 public MockClassLoader run() {
-                    return new MockClassLoader(classesToLoadByMockClassloader, packagesToIgnore);
+                    return new MockClassLoader(classesToLoadByMockClassloader, packagesToIgnore, useClassPathAdjuster);
                 }
             });
             MockClassLoader mockClassLoader = (MockClassLoader) mockLoader;

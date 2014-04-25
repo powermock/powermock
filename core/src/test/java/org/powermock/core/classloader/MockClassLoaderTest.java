@@ -16,16 +16,26 @@
 package org.powermock.core.classloader;
 
 import junit.framework.Assert;
+
+import org.junit.Ignore;
 import org.junit.Test;
+import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.MainMockTransformer;
 import org.powermock.reflect.Whitebox;
 
+import java.io.FileOutputStream;
+import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
+
+import javassist.ByteArrayClassPath;
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
 
 import static org.junit.Assert.*;
 import static org.powermock.core.classloader.MockClassLoader.MODIFY_ALL_CLASSES;
@@ -145,5 +155,67 @@ public class MockClassLoaderTest {
         URL resource = resources.nextElement();
         Assert.assertTrue(resource.getPath().endsWith("test.txt"));
         Assert.assertFalse(resources.hasMoreElements());
+    }
+    
+    @Test
+    public void canFindDynamicClassFromAdjustedClasspath() throws Exception {
+        // Construct MockClassLoader with @UseClassPathAdjuster annotation.
+        // It activates our MyClassPathAdjuster class which appends our dynamic
+        // class to the MockClassLoader's classpool.
+        UseClassPathAdjuster useClassPathAdjuster = new UseClassPathAdjuster() {
+            public Class<? extends Annotation> annotationType() {
+                return UseClassPathAdjuster.class;
+            }
+            public Class<? extends ClassPathAdjuster> value() {
+                return MyClassPathAdjuster.class;
+            }
+        };
+        final MockClassLoader mockClassLoader = new MockClassLoader(new String[0], useClassPathAdjuster );
+        List<MockTransformer> list = new LinkedList<MockTransformer>();
+        list.add(new MainMockTransformer());
+        mockClassLoader.setMockTransformerChain(list);
+
+        // setup custom classloader providing our dynamic class, for MockClassLoader to defer to
+        mockClassLoader.deferTo = new ClassLoader(getClass().getClassLoader()) {
+            @Override
+            public Class<?> loadClass(String name)
+                    throws ClassNotFoundException {
+                if (name.equals(DynamicClassHolder.clazz.getName())) {
+                        return DynamicClassHolder.clazz;
+                }
+                return super.loadClass(name);
+            }
+        };
+
+        // verify that MockClassLoader can successfully load the class
+        Class<?> dynamicTestClass = Class.forName(DynamicClassHolder.clazz.getName(), false, mockClassLoader);
+        Assert.assertNotNull(dynamicTestClass);
+        // .. and that MockClassLoader really loaded the class itself rather
+        // than just providing the class from the deferred classloader
+        assertNotSame(DynamicClassHolder.clazz, dynamicTestClass);
+    }
+
+    // helper class for canFindDynamicClassFromAdjustedClasspath()
+    static class MyClassPathAdjuster implements ClassPathAdjuster {
+        public void adjustClassPath(ClassPool classPool) {
+            classPool.appendClassPath(new ByteArrayClassPath(DynamicClassHolder.clazz.getName(), DynamicClassHolder.classBytes));
+        }
+    }
+
+    // helper class for canFindDynamicClassFromAdjustedClasspath()
+    static class DynamicClassHolder {
+        final static byte[] classBytes;
+        final static Class<?> clazz;
+        static {
+            try {
+                // construct a new class dynamically
+                ClassPool cp = ClassPool.getDefault();
+                final CtClass ctClass = cp.makeClass("my.ABCTestClass");
+                classBytes = ctClass.toBytecode();
+                clazz = ctClass.toClass();
+            } catch (Exception e) {
+                throw new RuntimeException("Problem constructing custom class", e);
+            }
+        }
     }
 }

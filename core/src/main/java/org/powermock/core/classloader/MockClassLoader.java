@@ -20,6 +20,7 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import org.powermock.core.ClassReplicaCreator;
 import org.powermock.core.WildcardMatcher;
+import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 import org.powermock.core.spi.PowerMockPolicy;
 import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.core.transformers.MockTransformer;
@@ -85,11 +86,20 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
      * @param packagesToDefer Classes in these packages will be defered to the system
      *                        class-loader.
      */
-    public MockClassLoader(String[] classesToMock, String[] packagesToDefer) {
+    public MockClassLoader(String[] classesToMock, String[] packagesToDefer, UseClassPathAdjuster useClassPathAdjuster) {
         super(MockClassLoader.class.getClassLoader(), getPackagesToDefer(packagesToDefer));
 
         addClassesToModify(classesToMock);
         classPool.appendClassPath(new ClassClassPath(this.getClass()));
+        if (useClassPathAdjuster != null) {
+            try {
+                Class<? extends ClassPathAdjuster> value = useClassPathAdjuster.value();
+                ClassPathAdjuster classPathAdjuster = value.newInstance();
+                classPathAdjuster.adjustClassPath(classPool);
+            } catch (Exception e) {
+                throw new RuntimeException("Error instantiating class path adjuster", e);
+            }
+        }
     }
 
     private static String[] getPackagesToDefer(final String[] additionalDeferPackages) {
@@ -110,10 +120,32 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
      * Creates a new instance of the {@link MockClassLoader} based on the
      * following parameters:
      *
+     * @param classesToMock   The classes that must be modified to prepare for testability.
+     * @param packagesToDefer Classes in these packages will be defered to the system
+     *                        class-loader.
+     */
+    public MockClassLoader(String[] classesToMock, String[] packagesToDefer) {
+        this(classesToMock, packagesToDefer, null);
+    }
+
+    /**
+     * Creates a new instance of the {@link MockClassLoader} based on the
+     * following parameters:
+     *
+     * @param classesToMock The classes that must be modified to prepare for testability.
+     */
+    public MockClassLoader(String[] classesToMock, UseClassPathAdjuster useClassPathAdjuster) {
+        this(classesToMock, new String[0], useClassPathAdjuster);
+    }
+
+    /**
+     * Creates a new instance of the {@link MockClassLoader} based on the
+     * following parameters:
+     *
      * @param classesToMock The classes that must be modified to prepare for testability.
      */
     public MockClassLoader(String[] classesToMock) {
-        this(classesToMock, new String[0]);
+        this(classesToMock, new String[0], null);
     }
 
     /**
