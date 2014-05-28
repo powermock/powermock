@@ -5,6 +5,7 @@ Change log next version
 * Added getResourceAsStream and getResource to DeferSupportingClassLoader which defers loading to the deferring classloader.
 * Added ability to adjust the classpath when running the a test using the @UseClassPathAdjuster annotation. This is useful when integrating PowerMock with certain third-party JUnit runners (thanks to Jonas Berlin for the patch).
 * Upgraded to Javassist 3.18.2-GA.
+* Moved project to github (issue 493).
 
 Change log 1.5.4 (2014-01-29)
 -----------------------------
