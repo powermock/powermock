@@ -7,6 +7,7 @@ Change log next version
 * Upgraded to Javassist 3.18.2-GA.
 * Moved project to github (issue 493).
 * Upgraded to TestNG 6.8.8.
+* Removed accidental JUnit dependency to Objenesis and XStream classloading projects.
 
 Change log 1.5.4 (2014-01-29)
 -----------------------------
