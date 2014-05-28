@@ -3,13 +3,13 @@
     <parent>
         <artifactId>powermock-modules-easymock-test</artifactId>
         <groupId>org.powermock</groupId>
-        <version>1.5.5-SNAPSHOT</version>
+        <version>1.5.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-module-test-easymock-junit45</artifactId>
     <name>powermock-module-test-easymock-junit45</name>
-    <version>1.5.5-SNAPSHOT</version>
+    <version>1.5.5</version>
 
     <description>
     Tests for EasyMock module with JUnit 4.5.
