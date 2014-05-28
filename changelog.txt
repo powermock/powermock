@@ -1,5 +1,5 @@
-Change log next version
------------------------
+Change log 1.5.5 (2014-05-28)
+-----------------------------
 * Updated OSGi metadata
 * MockClassLoader.getResources no longer loads same file twice (thanks to Kelsey Rider for the patch)
 * Added getResourceAsStream and getResource to DeferSupportingClassLoader which defers loading to the deferring classloader.
