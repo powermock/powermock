@@ -4,6 +4,7 @@ Change log next version
 * MockClassLoader.getResources no longer loads same file twice (thanks to Kelsey Rider for the patch)
 * Added getResourceAsStream and getResource to DeferSupportingClassLoader which defers loading to the deferring classloader.
 * Added ability to adjust the classpath when running the a test using the @UseClassPathAdjuster annotation. This is useful when integrating PowerMock with certain third-party JUnit runners (thanks to Jonas Berlin for the patch).
+* Upgraded to Javassist 3.18.1-GA.
 
 Change log 1.5.4 (2014-01-29)
 -----------------------------
@@ -16,7 +17,7 @@ Change log 1.5.4 (2014-01-29)
 Change log 1.5.3 (2014-01-10)
 -----------------------------
 * Added OSGi metadata to manifest files (issue 204) (thanks to Gabor Liptak for patch)
-* Upgraded to Javassist 3.18.2-GA.
+* Upgraded to Javassist 3.18.1-GA.
 * Test case with expectedExceptions no longer fails when using PowerMock with TestNG (issue 366) (thanks to majorpetya for the patch).
 * Fixed a classloading issue with the JUnit4TestSuiteChunkerImpl (thanks to Robert Gay for the patch)
 * Updated objenesis to version 2.1
