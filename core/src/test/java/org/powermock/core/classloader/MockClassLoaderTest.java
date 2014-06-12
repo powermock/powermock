@@ -15,16 +15,12 @@
  */
 package org.powermock.core.classloader;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
+import static org.powermock.core.classloader.MockClassLoader.MODIFY_ALL_CLASSES;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
-import org.powermock.core.transformers.MockTransformer;
-import org.powermock.core.transformers.impl.MainMockTransformer;
-import org.powermock.reflect.Whitebox;
-
-import java.io.FileOutputStream;
 import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -33,12 +29,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javassist.ByteArrayClassPath;
-import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
+import junit.framework.Assert;
 
-import static org.junit.Assert.*;
-import static org.powermock.core.classloader.MockClassLoader.MODIFY_ALL_CLASSES;
+import org.junit.Test;
+import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
+import org.powermock.core.transformers.MockTransformer;
+import org.powermock.core.transformers.impl.MainMockTransformer;
+import org.powermock.reflect.Whitebox;
 
 public class MockClassLoaderTest {
     @Test
@@ -193,6 +192,29 @@ public class MockClassLoaderTest {
         // .. and that MockClassLoader really loaded the class itself rather
         // than just providing the class from the deferred classloader
         assertNotSame(DynamicClassHolder.clazz, dynamicTestClass);
+    }
+
+    @Test(expected = ClassNotFoundException.class)
+    public void cannotFindDynamicClassInDeferredClassLoader() throws Exception {
+
+        MockClassLoader mockClassLoader = new MockClassLoader(new String[0]);
+        List<MockTransformer> list = new LinkedList<MockTransformer>();
+        list.add(new MainMockTransformer());
+        mockClassLoader.setMockTransformerChain(list);
+
+        // setup custom classloader providing our dynamic class, for MockClassLoader to defer to
+        mockClassLoader.deferTo = new ClassLoader(getClass().getClassLoader()) {
+
+            @Override
+            public Class<?> loadClass(String name)
+                    throws ClassNotFoundException {
+                return super.loadClass(name);
+            }
+        };
+
+        //Try to locate and load a class that is not in MockClassLoader.
+        Class<?> dynamicTestClass = Class.forName(DynamicClassHolder.clazz.getName(), false, mockClassLoader);
+
     }
 
     // helper class for canFindDynamicClassFromAdjustedClasspath()
