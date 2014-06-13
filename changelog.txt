@@ -1,3 +1,7 @@
+Change log next version
+-----------------------
+* Changed so that the MockClassLoader throws ClassNotFoundException instead of Javassist's NotFoundException when a class isn't found (thanks to Mikael Petterson for the pull request).
+
 Change log 1.5.5 (2014-05-28)
 -----------------------------
 * Updated OSGi metadata
