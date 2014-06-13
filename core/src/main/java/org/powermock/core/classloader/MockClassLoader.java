@@ -1,12 +1,9 @@
 /*
  * Copyright 2011 the original author or authors.
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
  * http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,20 +12,21 @@
  */
 package org.powermock.core.classloader;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
+
 import org.powermock.core.ClassReplicaCreator;
 import org.powermock.core.WildcardMatcher;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 import org.powermock.core.spi.PowerMockPolicy;
 import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.core.transformers.MockTransformer;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Mock all classes except system classes.
@@ -38,7 +36,7 @@ import java.util.Set;
  * <li>system classes are deferred to another classloader</li>
  * <li>testing framework classes are loaded, but not modified</li>
  * </ol>
- *
+ * 
  * @author Johan Haleby
  * @author Jan Kronquist
  */
@@ -61,30 +59,35 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
      * Classes not deferred but loaded by the mock class loader but they're not
      * modified.
      */
-    private final String[] packagesToLoadButNotModify = new String[]{"org.junit.", "junit.", "org.easymock.", "net.sf.cglib.", "javassist.",
-            "org.powermock.modules.junit4.internal.", "org.powermock.modules.junit4.legacy.internal.", "org.powermock.modules.junit3.internal.",
-            "org.powermock"};
+    private final String[] packagesToLoadButNotModify = new String[] { "org.junit.", "junit.", "org.easymock.",
+            "net.sf.cglib.", "javassist.",
+            "org.powermock.modules.junit4.internal.", "org.powermock.modules.junit4.legacy.internal.",
+            "org.powermock.modules.junit3.internal.",
+            "org.powermock" };
 
-    private final String[] specificClassesToLoadButNotModify = new String[]{InvocationSubstitute.class.getName(), PowerMockPolicy.class.getName(),
-            ClassReplicaCreator.class.getName()};
+    private final String[] specificClassesToLoadButNotModify = new String[] { InvocationSubstitute.class.getName(),
+            PowerMockPolicy.class.getName(),
+            ClassReplicaCreator.class.getName() };
 
     /*
      * Classes that should always be deferred regardless of what the user
      * specifies in annotations etc.
      */
-    private static final String[] packagesToBeDeferred = new String[]{"org.hamcrest.*", "java.*", "javax.accessibility.*", "sun.*", "org.junit.*",
-            "junit.*", "org.pitest.*", "org.powermock.modules.junit4.common.internal.*", "org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate*",
-            "org.powermock.core*", "org.jacoco.agent.rt.*"};
+    private static final String[] packagesToBeDeferred = new String[] { "org.hamcrest.*", "java.*",
+            "javax.accessibility.*", "sun.*", "org.junit.*",
+            "junit.*", "org.pitest.*", "org.powermock.modules.junit4.common.internal.*",
+            "org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate*",
+            "org.powermock.core*", "org.jacoco.agent.rt.*" };
 
     private ClassPool classPool = new ClassPool();
 
     /**
      * Creates a new instance of the {@link MockClassLoader} based on the
      * following parameters:
-     *
-     * @param classesToMock   The classes that must be modified to prepare for testability.
+     * 
+     * @param classesToMock The classes that must be modified to prepare for testability.
      * @param packagesToDefer Classes in these packages will be defered to the system
-     *                        class-loader.
+     *        class-loader.
      */
     public MockClassLoader(String[] classesToMock, String[] packagesToDefer, UseClassPathAdjuster useClassPathAdjuster) {
         super(MockClassLoader.class.getClassLoader(), getPackagesToDefer(packagesToDefer));
@@ -109,20 +112,20 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
         final String[] allPackagesToBeIgnored = new String[allIgnoreLength];
         if (allIgnoreLength > defaultDeferPackagesLength) {
             System.arraycopy(packagesToBeDeferred, 0, allPackagesToBeIgnored, 0, defaultDeferPackagesLength);
-            System.arraycopy(additionalDeferPackages, 0, allPackagesToBeIgnored, defaultDeferPackagesLength, additionalIgnorePackagesLength);
+            System.arraycopy(additionalDeferPackages, 0, allPackagesToBeIgnored, defaultDeferPackagesLength,
+                    additionalIgnorePackagesLength);
             return allPackagesToBeIgnored;
         }
         return packagesToBeDeferred;
     }
 
-
     /**
      * Creates a new instance of the {@link MockClassLoader} based on the
      * following parameters:
-     *
-     * @param classesToMock   The classes that must be modified to prepare for testability.
+     * 
+     * @param classesToMock The classes that must be modified to prepare for testability.
      * @param packagesToDefer Classes in these packages will be defered to the system
-     *                        class-loader.
+     *        class-loader.
      */
     public MockClassLoader(String[] classesToMock, String[] packagesToDefer) {
         this(classesToMock, packagesToDefer, null);
@@ -131,7 +134,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
     /**
      * Creates a new instance of the {@link MockClassLoader} based on the
      * following parameters:
-     *
+     * 
      * @param classesToMock The classes that must be modified to prepare for testability.
      */
     public MockClassLoader(String[] classesToMock, UseClassPathAdjuster useClassPathAdjuster) {
@@ -141,7 +144,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
     /**
      * Creates a new instance of the {@link MockClassLoader} based on the
      * following parameters:
-     *
+     * 
      * @param classesToMock The classes that must be modified to prepare for testability.
      */
     public MockClassLoader(String[] classesToMock) {
@@ -154,10 +157,10 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
      * contained in the {@link #packagesToBeDeferred} will be ignored. How ever
      * classes added here have precedence over additionally deferred (ignored)
      * packages (those ignored by the user using @PrepareForTest).
-     *
+     * 
      * @param classes The fully qualified name of the classes that will be appended
-     *                to the list of classes that will be byte-code modified to
-     *                enable testability.
+     *        to the list of classes that will be byte-code modified to
+     *        enable testability.
      */
     public void addClassesToModify(String... classes) {
         if (classes != null) {
@@ -187,7 +190,8 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
         if (shouldModifyAll) {
             return !shouldIgnoreClass;
         } else {
-            /* Never mind if we should ignore the class here since
+            /*
+             * Never mind if we should ignore the class here since
              * classes added by prepared for test should (i.e. those added in "modify")
              * have precedence over ignored packages.
              */
@@ -208,7 +212,6 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
              * "javassist.NotFoundException:
              * net.sf.cglib.proxy.Enhancer$EnhancerKey$$KeyFactoryByCGLIB$$7fb24d72
              * ". This happens after the
-             * 
              * se.jayway.examples.tests.privatefield.
              * SimplePrivateFieldServiceClassTest#testUseService(..) tests has
              * been run and all other tests will fail if this class is tried to
@@ -224,7 +227,12 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
                 bytes = ctClass.toBytecode();
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            if (e instanceof javassist.NotFoundException) {
+                throw new ClassNotFoundException();
+            } else {
+                throw new RuntimeException(e);
+            }
+
         }
         return bytes == null ? null : defineClass(name, bytes, 0, bytes.length);
     }
@@ -244,7 +252,8 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
             }
             clazz = type.toBytecode();
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to transform class with name " + name + ". Reason: " + e.getMessage(), e);
+            throw new IllegalStateException("Failed to transform class with name " + name + ". Reason: "
+                    + e.getMessage(), e);
         }
 
         return defineClass(name, clazz, 0, clazz.length);
