@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import org.mockito.internal.util.ObjectMethodsGuru;
 import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.core.spi.NewInvocationControl;
 import org.powermock.reflect.exceptions.MethodNotFoundException;
@@ -35,6 +36,8 @@ public class MockGateway {
 
 	public static final Object PROCEED = new Object();
 	public static final Object SUPPRESS = new Object();
+
+
 	/**
 	 * Used to tell the MockGateway that the next call should not be mocked
 	 * regardless if a {@link MethodInvocationControl} is found in the
@@ -101,33 +104,51 @@ public class MockGateway {
 				throw e;
 			}
 		}
-		if (methodInvocationControl != null && methodInvocationControl.isMocked(method) && shouldMockThisCall()) {
-			returnValue = methodInvocationControl.invoke(object, method, args);
-			if (returnValue == SUPPRESS) {
-				returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
-			}
-		} else if (MockRepository.hasMethodProxy(method)) {
-			/*
-			 * We must temporary remove the method proxy when invoking the
-			 * invocation handler because if the invocation handler delegates
-			 * the call we will end up here again and we'll get a
-			 * StackOverflowError.
-			 */
-			final InvocationHandler invocationHandler = MockRepository.removeMethodProxy(method);
-			try {
-				returnValue = invocationHandler.invoke(object, method, args);
-			} finally {
-				// Set the method proxy again after the invocation
-				MockRepository.putMethodProxy(method, invocationHandler);
-			}
 
-		} else if (MockRepository.shouldSuppressMethod(method, objectType)) {
-			returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
-		} else if (MockRepository.shouldStubMethod(method)) {
-			returnValue = MockRepository.getMethodToStub(method);
-		} else {
-			returnValue = PROCEED;
-		}
+        // Fix for Issue http://code.google.com/p/powermock/issues/detail?id=88
+        // For some reason the method call to equals() on final methods is
+        // intercepted and during the further processing in Mockito the same
+        // equals() method is called on the same instance. A StackOverflowError
+        // is the result. The following fix changes this by checking if the
+        // method to be called is a final equals() method. In that case the
+        // original method is called by returning PROCEED.
+        if (    // The following describes the equals method.
+                method.getName().equals("equals")
+                && method.getParameterTypes().length == 1
+                && method.getParameterTypes()[0] == Object.class
+                && Modifier.isFinal(method.getModifiers())) {
+                returnValue = PROCEED;
+        } else {
+
+            if (methodInvocationControl != null && methodInvocationControl.isMocked(method) && shouldMockThisCall()) {
+                returnValue = methodInvocationControl.invoke(object, method, args);
+                if (returnValue == SUPPRESS) {
+                    returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
+                }
+            } else if (MockRepository.hasMethodProxy(method)) {
+                /*
+                 * We must temporary remove the method proxy when invoking the
+                 * invocation handler because if the invocation handler delegates
+                 * the call we will end up here again and we'll get a
+                 * StackOverflowError.
+                 */
+                final InvocationHandler invocationHandler = MockRepository.removeMethodProxy(method);
+                try {
+                    returnValue = invocationHandler.invoke(object, method, args);
+                } finally {
+                    // Set the method proxy again after the invocation
+                    MockRepository.putMethodProxy(method, invocationHandler);
+                }
+
+            } else if (MockRepository.shouldSuppressMethod(method, objectType)) {
+                returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
+            } else if (MockRepository.shouldStubMethod(method)) {
+                returnValue = MockRepository.getMethodToStub(method);
+            } else {
+                returnValue = PROCEED;
+            }
+        }
+
 		return returnValue;
 	}
 
