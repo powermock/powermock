@@ -20,7 +20,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import org.mockito.internal.util.ObjectMethodsGuru;
 import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.core.spi.NewInvocationControl;
 import org.powermock.reflect.exceptions.MethodNotFoundException;
