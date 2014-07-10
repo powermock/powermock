@@ -25,31 +25,25 @@ import org.powermock.modules.junit4.PowerMockRunner;
  */
 
 @RunWith(value = PowerMockRunner.class)
-@PrepareForTest({FinalClass.class})
+@PrepareForTest({FinalEqualsClass.class})
 @SuppressStaticInitializationFor({"samples.powermockito.junit4.FinalClass"})
-public class FinalClassTest {
+public class FinalEqualsClassTest {
 
     @Test
-    public void test() throws Exception {
-
-        FinalClass fc = new FinalClass();
+    public void callingEqualsDoesntCauseStackOverflow() throws Exception {
+        FinalEqualsClass fc = new FinalEqualsClass();
         fc.foo();
 
-        FinalClass mock = PowerMockito.mock(FinalClass.class);
-        FinalClass mock2 = PowerMockito.mock(FinalClass.class);
+        FinalEqualsClass mock = PowerMockito.mock(FinalEqualsClass.class);
+        FinalEqualsClass mock2 = PowerMockito.mock(FinalEqualsClass.class);
         PowerMockito.when(mock.foo()).thenReturn("bar");
         fc = PowerMockito.spy(fc);
         PowerMockito.when(fc.foo()).thenReturn("bar");
-        System.out.println("-a----");
         fc.equals(mock);
-        System.out.println("-b----");
         assertEquals("bar", mock.foo());
-        System.out.println("-c----");
         assertEquals("bar", fc.foo());
 
-        System.out.println("-d----");
         assertEquals(mock, mock);
-        System.out.println("-e----");
         assertFalse(mock.equals(mock2));
 
     }

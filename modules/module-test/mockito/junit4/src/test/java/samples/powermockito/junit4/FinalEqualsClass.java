@@ -19,11 +19,10 @@ package samples.powermockito.junit4;
 /**
  * Just a testclass with a final-equals method.
  */
-public class FinalClass {
+public class FinalEqualsClass {
 
     @Override
     public final boolean equals(Object obj) {
-        System.out.println("Call to the real Equals() Method.");
         return super.equals(obj);
     }
 
