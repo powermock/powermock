@@ -3,7 +3,7 @@ Change log next version
 * Changed so that the MockClassLoader throws ClassNotFoundException instead of Javassist's NotFoundException when a class isn't found (thanks to Mikael Petterson for the pull request).
 * Final equals methods should now work with Mockito and not cause stackoverflow (thanks to Peer Hartmann for pull request)
 * Removed redundant cast when creating a class replicas for final system classes.
-
+* Cleaned up some code in the ClassReplicaCreator class
 
 Change log 1.5.5 (2014-05-28)
 -----------------------------

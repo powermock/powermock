@@ -17,6 +17,7 @@ package org.powermock.core;
 
 import javassist.*;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -39,7 +40,7 @@ public class ClassReplicaCreator {
         }
         ClassPool classpool = ClassPool.getDefault();
         final String originalClassName = clazz.getName();
-        CtClass originalClassAsCtClass = null;
+        CtClass originalClassAsCtClass;
         final CtClass newClass = classpool.makeClass(generateReplicaClassName(clazz));
         try {
             originalClassAsCtClass = classpool.get(originalClassName);
@@ -60,12 +61,10 @@ public class ClassReplicaCreator {
      * Create a class that is a replica of type <code>T</code>. To allow for
      * partial mocking all calls to non-mocked methods will be delegated to the
      * <code>delegator</code>.
-     * 
-     * @param <T>
-     *            The type of the replica class to be created.
-     * @param delegator
-     *            The delegator object that will be invoked to allow for partial
-     *            mocking.
+     *
+     * @param <T>       The type of the replica class to be created.
+     * @param delegator The delegator object that will be invoked to allow for partial
+     *                  mocking.
      * @return A replica class that can be used to duck-type an instance.
      */
     @SuppressWarnings("unchecked")
@@ -76,7 +75,7 @@ public class ClassReplicaCreator {
         final Class<T> clazz = (Class<T>) delegator.getClass();
         ClassPool classpool = ClassPool.getDefault();
         final String originalClassName = clazz.getName();
-        CtClass originalClassAsCtClass = null;
+        CtClass originalClassAsCtClass;
         final CtClass newClass = classpool.makeClass(generateReplicaClassName(clazz));
         try {
             originalClassAsCtClass = classpool.get(originalClassName);
@@ -87,12 +86,8 @@ public class ClassReplicaCreator {
             CtMethod[] declaredMethods = originalClassAsCtClass.getDeclaredMethods();
             for (CtMethod ctMethod : declaredMethods) {
                 @SuppressWarnings("unused")
-				final String code = getReplicaMethodDelegationCode(delegator.getClass(), ctMethod, POWERMOCK_INSTANCE_DELEGATOR_FIELD_NAME);
-                // CtMethod make = CtNewMethod.make(ctMethod.getReturnType(),
-                // ctMethod.getName(), ctMethod.getParameterTypes(), ctMethod
-                // .getExceptionTypes(), code, newClass);
+                final String code = getReplicaMethodDelegationCode(delegator.getClass(), ctMethod, POWERMOCK_INSTANCE_DELEGATOR_FIELD_NAME);
                 CtMethod make2 = CtNewMethod.copy(ctMethod, newClass, null);
-                // make2.setBody(code);
                 newClass.addMethod(make2);
             }
 
@@ -127,12 +122,8 @@ public class ClassReplicaCreator {
         CtField[] declaredFields = originalClassAsCtClass.getDeclaredFields();
         CtField[] undeclaredFields = originalClassAsCtClass.getFields();
         Set<CtField> allFields = new HashSet<CtField>();
-        for (CtField ctField : declaredFields) {
-            allFields.add(ctField);
-        }
-        for (CtField ctField : undeclaredFields) {
-            allFields.add(ctField);
-        }
+        Collections.addAll(allFields, declaredFields);
+        Collections.addAll(allFields, undeclaredFields);
 
         for (CtField ctField : allFields) {
             CtField f = new CtField(ctField.getType(), ctField.getName(), newClass);
@@ -193,7 +184,7 @@ public class ClassReplicaCreator {
             parametersAsString.append("new Class[0]");
         } else {
             parametersAsString.append("new Class[] {");
-            if (types != null && types.length != 0) {
+            if (types != null) {
                 for (int i = 0; i < types.length; i++) {
                     parametersAsString.append(types[i]);
                     if (i != types.length - 1) {
