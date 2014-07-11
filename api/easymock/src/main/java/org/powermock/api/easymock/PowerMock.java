@@ -2190,7 +2190,7 @@ public class PowerMock extends MemberModifier {
             } catch (RuntimeException e) {
                 throw e;
             } catch (InvocationTargetException e) {
-                Throwable targetException = ((InvocationTargetException) e).getTargetException();
+                Throwable targetException = e.getTargetException();
                 if (targetException instanceof RuntimeException) {
                     throw (RuntimeException) targetException;
                 }
