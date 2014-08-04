@@ -218,4 +218,14 @@ public class StaticPartialMockingTest {
         int result = MockSelfDemo.getSomething();
         assertEquals(4, result);
     }
+
+    @Test
+    public void partialMockingOfPublicStaticMethodsWorksWhenUsingDoReturnAndMethodNameAsString() throws Exception {
+        spy(MockSelfDemo.class);
+
+        doReturn(3).when(MockSelfDemo.class, "methodToBeStubbed");
+
+        int result = MockSelfDemo.getSomething();
+        assertEquals(6, result);
+    }
 }
