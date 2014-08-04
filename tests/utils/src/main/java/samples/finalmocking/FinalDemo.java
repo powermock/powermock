@@ -15,6 +15,9 @@
  */
 package samples.finalmocking;
 
+import samples.simplemix.SimpleMix;
+import samples.simplereturn.SimpleReturnExample;
+
 public final class FinalDemo {
 
 	public final String say(String string) {
@@ -30,4 +33,12 @@ public final class FinalDemo {
 	}
 
 	public final native String sayFinalNative(String string);
+
+    public final SimpleReturnExample simpleReturnExample() {
+        return new SimpleReturnExample();
+    }
+
+    public final SimpleMix simpleMix() {
+        return new SimpleMix();
+    }
 }
