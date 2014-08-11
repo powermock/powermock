@@ -4,7 +4,7 @@ Change log next version
 * Final equals methods should now work with Mockito and not cause stackoverflow (thanks to Peer Hartmann for pull request)
 * Removed redundant cast when creating a class replicas for final system classes.
 * Cleaned up some code in the ClassReplicaCreator class
-* Added support for answers, name and extract inferfaces in PowerMockito when using annotations (@Mock). Note that answers doesn't work for final classes or methods! (issue 486).
+* Added support for answers, name and extract interfaces in PowerMockito when using annotations (@Mock). Note that answers doesn't work for final classes or methods! (issue 486).
 
 Change log 1.5.5 (2014-05-28)
 -----------------------------
