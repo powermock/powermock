@@ -1602,14 +1602,14 @@ public class WhiteboxImpl {
 
         while (thisType != null) {
             final Class<?> type = thisType;
-            final Method[] declaredMethods = AccessController.doPrivileged(new PrivilegedAction<Method[]>() {
+            final Method[] hierarchyMethods = AccessController.doPrivileged(new PrivilegedAction<Method[]>() {
 
                 public Method[] run() {
-                    return type.getDeclaredMethods();
+                    return type.getMethods();
                 }
 
             });
-            for (Method method : declaredMethods) {
+            for (Method method : hierarchyMethods) {
                 method.setAccessible(true);
                 methods.add(method);
             }

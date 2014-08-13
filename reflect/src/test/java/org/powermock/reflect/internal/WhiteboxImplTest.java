@@ -21,6 +21,11 @@ import org.powermock.reflect.testclasses.ClassWithOverloadedMethods;
 import org.powermock.reflect.testclasses.ClassWithStandardMethod;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -65,5 +70,32 @@ public class WhiteboxImplTest {
 		final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithOverloadedMethods.class, "overloaded",
 				new Class<?>[] { double.class, Child.class }, false);
 		assertEquals(expectedMethod, actualMethod);
+	}
+
+	@Test
+	public void assertThatDefaultCollectionMethodsAreReturnedWhenGetAllMethodsIsCalledOnChild() throws Exception {
+		Method[] methods = WhiteboxImpl.getAllMethods(Collection.class);
+		boolean foundStreamMethod = false;
+		for (Method eachMethod : methods)
+		{
+			if (eachMethod.getName().equals("stream"))
+			{
+				foundStreamMethod = true;
+				break;
+			}
+		}
+		assertTrue(foundStreamMethod);
+
+		methods = WhiteboxImpl.getAllMethods(ArrayList.class);
+		foundStreamMethod = false;
+		for (Method eachMethod : methods)
+		{
+			if (eachMethod.getName().equals("stream"))
+			{
+				foundStreamMethod = true;
+				break;
+			}
+		}
+		assertTrue(foundStreamMethod);
 	}
 }
