@@ -20,6 +20,7 @@ import org.powermock.modules.agent.PowerMockClassRedefiner;
 import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.proxyframework.RegisterProxyFramework;
 import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
+import org.powermock.tests.utils.impl.PowerMockIgnorePackagesExtractorImpl;
 import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
 import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
 
@@ -36,17 +37,19 @@ public class PowerMockAgentTestInitializer {
 
         PrepareForTestExtractorImpl testClassesExtractor = new PrepareForTestExtractorImpl();
         StaticConstructorSuppressExtractorImpl suppressExtractor = new StaticConstructorSuppressExtractorImpl();
+        PowerMockIgnorePackagesExtractorImpl powerMockIgnorePackagesExtractor = new PowerMockIgnorePackagesExtractorImpl();
         final String[] classesToPrepare = testClassesExtractor.getTestClasses(testClass);
         final String[] classesToSuppress = suppressExtractor.getTestClasses(testClass);
-        redefine(classesToPrepare);
-        redefine(classesToSuppress);
+        final String[] packagesToIgnore = powerMockIgnorePackagesExtractor.getPackagesToIgnore(testClass);
+        redefine(classesToPrepare, packagesToIgnore);
+        redefine(classesToSuppress, packagesToIgnore);
         final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
         registerProxyframework(contextClassLoader);
         new MockPolicyInitializerImpl(testClass).initialize(contextClassLoader);
     }
 
-    private static void redefine(String[] classes) {
-        PowerMockClassRedefiner.redefine(classes);
+    private static void redefine(String[] classes, String[] packagesToIgnore) {
+        PowerMockClassRedefiner.redefine(classes, packagesToIgnore);
     }
 
     private static void registerProxyframework(ClassLoader classLoader) {

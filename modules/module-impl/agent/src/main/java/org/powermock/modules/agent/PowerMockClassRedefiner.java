@@ -21,21 +21,21 @@ import java.util.Arrays;
 public class PowerMockClassRedefiner {
 
     public static void redefine(Class<?> cls) {
-        if(cls == null) {
+        if (cls == null) {
             throw new IllegalArgumentException("Class to redefine cannot be null");
         }
-        
+
         PowerMockAgent.getClasstransformer().setClassesToTransform(Arrays.asList(cls.getName()));
-        
-        try {            
+
+        try {
             PowerMockAgent.instrumentation().retransformClasses(cls);
-        } catch(Exception e){
-            throw new RuntimeException("Failed to redefine class "+cls.getName(), e);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to redefine class " + cls.getName(), e);
         }
     }
 
     public static void redefine(String className) {
-        if(className == null) {
+        if (className == null) {
             throw new IllegalArgumentException("Class name to redefine cannot be null");
         }
         try {
@@ -44,20 +44,26 @@ public class PowerMockClassRedefiner {
             throw new RuntimeException(e);
         }
     }
-    
-    public static void redefine(String[] classes) {
-        PowerMockAgent.getClasstransformer().setClassesToTransform(Arrays.asList(classes));
-        
-        for (int i = classes.length - 1; i >= 0 ; i--) {
-            String className = classes[i];
-            Class<?> clazz;
-            try {
-                clazz = Class.forName(className);
-                
-                PowerMockAgent.instrumentation().retransformClasses(clazz);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+
+    public static void redefine(String[] classes, String[] packagesToIgnore) {
+        PowerMockClassTransformer transformer = PowerMockAgent.getClasstransformer();
+        transformer.setClassesToTransform(Arrays.asList(classes));
+        transformer.setPackagesToIgnore(Arrays.asList(packagesToIgnore));
+
+        try {
+            for (int i = classes.length - 1; i >= 0; i--) {
+                String className = classes[i];
+                Class<?> clazz;
+                try {
+                    clazz = Class.forName(className);
+
+                    PowerMockAgent.instrumentation().retransformClasses(clazz);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
+        } finally {
+            transformer.resetPackagesToIgnore();
         }
     }
 }

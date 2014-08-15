@@ -16,42 +16,51 @@
 
 package org.powermock.modules.agent;
 
+import org.powermock.core.WildcardMatcher;
+
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 public abstract class AbstractClassTransformer {
     
-    protected static final List<String> STARTS_WITH_IGNORED = new LinkedList<String>();
-    protected static final List<String> CONTAINS_IGNORED = new LinkedList<String>();
+    protected static final List<String> ALWAYS_IGNORED = new LinkedList<String>();
+    protected final List<String> USER_IGNORED = Collections.synchronizedList(new LinkedList<String>());
 
     static {
-        STARTS_WITH_IGNORED.add("org/powermock");
-        STARTS_WITH_IGNORED.add("org/junit");
-        STARTS_WITH_IGNORED.add("org/mockito");
-        STARTS_WITH_IGNORED.add("javassist");
-        STARTS_WITH_IGNORED.add("org/objenesis");
-        STARTS_WITH_IGNORED.add("junit");
-        STARTS_WITH_IGNORED.add("org/hamcrest");
-        STARTS_WITH_IGNORED.add("sun/");
-        STARTS_WITH_IGNORED.add("$Proxy");
-
-        CONTAINS_IGNORED.add("CGLIB$$");
-        CONTAINS_IGNORED.add("$$PowerMock");
+        ALWAYS_IGNORED.add("org.powermock.*");
+        ALWAYS_IGNORED.add("org.junit.*");
+        ALWAYS_IGNORED.add("org.mockito.*");
+        ALWAYS_IGNORED.add("javassist.*");
+        ALWAYS_IGNORED.add("org.objenesis.*");
+        ALWAYS_IGNORED.add("junit.*");
+        ALWAYS_IGNORED.add("org.hamcrest.*");
+        ALWAYS_IGNORED.add("sun.*");
+        ALWAYS_IGNORED.add("$Proxy*");
+        ALWAYS_IGNORED.add("*CGLIB$$*");
+        ALWAYS_IGNORED.add("*$$PowerMock*");
     }     
-    
-    protected boolean shouldIgnore(String className) {
-        for (String ignore : STARTS_WITH_IGNORED) {
-            if(className.startsWith(ignore)) {
-                return true;
-            }
-        }
-    
-        for (String ignore : CONTAINS_IGNORED) {
-            if(className.contains(ignore)) {
-                return true;
-            }
-        }
-        return false;
+
+    public synchronized void setPackagesToIgnore(List<String> packagesToIgnore) {
+        USER_IGNORED.clear();
+        USER_IGNORED.addAll(packagesToIgnore);
     }
 
+    public void resetPackagesToIgnore() {
+        USER_IGNORED.clear();
+    }
+
+    protected boolean shouldIgnore(String className) {
+        return WildcardMatcher.matchesAny(merge(ALWAYS_IGNORED, USER_IGNORED), replaceSlashWithDots(className));
+    }
+
+    private List<String> merge(List<String> alwaysIgnored, List<String> userIgnored) {
+        List<String> list = new LinkedList<String>(alwaysIgnored);
+        list.addAll(userIgnored);
+        return Collections.unmodifiableList(list);
+    }
+
+    String replaceSlashWithDots(String className) {
+        return className.replaceAll("/", ".");
+    }
 }
