@@ -16,13 +16,19 @@
 package org.powermock.reflect.internal;
 
 import org.junit.Test;
+import org.junit.matchers.JUnitMatchers;
 import org.powermock.reflect.testclasses.Child;
 import org.powermock.reflect.testclasses.ClassWithOverloadedMethods;
 import org.powermock.reflect.testclasses.ClassWithStandardMethod;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.junit.Assume.assumeTrue;
+import static org.junit.matchers.JUnitMatchers.hasItem;
 
 /**
  * Unit tests specific to the WhiteboxImpl.
@@ -66,4 +72,17 @@ public class WhiteboxImplTest {
 				new Class<?>[] { double.class, Child.class }, false);
 		assertEquals(expectedMethod, actualMethod);
 	}
+
+    @Test
+    public void defaultMethodsAreFound() throws Exception {
+        assumeTrue(Float.valueOf(System.getProperty("java.specification.version")) >= 1.8f);
+
+        Method[] methods = WhiteboxImpl.getAllMethods(Collection.class);
+        List<String> methodNames = new ArrayList<String>();
+        for (Method method : methods) {
+            methodNames.add(method.getName());
+        }
+
+        assertThat(methodNames, hasItem("stream"));
+    }
 }

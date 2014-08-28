@@ -20,6 +20,7 @@ import org.objenesis.ObjenesisStd;
 import org.objenesis.instantiator.ObjectInstantiator;
 import org.powermock.reflect.exceptions.*;
 import org.powermock.reflect.internal.matcherstrategies.*;
+import org.powermock.reflect.internal.primitivesupport.BoxedWrapper;
 import org.powermock.reflect.internal.primitivesupport.PrimitiveWrapper;
 import org.powermock.reflect.matching.FieldMatchingStrategy;
 import org.powermock.reflect.spi.ProxyFramework;
@@ -36,26 +37,26 @@ import java.util.*;
  */
 public class WhiteboxImpl {
 
-    /** The proxy framework. */
+    /**
+     * The proxy framework.
+     */
     private static ProxyFramework proxyFramework = null;
 
     /**
      * Convenience method to get a method from a class type without having to
      * catch the checked exceptions otherwise required. These exceptions are
      * wrapped as runtime exceptions.
-     * <p>
+     * <p/>
      * The method will first try to look for a declared method in the same
      * class. If the method is not declared in this class it will look for the
      * method in the super class. This will continue throughout the whole class
      * hierarchy. If the method is not found an {@link MethodNotFoundException}
      * is thrown. Since the method name is not specified an
      *
-     * @param type
-     *            The type of the class where the method is located.
-     * @param parameterTypes
-     *            All parameter types of the method (may be <code>null</code>).
+     * @param type           The type of the class where the method is located.
+     * @param parameterTypes All parameter types of the method (may be <code>null</code>).
      * @return A . {@link TooManyMethodsFoundException} is thrown if two or more
-     *         methods matches the same parameter types in the same class.
+     * methods matches the same parameter types in the same class.
      */
     public static Method getMethod(Class<?> type, Class<?>... parameterTypes) {
         Class<?> thisType = type;
@@ -106,19 +107,16 @@ public class WhiteboxImpl {
      * Convenience method to get a method from a class type without having to
      * catch the checked exceptions otherwise required. These exceptions are
      * wrapped as runtime exceptions.
-     * <p>
+     * <p/>
      * The method will first try to look for a declared method in the same
      * class. If the method is not declared in this class it will look for the
      * method in the super class. This will continue throughout the whole class
      * hierarchy. If the method is not found an {@link IllegalArgumentException}
      * is thrown.
      *
-     * @param type
-     *            The type of the class where the method is located.
-     * @param methodName
-     *            The method names.
-     * @param parameterTypes
-     *            All parameter types of the method (may be <code>null</code>).
+     * @param type           The type of the class where the method is located.
+     * @param methodName     The method names.
+     * @param parameterTypes All parameter types of the method (may be <code>null</code>).
      * @return A .
      */
     public static Method getMethod(Class<?> type, String methodName, Class<?>... parameterTypes) {
@@ -145,25 +143,23 @@ public class WhiteboxImpl {
             thisType = thisType.getSuperclass();
         }
 
-        throwExceptionIfMethodWasNotFound(type, methodName, null, new Object[] { parameterTypes });
+        throwExceptionIfMethodWasNotFound(type, methodName, null, new Object[]{parameterTypes});
         return null;
     }
 
     /**
      * Convenience method to get a field from a class type.
-     * <p>
+     * <p/>
      * The method will first try to look for a declared field in the same class.
      * If the method is not declared in this class it will look for the field in
      * the super class. This will continue throughout the whole class hierarchy.
      * If the field is not found an {@link IllegalArgumentException} is thrown.
      *
-     * @param type
-     *            The type of the class where the method is located.
-     * @param fieldName
-     *            The method names.
+     * @param type      The type of the class where the method is located.
+     * @param fieldName The method names.
      * @return A .
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static Field getField(Class<?> type, String fieldName) {
         LinkedList<Class<?>> examine = new LinkedList<Class<?>>();
         examine.add(type);
@@ -194,17 +190,15 @@ public class WhiteboxImpl {
 
     /**
      * Create a new instance of a class without invoking its constructor.
-     * <p>
+     * <p/>
      * No byte-code manipulation is needed to perform this operation and thus
      * it's not necessary use the <code>PowerMockRunner</code> or
      * <code>PrepareForTest</code> annotation to use this functionality.
      *
-     * @param <T>
-     *            The type of the instance to create.
-     * @param classToInstantiate
-     *            The type of the instance to create.
+     * @param <T>                The type of the instance to create.
+     * @param classToInstantiate The type of the instance to create.
      * @return A new instance of type T, created without invoking the
-     *         constructor.
+     * constructor.
      */
     @SuppressWarnings("unchecked")
     public static <T> T newInstance(Class<T> classToInstantiate) {
@@ -212,7 +206,7 @@ public class WhiteboxImpl {
 
         final Object object;
         if (Modifier.isInterface(modifiers)) {
-            object = Proxy.newProxyInstance(WhiteboxImpl.class.getClassLoader(), new Class<?>[] { classToInstantiate },
+            object = Proxy.newProxyInstance(WhiteboxImpl.class.getClassLoader(), new Class<?>[]{classToInstantiate},
                     new InvocationHandler() {
                         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                             return TypeUtils.getDefaultValue(method.getReturnType());
@@ -237,11 +231,9 @@ public class WhiteboxImpl {
      * exceptions are wrapped as runtime exceptions. The constructor is also set
      * to accessible.
      *
-     * @param type
-     *            The type of the class where the constructor is located.
-     * @param parameterTypes
-     *            All parameter types of the constructor (may be
-     *            <code>null</code>).
+     * @param type           The type of the class where the constructor is located.
+     * @param parameterTypes All parameter types of the constructor (may be
+     *                       <code>null</code>).
      * @return A .
      */
     public static Constructor<?> getConstructor(Class<?> type, Class<?>... parameterTypes) {
@@ -266,12 +258,9 @@ public class WhiteboxImpl {
      * super class hierarchy until a field with name <tt>fieldName</tt> is
      * found.
      *
-     * @param object
-     *            the object whose field to modify
-     * @param fieldName
-     *            the name of the field
-     * @param value
-     *            the new value of the field
+     * @param object    the object whose field to modify
+     * @param fieldName the name of the field
+     * @param value     the new value of the field
      */
     public static void setInternalState(Object object, String fieldName, Object value) {
         Field foundField = findFieldInHierarchy(object, fieldName);
@@ -283,12 +272,9 @@ public class WhiteboxImpl {
      * super class hierarchy until a field with name <tt>fieldName</tt> is
      * found.
      *
-     * @param object
-     *            the object to modify
-     * @param fieldName
-     *            the name of the field
-     * @param value
-     *            the new value of the field
+     * @param object    the object to modify
+     * @param fieldName the name of the field
+     * @param value     the new value of the field
      */
     public static void setInternalState(Object object, String fieldName, Object[] value) {
         setInternalState(object, fieldName, (Object) value);
@@ -299,12 +285,9 @@ public class WhiteboxImpl {
      * super class hierarchy until the first field of type <tt>fieldType</tt> is
      * found. The <tt>value</tt> will then be assigned to this field.
      *
-     * @param object
-     *            the object to modify
-     * @param fieldType
-     *            the type of the field
-     * @param value
-     *            the new value of the field
+     * @param object    the object to modify
+     * @param fieldType the type of the field
+     * @param value     the new value of the field
      */
     public static void setInternalState(Object object, Class<?> fieldType, Object value) {
         setField(object, value, findFieldInHierarchy(object, new AssignableFromFieldTypeMatcherStrategy(fieldType)));
@@ -316,12 +299,9 @@ public class WhiteboxImpl {
      * <tt>value</tt> type is found. The <tt>value</tt> (or
      * <tt>additionaValues</tt> if present) will then be assigned to this field.
      *
-     * @param object
-     *            the object to modify
-     * @param value
-     *            the new value of the field
-     * @param additionalValues
-     *            Additional values to set on the object
+     * @param object           the object to modify
+     * @param value            the new value of the field
+     * @param additionalValues Additional values to set on the object
      */
     public static void setInternalState(Object object, Object value, Object... additionalValues) {
         setField(object, value,
@@ -342,12 +322,9 @@ public class WhiteboxImpl {
      * class hierarchy (<tt>where</tt>). This first field assignable to
      * <tt>object</tt> will then be set to <tt>value</tt>.
      *
-     * @param object
-     *            the object to modify
-     * @param value
-     *            the new value of the field
-     * @param where
-     *            the class in the hierarchy where the field is defined
+     * @param object the object to modify
+     * @param value  the new value of the field
+     * @param where  the class in the hierarchy where the field is defined
      */
     public static void setInternalState(Object object, Object value, Class<?> where) {
         setField(object, value, findField(object, new AssignableFromFieldTypeMatcherStrategy(getType(value)), where));
@@ -358,14 +335,10 @@ public class WhiteboxImpl {
      * <tt>where</tt>) in the class hierarchy. The <tt>value</tt> will then be
      * assigned to this field.
      *
-     * @param object
-     *            the object to modify
-     * @param fieldType
-     *            the type of the field the should be set.
-     * @param value
-     *            the new value of the field
-     * @param where
-     *            which class in the hierarchy defining the field
+     * @param object    the object to modify
+     * @param fieldType the type of the field the should be set.
+     * @param value     the new value of the field
+     * @param where     which class in the hierarchy defining the field
      */
     public static void setInternalState(Object object, Class<?> fieldType, Object value, Class<?> where) {
         if (fieldType == null || where == null) {
@@ -381,14 +354,10 @@ public class WhiteboxImpl {
      * have two fields in a class hierarchy that has the same name but you like
      * to modify the latter.
      *
-     * @param object
-     *            the object to modify
-     * @param fieldName
-     *            the name of the field
-     * @param value
-     *            the new value of the field
-     * @param where
-     *            which class the field is defined
+     * @param object    the object to modify
+     * @param fieldName the name of the field
+     * @param value     the new value of the field
+     * @param where     which class the field is defined
      */
     public static void setInternalState(Object object, String fieldName, Object value, Class<?> where) {
         if (object == null || fieldName == null || fieldName.equals("") || fieldName.startsWith(" ")) {
@@ -409,14 +378,11 @@ public class WhiteboxImpl {
      * field named <tt>fieldName</tt>. If you want to get a specific field value
      * at specific place in the class hierarchy please refer to
      *
-     * @param <T>
-     *            the generic type
-     * @param object
-     *            the object to modify
-     * @param fieldName
-     *            the name of the field
+     * @param <T>       the generic type
+     * @param object    the object to modify
+     * @param fieldName the name of the field
      * @return the internal state
-     *         {@link #getInternalState(Object, String, Class)}.
+     * {@link #getInternalState(Object, String, Class)}.
      */
     @SuppressWarnings("unchecked")
     public static <T> T getInternalState(Object object, String fieldName) {
@@ -431,10 +397,8 @@ public class WhiteboxImpl {
     /**
      * Find field in hierarchy.
      *
-     * @param object
-     *            the object
-     * @param fieldName
-     *            the field name
+     * @param object    the object
+     * @param fieldName the field name
      * @return the field
      */
     private static Field findFieldInHierarchy(Object object, String fieldName) {
@@ -444,10 +408,8 @@ public class WhiteboxImpl {
     /**
      * Find field in hierarchy.
      *
-     * @param object
-     *            the object
-     * @param strategy
-     *            the strategy
+     * @param object   the object
+     * @param strategy the strategy
      * @return the field
      */
     private static Field findFieldInHierarchy(Object object, FieldMatcherStrategy strategy) {
@@ -458,12 +420,9 @@ public class WhiteboxImpl {
     /**
      * Find field.
      *
-     * @param object
-     *            the object
-     * @param strategy
-     *            the strategy
-     * @param where
-     *            the where
+     * @param object   the object
+     * @param strategy the strategy
+     * @param where    the where
      * @return the field
      */
     private static Field findField(Object object, FieldMatcherStrategy strategy, Class<?> where) {
@@ -473,14 +432,10 @@ public class WhiteboxImpl {
     /**
      * Find single field using strategy.
      *
-     * @param strategy
-     *            the strategy
-     * @param object
-     *            the object
-     * @param checkHierarchy
-     *            the check hierarchy
-     * @param startClass
-     *            the start class
+     * @param strategy       the strategy
+     * @param object         the object
+     * @param checkHierarchy the check hierarchy
+     * @param startClass     the start class
      * @return the field
      */
     private static Field findSingleFieldUsingStrategy(FieldMatcherStrategy strategy, Object object,
@@ -515,14 +470,10 @@ public class WhiteboxImpl {
     /**
      * Find all fields using strategy.
      *
-     * @param strategy
-     *            the strategy
-     * @param object
-     *            the object
-     * @param checkHierarchy
-     *            the check hierarchy
-     * @param startClass
-     *            the start class
+     * @param strategy       the strategy
+     * @param object         the object
+     * @param checkHierarchy the check hierarchy
+     * @param startClass     the start class
      * @return the set
      */
     private static Set<Field> findAllFieldsUsingStrategy(FieldMatcherStrategy strategy, Object object,
@@ -549,10 +500,8 @@ public class WhiteboxImpl {
     /**
      * Checks for field proper modifier.
      *
-     * @param object
-     *            the object
-     * @param field
-     *            the field
+     * @param object the object
+     * @param field  the field
      * @return true, if successful
      */
     private static boolean hasFieldProperModifier(Object object, Field field) {
@@ -565,12 +514,9 @@ public class WhiteboxImpl {
      * super class hierarchy until the first field of type <tt>fieldType</tt> is
      * found. The value of this field will be returned.
      *
-     * @param <T>
-     *            the generic type
-     * @param object
-     *            the object to modify
-     * @param fieldType
-     *            the type of the field
+     * @param <T>       the generic type
+     * @param object    the object to modify
+     * @param fieldType the type of the field
      * @return the internal state
      */
     @SuppressWarnings("unchecked")
@@ -589,14 +535,10 @@ public class WhiteboxImpl {
      * the <tt>fieldType</tt> in <tt>where</tt> will is the field whose value
      * will be returned.
      *
-     * @param <T>
-     *            the expected type of the field
-     * @param object
-     *            the object to modify
-     * @param fieldType
-     *            the type of the field
-     * @param where
-     *            which class the field is defined
+     * @param <T>       the expected type of the field
+     * @param object    the object to modify
+     * @param fieldType the type of the field
+     * @param where     which class the field is defined
      * @return the internal state
      */
     @SuppressWarnings("unchecked")
@@ -618,14 +560,10 @@ public class WhiteboxImpl {
      * when you have mocked the instance you are trying to access. Use this
      * method to avoid casting.
      *
-     * @param <T>
-     *            the expected type of the field
-     * @param object
-     *            the object to modify
-     * @param fieldName
-     *            the name of the field
-     * @param where
-     *            which class the field is defined
+     * @param <T>       the expected type of the field
+     * @param object    the object to modify
+     * @param fieldName the name of the field
+     * @param where     which class the field is defined
      * @return the internal state
      */
     @SuppressWarnings("unchecked")
@@ -651,18 +589,14 @@ public class WhiteboxImpl {
      * Invoke a private or inner class method without the need to specify the
      * method name. This is thus a more refactor friendly version of the
      *
-     * @param <T>
-     *            the generic type
-     * @param tested
-     *            the tested
-     * @param arguments
-     *            the arguments
+     * @param <T>       the generic type
+     * @param tested    the tested
+     * @param arguments the arguments
      * @return the t
-     * @throws Exception
-     *             the exception
-     *             {@link #invokeMethod(Object, String, Object...)} method and
-     *             is recommend over this method for that reason. This method
-     *             might be useful to test private methods.
+     * @throws Exception the exception
+     *                   {@link #invokeMethod(Object, String, Object...)} method and
+     *                   is recommend over this method for that reason. This method
+     *                   might be useful to test private methods.
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> T invokeMethod(Object tested, Object... arguments) throws Exception {
@@ -673,18 +607,14 @@ public class WhiteboxImpl {
      * Invoke a private or inner class method without the need to specify the
      * method name. This is thus a more refactor friendly version of the
      *
-     * @param <T>
-     *            the generic type
-     * @param tested
-     *            the tested
-     * @param arguments
-     *            the arguments
+     * @param <T>       the generic type
+     * @param tested    the tested
+     * @param arguments the arguments
      * @return the t
-     * @throws Exception
-     *             the exception
-     *             {@link #invokeMethod(Object, String, Object...)} method and
-     *             is recommend over this method for that reason. This method
-     *             might be useful to test private methods.
+     * @throws Exception the exception
+     *                   {@link #invokeMethod(Object, String, Object...)} method and
+     *                   is recommend over this method for that reason. This method
+     *                   might be useful to test private methods.
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> T invokeMethod(Class<?> tested, Object... arguments) throws Exception {
@@ -695,17 +625,12 @@ public class WhiteboxImpl {
      * Invoke a private or inner class method. This might be useful to test
      * private methods.
      *
-     * @param <T>
-     *            the generic type
-     * @param tested
-     *            the tested
-     * @param methodToExecute
-     *            the method to execute
-     * @param arguments
-     *            the arguments
+     * @param <T>             the generic type
+     * @param tested          the tested
+     * @param methodToExecute the method to execute
+     * @param arguments       the arguments
      * @return the t
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> T invokeMethod(Object tested, String methodToExecute, Object... arguments)
@@ -719,19 +644,13 @@ public class WhiteboxImpl {
      * mixing primitive types and wrapper types in the same method. For most
      * situations use {@link #invokeMethod(Class, String, Object...)} instead.
      *
-     * @param <T>
-     *            the generic type
-     * @param tested
-     *            the tested
-     * @param methodToExecute
-     *            the method to execute
-     * @param argumentTypes
-     *            the argument types
-     * @param arguments
-     *            the arguments
+     * @param <T>             the generic type
+     * @param tested          the tested
+     * @param methodToExecute the method to execute
+     * @param argumentTypes   the argument types
+     * @param arguments       the arguments
      * @return the t
-     * @throws Exception
-     *             Exception that may occur when invoking this method.
+     * @throws Exception Exception that may occur when invoking this method.
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> T invokeMethod(Object tested, String methodToExecute, Class<?>[] argumentTypes,
@@ -750,22 +669,15 @@ public class WhiteboxImpl {
      * determine the type of the parameters, for example when mixing primitive
      * types and wrapper types in the same method. For most situations use
      *
-     * @param <T>
-     *            the generic type
-     * @param tested
-     *            the tested
-     * @param methodToExecute
-     *            the method to execute
-     * @param definedIn
-     *            the defined in
-     * @param argumentTypes
-     *            the argument types
-     * @param arguments
-     *            the arguments
+     * @param <T>             the generic type
+     * @param tested          the tested
+     * @param methodToExecute the method to execute
+     * @param definedIn       the defined in
+     * @param argumentTypes   the argument types
+     * @param arguments       the arguments
      * @return the t
-     * @throws Exception
-     *             Exception that may occur when invoking this method.
-     *             {@link #invokeMethod(Class, String, Object...)} instead.
+     * @throws Exception Exception that may occur when invoking this method.
+     *                   {@link #invokeMethod(Class, String, Object...)} instead.
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> T invokeMethod(Object tested, String methodToExecute, Class<?> definedIn,
@@ -781,19 +693,13 @@ public class WhiteboxImpl {
      * Invoke a private or inner class method in that is located in a subclass
      * of the tested instance. This might be useful to test private methods.
      *
-     * @param <T>
-     *            the generic type
-     * @param tested
-     *            the tested
-     * @param declaringClass
-     *            the declaring class
-     * @param methodToExecute
-     *            the method to execute
-     * @param arguments
-     *            the arguments
+     * @param <T>             the generic type
+     * @param tested          the tested
+     * @param declaringClass  the declaring class
+     * @param methodToExecute the method to execute
+     * @param arguments       the arguments
      * @return the t
-     * @throws Exception
-     *             Exception that may occur when invoking this method.
+     * @throws Exception Exception that may occur when invoking this method.
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> T invokeMethod(Object tested, Class<?> declaringClass, String methodToExecute,
@@ -804,26 +710,19 @@ public class WhiteboxImpl {
     /**
      * Invoke a private method in that is located in a subclass of an instance.
      * This might be useful to test overloaded private methods.
-     * <p>
+     * <p/>
      * Use this for overloaded methods only, if possible use
      *
-     * @param <T>
-     *            the generic type
-     * @param object
-     *            the object
-     * @param declaringClass
-     *            the declaring class
-     * @param methodToExecute
-     *            the method to execute
-     * @param parameterTypes
-     *            the parameter types
-     * @param arguments
-     *            the arguments
+     * @param <T>             the generic type
+     * @param object          the object
+     * @param declaringClass  the declaring class
+     * @param methodToExecute the method to execute
+     * @param parameterTypes  the parameter types
+     * @param arguments       the arguments
      * @return the t
-     * @throws Exception
-     *             Exception that may occur when invoking this method.
-     *             {@link #invokeMethod(Object, Object...)} or
-     *             {@link #invokeMethod(Object, String, Object...)} instead.
+     * @throws Exception Exception that may occur when invoking this method.
+     *                   {@link #invokeMethod(Object, Object...)} or
+     *                   {@link #invokeMethod(Object, String, Object...)} instead.
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> T invokeMethod(Object object, Class<?> declaringClass, String methodToExecute,
@@ -841,17 +740,12 @@ public class WhiteboxImpl {
      * Invoke a private or inner class method. This might be useful to test
      * private methods.
      *
-     * @param <T>
-     *            the generic type
-     * @param clazz
-     *            the clazz
-     * @param methodToExecute
-     *            the method to execute
-     * @param arguments
-     *            the arguments
+     * @param <T>             the generic type
+     * @param clazz           the clazz
+     * @param methodToExecute the method to execute
+     * @param arguments       the arguments
      * @return the t
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> T invokeMethod(Class<?> clazz, String methodToExecute, Object... arguments)
@@ -862,19 +756,13 @@ public class WhiteboxImpl {
     /**
      * Do invoke method.
      *
-     * @param <T>
-     *            the generic type
-     * @param tested
-     *            the tested
-     * @param declaringClass
-     *            the declaring class
-     * @param methodToExecute
-     *            the method to execute
-     * @param arguments
-     *            the arguments
+     * @param <T>             the generic type
+     * @param tested          the tested
+     * @param declaringClass  the declaring class
+     * @param methodToExecute the method to execute
+     * @param arguments       the arguments
      * @return the t
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @SuppressWarnings("unchecked")
     private static <T> T doInvokeMethod(Object tested, Class<?> declaringClass, String methodToExecute,
@@ -889,19 +777,15 @@ public class WhiteboxImpl {
      * Finds and returns a certain method. If the method couldn't be found this
      * method delegates to
      *
-     * @param tested
-     *            The instance or class containing the method.
-     * @param declaringClass
-     *            The class where the method is supposed to be declared (may be
-     *            <code>null</code>).
-     * @param methodToExecute
-     *            The method name. If <code>null</code> then method will be
-     *            looked up based on the argument types only.
-     * @param arguments
-     *            The arguments of the methods.
+     * @param tested          The instance or class containing the method.
+     * @param declaringClass  The class where the method is supposed to be declared (may be
+     *                        <code>null</code>).
+     * @param methodToExecute The method name. If <code>null</code> then method will be
+     *                        looked up based on the argument types only.
+     * @param arguments       The arguments of the methods.
      * @return A single method.
-     * @throws  {@link org.powermock.reflect.exceptions.MethodNotFoundException} if no method was found
-     * @throws  {@link org.powermock.reflect.exceptions.TooManyMethodsFoundException} if too methods matched
+     * @throws {@link org.powermock.reflect.exceptions.MethodNotFoundException} if no method was found
+     * @throws {@link org.powermock.reflect.exceptions.TooManyMethodsFoundException} if too methods matched
      */
     public static Method findMethodOrThrowException(Object tested, Class<?> declaringClass, String methodToExecute,
                                                     Object[] arguments) {
@@ -940,7 +824,7 @@ public class WhiteboxImpl {
                         if (potentialMethodToInvoke == null) {
                             potentialMethodToInvoke = method;
                         } else if (potentialMethodToInvoke.getName().equals(method.getName())) {
-                            if(areAllArgumentsOfSameType(arguments) && potentialMethodToInvoke.getDeclaringClass() != method.getDeclaringClass()) {
+                            if (areAllArgumentsOfSameType(arguments) && potentialMethodToInvoke.getDeclaringClass() != method.getDeclaringClass()) {
                                 //  We've already found the method which means that "potentialMethodToInvoke" overrides "method".
                                 return potentialMethodToInvoke;
                             } else {
@@ -948,15 +832,21 @@ public class WhiteboxImpl {
                                 return getBestMethodCandidate(getType(tested), method.getName(), getTypes(arguments), false);
                             }
                         } else {
+                            // A special case to be backward compatible
+                            Method bestCandidateMethod = getMethodWithMostSpecificParameterTypes(method, potentialMethodToInvoke);
+                            if (bestCandidateMethod != null) {
+                                potentialMethodToInvoke = bestCandidateMethod;
+                                continue;
+                            }
                             /*
-                                    * We've already found a method match before, this
-                                    * means that PowerMock cannot determine which
-                                    * method to expect since there are two methods with
-                                    * the same name and the same number of arguments
-                                    * but one is using wrapper types.
-                                    */
-                            throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", new Method[] {
-                                    potentialMethodToInvoke, method });
+                            * We've already found a method match before, this
+                            * means that PowerMock cannot determine which
+                            * method to expect since there are two methods with
+                            * the same name and the same number of arguments
+                            * but one is using wrapper types.
+                            */
+                            throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", new Method[]{
+                                    potentialMethodToInvoke, method});
                         }
                     }
                 } else if (isPotentialVarArgsMethod(method, arguments)) {
@@ -970,13 +860,13 @@ public class WhiteboxImpl {
                                * and the same number of arguments but one is using
                                * wrapper types.
                                */
-                        throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", new Method[] {
-                                potentialMethodToInvoke, method });
+                        throwExceptionWhenMultipleMethodMatchesFound("argument parameter types", new Method[]{
+                                potentialMethodToInvoke, method});
                     }
                     break;
                 } else if (arguments != null && (paramTypes.length != arguments.length)) {
                     continue;
-                } else if(arguments == null && paramTypes.length == 1 && !paramTypes[0].isPrimitive()) {
+                } else if (arguments == null && paramTypes.length == 1 && !paramTypes[0].isPrimitive()) {
                     potentialMethodToInvoke = method;
                 }
             }
@@ -988,10 +878,54 @@ public class WhiteboxImpl {
     }
 
     /**
+     * Find the method whose parameter types most closely matches the <code>types</code>.
+     *
+     * @param firstMethodCandidate  The first method candidate
+     * @param secondMethodCandidate The second method candidate
+     * @return The method that most closely matches the provided types or <code>null</code> if no method match.
+     */
+    private static Method getMethodWithMostSpecificParameterTypes(Method firstMethodCandidate, Method secondMethodCandidate) {
+        Class<?>[] firstMethodCandidateParameterTypes = firstMethodCandidate.getParameterTypes();
+        Class<?>[] secondMethodCandidateParameterTypes = secondMethodCandidate.getParameterTypes();
+
+        Method bestMatch = null;
+        for (int i = 0; i < firstMethodCandidateParameterTypes.length; i++) {
+            Class<?> candidateType1 = toBoxedIfPrimitive(firstMethodCandidateParameterTypes[i]);
+            Class<?> candidateType2 = toBoxedIfPrimitive(secondMethodCandidateParameterTypes[i]);
+
+            if (!candidateType1.equals(candidateType2)) {
+                Method potentialMatch = null;
+                if (candidateType1.isAssignableFrom(candidateType2)) {
+                    potentialMatch = secondMethodCandidate;
+                } else if (candidateType2.isAssignableFrom(candidateType1)) {
+                    potentialMatch = firstMethodCandidate;
+                }
+
+                if (potentialMatch != null) {
+                    if (bestMatch != null && !potentialMatch.equals(bestMatch)) {
+                        /*
+                         * We cannot determine which method is the most specific because one parameter of the first candidate
+                         * was more specific and another parameter of the second candidate was more specific.
+                         */
+                        return null;
+                    } else {
+                        bestMatch = potentialMatch;
+                    }
+                }
+            }
+        }
+
+        return bestMatch;
+    }
+
+    private static Class<?> toBoxedIfPrimitive(Class<?> type) {
+        return type.isPrimitive() ? BoxedWrapper.getBoxedFromPrimitiveType(type) : type;
+    }
+
+    /**
      * Gets the types.
      *
-     * @param arguments
-     *            the arguments
+     * @param arguments the arguments
      * @return the types
      */
     private static Class<?>[] getTypes(Object[] arguments) {
@@ -1005,18 +939,14 @@ public class WhiteboxImpl {
     /**
      * Gets the best method candidate.
      *
-     * @param cls
-     *            the cls
-     * @param methodName
-     *            the method name
-     * @param signature
-     *            the signature
-     * @param exactParameterTypeMatch
-     *            <code>true</code> if the <code>expectedTypes</code> must match
-     *            the parameter types must match exactly, <code>false</code> if
-     *            the <code>expectedTypes</code> are allowed to be converted
-     *            into primitive types if they are of a wrapped type and still
-     *            match.
+     * @param cls                     the cls
+     * @param methodName              the method name
+     * @param signature               the signature
+     * @param exactParameterTypeMatch <code>true</code> if the <code>expectedTypes</code> must match
+     *                                the parameter types must match exactly, <code>false</code> if
+     *                                the <code>expectedTypes</code> are allowed to be converted
+     *                                into primitive types if they are of a wrapped type and still
+     *                                match.
      * @return the best method candidate
      */
     public static Method getBestMethodCandidate(Class<?> cls, String methodName, Class<?>[] signature,
@@ -1064,13 +994,12 @@ public class WhiteboxImpl {
      * Finds and returns the default constructor. If the constructor couldn't be
      * found this method delegates to {@link #throwExceptionWhenMultipleConstructorMatchesFound(java.lang.reflect.Constructor[])}.
      *
-     * @param type
-     *            The type where the constructor should be located.
+     * @param type The type where the constructor should be located.
      * @return The found constructor.
-     * @throws {@link org.powermock.reflect.exceptions.TooManyConstructorsFoundException} if too many constructors was found. 
+     * @throws {@link org.powermock.reflect.exceptions.TooManyConstructorsFoundException} if too many constructors was found.
      */
     public static Constructor<?> findDefaultConstructorOrThrowException(Class<?> type) {
-        if(type == null) {
+        if (type == null) {
             throw new IllegalArgumentException("type cannot be null");
         }
 
@@ -1087,8 +1016,7 @@ public class WhiteboxImpl {
      * Finds and returns any constructor. If the constructor couldn't be
      * found this method delegates to {@link #throwExceptionWhenMultipleConstructorMatchesFound(java.lang.reflect.Constructor[])}.
      *
-     * @param type
-     *            The type where the constructor should be located.
+     * @param type The type where the constructor should be located.
      * @return The found constructor.
      * @throws {@link org.powermock.reflect.exceptions.TooManyConstructorsFoundException} if too many constructors was found.
      */
@@ -1103,8 +1031,7 @@ public class WhiteboxImpl {
     /**
      * Filter power mock constructor.
      *
-     * @param declaredConstructors
-     *            the declared constructors
+     * @param declaredConstructors the declared constructors
      * @return the constructor[]
      */
     private static Constructor<?>[] filterPowerMockConstructor(Constructor<?>[] declaredConstructors) {
@@ -1126,13 +1053,11 @@ public class WhiteboxImpl {
      * Finds and returns a certain constructor. If the constructor couldn't be
      * found this method delegates to
      *
-     * @param type
-     *            The type where the constructor should be located.
-     * @param arguments
-     *            The arguments passed to the constructor.
+     * @param type      The type where the constructor should be located.
+     * @param arguments The arguments passed to the constructor.
      * @return The found constructor.
-     * @throws  {@link org.powermock.reflect.exceptions.ConstructorNotFoundException} if no constructor was found
-     * @throws  {@link org.powermock.reflect.exceptions.TooManyConstructorsFoundException} if too constructors matched
+     * @throws {@link org.powermock.reflect.exceptions.ConstructorNotFoundException} if no constructor was found
+     * @throws {@link org.powermock.reflect.exceptions.TooManyConstructorsFoundException} if too constructors matched
      */
     public static Constructor<?> findUniqueConstructorOrThrowException(Class<?> type, Object... arguments) {
         if (type == null) {
@@ -1169,8 +1094,8 @@ public class WhiteboxImpl {
                                * and the same number of arguments but one is using
                                * wrapper types.
                                */
-                        throwExceptionWhenMultipleConstructorMatchesFound(new Constructor<?>[] { potentialConstructor,
-                                constructor });
+                        throwExceptionWhenMultipleConstructorMatchesFound(new Constructor<?>[]{potentialConstructor,
+                                constructor});
                     }
                 }
             } else if (isPotentialVarArgsConstructor(constructor, arguments)) {
@@ -1184,8 +1109,8 @@ public class WhiteboxImpl {
                           * the same number of arguments but one is using wrapper
                           * types.
                           */
-                    throwExceptionWhenMultipleConstructorMatchesFound(new Constructor<?>[] { potentialConstructor,
-                            constructor });
+                    throwExceptionWhenMultipleConstructorMatchesFound(new Constructor<?>[]{potentialConstructor,
+                            constructor});
                 }
                 break;
             } else if (arguments != null && (paramTypes.length != arguments.length)) {
@@ -1200,10 +1125,8 @@ public class WhiteboxImpl {
     /**
      * Convert argument types to primitive.
      *
-     * @param paramTypes
-     *            the param types
-     * @param arguments
-     *            the arguments
+     * @param paramTypes the param types
+     * @param arguments  the arguments
      * @return the class[]
      */
     private static Class<?>[] convertArgumentTypesToPrimitive(Class<?>[] paramTypes, Object[] arguments) {
@@ -1228,14 +1151,10 @@ public class WhiteboxImpl {
     /**
      * Throw exception if method was not found.
      *
-     * @param type
-     *            the type
-     * @param methodName
-     *            the method name
-     * @param methodToMock
-     *            the method to mock
-     * @param arguments
-     *            the arguments
+     * @param type         the type
+     * @param methodName   the method name
+     * @param methodToMock the method to mock
+     * @param arguments    the arguments
      */
     public static void throwExceptionIfMethodWasNotFound(Class<?> type, String methodName, Method methodToMock,
                                                          Object... arguments) {
@@ -1252,12 +1171,9 @@ public class WhiteboxImpl {
     /**
      * Throw exception if field was not found.
      *
-     * @param type
-     *            the type
-     * @param fieldName
-     *            the field name
-     * @param field
-     *            the field
+     * @param type      the type
+     * @param fieldName the field name
+     * @param field     the field
      */
     public static void throwExceptionIfFieldWasNotFound(Class<?> type, String fieldName, Field field) {
         if (field == null) {
@@ -1269,12 +1185,9 @@ public class WhiteboxImpl {
     /**
      * Throw exception if constructor was not found.
      *
-     * @param type
-     *            the type
-     * @param potentialConstructor
-     *            the potential constructor
-     * @param arguments
-     *            the arguments
+     * @param type                 the type
+     * @param potentialConstructor the potential constructor
+     * @param arguments            the arguments
      */
     static void throwExceptionIfConstructorWasNotFound(Class<?> type, Constructor<?> potentialConstructor,
                                                        Object... arguments) {
@@ -1288,8 +1201,7 @@ public class WhiteboxImpl {
     /**
      * Gets the argument types as string.
      *
-     * @param arguments
-     *            the arguments
+     * @param arguments the arguments
      * @return the argument types as string
      */
     private static String getArgumentTypesAsString(Object... arguments) {
@@ -1330,14 +1242,10 @@ public class WhiteboxImpl {
     /**
      * Append argument.
      *
-     * @param argumentsAsString
-     *            the arguments as string
-     * @param index
-     *            the index
-     * @param argumentName
-     *            the argument name
-     * @param arguments
-     *            the arguments
+     * @param argumentsAsString the arguments as string
+     * @param index             the index
+     * @param argumentName      the argument name
+     * @param arguments         the arguments
      */
     private static void appendArgument(StringBuilder argumentsAsString, int index, String argumentName,
                                        Object[] arguments) {
@@ -1353,7 +1261,7 @@ public class WhiteboxImpl {
      * This only happens if you have two constructors with the same number of
      * arguments where one is using primitive data types and the other is using
      * the wrapped counter part. For example:
-     *
+     * <p/>
      * <pre>
      * public class MyClass {
      * private MyClass(Integer i) {
@@ -1364,21 +1272,16 @@ public class WhiteboxImpl {
      * ...
      * }
      * </pre>
-     *
+     * <p/>
      * This ought to be a really rare case. So for most situation, use
      *
-     * @param <T>
-     *            the generic type
-     * @param classThatContainsTheConstructorToTest
-     *            the class that contains the constructor to test
-     * @param parameterTypes
-     *            the parameter types
-     * @param arguments
-     *            the arguments
+     * @param <T>                                   the generic type
+     * @param classThatContainsTheConstructorToTest the class that contains the constructor to test
+     * @param parameterTypes                        the parameter types
+     * @param arguments                             the arguments
      * @return The object created after the constructor has been invoked.
-     * @throws Exception
-     *             If an exception occur when invoking the constructor.
-     *             {@link #invokeConstructor(Class, Object...)} instead.
+     * @throws Exception If an exception occur when invoking the constructor.
+     *                   {@link #invokeConstructor(Class, Object...)} instead.
      */
     public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Class<?>[] parameterTypes,
                                           Object[] arguments) throws Exception {
@@ -1402,15 +1305,11 @@ public class WhiteboxImpl {
      * Invoke a constructor. Useful for testing classes with a private
      * constructor.
      *
-     * @param <T>
-     *            the generic type
-     * @param classThatContainsTheConstructorToTest
-     *            the class that contains the constructor to test
-     * @param arguments
-     *            the arguments
+     * @param <T>                                   the generic type
+     * @param classThatContainsTheConstructorToTest the class that contains the constructor to test
+     * @param arguments                             the arguments
      * @return The object created after the constructor has been invoked.
-     * @throws Exception
-     *             If an exception occur when invoking the constructor.
+     * @throws Exception If an exception occur when invoking the constructor.
      */
     public static <T> T invokeConstructor(Class<T> classThatContainsTheConstructorToTest, Object... arguments)
             throws Exception {
@@ -1471,12 +1370,9 @@ public class WhiteboxImpl {
     /**
      * Gets the potential var args constructor.
      *
-     * @param <T>
-     *            the generic type
-     * @param classThatContainsTheConstructorToTest
-     *            the class that contains the constructor to test
-     * @param arguments
-     *            the arguments
+     * @param <T>                                   the generic type
+     * @param classThatContainsTheConstructorToTest the class that contains the constructor to test
+     * @param arguments                             the arguments
      * @return the potential var args constructor
      */
     @SuppressWarnings("unchecked")
@@ -1503,15 +1399,11 @@ public class WhiteboxImpl {
     /**
      * Creates the instance.
      *
-     * @param <T>
-     *            the generic type
-     * @param constructor
-     *            the constructor
-     * @param arguments
-     *            the arguments
+     * @param <T>         the generic type
+     * @param constructor the constructor
+     * @param arguments   the arguments
      * @return the t
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     private static <T> T createInstance(Constructor<T> constructor, Object... arguments) throws Exception {
         if (constructor == null) {
@@ -1549,12 +1441,9 @@ public class WhiteboxImpl {
     /**
      * Creates the and populate var args array.
      *
-     * @param varArgsType
-     *            the var args type
-     * @param varArgsStartPosition
-     *            the var args start position
-     * @param arguments
-     *            the arguments
+     * @param varArgsType          the var args type
+     * @param varArgsStartPosition the var args start position
+     * @param arguments            the arguments
      * @return the object
      */
     private static Object createAndPopulateVarArgsArray(Class<?> varArgsType, int varArgsStartPosition,
@@ -1570,8 +1459,7 @@ public class WhiteboxImpl {
      * Get all declared constructors in the class and set accessible to
      * <code>true</code>.
      *
-     * @param clazz
-     *            The class whose constructors to get.
+     * @param clazz The class whose constructors to get.
      * @return All constructors declared in this class hierarchy.
      */
     public static Constructor<?>[] getAllConstructors(Class<?> clazz) {
@@ -1588,8 +1476,7 @@ public class WhiteboxImpl {
      * Get all methods in a class hierarchy! Both declared an non-declared (no
      * duplicates).
      *
-     * @param clazz
-     *            The class whose methods to get.
+     * @param clazz The class whose methods to get.
      * @return All methods declared in this class hierarchy.
      */
     public static Method[] getAllMethods(Class<?> clazz) {
@@ -1613,17 +1500,17 @@ public class WhiteboxImpl {
                 method.setAccessible(true);
                 methods.add(method);
             }
+            Collections.addAll(methods, type.getMethods());
             thisType = thisType.getSuperclass();
         }
-        return methods.toArray(new Method[0]);
+        return methods.toArray(new Method[methods.size()]);
     }
 
     /**
      * Get all public methods for a class (no duplicates)! Note that the
      * class-hierarchy will not be traversed.
      *
-     * @param clazz
-     *            The class whose methods to get.
+     * @param clazz The class whose methods to get.
      * @return All public methods declared in class.
      */
     private static Method[] getAllPublicMethods(Class<?> clazz) {
@@ -1643,8 +1530,7 @@ public class WhiteboxImpl {
      * Get all fields in a class hierarchy! Both declared an non-declared (no
      * duplicates).
      *
-     * @param clazz
-     *            The class whose fields to get.
+     * @param clazz The class whose fields to get.
      * @return All fields declared in this class hierarchy.
      */
     public static Field[] getAllFields(Class<?> clazz) {
@@ -1670,9 +1556,8 @@ public class WhiteboxImpl {
      * Get the first parent constructor defined in a super class of
      * <code>klass</code>.
      *
-     * @param klass
-     *            The class where the constructor is located. <code>null</code>
-     *            ).
+     * @param klass The class where the constructor is located. <code>null</code>
+     *              ).
      * @return A .
      */
     public static Constructor<?> getFirstParentConstructor(Class<?> klass) {
@@ -1691,14 +1576,10 @@ public class WhiteboxImpl {
      * specified the method will be found based on the parameter types. If
      * neither method name nor parameters are specified an
      *
-     * @param <T>
-     *            the generic type
-     * @param type
-     *            the type
-     * @param methodName
-     *            the method name
-     * @param parameterTypes
-     *            the parameter types
+     * @param <T>            the generic type
+     * @param type           the type
+     * @param methodName     the method name
+     * @param parameterTypes the parameter types
      * @return the method {@link IllegalArgumentException} will be thrown.
      */
     public static <T> Method findMethod(Class<T> type, String methodName, Class<?>... parameterTypes) {
@@ -1726,7 +1607,7 @@ public class WhiteboxImpl {
             if (matchingMethodsList.size() == 1) {
                 // We've found a unique method match.
                 methodToMock = matchingMethodsList.get(0);
-            } else if (parameterTypes.length == 0) {
+            } else if ((parameterTypes != null ? parameterTypes.length : 0) == 0) {
                 /*
                      * If we've found several matches and we've supplied no
                      * parameter types, go through the list of found methods and see
@@ -1742,12 +1623,12 @@ public class WhiteboxImpl {
 
                 if (methodToMock == null) {
                     WhiteboxImpl.throwExceptionWhenMultipleMethodMatchesFound("argument parameter types",
-                            matchingMethodsList.toArray(new Method[0]));
+                            matchingMethodsList.toArray(new Method[matchingMethodsList.size()]));
                 }
             } else {
                 // We've found several matching methods.
                 WhiteboxImpl.throwExceptionWhenMultipleMethodMatchesFound("argument parameter types",
-                        matchingMethodsList.toArray(new Method[0]));
+                        matchingMethodsList.toArray(new Method[matchingMethodsList.size()]));
             }
         }
 
@@ -1757,8 +1638,7 @@ public class WhiteboxImpl {
     /**
      * Checks if is proxy.
      *
-     * @param type
-     *            the type
+     * @param type the type
      * @return true, if is proxy
      */
     public static boolean isProxy(Class<?> type) {
@@ -1768,10 +1648,8 @@ public class WhiteboxImpl {
     /**
      * Gets the unmocked type.
      *
-     * @param <T>
-     *            the generic type
-     * @param type
-     *            the type
+     * @param <T>  the generic type
+     * @param type the type
      * @return the unmocked type
      */
     public static <T> Class<?> getUnmockedType(Class<T> type) {
@@ -1793,10 +1671,8 @@ public class WhiteboxImpl {
     /**
      * Throw exception when multiple method matches found.
      *
-     * @param helpInfo
-     *            the help info
-     * @param methods
-     *            the methods
+     * @param helpInfo the help info
+     * @param methods  the methods
      */
     static void throwExceptionWhenMultipleMethodMatchesFound(String helpInfo, Method[] methods) {
         if (methods == null || methods.length < 2) {
@@ -1824,8 +1700,7 @@ public class WhiteboxImpl {
     /**
      * Throw exception when multiple constructor matches found.
      *
-     * @param constructors
-     *            the constructors
+     * @param constructors the constructors
      */
     static void throwExceptionWhenMultipleConstructorMatchesFound(Constructor<?>[] constructors) {
         if (constructors == null || constructors.length < 2) {
@@ -1851,12 +1726,9 @@ public class WhiteboxImpl {
     /**
      * Find method or throw exception.
      *
-     * @param type
-     *            the type
-     * @param methodName
-     *            the method name
-     * @param parameterTypes
-     *            the parameter types
+     * @param type           the type
+     * @param methodName     the method name
+     * @param parameterTypes the parameter types
      * @return the method
      */
     @SuppressWarnings("all")
@@ -1870,10 +1742,8 @@ public class WhiteboxImpl {
      * Get an array of {@link Method}'s that matches the supplied list of method
      * names. Both instance and static methods are taken into account.
      *
-     * @param clazz
-     *            The class that should contain the methods.
-     * @param methodNames
-     *            Names of the methods that will be returned.
+     * @param clazz       The class that should contain the methods.
+     * @param methodNames Names of the methods that will be returned.
      * @return An array of Method's.
      */
     public static Method[] getMethods(Class<?> clazz, String... methodNames) {
@@ -1911,18 +1781,14 @@ public class WhiteboxImpl {
      * argument types are assignable from <code>expectedTypes</code>. Both
      * instance and static methods are taken into account.
      *
-     * @param clazz
-     *            The class that should contain the methods.
-     * @param methodName
-     *            Names of the methods that will be returned.
-     * @param expectedTypes
-     *            The methods must match
-     * @param exactParameterTypeMatch
-     *            <code>true</code> if the <code>expectedTypes</code> must match
-     *            the parameter types must match exactly, <code>false</code> if
-     *            the <code>expectedTypes</code> are allowed to be converted
-     *            into primitive types if they are of a wrapped type and still
-     *            match.
+     * @param clazz                   The class that should contain the methods.
+     * @param methodName              Names of the methods that will be returned.
+     * @param expectedTypes           The methods must match
+     * @param exactParameterTypeMatch <code>true</code> if the <code>expectedTypes</code> must match
+     *                                the parameter types must match exactly, <code>false</code> if
+     *                                the <code>expectedTypes</code> are allowed to be converted
+     *                                into primitive types if they are of a wrapped type and still
+     *                                match.
      * @return An array of Method's.
      */
     public static Method[] getMethods(Class<?> clazz, String methodName, Class<?>[] expectedTypes,
@@ -1950,10 +1816,8 @@ public class WhiteboxImpl {
      * Get an array of {@link Field}'s that matches the supplied list of field
      * names. Both instance and static fields are taken into account.
      *
-     * @param clazz
-     *            The class that should contain the fields.
-     * @param fieldNames
-     *            Names of the fields that will be returned.
+     * @param clazz      The class that should contain the fields.
+     * @param fieldNames Names of the fields that will be returned.
      * @return An array of Field's. May be of length 0 but not .
      */
     public static Field[] getFields(Class<?> clazz, String... fieldNames) {
@@ -1979,17 +1843,12 @@ public class WhiteboxImpl {
     /**
      * Perform method invocation.
      *
-     * @param <T>
-     *            the generic type
-     * @param tested
-     *            the tested
-     * @param methodToInvoke
-     *            the method to invoke
-     * @param arguments
-     *            the arguments
+     * @param <T>            the generic type
+     * @param tested         the tested
+     * @param methodToInvoke the method to invoke
+     * @param arguments      the arguments
      * @return the t
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @SuppressWarnings("unchecked")
     public static <T> T performMethodInvocation(Object tested, Method methodToInvoke, Object... arguments)
@@ -2011,7 +1870,7 @@ public class WhiteboxImpl {
                 completeArgumentList[completeArgumentList.length - 1] = varArgsArrayInstance;
                 return (T) methodToInvoke.invoke(tested, completeArgumentList);
             } else {
-                return (T) methodToInvoke.invoke(tested, arguments == null ? new Object[] { arguments } : arguments);
+                return (T) methodToInvoke.invoke(tested, arguments == null ? new Object[]{arguments} : arguments);
             }
         } catch (InvocationTargetException e) {
             Throwable cause = e.getCause();
@@ -2032,18 +1891,16 @@ public class WhiteboxImpl {
     /**
      * Gets the all method except.
      *
-     * @param <T>
-     *            the generic type
-     * @param type
-     *            the type
-     * @param methodNames
-     *            the method names
+     * @param <T>         the generic type
+     * @param type        the type
+     * @param methodNames the method names
      * @return the all method except
      */
     public static <T> Method[] getAllMethodExcept(Class<T> type, String... methodNames) {
         List<Method> methodsToMock = new LinkedList<Method>();
         Method[] methods = getAllMethods(type);
-        iterateMethods: for (Method method : methods) {
+        iterateMethods:
+        for (Method method : methods) {
             for (String methodName : methodNames) {
                 if (method.getName().equals(methodName)) {
                     continue iterateMethods;
@@ -2057,20 +1914,17 @@ public class WhiteboxImpl {
     /**
      * Gets the all metods except.
      *
-     * @param <T>
-     *            the generic type
-     * @param type
-     *            the type
-     * @param methodNameToExclude
-     *            the method name to exclude
-     * @param argumentTypes
-     *            the argument types
+     * @param <T>                 the generic type
+     * @param type                the type
+     * @param methodNameToExclude the method name to exclude
+     * @param argumentTypes       the argument types
      * @return the all metods except
      */
     public static <T> Method[] getAllMetodsExcept(Class<T> type, String methodNameToExclude, Class<?>[] argumentTypes) {
         Method[] methods = getAllMethods(type);
         List<Method> methodList = new ArrayList<Method>();
-        outer: for (Method method : methods) {
+        outer:
+        for (Method method : methods) {
             if (method.getName().equals(methodNameToExclude)) {
                 if (argumentTypes != null && argumentTypes.length > 0) {
                     final Class<?>[] args = method.getParameterTypes();
@@ -2098,8 +1952,7 @@ public class WhiteboxImpl {
     /**
      * Are all methods static.
      *
-     * @param methods
-     *            the methods
+     * @param methods the methods
      * @return true, if successful
      */
     public static boolean areAllMethodsStatic(Method... methods) {
@@ -2114,8 +1967,7 @@ public class WhiteboxImpl {
     /**
      * Check if all arguments are of the same type.
      *
-     * @param arguments
-     *            the arguments
+     * @param arguments the arguments
      * @return true, if successful
      */
     static boolean areAllArgumentsOfSameType(Object[] arguments) {
@@ -2149,14 +2001,11 @@ public class WhiteboxImpl {
     /**
      * Check argument types match parameter types.
      *
-     * @param isVarArgs
-     *            If the last parameter is a var args.
-     * @param parameterTypes
-     *            the parameter types
-     * @param arguments
-     *            the arguments
+     * @param isVarArgs      If the last parameter is a var args.
+     * @param parameterTypes the parameter types
+     * @param arguments      the arguments
      * @return if all actual parameter types are assignable from the expected
-     *         arguments, otherwise.
+     * arguments, otherwise.
      */
     private static boolean checkArgumentTypesMatchParameterTypes(boolean isVarArgs, Class<?>[] parameterTypes,
                                                                  Object[] arguments) {
@@ -2169,26 +2018,26 @@ public class WhiteboxImpl {
             Object argument = arguments[i];
             if (argument == null) {
                 final int index;
-                if(i >= parameterTypes.length) {
-                    index = parameterTypes.length -1;
+                if (i >= parameterTypes.length) {
+                    index = parameterTypes.length - 1;
                 } else {
                     index = i;
                 }
                 final Class<?> type = parameterTypes[index];
-                if(type.isPrimitive()) {
+                if (type.isPrimitive()) {
                     // Primitives cannot be null
                     return false;
                 } else {
                     continue;
                 }
-            } else if(i >= parameterTypes.length) {
-                if(isAssignableFrom(parameterTypes[parameterTypes.length -1], getType(argument))) {
+            } else if (i >= parameterTypes.length) {
+                if (isAssignableFrom(parameterTypes[parameterTypes.length - 1], getType(argument))) {
                     continue;
                 } else {
                     return false;
                 }
             } else {
-                boolean assignableFrom = isAssignableFrom(parameterTypes[i],  getType(argument));
+                boolean assignableFrom = isAssignableFrom(parameterTypes[i], getType(argument));
                 final boolean isClass = parameterTypes[i].equals(Class.class) && isClass(argument);
                 if (!assignableFrom && !isClass) {
                     return false;
@@ -2203,9 +2052,9 @@ public class WhiteboxImpl {
         Class<?> theType = getComponentType(type);
         Class<?> theFrom = getComponentType(from);
         assignableFrom = theType.isAssignableFrom(theFrom);
-        if(!assignableFrom && PrimitiveWrapper.hasPrimitiveCounterPart(theFrom)) {
+        if (!assignableFrom && PrimitiveWrapper.hasPrimitiveCounterPart(theFrom)) {
             final Class<?> primitiveFromWrapperType = PrimitiveWrapper.getPrimitiveFromWrapperType(theFrom);
-            if(primitiveFromWrapperType != null) {
+            if (primitiveFromWrapperType != null) {
                 assignableFrom = theType.isAssignableFrom(primitiveFromWrapperType);
             }
         }
@@ -2214,7 +2063,7 @@ public class WhiteboxImpl {
 
     private static Class<?> getComponentType(Class<?> type) {
         Class<?> theType = type;
-        while(theType.isArray()) {
+        while (theType.isArray()) {
             theType = theType.getComponentType();
         }
         return theType;
@@ -2223,8 +2072,7 @@ public class WhiteboxImpl {
     /**
      * Gets the type.
      *
-     * @param object
-     *            the object
+     * @param object the object
      * @return The type of the of an object.
      */
     public static Class<?> getType(Object object) {
@@ -2240,13 +2088,10 @@ public class WhiteboxImpl {
     /**
      * Get an inner class type.
      *
-     * @param declaringClass
-     *            The class in which the inner class is declared.
-     * @param name
-     *            The unqualified name (simple name) of the inner class.
+     * @param declaringClass The class in which the inner class is declared.
+     * @param name           The unqualified name (simple name) of the inner class.
      * @return The type.
-     * @throws ClassNotFoundException
-     *             the class not found exception
+     * @throws ClassNotFoundException the class not found exception
      */
     @SuppressWarnings("unchecked")
     public static Class<Object> getInnerClassType(Class<?> declaringClass, String name) throws ClassNotFoundException {
@@ -2256,18 +2101,14 @@ public class WhiteboxImpl {
     /**
      * Get the type of a local inner class.
      *
-     * @param declaringClass
-     *            The class in which the local inner class is declared.
-     * @param occurrence
-     *            The occurrence of the local class. For example if you have two
-     *            local classes in the <code>declaringClass</code> you must pass
-     *            in <code>1</code> if you want to get the type for the first
-     *            one or <code>2</code> if you want the second one.
-     * @param name
-     *            The unqualified name (simple name) of the local class.
+     * @param declaringClass The class in which the local inner class is declared.
+     * @param occurrence     The occurrence of the local class. For example if you have two
+     *                       local classes in the <code>declaringClass</code> you must pass
+     *                       in <code>1</code> if you want to get the type for the first
+     *                       one or <code>2</code> if you want the second one.
+     * @param name           The unqualified name (simple name) of the local class.
      * @return The type.
-     * @throws ClassNotFoundException
-     *             the class not found exception
+     * @throws ClassNotFoundException the class not found exception
      */
     @SuppressWarnings("unchecked")
     public static Class<Object> getLocalClassType(Class<?> declaringClass, int occurrence, String name)
@@ -2278,17 +2119,14 @@ public class WhiteboxImpl {
     /**
      * Get the type of an anonymous inner class.
      *
-     * @param declaringClass
-     *            The class in which the anonymous inner class is declared.
-     * @param occurrence
-     *            The occurrence of the anonymous inner class. For example if
-     *            you have two anonymous inner classes classes in the
-     *            <code>declaringClass</code> you must pass in <code>1</code> if
-     *            you want to get the type for the first one or <code>2</code>
-     *            if you want the second one.
+     * @param declaringClass The class in which the anonymous inner class is declared.
+     * @param occurrence     The occurrence of the anonymous inner class. For example if
+     *                       you have two anonymous inner classes classes in the
+     *                       <code>declaringClass</code> you must pass in <code>1</code> if
+     *                       you want to get the type for the first one or <code>2</code>
+     *                       if you want the second one.
      * @return The type.
-     * @throws ClassNotFoundException
-     *             the class not found exception
+     * @throws ClassNotFoundException the class not found exception
      */
     @SuppressWarnings("unchecked")
     public static Class<Object> getAnonymousInnerClassType(Class<?> declaringClass, int occurrence)
@@ -2300,16 +2138,13 @@ public class WhiteboxImpl {
      * Get all fields annotated with a particular annotation. This method
      * traverses the class hierarchy when checking for the annotation.
      *
-     * @param object
-     *            The object to look for annotations. Note that if're you're
-     *            passing an object only instance fields are checked, passing a
-     *            class will only check static fields.
-     * @param annotation
-     *            The annotation type to look for.
-     * @param additionalAnnotations
-     *            Optionally more annotations to look for. If any of the
-     *            annotations are associated with a particular field it will be
-     *            added to the resulting <code>Set</code>.
+     * @param object                The object to look for annotations. Note that if're you're
+     *                              passing an object only instance fields are checked, passing a
+     *                              class will only check static fields.
+     * @param annotation            The annotation type to look for.
+     * @param additionalAnnotations Optionally more annotations to look for. If any of the
+     *                              annotations are associated with a particular field it will be
+     *                              added to the resulting <code>Set</code>.
      * @return A set of all fields containing the particular annotation.
      */
     @SuppressWarnings("unchecked")
@@ -2317,7 +2152,7 @@ public class WhiteboxImpl {
                                                     Class<? extends Annotation>... additionalAnnotations) {
         Class<? extends Annotation>[] annotations = null;
         if (additionalAnnotations == null || additionalAnnotations.length == 0) {
-            annotations = (Class<? extends Annotation>[]) new Class<?>[] { annotation };
+            annotations = (Class<? extends Annotation>[]) new Class<?>[]{annotation};
         } else {
             annotations = (Class<? extends Annotation>[]) new Class<?>[additionalAnnotations.length + 1];
             annotations[0] = annotation;
@@ -2330,12 +2165,10 @@ public class WhiteboxImpl {
      * Get all fields annotated with a particular annotation. This method
      * traverses the class hierarchy when checking for the annotation.
      *
-     * @param object
-     *            The object to look for annotations. Note that if're you're
-     *            passing an object only instance fields are checked, passing a
-     *            class will only check static fields.
-     * @param annotationTypes
-     *            The annotation types to look for
+     * @param object          The object to look for annotations. Note that if're you're
+     *                        passing an object only instance fields are checked, passing a
+     *                        class will only check static fields.
+     * @param annotationTypes The annotation types to look for
      * @return A set of all fields containing the particular annotation(s).
      * @since 1.3
      */
@@ -2348,12 +2181,10 @@ public class WhiteboxImpl {
      * Get all fields assignable from a particular type. This method traverses
      * the class hierarchy when checking for the type.
      *
-     * @param object
-     *            The object to look for type. Note that if're you're passing an
-     *            object only instance fields are checked, passing a class will
-     *            only check static fields.
-     * @param type
-     *            The type to look for.
+     * @param object The object to look for type. Note that if're you're passing an
+     *               object only instance fields are checked, passing a class will
+     *               only check static fields.
+     * @param type   The type to look for.
      * @return A set of all fields of the particular type.
      */
     public static Set<Field> getFieldsOfType(Object object, Class<?> type) {
@@ -2366,10 +2197,9 @@ public class WhiteboxImpl {
      * regardless of the field modifier and regardless of where in the class
      * hierarchy a field is located.
      *
-     * @param object
-     *            The object whose instance fields to get.
+     * @param object The object whose instance fields to get.
      * @return All instance fields in the hierarchy. All fields are set to
-     *         accessible
+     * accessible
      */
     public static Set<Field> getAllInstanceFields(Object object) {
         return findAllFieldsUsingStrategy(new AllFieldsMatcherStrategy(), object, true, getType(object));
@@ -2378,8 +2208,7 @@ public class WhiteboxImpl {
     /**
      * Get all static fields for a particular type.
      *
-     * @param type
-     *            The class whose static fields to get.
+     * @param type The class whose static fields to get.
      * @return All static fields in . All fields are set to accessible.
      */
     public static Set<Field> getAllStaticFields(Class<?> type) {
@@ -2397,8 +2226,7 @@ public class WhiteboxImpl {
     /**
      * Checks if is class.
      *
-     * @param argument
-     *            the argument
+     * @param argument the argument
      * @return true, if is class
      */
     public static boolean isClass(Object argument) {
@@ -2408,14 +2236,11 @@ public class WhiteboxImpl {
     /**
      * Check if parameter types are same.
      *
-     * @param isVarArgs
-     *            Whether or not the method or constructor contains var args.
-     * @param expectedParameterTypes
-     *            the expected parameter types
-     * @param actualParameterTypes
-     *            the actual parameter types
+     * @param isVarArgs              Whether or not the method or constructor contains var args.
+     * @param expectedParameterTypes the expected parameter types
+     * @param actualParameterTypes   the actual parameter types
      * @return if all actual parameter types are assignable from the expected
-     *         parameter types, otherwise.
+     * parameter types, otherwise.
      */
     public static boolean checkIfParameterTypesAreSame(boolean isVarArgs, Class<?>[] expectedParameterTypes,
                                                        Class<?>[] actualParameterTypes) {
@@ -2440,10 +2265,8 @@ public class WhiteboxImpl {
     /**
      * Gets the field.
      *
-     * @param fieldName
-     *            the field name
-     * @param where
-     *            the where
+     * @param fieldName the field name
+     * @param where     the where
      * @return the field
      */
     private static Field getField(String fieldName, Class<?> where) {
@@ -2465,10 +2288,8 @@ public class WhiteboxImpl {
     /**
      * Find field or throw exception.
      *
-     * @param fieldType
-     *            the field type
-     * @param where
-     *            the where
+     * @param fieldType the field type
+     * @param where     the where
      * @return the field
      */
     private static Field findFieldOrThrowException(Class<?> fieldType, Class<?> where) {
@@ -2492,12 +2313,9 @@ public class WhiteboxImpl {
     /**
      * Sets the field.
      *
-     * @param object
-     *            the object
-     * @param value
-     *            the value
-     * @param foundField
-     *            the found field
+     * @param object     the object
+     * @param value      the value
+     * @param foundField the found field
      */
     private static void setField(Object object, Object value, Field foundField) {
         foundField.setAccessible(true);
@@ -2511,8 +2329,7 @@ public class WhiteboxImpl {
     /**
      * Concatenate strings.
      *
-     * @param stringsToConcatenate
-     *            the strings to concatenate
+     * @param stringsToConcatenate the strings to concatenate
      * @return the string
      */
     private static String concatenateStrings(String... stringsToConcatenate) {
@@ -2532,10 +2349,8 @@ public class WhiteboxImpl {
     /**
      * Checks if is potential var args method.
      *
-     * @param method
-     *            the method
-     * @param arguments
-     *            the arguments
+     * @param method    the method
+     * @param arguments the arguments
      * @return true, if is potential var args method
      */
     private static boolean isPotentialVarArgsMethod(Method method, Object[] arguments) {
@@ -2545,10 +2360,8 @@ public class WhiteboxImpl {
     /**
      * Checks if is potential var args constructor.
      *
-     * @param constructor
-     *            the constructor
-     * @param arguments
-     *            the arguments
+     * @param constructor the constructor
+     * @param arguments   the arguments
      * @return true, if is potential var args constructor
      */
     private static boolean isPotentialVarArgsConstructor(Constructor<?> constructor, Object[] arguments) {
@@ -2559,12 +2372,9 @@ public class WhiteboxImpl {
     /**
      * Does parameter types match for var args invocation.
      *
-     * @param isVarArgs
-     *            the is var args
-     * @param parameterTypes
-     *            the parameter types
-     * @param arguments
-     *            the arguments
+     * @param isVarArgs      the is var args
+     * @param parameterTypes the parameter types
+     * @param arguments      the arguments
      * @return true, if successful
      */
     private static boolean doesParameterTypesMatchForVarArgsInvocation(boolean isVarArgs, Class<?>[] parameterTypes,
@@ -2588,8 +2398,7 @@ public class WhiteboxImpl {
      * <code>java.lang.Integer</code> this method will return
      * <code>int.class</code>.
      *
-     * @param object
-     *            The object whose type to get.
+     * @param object The object whose type to get.
      * @return the type as primitive if wrapped
      */
     private static Class<?> getTypeAsPrimitiveIfWrapped(Object object) {
@@ -2607,9 +2416,9 @@ public class WhiteboxImpl {
      * reflection. The values in the context will be assigned to values on the
      * <code>instance</code>. This method will traverse the class hierarchy when
      * searching for the fields. Example usage:
-     * <p>
+     * <p/>
      * Given:
-     *
+     * <p/>
      * <pre>
      * public class MyContext {
      * 	private String myString = &quot;myString&quot;;
@@ -2622,22 +2431,19 @@ public class WhiteboxImpl {
      *
      * }
      * </pre>
-     *
+     * <p/>
      * then
-     *
+     * <p/>
      * <pre>
      * Whitebox.setInternalStateFromContext(new MyInstance(), new MyContext());
      * </pre>
-     *
+     * <p/>
      * will set the instance variables of <code>myInstance</code> to the values
      * specified in <code>MyContext</code>.
      *
-     * @param object
-     *            the object
-     * @param context
-     *            The context where the fields are defined.
-     * @param additionalContexts
-     *            Optionally more additional contexts.
+     * @param object             the object
+     * @param context            The context where the fields are defined.
+     * @param additionalContexts Optionally more additional contexts.
      */
     public static void setInternalStateFromContext(Object object, Object context, Object[] additionalContexts) {
         setInternalStateFromContext(object, context, FieldMatchingStrategy.MATCHING);
@@ -2661,9 +2467,9 @@ public class WhiteboxImpl {
      * reflection. The values in the context will be assigned to values on the
      * <code>classOrInstance</code>. This method will traverse the class
      * hierarchy when searching for the fields. Example usage:
-     * <p>
+     * <p/>
      * Given:
-     *
+     * <p/>
      * <pre>
      * public class MyContext {
      * 	private static String myString = &quot;myString&quot;;
@@ -2676,22 +2482,19 @@ public class WhiteboxImpl {
      *
      * }
      * </pre>
-     *
+     * <p/>
      * then
-     *
+     * <p/>
      * <pre>
      * Whitebox.setInternalStateFromContext(MyInstance.class, MyContext.class);
      * </pre>
-     *
+     * <p/>
      * will set the static variables of <code>MyInstance</code> to the values
      * specified in <code>MyContext</code>.
      *
-     * @param object
-     *            the object
-     * @param context
-     *            The context where the fields are defined.
-     * @param additionalContexts
-     *            Optionally more additional contexts.
+     * @param object             the object
+     * @param context            The context where the fields are defined.
+     * @param additionalContexts Optionally more additional contexts.
      */
     public static void setInternalStateFromContext(Object object, Class<?> context, Class<?>[] additionalContexts) {
         setInternalStateFromContext(object, context, FieldMatchingStrategy.MATCHING);
@@ -2705,12 +2508,9 @@ public class WhiteboxImpl {
     /**
      * Copy state.
      *
-     * @param object
-     *            the object
-     * @param context
-     *            the context
-     * @param strategy
-     *            The field matching strategy.
+     * @param object   the object
+     * @param context  the context
+     * @param strategy The field matching strategy.
      */
     static void copyState(Object object, Object context, FieldMatchingStrategy strategy) {
         if (object == null) {
@@ -2741,8 +2541,7 @@ public class WhiteboxImpl {
     /**
      * Assert object in get internal state is not null.
      *
-     * @param object
-     *            the object
+     * @param object the object
      */
     private static void assertObjectInGetInternalStateIsNotNull(Object object) {
         if (object == null) {
@@ -2753,8 +2552,7 @@ public class WhiteboxImpl {
     /**
      * Convert parameter types to primitive.
      *
-     * @param parameterTypes
-     *            the parameter types
+     * @param parameterTypes the parameter types
      * @return the class[]
      */
     private static Class<?>[] convertParameterTypesToPrimitive(Class<?>[] parameterTypes) {

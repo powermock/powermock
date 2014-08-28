@@ -36,6 +36,7 @@
         <module>spring-mockito</module>
         <module>spring-mockito-xml-agent</module>
         <module>spring-mockito-xml</module>
+        <module>java8</module>
     </modules>
     <dependencyManagement>
         <dependencies>

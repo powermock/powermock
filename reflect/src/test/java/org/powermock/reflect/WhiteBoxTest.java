@@ -805,7 +805,7 @@ public class WhiteBoxTest {
 
 	@Test
 	public void invokeMethodInvokesOverridenMethods() throws Exception {
-		assertTrue(Whitebox.<Boolean> invokeMethod(new ClassWithOverriddenMethod(), 2.0d));
+        assertTrue(Whitebox.<Boolean> invokeMethod(new ClassWithOverriddenMethod(), 2.0d));
 	}
 
 	@Test(expected = IllegalArgumentException.class)

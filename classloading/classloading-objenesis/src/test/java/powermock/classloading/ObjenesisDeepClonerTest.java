@@ -16,6 +16,7 @@
 
 package powermock.classloading;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.powermock.classloading.DeepCloner;
 
@@ -25,8 +26,17 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.junit.Assume.assumeTrue;
 
 public class ObjenesisDeepClonerTest {
+
+    /**
+     * These tests crashes the JVM on version 1.8
+     */
+    @Before
+    public void onlyRunTestsOnNonJava8Environment() throws Exception {
+        assumeTrue(Float.valueOf(System.getProperty("java.specification.version")) < 1.8f);
+    }
 
     @Test
     public void clonesJavaInstances() throws Exception {

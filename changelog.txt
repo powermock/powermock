@@ -6,6 +6,8 @@ Change log next version
 * Cleaned up some code in the ClassReplicaCreator class
 * Added support for answers, name and extract interfaces in PowerMockito when using annotations (@Mock). Note that answers doesn't work for final classes or methods! (issue 486).
 * PowerMockIgnore is now taken into account when using the Java Agent PowerMockRule.
+* Improved java agent automatic bootstrap mechanism to work better for newer JDK's.
+* Improved Java 8 support. PowerMock now finds default methods (issue 513).
 
 Change log 1.5.5 (2014-05-28)
 -----------------------------

@@ -6,8 +6,9 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.exceptions.TooManyConstructorsFoundException;
 import samples.expectnew.PrimitiveAndWrapperDemo;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.junit.matchers.JUnitMatchers.containsString;
 import static org.powermock.api.easymock.PowerMock.createMockAndExpectNew;
 
 /**
@@ -22,11 +23,10 @@ public class PrimitiveAndWrapperDemoTest {
 			createMockAndExpectNew(PrimitiveAndWrapperDemo.class, 2);
 			fail("Should throw TooManyConstructorsFoundException");
 		} catch (TooManyConstructorsFoundException e) {
-			assertEquals(
-					"Several matching constructors found, please specify the argument parameter types so that PowerMock can determine which method you're referring to."
-							+ "\nMatching constructors in class samples.expectnew.PrimitiveAndWrapperDemo were:\n"
-							+ "samples.expectnew.PrimitiveAndWrapperDemo( java.lang.Integer.class )\n"
-							+ "samples.expectnew.PrimitiveAndWrapperDemo( int.class )\n", e.getMessage());
+			assertThat(e.getMessage(), containsString("Several matching constructors found, please specify the argument parameter types so that PowerMock can determine which method you're referring to."
+                    + "\nMatching constructors in class samples.expectnew.PrimitiveAndWrapperDemo were:\n"));
+            assertThat(e.getMessage(), containsString("samples.expectnew.PrimitiveAndWrapperDemo( java.lang.Integer.class )\n"));
+            assertThat(e.getMessage(), containsString("samples.expectnew.PrimitiveAndWrapperDemo( int.class )\n"));
 		}
 	}
 
