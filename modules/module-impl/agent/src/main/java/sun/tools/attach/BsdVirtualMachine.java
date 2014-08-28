@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2012, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -34,18 +34,17 @@ import java.io.File;
 import java.util.Properties;
 
 /*
- * Linux implementation of HotSpotVirtualMachine
+ * Bsd implementation of HotSpotVirtualMachine
  */
-public class LinuxVirtualMachine extends HotSpotVirtualMachine {
-    // "/tmp" is used as a global well-known location for the files
+public class BsdVirtualMachine extends HotSpotVirtualMachine {
+    // "tmpdir" is used as a global well-known location for the files
     // .java_pid<pid>. and .attach_pid<pid>. It is important that this
     // location is the same for all processes, otherwise the tools
     // will not be able to find all Hotspot processes.
+    // This is intentionally not the same as java.io.tmpdir, since
+    // the latter can be changed by the user.
     // Any changes to this needs to be synchronized with HotSpot.
-    private static final String tmpdir = "/tmp";
-
-    // Indicates if this machine uses the old LinuxThreads
-    static boolean isLinuxThreads;
+    private static final String tmpdir;
 
     // The patch to the socket file created by the target VM
     String path;
@@ -53,7 +52,7 @@ public class LinuxVirtualMachine extends HotSpotVirtualMachine {
     /**
      * Attaches to the target VM
      */
-    public LinuxVirtualMachine(AttachProvider provider, String vmid)
+    public BsdVirtualMachine(AttachProvider provider, String vmid)
         throws AttachNotSupportedException, IOException
     {
         super(provider, vmid);
@@ -71,25 +70,10 @@ public class LinuxVirtualMachine extends HotSpotVirtualMachine {
         // Then we attempt to find the socket file again.
         path = findSocketFile(pid);
         if (path == null) {
-            File f = createAttachFile(pid);
+            File f = new File(tmpdir, ".attach_pid" + pid);
+            createAttachFile(f.getPath());
             try {
-                // On LinuxThreads each thread is a process and we don't have the
-                // pid of the VMThread which has SIGQUIT unblocked. To workaround
-                // this we get the pid of the "manager thread" that is created
-                // by the first call to pthread_create. This is parent of all
-                // threads (except the initial thread).
-                if (isLinuxThreads) {
-                    int mpid;
-                    try {
-                        mpid = getLinuxThreadsManager(pid);
-                    } catch (IOException x) {
-                        throw new AttachNotSupportedException(x.getMessage());
-                    }
-                    assert(mpid >= 1);
-                    sendQuitToChildrenOf(mpid);
-                } else {
-                    sendQuitTo(pid);
-                }
+                sendQuitTo(pid);
 
                 // give the target VM time to start the attach mechanism
                 int i = 0;
@@ -256,38 +240,20 @@ public class LinuxVirtualMachine extends HotSpotVirtualMachine {
             } else if (len == 0)
                 return 0;
 
-            return LinuxVirtualMachine.read(s, bs, off, len);
+            return BsdVirtualMachine.read(s, bs, off, len);
         }
 
         public void close() throws IOException {
-            LinuxVirtualMachine.close(s);
+            BsdVirtualMachine.close(s);
         }
     }
 
     // Return the socket file for the given process.
+    // Checks temp directory for .java_pid<pid>.
     private String findSocketFile(int pid) {
-        File f = new File(tmpdir, ".java_pid" + pid);
-        if (!f.exists()) {
-            return null;
-        }
-        return f.getPath();
-    }
-
-    // On Solaris/Linux a simple handshake is used to start the attach mechanism
-    // if not already started. The client creates a .attach_pid<pid> file in the
-    // target VM's working directory (or temp directory), and the SIGQUIT handler
-    // checks for the file.
-    private File createAttachFile(int pid) throws IOException {
-        String fn = ".attach_pid" + pid;
-        String path = "/proc/" + pid + "/cwd/" + fn;
-        File f = new File(path);
-        try {
-            f.createNewFile();
-        } catch (IOException x) {
-            f = new File(tmpdir, fn);
-            f.createNewFile();
-        }
-        return f;
+        String fn = ".java_pid" + pid;
+        File f = new File(tmpdir, fn);
+        return f.exists() ? f.getPath() : null;
     }
 
     /*
@@ -302,7 +268,7 @@ public class LinuxVirtualMachine extends HotSpotVirtualMachine {
             } catch (java.io.UnsupportedEncodingException x) {
                 throw new InternalError();
             }
-            LinuxVirtualMachine.write(fd, b, 0, b.length);
+            BsdVirtualMachine.write(fd, b, 0, b.length);
         }
         byte b[] = new byte[1];
         b[0] = 0;
@@ -311,12 +277,6 @@ public class LinuxVirtualMachine extends HotSpotVirtualMachine {
 
 
     //-- native methods
-
-    static native boolean isLinuxThreads();
-
-    static native int getLinuxThreadsManager(int pid) throws IOException;
-
-    static native void sendQuitToChildrenOf(int pid) throws IOException;
 
     static native void sendQuitTo(int pid) throws IOException;
 
@@ -332,8 +292,12 @@ public class LinuxVirtualMachine extends HotSpotVirtualMachine {
 
     static native void write(int fd, byte buf[], int off, int bufLen) throws IOException;
 
+    static native void createAttachFile(String path);
+
+    static native String getTempDir();
+
     static {
         System.loadLibrary("attach");
-        isLinuxThreads = isLinuxThreads();
+        tmpdir = getTempDir();
     }
 }

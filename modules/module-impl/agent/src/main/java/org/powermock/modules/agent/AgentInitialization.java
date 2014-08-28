@@ -37,7 +37,7 @@ final class AgentInitialization
         String jarFilePath = discoverPathToJarFile();
 
         if (PowerMockAgent.jdk6OrLater) {
-            new JDK6AgentLoader(jarFilePath).loadAgent();
+            new AgentLoader(jarFilePath).loadAgent();
         }
         else if ("1.5".equals(PowerMockAgent.javaSpecVersion)) {
             throw new IllegalStateException(
