@@ -15,7 +15,6 @@
  */
 package samples.junit4.staticinitializer;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
@@ -30,7 +29,6 @@ import static org.junit.Assert.assertSame;
 
 @RunWith(PowerMockRunner.class)
 @SuppressStaticInitializationFor("samples.staticinitializer.StaticInitializerExample")
-@Ignore("Temporary ignored")
 public class StaticInitializerExampleTest {
 
 	@Test
