@@ -21,35 +21,87 @@ import org.junit.runners.model.Statement;
 import org.powermock.core.MockRepository;
 import org.powermock.modules.agent.PowerMockAgent;
 import org.powermock.modules.agent.support.PowerMockAgentTestInitializer;
+import org.powermock.reflect.Whitebox;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Set;
 
 public class PowerMockRule implements MethodRule {
     static {
-        if(PowerMockRule.class.getClassLoader() != ClassLoader.getSystemClassLoader()) {
-            throw new IllegalStateException("PowerMockRule can only be used with the system classloader but was loaded by "+PowerMockRule.class.getClassLoader());
+        if (PowerMockRule.class.getClassLoader() != ClassLoader.getSystemClassLoader()) {
+            throw new IllegalStateException("PowerMockRule can only be used with the system classloader but was loaded by " + PowerMockRule.class.getClassLoader());
         }
         PowerMockAgent.initializeIfPossible();
     }
 
     public Statement apply(Statement base, FrameworkMethod method, Object target) {
         PowerMockAgentTestInitializer.initialize(target.getClass());
-        return new PowerMockStatement(base);
+
+        return new PowerMockStatement(base, target);
     }
 }
 
 class PowerMockStatement extends Statement {
+    private static final String ANNOTATION_ENABLER = "org.powermock.api.extension.listener.AnnotationEnabler";
     private final Statement fNext;
+    private final Object target;
 
-    public PowerMockStatement(Statement base) {
+    public PowerMockStatement(Statement base, Object target) {
         fNext = base;
+        this.target = target;
     }
 
     @Override
     public void evaluate() throws Throwable {
+        Object annotationEnabler = loadAnnotationEnableIfPresent();
         try {
+            injectMocksUsingAnnotationEnabler(target, annotationEnabler);
             fNext.evaluate();
         } finally {
             // Clear the mock repository after each test
             MockRepository.clear();
+            clearMockFields(target, annotationEnabler);
+        }
+    }
+
+    private Object loadAnnotationEnableIfPresent() {
+        boolean hasAnnotationEnabler = hasClass(ANNOTATION_ENABLER);
+        if (!hasAnnotationEnabler) {
+            return null;
+        }
+
+        try {
+            return Whitebox.invokeConstructor(Class.forName(ANNOTATION_ENABLER, true, Thread.currentThread().getContextClassLoader()));
+        } catch (Exception e) {
+            throw new RuntimeException("PowerMock internal error, failed to load annotation enabler.");
+        }
+    }
+
+    private boolean hasClass(String className) {
+        try {
+            Class.forName(className, false, Thread.currentThread().getContextClassLoader());
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    private void clearMockFields(Object target, Object annotationEnabler) throws Exception {
+        if (annotationEnabler != null) {
+            Class<? extends Annotation>[] mockAnnotations = Whitebox.invokeMethod(annotationEnabler, "getMockAnnotations");
+            Set<Field> mockFields = Whitebox.getFieldsAnnotatedWith(target, mockAnnotations);
+            for (Field field : mockFields) {
+                field.set(target, null);
+            }
+        }
+    }
+
+    private void injectMocksUsingAnnotationEnabler(Object target, Object annotationEnabler) throws Exception {
+        if (annotationEnabler != null) {
+            Whitebox.invokeMethod(annotationEnabler, "beforeTestMethod", new Class<?>[]{Object.class, Method.class,
+                    Object[].class}, target, null, null);
         }
     }
 }

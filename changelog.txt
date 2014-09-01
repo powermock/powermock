@@ -8,6 +8,7 @@ Change log next version
 * PowerMockIgnore is now taken into account when using the Java Agent PowerMockRule.
 * Improved java agent automatic bootstrap mechanism to work better for newer JDK's.
 * Improved Java 8 support. PowerMock now finds default methods (issue 513).
+* Annotations such as @Mock and @InjectMocks can now be used with the JUnit Java Agent.
 
 Change log 1.5.5 (2014-05-28)
 -----------------------------
