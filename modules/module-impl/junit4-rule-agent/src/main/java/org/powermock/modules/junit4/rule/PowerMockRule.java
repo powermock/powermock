@@ -22,6 +22,7 @@ import org.powermock.core.MockRepository;
 import org.powermock.modules.agent.PowerMockAgent;
 import org.powermock.modules.agent.support.PowerMockAgentTestInitializer;
 import org.powermock.reflect.Whitebox;
+import org.powermock.reflect.proxyframework.RegisterProxyFramework;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -58,6 +59,7 @@ class PowerMockStatement extends Statement {
         Object annotationEnabler = loadAnnotationEnableIfPresent();
         try {
             injectMocksUsingAnnotationEnabler(target, annotationEnabler);
+            registerProxyFramework();
             fNext.evaluate();
         } finally {
             // Clear the mock repository after each test
@@ -102,6 +104,32 @@ class PowerMockStatement extends Statement {
         if (annotationEnabler != null) {
             Whitebox.invokeMethod(annotationEnabler, "beforeTestMethod", new Class<?>[]{Object.class, Method.class,
                     Object[].class}, target, null, null);
+        }
+    }
+
+    private static void registerProxyFramework() {
+        Class<?> proxyFrameworkClass;
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            proxyFrameworkClass = Class.forName("org.powermock.api.extension.proxyframework.ProxyFrameworkImpl", false, contextClassLoader);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException(
+                    "Extension API error: org.powermock.api.extension.proxyframework.ProxyFrameworkImpl could not be located in classpath.");
+        }
+
+        Class<?> proxyFrameworkRegistrar = null;
+        try {
+            proxyFrameworkRegistrar = Class.forName(RegisterProxyFramework.class.getName(), false, contextClassLoader);
+        } catch (ClassNotFoundException e) {
+            // Should never happen
+            throw new RuntimeException(e);
+        }
+        try {
+            Whitebox.invokeMethod(proxyFrameworkRegistrar, "registerProxyFramework", Whitebox.newInstance(proxyFrameworkClass));
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
