@@ -141,13 +141,11 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
-                        <configuration>
-                            <additionalparam>-Xdoclint:none</additionalparam>
-                        </configuration>
                     </execution>
                 </executions>
                 <configuration>
                     <failOnError>false</failOnError>
+                    <additionalparam>-Xdoclint:none</additionalparam>
                 </configuration>
                 <dependencies>
                     <!-- To avoid "You have more than one version of 'org.apache.commons.logging.Log' visible, which is not allowed" -->
