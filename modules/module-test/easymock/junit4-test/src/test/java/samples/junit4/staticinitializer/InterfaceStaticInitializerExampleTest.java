@@ -15,7 +15,6 @@
  */
 package samples.junit4.staticinitializer;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
@@ -27,7 +26,6 @@ import static org.junit.Assert.assertEquals;
 @RunWith(PowerMockRunner.class)
 @SuppressStaticInitializationFor( { "samples.staticinitializer.InterfaceA", "samples.staticinitializer.InterfaceB",
 		"samples.staticinitializer.InterfaceC" })
-@Ignore("Fails in Maven for some reason")
 public class InterfaceStaticInitializerExampleTest {
 
 	@Test
