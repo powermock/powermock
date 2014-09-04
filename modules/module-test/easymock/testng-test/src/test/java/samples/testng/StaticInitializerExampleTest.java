@@ -15,25 +15,26 @@
  */
 package samples.testng;
 
-import org.testng.annotations.Test;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
+import org.powermock.modules.testng.PowerMockTestCase;
 import org.powermock.reflect.Whitebox;
+import org.testng.annotations.Test;
 import samples.staticinitializer.StaticInitializerExample;
 
 import java.util.HashSet;
 
-import static org.testng.Assert.*;
-import org.powermock.modules.testng.PowerMockTestCase;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertSame;
 
 @SuppressStaticInitializationFor("samples.staticinitializer.StaticInitializerExample")
 public class StaticInitializerExampleTest extends PowerMockTestCase {
 
-	@Test
+	@Test(enabled = false)
 	public void testSupressStaticInitializer() throws Exception {
 		assertNull(StaticInitializerExample.getMySet(), "Should be null because the static initializer should be suppressed");
 	}
 
-	@Test
+	@Test(enabled = false)
 	public void testSupressStaticInitializerAndSetFinalField() throws Exception {
 		assertNull(StaticInitializerExample.getMySet(), "Should be null because the static initializer should be suppressed");
 		final HashSet<String> hashSet = new HashSet<String>();
