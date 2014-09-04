@@ -1,5 +1,5 @@
-Change log next version
------------------------
+Change log 1.5.6 (2014-09-04)
+-----------------------------
 * Changed so that the MockClassLoader throws ClassNotFoundException instead of Javassist's NotFoundException when a class isn't found (thanks to Mikael Petterson for the pull request).
 * Final equals methods should now work with Mockito and not cause stackoverflow (thanks to Peer Hartmann for pull request)
 * Removed redundant cast when creating a class replicas for final system classes.
@@ -7,7 +7,7 @@ Change log next version
 * Added support for answers, name and extract interfaces in PowerMockito when using annotations (@Mock). Note that answers doesn't work for final classes or methods! (issue 486).
 * PowerMockIgnore is now taken into account when using the Java Agent PowerMockRule.
 * Improved java agent automatic bootstrap mechanism to work better for newer JDK's.
-* Improved Java 8 support. PowerMock now finds default methods (issue 513).
+* PowerMock now finds default methods in Java 8 (issue 513).
 * Annotations such as @Mock and @InjectMocks can now be used with the JUnit Java Agent.
 * Proxy framework is loaded from the the JUnit Java Agent which means that all Whitebox methods work as expected.
 
