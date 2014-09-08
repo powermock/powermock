@@ -22,16 +22,17 @@ import org.mockito.Captor;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import samples.finalmocking.FinalDemo;
+import samples.privateandfinal.PrivateFinal;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
  * Asserts that {@link Captor} with PowerMock.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(FinalDemo.class)
+@PrepareForTest({FinalDemo.class, PrivateFinal.class})
 public class CaptorAnnotationTest {
 
 	@Captor
@@ -44,6 +45,16 @@ public class CaptorAnnotationTest {
 		demo.say(expected);
 
 		verify(demo).say(captor.capture());
+		assertEquals(expected, captor.getValue());
+	}
+
+    @Test
+	public void captorAnnotationWorksOnPrivateMethods() throws Exception {
+		final String expected = "testing";
+		PrivateFinal demo = spy(new PrivateFinal());
+		demo.say(expected);
+
+		verifyPrivate(demo).invoke("sayIt", captor.capture());
 		assertEquals(expected, captor.getValue());
 	}
 }
