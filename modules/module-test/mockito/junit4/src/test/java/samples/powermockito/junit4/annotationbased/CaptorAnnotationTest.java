@@ -35,26 +35,26 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @PrepareForTest({FinalDemo.class, PrivateFinal.class})
 public class CaptorAnnotationTest {
 
-	@Captor
-	private ArgumentCaptor<String> captor;
-
-	@Test
-	public void captorAnnotationWorks() throws Exception {
-		final String expected = "testing";
-		FinalDemo demo = mock(FinalDemo.class);
-		demo.say(expected);
-
-		verify(demo).say(captor.capture());
-		assertEquals(expected, captor.getValue());
-	}
+    @Captor
+    private ArgumentCaptor<String> captor;
 
     @Test
-	public void captorAnnotationWorksOnPrivateMethods() throws Exception {
-		final String expected = "testing";
-		PrivateFinal demo = spy(new PrivateFinal());
-		demo.say(expected);
+    public void captorAnnotationWorks() throws Exception {
+        final String expected = "testing";
+        FinalDemo demo = mock(FinalDemo.class);
+        demo.say(expected);
 
-		verifyPrivate(demo).invoke("sayIt", captor.capture());
-		assertEquals(expected, captor.getValue());
-	}
+        verify(demo).say(captor.capture());
+        assertEquals(expected, captor.getValue());
+    }
+
+    @Test
+    public void captorAnnotationWorksOnPrivateMethods() throws Exception {
+        final String expected = "testing";
+        PrivateFinal demo = spy(new PrivateFinal());
+        demo.say(expected);
+
+        verifyPrivate(demo).invoke("sayIt", captor.capture());
+        assertEquals(expected, captor.getValue());
+    }
 }
