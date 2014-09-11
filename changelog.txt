@@ -1,3 +1,8 @@
+Change log next version
+-----------------------
+It's now possible to verify private final overloaded methods in the Mockito Extension API. For example:
+    verifyPrivate(tested).invoke(method(MyClass.class, "myOverloadedMethodName", String.class, String.class)).withArguments(anyString(), captor.capture());
+
 Change log 1.5.6 (2014-09-04)
 -----------------------------
 * Changed so that the MockClassLoader throws ClassNotFoundException instead of Javassist's NotFoundException when a class isn't found (thanks to Mikael Petterson for the pull request).

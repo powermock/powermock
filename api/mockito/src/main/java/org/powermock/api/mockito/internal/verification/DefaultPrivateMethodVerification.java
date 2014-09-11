@@ -18,6 +18,7 @@ package org.powermock.api.mockito.internal.verification;
 import org.powermock.api.mockito.verification.PrivateMethodVerification;
 import org.powermock.api.mockito.verification.WithOrWithoutVerifiedArguments;
 import org.powermock.reflect.Whitebox;
+import org.powermock.tests.utils.impl.ArrayMergerImpl;
 
 import java.lang.reflect.Method;
 
@@ -57,7 +58,8 @@ public class DefaultPrivateMethodVerification implements PrivateMethodVerificati
 			if (additionalArguments == null || additionalArguments.length == 0) {
 				method.invoke(objectToVerify, firstArgument);
 			} else {
-				method.invoke(objectToVerify, firstArgument, additionalArguments);
+                Object[] arguments = new ArrayMergerImpl().mergeArrays(Object.class, new Object[]{firstArgument}, additionalArguments);
+                method.invoke(objectToVerify, arguments);
 			}
 		}
 
