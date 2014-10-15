@@ -621,6 +621,7 @@ public class WhiteBoxTest {
 	@Test
 	public void testSetInternalStateFromContext_contextHasOneInstanceAndOneStaticFieldOfSameType_onlyInstanceContext()
 			throws Exception {
+		ClassWithStaticAndInstanceInternalStateOfSameType.reset();
 		ClassWithStaticAndInstanceInternalStateOfSameType tested = new ClassWithStaticAndInstanceInternalStateOfSameType();
 		OneInstanceAndOneStaticFieldOfSameTypeContext context = new OneInstanceAndOneStaticFieldOfSameTypeContext();
 		Whitebox.setInternalStateFromContext(tested, context);
@@ -631,6 +632,7 @@ public class WhiteBoxTest {
 	@Test
 	public void testSetInternalStateFromContext_contextHasOneInstanceAndOneStaticFieldOfSameType_onlyStaticContext()
 			throws Exception {
+		ClassWithStaticAndInstanceInternalStateOfSameType.reset();
 		ClassWithStaticAndInstanceInternalStateOfSameType tested = new ClassWithStaticAndInstanceInternalStateOfSameType();
 		Whitebox.setInternalStateFromContext(tested, OneInstanceAndOneStaticFieldOfSameTypeContext.class);
 		assertEquals(OneInstanceAndOneStaticFieldOfSameTypeContext.getMyStaticStringState(), tested
