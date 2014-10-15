@@ -19,11 +19,6 @@ public class StaticInitializerExampleTest {
     public PowerMockRule rule = new PowerMockRule();
 
 	@Test
-	public void testSupressStaticInitializer() throws Exception {
-		assertNull("Should be null because the static initializer should be suppressed", StaticInitializerExample.getMySet());
-	}
-
-	@Test
 	public void testSupressStaticInitializerAndSetFinalField() throws Exception {
 		assertNull("Should be null because the static initializer should be suppressed", StaticInitializerExample.getMySet());
 		final HashSet<String> hashSet = new HashSet<String>();

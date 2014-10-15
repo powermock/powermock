@@ -1,6 +1,5 @@
 package org.powermock.modules.test.junit4.rule.objenesis;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
@@ -14,16 +13,10 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
 @SuppressStaticInitializationFor("samples.staticinitializer.StaticInitializerExample")
-@Ignore("Fails in Maven for some reason")
 public class StaticInitializerExampleTest {
 
     @Rule
     public PowerMockRule rule = new PowerMockRule();
-
-	@Test
-	public void testSupressStaticInitializer() throws Exception {
-		assertNull("Should be null because the static initializer should be suppressed", StaticInitializerExample.getMySet());
-	}
 
 	@Test
 	public void testSupressStaticInitializerAndSetFinalField() throws Exception {
