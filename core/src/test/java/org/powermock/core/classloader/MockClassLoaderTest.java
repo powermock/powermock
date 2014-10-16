@@ -107,8 +107,9 @@ public class MockClassLoaderTest {
 
         // Force a ClassLoader that can find 'foo/bar/baz/test.txt' into
         // mockClassLoader.deferTo.
-        URL fooRoot = this.getClass().getClassLoader().getResource("org/powermock/core/classloader/");
-        mockClassLoader.deferTo = new URLClassLoader(new URL[] { fooRoot });;
+        ResourcePrefixClassLoader resourcePrefixClassLoader = new ResourcePrefixClassLoader(
+          getClass().getClassLoader(), "org/powermock/core/classloader/");
+        mockClassLoader.deferTo = resourcePrefixClassLoader;
 		
         // MockClassLoader will only be able to find 'foo/bar/baz/test.txt' if it
         // properly defers the resource lookup to its deferTo ClassLoader.
@@ -126,8 +127,9 @@ public class MockClassLoaderTest {
 
         // Force a ClassLoader that can find 'foo/bar/baz/test.txt' into
         // mockClassLoader.deferTo.
-        URL fooRoot = this.getClass().getClassLoader().getResource("org/powermock/core/classloader/");
-        mockClassLoader.deferTo = new URLClassLoader(new URL[] { fooRoot });;
+        ResourcePrefixClassLoader resourcePrefixClassLoader = new ResourcePrefixClassLoader(
+            getClass().getClassLoader(), "org/powermock/core/classloader/");
+        mockClassLoader.deferTo = resourcePrefixClassLoader;
 		
         // MockClassLoader will only be able to find 'foo/bar/baz/test.txt' if it
         // properly defers the resources lookup to its deferTo ClassLoader.
