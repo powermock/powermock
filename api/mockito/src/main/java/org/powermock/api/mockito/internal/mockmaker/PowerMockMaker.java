@@ -45,7 +45,7 @@ public class PowerMockMaker implements MockMaker {
 
     public MockHandler getHandler(Object mock) {
         // Return a fake mock handler for static method mocks
-        if(mock instanceof Class) {
+        if (mock instanceof Class) {
             return new PowerMockInternalMockHandler((Class<?>) mock);
         } else {
             return cglibMockMaker.getHandler(mock);
