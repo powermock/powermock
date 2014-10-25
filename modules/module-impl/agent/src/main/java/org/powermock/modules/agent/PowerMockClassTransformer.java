@@ -55,7 +55,17 @@ class PowerMockClassTransformer extends AbstractClassTransformer implements Clas
                 }
                 
                 ctClass = mainMockTransformer.transform(ctClass);
-                
+
+                /*
+                 * ClassPool may cause huge memory consumption if the number of CtClass
+                 * objects becomes amazingly large (this rarely happens since Javassist
+                 * tries to reduce memory consumption in various ways). To avoid this
+                 * problem, you can explicitly remove an unnecessary CtClass object from
+                 * the ClassPool. If you call detach() on a CtClass object, then that
+                 * CtClass object is removed from the ClassPool.
+                 */
+                ctClass.detach();
+
                 return ctClass.toBytecode();                      
             } 
             
