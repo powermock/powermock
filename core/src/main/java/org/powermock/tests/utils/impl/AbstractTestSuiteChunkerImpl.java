@@ -15,12 +15,14 @@
  */
 package org.powermock.tests.utils.impl;
 
+import java.lang.annotation.Annotation;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.classloader.annotations.*;
 import org.powermock.core.spi.PowerMockPolicy;
 import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.MainMockTransformer;
+import org.powermock.core.transformers.impl.TestClassTransformer;
 import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.proxyframework.RegisterProxyFramework;
 import org.powermock.tests.utils.*;
@@ -35,7 +37,9 @@ import java.util.Map.Entry;
 /**
  * Abstract base class for test suite chunking, i.e. a suite is chunked into
  * several smaller pieces which are ran with different classloaders. A chunk is
- * defined by the {@link PrepareForTest} annotation. This to make sure that you
+ * defined by the {@link PrepareForTest} annotation and whichever test-method
+ * annotation the actual implementation-class specifies by overriding the
+ * method {@link #testMethodAnnotation()}. This to make sure that you
  * can byte-code manipulate classes in tests without impacting on other tests.
  * 
  */
@@ -161,14 +165,18 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
 
     protected void chunkClass(final Class<?> testClass) throws Exception {
         ClassLoader defaultMockLoader = null;
+        List<Method> testMethodsForOtherClassLoaders = new ArrayList<Method>();
+        MockTransformer[] extraMockTransformers = createDefaultExtraMockTransformers(
+                testClass, testMethodsForOtherClassLoaders);
         final String[] ignorePackages = ignorePackagesExtractor.getPackagesToIgnore(testClass);
         if (testClass.isAnnotationPresent(PrepareEverythingForTest.class)) {
-            defaultMockLoader = createNewClassloader(testClass, new String[] { MockClassLoader.MODIFY_ALL_CLASSES }, ignorePackages);
+            defaultMockLoader = createNewClassloader(testClass, new String[] { MockClassLoader.MODIFY_ALL_CLASSES },
+                    ignorePackages, extraMockTransformers);
         } else {
             final String[] prepareForTestClasses = prepareForTestExtractor.getTestClasses(testClass);
             final String[] suppressStaticClasses = suppressionExtractor.getTestClasses(testClass);
             defaultMockLoader = createNewClassloader(testClass, arrayMerger.mergeArrays(String.class, prepareForTestClasses, suppressStaticClasses),
-                    ignorePackages);
+                    ignorePackages, extraMockTransformers);
         }
         registerProxyframework(defaultMockLoader);
         List<Method> currentClassloaderMethods = new LinkedList<Method>();
@@ -178,23 +186,41 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
         testChunks.add(defaultTestChunk);
         internalSuites.add(new TestCaseEntry(testClass, testChunks));
         initEntries(internalSuites);
-        /*
-         * If we don't have any test that should be executed by the default
-         * class loader remove it to avoid duplicate test print outs.
-         */
-        if (currentClassloaderMethods.isEmpty()) {
+
+        if (false == currentClassloaderMethods.isEmpty()) {
+            List<TestChunk> allTestChunks = internalSuites.get(0).getTestChunks();
+            for (TestChunk chunk : allTestChunks.subList(1, allTestChunks.size())) {
+                for (Method m : chunk.getTestMethodsToBeExecutedByThisClassloader()) {
+                    testMethodsForOtherClassLoaders.add(m);
+                }
+            }
+        } else if (2 <= internalSuites.size()
+                || 1 == internalSuites.size()
+                && 2 <= internalSuites.get(0).getTestChunks().size()) {
+            /*
+             * If we don't have any test that should be executed by the default
+             * class loader remove it to avoid duplicate test print outs.
+             */
             internalSuites.get(0).getTestChunks().remove(0);
         }
+        //else{ /*Delegation-runner maybe doesn't use test-method annotations!*/ }
     }
 
-    public ClassLoader createNewClassloader(Class<?> testClass, final String[] classesToLoadByMockClassloader, final String[] packagesToIgnore) {
+    public ClassLoader createNewClassloader(
+            Class<?> testClass,
+            String[] preliminaryClassesToLoadByMockClassloader,
+            final String[] packagesToIgnore,
+            MockTransformer... extraMockTransformers) {
         ClassLoader mockLoader = null;
+        final String[] classesToLoadByMockClassloader = makeSureArrayContainsTestClassName(
+                preliminaryClassesToLoadByMockClassloader, testClass.getName());
         if ((classesToLoadByMockClassloader == null || classesToLoadByMockClassloader.length == 0) && !hasMockPolicyProvidedClasses(testClass)) {
             mockLoader = Thread.currentThread().getContextClassLoader();
         } else {
             List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
             final MainMockTransformer mainMockTransformer = new MainMockTransformer();
             mockTransformerChain.add(mainMockTransformer);
+            Collections.addAll(mockTransformerChain, extraMockTransformers);
             final UseClassPathAdjuster useClassPathAdjuster = testClass.getAnnotation(UseClassPathAdjuster.class);
             mockLoader = AccessController.doPrivileged(new PrivilegedAction<MockClassLoader>() {
                 public MockClassLoader run() {
@@ -221,6 +247,24 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
         delegatesCreatedForTheseClasses.add(testClass);
     }
 
+    private MockTransformer[] createDefaultExtraMockTransformers(
+            Class<?> testClass, List<Method> testMethodsThatRunOnOtherClassLoaders) {
+        if (null == testMethodAnnotation()) {
+            return new MockTransformer[0];
+        } else {
+            return new MockTransformer[] {
+                TestClassTransformer
+                    .forTestClass(testClass)
+                    .removesTestMethodAnnotation(testMethodAnnotation())
+                    .fromMethods(testMethodsThatRunOnOtherClassLoaders)
+            };
+        }
+    }
+
+    protected Class<? extends Annotation> testMethodAnnotation() {
+        return null;
+    }
+
     protected abstract T createDelegatorFromClassloader(ClassLoader classLoader, Class<?> testClass, final List<Method> methodsToTest)
             throws Exception;
 
@@ -236,12 +280,20 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
                         methodsInThisChunk.add(method);
                         final String[] staticSuppressionClasses = getStaticSuppressionClasses(testClass, method);
                         ClassLoader mockClassloader = null;
+                        TestClassTransformer[] extraTransformers = null == testMethodAnnotation()
+                                ? new TestClassTransformer[0]
+                                : new TestClassTransformer[] {
+                                    TestClassTransformer.forTestClass(testClass)
+                                        .removesTestMethodAnnotation(testMethodAnnotation())
+                                        .fromAllMethodsExcept(method)
+                                };
                         if (method.isAnnotationPresent(PrepareEverythingForTest.class)) {
                             mockClassloader = createNewClassloader(testClass, new String[] { MockClassLoader.MODIFY_ALL_CLASSES },
-                                    ignorePackagesExtractor.getPackagesToIgnore(testClass));
+                                    ignorePackagesExtractor.getPackagesToIgnore(testClass), extraTransformers);
                         } else {
                             mockClassloader = createNewClassloader(testClass, arrayMerger.mergeArrays(String.class, prepareForTestExtractor
-                                    .getTestClasses(method), staticSuppressionClasses), ignorePackagesExtractor.getPackagesToIgnore(testClass));
+                                    .getTestClasses(method), staticSuppressionClasses), ignorePackagesExtractor.getPackagesToIgnore(testClass),
+                                    extraTransformers);
                         }
                         TestChunkImpl chunk = new TestChunkImpl(mockClassloader, methodsInThisChunk);
                         testCaseEntry.getTestChunks().add(chunk);
@@ -387,5 +439,26 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
             hasMockPolicyProvidedClasses = new MockPolicyInitializerImpl(value).needsInitialization();
         }
         return hasMockPolicyProvidedClasses;
+    }
+
+    private String[] makeSureArrayContainsTestClassName(
+            String[] arrayOfClassNames, String testClassName) {
+        if (null == arrayOfClassNames || 0 == arrayOfClassNames.length) {
+            return new String[] {testClassName};
+
+        } else {
+            List<String> modifiedArrayOfClassNames = new ArrayList<String>(
+                    arrayOfClassNames.length + 1);
+            modifiedArrayOfClassNames.add(testClassName);
+            for (String className : arrayOfClassNames) {
+                if (testClassName.equals(className)) {
+                    return arrayOfClassNames;
+                } else {
+                    modifiedArrayOfClassNames.add(className);
+                }
+            }
+            return modifiedArrayOfClassNames.toArray(
+                    new String[arrayOfClassNames.length + 1]);
+        }
     }
 }
