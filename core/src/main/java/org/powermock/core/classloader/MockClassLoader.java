@@ -289,6 +289,9 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
     }
 
     private boolean shouldLoadModified(String className) {
+        if (className.startsWith("org.powermock.example")) {
+            return false;
+        }
         for (String packageToLoadButNotModify : packagesToLoadButNotModify) {
             if (className.startsWith(packageToLoadButNotModify)) {
                 return true;
