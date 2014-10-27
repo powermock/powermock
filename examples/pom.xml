@@ -34,6 +34,7 @@
         <module>jdom</module>
         <module>jmock</module>
         <module>spring-mockito</module>
+        <module>spring-mockito-delegate</module>
         <module>spring-mockito-xml-agent</module>
         <module>spring-mockito-xml</module>
         <module>java8</module>
