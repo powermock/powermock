@@ -60,11 +60,11 @@ public class GlobalNotificationBuildSupport {
         if (false == initiatedTestSuiteClasses.containsKey(testClass)) {
             Callback callback = testSuiteCallbacks.get(testClass.getName());
             if (null == callback) {
-                System.err.println(
-                        "Test-" + testClass + " from class-loader "
-                        + testClass.getClassLoader()
-                        + " does not have any ligit test-suite callback! - yet");
-				pendingInitiatedTestClass.set(testClass);
+//                System.err.println(
+//                        "Test-" + testClass + " from class-loader "
+//                        + testClass.getClassLoader()
+//                        + " does not have any ligit test-suite callback! - yet");
+                pendingInitiatedTestClass.set(testClass);
             } else {
                 initiatedTestSuiteClasses.put(testClass, callback);
                 callback.suiteClassInitiated(testClass);
@@ -95,15 +95,15 @@ public class GlobalNotificationBuildSupport {
                 return;
             }
         }
-        if (false == testInstance instanceof Enum) {
-            System.err.println("Test-instance of " + testInstance.getClass()
-                    + " from classloader " + testInstance.getClass().getClassLoader()
-                    + " does not have any ongoing test-suite callback");
-        } else {
-            /* enum-classes are excused - they don't need to have their
-             * class initiated before the test-class is initiated.
-             */
-        }
+//        if (false == testInstance instanceof Enum) {
+//            System.err.println("Test-instance of " + testInstance.getClass()
+//                    + " from classloader " + testInstance.getClass().getClassLoader()
+//                    + " does not have any ongoing test-suite callback");
+//        } else {
+//            /* enum-classes are excused - they don't need to have their
+//             * class initiated before the test-class is initiated.
+//             */
+//        }
     }
 
     public static void closeTestSuite(Class<?> testClass) {

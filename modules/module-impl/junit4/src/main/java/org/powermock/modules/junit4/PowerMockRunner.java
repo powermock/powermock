@@ -37,7 +37,7 @@ public class PowerMockRunner extends AbstractCommonPowerMockRunner {
     private static Class<? extends PowerMockJUnitRunnerDelegate> getRunnerDelegateImplClass(Class<?> klass) {
         if (klass.isAnnotationPresent(PowerMockRunnerDelegate.class)
                 || Boolean.getBoolean("powermock.implicitDelegateAnnotation")) {
-            System.out.println("\nUSING DELEGATE ANNOTATION\n");
+//            System.out.println("\nUSING DELEGATE ANNOTATION\n");
             return DelegatingPowerMockRunner.class;
         }
 

@@ -233,7 +233,7 @@ class NotificationBuilder {
                 return;
             case ALL_TESTINSTANCES_ARE_CREATED_FIRST:
                 System.err.println(
-                        "Notifications are not supported when all test-instances are reated first!");
+                        "Notifications are not supported when all test-instances are created first!");
                 return;
             default:
                 throw new AssertionError();
