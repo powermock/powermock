@@ -1,7 +1,8 @@
 Change log next version
 -----------------------
-It's now possible to verify private final overloaded methods in the Mockito Extension API. For example:
+* It's now possible to verify private final overloaded methods in the Mockito Extension API. For example:
     verifyPrivate(tested).invoke(method(MyClass.class, "myOverloadedMethodName", String.class, String.class)).withArguments(anyString(), captor.capture());
+* Upgraded Mockito API extension to work with version Mockito 1.10.8.
 
 Change log 1.5.6 (2014-09-04)
 -----------------------------

@@ -19,7 +19,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import samples.finalmocking.FinalDemo;
@@ -47,7 +46,7 @@ public class MockFinalUsingAnnotationsWithAnswersTest {
 
 	@Test public void
     assert_mock_final_with_mockito_mock_annotation_with_deep_stubs_works() {
-		when(tested1.simpleReturnExample().mySimpleMethod()).thenReturn(42);
+        when(tested1.simpleReturnExample().mySimpleMethod()).thenReturn(42);
 
         assertEquals(42, tested1.simpleReturnExample().mySimpleMethod());
 	}
