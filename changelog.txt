@@ -4,6 +4,16 @@ Change log next version
     verifyPrivate(tested).invoke(method(MyClass.class, "myOverloadedMethodName", String.class, String.class)).withArguments(anyString(), captor.capture());
 * Upgraded Mockito API extension to work with version Mockito 1.10.8.
 * PowerMock now builds for Java 6 and not Java 5.
+* You can now use other runners in combination with the PowerMockRunner without using a JUnit Rule. This leaves the actual test-execution to or another runner of your choice.
+  For example tests can delegate to "SpringJUnit4ClassRunner", "Parameterized" or the "Enclosed" runner. This also allows PowerMock to (without any modifications) support future new JUnit-features from day one! Usage example:
+
+  @RunWith(PowerMockRunner.class)
+  @PowerMockRunnerDelegate(Parameterized.class) // Use the parameterized JUnit in combination with the PowerMockRunner
+  @PrepareForTest(SuppressConstructorDemo.class)
+  public class SuppressConstructorDemoTest {
+    ...
+  }
+  (Big thanks to Henrik Kaipe for this excellent pull request).
 
 Change log 1.5.6 (2014-09-04)
 -----------------------------
