@@ -187,7 +187,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
         internalSuites.add(new TestCaseEntry(testClass, testChunks));
         initEntries(internalSuites);
 
-        if (false == currentClassloaderMethods.isEmpty()) {
+        if (!currentClassloaderMethods.isEmpty()) {
             List<TestChunk> allTestChunks = internalSuites.get(0).getTestChunks();
             for (TestChunk chunk : allTestChunks.subList(1, allTestChunks.size())) {
                 for (Method m : chunk.getTestMethodsToBeExecutedByThisClassloader()) {
