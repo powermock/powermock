@@ -58,7 +58,7 @@ public class GlobalNotificationBuildSupport {
     }
 
     public static void testClassInitiated(Class<?> testClass) {
-        if (false == initiatedTestSuiteClasses.containsKey(testClass)) {
+        if (!initiatedTestSuiteClasses.containsKey(testClass)) {
             Callback callback = testSuiteCallbacks.get(testClass.getName());
             if (null == callback) {
                 pendingInitiatedTestClass.set(testClass);
