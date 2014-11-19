@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
  * The design of this test-class does only allow it to be run once per JVM
  * (or more accurately "per classloader", in case the test-class is redefined
  * by different classloaders in some sort of test suite),
- * because it will test some class instanciation, which can only occur one per
+ * because it will test some class instantiation, which can only occur one per
  * class.
  */
 public class GlobalNotificationBuildSupportTest {
