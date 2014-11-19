@@ -30,6 +30,7 @@ import org.powermock.tests.utils.TestChunk;
 import org.powermock.tests.utils.impl.AbstractTestSuiteChunkerImpl;
 import org.powermock.tests.utils.impl.PowerMockTestNotifierImpl;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -41,6 +42,7 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 
 	private Description description;
 	private final Class<? extends PowerMockJUnitRunnerDelegate> runnerDelegateImplementationType;
+	private static final Class<? extends Annotation> testMethodAnnotation = Test.class;
 
 	public JUnit4TestSuiteChunkerImpl(Class<?> testClass,
 			Class<? extends PowerMockJUnitRunnerDelegate> runnerDelegateImplementationType) throws Exception {
@@ -93,26 +95,26 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		int successCount = 0;
 		int ignoreCount = 0;
 
-        for (PowerMockJUnitRunnerDelegate delegate : delegates) {
-            TestChunk next = iterator.next();
-            final ClassLoader key = next.getClassLoader();
-            PowerMockJUnit4RunListener powerMockListener = new PowerMockJUnit4RunListener(key, powerMockTestNotifier);
-            notifier.addListener(powerMockListener);
-            final ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
-            Thread.currentThread().setContextClassLoader(key);
-            try {
-                delegate.run(notifier);
-            } finally {
-                Thread.currentThread().setContextClassLoader(originalClassLoader);
-            }
-            final int failureCountForThisPowerMockListener = powerMockListener.getFailureCount();
-            final int ignoreCountForThisPowerMockListener = powerMockListener.getIgnoreCount();
-            failureCount += failureCountForThisPowerMockListener;
-            ignoreCount += ignoreCountForThisPowerMockListener;
-            successCount += delegate.getTestCount() - failureCountForThisPowerMockListener
-                    - ignoreCountForThisPowerMockListener;
-            notifier.removeListener(powerMockListener);
-        }
+		for (PowerMockJUnitRunnerDelegate delegate : delegates) {
+			TestChunk next = iterator.next();
+			final ClassLoader key = next.getClassLoader();
+			PowerMockJUnit4RunListener powerMockListener = new PowerMockJUnit4RunListener(key, powerMockTestNotifier);
+			notifier.addListener(powerMockListener);
+			final ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+			Thread.currentThread().setContextClassLoader(key);
+			try {
+				delegate.run(notifier);
+			} finally {
+				Thread.currentThread().setContextClassLoader(originalClassLoader);
+			}
+			final int failureCountForThisPowerMockListener = powerMockListener.getFailureCount();
+			final int ignoreCountForThisPowerMockListener = powerMockListener.getIgnoreCount();
+			failureCount += failureCountForThisPowerMockListener;
+			ignoreCount += ignoreCountForThisPowerMockListener;
+			successCount += delegate.getTestCount() - failureCountForThisPowerMockListener
+					- ignoreCountForThisPowerMockListener;
+			notifier.removeListener(powerMockListener);
+		}
 
 		final TestSuiteResult testSuiteResult = new TestSuiteResultImpl(failureCount, successCount, getTestCount(),
 				ignoreCount);
@@ -124,6 +126,11 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 				&& Modifier.isPublic(potentialTestMethod.getModifiers())
 				&& potentialTestMethod.getReturnType().equals(Void.TYPE) && TestCase.class.isAssignableFrom(testClass) || potentialTestMethod
 				.isAnnotationPresent(Test.class));
+	}
+
+	@Override
+	protected Class<? extends Annotation> testMethodAnnotation() {
+		return testMethodAnnotation;
 	}
 
 	@Override

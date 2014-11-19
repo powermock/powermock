@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2011 the original author or authors.
+  ~ Copyright 2010 the original author or authors.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -16,43 +16,50 @@
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
-        <artifactId>powermock</artifactId>
-        <groupId>org.powermock</groupId>
+        <artifactId>powermock-examples</artifactId>
+        <groupId>org.powermock.examples</groupId>
         <version>1.5.7-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.powermock</groupId>
-    <artifactId>powermock-core</artifactId>
-    <name>powermock-core</name>
-    <url>http://www.powermock.org</url>
+    <groupId>org.powermock.examples</groupId>
+    <artifactId>powermock-examples-spring-mockito-delegate</artifactId>
+    <name>powermock-examples-spring-mockito-delegate</name>
+    <properties>
+        <spring.version>3.0.5.RELEASE</spring.version>
+    </properties>
 
     <description>
-		PowerMock core functionality.
+        Example showing how to use the PowerMock in a Spring Integration Test
     </description>
 
     <dependencies>
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
-            <version>1.10.8</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.4</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
-            <artifactId>powermock-reflect</artifactId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <scope>test</scope>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.18.2-GA</version>
-            <scope>compile</scope>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

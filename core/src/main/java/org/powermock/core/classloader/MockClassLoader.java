@@ -250,6 +250,16 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
             for (MockTransformer transformer : mockTransformerChain) {
                 type = transformer.transform(type);
             }
+            /*
+             * ClassPool may cause huge memory consumption if the number of CtClass
+             * objects becomes amazingly large (this rarely happens since Javassist
+             * tries to reduce memory consumption in various ways). To avoid this
+             * problem, you can explicitly remove an unnecessary CtClass object from
+             * the ClassPool. If you call detach() on a CtClass object, then that
+             * CtClass object is removed from the ClassPool.
+             */
+            type.detach();
+
             clazz = type.toBytecode();
         } catch (Exception e) {
             throw new IllegalStateException("Failed to transform class with name " + name + ". Reason: "
@@ -279,6 +289,9 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
     }
 
     private boolean shouldLoadModified(String className) {
+        if (className.startsWith("org.powermock.example")) {
+            return false;
+        }
         for (String packageToLoadButNotModify : packagesToLoadButNotModify) {
             if (className.startsWith(packageToLoadButNotModify)) {
                 return true;

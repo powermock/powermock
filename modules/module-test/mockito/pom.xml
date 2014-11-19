@@ -34,5 +34,6 @@
     <module>junit4-rule-objenesis</module>
     <module>junit4-rule-xstream</module>
     <module>junit4-agent</module>
+    <module>junit4-delegate</module>
   </modules>
 </project>

@@ -17,6 +17,7 @@ package org.powermock.tests.utils;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import org.powermock.core.transformers.MockTransformer;
 
 /**
  * An interface that should be implemented by classes that performs test suite
@@ -83,7 +84,8 @@ public interface TestSuiteChunker {
 	 * @param packagesToIgnore
 	 *            Packages to ignore.
 	 */
-	public ClassLoader createNewClassloader(Class<?> testClass, String[] classesToLoadByMockClassloader, String[] packagesToIgnore);
+	public ClassLoader createNewClassloader(Class<?> testClass, String[] classesToLoadByMockClassloader, String[] packagesToIgnore,
+            MockTransformer... extraMockTransformers);
 
 	/**
 	 * Get the number of total tests defined in the suite (the sum of all tests

@@ -20,6 +20,7 @@ import org.junit.runner.notification.RunNotifier;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.powermock.modules.junit4.common.internal.impl.AbstractCommonPowerMockRunner;
 import org.powermock.modules.junit4.common.internal.impl.JUnitVersion;
+import org.powermock.modules.junit4.internal.impl.DelegatingPowerMockRunner;
 import org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl;
 import org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl;
 import org.powermock.modules.junit4.internal.impl.PowerMockJUnit49RunnerDelegateImpl;
@@ -30,10 +31,16 @@ import java.lang.annotation.Annotation;
 public class PowerMockRunner extends AbstractCommonPowerMockRunner {
 
     public PowerMockRunner(Class<?> klass) throws Exception {
-        super(klass, getRunnerDelegateImplClass());
+        super(klass, getRunnerDelegateImplClass(klass));
     }
     
-    private static Class<? extends PowerMockJUnitRunnerDelegate> getRunnerDelegateImplClass() {
+    private static Class<? extends PowerMockJUnitRunnerDelegate> getRunnerDelegateImplClass(Class<?> klass) {
+        if (klass.isAnnotationPresent(PowerMockRunnerDelegate.class)
+                || Boolean.getBoolean("powermock.implicitDelegateAnnotation")) {
+//            System.out.println("\nUSING DELEGATE ANNOTATION\n");
+            return DelegatingPowerMockRunner.class;
+        }
+
         Class<? extends PowerMockJUnitRunnerDelegate> concreteClass = PowerMockJUnit44RunnerDelegateImpl.class;
         if(JUnitVersion.isGreaterThanOrEqualTo("4.9")) {
                    concreteClass = PowerMockJUnit49RunnerDelegateImpl.class;

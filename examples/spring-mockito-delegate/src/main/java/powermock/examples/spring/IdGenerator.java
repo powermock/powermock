@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package samples.junit4.testhierarchy;
+package powermock.examples.spring;
 
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
+/**
+ * The purpose of the IdGenerator is to generate ID's based on the system time.
+ */
+public class IdGenerator {
 
-@RunWith(PowerMockRunner.class)
-public abstract class TestParent {
-
+	/**
+	 * @return A new ID based on the current time.
+	 */
+	public static long generateNewId() {
+		return System.currentTimeMillis();
+	}
 }
