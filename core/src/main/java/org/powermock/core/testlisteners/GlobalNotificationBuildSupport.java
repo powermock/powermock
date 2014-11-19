@@ -27,6 +27,7 @@ public class GlobalNotificationBuildSupport {
 
     public interface Callback {
         void suiteClassInitiated(Class<?> testClass);
+
         void testInstanceCreated(Object testInstance);
     }
 
@@ -50,7 +51,7 @@ public class GlobalNotificationBuildSupport {
             if (null != initiatedTestClass
                     && initiatedTestClass.getName().equals(testClassName)) {
                 System.err.println("Detected late test-suite preparation of "
-						+ "already initiated test-" + initiatedTestClass);
+                        + "already initiated test-" + initiatedTestClass);
                 testClassInitiated(initiatedTestClass);
             }
         }
@@ -91,15 +92,6 @@ public class GlobalNotificationBuildSupport {
                 return;
             }
         }
-//        if (false == testInstance instanceof Enum) {
-//            System.err.println("Test-instance of " + testInstance.getClass()
-//                    + " from classloader " + testInstance.getClass().getClassLoader()
-//                    + " does not have any ongoing test-suite callback");
-//        } else {
-//            /* enum-classes are excused - they don't need to have their
-//             * class initiated before the test-class is initiated.
-//             */
-//        }
     }
 
     public static void closeTestSuite(Class<?> testClass) {
