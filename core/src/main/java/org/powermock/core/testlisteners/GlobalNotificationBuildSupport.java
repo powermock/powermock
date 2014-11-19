@@ -97,7 +97,7 @@ public class GlobalNotificationBuildSupport {
     public static void closeTestSuite(Class<?> testClass) {
         Callback callback = initiatedTestSuiteClasses.remove(testClass);
         if (null != callback
-                && false == initiatedTestSuiteClasses.values().contains(callback)) {
+                && !initiatedTestSuiteClasses.values().contains(callback)) {
             testSuiteCallbacks.values().remove(callback);
         }
     }
