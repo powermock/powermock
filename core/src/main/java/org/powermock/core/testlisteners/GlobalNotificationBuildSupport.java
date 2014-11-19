@@ -60,10 +60,6 @@ public class GlobalNotificationBuildSupport {
         if (false == initiatedTestSuiteClasses.containsKey(testClass)) {
             Callback callback = testSuiteCallbacks.get(testClass.getName());
             if (null == callback) {
-//                System.err.println(
-//                        "Test-" + testClass + " from class-loader "
-//                        + testClass.getClassLoader()
-//                        + " does not have any ligit test-suite callback! - yet");
                 pendingInitiatedTestClass.set(testClass);
             } else {
                 initiatedTestSuiteClasses.put(testClass, callback);
