@@ -95,8 +95,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                     <!-- Added because the use of sun.misc.Unsafe cause a warning message.
                                But for some reason this warning fails the build using 1.5 -->
                     <compilerArgument>-nowarn</compilerArgument>
@@ -218,7 +218,7 @@
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <configuration>
-                    <targetJdk>1.5</targetJdk>
+                    <targetJdk>1.6</targetJdk>
                     <rulesets>
                         <ruleset>/rulesets/basic.xml</ruleset>
                     </rulesets>
