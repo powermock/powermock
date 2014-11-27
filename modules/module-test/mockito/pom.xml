@@ -2,13 +2,13 @@
   <parent>
     <artifactId>powermock-modules-test</artifactId>
     <groupId>org.powermock</groupId>
-    <version>1.5.7-SNAPSHOT</version>
+    <version>1.6.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.powermock</groupId>
   <artifactId>powermock-modules-test-mockito</artifactId>
   <name>powermock-modules-test-mockito</name>
-  <version>1.5.7-SNAPSHOT</version>
+  <version>1.6.0</version>
   <packaging>pom</packaging>
 
   <description>
