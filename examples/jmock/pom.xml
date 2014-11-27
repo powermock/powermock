@@ -6,7 +6,6 @@
         <version>1.6.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.powermock.examples</groupId>
     <artifactId>powermock-examples-jmock</artifactId>
     <name>JMock Example</name>
     <version>1.6.1-SNAPSHOT</version>
