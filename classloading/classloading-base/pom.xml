@@ -3,14 +3,14 @@
     <parent>
         <artifactId>powermock</artifactId>
         <groupId>org.powermock</groupId>
-        <version>1.6.0</version>
+        <version>1.6.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-classloading-base</artifactId>
     <name>powermock-classloading-base</name>
-    <version>1.6.0</version>
+    <version>1.6.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <description>
