@@ -21,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.internal.runners.MethodValidator;
 import org.junit.internal.runners.TestClass;
+import org.powermock.modules.junit4.common.internal.impl.JUnitVersion;
 import org.powermock.reflect.Whitebox;
 
 import java.lang.annotation.Annotation;
@@ -39,6 +40,23 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public class PowerMockJUnit4MethodValidator extends MethodValidator {
 
+    private static final String TEST_CLASS_FIELD;
+    private static final String CLASS_UNDER_TEST_FIELD;
+    private static final String ERRORS_FIELD;
+
+    static {
+        if(JUnitVersion.isGreaterThanOrEqualTo("4.12")) {
+            TEST_CLASS_FIELD = "testClass";
+            CLASS_UNDER_TEST_FIELD = "klass";
+            ERRORS_FIELD = "errors";
+        }
+        else {
+            TEST_CLASS_FIELD = "fTestClass";
+            CLASS_UNDER_TEST_FIELD = "fClass";
+            ERRORS_FIELD = "fErrors";
+        }
+    }
+
     public PowerMockJUnit4MethodValidator(TestClass testClass) {
         super(testClass);
     }
@@ -50,9 +68,9 @@ public class PowerMockJUnit4MethodValidator extends MethodValidator {
         validateTestMethods(Before.class, false);
         validateTestMethods(Test.class, false);
 
-        TestClass testClass = (TestClass) Whitebox.getInternalState(this, "fTestClass", MethodValidator.class);
-        Class<?> classUnderTest = (Class<?>) Whitebox.getInternalState(testClass, "fClass");
-        List<Throwable> fErrors = (List<Throwable>) Whitebox.getInternalState(this, "fErrors", MethodValidator.class);
+        TestClass testClass = (TestClass) Whitebox.getInternalState(this, TEST_CLASS_FIELD, MethodValidator.class);
+        Class<?> classUnderTest = (Class<?>) Whitebox.getInternalState(testClass, CLASS_UNDER_TEST_FIELD);
+        List<Throwable> fErrors = (List<Throwable>) Whitebox.getInternalState(this, ERRORS_FIELD, MethodValidator.class);
 
         List<Method> methods = getTestMethods(testClass, classUnderTest);
         if (methods.size() == 0)
@@ -76,8 +94,8 @@ public class PowerMockJUnit4MethodValidator extends MethodValidator {
      */
     @SuppressWarnings("unchecked")
     private void validateTestMethods(Class<? extends Annotation> annotation, boolean isStatic) {
-        TestClass testClass = (TestClass) Whitebox.getInternalState(this, "fTestClass", MethodValidator.class);
-        Class<?> classUnderTest = (Class<?>) Whitebox.getInternalState(testClass, "fClass");
+        TestClass testClass = (TestClass) Whitebox.getInternalState(this, TEST_CLASS_FIELD, MethodValidator.class);
+        Class<?> classUnderTest = (Class<?>) Whitebox.getInternalState(testClass, CLASS_UNDER_TEST_FIELD);
         final List<Method> methods;
         if (TestCase.class.equals(classUnderTest.getSuperclass()) && !isStatic) {
             methods = getTestMethodsWithNoAnnotation(classUnderTest);
@@ -85,7 +103,7 @@ public class PowerMockJUnit4MethodValidator extends MethodValidator {
             methods = testClass.getAnnotatedMethods(annotation);
         }
 
-        List<Throwable> fErrors = (List<Throwable>) Whitebox.getInternalState(this, "fErrors", MethodValidator.class);
+        List<Throwable> fErrors = (List<Throwable>) Whitebox.getInternalState(this, ERRORS_FIELD, MethodValidator.class);
         for (Method each : methods) {
             if (Modifier.isStatic(each.getModifiers()) != isStatic) {
                 String state = isStatic ? "should" : "should not";
