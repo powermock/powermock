@@ -7,8 +7,6 @@
         <version>1.6.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.powermock
-    </groupId>
     <artifactId>powermock-module-test-easymock-testng-agent</artifactId>
     <name>powermock-module-test-easymock-testng-agent</name>
     <version>1.6.1-SNAPSHOT</version>
@@ -21,7 +19,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.8.13>/version>
+            <version>6.8.13</version>
             <scope>test</scope>
         </dependency>
         <dependency>
