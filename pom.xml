@@ -24,7 +24,7 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock</artifactId>
     <packaging>pom</packaging>
-    <version>1.6.1</version>
+    <version>1.6.2-SNAPSHOT</version>
     <name>powermock</name>
     <url>http://www.powermock.org</url>
     <description>

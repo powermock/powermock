@@ -18,12 +18,12 @@
     <parent>
         <artifactId>powermock-examples</artifactId>
         <groupId>org.powermock.examples</groupId>
-        <version>1.6.1</version>
+        <version>1.6.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>powermock-examples-java8</artifactId>
     <name>java8</name>
-    <version>1.6.1</version>
+    <version>1.6.2-SNAPSHOT</version>
 
     <description>
         Example of using Java 8.
