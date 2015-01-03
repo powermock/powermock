@@ -88,7 +88,7 @@
     </modules>
     <properties>
         <easymock.version>3.3</easymock.version>
-        <mockito.version>1.10.19</mockito.version>
+        <mockito.version>1.10.8</mockito.version>
     </properties>
     <build>
         <plugins>
