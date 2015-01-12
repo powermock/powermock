@@ -1,3 +1,7 @@
+Change log next version
+-----------------------
+* PowerMockRunnerDelegate annotation now uses @Inherited
+
 Change log 1.6.1 (2015-01-03)
 ----------------------------
 * The PowerMock EasyMock Api now depends on EasyMock 3.3. Note that 1.6.0 also works with this version of EasyMock _if_ cglib-nodep 2.2.2 is used as EasyMock transitive dependency.
