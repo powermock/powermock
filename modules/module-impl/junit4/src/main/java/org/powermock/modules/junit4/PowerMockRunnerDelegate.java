@@ -17,6 +17,7 @@ package org.powermock.modules.junit4;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -36,6 +37,7 @@ import org.powermock.modules.junit4.common.internal.impl.JUnitVersion;
 @Target(ElementType.TYPE)
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
+@Inherited
 public @interface PowerMockRunnerDelegate {
 
     Class<? extends Runner> value() default DefaultJUnitRunner.class;
