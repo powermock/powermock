@@ -13,7 +13,7 @@
     <name>powermock-modules-test</name>
 
     <description>
-    Tests for mocking framework modules.
+        Tests for mocking framework modules.
     </description>
 
     <modules>
