@@ -1,6 +1,7 @@
 Change log next version
 -----------------------
-* PowerMockRunnerDelegate annotation now uses @Inherited
+* PowerMockRunnerDelegate annotation now uses @Inherited (thanks to Henrik Kaipe for pull request)
+* Cleanup pom files and added version numbers (thanks to René Scheibe for pull request)
 
 Change log 1.6.1 (2015-01-03)
 ----------------------------
