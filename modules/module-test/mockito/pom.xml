@@ -8,7 +8,6 @@
   <groupId>org.powermock</groupId>
   <artifactId>powermock-modules-test-mockito</artifactId>
   <name>powermock-modules-test-mockito</name>
-  <version>1.6.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <description>

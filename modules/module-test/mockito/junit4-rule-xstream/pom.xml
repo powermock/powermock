@@ -8,7 +8,6 @@
     </parent>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-junit4-rule-xstream-test</artifactId>
-    <version>1.6.2-SNAPSHOT</version>
     <name>powermock-junit4-rule-xstream-test</name>
 
     <description>

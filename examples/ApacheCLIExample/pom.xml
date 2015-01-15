@@ -9,7 +9,6 @@
     <groupId>org.powermock.examples</groupId>
     <artifactId>powermock-examples-apachecli</artifactId>
     <name>ApacheCLIExample</name>
-    <version>1.6.2-SNAPSHOT</version>
 
     <description>
         Example showing PowerMock testing classes that extend Object.

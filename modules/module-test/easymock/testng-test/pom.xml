@@ -8,7 +8,6 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>powermock-module-test-easymock-testng</artifactId>
     <name>powermock-module-test-easymock-testng</name>
-    <version>1.6.2-SNAPSHOT</version>
 
     <description>
         Tests for EasyMock module with TestNG.

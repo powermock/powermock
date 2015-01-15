@@ -9,7 +9,6 @@
     <groupId>org.powermock.examples</groupId>
     <artifactId>powermock-examples-hamcrestexample</artifactId>
     <name>HamcrestExample</name>
-    <version>1.6.2-SNAPSHOT</version>
 
     <description>
         Examples showing PowerMock used with Hamcrest matchers.

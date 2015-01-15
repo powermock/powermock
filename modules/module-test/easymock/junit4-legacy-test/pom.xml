@@ -9,7 +9,6 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-module-test-easymock-junit4-legacy</artifactId>
     <name>powermock-module-test-easymock-junit4-legacy</name>
-    <version>1.6.2-SNAPSHOT</version>
 
     <description>
         Tests for EasyMock module with JUnit 4.0-4.3.

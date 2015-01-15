@@ -9,7 +9,6 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-api-support</artifactId>
     <name>powermock-api-support</name>
-    <version>1.6.2-SNAPSHOT</version>
 
     <description>
 		Utility classes.

@@ -9,7 +9,6 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-api-mockito</artifactId>
     <name>powermock-api-mockito</name>
-    <version>1.6.2-SNAPSHOT</version>
 
     <description>
 		PowerMock API for Mockito.

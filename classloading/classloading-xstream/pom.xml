@@ -10,7 +10,6 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-classloading-xstream</artifactId>
     <name>powermock-classloading-xstream</name>
-    <version>1.6.2-SNAPSHOT</version>
 
     <description>
         Performs classloader deep-cloning using X-Stream

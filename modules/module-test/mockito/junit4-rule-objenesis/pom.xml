@@ -8,7 +8,6 @@
     </parent>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-junit4-rule-objenesis-test</artifactId>
-    <version>1.6.2-SNAPSHOT</version>
     <name>powermock-junit4-rule-objenesis-test</name>
 
     <description>

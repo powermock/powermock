@@ -10,7 +10,6 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-classloading-base</artifactId>
     <name>powermock-classloading-base</name>
-    <version>1.6.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <description>

@@ -9,7 +9,6 @@
     <groupId>org.powermock.examples</groupId>
     <artifactId>powermock-examples-documentationexamples</artifactId>
     <name>DocumentationExamples</name>
-    <version>1.6.2-SNAPSHOT</version>
 
     <description>
         Examples used to document various PowerMock features.

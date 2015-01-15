@@ -9,7 +9,6 @@
     <groupId>org.powermock.examples</groupId>
     <artifactId>powermock-examples-jdom</artifactId>
     <name>powermock-examples-jdom</name>
-    <version>1.6.2-SNAPSHOT</version>
 
     <description>
         Example showing PowerMock used with jDom and static classes.

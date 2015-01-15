@@ -9,7 +9,6 @@
     </parent>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-module-javaagent</artifactId>
-    <version>1.6.2-SNAPSHOT</version>
     <name>powermock-module-javaagent</name>
 
     <description>

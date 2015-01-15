@@ -9,7 +9,6 @@
     <groupId>org.powermock.examples</groupId>
     <artifactId>powermock-examples-signedmocking</artifactId>
     <name>SignedMocking</name>
-    <version>1.6.2-SNAPSHOT</version>
     <url>http://www.powermock.org</url>
 
     <description>

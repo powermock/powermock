@@ -9,7 +9,6 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-module-test-easymock-junit3</artifactId>
     <name>powermock-module-test-easymock-junit3</name>
-    <version>1.6.2-SNAPSHOT</version>
 
     <description>
         Tests for EasyMock module with JUnit 3.x.

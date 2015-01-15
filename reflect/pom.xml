@@ -9,7 +9,6 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-reflect</artifactId>
     <name>powermock-reflect</name>
-    <version>1.6.2-SNAPSHOT</version>
 
     <description>
 		Various utilities for accessing internals of a class.

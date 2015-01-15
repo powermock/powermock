@@ -9,7 +9,6 @@
     <groupId>org.powermock.examples</groupId>
     <artifactId>powermock-examples-slf4j</artifactId>
     <name>slf4j</name>
-    <version>1.6.2-SNAPSHOT</version>
 
     <description>
         Example of using Slf4jMockPolicy.
