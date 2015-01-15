@@ -13,8 +13,7 @@
     <url>http://www.powermock.org</url>
 
     <description>
-        Common set of classes to test PowerMock features in
-        mocking framework modules.
+        Common set of classes to test PowerMock features in mocking framework modules.
     </description>
 
     <dependencies>

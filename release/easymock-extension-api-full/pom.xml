@@ -15,8 +15,7 @@
     <name>powermock-easymock-single-jar-release-full</name>
 
     <description>
-        Single jar containing binaries for PowerMock core, EasyMock and
-        all test framework modules.
+        Single jar containing binaries for PowerMock core, EasyMock and all test framework modules.
     </description>
 
     <dependencies>

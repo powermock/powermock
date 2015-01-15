@@ -27,7 +27,7 @@
     <url>http://www.powermock.org</url>
 
     <description>
-		PowerMock core functionality.
+        PowerMock core functionality.
     </description>
 
     <dependencies>

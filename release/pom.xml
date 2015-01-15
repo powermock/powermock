@@ -29,8 +29,7 @@
     <name>powermock-release</name>
 
     <description>
-        Convenience distributions containing various combinations of
-        modules.
+        Convenience distributions containing various combinations of modules.
     </description>
 
     <modules>

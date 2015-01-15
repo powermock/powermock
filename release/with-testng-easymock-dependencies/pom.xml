@@ -14,8 +14,7 @@
     <name>powermock-release-with-testng-easymock-dependencies</name>
 
     <description>
-        Single jar containing binaries for PowerMock core, TestNG and
-        EasyMock modules.
+        Single jar containing binaries for PowerMock core, TestNG and EasyMock modules.
     </description>
 
     <dependencies>

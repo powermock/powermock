@@ -11,7 +11,7 @@
     <name>powermock-api-mockito</name>
 
     <description>
-		PowerMock API for Mockito.
+        PowerMock API for Mockito.
     </description>
 
     <dependencies>

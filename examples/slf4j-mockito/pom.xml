@@ -11,7 +11,7 @@
     <name>slf4j-mockito</name>
 
     <description>
-    Example of using Slf4jMockPolicy with Mockito.
+        Example of using Slf4jMockPolicy with Mockito.
     </description>
 
     <dependencies>

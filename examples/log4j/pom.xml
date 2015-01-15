@@ -11,7 +11,7 @@
     <name>log4j</name>
 
     <description>
-      Example of using Log4jMockPolicy.
+        Example of using Log4jMockPolicy.
     </description>
 
     <dependencies>

@@ -10,9 +10,8 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-module-junit4-rule</artifactId>
     <name>powermock-module-junit4-rule</name>
-
     <description>
-		PowerMock support module for JUnit 4.x rules.
+        PowerMock support module for JUnit 4.x rules.
     </description>
 
     <dependencies>

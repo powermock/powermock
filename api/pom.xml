@@ -12,7 +12,7 @@
     <name>powermock-api</name>
 
     <description>
-    The mocking framework-specific interfaces to PowerMock.
+        The mocking framework-specific interfaces to PowerMock.
     </description>
 
     <modules>

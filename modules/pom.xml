@@ -12,7 +12,7 @@
     <name>powermock-modules</name>
 
     <description>
-    Aggregator for building PowerMock implementation and test modules.
+        Aggregator for building PowerMock implementation and test modules.
     </description>
 
     <modules>

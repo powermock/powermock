@@ -11,7 +11,7 @@
     <name>powermock-reflect</name>
 
     <description>
-		Various utilities for accessing internals of a class.
+        Various utilities for accessing internals of a class.
     </description>
 
     <dependencies>

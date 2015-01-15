@@ -12,7 +12,7 @@
     <name>powermock-tests</name>
 
     <description>
-    Common tests for PowerMock core and modules for mocking frameworks.
+        Common tests for PowerMock core and modules for mocking frameworks.
     </description>
 
     <modules>

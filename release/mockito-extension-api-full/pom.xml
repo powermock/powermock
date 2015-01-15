@@ -15,8 +15,7 @@
     <name>powermock-mockito-single-jar-release-full</name>
 
     <description>
-        Single jar containing source and binaries for PowerMock core and all
-        modules.
+        Single jar containing source and binaries for PowerMock core and all modules.
     </description>
 
     <dependencies>

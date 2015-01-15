@@ -14,7 +14,7 @@
     <url>http://www.powermock.org</url>
 
     <description>
-      PowerMock support module for JUnit 3.x.
+        PowerMock support module for JUnit 3.x.
     </description>
 
     <dependencies>

@@ -15,8 +15,7 @@
     <name>powermock-release-with-testng-mockito-dependencies</name>
 
     <description>
-        Single jar containing binaries for PowerMock core, TestNG and
-        Mockito modules.
+        Single jar containing binaries for PowerMock core, TestNG and Mockito modules.
     </description>
 
     <dependencies>

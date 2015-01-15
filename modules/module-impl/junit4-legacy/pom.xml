@@ -12,7 +12,7 @@
     <name>powermock-module-junit4-legacy</name>
 
     <description>
-		PowerMock support module for JUnit 4.0-4.3.
+        PowerMock support module for JUnit 4.0-4.3.
     </description>
 
     <dependencies>

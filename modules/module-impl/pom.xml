@@ -11,9 +11,8 @@
     <artifactId>powermock-modules-impl</artifactId>
     <packaging>pom</packaging>
     <name>powermock-modules-impl</name>
-
     <description>
-    PowerMock support modules for JUnit and TestNG.
+        PowerMock support modules for JUnit and TestNG.
     </description>
 
     <modules>

@@ -12,7 +12,7 @@
     <name>powermock-examples</name>
 
     <description>
-    Examples of specific uses of PowerMock.
+        Examples of specific uses of PowerMock.
     </description>
 
     <modules>

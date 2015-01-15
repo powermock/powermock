@@ -15,8 +15,7 @@
     <name>powermock-release-without-test-and-mock-framework</name>
 
     <description>
-        Single jar containing binaries for PowerMock core, without any
-        test or mock frameworks.
+        Single jar containing binaries for PowerMock core, without any test or mock frameworks.
     </description>
 
     <dependencies>
