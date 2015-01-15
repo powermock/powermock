@@ -43,8 +43,7 @@
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4
-            </artifactId>
+            <artifactId>powermock-module-junit4</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

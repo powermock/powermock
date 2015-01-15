@@ -7,8 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock.examples</groupId>
-    <artifactId>powermock-examples-log4j
-    </artifactId>
+    <artifactId>powermock-examples-log4j</artifactId>
     <name>log4j</name>
     <version>1.6.2-SNAPSHOT</version>
 
@@ -47,8 +46,7 @@
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4
-            </artifactId>
+            <artifactId>powermock-module-junit4</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

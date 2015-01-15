@@ -7,10 +7,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock</groupId>
-    <artifactId>powermock-module-test-easymock-junit4-legacy
-    </artifactId>
-    <name>powermock-module-test-easymock-junit4-legacy
-    </name>
+    <artifactId>powermock-module-test-easymock-junit4-legacy</artifactId>
+    <name>powermock-module-test-easymock-junit4-legacy</name>
     <version>1.6.2-SNAPSHOT</version>
 
     <description>
@@ -28,8 +26,7 @@
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4-legacy
-            </artifactId>
+            <artifactId>powermock-module-junit4-legacy</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
