@@ -12,7 +12,7 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-release-with-junit-easymock-dependencies</artifactId>
     <packaging>pom</packaging>
-    <name>powermock-release-with-junit-easymock-dependencies</name>
+    <name>${project.artifactId}</name>
 
     <description>
         Single jar containing binaries for PowerMock core, JUnit and EasyMock modules.

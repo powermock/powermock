@@ -25,7 +25,7 @@
     <artifactId>powermock</artifactId>
     <packaging>pom</packaging>
     <version>1.6.2-SNAPSHOT</version>
-    <name>powermock</name>
+    <name>${project.artifactId}</name>
     <url>http://www.powermock.org</url>
     <description>
         PowerMock allows you to unit test code normally regarded as untestable.

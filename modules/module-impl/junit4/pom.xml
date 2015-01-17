@@ -10,7 +10,7 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-module-junit4</artifactId>
     <packaging>jar</packaging>
-    <name>powermock-module-junit4</name>
+    <name>${project.artifactId}</name>
     <url>http://www.powermock.org</url>
 
     <description>

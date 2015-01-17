@@ -8,7 +8,7 @@
     </parent>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-api-mockito</artifactId>
-    <name>powermock-api-mockito</name>
+    <name>${project.artifactId}</name>
 
     <description>
         PowerMock API for Mockito.

@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-classloading-objenesis</artifactId>
-    <name>powermock-classloading-objenesis</name>
+    <name>${project.artifactId}</name>
 
     <description>
         Performs classloader deep-cloning using Objenesis

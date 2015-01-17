@@ -9,7 +9,7 @@
 
     <groupId>org.powermock</groupId>
     <artifactId>powermock-module-test-mockito-junit4</artifactId>
-    <name>powermock-module-test-mockito-junit4</name>
+    <name>${project.artifactId}</name>
 
     <description>
         Tests for Mockito module with JUnit 4.x.

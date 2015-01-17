@@ -8,7 +8,7 @@
     </parent>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-junit4-rule-xstream-test</artifactId>
-    <name>powermock-junit4-rule-xstream-test</name>
+    <name>${project.artifactId}</name>
 
     <description>
         Tests for PowerMock Rule using XStream Deepcloning

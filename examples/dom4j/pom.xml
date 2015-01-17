@@ -7,7 +7,7 @@
         <version>1.6.2-SNAPSHOT</version>
     </parent>
     <artifactId>powermock-examples-dom4j</artifactId>
-    <name>powermock-examples-dom4j</name>
+    <name>${project.artifactId}</name>
 
     <description>
         Example showing how to suppress static initializers.

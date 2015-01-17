@@ -10,7 +10,7 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-modules-easymock-test</artifactId>
     <packaging>pom</packaging>
-    <name>powermock-modules-easymock-test</name>
+    <name>${project.artifactId}</name>
 
     <description>
         Tests for EasyMock module with various test frameworks.

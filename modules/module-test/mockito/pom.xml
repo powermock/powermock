@@ -9,7 +9,7 @@
 
     <groupId>org.powermock</groupId>
     <artifactId>powermock-modules-test-mockito</artifactId>
-    <name>powermock-modules-test-mockito</name>
+    <name>${project.artifactId}</name>
     <packaging>pom</packaging>
 
     <description>

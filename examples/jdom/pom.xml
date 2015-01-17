@@ -8,7 +8,7 @@
     </parent>
     <groupId>org.powermock.examples</groupId>
     <artifactId>powermock-examples-jdom</artifactId>
-    <name>powermock-examples-jdom</name>
+    <name>${project.artifactId}</name>
 
     <description>
         Example showing PowerMock used with jDom and static classes.

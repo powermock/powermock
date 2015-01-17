@@ -7,7 +7,7 @@
         <version>1.6.2-SNAPSHOT</version>
     </parent>
     <artifactId>powermock-module-test-easymock-testng</artifactId>
-    <name>powermock-module-test-easymock-testng</name>
+    <name>${project.artifactId}</name>
 
     <description>
         Tests for EasyMock module with TestNG.

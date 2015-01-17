@@ -8,7 +8,7 @@
     </parent>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-module-test-easymock-junit47</artifactId>
-    <name>powermock-module-test-easymock-junit47</name>
+    <name>${project.artifactId}</name>
 
     <description>
         Tests for EasyMock module with JUnit 4.7.

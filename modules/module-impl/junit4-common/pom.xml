@@ -10,7 +10,7 @@
 
     <groupId>org.powermock</groupId>
     <artifactId>powermock-module-junit4-common</artifactId>
-    <name>powermock-module-junit4-common</name>
+    <name>${project.artifactId}</name>
 
     <description>
         PowerMock support module for all versions of JUnit 4.x.

@@ -23,7 +23,7 @@
     </parent>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-core</artifactId>
-    <name>powermock-core</name>
+    <name>${project.artifactId}</name>
     <url>http://www.powermock.org</url>
 
     <description>

@@ -9,7 +9,7 @@
     </parent>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-module-junit4-legacy</artifactId>
-    <name>powermock-module-junit4-legacy</name>
+    <name>${project.artifactId}</name>
 
     <description>
         PowerMock support module for JUnit 4.0-4.3.

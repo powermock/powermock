@@ -12,7 +12,7 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-release-with-testng-mockito-dependencies</artifactId>
     <packaging>pom</packaging>
-    <name>powermock-release-with-testng-mockito-dependencies</name>
+    <name>${project.artifactId}</name>
 
     <description>
         Single jar containing binaries for PowerMock core, TestNG and Mockito modules.

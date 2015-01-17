@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-classloading-xstream</artifactId>
-    <name>powermock-classloading-xstream</name>
+    <name>${project.artifactId}</name>
 
     <description>
         Performs classloader deep-cloning using X-Stream

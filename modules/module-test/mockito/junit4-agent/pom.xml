@@ -8,7 +8,7 @@
     </parent>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-module-test-mockito-junit4-agent</artifactId>
-    <name>powermock-module-test-mockito-junit4-agent</name>
+    <name>${project.artifactId}</name>
 
     <description>
         Tests for PowerMock Java agent with JUnit4 and Mockito

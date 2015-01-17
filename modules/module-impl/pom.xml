@@ -10,7 +10,7 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-modules-impl</artifactId>
     <packaging>pom</packaging>
-    <name>powermock-modules-impl</name>
+    <name>${project.artifactId}</name>
     <description>
         PowerMock support modules for JUnit and TestNG.
     </description>

@@ -10,7 +10,7 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-modules-test</artifactId>
     <packaging>pom</packaging>
-    <name>powermock-modules-test</name>
+    <name>${project.artifactId}</name>
 
     <description>
         Tests for mocking framework modules.

@@ -9,7 +9,7 @@
     </parent>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-classloading-base</artifactId>
-    <name>powermock-classloading-base</name>
+    <name>${project.artifactId}</name>
     <packaging>jar</packaging>
 
     <description>

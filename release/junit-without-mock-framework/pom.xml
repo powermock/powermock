@@ -12,7 +12,7 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-release-junit-without-mock-framework</artifactId>
     <packaging>pom</packaging>
-    <name>powermock-release-junit-without-mock-framework</name>
+    <name>${project.artifactId}</name>
 
     <description>
         Single jar containing binaries for PowerMock core and JUnit module.

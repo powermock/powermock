@@ -9,7 +9,7 @@
     </parent>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-module-javaagent</artifactId>
-    <name>powermock-module-javaagent</name>
+    <name>${project.artifactId}</name>
 
     <description>
         PowerMock Java agent support.

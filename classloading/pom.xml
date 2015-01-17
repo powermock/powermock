@@ -9,7 +9,7 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-classloading-module</artifactId>
     <packaging>pom</packaging>
-    <name>powermock-classloading-module</name>
+    <name>${project.artifactId}</name>
 
     <description>
         PowerMock Classloading Module

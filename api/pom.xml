@@ -9,7 +9,7 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-api</artifactId>
     <packaging>pom</packaging>
-    <name>powermock-api</name>
+    <name>${project.artifactId}</name>
 
     <description>
         The mocking framework-specific interfaces to PowerMock.

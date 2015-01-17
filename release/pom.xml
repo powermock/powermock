@@ -26,7 +26,7 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-release</artifactId>
     <packaging>pom</packaging>
-    <name>powermock-release</name>
+    <name>${project.artifactId}</name>
 
     <description>
         Convenience distributions containing various combinations of modules.

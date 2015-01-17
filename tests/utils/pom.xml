@@ -9,7 +9,7 @@
     <groupId>org.powermock.tests</groupId>
     <artifactId>powermock-tests-utils</artifactId>
     <packaging>jar</packaging>
-    <name>powermock-tests-utils</name>
+    <name>${project.artifactId}</name>
     <url>http://www.powermock.org</url>
 
     <description>

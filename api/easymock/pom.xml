@@ -7,7 +7,7 @@
         <version>1.6.2-SNAPSHOT</version>
     </parent>
     <artifactId>powermock-api-easymock</artifactId>
-    <name>powermock-api-easymock</name>
+    <name>${project.artifactId}</name>
 
     <description>
         PowerMock API for EasyMock.

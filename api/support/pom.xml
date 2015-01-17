@@ -8,7 +8,7 @@
     </parent>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-api-support</artifactId>
-    <name>powermock-api-support</name>
+    <name>${project.artifactId}</name>
 
     <description>
         Utility classes.

@@ -11,7 +11,7 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-module-testng</artifactId>
     <packaging>jar</packaging>
-    <name>powermock-module-testng</name>
+    <name>${project.artifactId}</name>
     <url>http://www.powermock.org</url>
 
     <description>

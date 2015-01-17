@@ -8,7 +8,7 @@
     </parent>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-module-test-mockito-junit4-delegate</artifactId>
-    <name>powermock-module-test-mockito-junit4-delegate</name>
+    <name>${project.artifactId}</name>
 
     <description>
         Tests for PowerMock JUnit4 runner-delegate and Mockito

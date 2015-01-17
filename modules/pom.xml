@@ -9,7 +9,7 @@
     <groupId>org.powermock</groupId>
     <artifactId>powermock-modules</artifactId>
     <packaging>pom</packaging>
-    <name>powermock-modules</name>
+    <name>${project.artifactId}</name>
 
     <description>
         Aggregator for building PowerMock implementation and test modules.
