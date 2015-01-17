@@ -23,8 +23,11 @@ import org.powermock.core.transformers.MockTransformer;
 import powermock.test.support.MainMockTransformerTestSupport.SupportClasses;
 
 import java.util.Collections;
+import org.powermock.core.IndicateReloadClass;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 public class MainMockTransformerTest {
     /**
@@ -69,5 +72,18 @@ public class MainMockTransformerTest {
         mockClassLoader.setMockTransformerChain(Collections.<MockTransformer> singletonList(new MainMockTransformer()));
         final Class<?> clazz = Class.forName(SupportClasses.class.getName() + "$PrivateStaticFinalInnerClass", true, mockClassLoader);
         assertFalse(Modifier.isFinal(clazz.getModifiers()));
+    }
+
+    @Test
+    public void subclassShouldNormallyGetAnAdditionalDeferConstructor() throws Exception {
+        MockClassLoader mockClassLoader = new MockClassLoader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES });
+        mockClassLoader.setMockTransformerChain(Collections.<MockTransformer> singletonList(new MainMockTransformer()));
+        final Class<?> clazz = Class.forName(SupportClasses.SubClass.class.getName(), true, mockClassLoader);
+        assertEquals("Original number of constructoprs",
+                1, SupportClasses.SubClass.class.getConstructors().length);
+        assertEquals("Number of constructors in modified class",
+                2, clazz.getConstructors().length);
+        assertNotNull("Defer-constructor expected",
+                clazz.getConstructor(IndicateReloadClass.class));
     }
 }

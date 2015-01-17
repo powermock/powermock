@@ -39,5 +39,11 @@ public class MainMockTransformerTestSupport {
         public enum EnumClass {
             VALUE;
         }
+
+        class SuperClass {
+        }
+
+        public class SubClass extends SuperClass {
+        }
     }
 }
