@@ -75,4 +75,6 @@ public class EnclosedTest {
                     not(equalTo(stubbedReturnValue)));
         }
     }
+
+    public static class SubClass extends StubbedStaticReturnValue {}
 }

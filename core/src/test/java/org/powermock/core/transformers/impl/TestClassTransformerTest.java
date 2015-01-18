@@ -16,7 +16,9 @@
 
 package org.powermock.core.transformers.impl;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
 import org.junit.Test;
 import org.powermock.core.classloader.MockClassLoader;
 import powermock.test.support.MainMockTransformerTestSupport.SupportClasses;
@@ -48,11 +50,33 @@ public class TestClassTransformerTest {
         try {
             fail("A public defer-constructor is not expected: "
                     + clazz.getConstructor(IndicateReloadClass.class));
-        } catch (NoSuchMethodException expected) {}
+        } catch (NoSuchMethodException is_expected) {}
         assertEquals("Number of (public) constructors in modified class",
                 1, clazz.getConstructors().length);
 
         assertNotNull("But there should still be a non-public defer constructor!",
                 clazz.getDeclaredConstructor(IndicateReloadClass.class));
+    }
+
+    @Test
+    public void withEnclosingClassAsTestClassTheNestedClassesShouldNotGetPublicDeferConstructor()
+    throws Exception {
+        MockClassLoader mockClassLoader = new MockClassLoader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES });
+        mockClassLoader.setMockTransformerChain(Arrays.asList(new MainMockTransformer(), TestClassTransformer
+                .forTestClass(SupportClasses.class)
+                .removesTestMethodAnnotation(Test.class)
+                .fromMethods(Collections.<Method>emptyList())));
+        final Class<?> clazz = Class.forName(SupportClasses.class.getName(), true, mockClassLoader);
+        try {
+            fail("A public defer-constructor is not expected: "
+                    + clazz.getConstructor(IndicateReloadClass.class));
+        } catch (NoSuchMethodException is_expected) {}
+
+        for (Class<?> nestedClazz : clazz.getDeclaredClasses()) {
+            try {
+                fail("A public defer-constructor is not expected for class that is nested within the test-class: "
+                        + nestedClazz.getConstructor(IndicateReloadClass.class));
+            } catch (NoSuchMethodException is_expected) {}
+        }
     }
 }

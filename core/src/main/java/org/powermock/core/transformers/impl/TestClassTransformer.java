@@ -43,6 +43,9 @@ import org.powermock.core.transformers.MockTransformer;
  * Otherwise a delegate runner from JUnit (or 3rd party) might get confused by
  * the presence of more than one test-class constructor and bail out with an
  * error message such as "Test class can only have one constructor".
+ *
+ * The #3 enhancement will also be enforced for the defer-constructors of
+ * classes that are nested within the test-class.
  */
 public abstract class TestClassTransformer implements MockTransformer {
 
@@ -123,6 +126,12 @@ public abstract class TestClassTransformer implements MockTransformer {
         }
     }
 
+    private boolean isNestedWithinTestClass(CtClass clazz) {
+        String clazzName = clazz.getName();
+        return clazzName.startsWith(testClass.getName())
+                && '$' == clazzName.charAt(testClass.getName().length());
+    }
+
     abstract boolean mustHaveTestAnnotationRemoved(CtMethod method) throws Exception;
 
     private void removeTestMethodAnnotationFrom(CtMethod m)
@@ -159,6 +168,9 @@ public abstract class TestClassTransformer implements MockTransformer {
         if (isTestClass(clazz)) {
             removeTestAnnotationsForTestMethodsThatRunOnOtherClassLoader(clazz);
             addLifeCycleNotifications(clazz);
+            makeDeferConstructorNonPublic(clazz);
+
+        } else if (isNestedWithinTestClass(clazz)) {
             makeDeferConstructorNonPublic(clazz);
         }
 
