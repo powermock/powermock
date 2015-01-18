@@ -9,7 +9,6 @@
     </parent>
 
     <artifactId>powermock-module-testng-common</artifactId>
-    <packaging>jar</packaging>
     <name>${project.artifactId}</name>
     <url>http://www.powermock.org</url>
 

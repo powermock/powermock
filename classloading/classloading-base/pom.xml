@@ -10,7 +10,6 @@
 
     <artifactId>powermock-classloading-base</artifactId>
     <name>${project.artifactId}</name>
-    <packaging>jar</packaging>
 
     <description>
         Utilities for loading and executing classes.

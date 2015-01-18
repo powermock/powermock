@@ -6,7 +6,7 @@
         <artifactId>powermock-classloading-module</artifactId>
         <version>1.6.2-SNAPSHOT</version>
     </parent>
-    <packaging>jar</packaging>
+
     <artifactId>powermock-classloading-xstream</artifactId>
     <name>${project.artifactId}</name>
 

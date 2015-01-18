@@ -8,7 +8,6 @@
     </parent>
 
     <artifactId>powermock-tests-utils</artifactId>
-    <packaging>jar</packaging>
     <name>${project.artifactId}</name>
     <url>http://www.powermock.org</url>
 

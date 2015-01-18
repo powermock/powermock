@@ -3,7 +3,6 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock.examples</groupId>
     <artifactId>powermock-examples-tutorial</artifactId>
-    <packaging>jar</packaging>
     <version>1.6.2-SNAPSHOT</version>
     <name>tutorial</name>
     <url>http://www.powermock.org</url>
