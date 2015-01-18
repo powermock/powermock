@@ -1,37 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-   <parent>
-      <artifactId>powermock-modules</artifactId>
-      <groupId>org.powermock</groupId>
-      <version>1.6.2-SNAPSHOT</version>
-      <relativePath>../../pom.xml</relativePath>
-   </parent>
-   <modelVersion>4.0.0</modelVersion>
-   <groupId>org.powermock</groupId>
-   <artifactId>powermock-module-testng</artifactId>
-   <packaging>jar</packaging>
-   <name>powermock-module-testng</name>
-   <url>http://www.powermock.org</url>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>powermock-modules</artifactId>
+        <groupId>org.powermock</groupId>
+        <version>1.6.2-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
 
-   <description>
-      PowerMock module for TestNG.
-   </description>
+    <groupId>org.powermock</groupId>
+    <artifactId>powermock-module-testng</artifactId>
+    <packaging>jar</packaging>
+    <name>${project.artifactId}</name>
+    <url>http://www.powermock.org</url>
 
-   <dependencies>
-      <dependency>
-         <groupId>org.testng</groupId>
-         <artifactId>testng</artifactId>
-         <version>6.8.13</version>
-         <scope>compile</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.powermock</groupId>
-         <artifactId>powermock-core</artifactId>
-         <version>${project.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.powermock</groupId>
-         <artifactId>powermock-module-testng-common</artifactId>
-         <version>${project.version}</version>
-      </dependency>
-   </dependencies>
+    <description>
+        PowerMock module for TestNG.
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.8.13</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-testng-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>

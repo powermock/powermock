@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.powermock</groupId>
@@ -8,11 +9,10 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <modelVersion>4.0.0</modelVersion>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-release-testng-without-mock-framework</artifactId>
     <packaging>pom</packaging>
-    <name>powermock-release-testng-without-mock-framework</name>
+    <name>${project.artifactId}</name>
 
     <description>
         Single jar containing binaries for PowerMock core and TestNG module.

@@ -9,10 +9,10 @@
     <groupId>org.powermock.examples</groupId>
     <artifactId>powermock-examples</artifactId>
     <packaging>pom</packaging>
-    <name>powermock-examples</name>
+    <name>${project.artifactId}</name>
 
     <description>
-    Examples of specific uses of PowerMock.
+        Examples of specific uses of PowerMock.
     </description>
 
     <modules>
