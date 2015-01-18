@@ -6,14 +6,14 @@
         <artifactId>powermock-classloading-module</artifactId>
         <version>1.6.2-SNAPSHOT</version>
     </parent>
-    <packaging>jar</packaging>
-    <groupId>org.powermock</groupId>
+
     <artifactId>powermock-classloading-objenesis</artifactId>
     <name>${project.artifactId}</name>
 
     <description>
         Performs classloader deep-cloning using Objenesis
     </description>
+
     <dependencies>
         <dependency>
             <groupId>org.powermock</groupId>

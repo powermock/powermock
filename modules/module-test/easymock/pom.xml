@@ -2,12 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>powermock-modules-test</artifactId>
         <groupId>org.powermock</groupId>
+        <artifactId>powermock-modules-test</artifactId>
         <version>1.6.2-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.powermock</groupId>
     <artifactId>powermock-modules-easymock-test</artifactId>
     <packaging>pom</packaging>
     <name>${project.artifactId}</name>
@@ -15,6 +14,24 @@
     <description>
         Tests for EasyMock module with various test frameworks.
     </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-easymock</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock.tests</groupId>
+            <artifactId>powermock-tests-utils</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <modules>
         <module>junit3-test</module>

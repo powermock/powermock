@@ -6,9 +6,8 @@
         <groupId>org.powermock.tests</groupId>
         <version>1.6.2-SNAPSHOT</version>
     </parent>
-    <groupId>org.powermock.tests</groupId>
+
     <artifactId>powermock-tests-utils</artifactId>
-    <packaging>jar</packaging>
     <name>${project.artifactId}</name>
     <url>http://www.powermock.org</url>
 
@@ -28,6 +27,7 @@
             <version>2.5</version>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
