@@ -31,11 +31,5 @@
             <artifactId>powermock-classloading-objenesis</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.powermock.tests</groupId>
-            <artifactId>powermock-tests-utils</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 </project>
