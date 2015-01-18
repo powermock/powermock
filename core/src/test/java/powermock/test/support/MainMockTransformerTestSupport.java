@@ -44,6 +44,7 @@ public class MainMockTransformerTestSupport {
         }
 
         public class SubClass extends SuperClass {
+            public void dummyMethod() {}
         }
     }
 }

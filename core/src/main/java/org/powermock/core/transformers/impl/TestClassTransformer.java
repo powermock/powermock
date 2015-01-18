@@ -23,20 +23,26 @@ import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtMethod;
+import javassist.Modifier;
 import javassist.NotFoundException;
 import javassist.bytecode.AnnotationsAttribute;
+import org.powermock.core.IndicateReloadClass;
 import org.powermock.core.testlisteners.GlobalNotificationBuildSupport;
 import org.powermock.core.transformers.MockTransformer;
 
 /**
  * MockTransformer implementation that will make PowerMock test-class
- * enhancements for two purposes...
+ * enhancements for three purposes...
  * 1) Make test-class static initializer and constructor send crucial details
  * (for PowerMockTestListener events) to GlobalNotificationBuildSupport so that
  * this information can be forwarded to whichever
  * facility is used for composing the PowerMockTestListener events.
  * 2) Removal of test-method annotations as a mean to achieve test-suite
  * chunking!
+ * 3) Set test-class defer constructor (if exist) as protected instead of public.
+ * Otherwise a delegate runner from JUnit (or 3rd party) might get confused by
+ * the presence of more than one test-class constructor and bail out with an
+ * error message such as "Test class can only have one constructor".
  */
 public abstract class TestClassTransformer implements MockTransformer {
 
@@ -153,6 +159,7 @@ public abstract class TestClassTransformer implements MockTransformer {
         if (isTestClass(clazz)) {
             removeTestAnnotationsForTestMethodsThatRunOnOtherClassLoader(clazz);
             addLifeCycleNotifications(clazz);
+            makeDeferConstructorNonPublic(clazz);
         }
 
         return clazz;
@@ -202,6 +209,26 @@ public abstract class TestClassTransformer implements MockTransformer {
                     notificationCode,
                     asFinally/* unless there is a super-class, because of this
                               * problem: https://community.jboss.org/thread/94194*/);
+        }
+    }
+
+    private void makeDeferConstructorNonPublic(final CtClass clazz) {
+        for (final CtConstructor constr : clazz.getConstructors()) {
+            try {
+                for (CtClass paramType : constr.getParameterTypes()) {
+                    if (IndicateReloadClass.class.getName()
+                            .equals(paramType.getName())) {
+                        /* Found defer constructor ... */
+                        final int modifiers = constr.getModifiers();
+                        if (Modifier.isPublic(modifiers)) {
+                            constr.setModifiers(Modifier.setProtected(modifiers));
+                        }
+                        break;
+                    }
+                }
+            } catch (NotFoundException thereAreNoParameters) {
+                /* ... but to get an exception here seems odd. */
+            }
         }
     }
 
