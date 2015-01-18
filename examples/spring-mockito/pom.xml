@@ -21,7 +21,7 @@
         <groupId>org.powermock.examples</groupId>
         <version>1.6.2-SNAPSHOT</version>
     </parent>
-    <groupId>org.powermock.examples</groupId>
+
     <artifactId>powermock-examples-spring-mockito</artifactId>
     <name>${project.artifactId}</name>
     <properties>

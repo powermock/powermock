@@ -9,7 +9,6 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <groupId>org.powermock</groupId>
     <artifactId>powermock-release-with-testng-mockito-dependencies</artifactId>
     <packaging>pom</packaging>
     <name>${project.artifactId}</name>

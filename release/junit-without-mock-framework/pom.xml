@@ -9,7 +9,6 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <groupId>org.powermock</groupId>
     <artifactId>powermock-release-junit-without-mock-framework</artifactId>
     <packaging>pom</packaging>
     <name>${project.artifactId}</name>

@@ -7,7 +7,7 @@
         <version>1.6.2-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-    <groupId>org.powermock</groupId>
+
     <artifactId>powermock-module-testng-agent</artifactId>
     <packaging>jar</packaging>
     <name>${project.artifactId}</name>

@@ -9,7 +9,6 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <groupId>org.powermock</groupId>
     <artifactId>powermock-easymock-release-full</artifactId>
     <packaging>pom</packaging>
     <name>powermock-easymock-single-jar-release-full</name>

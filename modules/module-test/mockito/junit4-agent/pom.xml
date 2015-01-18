@@ -6,7 +6,7 @@
         <groupId>org.powermock</groupId>
         <version>1.6.2-SNAPSHOT</version>
     </parent>
-    <groupId>org.powermock</groupId>
+
     <artifactId>powermock-module-test-mockito-junit4-agent</artifactId>
     <name>${project.artifactId}</name>
 

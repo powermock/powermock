@@ -8,7 +8,6 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <groupId>org.powermock</groupId>
     <artifactId>powermock-module-testng-common</artifactId>
     <packaging>jar</packaging>
     <name>${project.artifactId}</name>

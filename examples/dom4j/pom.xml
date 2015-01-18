@@ -6,6 +6,7 @@
         <groupId>org.powermock.examples</groupId>
         <version>1.6.2-SNAPSHOT</version>
     </parent>
+
     <artifactId>powermock-examples-dom4j</artifactId>
     <name>${project.artifactId}</name>
 

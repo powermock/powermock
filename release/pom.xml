@@ -23,7 +23,6 @@
         <version>1.6.2-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.powermock</groupId>
     <artifactId>powermock-release</artifactId>
     <packaging>pom</packaging>
     <name>${project.artifactId}</name>

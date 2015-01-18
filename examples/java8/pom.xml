@@ -21,6 +21,7 @@
         <groupId>org.powermock.examples</groupId>
         <version>1.6.2-SNAPSHOT</version>
     </parent>
+
     <artifactId>powermock-examples-java8</artifactId>
     <name>java8</name>
 

@@ -9,7 +9,6 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.powermock</groupId>
     <artifactId>powermock-release-with-junit-mockito-dependencies</artifactId>
     <packaging>pom</packaging>
     <name>${project.artifactId}</name>
