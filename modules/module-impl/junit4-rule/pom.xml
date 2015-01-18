@@ -10,6 +10,7 @@
 
     <artifactId>powermock-module-junit4-rule</artifactId>
     <name>${project.artifactId}</name>
+
     <description>
         PowerMock support module for JUnit 4.x rules.
     </description>

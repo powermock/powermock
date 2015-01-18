@@ -6,6 +6,7 @@
         <artifactId>powermock-api</artifactId>
         <version>1.6.2-SNAPSHOT</version>
     </parent>
+
     <artifactId>powermock-api-easymock</artifactId>
     <name>${project.artifactId}</name>
 

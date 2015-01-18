@@ -6,6 +6,7 @@
         <artifactId>powermock-modules-easymock-test</artifactId>
         <version>1.6.2-SNAPSHOT</version>
     </parent>
+
     <artifactId>powermock-module-test-easymock-testng-agent</artifactId>
     <name>${project.artifactId}</name>
 
@@ -27,6 +28,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>

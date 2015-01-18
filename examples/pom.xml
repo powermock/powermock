@@ -40,6 +40,7 @@
         <module>spring-mockito-xml</module>
         <module>java8</module>
     </modules>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
