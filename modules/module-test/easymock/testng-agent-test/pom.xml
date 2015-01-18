@@ -21,10 +21,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-        </dependency>
-        <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib-nodep</artifactId>
         </dependency>
@@ -33,16 +29,6 @@
             <artifactId>powermock-module-testng-agent</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-easymock</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock.tests</groupId>
-            <artifactId>powermock-tests-utils</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
     <build>
