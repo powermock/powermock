@@ -14,17 +14,6 @@
         Tests for EasyMock module with JUnit 4.x.
     </description>
 
-    <build>
-        <!--  <plugins>
-             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <forkMode>pertest</forkMode>
-                </configuration>
-              </plugin>
-             </plugins> -->
-    </build>
     <dependencies>
         <dependency>
             <groupId>org.powermock</groupId>
