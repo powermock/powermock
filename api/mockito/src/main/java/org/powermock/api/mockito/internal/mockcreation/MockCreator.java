@@ -18,13 +18,14 @@ package org.powermock.api.mockito.internal.mockcreation;
 import org.mockito.MockSettings;
 import org.mockito.Mockito;
 import org.mockito.internal.InternalMockHandler;
-import org.mockito.internal.creation.MethodInterceptorFilter;
 import org.mockito.internal.creation.MockSettingsImpl;
-import org.mockito.internal.creation.jmock.ClassImposterizer;
+import org.mockito.internal.creation.instance.InstantiatorProvider;
 import org.mockito.internal.handler.MockHandlerFactory;
 import org.mockito.internal.util.MockNameImpl;
 import org.mockito.internal.util.reflection.LenientCopyTool;
 import org.powermock.api.mockito.internal.invocation.MockitoMethodInvocationControl;
+import org.powermock.api.mockito.repackaged.ClassImposterizer;
+import org.powermock.api.mockito.repackaged.MethodInterceptorFilter;
 import org.powermock.core.ClassReplicaCreator;
 import org.powermock.core.DefaultFieldValueGenerator;
 import org.powermock.core.MockRepository;
@@ -106,9 +107,12 @@ public class MockCreator {
 
         InternalMockHandler mockHandler = new MockHandlerFactory().create(settings);
         MethodInterceptorFilter filter = new PowerMockMethodInterceptorFilter(mockHandler, settings);
-        final T mock = (T) ClassImposterizer.INSTANCE.imposterise(filter, type);
-        final MockitoMethodInvocationControl invocationControl = new MockitoMethodInvocationControl(filter,
-                isSpy && delegator == null ? new Object() : delegator, mock, methods);
+        final T mock = (T) new ClassImposterizer(new InstantiatorProvider().getInstantiator(settings)).imposterise(filter, type);
+        final MockitoMethodInvocationControl invocationControl = new MockitoMethodInvocationControl(
+                filter,
+                isSpy && delegator == null ? new Object() : delegator,
+                mock,
+                methods);
 
         return new MockData<T>(invocationControl, mock);
     }

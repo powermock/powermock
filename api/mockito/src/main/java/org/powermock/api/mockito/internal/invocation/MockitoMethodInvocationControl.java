@@ -20,12 +20,11 @@ import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.exceptions.misusing.NotAMockException;
 import org.mockito.internal.InternalMockHandler;
 import org.mockito.internal.creation.DelegatingMethod;
-import org.mockito.internal.creation.MethodInterceptorFilter;
 import org.mockito.internal.debugging.Localized;
 import org.mockito.internal.exceptions.stacktrace.StackTraceFilter;
 import org.mockito.internal.invocation.InvocationImpl;
 import org.mockito.internal.invocation.MatchersBinder;
-import org.mockito.internal.invocation.realmethod.FilteredCGLIBProxyRealMethod;
+import org.mockito.internal.invocation.realmethod.CleanTraceRealMethod;
 import org.mockito.internal.invocation.realmethod.RealMethod;
 import org.mockito.internal.progress.MockingProgress;
 import org.mockito.internal.progress.SequenceNumber;
@@ -37,6 +36,7 @@ import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MockHandler;
 import org.mockito.verification.VerificationMode;
 import org.powermock.api.mockito.internal.verification.StaticMockAwareVerificationMode;
+import org.powermock.api.mockito.repackaged.MethodInterceptorFilter;
 import org.powermock.api.support.SafeExceptionRethrower;
 import org.powermock.core.MockGateway;
 import org.powermock.core.MockRepository;
@@ -94,8 +94,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
      * <code>null</code> (if it is then no calls will be forwarded to this
      * instance). If a delegator exists (i.e. not null) all non-mocked calls
      * will be delegated to that instance.
-     *
-     * @param methodInterceptionFilter
+     *  @param methodInterceptionFilter
      *            The methodInterceptionFilter to be associated with this
      *            instance.
      * @param delegator
@@ -116,7 +115,6 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
      *            The methods that are mocked for this instance. If
      *            <code>methodsToMock</code> is null or empty, all methods for
      *            the <code>invocationHandler</code> are considered to be
-     *            mocked.
      */
     public MockitoMethodInvocationControl(MethodInterceptorFilter methodInterceptionFilter, Object delegator,
                                           Object mockInstance, Method... methodsToMock) {
@@ -220,7 +218,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
                                     final Method method, Object[] arguments) throws Throwable {
         MockHandler mockHandler = invocationHandler.getHandler();
 
-        final FilteredCGLIBProxyRealMethod cglibProxyRealMethod = new FilteredCGLIBProxyRealMethod(new RealMethod() {
+        final CleanTraceRealMethod cglibProxyRealMethod = new CleanTraceRealMethod(new RealMethod() {
             private static final long serialVersionUID = 4564320968038564170L;
 
             public Object invoke(Object target, Object[] arguments) throws Throwable {
@@ -247,8 +245,12 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
             }
         });
 
-        Invocation invocation = new InvocationImpl(interceptionObject, new DelegatingMethod(method), arguments,
-                SequenceNumber.next(), cglibProxyRealMethod) {
+        Invocation invocation = new InvocationImpl(
+                interceptionObject,
+                new DelegatingMethod(method),
+                arguments,
+                SequenceNumber.next(),
+                cglibProxyRealMethod) {
             private static final long serialVersionUID = -3679957412502758558L;
 
             public String toString() {
