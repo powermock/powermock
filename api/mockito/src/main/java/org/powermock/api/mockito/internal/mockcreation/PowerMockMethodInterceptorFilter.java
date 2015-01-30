@@ -1,15 +1,11 @@
 package org.powermock.api.mockito.internal.mockcreation;
 
-import java.lang.reflect.Method;
-
 import org.mockito.cglib.proxy.MethodProxy;
 import org.mockito.internal.InternalMockHandler;
-import org.mockito.internal.configuration.GlobalConfiguration;
-import org.mockito.internal.creation.MethodInterceptorFilter;
-import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.mock.MockCreationSettings;
-import org.powermock.api.support.ClassLoaderUtil;
-import org.powermock.reflect.Whitebox;
+import org.powermock.api.mockito.repackaged.MethodInterceptorFilter;
+
+import java.lang.reflect.Method;
 
 class PowerMockMethodInterceptorFilter extends MethodInterceptorFilter {
 
@@ -17,7 +13,7 @@ class PowerMockMethodInterceptorFilter extends MethodInterceptorFilter {
             MockCreationSettings mockSettings) {
         super(handler, mockSettings);
     }
-    
+
     @Override
     public Object intercept(Object proxy, Method method, Object[] args,
             MethodProxy methodProxy) throws Throwable {
@@ -29,5 +25,5 @@ class PowerMockMethodInterceptorFilter extends MethodInterceptorFilter {
         }
         return intercept;
     }
-    
+
 }

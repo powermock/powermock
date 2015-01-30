@@ -16,7 +16,6 @@
 package org.powermock.api.mockito.internal.mockmaker;
 
 import org.mockito.internal.InternalMockHandler;
-import org.mockito.internal.creation.CglibMockMaker;
 import org.mockito.internal.creation.MockSettingsImpl;
 import org.mockito.internal.stubbing.InvocationContainer;
 import org.mockito.internal.util.MockNameImpl;
@@ -26,18 +25,21 @@ import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.MockMaker;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.VoidMethodStubbable;
+import org.powermock.api.mockito.repackaged.CglibMockMaker;
 
 import java.util.List;
 
 /**
- * A PowerMock implementation of the MockMaker. Right now it simply delegates to the
- * {@link org.mockito.internal.creation.CglibMockMaker} but in the future we may use it more properly.
- * The reason for its existence is that the CglibMockMaker throws exception for when getting the name
- * from of a mock that is created by PowerMock but not know for Mockito. This is trigged when by the MockUtil class.
+ * A PowerMock implementation of the MockMaker. Right now it simply delegates to the default Mockito
+ * {@link org.mockito.plugins.MockMaker} via {@link org.mockito.internal.configuration.plugins.Plugins#getMockMaker()}
+ * but in the future we may use it more properly.
+ * The reason for its existence is that the current Mockito MockMaker throws exception when getting the name
+ * from of a mock that is created by PowerMock but not know for Mockito. This is triggered when by the
+ * {@link org.mockito.internal.util.MockUtil} class.
  * For more details see the {@link org.powermock.api.mockito.internal.invocation.ToStringGenerator}.
  */
 public class PowerMockMaker implements MockMaker {
-    private final CglibMockMaker cglibMockMaker = new CglibMockMaker();
+    private final MockMaker cglibMockMaker = new CglibMockMaker();
 
     public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
         return cglibMockMaker.createMock(settings, handler);
