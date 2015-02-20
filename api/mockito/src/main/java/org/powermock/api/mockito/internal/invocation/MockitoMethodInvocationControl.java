@@ -233,7 +233,8 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
                      */
                 final Class<?> type = Whitebox.getType(interceptionObject);
                 final boolean isFinalSystemClass = type.getName().startsWith("java.") && Modifier.isFinal(type.getModifiers());
-                if (!isFinalSystemClass) {
+                final boolean isStaticMethod = interceptionObject instanceof Class<?>;
+                if (!isFinalSystemClass && !isStaticMethod) {
                     MockRepository.putAdditionalState(MockGateway.DONT_MOCK_NEXT_CALL, true);
                 }
                 try {
