@@ -77,4 +77,11 @@ public class EnclosedTest {
     }
 
     public static class SubClass extends StubbedStaticReturnValue {}
+
+    public static class SubClassWithExtraNonPublicConstructors
+    extends StubbedStaticReturnValue {
+        public SubClassWithExtraNonPublicConstructors() {}
+        private SubClassWithExtraNonPublicConstructors(boolean arg) {}
+        protected SubClassWithExtraNonPublicConstructors(String arg) {}
+    }
 }
