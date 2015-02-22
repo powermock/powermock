@@ -35,7 +35,7 @@ public class TestPrimitives {
         this.ctType = ctType;
     }
 
-    @Parameterized.Parameters
+    @Parameterized.Parameters(name = "{0}")
     public static List<?> values() throws Exception {
         List<Object[]> valuesList = new ArrayList<Object[]>();
         for (Field f : CtClass.class.getFields()) {
