@@ -20,7 +20,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.powermock.core.classloader.MockClassLoader;
 import powermock.test.support.MainMockTransformerTestSupport.SupportClasses;
 
@@ -31,21 +34,27 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+@RunWith(Parameterized.class)
 public class TestClassTransformerTest {
 
-    @Test
-    public void subclassShouldNormallyGetPublicAdditionalDeferConstructor() throws Exception {
-        new MainMockTransformerTest()
-                .subclassShouldNormallyGetAnAdditionalDeferConstructor();
+    @Parameterized.Parameter(0)
+    public MockClassLoaderCase classLoaderCase;
+
+    @Parameterized.Parameters(name = "{0}")
+    public static List<?> values() {
+        MockClassLoaderCase[] factoryAlternatives = MockClassLoaderCase.values();
+        List<Object[]> values = Arrays.asList(new Object[factoryAlternatives.length][]);
+        for (MockClassLoaderCase eachFactoryAlternative : factoryAlternatives) {
+            values.set(eachFactoryAlternative.ordinal(),
+                    new Object[] {eachFactoryAlternative});
+        }
+        return values;
     }
 
     @Test
-    public void subclassTestClassShouldNotGetPublicDeferConstructor() throws Exception {
-        MockClassLoader mockClassLoader = new MockClassLoader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES });
-        mockClassLoader.setMockTransformerChain(Arrays.asList(new MainMockTransformer(), TestClassTransformer
-                .forTestClass(SupportClasses.SubClass.class)
-                .removesTestMethodAnnotation(Test.class)
-                .fromAllMethodsExcept(SupportClasses.SubClass.class.getMethods()[0])));
+    public void preparedSubclassShouldNotGetPublicDeferConstructor() throws Exception {
+        MockClassLoader mockClassLoader = classLoaderCase
+                .createMockClassLoaderThatPrepare(SupportClasses.SubClass.class);
         final Class<?> clazz = Class.forName(SupportClasses.SubClass.class.getName(), true, mockClassLoader);
         assertEquals("Original number of constructoprs",
                 1, SupportClasses.SubClass.class.getConstructors().length);
@@ -61,35 +70,9 @@ public class TestClassTransformerTest {
     }
 
     @Test
-    public void withEnclosingClassAsTestClassTheNestedClassesShouldNotGetPublicDeferConstructor()
-    throws Exception {
-        MockClassLoader mockClassLoader = new MockClassLoader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES });
-        mockClassLoader.setMockTransformerChain(Arrays.asList(new MainMockTransformer(), TestClassTransformer
-                .forTestClass(SupportClasses.class)
-                .removesTestMethodAnnotation(Test.class)
-                .fromMethods(Collections.<Method>emptyList())));
-        final Class<?> clazz = Class.forName(SupportClasses.class.getName(), true, mockClassLoader);
-        try {
-            fail("A public defer-constructor is not expected: "
-                    + clazz.getConstructor(IndicateReloadClass.class));
-        } catch (NoSuchMethodException is_expected) {}
-
-        for (Class<?> nestedClazz : clazz.getDeclaredClasses()) {
-            try {
-                fail("A public defer-constructor is not expected for class that is nested within the test-class: "
-                        + nestedClazz.getConstructor(IndicateReloadClass.class));
-            } catch (NoSuchMethodException is_expected) {}
-        }
-    }
-
-    @Test
-    public void testClassConstructorsShouldKeepTheirAccessModifier()
-    throws Exception {
-        MockClassLoader mockClassLoader = new MockClassLoader(new String[] {MockClassLoader.MODIFY_ALL_CLASSES});
-        mockClassLoader.setMockTransformerChain(Arrays.asList(new MainMockTransformer(), TestClassTransformer
-                .forTestClass(SupportClasses.MultipleConstructors.class)
-                .removesTestMethodAnnotation(Test.class)
-                .fromMethods(Collections.<Method>emptyList())));
+    public void preparedClassConstructorsShouldKeepTheirAccessModifier() throws Exception {
+        MockClassLoader mockClassLoader = classLoaderCase
+                .createMockClassLoaderThatPrepare(SupportClasses.MultipleConstructors.class);
         final Class<?> clazz = Class.forName(
                 SupportClasses.MultipleConstructors.class.getName(),
                 true, mockClassLoader);
@@ -110,31 +93,38 @@ public class TestClassTransformerTest {
         }
     }
 
-    @Test
-    public void withEnclosingClassAsTestClassTheNestedClassConstructorsShouldKeepTheirAccessModifier()
-    throws Exception {
-        MockClassLoader mockClassLoader = new MockClassLoader(new String[] {MockClassLoader.MODIFY_ALL_CLASSES});
-        mockClassLoader.setMockTransformerChain(Arrays.asList(new MainMockTransformer(), TestClassTransformer
-                .forTestClass(SupportClasses.class)
-                .removesTestMethodAnnotation(Test.class)
-                .fromMethods(Collections.<Method>emptyList())));
-        final Class<?> clazz = Class.forName(
-                SupportClasses.MultipleConstructors.class.getName(),
-                true, mockClassLoader);
-        for (Constructor<?> originalConstructor : SupportClasses
-                .MultipleConstructors.class.getDeclaredConstructors()) {
-            Class[] paramTypes = originalConstructor.getParameterTypes();
-            int originalModifiers = originalConstructor.getModifiers();
-            int newModifiers = clazz.getDeclaredConstructor(paramTypes).getModifiers();
-            String constructorName = 0 == paramTypes.length
-                    ? "Default constructor "
-                    : paramTypes[0].getSimpleName() + " constructor ";
-            assertEquals(constructorName + "is public?",
-                    isPublic(originalModifiers), isPublic(newModifiers));
-            assertEquals(constructorName + "is protected?",
-                    isProtected(originalModifiers), isProtected(newModifiers));
-            assertEquals(constructorName + "is private?",
-                    isPrivate(originalModifiers), isPrivate(newModifiers));
+    enum MockClassLoaderCase {
+        WHEN_PREPARED_CLASS_IS_TESTCLASS {
+            @Override Class<?> chooseTestClass(Class<?> prepare4test) {
+                return prepare4test;
+            }
+            @Override String[] preparations(Class<?> prepare4test) {
+                return new String[] {MockClassLoader.MODIFY_ALL_CLASSES};
+            }
+        },
+        WHEN_ENCLOSING_CLASS_IS_TESTCLASS {
+            @Override Class<?> chooseTestClass(Class<?> prepare4test) {
+                return prepare4test.getDeclaringClass();
+            }
+            @Override String[] preparations(Class<?> prepare4test) {
+                return new String[] {prepare4test.getName()};
+            }
+        };
+
+        abstract Class<?> chooseTestClass(Class<?> prepare4test);
+        abstract String[] preparations(Class<?> prepare4test);
+
+        MockClassLoader createMockClassLoaderThatPrepare(Class<?> prepare4test) {
+            TestClassTransformer testClassTransformer = TestClassTransformer
+                    .forTestClass(chooseTestClass(prepare4test))
+                    .removesTestMethodAnnotation(Test.class)
+                    .fromMethods(Collections.<Method>emptyList());
+            MockClassLoader mockClassLoader =
+                    new MockClassLoader(preparations(prepare4test));
+            mockClassLoader.setMockTransformerChain(Arrays.asList(
+                    new MainMockTransformer(),
+                    testClassTransformer));
+            return mockClassLoader;
         }
     }
 }
