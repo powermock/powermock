@@ -46,5 +46,14 @@ public class MainMockTransformerTestSupport {
         public class SubClass extends SuperClass {
             public void dummyMethod() {}
         }
+
+        public static class MultipleConstructors {
+
+            public MultipleConstructors() {}
+            protected MultipleConstructors(String s) {}
+            MultipleConstructors(int i) {}
+            private MultipleConstructors(Boolean[] array) {}
+            protected MultipleConstructors(int[] iarray, boolean b, String[] sarray) {}
+        }
     }
 }
