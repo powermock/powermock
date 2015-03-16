@@ -82,7 +82,7 @@
         <module>classloading</module>
     </modules>
     <properties>
-        <easymock.version>3.3</easymock.version>
+        <easymock.version>3.3.1</easymock.version>
         <mockito.version>1.10.19</mockito.version>
     </properties>
     <build>

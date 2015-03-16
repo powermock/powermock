@@ -7,6 +7,7 @@ Change log next version
 * Packaged some of the Mocktio classes internally since Mockito is moving from CgLib to ByteBuddy. (thanks to Brice Dutheil for the pull request).
 * Upgraded Javassist dependency to version 3.19.0-GA.
 * Upgraded TestNG dependency to version 6.8.21.
+* The PowerMock EasyMock Api now depends on EasyMock 3.3.1.
 
 Change log 1.6.1 (2015-01-03)
 ----------------------------
