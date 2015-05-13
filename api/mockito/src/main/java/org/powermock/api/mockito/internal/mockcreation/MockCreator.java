@@ -44,7 +44,7 @@ public class MockCreator {
         }
 
         T mock = null;
-        final String mockName = toInstanceName(type);
+        final String mockName = toInstanceName(type, mockSettings);
 
         MockRepository.addAfterMethodRunner(new MockitoStateCleanerRunnable());
 
@@ -117,7 +117,16 @@ public class MockCreator {
         return new MockData<T>(invocationControl, mock);
     }
 
-    private static String toInstanceName(Class<?> clazz) {
+    private static String toInstanceName(Class<?> clazz, final MockSettings mockSettings) {
+		// if the settings define a mock name, use it
+		if ( mockSettings instanceof MockSettingsImpl<?> ) {
+			String settingName = ( (MockSettingsImpl<?>) mockSettings ).getName();
+			if ( settingName != null ) {
+				return settingName;
+			}
+		}
+		
+		// else, use the class name as mock name
         String className = clazz.getSimpleName();
         if (className.length() == 0) {
             return clazz.getName();
