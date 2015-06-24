@@ -34,8 +34,8 @@ public class DefaultConstructorArgumentsVerfication<T> implements ConstructorArg
 
     public void withArguments(Object argument, Object... arguments) throws Exception {
         final Object[] realArguments;
-        if (argument == null && arguments.length == 0) {
-            realArguments = null;
+        if (arguments == null) {
+            realArguments = new Object[]{argument, null};
         } else {
             realArguments = new Object[arguments.length + 1];
             realArguments[0] = argument;
