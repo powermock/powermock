@@ -42,8 +42,6 @@ Please note that PowerMock is mainly intended for people with expert knowledge i
   * [Bootstrap using a Java Agent](https://github.com/jayway/powermock/wiki/PowerMockAgent)
 * [OSGi](https://github.com/jayway/powermock/wiki/osgi)
 * [Release Notes](https://github.com/jayway/powermock/wiki/ReleaseNotes)
- 
-### [FAQ]
 * [FAQ](https://github.com/jayway/powermock/wiki/FAQ) 
 
 ### Support and discussion
