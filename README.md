@@ -20,6 +20,7 @@ Please note that PowerMock is mainly intended for people with expert knowledge i
 ## Documentation
 * [Getting Started](https://github.com/jayway/powermock/wiki/GettingStarted)
 * [Downloads](https://github.com/jayway/powermock/wiki/Downloads)
+* * [Motivation](https://github.com/jayway/powermock/wiki/Motivation)
 * [EasyMock](https://github.com/jayway/powermock/wiki/EasyMock)
   * [Mock Static](https://github.com/jayway/powermock/wiki/MockStatic)
   * [Mock Final](https://github.com/jayway/powermock/wiki/MockFinal)
