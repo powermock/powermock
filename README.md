@@ -21,6 +21,10 @@ Please note that PowerMock is mainly intended for people with expert knowledge i
 * [Getting Started](https://github.com/jayway/powermock/wiki/GettingStarted)
 * [Downloads](https://github.com/jayway/powermock/wiki/Downloads)
 * [Motivation](https://github.com/jayway/powermock/wiki/Motivation)
+* Javadoc
+  * [EasyMock API extension](http://www.javadoc.io/doc/org.powermock/powermock-api-easymock/1.6.2) ([PowerMock class](http://static.javadoc.io/org.powermock/powermock-api-easymock/1.6.2/org/powermock/api/easymock/PowerMock.html))
+  * [Mockito API extension](http://www.javadoc.io/doc/org.powermock/powermock-api-mockito/1.6.2) ([PowerMockito class](http://static.javadoc.io/org.powermock/powermock-api-mockito/1.6.2/org/powermock/api/mockito/PowerMockito.html))
+  * [PowerMock Reflect](http://www.javadoc.io/doc/org.powermock/powermock-reflect/1.6.2) ([Whitebox class](http://static.javadoc.io/org.powermock/powermock-reflect/1.6.2/org/powermock/reflect/Whitebox.html))
 * [EasyMock](https://github.com/jayway/powermock/wiki/EasyMock)
   * [Mock Static](https://github.com/jayway/powermock/wiki/MockStatic)
   * [Mock Final](https://github.com/jayway/powermock/wiki/MockFinal)
