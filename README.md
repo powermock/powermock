@@ -10,4 +10,9 @@ When writing unit tests it is often useful to bypass encapsulation and therefore
 
 Please note that PowerMock is mainly intended for people with expert knowledge in unit testing. Putting it in the hands of junior developers may cause more harm than good.
 
-Refer to the <a href="https://code.google.com/p/powermock/">google code</a> page for more info and documentation. 
+## News
+* 2015-03-16: PowerMock 1.6.2 has been released. See [change log](https://raw.githubusercontent.com/jayway/powermock/master/changelog.txt) for details.
+* 2015-01-03: PowerMock 1.6.1 has been released with support for JUnit 4.12. See [change log](https://raw.githubusercontent.com/jayway/powermock/master/changelog.txt) for details.
+* 2014-11-29: Johan blogs about the new ability to delegate to other JUnit Runners in PowerMock 1.6.0 at the [Jayway Blog](http://www.jayway.com/2014/11/29/using-another-junit-runner-with-powermock/).
+
+[Older News](https://github.com/jayway/powermock/wiki/OldNews)
