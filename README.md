@@ -16,3 +16,33 @@ Please note that PowerMock is mainly intended for people with expert knowledge i
 * 2014-11-29: Johan blogs about the new ability to delegate to other JUnit Runners in PowerMock 1.6.0 at the [Jayway Blog](http://www.jayway.com/2014/11/29/using-another-junit-runner-with-powermock/).
 
 [Older News](https://github.com/jayway/powermock/wiki/OldNews)
+
+## Documentation
+* [Getting Started](https://github.com/jayway/powermock/wiki/GettingStarted)
+* [Downloads](Downloads)
+* [EasyMock](EasyMock)
+  * [Mock Static](MockStatic)
+  * [Mock Final](MockFinal)
+  * [Mock Private](MockPrivate)
+  * [Mock New](MockConstructor)
+  * [Mock Partial](MockPartial)
+  * [Replay and verify all](ReplayAllAndVerifyAll)
+* [Mockito](MockitoUsage) ([Legacy](MockitoUsage_Legacy))
+* Common
+  * [Bypass Encapsulation](BypassEncapsulation)
+  * [Suppress Unwanted Behavior](SuppressUnwantedBehavior)
+  * [Test Listeners](TestListeners)
+  * [Mock Policies](MockPolicies)
+  * [Mock system classes](MockSystem)
+* [TestNG](TestNG_usage)
+* [Delegate to another JUnit Runner](JUnit_Delegating_Runner)
+* [Tutorial](PowerMock_tutorial)
+* Experimental
+  * [Bootstrap using a JUnit Rule](PowerMockRule)
+  * [Bootstrap using a Java Agent](PowerMockAgent)
+* [OSGi](osgi)
+* [Release Notes](ReleaseNotes)
+* [FAQ](FAQ) 
+
+## Support
+Join the mailing-list [here](http://groups.google.com/group/powermock) for questions, feedback and support.
