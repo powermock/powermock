@@ -51,3 +51,7 @@ Join the mailing-list [here](http://groups.google.com/group/powermock) for quest
 * [Change log](https://raw.githubusercontent.com/jayway/powermock/master/changelog.txt)
 * [PowerMock on Ohloh](http://www.ohloh.net/p/powermock/)
 * [Mailing list for questions and support](http://groups.google.com/group/powermock)
+ 
+## Sponsored by:
+[![JAYWAY](http://www.arctiquator.com/oppenkallkod/assets/images/jayway_logo.png)](http://www.jayway.com/)
+
