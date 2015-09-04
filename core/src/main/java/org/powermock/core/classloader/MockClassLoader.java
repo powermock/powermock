@@ -40,7 +40,7 @@ import org.powermock.core.transformers.MockTransformer;
  * @author Johan Haleby
  * @author Jan Kronquist
  */
-public final class MockClassLoader extends DeferSupportingClassLoader {
+public class MockClassLoader extends DeferSupportingClassLoader {
 
     /**
      * Pass this string to the constructor to indicate that all classes should
@@ -173,10 +173,9 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
     }
 
     protected Class<?> loadModifiedClass(String s) throws ClassFormatError, ClassNotFoundException {
-        Class<?> loadedClass = null;
-        // findSystemClass(s);
+        Class<?> loadedClass;
         deferTo.loadClass(s);
-        if (shouldModify(s) && !shouldLoadModified(s)) {
+        if (shouldModify(s) && !shouldLoadWithMockClassloaderWithoutModifications(s)) {
             loadedClass = loadMockClass(s);
         } else {
             loadedClass = loadUnmockedClass(s);
@@ -288,7 +287,7 @@ public final class MockClassLoader extends DeferSupportingClassLoader {
         return false;
     }
 
-    private boolean shouldLoadModified(String className) {
+    private boolean shouldLoadWithMockClassloaderWithoutModifications(String className) {
         if (className.startsWith("org.powermock.example")) {
             return false;
         }

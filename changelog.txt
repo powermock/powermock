@@ -3,6 +3,8 @@ Change log next version
 * Mock name in @Mock(name="abc") annotations are no longer ignored for the Mockito API extension
 * Fixed NPE in withArguments() constructor (thanks to Tomoyuki Saito for pull request)
 * Upgraded Javassist dependency to version 3.20.0-GA.
+* Using soft reference in classloader cache
+* MockClassloader now extends Javassist Loader classloader to implement findClass etc
 
 Change log 1.6.2 (2015-01-03)
 ----------------------------

@@ -15,35 +15,30 @@
  */
 package org.powermock.core.classloader;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
-import static org.powermock.core.classloader.MockClassLoader.MODIFY_ALL_CLASSES;
-
-import java.lang.annotation.Annotation;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Enumeration;
-import java.util.LinkedList;
-import java.util.List;
-
 import javassist.ByteArrayClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.MainMockTransformer;
 import org.powermock.reflect.Whitebox;
 
+import java.lang.annotation.Annotation;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.junit.Assert.*;
+import static org.powermock.core.classloader.MockClassLoader.MODIFY_ALL_CLASSES;
+
 public class MockClassLoaderTest {
     @Test
     public void autoboxingWorks() throws Exception {
         String name = this.getClass().getPackage().getName() + ".HardToTransform";
-        final MockClassLoader mockClassLoader = new MockClassLoader(new String[] { name });
+        final MockClassLoader mockClassLoader = new MockClassLoader(new String[]{name});
         List<MockTransformer> list = new LinkedList<MockTransformer>();
         list.add(new MainMockTransformer());
         mockClassLoader.setMockTransformerChain(list);
@@ -63,41 +58,47 @@ public class MockClassLoaderTest {
     }
 
     @Test
+    public void callFindClassWorks() throws Exception {
+        MyClassloader myClassloader = new MyClassloader(new String[]{"org.mytest.myclass"});
+        assertEquals(String.class, myClassloader.findClassPublic("java.lang.String"));
+    }
+
+    @Test
     public void prepareForTestHasPrecedenceOverPowerMockIgnoreAnnotatedPackages() throws Exception {
-        MockClassLoader mockClassLoader = new MockClassLoader(new String[] { "org.mytest.myclass" });
-        Whitebox.setInternalState(mockClassLoader, new String[] { "*mytest*" }, DeferSupportingClassLoader.class);
+        MockClassLoader mockClassLoader = new MockClassLoader(new String[]{"org.mytest.myclass"});
+        Whitebox.setInternalState(mockClassLoader, new String[]{"*mytest*"}, DeferSupportingClassLoader.class);
         assertTrue(Whitebox.<Boolean>invokeMethod(mockClassLoader, "shouldModify", "org.mytest.myclass"));
     }
 
     @Test
     public void powerMockIgnoreAnnotatedPackagesAreIgnored() throws Exception {
-        MockClassLoader mockClassLoader = new MockClassLoader(new String[] { "org.ikk.Jux" });
-        Whitebox.setInternalState(mockClassLoader, new String[] { "*mytest*" }, DeferSupportingClassLoader.class);
-        assertFalse(Whitebox.<Boolean> invokeMethod(mockClassLoader, "shouldModify", "org.mytest.myclass"));
+        MockClassLoader mockClassLoader = new MockClassLoader(new String[]{"org.ikk.Jux"});
+        Whitebox.setInternalState(mockClassLoader, new String[]{"*mytest*"}, DeferSupportingClassLoader.class);
+        assertFalse(Whitebox.<Boolean>invokeMethod(mockClassLoader, "shouldModify", "org.mytest.myclass"));
     }
 
     @Test
     public void powerMockIgnoreAnnotatedPackagesHavePrecedenceOverPrepareEverythingForTest() throws Exception {
-        MockClassLoader mockClassLoader = new MockClassLoader(new String[] { MODIFY_ALL_CLASSES });
-        Whitebox.setInternalState(mockClassLoader, new String[] { "*mytest*" }, DeferSupportingClassLoader.class);
-        assertFalse(Whitebox.<Boolean> invokeMethod(mockClassLoader, "shouldModify", "org.mytest.myclass"));
+        MockClassLoader mockClassLoader = new MockClassLoader(new String[]{MODIFY_ALL_CLASSES});
+        Whitebox.setInternalState(mockClassLoader, new String[]{"*mytest*"}, DeferSupportingClassLoader.class);
+        assertFalse(Whitebox.<Boolean>invokeMethod(mockClassLoader, "shouldModify", "org.mytest.myclass"));
     }
 
     @Test
     public void prepareForTestPackagesArePrepared() throws Exception {
-        MockClassLoader mockClassLoader = new MockClassLoader(new String[] { "*mytest*" });
-        assertTrue(Whitebox.<Boolean> invokeMethod(mockClassLoader, "shouldModify", "org.mytest.myclass"));
+        MockClassLoader mockClassLoader = new MockClassLoader(new String[]{"*mytest*"});
+        assertTrue(Whitebox.<Boolean>invokeMethod(mockClassLoader, "shouldModify", "org.mytest.myclass"));
     }
 
     @Test
     public void shouldAddIgnorePackagesToDefer() throws Exception {
         MockClassLoader mockClassLoader = new MockClassLoader(new String[0]);
         mockClassLoader.addIgnorePackage("test*");
-        String[] deferPackages = Whitebox.<String[]> getInternalState(mockClassLoader, "deferPackages");
+        String[] deferPackages = Whitebox.<String[]>getInternalState(mockClassLoader, "deferPackages");
         assertTrue(deferPackages.length > 1);
         assertEquals("test*", deferPackages[deferPackages.length - 1]);
     }
-    
+
     @Test
     public void canFindResource() throws Exception {
         final MockClassLoader mockClassLoader = new MockClassLoader(new String[0]);
@@ -108,9 +109,9 @@ public class MockClassLoaderTest {
         // Force a ClassLoader that can find 'foo/bar/baz/test.txt' into
         // mockClassLoader.deferTo.
         ResourcePrefixClassLoader resourcePrefixClassLoader = new ResourcePrefixClassLoader(
-          getClass().getClassLoader(), "org/powermock/core/classloader/");
+                getClass().getClassLoader(), "org/powermock/core/classloader/");
         mockClassLoader.deferTo = resourcePrefixClassLoader;
-		
+
         // MockClassLoader will only be able to find 'foo/bar/baz/test.txt' if it
         // properly defers the resource lookup to its deferTo ClassLoader.
         URL resource = mockClassLoader.getResource("foo/bar/baz/test.txt");
@@ -128,9 +129,9 @@ public class MockClassLoaderTest {
         // Force a ClassLoader that can find 'foo/bar/baz/test.txt' into
         // mockClassLoader.deferTo.
         ResourcePrefixClassLoader resourcePrefixClassLoader = new ResourcePrefixClassLoader(
-            getClass().getClassLoader(), "org/powermock/core/classloader/");
+                getClass().getClassLoader(), "org/powermock/core/classloader/");
         mockClassLoader.deferTo = resourcePrefixClassLoader;
-		
+
         // MockClassLoader will only be able to find 'foo/bar/baz/test.txt' if it
         // properly defers the resources lookup to its deferTo ClassLoader.
         Enumeration<URL> resources = mockClassLoader.getResources("foo/bar/baz/test.txt");
@@ -140,14 +141,14 @@ public class MockClassLoaderTest {
         Assert.assertTrue(resource.getPath().endsWith("test.txt"));
         Assert.assertFalse(resources.hasMoreElements());
     }
-    
+
     @Test
     public void resourcesNotDoubled() throws Exception {
         final MockClassLoader mockClassLoader = new MockClassLoader(new String[0]);
         List<MockTransformer> list = new LinkedList<MockTransformer>();
         list.add(new MainMockTransformer());
         mockClassLoader.setMockTransformerChain(list);
-        
+
         // MockClassLoader will only be able to find 'foo/bar/baz/test.txt' if it
         // properly defers the resources lookup to its deferTo ClassLoader.
         Enumeration<URL> resources = mockClassLoader.getResources("org/powermock/core/classloader/foo/bar/baz/test.txt");
@@ -157,7 +158,7 @@ public class MockClassLoaderTest {
         Assert.assertTrue(resource.getPath().endsWith("test.txt"));
         Assert.assertFalse(resources.hasMoreElements());
     }
-    
+
     @Test
     public void canFindDynamicClassFromAdjustedClasspath() throws Exception {
         // Construct MockClassLoader with @UseClassPathAdjuster annotation.
@@ -167,11 +168,12 @@ public class MockClassLoaderTest {
             public Class<? extends Annotation> annotationType() {
                 return UseClassPathAdjuster.class;
             }
+
             public Class<? extends ClassPathAdjuster> value() {
                 return MyClassPathAdjuster.class;
             }
         };
-        final MockClassLoader mockClassLoader = new MockClassLoader(new String[0], useClassPathAdjuster );
+        final MockClassLoader mockClassLoader = new MockClassLoader(new String[0], useClassPathAdjuster);
         List<MockTransformer> list = new LinkedList<MockTransformer>();
         list.add(new MainMockTransformer());
         mockClassLoader.setMockTransformerChain(list);
@@ -182,7 +184,7 @@ public class MockClassLoaderTest {
             public Class<?> loadClass(String name)
                     throws ClassNotFoundException {
                 if (name.equals(DynamicClassHolder.clazz.getName())) {
-                        return DynamicClassHolder.clazz;
+                    return DynamicClassHolder.clazz;
                 }
                 return super.loadClass(name);
             }
@@ -230,6 +232,7 @@ public class MockClassLoaderTest {
     static class DynamicClassHolder {
         final static byte[] classBytes;
         final static Class<?> clazz;
+
         static {
             try {
                 // construct a new class dynamically
@@ -242,4 +245,24 @@ public class MockClassLoaderTest {
             }
         }
     }
+
+    static class MyClassloader extends MockClassLoader {
+
+        public MyClassloader(String[] classesToMock) {
+            super(classesToMock);
+        }
+
+        @Override
+        protected Class findClass(String name) throws ClassNotFoundException {
+            if (name.startsWith("java.lang")) {
+                return this.getClass().getClassLoader().loadClass(name);
+            }
+            return super.findClass(name);
+        }
+
+        public Class<?> findClassPublic(String s) throws ClassNotFoundException {
+            return findClass(s);
+        }
+    }
+
 }

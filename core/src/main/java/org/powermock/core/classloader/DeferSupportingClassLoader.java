@@ -15,11 +15,13 @@
  */
 package org.powermock.core.classloader;
 
+import javassist.Loader;
 import org.powermock.core.WildcardMatcher;
 import org.powermock.reflect.Whitebox;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -27,12 +29,12 @@ import java.util.Map;
 
 /**
  * Defers classloading of system classes to a delegate.
- * 
+ *
  * @author Johan Haleby
  * @author Jan Kronquist
  */
-public abstract class DeferSupportingClassLoader extends ClassLoader {
-    private Map<String, Class<?>> classes;
+public abstract class DeferSupportingClassLoader extends Loader {
+    private Map<String, SoftReference<?>> classes;
 
     String deferPackages[];
 
@@ -54,15 +56,15 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
         } else {
             deferTo = classloader;
         }
-        classes = new HashMap<String, Class<?>>();
+        classes = new HashMap<String, SoftReference<?>>();
         this.deferPackages = deferPackages;
     }
 
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-        Class<?> clazz = null;
-        if ((clazz = (Class<?>) classes.get(name)) == null) {
-            final boolean shouldDefer = shouldDefer(deferPackages, name);
-            if (shouldDefer) {
+        SoftReference<?> reference = classes.get(name);
+        if (reference == null || reference.get() == null) {
+            final Class<?> clazz;
+            if (shouldDefer(deferPackages, name)) {
                 clazz = deferTo.loadClass(name);
             } else {
                 clazz = loadModifiedClass(name);
@@ -70,10 +72,9 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
             if (resolve) {
                 resolveClass(clazz);
             }
+            classes.put(name, (reference = new SoftReference<Object>(clazz)));
         }
-
-        classes.put(name, clazz);
-        return clazz;
+        return (Class<?>) reference.get();
     }
 
     protected boolean shouldDefer(String[] packages, String name) {
@@ -87,26 +88,22 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
 
     private boolean deferConditionMatches(String name, String packageName) {
         final boolean wildcardMatch = WildcardMatcher.matches(name, packageName);
-        return wildcardMatch && !(shouldLoadUnmodifiedClass(name) || wildcardMatch && shouldModifyClass(name));
+        return wildcardMatch && !(shouldLoadUnmodifiedClass(name) || shouldModifyClass(name));
     }
 
     protected boolean shouldIgnore(Iterable<String> packages, String name) {
-        synchronized (packages) {
-            for (String ignore : packages) {
-                if (WildcardMatcher.matches(ignore, name)) {
-                    return true;
-                }
+        for (String ignore : packages) {
+            if (WildcardMatcher.matches(ignore, name)) {
+                return true;
             }
         }
         return false;
     }
 
     protected boolean shouldIgnore(String[] packages, String name) {
-        synchronized (packages) {
-            for (String ignore : packages) {
-                if (WildcardMatcher.matches(name, ignore)) {
-                    return true;
-                }
+        for (String ignore : packages) {
+            if (WildcardMatcher.matches(name, ignore)) {
+                return true;
             }
         }
         return false;
@@ -114,11 +111,10 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
 
     /**
      * Finds the resource with the specified name on the search path.
-     * 
-     * @param name
-     *            the name of the resource
+     *
+     * @param name the name of the resource
      * @return a <code>URL</code> for the resource, or <code>null</code> if the
-     *         resource could not be found.
+     * resource could not be found.
      */
     protected URL findResource(String name) {
         try {
@@ -128,13 +124,13 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
         }
     }
 
-	protected Enumeration<URL> findResources(String name) throws IOException {
+    protected Enumeration<URL> findResources(String name) throws IOException {
         try {
             return Whitebox.invokeMethod(deferTo, "findResources", name);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-	}
+    }
 
     public URL getResource(String s) {
         return deferTo.getResource(s);
@@ -145,11 +141,11 @@ public abstract class DeferSupportingClassLoader extends ClassLoader {
     }
 
     public Enumeration<URL> getResources(String name) throws IOException {
-    	// If deferTo is already the parent, then we'd end up returning two copies of each resource...
-    	if(deferTo.equals(getParent()))
-    		return deferTo.getResources(name);
-    	else
-    		return super.getResources(name);
+        // If deferTo is already the parent, then we'd end up returning two copies of each resource...
+        if (deferTo.equals(getParent()))
+            return deferTo.getResources(name);
+        else
+            return super.getResources(name);
     }
 
     protected boolean shouldModify(Iterable<String> packages, String name) {
