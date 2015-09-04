@@ -112,7 +112,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
         final String[] allPackagesToBeIgnored = new String[allIgnoreLength];
         if (allIgnoreLength > defaultDeferPackagesLength) {
             System.arraycopy(packagesToBeDeferred, 0, allPackagesToBeIgnored, 0, defaultDeferPackagesLength);
-            System.arraycopy(additionalDeferPackages, 0, allPackagesToBeIgnored, defaultDeferPackagesLength,
+            System.arraycopy(additionalDeferPackages != null ? additionalDeferPackages : new String[0], 0, allPackagesToBeIgnored, defaultDeferPackagesLength,
                     additionalIgnorePackagesLength);
             return allPackagesToBeIgnored;
         }
