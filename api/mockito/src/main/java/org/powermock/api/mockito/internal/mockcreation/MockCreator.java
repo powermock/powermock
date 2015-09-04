@@ -29,6 +29,7 @@ import org.powermock.api.mockito.repackaged.MethodInterceptorFilter;
 import org.powermock.core.ClassReplicaCreator;
 import org.powermock.core.DefaultFieldValueGenerator;
 import org.powermock.core.MockRepository;
+import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.reflect.Whitebox;
 
 import java.lang.reflect.Method;
@@ -43,7 +44,7 @@ public class MockCreator {
             throw new IllegalArgumentException("The class to mock cannot be null");
         }
 
-        T mock = null;
+        T mock;
         final String mockName = toInstanceName(type, mockSettings);
 
         MockRepository.addAfterMethodRunner(new MockitoStateCleanerRunnable());
@@ -108,6 +109,11 @@ public class MockCreator {
         InternalMockHandler mockHandler = new MockHandlerFactory().create(settings);
         MethodInterceptorFilter filter = new PowerMockMethodInterceptorFilter(mockHandler, settings);
         final T mock = (T) new ClassImposterizer(new InstantiatorProvider().getInstantiator(settings)).imposterise(filter, type);
+        ClassLoader classLoader = mock.getClass().getClassLoader();
+        if (classLoader instanceof MockClassLoader) {
+            MockClassLoader mcl = (MockClassLoader) classLoader;
+            mcl.cache(mock.getClass());
+        }
         final MockitoMethodInvocationControl invocationControl = new MockitoMethodInvocationControl(
                 filter,
                 isSpy && delegator == null ? new Object() : delegator,
@@ -118,15 +124,15 @@ public class MockCreator {
     }
 
     private static String toInstanceName(Class<?> clazz, final MockSettings mockSettings) {
-		// if the settings define a mock name, use it
-		if ( mockSettings instanceof MockSettingsImpl<?> ) {
-			String settingName = ( (MockSettingsImpl<?>) mockSettings ).getName();
-			if ( settingName != null ) {
-				return settingName;
-			}
-		}
-		
-		// else, use the class name as mock name
+        // if the settings define a mock name, use it
+        if (mockSettings instanceof MockSettingsImpl<?>) {
+            String settingName = ((MockSettingsImpl<?>) mockSettings).getName();
+            if (settingName != null) {
+                return settingName;
+            }
+        }
+
+        // else, use the class name as mock name
         String className = clazz.getSimpleName();
         if (className.length() == 0) {
             return clazz.getName();

@@ -26,6 +26,7 @@ import org.mockito.plugins.MockMaker;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.VoidMethodStubbable;
 import org.powermock.api.mockito.repackaged.CglibMockMaker;
+import org.powermock.core.classloader.MockClassLoader;
 
 import java.util.List;
 
@@ -42,7 +43,14 @@ public class PowerMockMaker implements MockMaker {
     private final MockMaker cglibMockMaker = new CglibMockMaker();
 
     public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
-        return cglibMockMaker.createMock(settings, handler);
+        T mock = cglibMockMaker.createMock(settings, handler);
+        ClassLoader classLoader = cglibMockMaker.getClass().getClassLoader();
+        if (classLoader instanceof MockClassLoader) {
+            MockClassLoader mcl = (MockClassLoader) classLoader;
+            // The generated class is not picked up by PowerMock so we cache it here
+            mcl.cache(mock.getClass());
+        }
+        return mock;
     }
 
     public MockHandler getHandler(Object mock) {

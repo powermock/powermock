@@ -39,6 +39,7 @@
         <module>spring-mockito-xml-agent</module>
         <module>spring-mockito-xml</module>
         <module>java8</module>
+        <module>byte-buddy</module>
     </modules>
 
     <dependencyManagement>

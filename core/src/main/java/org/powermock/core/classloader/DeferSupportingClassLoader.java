@@ -24,8 +24,8 @@ import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Defers classloading of system classes to a delegate.
@@ -34,7 +34,7 @@ import java.util.Map;
  * @author Jan Kronquist
  */
 public abstract class DeferSupportingClassLoader extends Loader {
-    private Map<String, SoftReference<?>> classes;
+    private ConcurrentMap<String, SoftReference<Class<?>>> classes;
 
     String deferPackages[];
 
@@ -56,12 +56,12 @@ public abstract class DeferSupportingClassLoader extends Loader {
         } else {
             deferTo = classloader;
         }
-        classes = new HashMap<String, SoftReference<?>>();
+        classes = new ConcurrentHashMap<String, SoftReference<Class<?>>>();
         this.deferPackages = deferPackages;
     }
 
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-        SoftReference<?> reference = classes.get(name);
+        SoftReference<Class<?>> reference = classes.get(name);
         if (reference == null || reference.get() == null) {
             final Class<?> clazz;
             if (shouldDefer(deferPackages, name)) {
@@ -72,9 +72,9 @@ public abstract class DeferSupportingClassLoader extends Loader {
             if (resolve) {
                 resolveClass(clazz);
             }
-            classes.put(name, (reference = new SoftReference<Object>(clazz)));
+            classes.put(name, (reference = new SoftReference<Class<?>>(clazz)));
         }
-        return (Class<?>) reference.get();
+        return reference.get();
     }
 
     protected boolean shouldDefer(String[] packages, String name) {
@@ -157,4 +157,13 @@ public abstract class DeferSupportingClassLoader extends Loader {
     protected abstract boolean shouldModifyClass(String s);
 
     protected abstract boolean shouldLoadUnmodifiedClass(String className);
+
+    /**
+     * Register a class to the cache of this classloader
+     */
+    public void cache(Class<?> cls) {
+        if (cls != null) {
+            classes.put(cls.getName(), new SoftReference<Class<?>>(cls));
+        }
+    }
 }
