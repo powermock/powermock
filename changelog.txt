@@ -5,7 +5,7 @@ Change log next version
 * Upgraded Javassist dependency to version 3.20.0-GA.
 * Using soft reference in classloader cache
 * MockClassloader now extends Javassist Loader classloader to implement findClass etc
-* PowerMockito now works with ByteBuddy (issue 579)
+* PowerMock now works better with ByteBuddy (issue 579)
 
 Change log 1.6.2 (2015-01-03)
 ----------------------------

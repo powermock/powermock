@@ -35,6 +35,7 @@ import org.powermock.core.ClassReplicaCreator;
 import org.powermock.core.DefaultFieldValueGenerator;
 import org.powermock.core.MockGateway;
 import org.powermock.core.MockRepository;
+import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
@@ -64,12 +65,9 @@ public class PowerMock extends MemberModifier {
     /**
      * Creates a mock object that supports mocking of final and native methods.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param methods
-     *            optionally what methods to mock
+     * @param <T>     the type of the mock object
+     * @param type    the type of the mock object
+     * @param methods optionally what methods to mock
      * @return the mock object.
      */
     public static synchronized <T> T createMock(Class<T> type, Method... methods) {
@@ -79,10 +77,8 @@ public class PowerMock extends MemberModifier {
     /**
      * Creates a mock object that supports mocking of final and native methods.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
+     * @param <T>  the type of the mock object
+     * @param type the type of the mock object
      * @return the mock object.
      */
     public static synchronized <T> T createMock(Class<T> type) {
@@ -93,15 +89,11 @@ public class PowerMock extends MemberModifier {
      * Creates a mock object that supports mocking of final and native methods
      * and invokes a specific constructor.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param constructorArgs
-     *            The constructor arguments that will be used to invoke a
-     *            special constructor.
-     * @param methods
-     *            optionally what methods to mock
+     * @param <T>             the type of the mock object
+     * @param type            the type of the mock object
+     * @param constructorArgs The constructor arguments that will be used to invoke a
+     *                        special constructor.
+     * @param methods         optionally what methods to mock
      * @return the mock object.
      */
     public static <T> T createMock(Class<T> type, ConstructorArgs constructorArgs, Method... methods) {
@@ -112,13 +104,10 @@ public class PowerMock extends MemberModifier {
      * Creates a mock object that supports mocking of final and native methods
      * and invokes a specific constructor based on the supplied argument values.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param constructorArguments
-     *            The constructor arguments that will be used to invoke a
-     *            certain constructor.
+     * @param <T>                  the type of the mock object
+     * @param type                 the type of the mock object
+     * @param constructorArguments The constructor arguments that will be used to invoke a
+     *                             certain constructor.
      * @return the mock object.
      */
     public static <T> T createMock(Class<T> type, Object... constructorArguments) {
@@ -131,12 +120,9 @@ public class PowerMock extends MemberModifier {
      * Creates a strict mock object that supports mocking of final and native
      * methods.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param methods
-     *            optionally what methods to mock
+     * @param <T>     the type of the mock object
+     * @param type    the type of the mock object
+     * @param methods optionally what methods to mock
      * @return the mock object.
      */
     public static synchronized <T> T createStrictMock(Class<T> type, Method... methods) {
@@ -147,10 +133,8 @@ public class PowerMock extends MemberModifier {
      * Creates a strict mock object that supports mocking of final and native
      * methods.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
+     * @param <T>  the type of the mock object
+     * @param type the type of the mock object
      * @return the mock object.
      */
     public static synchronized <T> T createStrictMock(Class<T> type) {
@@ -161,12 +145,9 @@ public class PowerMock extends MemberModifier {
      * Creates a nice mock object that supports mocking of final and native
      * methods.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param methods
-     *            optionally what methods to mock
+     * @param <T>     the type of the mock object
+     * @param type    the type of the mock object
+     * @param methods optionally what methods to mock
      * @return the mock object.
      */
     public static synchronized <T> T createNiceMock(Class<T> type, Method... methods) {
@@ -177,10 +158,8 @@ public class PowerMock extends MemberModifier {
      * Creates a nice mock object that supports mocking of final and native
      * methods.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
+     * @param <T>  the type of the mock object
+     * @param type the type of the mock object
      * @return the mock object.
      */
     public static synchronized <T> T createNiceMock(Class<T> type) {
@@ -191,15 +170,11 @@ public class PowerMock extends MemberModifier {
      * Creates a strict mock object that supports mocking of final and native
      * methods and invokes a specific constructor.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param constructorArgs
-     *            The constructor arguments that will be used to invoke a
-     *            special constructor.
-     * @param methods
-     *            optionally what methods to mock
+     * @param <T>             the type of the mock object
+     * @param type            the type of the mock object
+     * @param constructorArgs The constructor arguments that will be used to invoke a
+     *                        special constructor.
+     * @param methods         optionally what methods to mock
      * @return the mock object.
      */
     public static <T> T createStrictMock(Class<T> type, ConstructorArgs constructorArgs, Method... methods) {
@@ -210,15 +185,11 @@ public class PowerMock extends MemberModifier {
      * Creates a nice mock object that supports mocking of final and native
      * methods and invokes a specific constructor.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param constructorArgs
-     *            The constructor arguments that will be used to invoke a
-     *            special constructor.
-     * @param methods
-     *            optionally what methods to mock
+     * @param <T>             the type of the mock object
+     * @param type            the type of the mock object
+     * @param constructorArgs The constructor arguments that will be used to invoke a
+     *                        special constructor.
+     * @param methods         optionally what methods to mock
      * @return the mock object.
      */
     public static <T> T createNiceMock(Class<T> type, ConstructorArgs constructorArgs, Method... methods) {
@@ -230,13 +201,10 @@ public class PowerMock extends MemberModifier {
      * methods and invokes a specific constructor based on the supplied argument
      * values.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param constructorArguments
-     *            The constructor arguments that will be used to invoke a
-     *            certain constructor.
+     * @param <T>                  the type of the mock object
+     * @param type                 the type of the mock object
+     * @param constructorArguments The constructor arguments that will be used to invoke a
+     *                             certain constructor.
      * @return the mock object.
      */
     public static <T> T createStrictMock(Class<T> type, Object... constructorArguments) {
@@ -250,13 +218,10 @@ public class PowerMock extends MemberModifier {
      * methods and invokes a specific constructor based on the supplied argument
      * values.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param constructorArguments
-     *            The constructor arguments that will be used to invoke a
-     *            certain constructor.
+     * @param <T>                  the type of the mock object
+     * @param type                 the type of the mock object
+     * @param constructorArguments The constructor arguments that will be used to invoke a
+     *                             certain constructor.
      * @return the mock object.
      */
     public static <T> T createNiceMock(Class<T> type, Object... constructorArguments) {
@@ -268,10 +233,8 @@ public class PowerMock extends MemberModifier {
     /**
      * Enable static mocking for a class.
      *
-     * @param type
-     *            the class to enable static mocking
-     * @param methods
-     *            optionally what methods to mock
+     * @param type    the class to enable static mocking
+     * @param methods optionally what methods to mock
      */
     public static synchronized void mockStatic(Class<?> type, Method... methods) {
         doMock(type, true, new DefaultMockStrategy(), null, methods);
@@ -280,8 +243,7 @@ public class PowerMock extends MemberModifier {
     /**
      * Enable static mocking for a class.
      *
-     * @param type
-     *            the class to enable static mocking
+     * @param type the class to enable static mocking
      */
     public static synchronized void mockStatic(Class<?> type) {
         doMock(type, true, new DefaultMockStrategy(), null, (Method[]) null);
@@ -290,10 +252,8 @@ public class PowerMock extends MemberModifier {
     /**
      * Enable strict static mocking for a class.
      *
-     * @param type
-     *            the class to enable static mocking
-     * @param methods
-     *            optionally what methods to mock
+     * @param type    the class to enable static mocking
+     * @param methods optionally what methods to mock
      */
     public static synchronized void mockStaticStrict(Class<?> type, Method... methods) {
         doMock(type, true, new StrictMockStrategy(), null, methods);
@@ -302,8 +262,7 @@ public class PowerMock extends MemberModifier {
     /**
      * Enable strict static mocking for a class.
      *
-     * @param type
-     *            the class to enable static mocking
+     * @param type the class to enable static mocking
      */
     public static synchronized void mockStaticStrict(Class<?> type) {
         doMock(type, true, new StrictMockStrategy(), null, (Method[]) null);
@@ -312,10 +271,8 @@ public class PowerMock extends MemberModifier {
     /**
      * Enable nice static mocking for a class.
      *
-     * @param type
-     *            the class to enable static mocking
-     * @param methods
-     *            optionally what methods to mock
+     * @param type    the class to enable static mocking
+     * @param methods optionally what methods to mock
      */
     public static synchronized void mockStaticNice(Class<?> type, Method... methods) {
         doMock(type, true, new NiceMockStrategy(), null, methods);
@@ -324,8 +281,7 @@ public class PowerMock extends MemberModifier {
     /**
      * Enable nice static mocking for a class.
      *
-     * @param type
-     *            the class to enable static mocking
+     * @param type the class to enable static mocking
      */
     public static synchronized void mockStaticNice(Class<?> type) {
         doMock(type, true, new NiceMockStrategy(), null, (Method[]) null);
@@ -342,16 +298,13 @@ public class PowerMock extends MemberModifier {
      * fall-back on using the {@link #createMock(Class, Method...)} method
      * instead.
      *
-     * @param <T>
-     *            The type of the mock.
-     * @param type
-     *            The type that'll be used to create a mock instance.
-     * @param methodNames
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
+     * @param <T>         The type of the mock.
+     * @param type        The type that'll be used to create a mock instance.
+     * @param methodNames The names of the methods that should be mocked. If
+     *                    <code>null</code>, then this method will have the same effect
+     *                    as just calling {@link #createMock(Class, Method...)} with the
+     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    methods in that class will be mocked).
      * @return A mock object of type <T>.
      */
     public static synchronized <T> T createPartialMockForAllMethodsExcept(Class<T> type, String... methodNames) {
@@ -373,16 +326,13 @@ public class PowerMock extends MemberModifier {
      * fall-back on using the {@link #createMock(Class, Method...)} method
      * instead.
      *
-     * @param <T>
-     *            The type of the mock.
-     * @param type
-     *            The type that'll be used to create a mock instance.
-     * @param methodNames
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
+     * @param <T>         The type of the mock.
+     * @param type        The type that'll be used to create a mock instance.
+     * @param methodNames The names of the methods that should be mocked. If
+     *                    <code>null</code>, then this method will have the same effect
+     *                    as just calling {@link #createMock(Class, Method...)} with the
+     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    methods in that class will be mocked).
      * @return A mock object of type <T>.
      */
     public static synchronized <T> T createNicePartialMockForAllMethodsExcept(Class<T> type, String... methodNames) {
@@ -404,16 +354,13 @@ public class PowerMock extends MemberModifier {
      * fall-back on using the {@link #createMock(Class, Method...)} method
      * instead.
      *
-     * @param <T>
-     *            The type of the mock.
-     * @param type
-     *            The type that'll be used to create a mock instance.
-     * @param methodNames
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
+     * @param <T>         The type of the mock.
+     * @param type        The type that'll be used to create a mock instance.
+     * @param methodNames The names of the methods that should be mocked. If
+     *                    <code>null</code>, then this method will have the same effect
+     *                    as just calling {@link #createMock(Class, Method...)} with the
+     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    methods in that class will be mocked).
      * @return A mock object of type <T>.
      */
     public static synchronized <T> T createStrictPartialMockForAllMethodsExcept(Class<T> type, String... methodNames) {
@@ -428,17 +375,12 @@ public class PowerMock extends MemberModifier {
      * Mock all methods of a class except for a specific one. Use this method
      * only if you have several overloaded methods.
      *
-     * @param <T>
-     *            The type of the mock.
-     * @param type
-     *            The type that'll be used to create a mock instance.
-     * @param methodNameToExclude
-     *            The name of the method not to mock.
-     * @param firstArgumentType
-     *            The type of the first parameter of the method not to mock
-     * @param moreTypes
-     *            Optionally more parameter types that defines the method. Note
-     *            that this is only needed to separate overloaded methods.
+     * @param <T>                 The type of the mock.
+     * @param type                The type that'll be used to create a mock instance.
+     * @param methodNameToExclude The name of the method not to mock.
+     * @param firstArgumentType   The type of the first parameter of the method not to mock
+     * @param moreTypes           Optionally more parameter types that defines the method. Note
+     *                            that this is only needed to separate overloaded methods.
      * @return A mock object of type <T>.
      */
     public static synchronized <T> T createPartialMockForAllMethodsExcept(Class<T> type, String methodNameToExclude,
@@ -457,17 +399,12 @@ public class PowerMock extends MemberModifier {
      * Mock all methods of a class except for a specific one nicely. Use this
      * method only if you have several overloaded methods.
      *
-     * @param <T>
-     *            The type of the mock.
-     * @param type
-     *            The type that'll be used to create a mock instance.
-     * @param methodNameToExclude
-     *            The name of the method not to mock.
-     * @param firstArgumentType
-     *            The type of the first parameter of the method not to mock
-     * @param moreTypes
-     *            Optionally more parameter types that defines the method. Note
-     *            that this is only needed to separate overloaded methods.
+     * @param <T>                 The type of the mock.
+     * @param type                The type that'll be used to create a mock instance.
+     * @param methodNameToExclude The name of the method not to mock.
+     * @param firstArgumentType   The type of the first parameter of the method not to mock
+     * @param moreTypes           Optionally more parameter types that defines the method. Note
+     *                            that this is only needed to separate overloaded methods.
      * @return A mock object of type <T>.
      */
     public static synchronized <T> T createNicePartialMockForAllMethodsExcept(Class<T> type,
@@ -486,17 +423,12 @@ public class PowerMock extends MemberModifier {
      * Mock all methods of a class except for a specific one strictly. Use this
      * method only if you have several overloaded methods.
      *
-     * @param <T>
-     *            The type of the mock.
-     * @param type
-     *            The type that'll be used to create a mock instance.
-     * @param methodNameToExclude
-     *            The name of the method not to mock.
-     * @param firstArgumentType
-     *            The type of the first parameter of the method not to mock
-     * @param moreTypes
-     *            Optionally more parameter types that defines the method. Note
-     *            that this is only needed to separate overloaded methods.
+     * @param <T>                 The type of the mock.
+     * @param type                The type that'll be used to create a mock instance.
+     * @param methodNameToExclude The name of the method not to mock.
+     * @param firstArgumentType   The type of the first parameter of the method not to mock
+     * @param moreTypes           Optionally more parameter types that defines the method. Note
+     *                            that this is only needed to separate overloaded methods.
      * @return A mock object of type <T>.
      */
     public static synchronized <T> T createStrictPartialMockForAllMethodsExcept(Class<T> type,
@@ -514,22 +446,17 @@ public class PowerMock extends MemberModifier {
     /**
      * Mock a single specific method. Use this to handle overloaded methods.
      *
-     * @param <T>
-     *            The type of the mock.
-     * @param type
-     *            The type that'll be used to create a mock instance.
-     * @param methodNameToMock
-     *            The name of the method to mock
-     * @param firstArgumentType
-     *            The type of the first parameter of the method to mock
-     * @param additionalArgumentTypes
-     *            Optionally more parameter types that defines the method. Note
-     *            that this is only needed to separate overloaded methods.
+     * @param <T>                     The type of the mock.
+     * @param type                    The type that'll be used to create a mock instance.
+     * @param methodNameToMock        The name of the method to mock
+     * @param firstArgumentType       The type of the first parameter of the method to mock
+     * @param additionalArgumentTypes Optionally more parameter types that defines the method. Note
+     *                                that this is only needed to separate overloaded methods.
      * @return A mock object of type <T>.
      */
     public static synchronized <T> T createPartialMock(Class<T> type, String methodNameToMock,
                                                        Class<?> firstArgumentType, Class<?>... additionalArgumentTypes) {
-        return doMockSpecific(type, new DefaultMockStrategy(), new String[] { methodNameToMock }, null,
+        return doMockSpecific(type, new DefaultMockStrategy(), new String[]{methodNameToMock}, null,
                 mergeArgumentTypes(firstArgumentType, additionalArgumentTypes));
     }
 
@@ -537,22 +464,17 @@ public class PowerMock extends MemberModifier {
      * Strictly mock a single specific method. Use this to handle overloaded
      * methods.
      *
-     * @param <T>
-     *            The type of the mock.
-     * @param type
-     *            The type that'll be used to create a mock instance.
-     * @param methodNameToMock
-     *            The name of the method to mock
-     * @param firstArgumentType
-     *            The type of the first parameter of the method to mock
-     * @param additionalArgumentTypes
-     *            Optionally more parameter types that defines the method. Note
-     *            that this is only needed to separate overloaded methods.
+     * @param <T>                     The type of the mock.
+     * @param type                    The type that'll be used to create a mock instance.
+     * @param methodNameToMock        The name of the method to mock
+     * @param firstArgumentType       The type of the first parameter of the method to mock
+     * @param additionalArgumentTypes Optionally more parameter types that defines the method. Note
+     *                                that this is only needed to separate overloaded methods.
      * @return A mock object of type <T>.
      */
     public static synchronized <T> T createStrictPartialMock(Class<T> type, String methodNameToMock,
                                                              Class<?> firstArgumentType, Class<?>... additionalArgumentTypes) {
-        return doMockSpecific(type, new StrictMockStrategy(), new String[] { methodNameToMock }, null,
+        return doMockSpecific(type, new StrictMockStrategy(), new String[]{methodNameToMock}, null,
                 mergeArgumentTypes(firstArgumentType, additionalArgumentTypes));
     }
 
@@ -560,76 +482,59 @@ public class PowerMock extends MemberModifier {
      * Nicely mock a single specific method. Use this to handle overloaded
      * methods.
      *
-     * @param <T>
-     *            The type of the mock.
-     * @param type
-     *            The type that'll be used to create a mock instance.
-     * @param methodNameToMock
-     *            The name of the method to mock
-     * @param firstArgumentType
-     *            The type of the first parameter of the method to mock
-     * @param additionalArgumentTypes
-     *            Optionally more parameter types that defines the method. Note
-     *            that this is only needed to separate overloaded methods.
+     * @param <T>                     The type of the mock.
+     * @param type                    The type that'll be used to create a mock instance.
+     * @param methodNameToMock        The name of the method to mock
+     * @param firstArgumentType       The type of the first parameter of the method to mock
+     * @param additionalArgumentTypes Optionally more parameter types that defines the method. Note
+     *                                that this is only needed to separate overloaded methods.
      * @return A mock object of type <T>.
      */
     public static synchronized <T> T createNicePartialMock(Class<T> type, String methodNameToMock,
                                                            Class<?> firstArgumentType, Class<?>... additionalArgumentTypes) {
-        return doMockSpecific(type, new NiceMockStrategy(), new String[] { methodNameToMock }, null,
+        return doMockSpecific(type, new NiceMockStrategy(), new String[]{methodNameToMock}, null,
                 mergeArgumentTypes(firstArgumentType, additionalArgumentTypes));
     }
 
     /**
      * Mock a single static method.
      *
-     * @param clazz
-     *            The class where the method is specified in.
-     * @param methodNameToMock
-     *            The first argument
-     * @param firstArgumentType
-     *            The first argument type.
-     * @param additionalArgumentTypes
-     *            Optional additional argument types.
+     * @param clazz                   The class where the method is specified in.
+     * @param methodNameToMock        The first argument
+     * @param firstArgumentType       The first argument type.
+     * @param additionalArgumentTypes Optional additional argument types.
      */
     public static synchronized void mockStaticPartial(Class<?> clazz, String methodNameToMock,
                                                       Class<?> firstArgumentType, Class<?>... additionalArgumentTypes) {
-        doMockSpecific(clazz, new DefaultMockStrategy(), new String[] { methodNameToMock }, null,
+        doMockSpecific(clazz, new DefaultMockStrategy(), new String[]{methodNameToMock}, null,
                 mergeArgumentTypes(firstArgumentType, additionalArgumentTypes));
     }
 
     /**
      * Mock a single static method (strict).
      *
-     * @param clazz
-     *            The class where the method is specified in.
-     * @param methodNameToMock
-     *            The first argument
-     * @param firstArgumentType
-     *            The first argument type.
-     * @param additionalArgumentTypes
-     *            Optional additional argument types.
+     * @param clazz                   The class where the method is specified in.
+     * @param methodNameToMock        The first argument
+     * @param firstArgumentType       The first argument type.
+     * @param additionalArgumentTypes Optional additional argument types.
      */
     public static synchronized void mockStaticPartialStrict(Class<?> clazz, String methodNameToMock,
                                                             Class<?> firstArgumentType, Class<?>... additionalArgumentTypes) {
-        doMockSpecific(clazz, new StrictMockStrategy(), new String[] { methodNameToMock }, null,
+        doMockSpecific(clazz, new StrictMockStrategy(), new String[]{methodNameToMock}, null,
                 mergeArgumentTypes(firstArgumentType, additionalArgumentTypes));
     }
 
     /**
      * Mock a single static method (nice).
      *
-     * @param clazz
-     *            The class where the method is specified in.
-     * @param methodNameToMock
-     *            The first argument
-     * @param firstArgumentType
-     *            The first argument type.
-     * @param additionalArgumentTypes
-     *            Optional additional argument types.
+     * @param clazz                   The class where the method is specified in.
+     * @param methodNameToMock        The first argument
+     * @param firstArgumentType       The first argument type.
+     * @param additionalArgumentTypes Optional additional argument types.
      */
     public static synchronized void mockStaticPartialNice(Class<?> clazz, String methodNameToMock,
                                                           Class<?> firstArgumentType, Class<?>... additionalArgumentTypes) {
-        doMockSpecific(clazz, new NiceMockStrategy(), new String[] { methodNameToMock }, null,
+        doMockSpecific(clazz, new NiceMockStrategy(), new String[]{methodNameToMock}, null,
                 mergeArgumentTypes(firstArgumentType, additionalArgumentTypes));
     }
 
@@ -643,15 +548,13 @@ public class PowerMock extends MemberModifier {
      * case you should fall-back on using the
      * {@link #mockStatic(Class, Method...)} method instead.
      *
-     * @param clazz
-     *            The class that contains the static methods that should be
-     *            mocked.
-     * @param methodNames
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #mockStatic(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
+     * @param clazz       The class that contains the static methods that should be
+     *                    mocked.
+     * @param methodNames The names of the methods that should be mocked. If
+     *                    <code>null</code>, then this method will have the same effect
+     *                    as just calling {@link #mockStatic(Class, Method...)} with the
+     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    methods in that class will be mocked).
      */
     public static synchronized void mockStaticPartial(Class<?> clazz, String... methodNames) {
         mockStatic(clazz, Whitebox.getMethods(clazz, methodNames));
@@ -667,15 +570,13 @@ public class PowerMock extends MemberModifier {
      * case you should fall-back on using the
      * {@link #mockStaticStrict(Class, Method...)} method instead.
      *
-     * @param clazz
-     *            The class that contains the static methods that should be
-     *            mocked.
-     * @param methodNames
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #mockStatic(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
+     * @param clazz       The class that contains the static methods that should be
+     *                    mocked.
+     * @param methodNames The names of the methods that should be mocked. If
+     *                    <code>null</code>, then this method will have the same effect
+     *                    as just calling {@link #mockStatic(Class, Method...)} with the
+     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    methods in that class will be mocked).
      */
     public static synchronized void mockStaticPartialStrict(Class<?> clazz, String... methodNames) {
         mockStaticStrict(clazz, Whitebox.getMethods(clazz, methodNames));
@@ -691,15 +592,13 @@ public class PowerMock extends MemberModifier {
      * case you should fall-back on using the
      * {@link #mockStaticStrict(Class, Method...)} method instead.
      *
-     * @param clazz
-     *            The class that contains the static methods that should be
-     *            mocked.
-     * @param methodNames
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #mockStatic(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
+     * @param clazz       The class that contains the static methods that should be
+     *                    mocked.
+     * @param methodNames The names of the methods that should be mocked. If
+     *                    <code>null</code>, then this method will have the same effect
+     *                    as just calling {@link #mockStatic(Class, Method...)} with the
+     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    methods in that class will be mocked).
      */
     public static synchronized void mockStaticPartialNice(Class<?> clazz, String... methodNames) {
         mockStaticNice(clazz, Whitebox.getMethods(clazz, methodNames));
@@ -746,16 +645,13 @@ public class PowerMock extends MemberModifier {
      * fall-back on using the {@link #createMock(Class, Method...)} method
      * instead.
      *
-     * @param <T>
-     *            The type of the mock.
-     * @param type
-     *            The type that'll be used to create a mock instance.
-     * @param methodNames
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
+     * @param <T>         The type of the mock.
+     * @param type        The type that'll be used to create a mock instance.
+     * @param methodNames The names of the methods that should be mocked. If
+     *                    <code>null</code>, then this method will have the same effect
+     *                    as just calling {@link #createMock(Class, Method...)} with the
+     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    methods in that class will be mocked).
      * @return A mock object of type <T>.
      */
     public static synchronized <T> T createPartialMock(Class<T> type, String... methodNames) {
@@ -771,31 +667,26 @@ public class PowerMock extends MemberModifier {
      * of parameter types and signature. If this is the case you should
      * fall-back on using the {@link #createMock(Class, Method...)} method
      * instead.
-     * <p>
+     * <p/>
      * With this method you can specify where the class hierarchy the methods
      * are located. This is useful in, for example, situations where class A
      * extends B and both have a method called "mockMe" (A overrides B's mockMe
      * method) and you like to specify the only the "mockMe" method in B should
      * be mocked. "mockMe" in A should be left intact. In this case you should
      * do:
-     *
+     * <p/>
      * <pre>
      * A tested = createPartialMock(A.class, B.class, &quot;mockMe&quot;);
      * </pre>
      *
-     *
-     * @param <T>
-     *            The type of the mock.
-     * @param type
-     *            The type that'll be used to create a mock instance.
-     * @param where
-     *            Where in the class hierarchy the methods resides.
-     * @param methodNames
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
+     * @param <T>         The type of the mock.
+     * @param type        The type that'll be used to create a mock instance.
+     * @param where       Where in the class hierarchy the methods resides.
+     * @param methodNames The names of the methods that should be mocked. If
+     *                    <code>null</code>, then this method will have the same effect
+     *                    as just calling {@link #createMock(Class, Method...)} with the
+     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    methods in that class will be mocked).
      * @return A mock object of type <T>.
      */
     public static synchronized <T> T createPartialMock(Class<T> type, Class<? super T> where, String... methodNames) {
@@ -812,16 +703,13 @@ public class PowerMock extends MemberModifier {
      * case you should fall-back on using the
      * {@link #createMock(Class, Method...)} method instead.
      *
-     * @param <T>
-     *            The type of the mock.
-     * @param type
-     *            The type that'll be used to create a mock instance.
-     * @param methodNames
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
+     * @param <T>         The type of the mock.
+     * @param type        The type that'll be used to create a mock instance.
+     * @param methodNames The names of the methods that should be mocked. If
+     *                    <code>null</code>, then this method will have the same effect
+     *                    as just calling {@link #createMock(Class, Method...)} with the
+     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    methods in that class will be mocked).
      * @return A mock object of type <T>.
      */
     public static synchronized <T> T createStrictPartialMock(Class<T> type, String... methodNames) {
@@ -837,30 +725,26 @@ public class PowerMock extends MemberModifier {
      * supplied name regardless of parameter types and signature. If this is the
      * case you should fall-back on using the
      * {@link #createMock(Class, Method...)} method instead.
-     * <p>
+     * <p/>
      * With this method you can specify where the class hierarchy the methods
      * are located. This is useful in, for example, situations where class A
      * extends B and both have a method called "mockMe" (A overrides B's mockMe
      * method) and you like to specify the only the "mockMe" method in B should
      * be mocked. "mockMe" in A should be left intact. In this case you should
      * do:
-     *
+     * <p/>
      * <pre>
      * A tested = createPartialMockStrict(A.class, B.class, &quot;mockMe&quot;);
      * </pre>
      *
-     * @param <T>
-     *            The type of the mock.
-     * @param type
-     *            The type that'll be used to create a mock instance.
-     * @param where
-     *            Where in the class hierarchy the methods resides.
-     * @param methodNames
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
+     * @param <T>         The type of the mock.
+     * @param type        The type that'll be used to create a mock instance.
+     * @param where       Where in the class hierarchy the methods resides.
+     * @param methodNames The names of the methods that should be mocked. If
+     *                    <code>null</code>, then this method will have the same effect
+     *                    as just calling {@link #createMock(Class, Method...)} with the
+     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    methods in that class will be mocked).
      * @return A mock object of type <T>.
      */
     public static synchronized <T> T createStrictPartialMock(Class<T> type, Class<? super T> where,
@@ -878,16 +762,13 @@ public class PowerMock extends MemberModifier {
      * case you should fall-back on using the
      * {@link #createMock(Class, Method...)} method instead.
      *
-     * @param <T>
-     *            The type of the mock.
-     * @param type
-     *            The type that'll be used to create a mock instance.
-     * @param methodNames
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
+     * @param <T>         The type of the mock.
+     * @param type        The type that'll be used to create a mock instance.
+     * @param methodNames The names of the methods that should be mocked. If
+     *                    <code>null</code>, then this method will have the same effect
+     *                    as just calling {@link #createMock(Class, Method...)} with the
+     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    methods in that class will be mocked).
      * @return A mock object of type <T>.
      */
     public static synchronized <T> T createNicePartialMock(Class<T> type, String... methodNames) {
@@ -903,30 +784,26 @@ public class PowerMock extends MemberModifier {
      * supplied name regardless of parameter types and signature. If this is the
      * case you should fall-back on using the
      * {@link #createMock(Class, Method...)} method instead.
-     * <p>
+     * <p/>
      * With this method you can specify where the class hierarchy the methods
      * are located. This is useful in, for example, situations where class A
      * extends B and both have a method called "mockMe" (A overrides B's mockMe
      * method) and you like to specify the only the "mockMe" method in B should
      * be mocked. "mockMe" in A should be left intact. In this case you should
      * do:
-     *
+     * <p/>
      * <pre>
      * A tested = createPartialMockNice(A.class, B.class, &quot;mockMe&quot;);
      * </pre>
      *
-     * @param <T>
-     *            The type of the mock.
-     * @param type
-     *            The type that'll be used to create a mock instance.
-     * @param where
-     *            Where in the class hierarchy the methods resides.
-     * @param methodNames
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
+     * @param <T>         The type of the mock.
+     * @param type        The type that'll be used to create a mock instance.
+     * @param where       Where in the class hierarchy the methods resides.
+     * @param methodNames The names of the methods that should be mocked. If
+     *                    <code>null</code>, then this method will have the same effect
+     *                    as just calling {@link #createMock(Class, Method...)} with the
+     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    methods in that class will be mocked).
      * @return A mock object of type <T>.
      */
     public static synchronized <T> T createNicePartialMock(Class<T> type, Class<? super T> where, String... methodNames) {
@@ -939,16 +816,13 @@ public class PowerMock extends MemberModifier {
      * mock object created will support mocking of final methods and invokes the
      * default constructor (even if it's private).
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param methodNames
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
+     * @param <T>         the type of the mock object
+     * @param type        the type of the mock object
+     * @param methodNames The names of the methods that should be mocked. If
+     *                    <code>null</code>, then this method will have the same effect
+     *                    as just calling {@link #createMock(Class, Method...)} with the
+     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    methods in that class will be mocked).
      * @return the mock object.
      */
     public static <T> T createPartialMockAndInvokeDefaultConstructor(Class<T> type, String... methodNames)
@@ -963,16 +837,13 @@ public class PowerMock extends MemberModifier {
      * mock). The mock object created will support mocking of final methods and
      * invokes the default constructor (even if it's private).
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param methodNames
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
+     * @param <T>         the type of the mock object
+     * @param type        the type of the mock object
+     * @param methodNames The names of the methods that should be mocked. If
+     *                    <code>null</code>, then this method will have the same effect
+     *                    as just calling {@link #createMock(Class, Method...)} with the
+     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    methods in that class will be mocked).
      * @return the mock object.
      */
     public static <T> T createNicePartialMockAndInvokeDefaultConstructor(Class<T> type, String... methodNames)
@@ -987,16 +858,13 @@ public class PowerMock extends MemberModifier {
      * mock). The mock object created will support mocking of final methods and
      * invokes the default constructor (even if it's private).
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param methodNames
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
+     * @param <T>         the type of the mock object
+     * @param type        the type of the mock object
+     * @param methodNames The names of the methods that should be mocked. If
+     *                    <code>null</code>, then this method will have the same effect
+     *                    as just calling {@link #createMock(Class, Method...)} with the
+     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    methods in that class will be mocked).
      * @return the mock object.
      */
     public static <T> T createStrictPartialMockAndInvokeDefaultConstructor(Class<T> type, String... methodNames)
@@ -1011,19 +879,15 @@ public class PowerMock extends MemberModifier {
      * mock object created will support mocking of final and native methods and
      * invokes a specific constructor based on the supplied argument values.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param methodNames
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
-     * @param constructorArguments
-     *            The constructor arguments that will be used to invoke a
-     *            certain constructor. (optional)
+     * @param <T>                  the type of the mock object
+     * @param type                 the type of the mock object
+     * @param methodNames          The names of the methods that should be mocked. If
+     *                             <code>null</code>, then this method will have the same effect
+     *                             as just calling {@link #createMock(Class, Method...)} with the
+     *                             second parameter as <code>new Method[0]</code> (i.e. all
+     *                             methods in that class will be mocked).
+     * @param constructorArguments The constructor arguments that will be used to invoke a
+     *                             certain constructor. (optional)
      * @return the mock object.
      */
     public static <T> T createPartialMock(Class<T> type, String[] methodNames, Object... constructorArguments) {
@@ -1039,19 +903,15 @@ public class PowerMock extends MemberModifier {
      * native methods and invokes a specific constructor based on the supplied
      * argument values.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param methodNames
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
-     * @param constructorArguments
-     *            The constructor arguments that will be used to invoke a
-     *            certain constructor. (optional)
+     * @param <T>                  the type of the mock object
+     * @param type                 the type of the mock object
+     * @param methodNames          The names of the methods that should be mocked. If
+     *                             <code>null</code>, then this method will have the same effect
+     *                             as just calling {@link #createMock(Class, Method...)} with the
+     *                             second parameter as <code>new Method[0]</code> (i.e. all
+     *                             methods in that class will be mocked).
+     * @param constructorArguments The constructor arguments that will be used to invoke a
+     *                             certain constructor. (optional)
      * @return the mock object.
      */
     public static <T> T createStrictPartialMock(Class<T> type, String[] methodNames, Object... constructorArguments) {
@@ -1067,19 +927,15 @@ public class PowerMock extends MemberModifier {
      * methods and invokes a specific constructor based on the supplied argument
      * values.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param methodNames
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
-     * @param constructorArguments
-     *            The constructor arguments that will be used to invoke a
-     *            certain constructor. (optional)
+     * @param <T>                  the type of the mock object
+     * @param type                 the type of the mock object
+     * @param methodNames          The names of the methods that should be mocked. If
+     *                             <code>null</code>, then this method will have the same effect
+     *                             as just calling {@link #createMock(Class, Method...)} with the
+     *                             second parameter as <code>new Method[0]</code> (i.e. all
+     *                             methods in that class will be mocked).
+     * @param constructorArguments The constructor arguments that will be used to invoke a
+     *                             certain constructor. (optional)
      * @return the mock object.
      */
     public static <T> T createNicePartialMock(Class<T> type, String[] methodNames, Object... constructorArguments) {
@@ -1095,29 +951,24 @@ public class PowerMock extends MemberModifier {
      * mocking of final and native methods and invokes a specific constructor
      * based on the supplied argument values.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param methodName
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
-     * @param methodParameterTypes
-     *            Parameter types that defines the method. Note that this is
-     *            only needed to separate overloaded methods.
-     * @param constructorArguments
-     *            The constructor arguments that will be used to invoke a
-     *            certain constructor. (optional)
+     * @param <T>                  the type of the mock object
+     * @param type                 the type of the mock object
+     * @param methodName           The names of the methods that should be mocked. If
+     *                             <code>null</code>, then this method will have the same effect
+     *                             as just calling {@link #createMock(Class, Method...)} with the
+     *                             second parameter as <code>new Method[0]</code> (i.e. all
+     *                             methods in that class will be mocked).
+     * @param methodParameterTypes Parameter types that defines the method. Note that this is
+     *                             only needed to separate overloaded methods.
+     * @param constructorArguments The constructor arguments that will be used to invoke a
+     *                             certain constructor. (optional)
      * @return the mock object.
      */
     public static <T> T createPartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes,
                                           Object... constructorArguments) {
         Constructor<?> constructor = WhiteboxImpl.findUniqueConstructorOrThrowException(type, constructorArguments);
         ConstructorArgs constructorArgs = new ConstructorArgs(constructor, constructorArguments);
-        return doMockSpecific(type, new DefaultMockStrategy(), new String[] { methodName }, constructorArgs,
+        return doMockSpecific(type, new DefaultMockStrategy(), new String[]{methodName}, constructorArgs,
                 methodParameterTypes);
     }
 
@@ -1128,29 +979,24 @@ public class PowerMock extends MemberModifier {
      * will support mocking of final and native methods and invokes a specific
      * constructor based on the supplied argument values.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param methodName
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
-     * @param methodParameterTypes
-     *            Parameter types that defines the method. Note that this is
-     *            only needed to separate overloaded methods.
-     * @param constructorArguments
-     *            The constructor arguments that will be used to invoke a
-     *            certain constructor. (optional)
+     * @param <T>                  the type of the mock object
+     * @param type                 the type of the mock object
+     * @param methodName           The names of the methods that should be mocked. If
+     *                             <code>null</code>, then this method will have the same effect
+     *                             as just calling {@link #createMock(Class, Method...)} with the
+     *                             second parameter as <code>new Method[0]</code> (i.e. all
+     *                             methods in that class will be mocked).
+     * @param methodParameterTypes Parameter types that defines the method. Note that this is
+     *                             only needed to separate overloaded methods.
+     * @param constructorArguments The constructor arguments that will be used to invoke a
+     *                             certain constructor. (optional)
      * @return the mock object.
      */
     public static <T> T createStrictPartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes,
                                                 Object... constructorArguments) {
         Constructor<?> constructor = WhiteboxImpl.findUniqueConstructorOrThrowException(type, constructorArguments);
         ConstructorArgs constructorArgs = new ConstructorArgs(constructor, constructorArguments);
-        return doMockSpecific(type, new StrictMockStrategy(), new String[] { methodName }, constructorArgs,
+        return doMockSpecific(type, new StrictMockStrategy(), new String[]{methodName}, constructorArgs,
                 methodParameterTypes);
     }
 
@@ -1161,29 +1007,24 @@ public class PowerMock extends MemberModifier {
      * will support mocking of final and native methods and invokes a specific
      * constructor based on the supplied argument values.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param methodName
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
-     * @param methodParameterTypes
-     *            Parameter types that defines the method. Note that this is
-     *            only needed to separate overloaded methods.
-     * @param constructorArguments
-     *            The constructor arguments that will be used to invoke a
-     *            certain constructor. (optional)
+     * @param <T>                  the type of the mock object
+     * @param type                 the type of the mock object
+     * @param methodName           The names of the methods that should be mocked. If
+     *                             <code>null</code>, then this method will have the same effect
+     *                             as just calling {@link #createMock(Class, Method...)} with the
+     *                             second parameter as <code>new Method[0]</code> (i.e. all
+     *                             methods in that class will be mocked).
+     * @param methodParameterTypes Parameter types that defines the method. Note that this is
+     *                             only needed to separate overloaded methods.
+     * @param constructorArguments The constructor arguments that will be used to invoke a
+     *                             certain constructor. (optional)
      * @return the mock object.
      */
     public static <T> T createNicePartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes,
                                               Object... constructorArguments) {
         Constructor<?> constructor = WhiteboxImpl.findUniqueConstructorOrThrowException(type, constructorArguments);
         ConstructorArgs constructorArgs = new ConstructorArgs(constructor, constructorArguments);
-        return doMockSpecific(type, new NiceMockStrategy(), new String[] { methodName }, constructorArgs,
+        return doMockSpecific(type, new NiceMockStrategy(), new String[]{methodName}, constructorArgs,
                 methodParameterTypes);
     }
 
@@ -1194,33 +1035,27 @@ public class PowerMock extends MemberModifier {
      * mock object created will support mocking of final and native methods and
      * invokes a specific constructor based on the supplied argument values.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param methodName
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
-     * @param methodParameterTypes
-     *            Parameter types that defines the method. Note that this is
-     *            only needed to separate overloaded methods.
-     * @param constructorArguments
-     *            The constructor arguments that will be used to invoke a
-     *            certain constructor.
-     * @param constructorParameterTypes
-     *            Parameter types that defines the constructor that should be
-     *            invoked. Note that this is only needed to separate overloaded
-     *            constructors.
+     * @param <T>                       the type of the mock object
+     * @param type                      the type of the mock object
+     * @param methodName                The names of the methods that should be mocked. If
+     *                                  <code>null</code>, then this method will have the same effect
+     *                                  as just calling {@link #createMock(Class, Method...)} with the
+     *                                  second parameter as <code>new Method[0]</code> (i.e. all
+     *                                  methods in that class will be mocked).
+     * @param methodParameterTypes      Parameter types that defines the method. Note that this is
+     *                                  only needed to separate overloaded methods.
+     * @param constructorArguments      The constructor arguments that will be used to invoke a
+     *                                  certain constructor.
+     * @param constructorParameterTypes Parameter types that defines the constructor that should be
+     *                                  invoked. Note that this is only needed to separate overloaded
+     *                                  constructors.
      * @return the mock object.
      */
     public static <T> T createPartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes,
                                           Object[] constructorArguments, Class<?>[] constructorParameterTypes) {
         ConstructorArgs constructorArgs = new ConstructorArgs(Whitebox.getConstructor(type, constructorParameterTypes),
                 constructorArguments);
-        return doMockSpecific(type, new DefaultMockStrategy(), new String[] { methodName }, constructorArgs,
+        return doMockSpecific(type, new DefaultMockStrategy(), new String[]{methodName}, constructorArgs,
                 methodParameterTypes);
     }
 
@@ -1232,33 +1067,27 @@ public class PowerMock extends MemberModifier {
      * native methods and invokes a specific constructor based on the supplied
      * argument values.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param methodName
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
-     * @param methodParameterTypes
-     *            Parameter types that defines the method. Note that this is
-     *            only needed to separate overloaded methods.
-     * @param constructorArguments
-     *            The constructor arguments that will be used to invoke a
-     *            certain constructor.
-     * @param constructorParameterTypes
-     *            Parameter types that defines the constructor that should be
-     *            invoked. Note that this is only needed to separate overloaded
-     *            constructors.
+     * @param <T>                       the type of the mock object
+     * @param type                      the type of the mock object
+     * @param methodName                The names of the methods that should be mocked. If
+     *                                  <code>null</code>, then this method will have the same effect
+     *                                  as just calling {@link #createMock(Class, Method...)} with the
+     *                                  second parameter as <code>new Method[0]</code> (i.e. all
+     *                                  methods in that class will be mocked).
+     * @param methodParameterTypes      Parameter types that defines the method. Note that this is
+     *                                  only needed to separate overloaded methods.
+     * @param constructorArguments      The constructor arguments that will be used to invoke a
+     *                                  certain constructor.
+     * @param constructorParameterTypes Parameter types that defines the constructor that should be
+     *                                  invoked. Note that this is only needed to separate overloaded
+     *                                  constructors.
      * @return the mock object.
      */
     public static <T> T createStrictPartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes,
                                                 Object[] constructorArguments, Class<?>[] constructorParameterTypes) {
         ConstructorArgs constructorArgs = new ConstructorArgs(Whitebox.getConstructor(type, constructorParameterTypes),
                 constructorArguments);
-        return doMockSpecific(type, new StrictMockStrategy(), new String[] { methodName }, constructorArgs,
+        return doMockSpecific(type, new StrictMockStrategy(), new String[]{methodName}, constructorArgs,
                 methodParameterTypes);
     }
 
@@ -1270,33 +1099,27 @@ public class PowerMock extends MemberModifier {
      * native methods and invokes a specific constructor based on the supplied
      * argument values.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
-     * @param methodName
-     *            The names of the methods that should be mocked. If
-     *            <code>null</code>, then this method will have the same effect
-     *            as just calling {@link #createMock(Class, Method...)} with the
-     *            second parameter as <code>new Method[0]</code> (i.e. all
-     *            methods in that class will be mocked).
-     * @param methodParameterTypes
-     *            Parameter types that defines the method. Note that this is
-     *            only needed to separate overloaded methods.
-     * @param constructorArguments
-     *            The constructor arguments that will be used to invoke a
-     *            certain constructor.
-     * @param constructorParameterTypes
-     *            Parameter types that defines the constructor that should be
-     *            invoked. Note that this is only needed to separate overloaded
-     *            constructors.
+     * @param <T>                       the type of the mock object
+     * @param type                      the type of the mock object
+     * @param methodName                The names of the methods that should be mocked. If
+     *                                  <code>null</code>, then this method will have the same effect
+     *                                  as just calling {@link #createMock(Class, Method...)} with the
+     *                                  second parameter as <code>new Method[0]</code> (i.e. all
+     *                                  methods in that class will be mocked).
+     * @param methodParameterTypes      Parameter types that defines the method. Note that this is
+     *                                  only needed to separate overloaded methods.
+     * @param constructorArguments      The constructor arguments that will be used to invoke a
+     *                                  certain constructor.
+     * @param constructorParameterTypes Parameter types that defines the constructor that should be
+     *                                  invoked. Note that this is only needed to separate overloaded
+     *                                  constructors.
      * @return the mock object.
      */
     public static <T> T createNicePartialMock(Class<T> type, String methodName, Class<?>[] methodParameterTypes,
                                               Object[] constructorArguments, Class<?>[] constructorParameterTypes) {
         ConstructorArgs constructorArgs = new ConstructorArgs(Whitebox.getConstructor(type, constructorParameterTypes),
                 constructorArguments);
-        return doMockSpecific(type, new NiceMockStrategy(), new String[] { methodName }, constructorArgs,
+        return doMockSpecific(type, new NiceMockStrategy(), new String[]{methodName}, constructorArgs,
                 methodParameterTypes);
     }
 
@@ -1374,7 +1197,7 @@ public class PowerMock extends MemberModifier {
      * specific place in the class hierarchy (specified by the
      * <code>where</code> parameter). Works on for example private or package
      * private methods.
-     * <p>
+     * <p/>
      * Use this for overloaded methods.
      */
     public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, String methodName,
@@ -1387,7 +1210,7 @@ public class PowerMock extends MemberModifier {
             if (parameterTypes == null) {
                 methods = Whitebox.getMethods(where, methodName);
             } else {
-                methods = new Method[] { Whitebox.getMethod(where, methodName, parameterTypes) };
+                methods = new Method[]{Whitebox.getMethod(where, methodName, parameterTypes)};
             }
         }
         Method methodToExpect;
@@ -1415,9 +1238,8 @@ public class PowerMock extends MemberModifier {
      * This method just delegates to EasyMock class extensions
      * {@link org.easymock.EasyMock#expectLastCall()} method.
      *
-     * @see org.easymock.EasyMock#expectLastCall()
-     *
      * @return The expectation setter.
+     * @see org.easymock.EasyMock#expectLastCall()
      */
     public static synchronized IExpectationSetters<Object> expectLastCall() {
         return org.easymock.EasyMock.expectLastCall();
@@ -1450,20 +1272,19 @@ public class PowerMock extends MemberModifier {
      * {@link #mockStatic(Class, Method...)},
      * {@link #expectNew(Class, Object...)},
      * {@link #createPartialMock(Class, String...)} etc.
-     * <p>
+     * <p/>
      * To make it easy to pass in additional mocks <i>not</i> created by the
      * PowerMock API you can optionally specify them as <tt>additionalMocks</tt>
      * . These are typically those mock objects you have created using pure
      * EasyMock or EasyMock class extensions. No additional mocks needs to be
      * specified if you're only using PowerMock API methods.
-     * <p>
+     * <p/>
      * Note that the <tt>additionalMocks</tt> are also automatically verified
      * when invoking the {@link #verifyAll()} method.
      *
-     * @param additionalMocks
-     *            Mocks not created by the PowerMock API. These are typically
-     *            those mock objects you have created using pure EasyMock or
-     *            EasyMock class extensions.
+     * @param additionalMocks Mocks not created by the PowerMock API. These are typically
+     *                        those mock objects you have created using pure EasyMock or
+     *                        EasyMock class extensions.
      */
     public static synchronized void replayAll(Object... additionalMocks) {
         MockRepository.addObjectsToAutomaticallyReplayAndVerify(additionalMocks);
@@ -1484,17 +1305,16 @@ public class PowerMock extends MemberModifier {
      * {@link #mockStatic(Class, Method...)},
      * {@link #expectNew(Class, Object...)},
      * {@link #createPartialMock(Class, String...)} etc.
-     * <p>
+     * <p/>
      * To make it easy to pass in additional mocks <i>not</i> created by the
      * PowerMock API you can optionally specify them as <tt>additionalMocks</tt>
      * . These are typically those mock objects you have created using pure
      * EasyMock or EasyMock class extensions. No additional mocks needs to be
      * specified if you're only using PowerMock API methods.
      *
-     * @param additionalMocks
-     *            Mocks not created by the PowerMock API. These are typically
-     *            those mock objects you have created using pure EasyMock or
-     *            EasyMock class extensions.
+     * @param additionalMocks Mocks not created by the PowerMock API. These are typically
+     *                        those mock objects you have created using pure EasyMock or
+     *                        EasyMock class extensions.
      */
     public static synchronized void resetAll(Object... additionalMocks) {
         MockRepository.addObjectsToAutomaticallyReplayAndVerify(additionalMocks);
@@ -1575,11 +1395,10 @@ public class PowerMock extends MemberModifier {
      * {@link #mockStatic(Class, Method...)},
      * {@link #expectNew(Class, Object...)},
      * {@link #createPartialMock(Class, String...)} etc.
-     * <p>
+     * <p/>
      * Note that all <tt>additionalMocks</tt> passed to the
      * {@link #replayAll(Object...)} method are also verified here
      * automatically.
-     *
      */
     public static synchronized void verifyAll() {
         for (Object classToReplayOrVerify : MockRepository.getObjectsToAutomaticallyReplayAndVerify()) {
@@ -1591,10 +1410,8 @@ public class PowerMock extends MemberModifier {
      * Switches the mocks or classes to replay mode. Note that you must use this
      * method when using PowerMock!
      *
-     * @param mocks
-     *            mock objects or classes loaded by PowerMock.
-     * @throws Exception
-     *             If something unexpected goes wrong.
+     * @param mocks mock objects or classes loaded by PowerMock.
+     * @throws Exception If something unexpected goes wrong.
      */
     public static synchronized void replay(Object... mocks) {
         try {
@@ -1637,8 +1454,7 @@ public class PowerMock extends MemberModifier {
      * Switches the mocks or classes to verify mode. Note that you must use this
      * method when using PowerMock!
      *
-     * @param objects
-     *            mock objects or classes loaded by PowerMock.
+     * @param objects mock objects or classes loaded by PowerMock.
      */
     public static synchronized void verify(Object... objects) {
         for (Object mock : objects) {
@@ -1670,10 +1486,8 @@ public class PowerMock extends MemberModifier {
     /**
      * Convenience method for createMock followed by expectNew.
      *
-     * @param type
-     *            The class that should be mocked.
-     * @param arguments
-     *            The constructor arguments.
+     * @param type      The class that should be mocked.
+     * @param arguments The constructor arguments.
      * @return A mock object of the same type as the mock.
      * @throws Exception
      */
@@ -1690,12 +1504,9 @@ public class PowerMock extends MemberModifier {
      * taking the wrapper type of the primitive. For example <code>int</code>
      * and <code>Integer</code>.
      *
-     * @param type
-     *            The class that should be mocked.
-     * @param parameterTypes
-     *            The constructor parameter types.
-     * @param arguments
-     *            The constructor arguments.
+     * @param type           The class that should be mocked.
+     * @param parameterTypes The constructor parameter types.
+     * @param arguments      The constructor arguments.
      * @return A mock object of the same type as the mock.
      * @throws Exception
      */
@@ -1709,10 +1520,8 @@ public class PowerMock extends MemberModifier {
     /**
      * Convenience method for createNiceMock followed by expectNew.
      *
-     * @param type
-     *            The class that should be mocked.
-     * @param arguments
-     *            The constructor arguments.
+     * @param type      The class that should be mocked.
+     * @param arguments The constructor arguments.
      * @return A mock object of the same type as the mock.
      * @throws Exception
      */
@@ -1732,12 +1541,9 @@ public class PowerMock extends MemberModifier {
      * one taking the wrapper type of the primitive. For example
      * <code>int</code> and <code>Integer</code>.
      *
-     * @param type
-     *            The class that should be mocked.
-     * @param parameterTypes
-     *            The constructor parameter types.
-     * @param arguments
-     *            The constructor arguments.
+     * @param type           The class that should be mocked.
+     * @param parameterTypes The constructor parameter types.
+     * @param arguments      The constructor arguments.
      * @return A mock object of the same type as the mock.
      * @throws Exception
      */
@@ -1754,10 +1560,8 @@ public class PowerMock extends MemberModifier {
     /**
      * Convenience method for createStrictMock followed by expectNew.
      *
-     * @param type
-     *            The class that should be mocked.
-     * @param arguments
-     *            The constructor arguments.
+     * @param type      The class that should be mocked.
+     * @param arguments The constructor arguments.
      * @return A mock object of the same type as the mock.
      * @throws Exception
      */
@@ -1774,12 +1578,9 @@ public class PowerMock extends MemberModifier {
      * one taking the wrapper type of the primitive. For example
      * <code>int</code> and <code>Integer</code>.
      *
-     * @param type
-     *            The class that should be mocked.
-     * @param parameterTypes
-     *            The constructor parameter types.
-     * @param arguments
-     *            The constructor arguments.
+     * @param type           The class that should be mocked.
+     * @param parameterTypes The constructor parameter types.
+     * @param arguments      The constructor arguments.
      * @return A mock object of the same type as the mock.
      * @throws Exception
      */
@@ -1795,7 +1596,7 @@ public class PowerMock extends MemberModifier {
      * want to throw an exception or return a mock. Note that you must replay
      * the class when using this method since this behavior is part of the class
      * mock.
-     * <p>
+     * <p/>
      * Use this method when you need to specify parameter types for the
      * constructor when PowerMock cannot determine which constructor to use
      * automatically. In most cases you should use
@@ -1863,11 +1664,9 @@ public class PowerMock extends MemberModifier {
      * class when using this method since this behavior is part of the class
      * mock.
      *
-     * @param fullyQualifiedName
-     *            The fully-qualified name of the inner/local/anonymous type to
-     *            expect.
-     * @param arguments
-     *            Optional number of arguments.
+     * @param fullyQualifiedName The fully-qualified name of the inner/local/anonymous type to
+     *                           expect.
+     * @param arguments          Optional number of arguments.
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> IExpectationSetters<T> expectNew(String fullyQualifiedName, Object... arguments)
@@ -1879,9 +1678,9 @@ public class PowerMock extends MemberModifier {
     /**
      * Allows specifying expectations on new invocations. For example you might
      * want to throw an exception or return a mock.
-     * <p>
+     * <p/>
      * This method checks the order of constructor invocations.
-     * <p>
+     * <p/>
      * Note that you must replay the class when using this method since this
      * behavior is part of the class mock.
      */
@@ -1895,9 +1694,9 @@ public class PowerMock extends MemberModifier {
      * want to throw an exception or return a mock. Note that you must replay
      * the class when using this method since this behavior is part of the class
      * mock.
-     * <p>
+     * <p/>
      * This method checks the order of constructor invocations.
-     * <p>
+     * <p/>
      * Use this method when you need to specify parameter types for the
      * constructor when PowerMock cannot determine which constructor to use
      * automatically. In most cases you should use
@@ -1911,10 +1710,10 @@ public class PowerMock extends MemberModifier {
     /**
      * Allows specifying expectations on new invocations. For example you might
      * want to throw an exception or return a mock.
-     * <p>
+     * <p/>
      * This method allows any number of calls to a new constructor without
      * throwing an exception.
-     * <p>
+     * <p/>
      * Note that you must replay the class when using this method since this
      * behavior is part of the class mock.
      */
@@ -1928,10 +1727,10 @@ public class PowerMock extends MemberModifier {
      * want to throw an exception or return a mock. Note that you must replay
      * the class when using this method since this behavior is part of the class
      * mock.
-     * <p>
+     * <p/>
      * This method allows any number of calls to a new constructor without
      * throwing an exception.
-     * <p>
+     * <p/>
      * Use this method when you need to specify parameter types for the
      * constructor when PowerMock cannot determine which constructor to use
      * automatically. In most cases you should use
@@ -1954,10 +1753,8 @@ public class PowerMock extends MemberModifier {
     /**
      * This method can be used to suppress the code in a specific constructor.
      *
-     * @param clazz
-     *            The class where the constructor is located.
-     * @param parameterTypes
-     *            The parameter types of the constructor to suppress.
+     * @param clazz          The class where the constructor is located.
+     * @param parameterTypes The parameter types of the constructor to suppress.
      * @deprecated Use {@link #suppress(Constructor)} instead.
      */
     public static synchronized void suppressSpecificConstructor(Class<?> clazz, Class<?>... parameterTypes) {
@@ -1967,8 +1764,7 @@ public class PowerMock extends MemberModifier {
     /**
      * Suppress all constructors in the given class and it's super classes.
      *
-     * @param classes
-     *            The classes whose constructors will be suppressed.
+     * @param classes The classes whose constructors will be suppressed.
      * @deprecated Use {@link #suppress(Constructor[])} instead.
      */
     public static synchronized void suppressConstructor(Class<?>... classes) {
@@ -1978,10 +1774,8 @@ public class PowerMock extends MemberModifier {
     /**
      * Suppress all constructors in the given class.
      *
-     * @param clazz
-     *            The classes whose constructors will be suppressed.
-     * @param excludePrivateConstructors
-     *            optionally keep code in private constructors
+     * @param clazz                      The classes whose constructors will be suppressed.
+     * @param excludePrivateConstructors optionally keep code in private constructors
      * @deprecated Use {@link #suppress(Constructor[])} instead.
      */
     public static synchronized void suppressConstructor(Class<?> clazz, boolean excludePrivateConstructors) {
@@ -2011,12 +1805,10 @@ public class PowerMock extends MemberModifier {
     /**
      * Suppress multiple methods for a class.
      *
-     * @param clazz
-     *            The class whose methods will be suppressed.
-     * @param fieldNames
-     *            The names of the methods that'll be suppressed. If field names
-     *            are empty, <i>all</i> fields in the supplied class will be
-     *            suppressed.
+     * @param clazz      The class whose methods will be suppressed.
+     * @param fieldNames The names of the methods that'll be suppressed. If field names
+     *                   are empty, <i>all</i> fields in the supplied class will be
+     *                   suppressed.
      * @deprecated Use {@link #suppress(Field)} instead.
      */
     public static synchronized void suppressField(Class<?> clazz, String... fieldNames) {
@@ -2037,10 +1829,8 @@ public class PowerMock extends MemberModifier {
     /**
      * Suppress all methods for these classes.
      *
-     * @param cls
-     *            The first class whose methods will be suppressed.
-     * @param additionalClasses
-     *            Additional classes whose methods will be suppressed.
+     * @param cls               The first class whose methods will be suppressed.
+     * @param additionalClasses Additional classes whose methods will be suppressed.
      * @deprecated Use {@link #suppress(Method[])} instead.
      */
     public static synchronized void suppressMethod(Class<?> cls, Class<?>... additionalClasses) {
@@ -2050,8 +1840,7 @@ public class PowerMock extends MemberModifier {
     /**
      * Suppress all methods for these classes.
      *
-     * @param classes
-     *            Classes whose methods will be suppressed.
+     * @param classes Classes whose methods will be suppressed.
      * @deprecated Use {@link #suppress(Method[])} instead.
      */
     public static synchronized void suppressMethod(Class<?>[] classes) {
@@ -2061,12 +1850,9 @@ public class PowerMock extends MemberModifier {
     /**
      * Suppress multiple methods for a class.
      *
-     * @param clazz
-     *            The class whose methods will be suppressed.
-     * @param methodName
-     *            The first method to be suppress in class <code>clazz</code>.
-     * @param additionalMethodNames
-     *            Additional methods to suppress in class <code>clazz</code>.
+     * @param clazz                 The class whose methods will be suppressed.
+     * @param methodName            The first method to be suppress in class <code>clazz</code>.
+     * @param additionalMethodNames Additional methods to suppress in class <code>clazz</code>.
      * @deprecated Use {@link #suppress(Method[])} instead.
      */
     public static synchronized void suppressMethod(Class<?> clazz, String methodName, String... additionalMethodNames) {
@@ -2076,10 +1862,8 @@ public class PowerMock extends MemberModifier {
     /**
      * Suppress multiple methods for a class.
      *
-     * @param clazz
-     *            The class whose methods will be suppressed.
-     * @param methodNames
-     *            Methods to suppress in class <code>clazz</code>.
+     * @param clazz       The class whose methods will be suppressed.
+     * @param methodNames Methods to suppress in class <code>clazz</code>.
      * @deprecated Use {@link #suppress(Method[])} instead.
      */
     public static synchronized void suppressMethod(Class<?> clazz, String[] methodNames) {
@@ -2089,10 +1873,8 @@ public class PowerMock extends MemberModifier {
     /**
      * Suppress all methods for this class.
      *
-     * @param clazz
-     *            The class which methods will be suppressed.
-     * @param excludePrivateMethods
-     *            optionally not suppress private methods
+     * @param clazz                 The class which methods will be suppressed.
+     * @param excludePrivateMethods optionally not suppress private methods
      * @deprecated Use {@link #suppress(Method[])} instead.
      */
     public static synchronized void suppressMethod(Class<?> clazz, boolean excludePrivateMethods) {
@@ -2126,7 +1908,7 @@ public class PowerMock extends MemberModifier {
 
         IMocksControl control = mockStrategy.createMockControl(type);
         MockRepository.addAfterMethodRunner(new EasyMockStateCleaner());
-        T mock = null;
+        T mock;
         if (type.isInterface()) {
             mock = control.createMock(type);
         } else if (type.getName().startsWith("java.") && Modifier.isFinal(type.getModifiers())) {
@@ -2174,6 +1956,10 @@ public class PowerMock extends MemberModifier {
             if (mock instanceof InvocationSubstitute<?> == false) {
                 MockRepository.addObjectsToAutomaticallyReplayAndVerify(mock);
             }
+        }
+        ClassLoader classLoader = mock.getClass().getClassLoader();
+        if (classLoader instanceof MockClassLoader) {
+            ((MockClassLoader) classLoader).cache(mock.getClass());
         }
         return mock;
     }
@@ -2298,33 +2084,29 @@ public class PowerMock extends MemberModifier {
         }
 
         private void clearStateFromOtherClassLoaders() {
-            for(ClassLoader cl : classloadersToClear())
-            {
-	            try {
-	                final Class<?> lastControlClassByCL = Class.forName(LastControl.class.getName(), false, cl);
-	                final Class<?> mocksControlClassByCL = Class.forName(MocksControl.class.getName(), false, cl);
-	                final Method reportLastControl = lastControlClassByCL.getMethod("reportLastControl", mocksControlClassByCL);
-	                reportLastControl.invoke(lastControlClassByCL, new Object[]{null});
-	            } catch (Exception e) {
-	                // Should never happen
-	                throw new RuntimeException("Failed to clean up state", e);
-	
-	            }
+            for (ClassLoader cl : classloadersToClear()) {
+                try {
+                    final Class<?> lastControlClassByCL = Class.forName(LastControl.class.getName(), false, cl);
+                    final Class<?> mocksControlClassByCL = Class.forName(MocksControl.class.getName(), false, cl);
+                    final Method reportLastControl = lastControlClassByCL.getMethod("reportLastControl", mocksControlClassByCL);
+                    reportLastControl.invoke(lastControlClassByCL, new Object[]{null});
+                } catch (Exception e) {
+                    // Should never happen
+                    throw new RuntimeException("Failed to clean up state", e);
+
+                }
             }
         }
-        
-        private Iterable<ClassLoader> classloadersToClear()
-        {
+
+        private Iterable<ClassLoader> classloadersToClear() {
             List<ClassLoader> loaders = new ArrayList<ClassLoader>();
             final ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
             final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-            if(classFoundInClassloader(LastControl.class, systemClassLoader))
-            {
-                 loaders.add(systemClassLoader);
+            if (classFoundInClassloader(LastControl.class, systemClassLoader)) {
+                loaders.add(systemClassLoader);
             }
-            if(classFoundInClassloader(LastControl.class, contextClassLoader))
-            {
-                 loaders.add(contextClassLoader);
+            if (classFoundInClassloader(LastControl.class, contextClassLoader)) {
+                loaders.add(contextClassLoader);
             }
             return loaders;
         }

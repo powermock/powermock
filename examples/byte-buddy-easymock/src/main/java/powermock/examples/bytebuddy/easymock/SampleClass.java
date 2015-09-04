@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package powermock.examples.bytebuddy;
+package powermock.examples.bytebuddy.easymock;
 
 public class SampleClass {
 }

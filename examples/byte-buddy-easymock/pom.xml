@@ -7,11 +7,11 @@
         <version>1.6.3-SNAPSHOT</version>
     </parent>
 
-    <artifactId>powermock-examples-byte-buddy</artifactId>
+    <artifactId>powermock-examples-byte-buddy-easymock</artifactId>
     <name>${project.artifactId}</name>
 
     <description>
-        Example demonstrating that PowerMock and Byte Buddy works together.
+        Example demonstrating that PowerMock EasyMock API and Byte Buddy works together.
     </description>
 
     <dependencies>
@@ -22,7 +22,7 @@
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
+            <artifactId>powermock-api-easymock</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -32,8 +32,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
