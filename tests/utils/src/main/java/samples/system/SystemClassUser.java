@@ -59,6 +59,10 @@ public class SystemClassUser {
         return new URL(anUrl);
     }
 
+    public StringBuilder newStringBuilder() {
+        return new StringBuilder();
+    }
+
     public void shuffleCollection(List<?> list) {
         Collections.shuffle(list);
     }

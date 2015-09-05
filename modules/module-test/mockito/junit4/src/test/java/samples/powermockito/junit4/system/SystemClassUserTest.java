@@ -183,7 +183,24 @@ public class SystemClassUserTest {
         // Then
         assertSame(url, actual);
     }
-    
+
+	@Test
+	public void mockingStringBuilder() throws Exception {
+        // Given
+		 final StringBuilder mock = mock(StringBuilder.class);
+		 whenNew(StringBuilder.class).withNoArguments().thenReturn(mock);
+		 when(mock.toString()).thenReturn("My toString");
+
+		 // When
+		 final StringBuilder actualStringBuilder = new SystemClassUser().newStringBuilder();
+		 final String actualToString = actualStringBuilder.toString();
+
+
+		 // Then
+		 assertSame(mock, actualStringBuilder);
+		 assertEquals("My toString", actualToString);
+    }
+
     @Test(expected = IllegalStateException.class)
     public void triggerMockedCallFromInterfaceTypeInsteadOfConcreteType() throws Exception
     {
