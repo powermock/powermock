@@ -45,4 +45,15 @@ public interface MockPolicyInitializer {
 	 *         this mock policy initializer.
 	 */
 	boolean isPrepared(String fullyQualifiedClassName);
+
+	/**
+	 * Re executes the {@link MockPolicy#} of all the policies for a given class
+	 * loader. This method must be called after a call to
+	 * {@link MockPolicyInitializer#initialize(ClassLoader)} on the same class
+	 * loader.
+	 * <p>
+	 * Note that if the class-loader is not an instance of
+	 * {@link MockClassLoader} this method will return silently.
+	 */
+	void refreshPolicies(ClassLoader classLoader);
 }

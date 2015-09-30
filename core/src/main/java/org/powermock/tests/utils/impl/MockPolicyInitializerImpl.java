@@ -15,6 +15,14 @@
  */
 package org.powermock.tests.utils.impl;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Map.Entry;
+
 import org.powermock.core.MockRepository;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.classloader.annotations.MockPolicy;
@@ -25,10 +33,6 @@ import org.powermock.mockpolicies.impl.MockPolicyClassLoadingSettingsImpl;
 import org.powermock.mockpolicies.impl.MockPolicyInterceptionSettingsImpl;
 import org.powermock.reflect.Whitebox;
 import org.powermock.tests.utils.MockPolicyInitializer;
-
-import java.lang.reflect.*;
-import java.util.Arrays;
-import java.util.Map.Entry;
 
 /**
  * The default implementation of the {@link MockPolicyInitializer} interface for
@@ -69,6 +73,7 @@ public class MockPolicyInitializerImpl implements MockPolicyInitializer {
         }
     }
 
+    @Override
     public boolean isPrepared(String fullyQualifiedClassName) {
         MockPolicyClassLoadingSettings settings = getClassLoadingSettings();
         final boolean foundInSuppressStaticInitializer = Arrays.binarySearch(settings.getStaticInitializersToSuppress(), fullyQualifiedClassName) < 0;
@@ -77,6 +82,7 @@ public class MockPolicyInitializerImpl implements MockPolicyInitializer {
         return foundInSuppressStaticInitializer || foundClassesLoadedByMockClassloader;
     }
 
+    @Override
     public boolean needsInitialization() {
         MockPolicyClassLoadingSettings settings = getClassLoadingSettings();
         return settings.getStaticInitializersToSuppress().length > 0 || settings.getFullyQualifiedNamesOfClassesToLoadByMockClassloader().length > 0;
@@ -85,6 +91,7 @@ public class MockPolicyInitializerImpl implements MockPolicyInitializer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initialize(ClassLoader classLoader) {
         if (classLoader instanceof MockClassLoader) {
             initialize((MockClassLoader) classLoader);
@@ -124,7 +131,14 @@ public class MockPolicyInitializerImpl implements MockPolicyInitializer {
             invokeInitializeInterceptionSettingsFromClassLoader(classLoader);
         }
     }
-
+    
+	@Override
+	public void refreshPolicies(ClassLoader classLoader) {
+		if (classLoader instanceof MockClassLoader) {
+			invokeInitializeInterceptionSettingsFromClassLoader((MockClassLoader) classLoader);
+		}
+	}
+    
     private void invokeInitializeInterceptionSettingsFromClassLoader(MockClassLoader classLoader) {
         try {
             final int sizeOfPolicies = mockPolicyTypes.length;
@@ -211,4 +225,5 @@ public class MockPolicyInitializerImpl implements MockPolicyInitializer {
         }
         return powerMockPolicies;
     }
+
 }

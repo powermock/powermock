@@ -15,23 +15,23 @@
  */
 package org.powermock.modules.junit4.rule;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.powermock.classloading.ClassloaderExecutor;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.MainMockTransformer;
 import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.proxyframework.RegisterProxyFramework;
-import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
+import org.powermock.tests.utils.MockPolicyInitializer;
 import org.powermock.tests.utils.impl.PowerMockIgnorePackagesExtractorImpl;
 import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
 import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class PowerMockClassloaderExecutor {
 
-    public static ClassloaderExecutor forClass(Class<?> testClass) {
+    public static ClassloaderExecutor forClass(Class<?> testClass, MockPolicyInitializer mockPolicyInitializer) {
         List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
         final MainMockTransformer mainMockTransformer = new MainMockTransformer();
         mockTransformerChain.add(mainMockTransformer);
@@ -48,7 +48,7 @@ public class PowerMockClassloaderExecutor {
         mockLoader.addClassesToModify(testClassesExtractor.getTestClasses(testClass));
         mockLoader.addClassesToModify(staticInitializationExtractor.getTestClasses(testClass));
         registerProxyframework(mockLoader);
-        new MockPolicyInitializerImpl(testClass).initialize(mockLoader);
+        mockPolicyInitializer.initialize(mockLoader);
         return new ClassloaderExecutor(mockLoader);
     }
 
