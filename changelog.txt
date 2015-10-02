@@ -1,5 +1,5 @@
-Change log next version
------------------------
+Change log 1.6.3 (2015-10-02)
+----------------------------
 * Mock name in @Mock(name="abc") annotations are no longer ignored for the Mockito API extension
 * Fixed NPE in withArguments() constructor (thanks to Tomoyuki Saito for pull request)
 * Upgraded Javassist dependency to version 3.20.0-GA.
