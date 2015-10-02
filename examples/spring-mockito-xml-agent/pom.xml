@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.powermock.examples</groupId>
         <artifactId>powermock-examples</artifactId>
-        <version>1.6.3-SNAPSHOT</version>
+        <version>1.6.3</version>
     </parent>
 
     <artifactId>powermock-examples-spring-mockito-xml-agent</artifactId>
