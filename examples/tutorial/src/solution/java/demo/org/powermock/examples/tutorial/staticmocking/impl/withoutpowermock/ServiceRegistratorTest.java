@@ -18,6 +18,7 @@ package demo.org.powermock.examples.tutorial.staticmocking.impl.withoutpowermock
 import demo.org.powermock.examples.tutorial.staticmocking.impl.ServiceRegistrator;
 import demo.org.powermock.examples.tutorial.staticmocking.osgi.BundleContext;
 import demo.org.powermock.examples.tutorial.staticmocking.osgi.ServiceRegistration;
+import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +30,7 @@ import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
+import static org.powermock.api.easymock.PowerMock.createMock;
 
 /**
  * Unit test for the {@link ServiceRegistrator} class.
@@ -46,8 +48,8 @@ public class ServiceRegistratorTest {
 	@Before
 	public void setUp() {
 		tested = new ServiceRegistratorWithoutPowerMock();
-		bundleContextMock = createMock(BundleContext.class);
-		serviceRegistrationMock = createMock(ServiceRegistration.class);
+		bundleContextMock = EasyMock.createMock(BundleContext.class);
+		serviceRegistrationMock = EasyMock.createMock(ServiceRegistration.class);
 	}
 
 	/**
@@ -92,7 +94,7 @@ public class ServiceRegistratorTest {
 		final long expectedId = 42;
 
 		Method generateIdMethod = ServiceRegistratorWithoutPowerMock.class.getDeclaredMethod("generateId");
-		tested = createMock(ServiceRegistratorWithoutPowerMock.class, new Method[] { generateIdMethod });
+		tested = createMock(ServiceRegistratorWithoutPowerMock.class, generateIdMethod);
 
 		Field field = ServiceRegistratorWithoutPowerMock.class.getDeclaredField("bundleContext");
 		field.setAccessible(true);

@@ -1997,13 +1997,13 @@ public class PowerMock extends MemberModifier {
             if (methods == null) {
                 mock = mocksControl.createMock(type);
             } else {
-                mock = mocksControl.createMock(type, methods);
+                mock = mocksControl.createMock(null, type, null, methods);
             }
         } else {
             if (methods == null) {
-                mock = mocksControl.createMock(type, constructorArgs);
+                mock = mocksControl.createMock(null, type, constructorArgs);
             } else {
-                mock = mocksControl.createMock(type, constructorArgs, methods);
+                mock = mocksControl.createMock(null, type, constructorArgs, methods);
             }
         }
         return mock;

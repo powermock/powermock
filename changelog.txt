@@ -7,6 +7,7 @@ Change log next version
 * MockClassloader now extends Javassist Loader classloader to implement findClass etc
 * PowerMock now works better with ByteBuddy (issue 579)
 * This allows creating mocks in the applyInterceptionPolicy method of MockPolicy, which in turn allows using MockPolicy together with PowerMockRule (issue 581).
+* Upgraded the powermock-easymock extension to use EasyMock 3.4
 
 Change log 1.6.2 (2015-01-03)
 ----------------------------

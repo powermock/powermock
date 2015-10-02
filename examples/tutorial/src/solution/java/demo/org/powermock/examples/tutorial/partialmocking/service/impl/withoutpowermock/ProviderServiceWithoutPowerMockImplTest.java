@@ -21,6 +21,7 @@ import demo.org.powermock.examples.tutorial.partialmocking.domain.ServiceProduce
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.powermock.api.easymock.PowerMock;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -176,6 +177,6 @@ public class ProviderServiceWithoutPowerMockImplTest {
 	@SuppressWarnings("deprecation")
 	private void createPartialMock(final String methodNameToMock) throws NoSuchMethodException {
 		Method getAllServiceProducersMethod = ProviderServiceWithoutPowerMockImpl.class.getDeclaredMethod(methodNameToMock);
-		tested = createMock(ProviderServiceWithoutPowerMockImpl.class, new Method[] { getAllServiceProducersMethod });
+		tested = PowerMock.createMock(ProviderServiceWithoutPowerMockImpl.class, getAllServiceProducersMethod);
 	}
 }

@@ -63,7 +63,7 @@ public class MockDateTest {
 	public void testMockDateWithEasyMockFails() {
 		Date someDate = new Date();
 		MocksControl c = (MocksControl) org.easymock.EasyMock.createControl();
-		Date date = c.createMock(Date.class, new Method[0]);
+		Date date = c.createMock(null, Date.class, null);
 		EasyMock.expect(date.after(someDate)).andReturn(false);
 		Assert.fail("EasyMock with no methods mocked should not be possible to mock");
 	}

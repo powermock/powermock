@@ -22,7 +22,9 @@ import samples.partialmocking.PartialMockingWithConstructor;
 
 import java.lang.reflect.Method;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.powermock.api.easymock.PowerMock.createMock;
 
 public class PartialMockingWithConstructorUsingEasyMockTest {
 

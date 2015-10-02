@@ -1,6 +1,5 @@
 package demo.org.powermock.examples;
 
-import net.sf.cglib.proxy.Enhancer;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +31,7 @@ public class Log4jUserTest {
 
 		final String actual = tested.mergeMessageWith(otherMessage);
 		Class<? extends Logger> class1 = Whitebox.getInternalState(Log4jUserParent.class, Logger.class).getClass();
-		assertTrue(Enhancer.isEnhanced(class1));
+		assertTrue(class1.getName().contains("org.apache.log4j.Logger$$EnhancerByCGLIB$$"));
 
 		verifyAll();
 

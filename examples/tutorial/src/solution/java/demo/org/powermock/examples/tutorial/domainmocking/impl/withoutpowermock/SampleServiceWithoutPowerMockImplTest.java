@@ -21,6 +21,7 @@ import demo.org.powermock.examples.tutorial.domainmocking.domain.BusinessMessage
 import demo.org.powermock.examples.tutorial.domainmocking.domain.Person;
 import demo.org.powermock.examples.tutorial.domainmocking.domain.SampleServiceException;
 import org.easymock.ConstructorArgs;
+import org.easymock.EasyMock;
 import org.easymock.internal.matchers.Equals;
 import org.easymock.internal.matchers.Same;
 import org.junit.After;
@@ -32,6 +33,7 @@ import java.lang.reflect.Method;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.powermock.api.easymock.PowerMock.createMock;
 
 /**
  * This test demonstrates how to test the refactored SampleService without
@@ -49,12 +51,12 @@ public class SampleServiceWithoutPowerMockImplTest {
 	@SuppressWarnings("deprecation")
 	@Before
 	public void setUp() throws Exception {
-		businessMessagesMock = createMock(BusinessMessages.class);
-		personServiceMock = createMock(PersonService.class);
-		eventServiceMock = createMock(EventService.class);
+		businessMessagesMock = EasyMock.createMock(BusinessMessages.class);
+		personServiceMock = EasyMock.createMock(PersonService.class);
+		eventServiceMock = EasyMock.createMock(EventService.class);
 		constructorArgs = new ConstructorArgs(SampleServiceWithoutPowerMockImpl.class.getConstructor(PersonService.class, EventService.class),
 				personServiceMock, eventServiceMock);
-		tested = createMock(SampleServiceWithoutPowerMockImpl.class, constructorArgs, new Method[] {});
+		tested = createMock(SampleServiceWithoutPowerMockImpl.class, constructorArgs);
 	}
 
 	@After
@@ -81,7 +83,7 @@ public class SampleServiceWithoutPowerMockImplTest {
 		final String lastName = "lastName";
 
 		Method getNewBusinessMessagesInstanceMethod = SampleServiceWithoutPowerMockImpl.class.getDeclaredMethod("getNewBusinessMessagesInstance");
-		tested = createMock(SampleServiceWithoutPowerMockImpl.class, constructorArgs, new Method[] { getNewBusinessMessagesInstanceMethod });
+		tested = createMock(SampleServiceWithoutPowerMockImpl.class, constructorArgs, getNewBusinessMessagesInstanceMethod);
 
 		expect(tested.getNewBusinessMessagesInstance()).andReturn(businessMessagesMock);
 
@@ -104,7 +106,7 @@ public class SampleServiceWithoutPowerMockImplTest {
 		final String lastName = "lastName";
 
 		Method getNewBusinessMessagesInstanceMethod = SampleServiceWithoutPowerMockImpl.class.getDeclaredMethod("getNewBusinessMessagesInstance");
-		tested = createMock(SampleServiceWithoutPowerMockImpl.class, constructorArgs, new Method[] { getNewBusinessMessagesInstanceMethod });
+		tested = createMock(SampleServiceWithoutPowerMockImpl.class, constructorArgs, getNewBusinessMessagesInstanceMethod);
 
 		expect(tested.getNewBusinessMessagesInstance()).andReturn(businessMessagesMock);
 
@@ -131,7 +133,7 @@ public class SampleServiceWithoutPowerMockImplTest {
 		final String lastName = "lastName";
 
 		Method getNewBusinessMessagesInstanceMethod = SampleServiceWithoutPowerMockImpl.class.getDeclaredMethod("getNewBusinessMessagesInstance");
-		tested = createMock(SampleServiceWithoutPowerMockImpl.class, constructorArgs, new Method[] { getNewBusinessMessagesInstanceMethod });
+		tested = createMock(SampleServiceWithoutPowerMockImpl.class, constructorArgs, getNewBusinessMessagesInstanceMethod);
 
 		expect(tested.getNewBusinessMessagesInstance()).andReturn(businessMessagesMock);
 
