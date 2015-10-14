@@ -1,3 +1,7 @@
+Change log next version
+-----------------------
+* DelegatingPowerMockRunner now implements Filterable interface to allow running for example individual test methods (thanks to chang-chao for pull request)
+
 Change log 1.6.3 (2015-10-02)
 ----------------------------
 * Mock name in @Mock(name="abc") annotations are no longer ignored for the Mockito API extension
