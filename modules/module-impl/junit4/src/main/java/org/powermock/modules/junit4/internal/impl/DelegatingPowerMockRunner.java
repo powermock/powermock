@@ -25,6 +25,9 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import org.junit.Test;
 import org.junit.runner.Runner;
+import org.junit.runner.manipulation.Filter;
+import org.junit.runner.manipulation.Filterable;
+import org.junit.runner.manipulation.NoTestsRemainException;
 import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.core.testlisteners.GlobalNotificationBuildSupport;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
@@ -36,7 +39,7 @@ import org.powermock.tests.utils.PowerMockTestNotifier;
 import org.powermock.tests.utils.impl.PowerMockTestNotifierImpl;
 
 public class DelegatingPowerMockRunner extends Runner
-implements PowerMockJUnitRunnerDelegate {
+implements PowerMockJUnitRunnerDelegate, Filterable {
 
     private final String testClassName;
     private final Runner delegate;
@@ -166,5 +169,12 @@ implements PowerMockJUnitRunnerDelegate {
     @Override
     public Class<?> getTestClass() {
         return getDescription().getTestClass();
+    }
+
+    @Override
+    public void filter(Filter filter) throws NoTestsRemainException {
+        if (this.delegate instanceof Filterable) {
+            ((Filterable) this.delegate).filter(filter);
+        }
     }
 }
