@@ -22,6 +22,7 @@ import org.powermock.core.spi.PowerMockPolicy;
 import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.core.transformers.MockTransformer;
 
+import java.security.ProtectionDomain;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -174,11 +175,11 @@ public class MockClassLoader extends DeferSupportingClassLoader {
     protected Class<?> loadModifiedClass(String s) throws ClassFormatError, ClassNotFoundException {
         Class<?> loadedClass;
 
-        deferTo.loadClass(s);
+        Class<?> deferClass = deferTo.loadClass(s);
         if (shouldModify(s) && !shouldLoadWithMockClassloaderWithoutModifications(s)) {
             loadedClass = loadMockClass(s);
         } else {
-            loadedClass = loadUnmockedClass(s);
+            loadedClass = loadUnmockedClass(s, deferClass.getProtectionDomain());
         }
         return loadedClass;
     }
@@ -202,7 +203,8 @@ public class MockClassLoader extends DeferSupportingClassLoader {
         return (modify.size() == 1 && modify.iterator().next().equals(MODIFY_ALL_CLASSES));
     }
 
-    private Class<?> loadUnmockedClass(String name) throws ClassFormatError, ClassNotFoundException {
+    private Class<?> loadUnmockedClass(String name, ProtectionDomain protectionDomain)
+            throws ClassFormatError, ClassNotFoundException {
         byte bytes[] = null;
         try {
             /*
@@ -233,7 +235,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
             }
 
         }
-        return bytes == null ? null : defineClass(name, bytes, 0, bytes.length);
+        return bytes == null ? null : defineClass(name, bytes, 0, bytes.length, protectionDomain);
     }
 
     /**
