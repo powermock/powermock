@@ -34,6 +34,7 @@ public class MethodReplaceStrategyImpl implements MethodReplaceStrategy {
         this.method = method;
     }
 
+    @Override
     public void with(Method method) {
         if (method == null) {
             throw new IllegalArgumentException("A metod cannot be replaced with null.");
@@ -51,6 +52,7 @@ public class MethodReplaceStrategyImpl implements MethodReplaceStrategy {
         }
     }
 
+    @Override
     public void with(InvocationHandler invocationHandler) {
         if (invocationHandler == null) {
             throw new IllegalArgumentException("Invocation handler cannot be null");
@@ -65,6 +67,7 @@ public class MethodReplaceStrategyImpl implements MethodReplaceStrategy {
             this.methodDelegator = methodDelegator;
         }
 
+        @Override
         public Object invoke(Object object, Method invokingMethod, Object[] arguments) throws Throwable {
             return methodDelegator.invoke(object, arguments);
         }

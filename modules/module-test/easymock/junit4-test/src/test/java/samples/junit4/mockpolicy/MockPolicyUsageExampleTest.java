@@ -45,10 +45,12 @@ public class MockPolicyUsageExampleTest {
 }
 
 class MockPolicyExample implements PowerMockPolicy {
+	@Override
 	public void applyClassLoadingPolicy(MockPolicyClassLoadingSettings settings) {
 		settings.addFullyQualifiedNamesOfClassesToLoadByMockClassloader(ResultCalculator.class.getName());
 	}
 
+	@Override
 	public void applyInterceptionPolicy(MockPolicyInterceptionSettings settings) {
 		Method calculateMethod = Whitebox.getMethod(ResultCalculator.class);
 		settings.stubMethod(calculateMethod, 4);

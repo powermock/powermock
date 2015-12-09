@@ -19,10 +19,12 @@ import demo.org.powermock.examples.tutorial.partialmocking.dao.domain.Connection
 
 public class ConnectionImpl implements Connection {
 
+	@Override
 	public void disconnect() {
 		System.out.println("Disconnecting...");
 	}
 
+	@Override
 	public void send(byte[] data) {
 		System.out.println("Sending data of " + data.length + " bytes.");
 	}

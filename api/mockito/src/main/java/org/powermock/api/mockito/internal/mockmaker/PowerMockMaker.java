@@ -42,6 +42,7 @@ import java.util.List;
 public class PowerMockMaker implements MockMaker {
     private final MockMaker cglibMockMaker = new CglibMockMaker();
 
+    @Override
     public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
         T mock = cglibMockMaker.createMock(settings, handler);
         ClassLoader classLoader = cglibMockMaker.getClass().getClassLoader();
@@ -53,6 +54,7 @@ public class PowerMockMaker implements MockMaker {
         return mock;
     }
 
+    @Override
     public MockHandler getHandler(Object mock) {
         // Return a fake mock handler for static method mocks
         if (mock instanceof Class) {
@@ -62,6 +64,7 @@ public class PowerMockMaker implements MockMaker {
         }
     }
 
+    @Override
     public void resetMock(Object mock, MockHandler newHandler, MockCreationSettings settings) {
         cglibMockMaker.resetMock(mock, newHandler, settings);
     }
@@ -76,6 +79,7 @@ public class PowerMockMaker implements MockMaker {
             this.mock = mock;
         }
 
+        @Override
         public MockCreationSettings getMockSettings() {
             final MockSettingsImpl mockSettings = new MockSettingsImpl();
             mockSettings.setMockName(new MockNameImpl(mock.getName()));
@@ -83,17 +87,21 @@ public class PowerMockMaker implements MockMaker {
             return mockSettings;
         }
 
+        @Override
         public VoidMethodStubbable<Object> voidMethodStubbable(Object mock) {
             return null;
         }
 
+        @Override
         public void setAnswersForStubbing(List<Answer> answers) {
         }
 
+        @Override
         public InvocationContainer getInvocationContainer() {
             return null;
         }
 
+        @Override
         public Object handle(Invocation invocation) throws Throwable {
             return null;
         }

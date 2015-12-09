@@ -722,6 +722,7 @@ public class Type {
      * @param o the object to be compared to this type.
      * @return <tt>true</tt> if the given object is equal to this type.
      */
+    @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
@@ -751,6 +752,7 @@ public class Type {
      * 
      * @return a hash code value for this type.
      */
+    @Override
     public int hashCode() {
         int hc = 13 * sort;
         if (sort == OBJECT || sort == ARRAY) {
@@ -766,6 +768,7 @@ public class Type {
      * 
      * @return the descriptor of this type.
      */
+    @Override
     public String toString() {
         return getDescriptor();
     }

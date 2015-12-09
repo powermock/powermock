@@ -28,10 +28,12 @@ public class SimpleFrameworkMockPolicy implements PowerMockPolicy {
 
 	public static final String NATIVE_RESULT_VALUE = "result";
 
+	@Override
 	public void applyClassLoadingPolicy(MockPolicyClassLoadingSettings settings) {
 		settings.addStaticInitializersToSuppress("samples.mockpolicy.frameworkexample.SimpleFramework");
 	}
 
+	@Override
 	public void applyInterceptionPolicy(MockPolicyInterceptionSettings settings) {
 		final Method doNativeStuffMethod = Whitebox.getMethod(SimpleFramework.class, String.class);
 		NativeResult nativeResult = new NativeResult(NATIVE_RESULT_VALUE);

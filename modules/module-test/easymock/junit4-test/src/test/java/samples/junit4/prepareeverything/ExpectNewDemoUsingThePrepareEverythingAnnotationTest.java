@@ -478,6 +478,7 @@ public class ExpectNewDemoUsingThePrepareEverythingAnnotationTest {
 
         final Service serviceSubTypeInstance = new Service() {
 
+            @Override
             public String getServiceMessage() {
                 return "message";
             }

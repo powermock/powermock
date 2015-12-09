@@ -50,6 +50,7 @@ public class ServiceRegistratorWithoutPowerMock implements IServiceRegistrator {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long registerService(String name, Object serviceImplementation) {
 		ServiceRegistration registerService = bundleContext.registerService(name, serviceImplementation, null);
 		final long id = generateId();
@@ -67,6 +68,7 @@ public class ServiceRegistratorWithoutPowerMock implements IServiceRegistrator {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void unregisterService(long id) {
 		final ServiceRegistration registration = serviceRegistrations.remove(id);
 		if (registration == null) {

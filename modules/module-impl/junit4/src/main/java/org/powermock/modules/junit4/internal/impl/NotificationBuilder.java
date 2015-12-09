@@ -121,6 +121,7 @@ class NotificationBuilder {
                     testInstance, testMethod, unsupportedMethodArgs, this);
         }
 
+        @Override
         public Result getResult() {
             return this.result;
         }

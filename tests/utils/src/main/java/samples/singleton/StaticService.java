@@ -31,6 +31,7 @@ public class StaticService {
 
 	public static int getNumberFromInner() {
 		return new Callable<Integer>() {
+			@Override
 			public Integer call() {
 				return number;
 			}
@@ -43,6 +44,7 @@ public class StaticService {
 
 	public int internalGetNumberFromInnerInstance() {
 		return new Callable<Integer>() {
+			@Override
 			public Integer call() {
 				return secret;
 			}

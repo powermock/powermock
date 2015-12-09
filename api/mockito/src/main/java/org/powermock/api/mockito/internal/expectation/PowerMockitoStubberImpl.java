@@ -36,6 +36,7 @@ public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockito
     /**
      * {@inheritDoc}
      */
+    @Override
     public void when(Class<?> classMock) {
         MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository
                 .getStaticMethodInvocationControl(classMock);
@@ -73,6 +74,7 @@ public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockito
         }
     }
 
+    @Override
     public <T> PrivatelyExpectedArguments when(T mock, Method method) throws Exception {
         assertNotNull(mock, "mock");
         assertNotNull(method, "Method");
@@ -80,12 +82,14 @@ public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockito
         return new DefaultPrivatelyExpectedArguments(mock, method);
     }
 
+    @Override
     public <T> void when(T mock, Object... arguments) throws Exception {
         assertNotNull(mock, "mock");
         prepareForStubbing(mock);
         Whitebox.invokeMethod(mock, arguments);
     }
 
+    @Override
     public <T> void when(T mock, String methodToExpect, Object... arguments) throws Exception {
         assertNotNull(mock, "mock");
         assertNotNull(methodToExpect, "methodToExpect");
@@ -93,12 +97,14 @@ public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockito
         Whitebox.invokeMethod(mock, methodToExpect, arguments);
     }
 
+    @Override
     public <T> void when(Class<T> classMock, Object... arguments) throws Exception {
         assertNotNull(classMock, "classMock");
         when(classMock);
         Whitebox.invokeMethod(classMock, arguments);
     }
 
+    @Override
     public <T> void when(Class<T> classMock, String methodToExpect, Object... parameters) throws Exception {
         assertNotNull(classMock, "classMock");
         assertNotNull(methodToExpect, "methodToExpect");
@@ -106,6 +112,7 @@ public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockito
         Whitebox.invokeMethod(classMock, methodToExpect, parameters);
     }
 
+    @Override
     public <T> PrivatelyExpectedArguments when(Class<T> classMock, Method method) throws Exception {
         assertNotNull(classMock, "classMock");
         assertNotNull(method, "Method");

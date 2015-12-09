@@ -60,6 +60,7 @@ public abstract class DeferSupportingClassLoader extends Loader {
         this.deferPackages = deferPackages;
     }
 
+    @Override
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
         SoftReference<Class<?>> reference = classes.get(name);
         if (reference == null || reference.get() == null) {
@@ -116,6 +117,7 @@ public abstract class DeferSupportingClassLoader extends Loader {
      * @return a <code>URL</code> for the resource, or <code>null</code> if the
      * resource could not be found.
      */
+    @Override
     protected URL findResource(String name) {
         try {
             return Whitebox.invokeMethod(deferTo, "findResource", name);
@@ -124,6 +126,7 @@ public abstract class DeferSupportingClassLoader extends Loader {
         }
     }
 
+    @Override
     protected Enumeration<URL> findResources(String name) throws IOException {
         try {
             return Whitebox.invokeMethod(deferTo, "findResources", name);
@@ -132,14 +135,17 @@ public abstract class DeferSupportingClassLoader extends Loader {
         }
     }
 
+    @Override
     public URL getResource(String s) {
         return deferTo.getResource(s);
     }
 
+    @Override
     public InputStream getResourceAsStream(String s) {
         return deferTo.getResourceAsStream(s);
     }
 
+    @Override
     public Enumeration<URL> getResources(String name) throws IOException {
         // If deferTo is already the parent, then we'd end up returning two copies of each resource...
         if (deferTo.equals(getParent()))

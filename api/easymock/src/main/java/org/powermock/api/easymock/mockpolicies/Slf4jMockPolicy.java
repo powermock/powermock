@@ -31,6 +31,7 @@ package org.powermock.api.easymock.mockpolicies;
  */
 public class Slf4jMockPolicy extends AbstractEasyMockLogPolicyBase {
 
+	@Override
 	protected String[] getFullyQualifiedNamesOfClassesToLoadByMockClassloader() {
 		return new String[] { "org.apache.log4j.Appender", "org.slf4j.LoggerFactory", "org.apache.log4j.xml.DOMConfigurator" };
 	}

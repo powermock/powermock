@@ -50,13 +50,16 @@ public class MockPolicyWithInvocationHandlerTest {
 }
 
 class MockPolicyInvocationHandlerExample implements PowerMockPolicy {
+	@Override
 	public void applyClassLoadingPolicy(MockPolicyClassLoadingSettings settings) {
 		settings.addFullyQualifiedNamesOfClassesToLoadByMockClassloader(ResultCalculator.class.getName());
 	}
 
+	@Override
 	public void applyInterceptionPolicy(MockPolicyInterceptionSettings settings) {
 		settings.proxyMethod(method(ResultCalculator.class), new InvocationHandler() {
 
+			@Override
 			public Object invoke(Object object, Method method, Object[] args) throws Throwable {
 				final double result = (Double) method.invoke(object, args);
 				return result + 1.0;

@@ -31,10 +31,12 @@ public class ConstructorAwareExpectationSetup<T> implements WithOrWithoutExpecte
 		this.ctor = ctor;
 	}
 
+	@Override
 	public OngoingStubbing<T> withArguments(Object firstArgument, Object... additionalArguments) throws Exception {
 		return setupExpectation().withArguments(firstArgument, additionalArguments);
 	}
 
+	@Override
 	public OngoingStubbing<T> withNoArguments() throws Exception {
 		return setupExpectation().withNoArguments();
 	}

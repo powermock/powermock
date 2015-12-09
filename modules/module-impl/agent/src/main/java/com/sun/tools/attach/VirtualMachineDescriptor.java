@@ -150,6 +150,7 @@ public final class VirtualMachineDescriptor
     *
     * @return A hash-code value for this descriptor.
     */
+   @Override
    public int hashCode()
    {
       if (hash != 0) {
@@ -176,6 +177,7 @@ public final class VirtualMachineDescriptor
     *         a VirtualMachineDescriptor that is equal to this
     *         VirtualMachineDescriptor.
     */
+   @Override
    public boolean equals(Object ob)
    {
       if (ob == this)
@@ -195,6 +197,7 @@ public final class VirtualMachineDescriptor
    /**
     * Returns the string representation of the <code>VirtualMachineDescriptor</code>.
     */
+   @Override
    public String toString()
    {
       String s = provider.toString() + ": " + id;

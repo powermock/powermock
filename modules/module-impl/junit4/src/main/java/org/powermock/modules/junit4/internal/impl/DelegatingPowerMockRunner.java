@@ -94,6 +94,7 @@ implements PowerMockJUnitRunnerDelegate, Filterable {
          */
         return withContextClassLoader(testClass.getClassLoader(),
                 new Callable<Runner>() {
+            @Override
             public Runner call() throws Exception {
                 try {
                     return Whitebox.invokeConstructor(
@@ -137,6 +138,7 @@ implements PowerMockJUnitRunnerDelegate, Filterable {
     public void run(final RunNotifier notifier) {
         try {
             withContextClassLoader(testClassLoader, new Callable<Void>() {
+                @Override
                 public Void call() {
                     PowerMockRunNotifier powerNotifier = new PowerMockRunNotifier(
                             notifier, powerMockTestNotifier, testMethods);

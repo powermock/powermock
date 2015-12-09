@@ -41,6 +41,7 @@ public class FieldNameMatcherStrategy extends FieldMatcherStrategy {
                 isInstanceField ? "instance" : "static", fieldName, type.getName()));
     }
 
+    @Override
     public String toString() {
         return "fieldName " + fieldName;
     }

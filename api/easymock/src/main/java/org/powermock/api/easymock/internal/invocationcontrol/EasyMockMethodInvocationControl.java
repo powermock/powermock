@@ -83,10 +83,12 @@ public class EasyMockMethodInvocationControl<T> implements MethodInvocationContr
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isMocked(Method method) {
         return mockedMethods == null || (mockedMethods != null && mockedMethods.contains(method));
     }
 
+    @Override
     public Object invoke(Object proxy, Method method, Object[] arguments) throws Throwable {
         return invocationHandler.invoke(mockInstance == null ? proxy : mockInstance, method, arguments);
     }
@@ -114,6 +116,7 @@ public class EasyMockMethodInvocationControl<T> implements MethodInvocationContr
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized Object replay(Object... mocks) {
         // Silently ignore replay if someone has replayed the mock before.
         if (!hasReplayed) {
@@ -126,6 +129,7 @@ public class EasyMockMethodInvocationControl<T> implements MethodInvocationContr
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized Object verify(Object... mocks) {
         // Silently ignore verify if someone has verified the mock before.
         if (!hasVerified) {
@@ -138,6 +142,7 @@ public class EasyMockMethodInvocationControl<T> implements MethodInvocationContr
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized Object reset(Object... mocks) {
         invocationHandler.getControl().reset();
         hasReplayed = false;

@@ -70,11 +70,13 @@ implements GlobalNotificationBuildSupport.Callback {
         return this.suiteClass;
     }
 
+    @Override
     public void suiteClassInitiated(Class<?> testClass) {
         this.suiteClass = testClass;
         notificationBuilder.get().testSuiteStarted(testClass);
     }
 
+    @Override
     public void testInstanceCreated(Object testInstance) {
         if (Thread.currentThread() == motherThread) {
             pendingTestInstancesOnMotherThread.add(testInstance);

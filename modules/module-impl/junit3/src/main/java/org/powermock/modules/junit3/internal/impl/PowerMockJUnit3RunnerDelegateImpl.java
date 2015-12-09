@@ -99,6 +99,7 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements Powe
         }
     }
 
+    @Override
     public Class<?> getTestClass() {
         return testClass;
     }
@@ -121,6 +122,7 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements Powe
      */
     private static Test warning(final String message) {
         return new TestCase("warning") {
+            @Override
             protected void runTest() {
                 fail(message);
             }

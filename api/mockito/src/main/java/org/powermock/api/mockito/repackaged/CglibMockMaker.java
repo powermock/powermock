@@ -18,6 +18,7 @@ import org.mockito.plugins.MockMaker;
  */
 public class CglibMockMaker implements MockMaker {
 
+    @Override
     public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
         InternalMockHandler mockitoHandler = cast(handler);
         new AcrossJVMSerializationFeature().enableSerializationAcrossJVM(settings);
@@ -33,10 +34,12 @@ public class CglibMockMaker implements MockMaker {
         return (InternalMockHandler) handler;
     }
 
+    @Override
     public void resetMock(Object mock, MockHandler newHandler, MockCreationSettings settings) {
         ((Factory) mock).setCallback(0, new MethodInterceptorFilter(cast(newHandler), settings));
     }
 
+    @Override
     public MockHandler getHandler(Object mock) {
         if (!(mock instanceof Factory)) {
             return null;

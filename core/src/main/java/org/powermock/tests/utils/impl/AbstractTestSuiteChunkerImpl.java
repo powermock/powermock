@@ -206,6 +206,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
         //else{ /*Delegation-runner maybe doesn't use test-method annotations!*/ }
     }
 
+    @Override
     public ClassLoader createNewClassloader(
             Class<?> testClass,
             String[] preliminaryClassesToLoadByMockClassloader,
@@ -223,6 +224,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
             Collections.addAll(mockTransformerChain, extraMockTransformers);
             final UseClassPathAdjuster useClassPathAdjuster = testClass.getAnnotation(UseClassPathAdjuster.class);
             mockLoader = AccessController.doPrivileged(new PrivilegedAction<MockClassLoader>() {
+                @Override
                 public MockClassLoader run() {
                     return new MockClassLoader(classesToLoadByMockClassloader, packagesToIgnore, useClassPathAdjuster);
                 }
@@ -340,10 +342,12 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
         testAtDelegateMapper.put(internalSuites.size(), testIndexesForThisClassloader);
     }
 
+    @Override
     public int getChunkSize() {
         return getTestChunks().size();
     }
 
+    @Override
     public List<TestChunk> getTestChunks() {
         List<TestChunk> allChunks = new LinkedList<TestChunk>();
         for (TestCaseEntry entry : internalSuites) {
@@ -413,6 +417,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
     /**
      * {@inheritDoc}
      */
+    @Override
     public List<TestChunk> getTestChunksEntries(Class<?> testClass) {
         for (TestCaseEntry entry : internalSuites) {
             if (entry.getTestClass().equals(testClass)) {

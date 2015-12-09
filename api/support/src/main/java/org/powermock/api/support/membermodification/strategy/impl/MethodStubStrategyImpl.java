@@ -34,13 +34,16 @@ public class MethodStubStrategyImpl<T> implements MethodStubStrategy<T> {
 	}
 
 	@Deprecated
+	@Override
 	public void andReturn(T returnValue) {
 		toReturn(returnValue);
 	}
 
+	@Override
 	public void toThrow(final Throwable throwable) {
 		InvocationHandler throwingInvocationHandler = new InvocationHandler() {
 
+			@Override
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 				throw throwable;
 			}
@@ -48,6 +51,7 @@ public class MethodStubStrategyImpl<T> implements MethodStubStrategy<T> {
 		MethodProxy.proxy(method, throwingInvocationHandler);
 	}
 
+	@Override
 	public void toReturn(T returnValue) {
 		Stubber.stubMethod(method, returnValue);
 	}

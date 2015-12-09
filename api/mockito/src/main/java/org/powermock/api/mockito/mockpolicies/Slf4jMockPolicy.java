@@ -44,6 +44,7 @@ public class Slf4jMockPolicy implements PowerMockPolicy {
 
     private static ThreadLocal<Object> threadLogger = new ThreadLocal<Object>();
 
+    @Override
     public void applyClassLoadingPolicy(MockPolicyClassLoadingSettings mockPolicyClassLoadingSettings) {
         mockPolicyClassLoadingSettings.addFullyQualifiedNamesOfClassesToLoadByMockClassloader(
                 LOGGER_FACTORY_CLASS_NAME,
@@ -51,6 +52,7 @@ public class Slf4jMockPolicy implements PowerMockPolicy {
                 "org.apache.log4j.xml.DOMConfigurator");
     }
 
+    @Override
     public void applyInterceptionPolicy(MockPolicyInterceptionSettings mockPolicyInterceptionSettings) {
         LogPolicySupport logPolicySupport = new LogPolicySupport();
 

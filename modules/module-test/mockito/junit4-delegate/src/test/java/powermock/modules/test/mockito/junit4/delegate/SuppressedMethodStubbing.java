@@ -34,6 +34,7 @@ public enum SuppressedMethodStubbing {
                 @Override
                 public void verify(final Callable<?> invocation) throws Exception {
                     super.verify(new Callable<Exception>() {
+                        @Override
                         public Exception call() {
                             try {
                                 invocation.call();
@@ -66,6 +67,7 @@ public enum SuppressedMethodStubbing {
         assertEquals(value, invocation.call());
     }
 
+    @Override
     public String toString() {
         return "returns " + value;
     }

@@ -115,6 +115,7 @@ final class AnnotationWriter implements AnnotationVisitor {
     // Implementation of the AnnotationVisitor interface
     // ------------------------------------------------------------------------
 
+    @Override
     public void visit(final String name, final Object value) {
         ++size;
         if (named) {
@@ -187,6 +188,7 @@ final class AnnotationWriter implements AnnotationVisitor {
         }
     }
 
+    @Override
     public void visitEnum(
         final String name,
         final String desc,
@@ -199,6 +201,7 @@ final class AnnotationWriter implements AnnotationVisitor {
         bv.put12('e', cw.newUTF8(desc)).putShort(cw.newUTF8(value));
     }
 
+    @Override
     public AnnotationVisitor visitAnnotation(
         final String name,
         final String desc)
@@ -212,6 +215,7 @@ final class AnnotationWriter implements AnnotationVisitor {
         return new AnnotationWriter(cw, true, bv, bv, bv.length - 2);
     }
 
+    @Override
     public AnnotationVisitor visitArray(final String name) {
         ++size;
         if (named) {
@@ -222,6 +226,7 @@ final class AnnotationWriter implements AnnotationVisitor {
         return new AnnotationWriter(cw, false, bv, bv, bv.length - 2);
     }
 
+    @Override
     public void visitEnd() {
         if (parent != null) {
             byte[] data = parent.data;

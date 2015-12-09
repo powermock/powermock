@@ -26,6 +26,7 @@ class VersionComparator implements Comparator {
         return compare(o1, o2) == 0;
     }
 
+    @Override
     public int compare(Object o1, Object o2) {
         String version1 = (String) o1;
         String version2 = (String) o2;

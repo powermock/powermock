@@ -27,6 +27,7 @@ public class TestMethodResultImpl implements TestMethodResult {
 		this.result = result;
 	}
 
+	@Override
 	public Result getResult() {
 		return result;
 	}

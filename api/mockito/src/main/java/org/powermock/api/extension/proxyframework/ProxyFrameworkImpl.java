@@ -27,6 +27,7 @@ public class ProxyFrameworkImpl implements ProxyFramework {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Class<?> getUnproxiedType(Class<?> type) {
         Class<?> currentType = type;
         while (isProxy(currentType)) {
@@ -43,6 +44,7 @@ public class ProxyFrameworkImpl implements ProxyFramework {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isProxy(Class<?> type) {
         if (type == null) {
             return false;

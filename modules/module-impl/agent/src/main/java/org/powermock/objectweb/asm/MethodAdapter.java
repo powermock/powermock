@@ -53,10 +53,12 @@ public class MethodAdapter implements MethodVisitor {
         this.mv = mv;
     }
 
+    @Override
     public AnnotationVisitor visitAnnotationDefault() {
         return mv.visitAnnotationDefault();
     }
 
+    @Override
     public AnnotationVisitor visitAnnotation(
         final String desc,
         final boolean visible)
@@ -64,6 +66,7 @@ public class MethodAdapter implements MethodVisitor {
         return mv.visitAnnotation(desc, visible);
     }
 
+    @Override
     public AnnotationVisitor visitParameterAnnotation(
         final int parameter,
         final String desc,
@@ -72,14 +75,17 @@ public class MethodAdapter implements MethodVisitor {
         return mv.visitParameterAnnotation(parameter, desc, visible);
     }
 
+    @Override
     public void visitAttribute(final Attribute attr) {
         mv.visitAttribute(attr);
     }
 
+    @Override
     public void visitCode() {
         mv.visitCode();
     }
 
+    @Override
     public void visitFrame(
         final int type,
         final int nLocal,
@@ -90,22 +96,27 @@ public class MethodAdapter implements MethodVisitor {
         mv.visitFrame(type, nLocal, local, nStack, stack);
     }
 
+    @Override
     public void visitInsn(final int opcode) {
         mv.visitInsn(opcode);
     }
 
+    @Override
     public void visitIntInsn(final int opcode, final int operand) {
         mv.visitIntInsn(opcode, operand);
     }
 
+    @Override
     public void visitVarInsn(final int opcode, final int var) {
         mv.visitVarInsn(opcode, var);
     }
 
+    @Override
     public void visitTypeInsn(final int opcode, final String type) {
         mv.visitTypeInsn(opcode, type);
     }
 
+    @Override
     public void visitFieldInsn(
         final int opcode,
         final String owner,
@@ -115,6 +126,7 @@ public class MethodAdapter implements MethodVisitor {
         mv.visitFieldInsn(opcode, owner, name, desc);
     }
 
+    @Override
     public void visitMethodInsn(
         final int opcode,
         final String owner,
@@ -124,22 +136,27 @@ public class MethodAdapter implements MethodVisitor {
         mv.visitMethodInsn(opcode, owner, name, desc);
     }
 
+    @Override
     public void visitJumpInsn(final int opcode, final Label label) {
         mv.visitJumpInsn(opcode, label);
     }
 
+    @Override
     public void visitLabel(final Label label) {
         mv.visitLabel(label);
     }
 
+    @Override
     public void visitLdcInsn(final Object cst) {
         mv.visitLdcInsn(cst);
     }
 
+    @Override
     public void visitIincInsn(final int var, final int increment) {
         mv.visitIincInsn(var, increment);
     }
 
+    @Override
     public void visitTableSwitchInsn(
         final int min,
         final int max,
@@ -149,6 +166,7 @@ public class MethodAdapter implements MethodVisitor {
         mv.visitTableSwitchInsn(min, max, dflt, labels);
     }
 
+    @Override
     public void visitLookupSwitchInsn(
         final Label dflt,
         final int[] keys,
@@ -157,10 +175,12 @@ public class MethodAdapter implements MethodVisitor {
         mv.visitLookupSwitchInsn(dflt, keys, labels);
     }
 
+    @Override
     public void visitMultiANewArrayInsn(final String desc, final int dims) {
         mv.visitMultiANewArrayInsn(desc, dims);
     }
 
+    @Override
     public void visitTryCatchBlock(
         final Label start,
         final Label end,
@@ -170,6 +190,7 @@ public class MethodAdapter implements MethodVisitor {
         mv.visitTryCatchBlock(start, end, handler, type);
     }
 
+    @Override
     public void visitLocalVariable(
         final String name,
         final String desc,
@@ -181,14 +202,17 @@ public class MethodAdapter implements MethodVisitor {
         mv.visitLocalVariable(name, desc, signature, start, end, index);
     }
 
+    @Override
     public void visitLineNumber(final int line, final Label start) {
         mv.visitLineNumber(line, start);
     }
 
+    @Override
     public void visitMaxs(final int maxStack, final int maxLocals) {
         mv.visitMaxs(maxStack, maxLocals);
     }
 
+    @Override
     public void visitEnd() {
         mv.visitEnd();
     }

@@ -50,6 +50,7 @@ public class SampleServiceImpl implements SampleService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean createPerson(String firstName, String lastName) {
 		BusinessMessages messages = new BusinessMessages();
 		Person person = null;

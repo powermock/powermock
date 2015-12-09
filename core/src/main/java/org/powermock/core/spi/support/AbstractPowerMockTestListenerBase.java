@@ -31,24 +31,28 @@ public class AbstractPowerMockTestListenerBase implements PowerMockTestListener 
 	/**
 	 * Provides an empty implementation.
 	 */
+	@Override
 	public void afterTestMethod(Object testInstance, Method method, Object[] arguments, TestMethodResult testResult) throws Exception {
 	}
 
 	/**
 	 * Provides an empty implementation.
 	 */
+	@Override
 	public void beforeTestMethod(Object testInstance, Method method, Object[] arguments) throws Exception {
 	}
 
 	/**
 	 * Provides an empty implementation.
 	 */
+	@Override
 	public void beforeTestSuiteStarted(Class<?> testClass, Method[] testMethods) throws Exception {
 	}
 
 	/**
 	 * Provides an empty implementation.
 	 */
+	@Override
 	public void afterTestSuiteEnded(Class<?> testClass, Method[] methods, TestSuiteResult testResult) throws Exception {
 	}
 }

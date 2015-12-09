@@ -37,6 +37,7 @@ public class PowerMockRule implements MethodRule {
         PowerMockAgent.initializeIfPossible();
     }
 
+    @Override
     public Statement apply(Statement base, FrameworkMethod method, Object target) {
         PowerMockAgentTestInitializer.initialize(target.getClass());
 

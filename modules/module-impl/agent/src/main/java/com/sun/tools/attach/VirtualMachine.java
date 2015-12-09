@@ -476,6 +476,7 @@ public abstract class VirtualMachine
     *
     * @return A hash-code value for this virtual machine
     */
+   @Override
    public int hashCode()
    {
       if (hash != 0) {
@@ -502,6 +503,7 @@ public abstract class VirtualMachine
     *         a VirtualMachine that is equal to this
     *         VirtualMachine.
     */
+   @Override
    public boolean equals(Object ob)
    {
       if (ob == this) {
@@ -520,6 +522,7 @@ public abstract class VirtualMachine
    /**
     * Returns the string representation of the <code>VirtualMachine</code>.
     */
+   @Override
    public String toString()
    {
       return provider.toString() + ": " + id;

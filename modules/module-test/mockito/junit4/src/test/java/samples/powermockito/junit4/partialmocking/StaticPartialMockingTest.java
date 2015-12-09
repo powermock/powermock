@@ -70,6 +70,7 @@ public class StaticPartialMockingTest {
 
         assertTrue(Object.class.equals(StaticExample.objectMethod().getClass()));
         doAnswer(new Answer<String>() {
+            @Override
             public String answer(InvocationOnMock invocation) throws Throwable {
                 return "Hello static";
             }
@@ -190,6 +191,7 @@ public class StaticPartialMockingTest {
         spy(StaticExample.class);
 
         doAnswer(new Answer<String>() {
+            @Override
             public String answer(InvocationOnMock invocation) throws Throwable {
                 return "something";
             }

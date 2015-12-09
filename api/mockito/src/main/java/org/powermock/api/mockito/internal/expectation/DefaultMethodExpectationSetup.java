@@ -39,6 +39,7 @@ public class DefaultMethodExpectationSetup<T> implements WithOrWithoutExpectedAr
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public OngoingStubbing<T> withArguments(Object firstArgument, Object... additionalArguments) throws Exception {
         if (additionalArguments == null || additionalArguments.length == 0) {
             return (OngoingStubbing<T>) Mockito.when(method.invoke(object, firstArgument));
@@ -48,6 +49,7 @@ public class DefaultMethodExpectationSetup<T> implements WithOrWithoutExpectedAr
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public OngoingStubbing<T> withNoArguments() throws Exception {
         return (OngoingStubbing<T>) Mockito.when(method.invoke(object));
     }

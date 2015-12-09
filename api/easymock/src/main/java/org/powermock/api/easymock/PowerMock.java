@@ -1901,6 +1901,7 @@ public class PowerMock extends MemberModifier {
          * Clear the EasyMock state after the test method is executed.
          */
         MockRepository.addAfterMethodRunner(new Runnable() {
+            @Override
             public void run() {
                 LastControl.reportLastControl(null);
             }
@@ -2078,6 +2079,7 @@ public class PowerMock extends MemberModifier {
      */
     private static class EasyMockStateCleaner implements Runnable {
 
+        @Override
         public void run() {
             LastControl.reportLastControl(null);
             clearStateFromOtherClassLoaders();

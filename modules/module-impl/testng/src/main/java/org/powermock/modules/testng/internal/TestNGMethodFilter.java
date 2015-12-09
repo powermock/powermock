@@ -25,6 +25,7 @@ import java.lang.reflect.Method;
  * replayAll/verifyAll doesn't work as expected.
  */
 public class TestNGMethodFilter implements MethodFilter {
+    @Override
     public boolean isHandled(Method method) {
         return !isToString(method) && !isHashCode(method) && !isFinalize(method) && !isEquals(method);
     }

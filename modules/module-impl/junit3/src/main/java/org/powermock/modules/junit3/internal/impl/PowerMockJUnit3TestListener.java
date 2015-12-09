@@ -39,15 +39,18 @@ public class PowerMockJUnit3TestListener implements TestListener {
 	/**
 	 * Does nothing.
 	 */
+	@Override
 	public void addError(Test test, Throwable t) {
 	}
 
 	/**
 	 * Does nothing.
 	 */
+	@Override
 	public void addFailure(Test test, AssertionFailedError t) {
 	}
 
+	@Override
 	public void endTest(Test test) {
 		try {
 			Class<?> powerMockClass = mockClassLoader.loadClass(MockRepository.class.getName());
@@ -65,6 +68,7 @@ public class PowerMockJUnit3TestListener implements TestListener {
 	/**
 	 * Does nothing.
 	 */
+	@Override
 	public void startTest(Test test) {
 	}
 }

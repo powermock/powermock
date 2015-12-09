@@ -71,6 +71,7 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		}
 	}
 
+	@Override
 	public void run(RunNotifier notifier) {
 		List<TestChunk> chunkEntries = getTestChunks();
 		Iterator<TestChunk> iterator = chunkEntries.iterator();
@@ -121,6 +122,7 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		powerMockTestNotifier.notifyAfterTestSuiteEnded(testClass, allMethodsAsArray, testSuiteResult);
 	}
 
+	@Override
 	public boolean shouldExecuteTestForMethod(Class<?> testClass, Method potentialTestMethod) {
 		return (potentialTestMethod.getName().startsWith("test")
 				&& Modifier.isPublic(potentialTestMethod.getModifiers())
@@ -159,6 +161,7 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		return newInstance;
 	}
 
+	@Override
 	public synchronized int getTestCount() {
 		if (testCount == NOT_INITIALIZED) {
 			testCount = 0;
@@ -169,6 +172,7 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		return testCount;
 	}
 
+	@Override
 	public Description getDescription() {
 		if (description == null) {
 			if (delegates.size() == 0) {
@@ -200,6 +204,7 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		return description;
 	}
 
+	@Override
 	public void filter(Filter filter) throws NoTestsRemainException {
 		for (Object delegate : delegates) {
 			if (delegate instanceof Filterable) {
@@ -208,6 +213,7 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		}
 	}
 
+	@Override
 	public void sort(Sorter sorter) {
 		for (Object delegate : delegates) {
 			if (delegate instanceof Sortable) {

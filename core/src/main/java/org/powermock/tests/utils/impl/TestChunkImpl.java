@@ -37,6 +37,7 @@ public class TestChunkImpl implements TestChunk {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ClassLoader getClassLoader() {
 		return classLoader;
 	}
@@ -44,6 +45,7 @@ public class TestChunkImpl implements TestChunk {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public List<Method> getTestMethodsToBeExecutedByThisClassloader() {
 		return testMethodsToBeExecutedByThisClassloader;
 	}

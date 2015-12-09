@@ -26,6 +26,7 @@ public class ClassWithInnerMembers {
 
 	private static class MyInnerClass implements InnerInterface {
 
+		@Override
 		public String doStuff() {
 			return "member class";
 		}
@@ -39,6 +40,7 @@ public class ClassWithInnerMembers {
 			this.value = value;
 		}
 
+		@Override
 		public String doStuff() {
 			return value;
 		}
@@ -52,6 +54,7 @@ public class ClassWithInnerMembers {
 			this.value = value;
 		}
 
+		@Override
 		public String doStuff() {
 			return value;
 		}
@@ -71,6 +74,7 @@ public class ClassWithInnerMembers {
 
 	public String getLocalClassValue() {
 		class MyLocalClass implements InnerInterface {
+			@Override
 			public String doStuff() {
 				return "local class";
 			}
@@ -88,6 +92,7 @@ public class ClassWithInnerMembers {
 				this.value = value;
 			}
 
+			@Override
 			public String doStuff() {
 				return value;
 			}
@@ -99,6 +104,7 @@ public class ClassWithInnerMembers {
 	public String getValueForAnonymousInnerClass() {
 
 		InnerInterface inner = new InnerInterface() {
+			@Override
 			public String doStuff() {
 				return "value";
 			}
