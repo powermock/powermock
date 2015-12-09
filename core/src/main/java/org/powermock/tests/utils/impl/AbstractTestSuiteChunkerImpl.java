@@ -237,7 +237,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
     /**
      * {@inheritDoc}
      */
-    public void createTestDelegators(Class<?> testClass, List<TestChunk> chunks) throws Exception {
+    public final void createTestDelegators(Class<?> testClass, List<TestChunk> chunks) throws Exception {
         for (TestChunk chunk : chunks) {
             ClassLoader classLoader = chunk.getClassLoader();
             List<Method> methodsToTest = chunk.getTestMethodsToBeExecutedByThisClassloader();

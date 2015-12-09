@@ -91,7 +91,7 @@ class NotificationBuilder {
             ongoingTestRuns.put(testDescription, this);            
         }
 
-        Class<?> testClass() {
+        final Class<?> testClass() {
             if (null == testClassName) {
                 return testInstance.getClass();
             } else {

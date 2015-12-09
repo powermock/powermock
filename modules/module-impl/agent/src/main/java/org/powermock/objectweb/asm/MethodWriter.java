@@ -956,7 +956,7 @@ class MethodWriter implements MethodVisitor {
         }
     }
 
-    public void visitLabel(final Label label) {
+    public final void visitLabel(final Label label) {
         // resolves previous forward references to label, if any
         resize |= label.resolve(this, code.length, code.data);
         // updates currentBlock
