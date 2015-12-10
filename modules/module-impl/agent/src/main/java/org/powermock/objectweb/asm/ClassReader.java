@@ -1884,7 +1884,7 @@ public class ClassReader {
      * @param index the start index of the value to be read in {@link #b b}.
      * @return the read value.
      */
-    public int readUnsignedShort(final int index) {
+    public final int readUnsignedShort(final int index) {
         byte[] b = this.b;
         return ((b[index] & 0xFF) << 8) | (b[index + 1] & 0xFF);
     }

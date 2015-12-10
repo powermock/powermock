@@ -79,7 +79,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
     }
 
     @SuppressWarnings("unchecked")
-    protected List<Method> getTestMethods(Class<?> klass, String[] methodsToRun) {
+    protected final List<Method> getTestMethods(Class<?> klass, String[] methodsToRun) {
         if (methodsToRun == null || methodsToRun.length == 0) {
             // The getTestMethods of TestClass is not visible so we need to look
             // it invoke it using reflection.
@@ -102,7 +102,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
         }
     }
 
-    protected void validate() throws InitializationError {
+    protected final void validate() throws InitializationError {
         if (!TestCase.class.isAssignableFrom(testClass.getJavaClass())) {
             MethodValidator methodValidator = new PowerMockJUnit4MethodValidator(testClass);
             methodValidator.validateMethodsForDefaultRunner();

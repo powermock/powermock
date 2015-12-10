@@ -267,7 +267,7 @@ public abstract class HotSpotVirtualMachine extends VirtualMachine {
      * property, or the default timeout if the property is not set to a positive
      * value.
      */
-    long attachTimeout() {
+    final long attachTimeout() {
         if (attachTimeout == 0) {
             synchronized(this) {
                 if (attachTimeout == 0) {

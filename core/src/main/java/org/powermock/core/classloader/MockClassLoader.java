@@ -162,7 +162,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
      *                to the list of classes that will be byte-code modified to
      *                enable testability.
      */
-    public void addClassesToModify(String... classes) {
+    public final void addClassesToModify(String... classes) {
         if (classes != null) {
             for (String clazz : classes) {
                 if (!shouldDefer(packagesToBeDeferred, clazz)) {
