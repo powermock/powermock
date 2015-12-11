@@ -1,5 +1,5 @@
-Change log next version
------------------------
+Change log 1.6.3 (2015-12-11)
+-----------------------------
 * DelegatingPowerMockRunner now implements Filterable interface to allow running for example individual test methods (thanks to chang-chao for pull request)
 * Fixed jacoco/powermock integration issue (thanks to Evgeny Astafyev for pull request)
 * Improvements to StackTraceCleanerProvider which cleans powermock classes from a stack trace
