@@ -33,6 +33,7 @@ import org.powermock.api.mockito.internal.expectation.ConstructorAwareExpectatio
 import org.powermock.api.mockito.internal.expectation.DefaultConstructorExpectationSetup;
 import org.powermock.api.mockito.internal.expectation.DefaultMethodExpectationSetup;
 import org.powermock.api.mockito.internal.mockcreation.MockCreator;
+import org.powermock.api.mockito.internal.stubbing.answers.ChainReturns;
 import org.powermock.api.mockito.internal.verification.DefaultConstructorArgumentsVerfication;
 import org.powermock.api.mockito.internal.verification.DefaultPrivateMethodVerification;
 import org.powermock.api.mockito.internal.verification.VerifyNoMoreInteractions;
@@ -768,7 +769,7 @@ public class PowerMockito extends MemberModifier {
      * <pre>
      * when(mock.foo()).thenThrow(new RuntimeException());
      *
-     * //Impossible: the exception-stubbed foo() method is called so RuntimeException is thrown. 
+     * //Impossible: the exception-stubbed foo() method is called so RuntimeException is thrown.
      * when(mock.foo()).thenReturn(&quot;bar&quot;);
      *
      * //You have to use doReturn() for stubbing:
@@ -787,5 +788,12 @@ public class PowerMockito extends MemberModifier {
      */
     public static PowerMockitoStubber doReturn(Object toBeReturned) {
         return POWERMOCKITO_CORE.doAnswer(new Returns(toBeReturned));
+    }
+
+    public static PowerMockitoStubber doReturn(Object toBeReturned, Object... othersToBeReturned) {
+        if (othersToBeReturned != null && othersToBeReturned.length == 0) {
+            return doReturn(toBeReturned);
+        }
+        return POWERMOCKITO_CORE.doAnswer(new ChainReturns(toBeReturned, othersToBeReturned));
     }
 }
