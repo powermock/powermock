@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.powermock.examples</groupId>
         <artifactId>powermock-examples</artifactId>
-        <version>1.6.4-SNAPSHOT</version>
+        <version>1.6.4</version>
     </parent>
 
     <artifactId>powermock-examples-hamcrestexample</artifactId>
