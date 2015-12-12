@@ -1,3 +1,7 @@
+Change log next version
+-----------------------
+* Add ability to chain returns with doReturn() (thanks to "gauee" for pull request) (issue 599)
+
 Change log 1.6.4 (2015-12-11)
 -----------------------------
 * DelegatingPowerMockRunner now implements Filterable interface to allow running for example individual test methods (thanks to chang-chao for pull request)
