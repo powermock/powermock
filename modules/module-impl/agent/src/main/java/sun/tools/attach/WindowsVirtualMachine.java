@@ -65,6 +65,7 @@ public class WindowsVirtualMachine extends HotSpotVirtualMachine {
         }
     }
 
+    @Override
     public void detach() throws IOException {
         synchronized (this) {
             if (hProcess != -1) {
@@ -74,6 +75,7 @@ public class WindowsVirtualMachine extends HotSpotVirtualMachine {
         }
     }
 
+    @Override
     InputStream execute(String cmd, Object ... args)
         throws AgentLoadException, IOException
     {
@@ -131,6 +133,7 @@ public class WindowsVirtualMachine extends HotSpotVirtualMachine {
             this.hPipe = hPipe;
         }
 
+        @Override
         public synchronized int read() throws IOException {
             byte b[] = new byte[1];
             int n = this.read(b, 0, 1);
@@ -141,6 +144,7 @@ public class WindowsVirtualMachine extends HotSpotVirtualMachine {
             }
         }
 
+        @Override
         public synchronized int read(byte[] bs, int off, int len) throws IOException {
             if ((off < 0) || (off > bs.length) || (len < 0) ||
                 ((off + len) > bs.length) || ((off + len) < 0)) {
@@ -151,6 +155,7 @@ public class WindowsVirtualMachine extends HotSpotVirtualMachine {
             return WindowsVirtualMachine.readPipe(hPipe, bs, off, len);
         }
 
+        @Override
         public void close() throws IOException {
             if (hPipe != -1) {
                 WindowsVirtualMachine.closePipe(hPipe);

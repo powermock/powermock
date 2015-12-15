@@ -26,6 +26,7 @@ public class MyServiceImpl implements MyService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<Person> getAllPersons() {
 		return new HashSet<Person>();
 	}

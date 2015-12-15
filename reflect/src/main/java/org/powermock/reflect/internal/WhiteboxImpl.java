@@ -208,6 +208,7 @@ public class WhiteboxImpl {
         if (Modifier.isInterface(modifiers)) {
             object = Proxy.newProxyInstance(WhiteboxImpl.class.getClassLoader(), new Class<?>[]{classToInstantiate},
                     new InvocationHandler() {
+                        @Override
                         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                             return TypeUtils.getDefaultValue(method.getReturnType());
                         }
@@ -961,6 +962,7 @@ public class WhiteboxImpl {
                 * invoke.
                 */
             Arrays.sort(methods, new Comparator<Method>() {
+                @Override
                 public int compare(Method m1, Method m2) {
                     final Class<?>[] typesMethod1 = m1.getParameterTypes();
                     final Class<?>[] typesMethod2 = m2.getParameterTypes();
@@ -1491,6 +1493,7 @@ public class WhiteboxImpl {
             final Class<?> type = thisType;
             final Method[] declaredMethods = AccessController.doPrivileged(new PrivilegedAction<Method[]>() {
 
+                @Override
                 public Method[] run() {
                     return type.getDeclaredMethods();
                 }

@@ -38,6 +38,7 @@ class SerializableMockitoMethodProxy implements MockitoMethodProxy, Serializable
         return methodProxy;
     }
 
+    @Override
     public Object invokeSuper(Object target, Object[] arguments) throws Throwable {
         return getMethodProxy().invokeSuper(target, arguments);
     }

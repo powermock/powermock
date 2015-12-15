@@ -37,98 +37,119 @@ public class MockPolicyInterceptionSettingsImpl implements MockPolicyInterceptio
 		fieldsTypesToSuppress = new LinkedHashSet<String>();
 	}
 
+	@Override
 	public void addFieldTypesToSuppress(String firstType, String... additionalFieldTypes) {
 		fieldsTypesToSuppress.add(firstType);
 		addFieldTypesToSuppress(additionalFieldTypes);
 	}
 
+	@Override
 	public void addFieldTypesToSuppress(String[] fieldTypes) {
 		for (String fieldType : fieldTypes) {
 			fieldsTypesToSuppress.add(fieldType);
 		}
 	}
 
+	@Override
 	public void setFieldTypesToSuppress(String[] fieldTypes) {
 		fieldsTypesToSuppress.clear();
 		addFieldTypesToSuppress(fieldTypes);
 	}
 
+    @Override
 	public Field[] getFieldsToSuppress() {
 		return fieldsToSuppress.toArray(new Field[fieldsToSuppress.size()]);
 	}
 
+    @Override
 	public Method[] getMethodsToSuppress() {
 		return methodsToSuppress.toArray(new Method[methodsToSuppress.size()]);
 	}
 
+    @Override
 	public Map<Method, Object> getStubbedMethods() {
 		return Collections.unmodifiableMap(substituteReturnValues);
 	}
 
+    @Override
 	public void addFieldToSuppress(Field firstField, Field... fields) {
 		fieldsToSuppress.add(firstField);
 		addFieldToSuppress(fields);
 	}
 
+    @Override
 	public void addFieldToSuppress(Field[] fields) {
 		for (Field field : fields) {
 			fieldsToSuppress.add(field);
 		}
 	}
 
+    @Override
 	public void addMethodsToSuppress(Method methodToSuppress, Method... additionalMethodsToSuppress) {
 		methodsToSuppress.add(methodToSuppress);
 		addMethodsToSuppress(additionalMethodsToSuppress);
 	}
 
+    @Override
 	public void addMethodsToSuppress(Method[] methods) {
 		for (Method method : methods) {
 			methodsToSuppress.add(method);
 		}
 	}
 
+    @Override
 	public void stubMethod(Method method, Object returnObject) {
 		substituteReturnValues.put(method, returnObject);
 	}
 
+    @Override
 	public void setFieldsSuppress(Field[] fields) {
 		fieldsToSuppress.clear();
 		addFieldToSuppress(fields);
 	}
 
+    @Override
 	public void setMethodsToSuppress(Method[] methods) {
 		methodsToSuppress.clear();
 		addMethodsToSuppress(methods);
 	}
 
+    @Override
 	public void setMethodsToStub(Map<Method, Object> substituteReturnValues) {
 		this.substituteReturnValues = substituteReturnValues;
 	}
 
+    @Override
 	public String[] getFieldTypesToSuppress() {
 		return fieldsTypesToSuppress.toArray(new String[fieldsTypesToSuppress.size()]);
 	}
 
+    @Override
 	public void addSubtituteReturnValue(Method method, Object returnObject) {
 		substituteReturnValues.put(method, returnObject);
 	}
 
+    @Override
 	public void setSubtituteReturnValues(Map<Method, Object> substituteReturnValues) {
 		this.substituteReturnValues = substituteReturnValues;
 	}
 
+    @Override
 	public Map<Method, Object> getSubstituteReturnValues() {
 		return getStubbedMethods();
 	}
 
+    @Override
 	public Map<Method, InvocationHandler> getProxiedMethods() {
 		return proxies;
 	}
 
+    @Override
 	public void proxyMethod(Method method, InvocationHandler invocationHandler) {
 		proxies.put(method, invocationHandler);
 	}
 
+    @Override
 	public void setMethodsToProxy(Map<Method, InvocationHandler> proxies) {
 		this.proxies = proxies;
 	}

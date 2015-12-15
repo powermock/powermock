@@ -131,6 +131,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isMocked(Method method) {
         return mockedMethods == null || (mockedMethods != null && mockedMethods.contains(method));
     }
@@ -163,6 +164,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
         }
     }
 
+    @Override
     public Object invoke(final Object obj, final Method method, final Object[] arguments) throws Throwable {
         /*
            * If we come here and it means that the class has been modified by
@@ -221,6 +223,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
         final CleanTraceRealMethod cglibProxyRealMethod = new CleanTraceRealMethod(new RealMethod() {
             private static final long serialVersionUID = 4564320968038564170L;
 
+            @Override
             public Object invoke(Object target, Object[] arguments) throws Throwable {
                 /*
                      * Instruct the MockGateway to don't intercept the next call.
@@ -253,6 +256,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
                 cglibProxyRealMethod) {
             private static final long serialVersionUID = -3679957412502758558L;
 
+            @Override
             public String toString() {
                 return new ToStringGenerator().generate(getMock(), getMethod(), getArguments());
             }
@@ -282,14 +286,17 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
         return mockHandler;
     }
 
+    @Override
     public Object replay(Object... mocks) {
         throw new IllegalStateException("Internal error: No such thing as replay exists in Mockito.");
     }
 
+    @Override
     public Object reset(Object... mocks) {
         throw new IllegalStateException("Internal error: No such thing as reset exists in Mockito.");
     }
 
+    @Override
     public Object verify(Object... mocks) {
         if (mocks == null || mocks.length != 1) {
             throw new IllegalArgumentException("Must supply one mock to the verify method.");

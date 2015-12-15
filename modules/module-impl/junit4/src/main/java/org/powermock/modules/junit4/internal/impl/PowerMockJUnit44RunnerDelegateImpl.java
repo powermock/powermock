@@ -116,6 +116,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
     @Override
     public void run(final RunNotifier notifier) {
         new ClassRoadie(notifier, testClass, getDescription(), new Runnable() {
+            @Override
             public void run() {
                 runMethods(notifier);
             }
@@ -234,6 +235,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
         return method.getAnnotations();
     }
 
+    @Override
     public void filter(Filter filter) throws NoTestsRemainException {
         for (Iterator<Method> iter = testMethods.iterator(); iter.hasNext(); ) {
             Method method = iter.next();
@@ -244,8 +246,10 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
             throw new NoTestsRemainException();
     }
 
+    @Override
     public void sort(final Sorter sorter) {
         Collections.sort(testMethods, new Comparator<Method>() {
+            @Override
             public int compare(Method o1, Method o2) {
                 return sorter.compare(methodDescription(o1), methodDescription(o2));
             }
@@ -256,10 +260,12 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
         return testClass;
     }
 
+    @Override
     public int getTestCount() {
         return testMethods.size();
     }
 
+    @Override
     public Class<?> getTestClass() {
         return testClass.getJavaClass();
     }

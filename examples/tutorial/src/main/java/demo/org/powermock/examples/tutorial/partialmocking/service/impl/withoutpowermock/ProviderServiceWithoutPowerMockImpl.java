@@ -54,6 +54,7 @@ public class ProviderServiceWithoutPowerMockImpl implements ProviderService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<ServiceProducer> getAllServiceProviders() {
 		final Set<ServiceProducer> serviceProducers = getAllServiceProducers();
 		if (serviceProducers == null) {
@@ -65,6 +66,7 @@ public class ProviderServiceWithoutPowerMockImpl implements ProviderService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ServiceProducer getServiceProvider(int id) {
 		Set<ServiceProducer> allServiceProducers = getAllServiceProducers();
 		for (ServiceProducer serviceProducer : allServiceProducers) {

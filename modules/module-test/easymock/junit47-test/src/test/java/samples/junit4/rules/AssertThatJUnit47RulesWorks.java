@@ -53,6 +53,7 @@ public class AssertThatJUnit47RulesWorks {
 	}
 
 	private class MyRule implements MethodRule {
+		@Override
 		public Statement apply(final Statement base, FrameworkMethod method, Object target) {
 			return new Statement() {
 				@Override

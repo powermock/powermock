@@ -130,6 +130,7 @@ public class LinuxVirtualMachine extends HotSpotVirtualMachine {
     /**
      * Detach from the target VM
      */
+    @Override
     public void detach() throws IOException {
         synchronized (this) {
             if (this.path != null) {
@@ -147,6 +148,7 @@ public class LinuxVirtualMachine extends HotSpotVirtualMachine {
     /**
      * Execute the given command in the target VM.
      */
+    @Override
     InputStream execute(String cmd, Object ... args) throws AgentLoadException, IOException {
         assert args.length <= 3;                // includes null
 
@@ -239,6 +241,7 @@ public class LinuxVirtualMachine extends HotSpotVirtualMachine {
             this.s = s;
         }
 
+        @Override
         public synchronized int read() throws IOException {
             byte b[] = new byte[1];
             int n = this.read(b, 0, 1);
@@ -249,6 +252,7 @@ public class LinuxVirtualMachine extends HotSpotVirtualMachine {
             }
         }
 
+        @Override
         public synchronized int read(byte[] bs, int off, int len) throws IOException {
             if ((off < 0) || (off > bs.length) || (len < 0) ||
                 ((off + len) > bs.length) || ((off + len) < 0)) {
@@ -259,6 +263,7 @@ public class LinuxVirtualMachine extends HotSpotVirtualMachine {
             return LinuxVirtualMachine.read(s, bs, off, len);
         }
 
+        @Override
         public void close() throws IOException {
             LinuxVirtualMachine.close(s);
         }

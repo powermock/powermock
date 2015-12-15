@@ -18,6 +18,7 @@ package samples.rule;
 
 public class SimpleThingImpl implements SimpleThing {
 
+    @Override
     public String getThingName() {
         return null;
     }

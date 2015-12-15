@@ -414,6 +414,7 @@ public class WhenNewTest {
 
         final Service serviceSubTypeInstance = new Service() {
 
+            @Override
             public String getServiceMessage() {
                 return "message";
             }

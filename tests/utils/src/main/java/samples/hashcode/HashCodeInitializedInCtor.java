@@ -29,6 +29,7 @@ public class HashCodeInitializedInCtor {
         return fault;
     }
 
+    @Override
     public final int hashCode() {
         return hash.hashCode();
     }

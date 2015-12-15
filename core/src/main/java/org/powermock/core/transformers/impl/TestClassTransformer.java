@@ -71,10 +71,12 @@ public abstract class TestClassTransformer implements MockTransformer {
 
     public static ForTestClass forTestClass(final Class<?> testClass) {
         return new ForTestClass() {
+            @Override
             public RemovesTestMethodAnnotation removesTestMethodAnnotation(
                     final Class<? extends Annotation> testMethodAnnotation) {
                 return new RemovesTestMethodAnnotation() {
 
+                    @Override
                     public TestClassTransformer fromMethods(
                             final Collection<Method> testMethodsThatRunOnOtherClassLoaders) {
                         return new TestClassTransformer(testClass, testMethodAnnotation) {
@@ -101,6 +103,7 @@ public abstract class TestClassTransformer implements MockTransformer {
                         };
                     }
 
+                    @Override
                     public TestClassTransformer fromAllMethodsExcept(
                             Method singleMethodToRunOnTargetClassLoader) {
                         final String targetMethodSignature =
@@ -189,6 +192,7 @@ public abstract class TestClassTransformer implements MockTransformer {
         }
     }
 
+    @Override
     public CtClass transform(final CtClass clazz) throws Exception {
         if (clazz.isFrozen()) {
             clazz.defrost();

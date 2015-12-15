@@ -111,6 +111,7 @@ public class AnnotationEnabler extends AbstractPowerMockTestListenerBase impleme
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public Class<? extends Annotation>[] getMockAnnotations() {
         return new Class[]{org.mockito.Mock.class, Mock.class, org.powermock.core.classloader.annotations.Mock.class};
     }

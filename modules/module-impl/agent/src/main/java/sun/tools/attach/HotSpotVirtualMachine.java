@@ -73,6 +73,7 @@ public abstract class HotSpotVirtualMachine extends VirtualMachine {
     /*
      * Load agent library - library name will be expanded in target VM
      */
+    @Override
     public void loadAgentLibrary(String agentLibrary, String options)
         throws AgentLoadException, AgentInitializationException, IOException
     {
@@ -82,6 +83,7 @@ public abstract class HotSpotVirtualMachine extends VirtualMachine {
     /*
      * Load agent - absolute path of library provided to target VM
      */
+    @Override
     public void loadAgentPath(String agentLibrary, String options)
         throws AgentLoadException, AgentInitializationException, IOException
     {
@@ -92,6 +94,7 @@ public abstract class HotSpotVirtualMachine extends VirtualMachine {
      * Load JPLIS agent which will load the agent JAR file and invoke
      * the agentmain method.
      */
+    @Override
     public void loadAgent(String agent, String options)
         throws AgentLoadException, AgentInitializationException, IOException
     {
@@ -137,6 +140,7 @@ public abstract class HotSpotVirtualMachine extends VirtualMachine {
     /*
      * Send "properties" command to target VM
      */
+    @Override
     public Properties getSystemProperties() throws IOException {
         InputStream in = null;
         Properties props = new Properties();
@@ -149,6 +153,7 @@ public abstract class HotSpotVirtualMachine extends VirtualMachine {
         return props;
     }
 
+    @Override
     public Properties getAgentProperties() throws IOException {
         InputStream in = null;
         Properties props = new Properties();

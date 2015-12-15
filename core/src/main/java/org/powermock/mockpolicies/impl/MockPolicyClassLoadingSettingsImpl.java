@@ -33,6 +33,7 @@ public class MockPolicyClassLoadingSettingsImpl implements MockPolicyClassLoadin
 		staticInitializersToSuppress = new LinkedHashSet<String>();
 	}
 
+	@Override
 	public String[] getFullyQualifiedNamesOfClassesToLoadByMockClassloader() {
 		if (fullyQualifiedNamesOfClassesToLoadByMockClassloader == null) {
 			return new String[0];
@@ -40,6 +41,7 @@ public class MockPolicyClassLoadingSettingsImpl implements MockPolicyClassLoadin
 		return fullyQualifiedNamesOfClassesToLoadByMockClassloader.toArray(new String[fullyQualifiedNamesOfClassesToLoadByMockClassloader.size()]);
 	}
 
+	@Override
 	public String[] getStaticInitializersToSuppress() {
 		if (staticInitializersToSuppress == null) {
 			return new String[0];
@@ -47,33 +49,39 @@ public class MockPolicyClassLoadingSettingsImpl implements MockPolicyClassLoadin
 		return staticInitializersToSuppress.toArray(new String[staticInitializersToSuppress.size()]);
 	}
 
+	@Override
 	public void addFullyQualifiedNamesOfClassesToLoadByMockClassloader(String firstClass, String... additionalClasses) {
 		fullyQualifiedNamesOfClassesToLoadByMockClassloader.add(firstClass);
 		addFullyQualifiedNamesOfClassesToLoadByMockClassloader(additionalClasses);
 	}
 
+	@Override
 	public void addFullyQualifiedNamesOfClassesToLoadByMockClassloader(String[] classes) {
 		for (String clazz : classes) {
 			fullyQualifiedNamesOfClassesToLoadByMockClassloader.add(clazz);
 		}
 	}
 
+	@Override
 	public void addStaticInitializersToSuppress(String firstStaticInitializerToSuppress, String... additionalStaticInitializersToSuppress) {
 		staticInitializersToSuppress.add(firstStaticInitializerToSuppress);
 		addStaticInitializersToSuppress(additionalStaticInitializersToSuppress);
 	}
 
+	@Override
 	public void addStaticInitializersToSuppress(String[] staticInitializersToSuppress) {
 		for (String staticInitializerToSuppress : staticInitializersToSuppress) {
 			this.staticInitializersToSuppress.add(staticInitializerToSuppress);
 		}
 	}
 
+	@Override
 	public void setFullyQualifiedNamesOfClassesToLoadByMockClassloader(String[] classes) {
 		fullyQualifiedNamesOfClassesToLoadByMockClassloader.clear();
 		addFullyQualifiedNamesOfClassesToLoadByMockClassloader(classes);
 	}
 
+	@Override
 	public void setStaticInitializersToSuppress(String[] staticInitializersToSuppress) {
 		this.staticInitializersToSuppress.clear();
 		addStaticInitializersToSuppress(staticInitializersToSuppress);

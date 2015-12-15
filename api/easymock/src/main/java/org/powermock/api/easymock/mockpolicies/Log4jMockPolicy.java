@@ -35,6 +35,7 @@ public class Log4jMockPolicy extends AbstractEasyMockLogPolicyBase {
 	/**
 	 * Loads all log4j classes with the mock classloader.
 	 */
+	@Override
 	protected String[] getFullyQualifiedNamesOfClassesToLoadByMockClassloader() {
 		return new String[] { "org.apache.log4j.*" };
 	}

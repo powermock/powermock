@@ -34,6 +34,7 @@ public class MyCustomMockPolicy implements PowerMockPolicy {
 	 * Add the {@link Dependency} to the list of classes that should be loaded
 	 * by the mock class-loader.
 	 */
+	@Override
 	public void applyClassLoadingPolicy(MockPolicyClassLoadingSettings settings) {
 		settings.addFullyQualifiedNamesOfClassesToLoadByMockClassloader(Dependency.class.getName());
 	}
@@ -42,6 +43,7 @@ public class MyCustomMockPolicy implements PowerMockPolicy {
 	 * Every time the {@link Dependency#getData()} method is invoked we return a
 	 * custom instance of a {@link DataObject}.
 	 */
+	@Override
 	public void applyInterceptionPolicy(MockPolicyInterceptionSettings settings) {
 		final Method getDataMethod = Whitebox.getMethod(Dependency.class);
 		final DataObject dataObject = new DataObject("Policy generated data object");

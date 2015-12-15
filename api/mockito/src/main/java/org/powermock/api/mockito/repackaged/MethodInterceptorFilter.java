@@ -39,6 +39,7 @@ public class MethodInterceptorFilter implements MethodInterceptor, Serializable 
         this.mockSettings = mockSettings;
     }
 
+    @Override
     public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy)
             throws Throwable {
         if (objectMethodsGuru.isEqualsMethod(method)) {

@@ -50,6 +50,7 @@ public class StubMethodTest {
 
         final SuppressMethod tested = new SuppressMethod();
         Callable<?> methodInvocation = new Callable<Object>() {
+            @Override
             public Object call() {
                 return method.invokeOn(tested);
             }

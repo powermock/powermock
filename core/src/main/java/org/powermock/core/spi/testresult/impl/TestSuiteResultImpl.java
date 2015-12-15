@@ -38,18 +38,22 @@ public class TestSuiteResultImpl implements TestSuiteResult {
 		this.ignoreCount = ignoreCount;
 	}
 
+	@Override
 	public int getFailureCount() {
 		return failureCount;
 	}
 
+	@Override
 	public int getSuccessCount() {
 		return successCount;
 	}
 
+	@Override
 	public int getIgnoreCount() {
 		return ignoreCount;
 	}
 
+	@Override
 	public Result getResult() {
 		Result result = Result.SUCCESSFUL;
 		if (testCount == 0) {
@@ -60,6 +64,7 @@ public class TestSuiteResultImpl implements TestSuiteResult {
 		return result;
 	}
 
+	@Override
 	public int getTestCount() {
 		return testCount;
 	}

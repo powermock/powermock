@@ -106,18 +106,21 @@ public class ProxyMethodTest {
 	}
 
 	private final class ThrowingInvocationHandler implements InvocationHandler {
+		@Override
 		public Object invoke(Object object, Method method, Object[] arguments) throws Throwable {
 			throw new ArrayStoreException();
 		}
 	}
 
 	private final class ReturnValueChangingInvocationHandler implements InvocationHandler {
+		@Override
 		public Object invoke(Object object, Method method, Object[] arguments) throws Throwable {
 			return "hello world";
 		}
 	}
 
 	private final class DelegatingInvocationHandler implements InvocationHandler {
+		@Override
 		public Object invoke(Object object, Method method, Object[] arguments) throws Throwable {
 			return method.invoke(object, arguments);
 		}

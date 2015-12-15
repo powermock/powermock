@@ -62,10 +62,12 @@ public abstract class AbstractCommonPowerMockRunner extends Runner implements Fi
         return suiteChunker.getTestCount();
     }
 
+    @Override
     public void filter(Filter filter) throws NoTestsRemainException {
         suiteChunker.filter(filter);
     }
 
+    @Override
     public void sort(Sorter sorter) {
         suiteChunker.sort(sorter);
     }

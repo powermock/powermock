@@ -39,6 +39,7 @@ public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpect
         this.substitute = substitute;
     }
 
+    @Override
     public Object invoke(Class<?> type, Object[] args, Class<?>[] sig) throws Exception {
         Constructor<?> constructor = WhiteboxImpl.getConstructor(type, sig);
         if (constructor.isVarArgs()) {
@@ -70,6 +71,7 @@ public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpect
         return null;
     }
 
+    @Override
     public IExpectationSetters<T> expectSubstitutionLogic(Object... arguments) throws Exception {
         return EasyMock.expect(substitute.performSubstitutionLogic(arguments));
     }
@@ -77,6 +79,7 @@ public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpect
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized Object replay(Object... mocks) {
         if (!hasReplayed) {
             EasyMock.replay(substitute);
@@ -88,6 +91,7 @@ public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpect
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized Object verify(Object... mocks) {
         if (!hasVerified) {
             EasyMock.verify(substitute);
@@ -99,6 +103,7 @@ public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpect
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized Object reset(Object... mocks) {
         EasyMock.reset(substitute);
         hasReplayed = false;

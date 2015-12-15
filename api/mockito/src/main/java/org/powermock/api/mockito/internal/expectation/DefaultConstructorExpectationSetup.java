@@ -50,11 +50,13 @@ public class DefaultConstructorExpectationSetup<T> implements ConstructorExpecta
         return createNewSubstituteMock(mockType, parameterTypes, additionalArguments);
     }
 
+    @Override
     public OngoingStubbing<T> withArguments(Object firstArgument, Object... additionalArguments) throws Exception {
         return createNewSubstituteMock(mockType, parameterTypes, arrayMerger.mergeArrays(Object.class, new Object[]{firstArgument},
                 additionalArguments));
     }
 
+    @Override
     public OngoingStubbing<T> withAnyArguments() throws Exception {
         if (mockType == null) {
             throw new IllegalArgumentException("Class to expected cannot be null");
@@ -74,10 +76,12 @@ public class DefaultConstructorExpectationSetup<T> implements ConstructorExpecta
         return new DelegatingToConstructorsOngoingStubbing<T>(otherCtors, ongoingStubbing);
     }
 
+    @Override
     public OngoingStubbing<T> withNoArguments() throws Exception {
         return createNewSubstituteMock(mockType, parameterTypes, new Object[0]);
     }
 
+    @Override
     public WithExpectedArguments<T> withParameterTypes(Class<?> parameterType, Class<?>... additionalParameterTypes) {
         this.parameterTypes = arrayMerger.mergeArrays(Class.class, new Class<?>[] { parameterType }, additionalParameterTypes);
         return this;

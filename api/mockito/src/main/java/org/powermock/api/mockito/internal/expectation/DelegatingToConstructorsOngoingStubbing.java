@@ -41,6 +41,7 @@ public class DelegatingToConstructorsOngoingStubbing<T> implements OngoingStubbi
         this.stubbing = stubbing;
     }
 
+    @Override
     public OngoingStubbing<T> thenReturn(final T value) {
         stubbing.thenReturn(value);
         return new InvokeStubMethod() {
@@ -51,6 +52,7 @@ public class DelegatingToConstructorsOngoingStubbing<T> implements OngoingStubbi
         }.invoke();
     }
 
+    @Override
     public OngoingStubbing<T> thenReturn(final T value, final T... values) {
         stubbing.thenReturn(value, values);
         return new InvokeStubMethod() {
@@ -61,6 +63,7 @@ public class DelegatingToConstructorsOngoingStubbing<T> implements OngoingStubbi
         }.invoke();
     }
 
+    @Override
     public OngoingStubbing<T> thenThrow(final Throwable... throwables) {
         stubbing.thenThrow(throwables);
         return new InvokeStubMethod() {
@@ -71,6 +74,7 @@ public class DelegatingToConstructorsOngoingStubbing<T> implements OngoingStubbi
         }.invoke();
     }
 
+    @Override
     public OngoingStubbing<T> thenThrow(final Class<? extends Throwable>... throwableClasses) {
         stubbing.thenThrow(throwableClasses);
         return new InvokeStubMethod() {
@@ -81,6 +85,7 @@ public class DelegatingToConstructorsOngoingStubbing<T> implements OngoingStubbi
         }.invoke();
     }
 
+    @Override
     public OngoingStubbing<T> thenCallRealMethod() {
         stubbing.thenCallRealMethod();
         return new InvokeStubMethod() {
@@ -91,6 +96,7 @@ public class DelegatingToConstructorsOngoingStubbing<T> implements OngoingStubbi
         }.invoke();
     }
 
+    @Override
     public OngoingStubbing<T> thenAnswer(final Answer<?> answer) {
         stubbing.thenAnswer(answer);
         return new InvokeStubMethod() {
@@ -101,6 +107,7 @@ public class DelegatingToConstructorsOngoingStubbing<T> implements OngoingStubbi
         }.invoke();
     }
 
+    @Override
     public OngoingStubbing<T> then(final Answer<?> answer) {
         stubbing.then(answer);
         return new InvokeStubMethod() {
@@ -111,6 +118,7 @@ public class DelegatingToConstructorsOngoingStubbing<T> implements OngoingStubbi
         }.invoke();
     }
 
+    @Override
     public <M> M getMock() {
         return stubbing.getMock();
     }

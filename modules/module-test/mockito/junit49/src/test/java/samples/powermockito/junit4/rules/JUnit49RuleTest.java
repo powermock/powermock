@@ -64,6 +64,7 @@ public class JUnit49RuleTest {
 
     private class MyRule implements TestRule {
 
+        @Override
         public Statement apply(final Statement statement, Description description) {
             return new Statement() {
                 @Override

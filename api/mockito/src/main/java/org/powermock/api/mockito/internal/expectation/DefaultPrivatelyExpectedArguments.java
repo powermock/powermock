@@ -30,6 +30,7 @@ public class DefaultPrivatelyExpectedArguments implements PrivatelyExpectedArgum
         method.setAccessible(true);
     }
 
+    @Override
     public <T> void withArguments(Object firstArgument, Object... additionalArguments) throws Exception {
         if (additionalArguments == null || additionalArguments.length == 0) {
             method.invoke(mock, firstArgument);
@@ -43,6 +44,7 @@ public class DefaultPrivatelyExpectedArguments implements PrivatelyExpectedArgum
         }
     }
 
+    @Override
     public <T> void withNoArguments() throws Exception {
         method.invoke(mock);
     }

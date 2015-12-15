@@ -51,6 +51,7 @@ public class SimpleEasyMockJUnitRule implements MethodRule {
         control.verify();
     }
 
+    @Override
     public Statement apply(final Statement base, final FrameworkMethod method, final Object target) {
         return new Statement() {
 

@@ -126,6 +126,7 @@ public class PrivateInstanceMockingTest {
         when(tested, "doObjectInternal", isA(String.class)).thenAnswer(new Answer<Void>() {
             private static final long serialVersionUID = 20645008237481667L;
 
+            @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
                 assertEquals("Testing", invocation.getArguments()[0]);
                 return null;

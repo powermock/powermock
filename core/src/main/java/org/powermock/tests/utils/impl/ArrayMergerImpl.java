@@ -25,6 +25,7 @@ import java.lang.reflect.Array;
 public class ArrayMergerImpl implements ArrayMerger {
 
 	@SuppressWarnings("unchecked")
+	@Override
 	public <T> T[] mergeArrays(Class<T> type, T[]... arraysToMerge) {
 		if (arraysToMerge == null || arraysToMerge.length == 0) {
 			return (T[]) Array.newInstance(type, 0);

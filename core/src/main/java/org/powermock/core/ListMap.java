@@ -31,14 +31,17 @@ public class ListMap<K, V> implements Map<K, V> {
             this.value = value;
         }
 
+        @Override
         public K getKey() {
             return key;
         }
 
+        @Override
         public V getValue() {
             return value;
         }
 
+        @Override
         public V setValue(V value) {
             V old = this.value;
             this.value = value;
@@ -47,6 +50,7 @@ public class ListMap<K, V> implements Map<K, V> {
 
     };
 
+    @Override
     public V remove(Object key) {
         for (Iterator<Map.Entry<K, V>> i = entries.iterator(); i.hasNext();) {
             Map.Entry<K, V> entry = i.next();
@@ -58,10 +62,12 @@ public class ListMap<K, V> implements Map<K, V> {
         return null;
     }
 
+    @Override
     public void clear() {
         entries.clear();
     }
 
+    @Override
     public V get(Object key) {
         for (Iterator<Map.Entry<K, V>> i = entries.iterator(); i.hasNext();) {
             Map.Entry<K, V> entry = i.next();
@@ -72,6 +78,7 @@ public class ListMap<K, V> implements Map<K, V> {
         return null;
     }
 
+    @Override
     public V put(K key, V value) {
         for (Iterator<Map.Entry<K, V>> i = entries.iterator(); i.hasNext();) {
             Map.Entry<K, V> entry = i.next();
@@ -84,10 +91,12 @@ public class ListMap<K, V> implements Map<K, V> {
         return null;
     }
 
+    @Override
     public boolean containsKey(Object key) {
         return get(key) != null;
     }
 
+    @Override
     public boolean containsValue(Object value) {
         for (Iterator<Map.Entry<K, V>> i = entries.iterator(); i.hasNext();) {
             Map.Entry<K, V> entry = i.next();
@@ -98,14 +107,17 @@ public class ListMap<K, V> implements Map<K, V> {
         return false;
     }
 
+    @Override
     public Set<java.util.Map.Entry<K, V>> entrySet() {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public boolean isEmpty() {
         return entries.isEmpty();
     }
 
+    @Override
     public Set<K> keySet() {
         Set<K> identityHashSet = new HashSet<K>();
         for (Map.Entry<K, V> entry : entries) {
@@ -114,6 +126,7 @@ public class ListMap<K, V> implements Map<K, V> {
         return identityHashSet;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void putAll(Map<? extends K, ? extends V> t) {
         Set<?> entrySet = t.entrySet();
@@ -122,10 +135,12 @@ public class ListMap<K, V> implements Map<K, V> {
         }
     }
 
+    @Override
     public int size() {
         return entries.size();
     }
 
+    @Override
     public Collection<V> values() {
         Set<V> hashSet = new HashSet<V>();
         for (Map.Entry<K, V> entry : entries) {

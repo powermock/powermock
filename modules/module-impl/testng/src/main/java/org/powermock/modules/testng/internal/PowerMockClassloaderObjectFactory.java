@@ -63,6 +63,7 @@ public class PowerMockClassloaderObjectFactory implements IObjectFactory {
                 staticConstructorSuppressExtractor = new StaticConstructorSuppressExtractorImpl();
 	}
 
+	@Override
 	public Object newInstance(@SuppressWarnings("rawtypes") Constructor constructor, Object... params) {
 		/*
 		 * For extra safety clear the MockitoRepository on each new

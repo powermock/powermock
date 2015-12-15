@@ -172,6 +172,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
         }
     }
 
+    @Override
     protected Class<?> loadModifiedClass(String s) throws ClassFormatError, ClassNotFoundException {
         Class<?> loadedClass;
 

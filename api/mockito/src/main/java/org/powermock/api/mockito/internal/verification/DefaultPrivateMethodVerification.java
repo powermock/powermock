@@ -30,15 +30,18 @@ public class DefaultPrivateMethodVerification implements PrivateMethodVerificati
 		this.objectToVerify = objectToVerify;
 	}
 
+	@Override
 	public void invoke(Object... arguments) throws Exception {
 		Whitebox.invokeMethod(objectToVerify, arguments);
 
 	}
 
+	@Override
 	public void invoke(String methodToExecute, Object... arguments) throws Exception {
 		Whitebox.invokeMethod(objectToVerify, methodToExecute, (Object[]) arguments);
 	}
 
+	@Override
 	public WithOrWithoutVerifiedArguments invoke(Method method) throws Exception {
 		return new VerificationArguments(method);
 	}
@@ -54,6 +57,7 @@ public class DefaultPrivateMethodVerification implements PrivateMethodVerificati
 			this.method.setAccessible(true);
 		}
 
+		@Override
 		public void withArguments(Object firstArgument, Object... additionalArguments) throws Exception {
 			if (additionalArguments == null || additionalArguments.length == 0) {
 				method.invoke(objectToVerify, firstArgument);
@@ -63,6 +67,7 @@ public class DefaultPrivateMethodVerification implements PrivateMethodVerificati
 			}
 		}
 
+		@Override
 		public void withNoArguments() throws Exception {
 			method.invoke(objectToVerify);
 		}

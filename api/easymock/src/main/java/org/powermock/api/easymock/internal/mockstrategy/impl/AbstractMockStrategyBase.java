@@ -20,6 +20,7 @@ public abstract class AbstractMockStrategyBase implements MockStrategy {
 		this.mockType = mockType;
 	}
 
+	@Override
 	public IMocksControl createMockControl(Class<?> type) {
 		return new MocksControl(mockType);
 	}

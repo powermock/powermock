@@ -25,6 +25,7 @@ import java.util.List;
 
 public class PowerMockIgnorePackagesExtractorImpl implements IgnorePackagesExtractor {
 
+    @Override
     public String[] getPackagesToIgnore(AnnotatedElement element) {
         List<String> ignoredPackages = new LinkedList<String>();
         PowerMockIgnore annotation = element.getAnnotation(PowerMockIgnore.class);

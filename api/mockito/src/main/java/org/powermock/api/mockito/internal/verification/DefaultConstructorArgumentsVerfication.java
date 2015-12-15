@@ -32,6 +32,7 @@ public class DefaultConstructorArgumentsVerfication<T> implements ConstructorArg
         this.invocationControl = (MockitoNewInvocationControl<T>) invocationControl;
     }
 
+    @Override
     public void withArguments(Object argument, Object... arguments) throws Exception {
         final Object[] realArguments;
         if (arguments == null) {
@@ -52,6 +53,7 @@ public class DefaultConstructorArgumentsVerfication<T> implements ConstructorArg
         }
     }
 
+    @Override
     public void withNoArguments() throws Exception {
         invokeSubstitute(new Object[0]);
     }

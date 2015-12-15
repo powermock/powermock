@@ -31,6 +31,7 @@ public abstract class AbstractTestClassExtractor implements TestClassesExtractor
 	 * and extracts classes that should be prepared for test in all super
 	 * classes.
 	 */
+	@Override
 	public final String[] getTestClasses(AnnotatedElement element) {
 		final Set<String> classesToPrepareForTest = new HashSet<String>();
 		if (element instanceof Class<?>) {
@@ -70,6 +71,7 @@ public abstract class AbstractTestClassExtractor implements TestClassesExtractor
 	 */
 	protected abstract String[] getClassesToModify(AnnotatedElement element);
 
+	@Override
 	public boolean isPrepared(AnnotatedElement element, String fullyQualifiedClassName) {
 		if (fullyQualifiedClassName == null) {
 			throw new IllegalArgumentException("fullyQualifiedClassName cannot be null.");

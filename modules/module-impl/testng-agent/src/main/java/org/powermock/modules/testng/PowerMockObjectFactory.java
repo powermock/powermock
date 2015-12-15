@@ -36,6 +36,7 @@ public class PowerMockObjectFactory implements IObjectFactory {
 
     private ObjectFactoryImpl defaultObjectFactory = new ObjectFactoryImpl();
 
+    @Override
     public Object newInstance(Constructor constructor, Object... params) {
         final Class<?> testClass = constructor.getDeclaringClass();
         PowerMockAgentTestInitializer.initialize(testClass);

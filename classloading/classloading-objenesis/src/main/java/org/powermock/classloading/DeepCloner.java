@@ -65,6 +65,7 @@ public class DeepCloner implements DeepClonerSPI {
 	 * 
 	 * @return A deep clone of the object to clone.
 	 */
+	@Override
 	public <T> T clone(T objectToClone) {
 		return clone(objectToClone, true);
 	}

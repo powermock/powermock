@@ -49,10 +49,12 @@ public class MockPolicyWithExpectationsTest {
 }
 
 class MockPolicyExpectationsExample implements PowerMockPolicy {
+	@Override
 	public void applyClassLoadingPolicy(MockPolicyClassLoadingSettings settings) {
 		settings.addFullyQualifiedNamesOfClassesToLoadByMockClassloader(ResultCalculator.class.getName());
 	}
 
+	@Override
 	public void applyInterceptionPolicy(MockPolicyInterceptionSettings settings) {
 		final ResultCalculator calculatorMock = createMock(ResultCalculator.class);
 		expect(calculatorMock.calculate()).andReturn(2.0);

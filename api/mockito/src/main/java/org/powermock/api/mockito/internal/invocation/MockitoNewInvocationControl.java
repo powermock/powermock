@@ -39,6 +39,7 @@ public class MockitoNewInvocationControl<T> implements NewInvocationControl<Ongo
 		this.substitute = substitute;
 	}
 
+	@Override
 	public Object invoke(Class<?> type, Object[] args, Class<?>[] sig) throws Exception {
 		Constructor<?> constructor = WhiteboxImpl.getConstructor(type, sig);
 		if (constructor.isVarArgs()) {
@@ -61,6 +62,7 @@ public class MockitoNewInvocationControl<T> implements NewInvocationControl<Ongo
 		return null;
 	}
 
+	@Override
 	public OngoingStubbing<T> expectSubstitutionLogic(Object... arguments) throws Exception {
 		return Mockito.when(substitute.performSubstitutionLogic(arguments));
 	}
@@ -72,6 +74,7 @@ public class MockitoNewInvocationControl<T> implements NewInvocationControl<Ongo
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public synchronized Object replay(Object... mocks) {
 		return null;
 	}
@@ -79,6 +82,7 @@ public class MockitoNewInvocationControl<T> implements NewInvocationControl<Ongo
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public synchronized Object verify(Object... mocks) {
 		final VerificationMode verificationMode;
 		Object mode = MockRepository.getAdditionalState("VerificationMode");
@@ -100,6 +104,7 @@ public class MockitoNewInvocationControl<T> implements NewInvocationControl<Ongo
 	 * {@inheritDoc}
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public synchronized Object reset(Object... mocks) {
 		Mockito.<InvocationSubstitute<T>> reset(substitute);
 		return null;

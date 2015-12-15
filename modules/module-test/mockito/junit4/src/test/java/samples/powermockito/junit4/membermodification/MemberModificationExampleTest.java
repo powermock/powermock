@@ -175,6 +175,7 @@ public class MemberModificationExampleTest {
     }
 
     private final class ReturnValueChangingInvocationHandler implements InvocationHandler {
+        @Override
         public Object invoke(Object object, Method method, Object[] arguments) throws Throwable {
             if (arguments[0].equals("make it a string")) {
                 return "hello world";
