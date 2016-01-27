@@ -58,7 +58,7 @@ import java.util.Set;
  * annotation the actual implementation-class specifies by overriding the
  * method {@link #testMethodAnnotation()}. This to make sure that you
  * can byte-code manipulate classes in tests without impacting on other tests.
- * 
+ *
  */
 public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunker {
     private static final int DEFAULT_TEST_LISTENERS_SIZE = 1;
@@ -388,12 +388,12 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
      * it will iterate through all junit runner delegates and see if they
      * contain the test with index 3, in the internal index of this test
      * delegator is returned.
-     * 
+     *
      * @param originalTestIndex
      *            The original test index as seen by the test runner.
      * @return The internal test index as seen by PowerMock or <code>-1</code>
      *         if no index was found.
-     * 
+     *
      */
     public int getInternalTestIndex(int originalTestIndex) {
         Set<Entry<Integer, List<Integer>>> delegatorEntrySet = testAtDelegateMapper.entrySet();
@@ -411,7 +411,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
      * Get the junit runner delegate that handles the test at index
      * <code>testIndex</code>. Throws a {@link RuntimeException} if a delegator
      * is not found for the specific test index.
-     * 
+     *
      * @param testIndex
      *            The test index that a delegator should hold.
      * @return The index for of the junit runner delegate as seen by JTestRack.
@@ -469,8 +469,9 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
     private String[] makeSureArrayContainsTestClassName(
             String[] arrayOfClassNames, String testClassName) {
         if (null == arrayOfClassNames || 0 == arrayOfClassNames.length) {
-            return new String[] {testClassName};
-
+            return new String[]{testClassName};
+        } else if (1 == arrayOfClassNames.length && MockClassLoader.MODIFY_ALL_CLASSES.equals(arrayOfClassNames[0])) {
+            return arrayOfClassNames;
         } else {
             List<String> modifiedArrayOfClassNames = new ArrayList<String>(
                     arrayOfClassNames.length + 1);
