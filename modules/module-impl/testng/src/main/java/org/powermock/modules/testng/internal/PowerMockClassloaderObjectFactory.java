@@ -32,35 +32,32 @@ import org.testng.IObjectFactory;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
 
 @SuppressWarnings("serial")
 public class PowerMockClassloaderObjectFactory implements IObjectFactory {
 
-	private final MockClassLoader mockLoader;
-
+	private final List<MockTransformer> mockTransformerChain;
 	private final TestClassesExtractor testClassesExtractor;
 
 	private final IgnorePackagesExtractor ignorePackagesExtractor;
 
-        private final StaticConstructorSuppressExtractorImpl staticConstructorSuppressExtractor;
+	private final StaticConstructorSuppressExtractorImpl staticConstructorSuppressExtractor;
 
-        private final ExpectedExceptionsExtractor expectedExceptionsExtractor;
+	private final ExpectedExceptionsExtractor expectedExceptionsExtractor;
 
 	public PowerMockClassloaderObjectFactory() {
-		List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
+		List<MockTransformer> mockTransformerChainMutable = new ArrayList<MockTransformer>();
 		final MainMockTransformer mainMockTransformer = new MainMockTransformer();
-		mockTransformerChain.add(mainMockTransformer);
+		mockTransformerChainMutable.add(mainMockTransformer);
 
-		String[] classesToLoadByMockClassloader = new String[0];
-		String[] packagesToIgnore = new String[0];
-		mockLoader = new MockClassLoader(classesToLoadByMockClassloader, packagesToIgnore);
-		mockLoader.setMockTransformerChain(mockTransformerChain);
+		mockTransformerChain = Collections.unmodifiableList(mockTransformerChainMutable);
 		testClassesExtractor = new PrepareForTestExtractorImpl();
 		ignorePackagesExtractor = new PowerMockIgnorePackagesExtractorImpl();
-                expectedExceptionsExtractor = new PowerMockExpectedExceptionsExtractorImpl();
-                staticConstructorSuppressExtractor = new StaticConstructorSuppressExtractorImpl();
+		expectedExceptionsExtractor = new PowerMockExpectedExceptionsExtractorImpl();
+		staticConstructorSuppressExtractor = new StaticConstructorSuppressExtractorImpl();
 	}
 
 	@Override
@@ -75,19 +72,21 @@ public class PowerMockClassloaderObjectFactory implements IObjectFactory {
 		 * it's not certain that this is always the case.
 		 */
 		MockRepository.clear();
-		Class<?> testClass = constructor.getDeclaringClass();
+		final Class<?> testClass = constructor.getDeclaringClass();
+		final MockClassLoader mockLoader = new MockClassLoader(new String[0], new String[0]);
+		mockLoader.setMockTransformerChain(mockTransformerChain);
 		mockLoader.addIgnorePackage(ignorePackagesExtractor.getPackagesToIgnore(testClass));
-                mockLoader.addIgnorePackage(expectedExceptionsExtractor.getPackagesToIgnore(testClass));
+		mockLoader.addIgnorePackage(expectedExceptionsExtractor.getPackagesToIgnore(testClass));
 		mockLoader.addClassesToModify(testClassesExtractor.getTestClasses(testClass));
-                mockLoader.addClassesToModify(staticConstructorSuppressExtractor.getClassesToModify(testClass));
+		mockLoader.addClassesToModify(staticConstructorSuppressExtractor.getClassesToModify(testClass));
 		try {
 			registerProxyframework(mockLoader);
 			new MockPolicyInitializerImpl(testClass).initialize(mockLoader);
-			final Class<?> testClassLoadedByMockedClassLoader = createTestClass(testClass);
+			final Class<?> testClassLoadedByMockedClassLoader = createTestClass(testClass, mockLoader);
 			Constructor<?> con = testClassLoadedByMockedClassLoader.getConstructor(constructor.getParameterTypes());
 			final Object testInstance = con.newInstance(params);
 			if (!extendsPowerMockTestCase(testClass)) {
-				setInvocationHandler(testInstance);
+				setInvocationHandler(testInstance, mockLoader);
 			}
 			return testInstance;
 		} catch (RuntimeException e) {
@@ -97,7 +96,7 @@ public class PowerMockClassloaderObjectFactory implements IObjectFactory {
 		}
 	}
 
-	private void setInvocationHandler(Object testInstance) throws Exception {
+	private void setInvocationHandler(Object testInstance, MockClassLoader mockLoader) throws Exception {
 		Class<?> powerMockTestNGMethodHandlerClass = Class.forName(PowerMockTestNGMethodHandler.class.getName(), false, mockLoader);
 		Object powerMockTestNGMethodHandlerInstance = powerMockTestNGMethodHandlerClass.getConstructor(Class.class).newInstance(
 				testInstance.getClass());
@@ -109,7 +108,7 @@ public class PowerMockClassloaderObjectFactory implements IObjectFactory {
 	 * test method invocation. It would be much better to be able to register a
 	 * testng listener programmtically but I cannot find a way to do so.
 	 */
-	private Class<?> createTestClass(Class<?> actualTestClass) throws Exception {
+	private Class<?> createTestClass(Class<?> actualTestClass, MockClassLoader mockLoader) throws Exception {
 		final Class<?> testClassLoadedByMockedClassLoader = Class.forName(actualTestClass.getName(), false, mockLoader);
 		if (extendsPowerMockTestCase(actualTestClass)) {
 			return testClassLoadedByMockedClassLoader;
