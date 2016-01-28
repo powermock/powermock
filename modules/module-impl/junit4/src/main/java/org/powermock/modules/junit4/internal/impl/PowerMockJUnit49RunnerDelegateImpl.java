@@ -57,7 +57,7 @@ public class PowerMockJUnit49RunnerDelegateImpl extends PowerMockJUnit47RunnerDe
 
         @Override
         protected Statement applyRuleToLastStatement(final Method method, final Object testInstance, Field field,
-                final LastRuleTestExecutorStatement lastStatement) throws IllegalAccessException {
+                final Statement lastStatement) throws IllegalAccessException {
             final Object fieldValue = field.get(testInstance);
             final Statement statement;
             if (fieldValue instanceof MethodRule) {

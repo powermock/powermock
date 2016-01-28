@@ -78,33 +78,37 @@ public class PowerMockJUnit47RunnerDelegateImpl extends PowerMockJUnit44RunnerDe
                 Thread.currentThread().setContextClassLoader(originalCL);
             }
             hasRules = !rules.isEmpty();
-            if (!hasRules) {
-                executeTestInSuper(method, testInstance, test);
-            } else {
-                int processedFields = 0;
-                for (Field field : rules) {
-                    processedFields++;
-                    try {
-                        LastRuleTestExecutorStatement lastStatement = new LastRuleTestExecutorStatement(processedFields, rules.size(), test, testInstance, method);
-                        Statement statement = applyRuleToLastStatement(method,
-                                testInstance, field, lastStatement);
-                        statement.evaluate();
-                    } catch (Throwable e) {
-                        /*
-                         * No rule could handle the exception thus we need to
-                         * add it as a failure.
-                         */
-                        super.handleException(testMethod, potentialTestFailure == null ? e : potentialTestFailure);
-                    }
+            Statement statement = createStatement(method, testInstance, test, rules);
+            evaluateStatement(statement);
+        }
+
+        private Statement createStatement(Method method, Object testInstance, Runnable test, Set<Field> rules) {
+            Statement statement = new TestExecutorStatement(test, testInstance, method);
+            for (Field field : rules) {
+                try {
+                    statement = applyRuleToLastStatement(method,
+                            testInstance, field, statement);
+                } catch (Throwable e) {
+                    super.handleException(testMethod, e);
                 }
             }
+            return statement;
         }
 
         protected Statement applyRuleToLastStatement(final Method method, final Object testInstance, Field field,
-                                                     final LastRuleTestExecutorStatement lastStatement) throws IllegalAccessException {
+                                                     final Statement lastStatement) throws IllegalAccessException {
             MethodRule rule = (MethodRule) field.get(testInstance);
             Statement statement = rule.apply(lastStatement, new FrameworkMethod(method), testInstance);
             return statement;
+        }
+
+        private void evaluateStatement(Statement statement) {
+            try {
+                statement.evaluate();
+            } catch (Throwable e) {
+                //No rule could handle the exception thus we need to add it as a failure.
+                super.handleException(testMethod, potentialTestFailure == null ? e : potentialTestFailure);
+            }
         }
 
         /**
@@ -127,16 +131,12 @@ public class PowerMockJUnit47RunnerDelegateImpl extends PowerMockJUnit44RunnerDe
             super.executeTest(method, testInstance, test);
         }
 
-        protected final class LastRuleTestExecutorStatement extends Statement {
+        private final class TestExecutorStatement extends Statement {
             private final Runnable test;
             private final Object testInstance;
             private final Method method;
-            private final int noOfRules;
-            private final int currentRule;
 
-            private LastRuleTestExecutorStatement(int currentRuleNumber, int noOfRules, Runnable test, Object testInstance, Method method) {
-                this.currentRule = currentRuleNumber;
-                this.noOfRules = noOfRules;
+            private TestExecutorStatement(Runnable test, Object testInstance, Method method) {
                 this.test = test;
                 this.testInstance = testInstance;
                 this.method = method;
@@ -144,12 +144,10 @@ public class PowerMockJUnit47RunnerDelegateImpl extends PowerMockJUnit44RunnerDe
 
             @Override
             public void evaluate() throws Throwable {
-                if (currentRule == noOfRules) {
-                    executeTestInSuper(method, testInstance, test);
-                    if (potentialTestFailure != null) {
-                        // Rethrow the potential failure caught in the test.
-                        throw potentialTestFailure;
-                    }
+                executeTestInSuper(method, testInstance, test);
+                if (potentialTestFailure != null) {
+                    // Rethrow the potential failure caught in the test.
+                    throw potentialTestFailure;
                 }
             }
         }
