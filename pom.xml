@@ -14,7 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -84,7 +84,6 @@
     <properties>
         <easymock.version>3.4</easymock.version>
         <hamcrest.version>1.3</hamcrest.version>
-        <mockito.version>1.10.19</mockito.version>
     </properties>
     <build>
         <plugins>
@@ -263,6 +262,21 @@
         </plugins>
     </reporting>
     <profiles>
+        <profile>
+            <id>mockito</id>
+            <properties>
+                <mockito.version>1.10.19</mockito.version>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>mockito2</id>
+            <properties>
+                <mockito.version>2.0.43-beta</mockito.version>
+            </properties>
+        </profile>
         <profile>
             <id>implicitDelegateAnnotation</id>
             <build>

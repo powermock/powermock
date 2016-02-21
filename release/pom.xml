@@ -14,7 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.powermock</groupId>
@@ -30,13 +30,32 @@
         Convenience distributions containing various combinations of modules.
     </description>
 
+    <profiles>
+        <profile>
+            <id>mockito</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>mockito-extension-api-full</module>
+                <module>with-junit-mockito-dependencies</module>
+                <module>with-testng-mockito-dependencies</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>mockito2</id>
+            <modules>
+                <module>mockito2-extension-api-full</module>
+                <module>with-junit-mockito2-dependencies</module>
+                <module>with-testng-mockito2-dependencies</module>
+            </modules>
+        </profile>
+    </profiles>
+
     <modules>
         <module>easymock-extension-api-full</module>
-        <module>mockito-extension-api-full</module>
         <module>with-junit-easymock-dependencies</module>
-        <module>with-junit-mockito-dependencies</module>
         <module>with-testng-easymock-dependencies</module>
-        <module>with-testng-mockito-dependencies</module>
         <module>junit-without-mock-framework</module>
         <module>testng-without-mock-framework</module>
         <module>without-test-and-mock-framework</module>
