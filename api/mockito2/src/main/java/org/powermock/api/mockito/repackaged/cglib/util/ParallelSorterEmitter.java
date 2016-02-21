@@ -1,0 +1,93 @@
+/*
+ *  Copyright (c) 2007 Mockito contributors
+ *  This program is made available under the terms of the MIT License.
+ */
+package org.powermock.api.mockito.repackaged.cglib.util;
+
+import org.powermock.api.mockito.repackaged.asm.ClassVisitor;
+import org.powermock.api.mockito.repackaged.asm.Type;
+import org.powermock.api.mockito.repackaged.cglib.core.ClassEmitter;
+import org.powermock.api.mockito.repackaged.cglib.core.CodeEmitter;
+import org.powermock.api.mockito.repackaged.cglib.core.Constants;
+import org.powermock.api.mockito.repackaged.cglib.core.EmitUtils;
+import org.powermock.api.mockito.repackaged.cglib.core.Local;
+import org.powermock.api.mockito.repackaged.cglib.core.Signature;
+import org.powermock.api.mockito.repackaged.cglib.core.TypeUtils;
+
+class ParallelSorterEmitter extends ClassEmitter {
+    private static final Type PARALLEL_SORTER =
+      TypeUtils.parseType("org.powermock.api.mockito.repackaged.cglib.util.ParallelSorter");
+    private static final Signature CSTRUCT_OBJECT_ARRAY =
+      TypeUtils.parseConstructor("Object[]");
+    private static final Signature NEW_INSTANCE =
+      new Signature("newInstance", PARALLEL_SORTER, new Type[]{ Constants.TYPE_OBJECT_ARRAY });
+    private static final Signature SWAP =
+      TypeUtils.parseSignature("void swap(int, int)");
+
+    public ParallelSorterEmitter(ClassVisitor v, String className, Object[] arrays) {
+        super(v);
+        begin_class(Constants.V1_2, Constants.ACC_PUBLIC, className, PARALLEL_SORTER, null, Constants.SOURCE_FILE);
+        EmitUtils.null_constructor(this);
+        EmitUtils.factory_method(this, NEW_INSTANCE);
+        generateConstructor(arrays);
+        generateSwap(arrays);
+        end_class();
+    }
+
+    private String getFieldName(int index) {
+        return "FIELD_" + index;
+    }
+
+    private void generateConstructor(Object[] arrays) {
+        CodeEmitter e = begin_method(Constants.ACC_PUBLIC, CSTRUCT_OBJECT_ARRAY, null);
+        e.load_this();
+        e.super_invoke_constructor();
+        e.load_this();
+        e.load_arg(0);
+        e.super_putfield("a", Constants.TYPE_OBJECT_ARRAY);
+        for (int i = 0; i < arrays.length; i++) {
+            Type type = Type.getType(arrays[i].getClass());
+            declare_field(Constants.ACC_PRIVATE, getFieldName(i), type, null);
+            e.load_this();
+            e.load_arg(0);
+            e.push(i);
+            e.aaload();
+            e.checkcast(type);
+            e.putfield(getFieldName(i));
+        }
+        e.return_value();
+        e.end_method();
+    }
+
+    private void generateSwap(final Object[] arrays) {
+        CodeEmitter e = begin_method(Constants.ACC_PUBLIC, SWAP, null);
+        for (int i = 0; i < arrays.length; i++) {
+            Type type = Type.getType(arrays[i].getClass());
+            Type component = TypeUtils.getComponentType(type);
+            Local T = e.make_local(type);
+
+            e.load_this();
+            e.getfield(getFieldName(i));
+            e.store_local(T);
+
+            e.load_local(T);
+            e.load_arg(0);
+
+            e.load_local(T);
+            e.load_arg(1);
+            e.array_load(component);
+                
+            e.load_local(T);
+            e.load_arg(1);
+
+            e.load_local(T);
+            e.load_arg(0);
+            e.array_load(component);
+
+            e.array_store(component);
+            e.array_store(component);
+        }
+        e.return_value();
+        e.end_method();
+    }
+}
