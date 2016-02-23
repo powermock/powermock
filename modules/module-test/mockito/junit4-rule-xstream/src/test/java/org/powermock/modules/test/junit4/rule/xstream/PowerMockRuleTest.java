@@ -1,10 +1,6 @@
 package org.powermock.modules.test.junit4.rule.xstream;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.MockPolicy;
@@ -18,7 +14,11 @@ import org.powermock.mockpolicies.MockPolicyInterceptionSettings;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.powermock.reflect.Whitebox;
 
-@PowerMockIgnore("org.mockito.*")
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+@PowerMockIgnore({"org.mockito.*","org.powermock.api.mockito.repackaged.*"})
 @PrepareForTest(Foo.class)
 @MockPolicy(PowerMockRuleTest.CustomPolicy.class)
 public class PowerMockRuleTest {
