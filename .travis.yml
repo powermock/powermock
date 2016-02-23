@@ -1,3 +1,11 @@
 language: java
 jdk:
   - oraclejdk8
+  - oraclejdk7
+  - oraclejdk6
+script:
+  - mvn install -DskipTests=true
+  - mvn test
+  - mvn install -DskipTests=true -Pmockito2
+  - mvn test -Pmockito2
+
