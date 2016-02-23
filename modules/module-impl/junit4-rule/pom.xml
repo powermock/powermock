@@ -21,23 +21,9 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.powermock</groupId>
-                    <artifactId>powermock-api-mockito</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-            </dependencies>
         </profile>
         <profile>
             <id>mockito2</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.powermock</groupId>
-                    <artifactId>powermock-api-mockito2</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-            </dependencies>
         </profile>
     </profiles>
 
