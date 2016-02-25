@@ -2,7 +2,11 @@ package org.powermock.api.easymock.annotation;
 
 import org.powermock.core.classloader.annotations.PowerMockListener;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * This annotation can be placed on those fields in your test class that should
@@ -39,7 +43,7 @@ import java.lang.annotation.*;
  * 
  * <pre>
  * ...
- * &#064;PowerMockListener(EasyMockAnnotationEnabler.class)
+ * &#064;PowerMockListener(AnnotationEnabler.class)
  * public class PersonServiceTest {
  * 
  * 	&#064;Mock({&quot;getPerson&quot;, &quot;savePerson&quot;})
@@ -62,4 +66,15 @@ import java.lang.annotation.*;
 @Documented
 public @interface Mock {
 	String[] value() default "";
+
+	/**
+	 * Name of the test subject field to which this mock will be assigned. Use to disambiguate the case where
+     * a mock may be assigned to multiple fields of the same type.
+	 * When set, this mock will be assigned to the given field name in any test subject with a matching field name.
+	 * If not set, injection is to all type-compatible fields in all test subjects.
+	 * A given field name may only be used once, and there must be a matching field in at least one test subject.
+	 *
+	 * @return name of the field to inject to
+	 **/
+	String fieldName() default "";
 }
