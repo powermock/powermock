@@ -3,6 +3,8 @@ Change log next version
 * Add ability to chain returns with doReturn() (thanks to "gauee" for pull request) (issue 599)
 * Code quality improvement, @Override annotation should be used on any method overriding (since Java 5) or implementing (since Java 6) another one
 * PowerMockRunner now processes JUnit Rules correctly (thanks to Stefan Birkner for pull request) (issue 427)
+* Added support for @TestSubject in EasyMock API. This is the equivalent of @InjectMocks in Mockito (big thanks to Arthur Zagretdinov for pull request)
+* Added experimental support for mockito 2.x
 
 Change log 1.6.4 (2015-12-11)
 -----------------------------
