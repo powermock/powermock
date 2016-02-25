@@ -24,7 +24,14 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import samples.finalmocking.FinalDemo;
 import samples.injectmocks.DependencyHolder;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Asserts that {@link @InjectMocks} with PowerMock.
@@ -41,7 +48,28 @@ public class InjectMocksAnnotationTest {
 	private DependencyHolder dependencyHolder = new DependencyHolder();
 
 	@Test
-	public void injectMocksWorks() throws Exception {
+	public void injectMocksWorks() {
 		assertNotNull(dependencyHolder.getFinalDemo());
+	}
+
+	@Test
+	public void testSay() throws Exception {
+
+		FinalDemo tested = dependencyHolder.getFinalDemo();
+
+		String expected = "Hello altered World";
+		when(tested.say("hello")).thenReturn("Hello altered World");
+
+		String actual = tested.say("hello");
+
+		assertEquals("Expected and actual did not match", expected, actual);
+
+		// Should still be mocked by now.
+		try {
+			verify(tested).say("world");
+			fail("Should throw AssertionError!");
+		} catch (AssertionError e) {
+			assertThat(e.getMessage(), is(containsString("Argument(s) are different! Wanted")));
+		}
 	}
 }

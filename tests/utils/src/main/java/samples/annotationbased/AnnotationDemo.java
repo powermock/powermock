@@ -19,10 +19,14 @@ import samples.Service;
 
 public class AnnotationDemo {
 
-	private final Service service;
+	private Service service;
 
 	public AnnotationDemo(Service service) {
 		this.service = service;
+	}
+
+	public AnnotationDemo() {
+
 	}
 
 	public String getServiceMessage() {
