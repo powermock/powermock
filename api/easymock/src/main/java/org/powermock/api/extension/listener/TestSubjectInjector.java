@@ -118,9 +118,7 @@ class TestSubjectInjector {
         } catch (NoSuchFieldException e) {
             return null;
         } catch (SecurityException e) {
-            // ///CLOVER:OFF
             return null;
-            // ///CLOVER:ON
         }
     }
 
