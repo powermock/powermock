@@ -43,5 +43,6 @@
         <module>junit47-test</module>
         <module>junit48-test</module>
         <module>junit410-test</module>
+        <module>junit4-agent</module>
     </modules>
 </project>
