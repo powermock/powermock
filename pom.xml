@@ -274,7 +274,7 @@
         <profile>
             <id>mockito2</id>
             <properties>
-                <mockito.version>2.0.43-beta</mockito.version>
+                <mockito.version>2.0.42-beta</mockito.version>
             </properties>
         </profile>
         <profile>
