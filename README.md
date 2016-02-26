@@ -34,7 +34,9 @@ Please note that PowerMock is mainly intended for people with expert knowledge i
   * [Mock New](https://github.com/jayway/powermock/wiki/MockConstructor)
   * [Mock Partial](https://github.com/jayway/powermock/wiki/MockPartial)
   * [Replay and verify all](https://github.com/jayway/powermock/wiki/ReplayAllAndVerifyAll)
-* [Mockito](https://github.com/jayway/powermock/wiki/MockitoUsage) ([Legacy](https://github.com/jayway/powermock/wiki/MockitoUsage_Legacy))
+* Mockito
+  * [Mockito 1.8+](MockitoUsage)
+  * [Mockito 1.7](MockitoUsage_Legacy)
 * Common
   * [Bypass Encapsulation](https://github.com/jayway/powermock/wiki/BypassEncapsulation)
   * [Suppress Unwanted Behavior](https://github.com/jayway/powermock/wiki/SuppressUnwantedBehavior)
@@ -60,5 +62,5 @@ Join the mailing-list [here](http://groups.google.com/group/powermock) for quest
 * [Mailing list for questions and support](http://groups.google.com/group/powermock)
  
 ## Sponsored by:
-[![JAYWAY](http://www.arctiquator.com/oppenkallkod/assets/images/jayway_logo.png)](http://www.jayway.com/)
+[![JAYWAY](http://www.jayway.com/wp-content/uploads/2014/05/jayway_rgb_inverted.png)](http://www.jayway.com/)
 
