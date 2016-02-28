@@ -17,7 +17,12 @@ package org.powermock.reflect;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.powermock.reflect.context.*;
+import org.powermock.reflect.context.ClassFieldsNotInTargetContext;
+import org.powermock.reflect.context.InstanceFieldsNotInTargetContext;
+import org.powermock.reflect.context.MyContext;
+import org.powermock.reflect.context.MyIntContext;
+import org.powermock.reflect.context.MyStringContext;
+import org.powermock.reflect.context.OneInstanceAndOneStaticFieldOfSameTypeContext;
 import org.powermock.reflect.exceptions.FieldNotFoundException;
 import org.powermock.reflect.exceptions.MethodNotFoundException;
 import org.powermock.reflect.exceptions.TooManyFieldsFoundException;
@@ -26,7 +31,31 @@ import org.powermock.reflect.internal.WhiteboxImpl;
 import org.powermock.reflect.matching.FieldMatchingStrategy;
 import org.powermock.reflect.proxyframework.RegisterProxyFramework;
 import org.powermock.reflect.spi.ProxyFramework;
-import org.powermock.reflect.testclasses.*;
+import org.powermock.reflect.testclasses.AbstractClass;
+import org.powermock.reflect.testclasses.AnInterface;
+import org.powermock.reflect.testclasses.Child;
+import org.powermock.reflect.testclasses.ClassWithAMethod;
+import org.powermock.reflect.testclasses.ClassWithChildThatHasInternalState;
+import org.powermock.reflect.testclasses.ClassWithInterfaceConstructors;
+import org.powermock.reflect.testclasses.ClassWithInterfaceConstructors.ConstructorInterface;
+import org.powermock.reflect.testclasses.ClassWithInterfaceConstructors.ConstructorInterfaceImpl;
+import org.powermock.reflect.testclasses.ClassWithInternalState;
+import org.powermock.reflect.testclasses.ClassWithList;
+import org.powermock.reflect.testclasses.ClassWithObjectConstructors;
+import org.powermock.reflect.testclasses.ClassWithOverloadedConstructors;
+import org.powermock.reflect.testclasses.ClassWithOverloadedMethods;
+import org.powermock.reflect.testclasses.ClassWithOverriddenMethod;
+import org.powermock.reflect.testclasses.ClassWithPrimitiveConstructors;
+import org.powermock.reflect.testclasses.ClassWithPrivateMethods;
+import org.powermock.reflect.testclasses.ClassWithSerializableState;
+import org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameName;
+import org.powermock.reflect.testclasses.ClassWithSeveralMethodsWithSameNameOneWithoutParameters;
+import org.powermock.reflect.testclasses.ClassWithSimpleInternalState;
+import org.powermock.reflect.testclasses.ClassWithStaticAndInstanceInternalStateOfSameType;
+import org.powermock.reflect.testclasses.ClassWithStaticMethod;
+import org.powermock.reflect.testclasses.ClassWithUniquePrivateMethods;
+import org.powermock.reflect.testclasses.ClassWithVarArgsConstructor;
+import org.powermock.reflect.testclasses.ClassWithVarArgsConstructor2;
 
 import java.io.InputStream;
 import java.io.Serializable;
@@ -37,7 +66,13 @@ import java.sql.Connection;
 import java.util.Set;
 
 import static junit.framework.Assert.assertFalse;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Tests the WhiteBox's functionality.
@@ -861,6 +896,47 @@ public class WhiteBoxTest {
         assertEquals("null null", Whitebox.invokeMethod(ClassWithStaticMethod.class, "anotherStaticMethod", (Object) null, (byte[]) null));
     }
 
+
+    @Test
+    public void testObjectConstructors() throws Exception{
+        String name = "objectConstructor";
+        ClassWithObjectConstructors instance = Whitebox.invokeConstructor(ClassWithObjectConstructors.class,
+                name);
+
+        assertEquals(instance.getName(),name);
+    }
+
+    @Test
+    public void testInterfaceConstructors() throws Exception{
+        ConstructorInterface param = new ConstructorInterfaceImpl("constructorInterfaceSomeValue");
+        ClassWithInterfaceConstructors instance = Whitebox.invokeConstructor(ClassWithInterfaceConstructors.class,
+                param);
+
+        assertEquals(instance.getValue(),param.getValue());
+    }
+
+    @Test
+    public void testPrimitiveConstructorsArgumentBoxed() throws Exception{
+        Long arg = 1L;
+        ClassWithPrimitiveConstructors instance = Whitebox.invokeConstructor(ClassWithPrimitiveConstructors.class,
+                arg);
+
+        assertEquals(instance.getValue(),arg.longValue());
+    }
+
+	@Test
+	public void testOverloadedConstructors() throws Exception{
+        String name = "overloadedConstructor";
+        ClassWithOverloadedConstructors instance = Whitebox.invokeConstructor(ClassWithOverloadedConstructors.class,
+                true, name);
+
+        assertEquals(instance.getName(),name);
+        assertTrue(instance.isBool());
+        assertFalse(instance.isBool1());
+	}
+
+    @Test
+    @Ignore("Reflection and direct call returns different values.")
 	public void testFinalState() {
 		ClassWithInternalState state = new ClassWithInternalState();
 		String expected = "changed";
