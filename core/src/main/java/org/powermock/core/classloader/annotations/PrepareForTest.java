@@ -17,7 +17,12 @@ package org.powermock.core.classloader.annotations;
 
 import org.powermock.core.IndicateReloadClass;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * This annotation tells PowerMock to prepare certain classes for testing.
@@ -43,7 +48,7 @@ import java.lang.annotation.*;
  * You can also prepare whole packages for test by using wildcards:
  * 
  * <pre>
- * &#064;PrepareForTest(&quot;com.mypackage.*&quot;)
+ * &#064;PrepareForTest(fullyQualifiedNames=&quot;com.mypackage.*&quot;)
  * </pre>
  * 
  * <p>
