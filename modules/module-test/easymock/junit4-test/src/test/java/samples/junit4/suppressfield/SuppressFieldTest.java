@@ -26,14 +26,14 @@ public class SuppressFieldTest {
 		assertNull(SuppressField.getMyObject());
 	}
 
-	@Ignore("Final primitive types doesn't work, see issue at http://code.google.com/p/powermock/issues/detail?id=85")
+	@Ignore("Final primitive types doesn't work, see issue at https://github.com/jayway/powermock/issues/105")
 	@Test
 	public void assertThatSpecificStaticFinalPrimitiveFieldSuppressionWorks() throws Exception {
 		suppress(field(SuppressField.class, "MY_VALUE"));
 		assertEquals(0, SuppressField.getMyValue());
 	}
 
-	@Ignore("Final primitive types doesn't work, see issue at http://code.google.com/p/powermock/issues/detail?id=85")
+	@Ignore("Final primitive types doesn't work, see issue at https://github.com/jayway/powermock/issues/105")
 	@Test
 	public void assertThatSpecificInstanceFinalPrimitiveFieldSuppressionWorks() throws Exception {
 		suppress(field(SuppressField.class, "myBoolean"));
