@@ -21,14 +21,19 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import samples.spy.SpyObject;
+import samples.suppressmethod.SuppressMethod;
+import samples.suppressmethod.SuppressMethodParent;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.suppress;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({SpyObject.class})
+@PrepareForTest({SpyObject.class, SuppressMethod.class, SuppressMethodParent.class})
 public class SpyTest {
 
     private SpyObject partialMock = null;
@@ -39,10 +44,26 @@ public class SpyTest {
     }
 
     @Test
-    public void spyingOnPrivateMethodWorks() throws Exception {
+    public void testSpyingOnPrivateMethodWorks() throws Exception {
         when(partialMock, "getMyString").thenReturn("ikk2");
 
         assertThat(partialMock.getMyString(), equalTo("ikk2"));
         assertThat(partialMock.getStringTwo(), equalTo("two"));
+    }
+
+    @Test
+    public void testSuppressMethodWhenObjectIsSpy() throws Exception {
+        suppress(method(SuppressMethod.class, "myMethod"));
+
+        SuppressMethod tested = spy(new SuppressMethod());
+        assertEquals(0, tested.myMethod());
+    }
+
+    @Test
+    public void testSuppressMethodInParentOnlyWhenObjectIsSpy() throws Exception {
+        suppress(method(SuppressMethodParent.class, "myMethod"));
+
+        SuppressMethod tested = spy(new SuppressMethod());
+        assertEquals(20, tested.myMethod());
     }
 }
