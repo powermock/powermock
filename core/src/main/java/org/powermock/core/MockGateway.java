@@ -113,14 +113,19 @@ public class MockGateway {
         // method to be called is a final equals() method. In that case the
         // original method is called by returning PROCEED.
         if (    // The following describes the equals method.
-                method.getName().equals("equals")
+                "equals".equals(method.getName())
                         && method.getParameterTypes().length == 1
                         && method.getParameterTypes()[0] == Object.class
                         && Modifier.isFinal(method.getModifiers())) {
             returnValue = PROCEED;
         } else {
 
-            if (methodInvocationControl != null && methodInvocationControl.isMocked(method) && shouldMockThisCall()) {
+            // At first should be checked that method not suppressed, because otherwise for spies real method is
+            // involved.
+
+            if (MockRepository.shouldSuppressMethod(method, objectType)){
+                returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
+            }else if (methodInvocationControl != null && methodInvocationControl.isMocked(method) && shouldMockThisCall()) {
                 returnValue = methodInvocationControl.invoke(object, method, args);
                 if (returnValue == SUPPRESS) {
                     returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
@@ -140,8 +145,6 @@ public class MockGateway {
                     MockRepository.putMethodProxy(method, invocationHandler);
                 }
 
-            } else if (MockRepository.shouldSuppressMethod(method, objectType)) {
-                returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
             } else if (MockRepository.shouldStubMethod(method)) {
                 returnValue = MockRepository.getMethodToStub(method);
             } else {
@@ -249,8 +252,8 @@ public class MockGateway {
      */
     private static Object[] copyArgumentsForInnerOrLocalOrAnonymousClass(Object[] args, boolean excludeEnclosingInstance) {
         Object[] newArgs = new Object[args.length - 1];
-        int start = 0;
-        int end = 0;
+        final int  start;
+        final int end;
         int j = 0;
 
         if (args[0] == null || excludeEnclosingInstance) {
