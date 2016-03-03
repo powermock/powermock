@@ -120,12 +120,15 @@ public class MockGateway {
             returnValue = PROCEED;
         } else {
 
-            // At first should be checked that method not suppressed, because otherwise for spies real method is
-            // involved.
+            // At first should be checked that method not suppressed/stubbed, because otherwise for spies real
+            // method is involved.
+            // https://github.com/jayway/powermock/issues/327
 
             if (MockRepository.shouldSuppressMethod(method, objectType)){
                 returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
-            }else if (methodInvocationControl != null && methodInvocationControl.isMocked(method) && shouldMockThisCall()) {
+            }else if (MockRepository.shouldStubMethod(method)) {
+                returnValue = MockRepository.getMethodToStub(method);
+            } else if (methodInvocationControl != null && methodInvocationControl.isMocked(method) && shouldMockThisCall()) {
                 returnValue = methodInvocationControl.invoke(object, method, args);
                 if (returnValue == SUPPRESS) {
                     returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
@@ -145,8 +148,6 @@ public class MockGateway {
                     MockRepository.putMethodProxy(method, invocationHandler);
                 }
 
-            } else if (MockRepository.shouldStubMethod(method)) {
-                returnValue = MockRepository.getMethodToStub(method);
             } else {
                 returnValue = PROCEED;
             }
