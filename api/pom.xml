@@ -18,6 +18,7 @@
     <modules>
         <module>easymock</module>
         <module>support</module>
+        <module>mockito-common</module>
     </modules>
 
     <profiles>

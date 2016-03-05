@@ -24,6 +24,11 @@
             <dependencies>
                 <dependency>
                     <groupId>org.powermock</groupId>
+                    <artifactId>powermock-api-mockito-common</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.powermock</groupId>
                     <artifactId>powermock-api-mockito</artifactId>
                     <version>${project.version}</version>
                 </dependency>
@@ -32,6 +37,11 @@
         <profile>
             <id>mockito2</id>
             <dependencies>
+                <dependency>
+                    <groupId>org.powermock</groupId>
+                    <artifactId>powermock-api-mockito-common</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
                 <dependency>
                     <groupId>org.powermock</groupId>
                     <artifactId>powermock-api-mockito2</artifactId>
@@ -58,5 +68,6 @@
         <module>junit4-rule-xstream</module>
         <module>junit4-agent</module>
         <module>junit4-delegate</module>
+        <module>testng</module>
     </modules>
 </project>
