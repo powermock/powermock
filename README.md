@@ -3,6 +3,9 @@
 [![Build Status](https://travis-ci.org/jayway/powermock.svg)](https://travis-ci.org/jayway/powermock)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.powermock/powermock/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.powermock/powermock)
 [![Javadoc](https://javadoc-emblem.rhcloud.com/doc/org.powermock/powermock/badge.svg)](http://www.javadoc.io/doc/org.powermock/powermock)
+[![Dependency Status](https://www.versioneye.com/user/projects/56da744cbfdb330030419e61/badge.svg?style=flat)](https://www.versioneye.com/user/projects/56da744cbfdb330030419e61)
+
+Usage status: Mockito: [![Reference Status](https://www.versioneye.com/java/org.powermock:powermock-api-mockito/reference_badge.svg?style=flat)](https://www.versioneye.com/java/org.powermock:powermock-api-mockito/references) Easymock: [![Reference Status](https://www.versioneye.com/java/org.powermock:powermock-api-easymock/reference_badge.svg?style=flat)](https://www.versioneye.com/java/org.powermock:powermock-api-easymock/references) jUnit: [![Reference Status](https://www.versioneye.com/java/org.powermock:powermock-module-junit4/reference_badge.svg?style=flat)](https://www.versioneye.com/java/org.powermock:powermock-module-junit4/references) TestNG [![Reference Status](https://www.versioneye.com/java/org.powermock:powermock-module-testng/reference_badge.svg?style=flat)](https://www.versioneye.com/java/org.powermock:powermock-module-testng/references)
 
 Writing unit tests can be hard and sometimes good design has to be sacrificed for the sole purpose of testability. Often testability corresponds to good design, but this is not always the case. For example final classes and methods cannot be used, private methods sometimes need to be protected or unnecessarily moved to a collaborator, static methods should be avoided completely and so on simply because of the limitations of existing frameworks.
 
