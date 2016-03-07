@@ -2,7 +2,7 @@ package org.powermock.api.extension.reporter;
 
 import org.mockito.exceptions.Reporter;
 import org.mockito.internal.MockitoCore;
-import org.powermock.api.mockito.expectation.PowerMockitoReporter;
+import org.powermock.api.mockito.expectation.reporter.PowerMockitoReporter;
 import org.powermock.api.org.powermock.api.extension.reporter.AbstractMockingFrameworkReporterFactory;
 import org.powermock.core.reporter.MockingFrameworkReporter;
 import org.powermock.reflect.Whitebox;
@@ -11,6 +11,7 @@ import org.powermock.reflect.Whitebox;
  *  The MockingFrameworkReporterFactory which create a new instance of MockingFrameworkReporter
  *  which is loaded by current context class loader.
  */
+@SuppressWarnings("WeakerAccess")
 public class MockingFrameworkReporterFactoryImpl extends AbstractMockingFrameworkReporterFactory {
 
 

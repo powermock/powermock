@@ -5,11 +5,13 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.exceptions.misusing.MissingMethodInvocationException;
+import org.powermock.api.mockito.ClassNotPreparedException;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import samples.singleton.StaticService;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
@@ -36,6 +38,13 @@ public class MockStaticNotPreparedTest {
 
     }
 
+
+    @Test(expected = ClassNotPreparedException.class)
+    public void testWhenNotPreparedAndMockStaticIsCalled() throws Exception {
+
+        mockStatic(StaticService.class);
+
+    }
 
     private void assertOverwrittenException() {
         expectedException.expect(MissingMethodInvocationException.class);

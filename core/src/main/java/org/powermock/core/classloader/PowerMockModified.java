@@ -15,12 +15,11 @@
  *
  */
 
-package org.powermock.core.reporter;
+package org.powermock.core.classloader;
 
 /**
- *  The interface is used to provide a user well-defined exception description.
+ * Interface marker. If an interface extends the PowerMockModified  or a class implements
+ * PowerMockModified  this means that the interface/class has been modified by PowerMock.
  */
-public interface PowerMockReporter {
-
-    <T> void classNotPrepared(Class<T> type);
+public interface PowerMockModified {
 }

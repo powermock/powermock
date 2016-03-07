@@ -15,7 +15,7 @@
  *
  */
 
-package org.powermock.api.mockito.expectation;
+package org.powermock.api.mockito.expectation.reporter;
 
 import org.mockito.exceptions.Reporter;
 import org.mockito.exceptions.misusing.MissingMethodInvocationException;

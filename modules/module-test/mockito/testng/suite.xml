@@ -2,6 +2,7 @@
     <test name="dgf">
         <classes>
             <class name="samples.powermockito.testng.staticmocking.MockStaticNotPreparedTest"/>
+            <class name="samples.powermockito.testng.staticmocking.MockStaticPreparedWithoutMockStaticTest"/>
         </classes>
     </test>
 </suite>

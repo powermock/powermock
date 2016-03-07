@@ -15,12 +15,22 @@
  *
  */
 
-package org.powermock.core.reporter;
+package org.powermock.api.extension.agent;
+
+import org.powermock.core.agent.JavaAgentClassRegister;
+import org.powermock.core.agent.JavaAgentFrameworkRegister;
 
 /**
- *  The interface is used to provide a user well-defined exception description.
+ * Implementation of JavaAgentFrameworkRegister for EasyMock framework.
  */
-public interface PowerMockReporter {
+public class JavaAgentFrameworkRegisterImpl implements JavaAgentFrameworkRegister {
+    @Override
+    public void set(JavaAgentClassRegister javaAgentClassRegister) {
 
-    <T> void classNotPrepared(Class<T> type);
+    }
+
+    @Override
+    public void clear() {
+
+    }
 }

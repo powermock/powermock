@@ -496,7 +496,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
             mockingFrameworkReporterFactoryClass = (Class<MockingFrameworkReporterFactory>) classLoader.loadClass("org.powermock.api.extension.reporter.MockingFrameworkReporterFactoryImpl");
         } catch (ClassNotFoundException e) {
             throw new IllegalStateException(
-                                                   "Extension API internal error: org.powermock.api.org.powermock.api.extension.reporter.MockingFrameworkReporterFactoryImpl could not be located in classpath.");
+                                                   "Extension API internal error: org.powermock.api.extension.reporter.MockingFrameworkReporterFactoryImpl could not be located in classpath.");
         }
 
         return Whitebox.newInstance(mockingFrameworkReporterFactoryClass);

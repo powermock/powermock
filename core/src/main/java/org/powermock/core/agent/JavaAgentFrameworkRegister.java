@@ -15,12 +15,24 @@
  *
  */
 
-package org.powermock.core.reporter;
+package org.powermock.core.agent;
 
 /**
- *  The interface is used to provide a user well-defined exception description.
+ * Instance of class should set/clear an instance of the JavaAgentClassRegister
+ * in Mockito Frameworks classes
  */
-public interface PowerMockReporter {
+public interface JavaAgentFrameworkRegister {
 
-    <T> void classNotPrepared(Class<T> type);
+    /**
+     * Set the <code>javaAgentClassRegister</code> to current loaded mocking framework.
+     * @param javaAgentClassRegister - an instance of {@link JavaAgentClassRegister} which should be set to
+     *                               frameworks classes.
+     */
+    void set(JavaAgentClassRegister javaAgentClassRegister);
+
+    /**
+     * Remove all links to JavaAgentClassRegister
+     */
+    void clear();
+
 }

@@ -16,6 +16,12 @@
 
 package org.powermock.modules.agent;
 
+import javassist.ClassPool;
+import javassist.CtClass;
+import org.powermock.core.agent.JavaAgentClassRegister;
+import org.powermock.core.transformers.TransformStrategy;
+import org.powermock.core.transformers.impl.MainMockTransformer;
+
 import java.io.ByteArrayInputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
@@ -24,28 +30,28 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import javassist.ClassPool;
-import javassist.CtClass;
-
-import org.powermock.core.transformers.TransformStrategy;
-import org.powermock.core.transformers.impl.MainMockTransformer;
-
 class PowerMockClassTransformer extends AbstractClassTransformer implements ClassFileTransformer {
 
 	private volatile Set<String> classesToTransform;
+    private volatile JavaAgentClassRegister javaAgentClassRegister;
     
     public void setClassesToTransform(Collection<String> classesToTransform) {
     	this.classesToTransform = new HashSet<String>(classesToTransform);
     }
-    
+
+    public void setJavaAgentClassRegister(JavaAgentClassRegister javaAgentClassRegister) {
+        this.javaAgentClassRegister = javaAgentClassRegister;
+    }
+
     private static final MainMockTransformer mainMockTransformer = new MainMockTransformer(TransformStrategy.INST_REDEFINE);
 
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
         if (loader == null || shouldIgnore(className)) {
             return null;
         }
-        try {            
-            if (classesToTransform != null && classesToTransform.contains(className.replace("/", "."))) {            
+        try {
+            String normalizedClassName = className.replace("/", ".");
+            if (classesToTransform != null && classesToTransform.contains(normalizedClassName)) {
                 ByteArrayInputStream is = new ByteArrayInputStream(classfileBuffer);
                 CtClass ctClass = null;
                 try {
@@ -65,6 +71,8 @@ class PowerMockClassTransformer extends AbstractClassTransformer implements Clas
                  * CtClass object is removed from the ClassPool.
                  */
                 ctClass.detach();
+
+                javaAgentClassRegister.registerClass(loader, normalizedClassName);
 
                 return ctClass.toBytecode();                      
             } 

@@ -15,12 +15,17 @@
  *
  */
 
-package org.powermock.core.reporter;
+package org.powermock.core.classloader;
+
+import javassist.CtClass;
 
 /**
- *  The interface is used to provide a user well-defined exception description.
+ *  Instance of this interface can be used to mark {@link CtClass} that it was created and loaded by PowerMock
  */
-public interface PowerMockReporter {
-
-    <T> void classNotPrepared(Class<T> type);
+public interface JavaAssistClassMarker {
+    /**
+     * Mark type as loaded by PowerMock
+     * @param type to mark.
+     */
+    void mark(CtClass type);
 }

@@ -1,28 +1,21 @@
 package samples.powermockito.testng.staticmocking;
 
 import org.mockito.exceptions.misusing.MissingMethodInvocationException;
-import org.powermock.api.mockito.ClassNotPreparedException;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.annotations.Test;
 import samples.singleton.StaticService;
 
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 
-public class MockStaticNotPreparedTest extends PowerMockTestCase {
-
-
-    @Test(expectedExceptions = ClassNotPreparedException.class)
-    public void testMockStatic() throws Exception {
-
-        mockStatic(StaticService.class);
-
-    }
+@PrepareForTest(StaticService.class)
+public class MockStaticPreparedWithoutMockStaticTest extends PowerMockTestCase {
 
 
     @Test(expectedExceptions = MissingMethodInvocationException.class, expectedExceptionsMessageRegExp =
-                                                                               "(?s).*PrepareForTest(?s).*")
+                                                                               "(?s).*PrepareForTest(?s).*", enabled
+                                                                                                                                                                                            = false)
     public void testWhenNotPrepared() throws Exception {
 
         when(StaticService.say("Hello")).thenReturn("Hello World!");
