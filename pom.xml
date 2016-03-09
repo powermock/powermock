@@ -68,8 +68,8 @@
     </scm>
 
     <issueManagement>
-        <system>Google Code</system>
-        <url>http://code.google.com/p/powermock/issues/list</url>
+        <system>Github</system>
+        <url>https://github.com/jayway/powermock/issues</url>
     </issueManagement>
     <modules>
         <module>core</module>
@@ -90,7 +90,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.2</version>
+                <version>3.5.1</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
@@ -102,7 +102,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.4</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -115,12 +115,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.4</version>
+                <version>3.5</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
+                <version>2.10.3</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -138,7 +138,7 @@
                     <dependency>
                         <groupId>commons-logging</groupId>
                         <artifactId>commons-logging</artifactId>
-                        <version>1.1.1</version>
+                        <version>1.2</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -159,7 +159,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.5.3</version>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
                         <id>bundle-manifest</id>
@@ -187,12 +187,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>2.5</version>
+                    <version>2.6</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.18.1</version>
+                    <version>2.19.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -202,7 +202,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
+                <version>2.10.3</version>
                 <configuration>
                     <aggregate>true</aggregate>
                     <breakiterator>true</breakiterator>
@@ -218,24 +218,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.18.1</version>
+                <version>2.19.1</version>
                 <configuration>
                     <aggregate>true</aggregate>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.3</version>
-                <configuration>
-                    <targetJdk>1.6</targetJdk>
-                    <rulesets>
-                        <ruleset>/rulesets/basic.xml</ruleset>
-                    </rulesets>
-                    <format>xml</format>
-                    <linkXref>true</linkXref>
-                    <sourceEncoding>utf-8</sourceEncoding>
-                    <minimumTokens>100</minimumTokens>
                 </configuration>
             </plugin>
             <plugin>
@@ -249,12 +234,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.8</version>
+                <version>2.8.1</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.0.3</version>
                 <configuration>
                     <onlyAnalyze>org.powermock.*</onlyAnalyze>
                 </configuration>
@@ -348,7 +333,7 @@
             <dependency>
                 <groupId>org.objenesis</groupId>
                 <artifactId>objenesis</artifactId>
-                <version>2.1</version>
+                <version>2.2</version>
             </dependency>
             <dependency>
                 <groupId>org.hamcrest</groupId>

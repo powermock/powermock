@@ -1,3 +1,4 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="dgf" verbose="10" object-factory="org.powermock.modules.testng.PowerMockObjectFactory">
     <test name="dgf">
         <classes>
