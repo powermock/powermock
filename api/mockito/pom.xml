@@ -11,7 +11,7 @@
     <name>${project.artifactId}</name>
 
     <description>
-        PowerMock API for Mockito.
+        PowerMock API for Mockito 1.+.
     </description>
 
     <dependencies>
@@ -31,7 +31,7 @@
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-support</artifactId>
+            <artifactId>powermock-api-mockito-common</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

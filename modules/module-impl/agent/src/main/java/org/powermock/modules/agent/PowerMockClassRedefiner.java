@@ -16,39 +16,17 @@
 
 package org.powermock.modules.agent;
 
+import org.powermock.core.agent.JavaAgentClassRegister;
+
 import java.util.Arrays;
 
 public class PowerMockClassRedefiner {
 
-    public static void redefine(Class<?> cls) {
-        if (cls == null) {
-            throw new IllegalArgumentException("Class to redefine cannot be null");
-        }
-
-        PowerMockAgent.getClasstransformer().setClassesToTransform(Arrays.asList(cls.getName()));
-
-        try {
-            PowerMockAgent.instrumentation().retransformClasses(cls);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to redefine class " + cls.getName(), e);
-        }
-    }
-
-    public static void redefine(String className) {
-        if (className == null) {
-            throw new IllegalArgumentException("Class name to redefine cannot be null");
-        }
-        try {
-            redefine(Class.forName(className));
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static void redefine(String[] classes, String[] packagesToIgnore) {
+    public static void redefine(String[] classes, String[] packagesToIgnore, JavaAgentClassRegister agentClassRegister) {
         PowerMockClassTransformer transformer = PowerMockAgent.getClasstransformer();
         transformer.setClassesToTransform(Arrays.asList(classes));
         transformer.setPackagesToIgnore(Arrays.asList(packagesToIgnore));
+        transformer.setJavaAgentClassRegister(agentClassRegister);
 
         try {
             for (int i = classes.length - 1; i >= 0; i--) {

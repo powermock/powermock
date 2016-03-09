@@ -15,7 +15,9 @@
  */
 package org.powermock.modules.testng;
 
+import org.powermock.core.agent.JavaAgentClassRegister;
 import org.powermock.modules.agent.PowerMockAgent;
+import org.powermock.modules.agent.support.JavaAgentClassRegisterImpl;
 import org.powermock.modules.agent.support.PowerMockAgentTestInitializer;
 import org.testng.IObjectFactory;
 import org.testng.internal.ObjectFactoryImpl;
@@ -34,12 +36,13 @@ public class PowerMockObjectFactory implements IObjectFactory {
         PowerMockAgent.initializeIfPossible();
     }
 
-    private ObjectFactoryImpl defaultObjectFactory = new ObjectFactoryImpl();
+    private final ObjectFactoryImpl defaultObjectFactory = new ObjectFactoryImpl();
 
     @Override
     public Object newInstance(Constructor constructor, Object... params) {
         final Class<?> testClass = constructor.getDeclaringClass();
-        PowerMockAgentTestInitializer.initialize(testClass);
+        JavaAgentClassRegister agentClassRegister = new JavaAgentClassRegisterImpl();
+        PowerMockAgentTestInitializer.initialize(testClass, agentClassRegister);
         return defaultObjectFactory.newInstance(constructor, params);
     }
 }

@@ -35,16 +35,27 @@ import org.powermock.reflect.Whitebox;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-public class MockCreator {
+@SuppressWarnings("unchecked")
+public class MockCreator extends AbstractMockCreator {
+
+
+    private static final MockCreator MOCK_CREATOR = new MockCreator();
 
     @SuppressWarnings("unchecked")
     public static <T> T mock(Class<T> type, boolean isStatic, boolean isSpy, Object delegator,
                              MockSettings mockSettings, Method... methods) {
+        return MOCK_CREATOR.createMock(type, isStatic, isSpy, delegator, mockSettings, methods);
+    }
+
+    @Override
+    protected  <T> T createMock(Class<T> type, boolean isStatic, boolean isSpy, Object delegator,
+                            MockSettings mockSettings, Method... methods) {
         if (type == null) {
             throw new IllegalArgumentException("The class to mock cannot be null");
         }
 
-        T mock;
+        validateType(type, isStatic, isSpy);
+
         final String mockName = toInstanceName(type, mockSettings);
 
         MockRepository.addAfterMethodRunner(new MockitoStateCleanerRunnable());
@@ -56,10 +67,10 @@ public class MockCreator {
             typeToMock = type;
         }
 
-        final MockData<T> mockData = createMethodInvocationControl(mockName, typeToMock, methods, isSpy, (T) delegator,
+        final MockData<T> mockData = createMethodInvocationControl(mockName, typeToMock, methods, isSpy, delegator,
                 mockSettings);
 
-        mock = mockData.getMock();
+        T mock = mockData.getMock();
         if (isFinalJavaSystemClass(type) && !isStatic) {
             mock = Whitebox.newInstance(type);
             DefaultFieldValueGenerator.fillWithDefaultValues(mock);
@@ -78,12 +89,12 @@ public class MockCreator {
         return mock;
     }
 
-    private static <T> boolean isFinalJavaSystemClass(Class<T> type) {
+    private <T> boolean isFinalJavaSystemClass(Class<T> type) {
         return type.getName().startsWith("java.") && Modifier.isFinal(type.getModifiers());
     }
 
-    private static <T> MockData<T> createMethodInvocationControl(final String mockName, Class<T> type,
-                                                                 Method[] methods, boolean isSpy, Object delegator, MockSettings mockSettings) {
+    private <T> MockData<T> createMethodInvocationControl(final String mockName, Class<T> type,
+                                                          Method[] methods, boolean isSpy, Object delegator, MockSettings mockSettings) {
         final MockSettingsImpl settings;
         if (mockSettings == null) {
             // We change the context classloader to the current CL in order for the Mockito
@@ -108,7 +119,7 @@ public class MockCreator {
 
         InternalMockHandler mockHandler = new MockHandlerFactory().create(settings);
         MethodInterceptorFilter filter = new PowerMockMethodInterceptorFilter(mockHandler, settings);
-        final T mock = (T) new ClassImposterizer(new InstantiatorProvider().getInstantiator(settings)).imposterise(filter, type);
+        final T mock = new ClassImposterizer(new InstantiatorProvider().getInstantiator(settings)).imposterise(filter, type);
         ClassLoader classLoader = mock.getClass().getClassLoader();
         if (classLoader instanceof MockClassLoader) {
             MockClassLoader mcl = (MockClassLoader) classLoader;
@@ -123,7 +134,7 @@ public class MockCreator {
         return new MockData<T>(invocationControl, mock);
     }
 
-    private static String toInstanceName(Class<?> clazz, final MockSettings mockSettings) {
+    private String toInstanceName(Class<?> clazz, final MockSettings mockSettings) {
         // if the settings define a mock name, use it
         if (mockSettings instanceof MockSettingsImpl<?>) {
             String settingName = ((MockSettingsImpl<?>) mockSettings).getName();
@@ -144,7 +155,7 @@ public class MockCreator {
     /**
      * Class that encapsulate a mock and its corresponding invocation control.
      */
-    private static class MockData<T> {
+    private class MockData<T> {
         private final MockitoMethodInvocationControl methodInvocationControl;
 
         private final T mock;
@@ -166,7 +177,7 @@ public class MockCreator {
     /**
      * Clear state in Mockito that retains memory between tests
      */
-    private static class MockitoStateCleanerRunnable implements Runnable {
+    private class MockitoStateCleanerRunnable implements Runnable {
         public void run() {
             MockitoStateCleaner cleaner = new MockitoStateCleaner();
             cleaner.clearConfiguration();
@@ -174,4 +185,5 @@ public class MockCreator {
         }
 
     }
+
 }

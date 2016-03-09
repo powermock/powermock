@@ -15,24 +15,38 @@
  */
 package org.powermock.core.transformers.impl;
 
-import javassist.*;
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtConstructor;
+import javassist.CtField;
+import javassist.CtMethod;
+import javassist.CtNewConstructor;
+import javassist.Modifier;
+import javassist.NotFoundException;
 import javassist.bytecode.AttributeInfo;
 import javassist.bytecode.ClassFile;
 import javassist.bytecode.DuplicateMemberException;
 import javassist.bytecode.InnerClassesAttribute;
-import javassist.expr.*;
+import javassist.expr.ConstructorCall;
+import javassist.expr.ExprEditor;
+import javassist.expr.FieldAccess;
+import javassist.expr.MethodCall;
+import javassist.expr.NewExpr;
 import org.powermock.core.IndicateReloadClass;
 import org.powermock.core.MockGateway;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.TransformStrategy;
 
-import static org.powermock.core.transformers.TransformStrategy.*;
+import static org.powermock.core.transformers.TransformStrategy.CLASSLOADER;
+import static org.powermock.core.transformers.TransformStrategy.INST_REDEFINE;
+import static org.powermock.core.transformers.TransformStrategy.INST_TRANSFORM;
 
 public class MainMockTransformer implements MockTransformer {
 
     private static final String VOID = "";
 
-    private TransformStrategy strategy;
+    private final TransformStrategy strategy;
 
     public MainMockTransformer() {
         this(CLASSLOADER);
@@ -46,6 +60,7 @@ public class MainMockTransformer implements MockTransformer {
         if (clazz.isFrozen()) {
             clazz.defrost();
         }
+
         /*
          * Set class modifier to public to allow for mocking of package private
          * classes. This is needed because we've changed to CgLib naming policy
@@ -157,7 +172,7 @@ public class MainMockTransformer implements MockTransformer {
         }
     }
 
-    public void modifyMethod(final CtMethod method) throws NotFoundException, CannotCompileException {
+    private void modifyMethod(final CtMethod method) throws NotFoundException, CannotCompileException {
         if (!Modifier.isAbstract(method.getModifiers())) {
             // Lookup the method return type
             final CtClass returnTypeAsCtClass = method.getReturnType();
@@ -213,7 +228,7 @@ public class MainMockTransformer implements MockTransformer {
      */
     private String getCorrectReturnValueType(final CtClass returnTypeAsCtClass) {
         final String returnTypeAsString = returnTypeAsCtClass.getName();
-        String returnValue = "($r)value";
+        final String returnValue;
         if (returnTypeAsCtClass.equals(CtClass.voidType)) {
             returnValue = VOID;
         } else if (returnTypeAsCtClass.isPrimitive()) {
@@ -272,7 +287,7 @@ public class MainMockTransformer implements MockTransformer {
                 final CtMethod method = m.getMethod();
                 final CtClass declaringClass = method.getDeclaringClass();
                 if (declaringClass != null) {
-                    if (shouldTreatAsSystemClassCall(method, declaringClass)) {
+                    if (shouldTreatAsSystemClassCall(declaringClass)) {
                         StringBuilder code = new StringBuilder();
                         code.append("{Object classOrInstance = null; if($0!=null){classOrInstance = $0;} else { classOrInstance = $class;}");
                         code.append("Object value =  ").append(MockGateway.class.getName()).append(".methodCall(").append("classOrInstance,\"")
@@ -299,12 +314,9 @@ public class MainMockTransformer implements MockTransformer {
             }
         }
 
-        private boolean shouldTreatAsSystemClassCall(CtMethod method, CtClass declaringClass) throws NotFoundException {
+        private boolean shouldTreatAsSystemClassCall(CtClass declaringClass) {
             final String className = declaringClass.getName();
-            if (className.startsWith("java.")) {
-                return true;
-            }
-            return false;
+            return className.startsWith("java.");
         }
 
         @Override
@@ -319,7 +331,7 @@ public class MainMockTransformer implements MockTransformer {
              * "suppressConstructorCode" both here and in NewExpr.
              */
             if (strategy != INST_REDEFINE && !c.getClassName().startsWith("java.lang")) {
-                CtClass superclass = null;
+                final CtClass superclass;
                 try {
                     superclass = clazz.getSuperclass();
                 } catch (NotFoundException e) {
@@ -362,7 +374,7 @@ public class MainMockTransformer implements MockTransformer {
          * @throws CannotCompileException If an unexpected compilation error occurs.
          */
         private void addNewDeferConstructor(final CtClass clazz) throws CannotCompileException {
-            CtClass superClass = null;
+            final CtClass superClass;
             try {
                 superClass = clazz.getSuperclass();
             } catch (NotFoundException e1) {
@@ -376,7 +388,7 @@ public class MainMockTransformer implements MockTransformer {
              * with one argument (IndicateReloadClass). So we get this class a
              * Javassist class below.
              */
-            CtClass constructorType = null;
+            final CtClass constructorType;
             try {
                 constructorType = classPool.get(IndicateReloadClass.class.getName());
             } catch (NotFoundException e) {

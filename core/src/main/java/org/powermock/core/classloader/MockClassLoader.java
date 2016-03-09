@@ -50,10 +50,11 @@ public class MockClassLoader extends DeferSupportingClassLoader {
 
     private static final String CGLIB_ENHANCER = "net.sf.cglib.proxy.Enhancer$EnhancerKey$$KeyFactoryByCGLIB$$";
     private static final String CGLIB_METHOD_WRAPPER = "net.sf.cglib.core.MethodWrapper$MethodWrapperKey$$KeyFactoryByCGLIB";
+    private final JavaAssistClassMarker javaAssistClassMarker;
 
     private List<MockTransformer> mockTransformerChain;
 
-    private Set<String> modify = Collections.synchronizedSet(new HashSet<String>());
+    private final Set<String> modify = Collections.synchronizedSet(new HashSet<String>());
 
     /*
      * Classes not deferred but loaded by the mock class loader but they're not
@@ -79,7 +80,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
             "org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate*",
             "org.powermock.core*", "org.jacoco.agent.rt.*"};
 
-    private ClassPool classPool = new ClassPool();
+    private final ClassPool classPool = new ClassPool();
 
     /**
      * Creates a new instance of the {@link MockClassLoader} based on the
@@ -103,6 +104,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
                 throw new RuntimeException("Error instantiating class path adjuster", e);
             }
         }
+        javaAssistClassMarker = JavaAssistClassMarkerFactory.createClassMarker(classPool);
     }
 
     private static String[] getPackagesToDefer(final String[] additionalDeferPackages) {
@@ -200,7 +202,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
         }
     }
 
-    public boolean shouldModifyAll() {
+    private boolean shouldModifyAll() {
         return (modify.size() == 1 && modify.iterator().next().equals(MODIFY_ALL_CLASSES));
     }
 
@@ -243,15 +245,18 @@ public class MockClassLoader extends DeferSupportingClassLoader {
      * Load a mocked version of the class.
      */
     private Class<?> loadMockClass(String name) {
-        CtClass type = null;
-        byte[] clazz = null;
+
+        final byte[] clazz;
 
         ClassPool.doPruning = false;
         try {
-            type = classPool.get(name);
+            CtClass type = classPool.get(name);
             for (MockTransformer transformer : mockTransformerChain) {
                 type = transformer.transform(type);
             }
+
+            javaAssistClassMarker.mark(type);
+
             /*
              * ClassPool may cause huge memory consumption if the number of CtClass
              * objects becomes amazingly large (this rarely happens since Javassist
@@ -261,6 +266,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
              * CtClass object is removed from the ClassPool.
              */
             type.detach();
+
 
             clazz = type.toBytecode();
         } catch (Exception e) {
@@ -301,4 +307,5 @@ public class MockClassLoader extends DeferSupportingClassLoader {
         }
         return false;
     }
+
 }

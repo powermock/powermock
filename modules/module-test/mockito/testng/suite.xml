@@ -1,0 +1,8 @@
+<suite name="dgf" verbose="10" object-factory="org.powermock.modules.testng.PowerMockObjectFactory">
+    <test name="dgf">
+        <classes>
+            <class name="samples.powermockito.testng.staticmocking.MockStaticNotPreparedTest"/>
+            <class name="samples.powermockito.testng.staticmocking.MockStaticPreparedWithoutMockStaticTest"/>
+        </classes>
+    </test>
+</suite>

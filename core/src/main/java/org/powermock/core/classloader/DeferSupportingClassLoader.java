@@ -34,9 +34,9 @@ import java.util.concurrent.ConcurrentMap;
  * @author Jan Kronquist
  */
 public abstract class DeferSupportingClassLoader extends Loader {
-    private ConcurrentMap<String, SoftReference<Class<?>>> classes;
+    private final ConcurrentMap<String, SoftReference<Class<?>>> classes;
 
-    String deferPackages[];
+    String[] deferPackages;
 
     ClassLoader deferTo;
 
@@ -50,7 +50,7 @@ public abstract class DeferSupportingClassLoader extends Loader {
         }
     }
 
-    public DeferSupportingClassLoader(ClassLoader classloader, String deferPackages[]) {
+    DeferSupportingClassLoader(ClassLoader classloader, String deferPackages[]) {
         if (classloader == null) {
             deferTo = ClassLoader.getSystemClassLoader();
         } else {
@@ -78,7 +78,7 @@ public abstract class DeferSupportingClassLoader extends Loader {
         return reference.get();
     }
 
-    protected boolean shouldDefer(String[] packages, String name) {
+    boolean shouldDefer(String[] packages, String name) {
         for (String packageToCheck : packages) {
             if (deferConditionMatches(name, packageToCheck)) {
                 return true;
@@ -92,7 +92,7 @@ public abstract class DeferSupportingClassLoader extends Loader {
         return wildcardMatch && !(shouldLoadUnmodifiedClass(name) || shouldModifyClass(name));
     }
 
-    protected boolean shouldIgnore(Iterable<String> packages, String name) {
+    private boolean shouldIgnore(Iterable<String> packages, String name) {
         for (String ignore : packages) {
             if (WildcardMatcher.matches(ignore, name)) {
                 return true;
@@ -101,7 +101,7 @@ public abstract class DeferSupportingClassLoader extends Loader {
         return false;
     }
 
-    protected boolean shouldIgnore(String[] packages, String name) {
+    boolean shouldIgnore(String[] packages, String name) {
         for (String ignore : packages) {
             if (WildcardMatcher.matches(name, ignore)) {
                 return true;
