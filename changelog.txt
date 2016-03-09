@@ -1,12 +1,15 @@
 Change log next version
 -----------------------
-* Add ability to chain returns with doReturn() (thanks to "gauee" for pull request) (issue 599)
+* Add ability to chain returns with doReturn() (thanks to "gauee" for pull request) (issue #599)
 * Code quality improvement, @Override annotation should be used on any method overriding (since Java 5) or implementing (since Java 6) another one
 * PowerMockRunner now processes JUnit Rules correctly (thanks to Stefan Birkner for pull request) (issue 427)
 * Fix #214: Whitebox.invokeConstructor may not work as expected with overloaded constructors
 * Fix #590: suppress(method) doesn't work on a @Spy/PowerMockito.spy
 * Added support for @TestSubject in EasyMock API. This is the equivalent of @InjectMocks in Mockito (big thanks to Arthur Zagretdinov for pull request)
 * Added experimental support for mockito 2.x
+* Upgraded commons-logging dependency to version 1.2
+* Upgraded objenesis dependency to version 2.2
+* Upgraded TestNG dependency to version 6.9.10. (but not for TestNG Agent. See issue #640)
 
 Change log 1.6.4 (2015-12-11)
 -----------------------------
