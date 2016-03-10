@@ -29,14 +29,18 @@ import java.lang.reflect.Constructor;
  */
 public class PowerMockObjectFactory implements IObjectFactory {
 
-     static {
-        if(PowerMockObjectFactory.class.getClassLoader() != ClassLoader.getSystemClassLoader()) {
-            throw new IllegalStateException("PowerMockObjectFactory can only be used with the system classloader but was loaded by "+PowerMockObjectFactory.class.getClassLoader());
+    static {
+        if (PowerMockObjectFactory.class.getClassLoader() != ClassLoader.getSystemClassLoader()) {
+            throw new IllegalStateException("PowerMockObjectFactory can only be used with the system classloader but was loaded by " + PowerMockObjectFactory.class.getClassLoader());
         }
         PowerMockAgent.initializeIfPossible();
     }
 
-    private final ObjectFactoryImpl defaultObjectFactory = new ObjectFactoryImpl();
+    private final ObjectFactoryImpl defaultObjectFactory;
+
+    public PowerMockObjectFactory() {
+        defaultObjectFactory = new ObjectFactoryImpl();
+    }
 
     @Override
     public Object newInstance(Constructor constructor, Object... params) {

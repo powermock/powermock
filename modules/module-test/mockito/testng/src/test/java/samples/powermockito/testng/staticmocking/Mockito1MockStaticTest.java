@@ -16,7 +16,10 @@
 package samples.powermockito.testng.staticmocking;
 
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import org.powermock.modules.testng.PowerMockObjectFactory;
+import org.testng.Assert;
+import org.testng.IObjectFactory;
+import org.testng.annotations.ObjectFactory;
 import org.testng.annotations.Test;
 import samples.singleton.StaticHelper;
 import samples.singleton.StaticService;
@@ -24,7 +27,6 @@ import samples.singleton.StaticService;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
-import static org.testng.Assert.assertEquals;
 
 
 /**
@@ -32,10 +34,16 @@ import static org.testng.Assert.assertEquals;
  * static+final+native methods mocking.
  */
 @PrepareForTest({StaticService.class, StaticHelper.class})
-public class MockStaticTest extends PowerMockTestCase {
+public class Mockito1MockStaticTest {
+
+    @ObjectFactory
+    public IObjectFactory getObjectFactory() {
+        return new PowerMockObjectFactory();
+    }
 
     @Test
     public void testMockStatic() throws Exception {
+
         mockStatic(StaticService.class);
         String expected = "Hello altered World";
         when(StaticService.say("hello")).thenReturn("Hello altered World");
@@ -45,12 +53,13 @@ public class MockStaticTest extends PowerMockTestCase {
         verifyStatic();
         StaticService.say("hello");
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 
 
     @Test
     public void testMockStaticFinal() throws Exception {
+
         mockStatic(StaticService.class);
         String expected = "Hello altered World";
         when(StaticService.sayFinal("hello")).thenReturn("Hello altered World");
@@ -60,6 +69,6 @@ public class MockStaticTest extends PowerMockTestCase {
         verifyStatic();
         StaticService.sayFinal("hello");
 
-        assertEquals(expected, actual);
+        Assert.assertEquals(expected, actual);
     }
 }
