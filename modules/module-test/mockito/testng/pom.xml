@@ -43,6 +43,12 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>suite.xml</suiteXmlFile>
                     </suiteXmlFiles>
+                    <systemProperties>
+                        <property>
+                            <name>mockitoVersion</name>
+                            <value>${mockito.version}</value>
+                        </property>
+                    </systemProperties>
                 </configuration>
             </plugin>
         </plugins>

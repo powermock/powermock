@@ -51,9 +51,19 @@ public class AnnotationEnabler extends AbstractPowerMockTestListenerBase impleme
 
     @Override
     public void beforeTestMethod(Object testInstance, Method method, Object[] arguments) throws Exception {
+
+        // Mockito uses context class loader not only to load resources, but to load plugin implementers, but for
+        // other purpose default/application class loader is used. So PluginRepository and Plugin could be loaded by
+        // different class loaders. Fix will be
+
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+
         standardInject(testInstance);
         injectSpiesAndInjectToSetters(testInstance);
         injectCaptor(testInstance);
+
+        Thread.currentThread().setContextClassLoader(contextClassLoader);
     }
 
     private void injectSpiesAndInjectToSetters(Object testInstance) {

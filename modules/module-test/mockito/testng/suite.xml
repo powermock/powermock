@@ -1,8 +1,39 @@
-<suite name="dgf" verbose="10" object-factory="org.powermock.modules.testng.PowerMockObjectFactory">
-    <test name="dgf">
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="PowerMockito TestNG" verbose="10" object-factory="org.powermock.modules.testng.PowerMockObjectFactory">
+    <test name="General">
         <classes>
             <class name="samples.powermockito.testng.staticmocking.MockStaticNotPreparedTest"/>
             <class name="samples.powermockito.testng.staticmocking.MockStaticPreparedWithoutMockStaticTest"/>
+        </classes>
+    </test>
+    <test name="Mockito1">
+        <method-selectors>
+            <method-selector>
+                <script language="beanshell">
+                    <![CDATA[
+                        String str = System.getProperty("mockitoVersion");
+                        str.startsWith("1");
+                      ]]>
+                </script>
+            </method-selector>
+        </method-selectors>
+        <classes>
+            <class name="samples.powermockito.testng.staticmocking.Mockito1MockStaticTest"/>
+        </classes>
+    </test>
+    <test name="Mockito2">
+        <method-selectors>
+            <method-selector>
+                <script language="beanshell">
+                    <![CDATA[
+                        String str = System.getProperty("mockitoVersion");
+                        str.startsWith("2")&&str.contains(".46");
+                      ]]>
+                </script>
+            </method-selector>
+        </method-selectors>
+        <classes>
+            <class name="samples.powermockito.testng.staticmocking.Mockito2MockStaticTest"/>
         </classes>
     </test>
 </suite>
