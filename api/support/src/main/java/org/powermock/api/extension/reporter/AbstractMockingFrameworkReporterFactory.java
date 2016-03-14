@@ -15,7 +15,7 @@
  *
  */
 
-package org.powermock.api.org.powermock.api.extension.reporter;
+package org.powermock.api.extension.reporter;
 
 import org.powermock.core.reporter.MockingFrameworkReporter;
 import org.powermock.core.reporter.MockingFrameworkReporterFactory;
@@ -25,6 +25,7 @@ import org.powermock.reflect.Whitebox;
  *  Abstract implementation of the {@link MockingFrameworkReporterFactory}, contains common code for EasyMock and
  *  Mockito.
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class AbstractMockingFrameworkReporterFactory implements MockingFrameworkReporterFactory {
     @Override
     public MockingFrameworkReporter create() {

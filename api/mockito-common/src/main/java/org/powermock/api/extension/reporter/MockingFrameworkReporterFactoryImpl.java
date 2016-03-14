@@ -3,7 +3,6 @@ package org.powermock.api.extension.reporter;
 import org.mockito.exceptions.Reporter;
 import org.mockito.internal.MockitoCore;
 import org.powermock.api.mockito.expectation.reporter.PowerMockitoReporter;
-import org.powermock.api.org.powermock.api.extension.reporter.AbstractMockingFrameworkReporterFactory;
 import org.powermock.core.reporter.MockingFrameworkReporter;
 import org.powermock.reflect.Whitebox;
 

@@ -17,7 +17,6 @@
 
 package org.powermock.api.extension.reporter;
 
-import org.powermock.api.org.powermock.api.extension.reporter.AbstractMockingFrameworkReporterFactory;
 import org.powermock.core.reporter.MockingFrameworkReporter;
 
 /**
