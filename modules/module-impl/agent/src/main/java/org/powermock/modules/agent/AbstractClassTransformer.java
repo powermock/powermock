@@ -30,6 +30,7 @@ public abstract class AbstractClassTransformer {
     static {
         ALWAYS_IGNORED.add("org.powermock.*");
         ALWAYS_IGNORED.add("org.junit.*");
+        ALWAYS_IGNORED.add("org.testng.*");
         ALWAYS_IGNORED.add("org.mockito.*");
         ALWAYS_IGNORED.add("javassist.*");
         ALWAYS_IGNORED.add("org.objenesis.*");

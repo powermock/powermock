@@ -9,7 +9,8 @@ Change log next version
 * Added experimental support for mockito 2.x
 * Upgraded commons-logging dependency to version 1.2
 * Upgraded objenesis dependency to version 2.2
-* Upgraded TestNG dependency to version 6.9.10. (but not for TestNG Agent. See issue #640)
+* Upgraded TestNG dependency to version 6.9.10.
+* ASM for PowerMock Javaagent repackaged from new version 5.0.4
 
 Change log 1.6.4 (2015-12-11)
 -----------------------------
