@@ -1,16 +1,13 @@
 package org.powermock.modules.agent;
 
-import org.powermock.objectweb.asm.ClassAdapter;
 import org.powermock.objectweb.asm.ClassVisitor;
 import org.powermock.objectweb.asm.MethodVisitor;
 import org.powermock.objectweb.asm.Opcodes;
 
-import java.lang.reflect.Modifier;
-
-class PowerMockClassVisitor extends ClassAdapter {
+class PowerMockClassVisitor extends ClassVisitor {
 
     public PowerMockClassVisitor(ClassVisitor classVisitor) {
-        super(classVisitor);
+        super(Opcodes.ASM5, classVisitor);
     }
 
     @Override
@@ -23,14 +20,7 @@ class PowerMockClassVisitor extends ClassAdapter {
     @Override
     public MethodVisitor visitMethod(int access, final String name, final String desc, final String signature,
             final String[] exceptions) {
-//        if(isConstructor(name)) {
-//            access = setConstructorToPublic(access);
-//        }
         return super.visitMethod(removeFinal(access), name, desc, signature, exceptions);
-    }
-
-    private int setConstructorToPublic(int access) {
-        return Modifier.isPublic(access) ? access : access & Opcodes.ACC_PUBLIC;
     }
 
     @Override
@@ -42,7 +32,4 @@ class PowerMockClassVisitor extends ClassAdapter {
         return access & ~Opcodes.ACC_FINAL;
     }
 
-    private boolean isConstructor(String name) {
-        return name.equals("<init>");
-    }
 }

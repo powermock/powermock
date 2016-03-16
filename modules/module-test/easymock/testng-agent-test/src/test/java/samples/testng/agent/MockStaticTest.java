@@ -16,13 +16,16 @@
 package samples.testng.agent;
 
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import samples.singleton.StaticHelper;
 import samples.singleton.StaticService;
 
 import static org.easymock.EasyMock.expect;
-import static org.powermock.api.easymock.PowerMock.*;
+import static org.powermock.api.easymock.PowerMock.mockStatic;
+import static org.powermock.api.easymock.PowerMock.replay;
+import static org.powermock.api.easymock.PowerMock.verify;
 
 /**
  * Test class to demonstrate static, static+final, static+native and
@@ -32,7 +35,7 @@ import static org.powermock.api.easymock.PowerMock.*;
  * @author Jan Kronquist
  */
 @PrepareForTest( { StaticService.class, StaticHelper.class })
-public class MockStaticTest {
+public class MockStaticTest extends PowerMockTestCase {
 
 	@Test
 	public void testMockStatic() throws Exception {
@@ -46,13 +49,6 @@ public class MockStaticTest {
 		verify(StaticService.class);
 		Assert.assertEquals(expected, actual);
 
-		// Singleton still be mocked by now.
-		try {
-			StaticService.say("world");
-			Assert.fail("Should throw AssertionError!");
-		} catch (AssertionError e) {
-			Assert.assertEquals("\n  Unexpected method call say(\"world\"):", e.getMessage());
-		}
 	}
 
 	@Test
@@ -66,13 +62,5 @@ public class MockStaticTest {
 
 		verify(StaticService.class);
 		Assert.assertEquals(expected, actual);
-
-		// Singleton still be mocked by now.
-		try {
-			StaticService.sayFinal("world");
-			Assert.fail("Should throw AssertionError!");
-		} catch (AssertionError e) {
-			Assert.assertEquals("\n  Unexpected method call sayFinal(\"world\"):", e.getMessage());
-		}
 	}
 }
