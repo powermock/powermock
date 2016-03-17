@@ -16,6 +16,8 @@
 package org.powermock.tests.utils.impl;
 
 import org.powermock.core.IndicateReloadClass;
+import org.powermock.core.classloader.MockClassLoader;
+import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.tests.utils.TestClassesExtractor;
@@ -30,7 +32,6 @@ import java.util.Set;
  * classes from the {@link PrepareForTest} or {@link PrepareOnlyThisForTest}
  * annotations. It also adds the test case to the array of classes that should
  * be modified.
- * 
  */
 public class PrepareForTestExtractorImpl extends AbstractTestClassExtractor {
 
@@ -39,6 +40,10 @@ public class PrepareForTestExtractorImpl extends AbstractTestClassExtractor {
      */
     @Override
     protected String[] getClassesToModify(AnnotatedElement element) {
+        if (element.getAnnotation(PrepareEverythingForTest.class) != null) {
+            return new String[]{MockClassLoader.MODIFY_ALL_CLASSES};
+        }
+
         Set<String> all = new LinkedHashSet<String>();
         addTestCase(all, element);
         PrepareForTest prepareForTestAnnotation = element.getAnnotation(PrepareForTest.class);

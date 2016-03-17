@@ -15,7 +15,9 @@
  */
 package org.powermock.modules.testng;
 
+import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.modules.testng.internal.PowerMockClassloaderObjectFactory;
 import org.testng.IObjectFactory;
@@ -64,6 +66,9 @@ public class PowerMockObjectFactory implements IObjectFactory {
     }
 
     private boolean isClassAnnotatedWithPowerMockAnnotation(Class<?> testClass) {
-        return testClass.isAnnotationPresent(PrepareForTest.class) || testClass.isAnnotationPresent(SuppressStaticInitializationFor.class);
+        return testClass.isAnnotationPresent(PrepareForTest.class)
+                || testClass.isAnnotationPresent(PrepareOnlyThisForTest.class)
+                || testClass.isAnnotationPresent(PrepareEverythingForTest.class)
+                || testClass.isAnnotationPresent(SuppressStaticInitializationFor.class);
     }
 }
