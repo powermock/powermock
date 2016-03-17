@@ -68,7 +68,7 @@
     </developers>
 
     <scm>
-        <url>git@github.com:jayway/powermock.git0</url>
+        <url>git@github.com:jayway/powermock.git</url>
         <connection>scm:git:git://github.com/jayway/powermock.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/jayway/powermock.git</developerConnection>
     </scm>
