@@ -59,10 +59,16 @@
             <email>jan.kronquist at jayway.com</email>
             <timezone>+1</timezone>
         </developer>
+        <developer>
+            <id>thekingnothing</id>
+            <name>Arthur Zagretdinov</name>
+            <email>arthur.zagretdinov at outlook.com</email>
+            <timezone>+3</timezone>
+        </developer>
     </developers>
 
     <scm>
-        <url>https://github.com/jayway/powermock/tree/master</url>
+        <url>git@github.com:jayway/powermock.git</url>
         <connection>scm:git:git://github.com/jayway/powermock.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/jayway/powermock.git</developerConnection>
     </scm>
