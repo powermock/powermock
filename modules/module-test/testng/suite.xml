@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="TestNG" verbose="10" object-factory="org.powermock.modules.testng.PowerMockObjectFactory">
+    <test name="TestNG Skip test Bug #647">
+        <classes>
+            <class name="samples.testng.powermock647.PowerMock647"/>
+        </classes>
+    </test>
+</suite>
