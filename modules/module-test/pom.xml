@@ -19,5 +19,6 @@
     <modules>
         <module>easymock</module>
         <module>mockito</module>
+        <module>testng</module>
     </modules>
 </project>

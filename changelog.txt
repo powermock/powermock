@@ -5,7 +5,8 @@ Change log next version
 * PowerMockRunner now processes JUnit Rules correctly (thanks to Stefan Birkner for pull request) (issue 427)
 * Fix #214: Whitebox.invokeConstructor may not work as expected with overloaded constructors
 * Fix #590: suppress(method) doesn't work on a @Spy/PowerMockito.spy
-* Fix #634/#632: Add workaround as fix  for Mockito 1+. Wait fix from Mockito team for Mockito 2. 
+* Fix #634/#632: Add workaround as fix  for Mockito 1+. Wait fix from Mockito team for Mockito 2.
+* Fix #648: TestNG SkipException doesn't work with PowerMock
 * Added support for @TestSubject in EasyMock API. This is the equivalent of @InjectMocks in Mockito (big thanks to Arthur Zagretdinov for pull request)
 * Added experimental support for mockito 2.x
 * Upgraded commons-logging dependency to version 1.2
