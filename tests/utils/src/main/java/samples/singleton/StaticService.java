@@ -27,7 +27,18 @@ import java.util.concurrent.Callable;
 public class StaticService {
 
 	private static int number = 17;
-	private int secret = 23;
+    private static Integer intValue;
+    public static String messageStorage;
+
+    private int secret = 23;
+
+    public static void sayHello(String message) {
+        messageStorage = message;
+    }
+
+    public static void sayHello(Integer intValue) {
+        StaticService.intValue = intValue;
+    }
 
 	public static int getNumberFromInner() {
 		return new Callable<Integer>() {
