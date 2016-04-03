@@ -1165,7 +1165,8 @@ public class WhiteboxImpl {
                 methodNameData = "with name '" + methodName + "' ";
             }
             throw new MethodNotFoundException("No method found " + methodNameData + "with parameter types: [ "
-                                                      + getArgumentTypesAsString(arguments) + " ] in class " + getUnmockedType(type).getName() + ".");
+                                                      + getArgumentTypesAsString(arguments) + " ] in class " + getUnmockedType(type)
+                                                                                                                       .getName() + ".");
         }
     }
 
@@ -1737,7 +1738,7 @@ public class WhiteboxImpl {
         StringBuilder sb = new StringBuilder();
         sb.append("Several matching constructors found, please specify the argument parameter types so that PowerMock can determine which method you're referring to.\n");
         sb.append("Matching constructors in class ").append(constructors[0].getDeclaringClass().getName())
-                .append(" were:\n");
+          .append(" were:\n");
 
         for (Constructor<?> constructor : constructors) {
             sb.append(constructor.getName()).append("( ");
@@ -2269,22 +2270,7 @@ public class WhiteboxImpl {
      */
     public static boolean checkIfParameterTypesAreSame(boolean isVarArgs, Class<?>[] expectedParameterTypes,
                                                        Class<?>[] actualParameterTypes) {
-        if (expectedParameterTypes == null || actualParameterTypes == null) {
-            throw new IllegalArgumentException("parameter types cannot be null");
-        } else if (expectedParameterTypes.length != actualParameterTypes.length) {
-            return false;
-        } else {
-            for (int i = 0; i < expectedParameterTypes.length; i++) {
-                final Class<?> actualParameterType = getType(actualParameterTypes[i]);
-                if (isVarArgs && i == expectedParameterTypes.length - 1
-                            && actualParameterType.getComponentType().isAssignableFrom(expectedParameterTypes[i])) {
-                    return true;
-                } else if (!actualParameterType.isAssignableFrom(expectedParameterTypes[i])) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return new ParameterTypesMatcher(isVarArgs, expectedParameterTypes, actualParameterTypes).match();
     }
 
     /**
