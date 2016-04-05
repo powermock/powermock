@@ -27,6 +27,7 @@ import samples.suppressmethod.SuppressMethodParent;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
@@ -65,5 +66,12 @@ public class SpyTest {
 
         SuppressMethod tested = spy(new SuppressMethod());
         assertEquals(20, tested.myMethod());
+    }
+
+    @Test
+    public void testDoNothingForSpy() {
+        doNothing().when(partialMock).throwException();
+
+        partialMock.throwException();
     }
 }

@@ -24,4 +24,9 @@ public class SpyObject {
     public String getStringTwo() {
         return "two";
     }
+
+
+    public void throwException() {
+        throw new RuntimeException("Aaaaa! Test is failed.");
+    }
 }
