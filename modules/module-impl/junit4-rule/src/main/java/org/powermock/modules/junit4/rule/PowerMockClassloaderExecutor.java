@@ -19,7 +19,8 @@ package org.powermock.modules.junit4.rule;
 import org.powermock.classloading.ClassloaderExecutor;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.transformers.MockTransformer;
-import org.powermock.core.transformers.impl.MainMockTransformer;
+import org.powermock.core.transformers.impl.ClassMockTransformer;
+import org.powermock.core.transformers.impl.InterfaceMockTransformer;
 import org.powermock.reflect.proxyframework.ClassLoaderRegisterProxyFramework;
 import org.powermock.tests.utils.MockPolicyInitializer;
 import org.powermock.tests.utils.impl.PowerMockIgnorePackagesExtractorImpl;
@@ -33,8 +34,8 @@ public class PowerMockClassloaderExecutor {
 
     public static ClassloaderExecutor forClass(Class<?> testClass, MockPolicyInitializer mockPolicyInitializer) {
         List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
-        final MainMockTransformer mainMockTransformer = new MainMockTransformer();
-        mockTransformerChain.add(mainMockTransformer);
+        mockTransformerChain.add(new ClassMockTransformer());
+        mockTransformerChain.add(new InterfaceMockTransformer());
     
         String[] classesToLoadByMockClassloader = new String[0];
         String[] packagesToIgnore = new String[0];

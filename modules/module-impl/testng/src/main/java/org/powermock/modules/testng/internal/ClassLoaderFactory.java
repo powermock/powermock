@@ -19,13 +19,15 @@ package org.powermock.modules.testng.internal;
 
 import org.powermock.core.classloader.MockClassLoaderBuilders;
 import org.powermock.core.transformers.MockTransformer;
-import org.powermock.core.transformers.impl.MainMockTransformer;
+import org.powermock.core.transformers.impl.ClassMockTransformer;
+import org.powermock.core.transformers.impl.InterfaceMockTransformer;
 import org.powermock.tests.utils.IgnorePackagesExtractor;
 import org.powermock.tests.utils.TestClassesExtractor;
 import org.powermock.tests.utils.impl.PowerMockIgnorePackagesExtractorImpl;
 import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
 import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,8 +49,17 @@ class ClassLoaderFactory {
         expectedExceptionsExtractor = new PowerMockExpectedExceptionsExtractorImpl();
         staticConstructorSuppressExtractor = new StaticConstructorSuppressExtractorImpl();
 
-        mockTransformerChain = Collections.singletonList((MockTransformer) new MainMockTransformer());
+        mockTransformerChain = getMockTransformers();
 
+    }
+
+    private List<MockTransformer> getMockTransformers() {
+        List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
+
+        mockTransformerChain.add(new ClassMockTransformer());
+        mockTransformerChain.add(new InterfaceMockTransformer());
+
+        return mockTransformerChain;
     }
 
     ClassLoader createClassLoader(Class<?> testClass) {

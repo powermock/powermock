@@ -29,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-public class MainMockTransformerTest {
+public class ClassMockTransformerTest {
     /**
      * This tests that a inner 'public static final class' can be modified to drop the final modifier. Fixes <a
      * href="http://code.google.com/p/powermock/issues/detail?id=95">Issue 95</a>.
@@ -37,7 +37,7 @@ public class MainMockTransformerTest {
     @Test
     public void staticFinalInnerClassesShouldBecomeNonFinal() throws Exception {
         MockClassLoader mockClassLoader = new MockClassLoader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES });
-        mockClassLoader.setMockTransformerChain(Collections.<MockTransformer> singletonList(new MainMockTransformer()));
+        mockClassLoader.setMockTransformerChain(Collections.<MockTransformer> singletonList(new ClassMockTransformer()));
         Class<?> clazz = Class.forName(SupportClasses.StaticFinalInnerClass.class.getName(), true, mockClassLoader);
         assertFalse(Modifier.isFinal(clazz.getModifiers()));
     }
@@ -49,7 +49,7 @@ public class MainMockTransformerTest {
     @Test
     public void finalInnerClassesShouldBecomeNonFinal() throws Exception {
         MockClassLoader mockClassLoader = new MockClassLoader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES });
-        mockClassLoader.setMockTransformerChain(Collections.<MockTransformer> singletonList(new MainMockTransformer()));
+        mockClassLoader.setMockTransformerChain(Collections.<MockTransformer> singletonList(new ClassMockTransformer()));
         Class<?> clazz = Class.forName(SupportClasses.FinalInnerClass.class.getName(), true, mockClassLoader);
         assertFalse(Modifier.isFinal(clazz.getModifiers()));
     }
@@ -61,7 +61,7 @@ public class MainMockTransformerTest {
     @Test
     public void enumClassesShouldBecomeNonFinal() throws Exception {
         MockClassLoader mockClassLoader = new MockClassLoader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES });
-        mockClassLoader.setMockTransformerChain(Collections.<MockTransformer> singletonList(new MainMockTransformer()));
+        mockClassLoader.setMockTransformerChain(Collections.<MockTransformer> singletonList(new ClassMockTransformer()));
         Class<?> clazz = Class.forName(SupportClasses.EnumClass.class.getName(), true, mockClassLoader);
         assertFalse(Modifier.isFinal(clazz.getModifiers()));
     }
@@ -69,7 +69,7 @@ public class MainMockTransformerTest {
     @Test
     public void privateInnerClassesShouldBecomeNonFinal() throws Exception {
         MockClassLoader mockClassLoader = new MockClassLoader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES });
-        mockClassLoader.setMockTransformerChain(Collections.<MockTransformer> singletonList(new MainMockTransformer()));
+        mockClassLoader.setMockTransformerChain(Collections.<MockTransformer> singletonList(new ClassMockTransformer()));
         final Class<?> clazz = Class.forName(SupportClasses.class.getName() + "$PrivateStaticFinalInnerClass", true, mockClassLoader);
         assertFalse(Modifier.isFinal(clazz.getModifiers()));
     }
@@ -77,7 +77,7 @@ public class MainMockTransformerTest {
     @Test
     public void subclassShouldNormallyGetAnAdditionalDeferConstructor() throws Exception {
         MockClassLoader mockClassLoader = new MockClassLoader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES });
-        mockClassLoader.setMockTransformerChain(Collections.<MockTransformer> singletonList(new MainMockTransformer()));
+        mockClassLoader.setMockTransformerChain(Collections.<MockTransformer> singletonList(new ClassMockTransformer()));
         final Class<?> clazz = Class.forName(SupportClasses.SubClass.class.getName(), true, mockClassLoader);
         assertEquals("Original number of constructoprs",
                 1, SupportClasses.SubClass.class.getConstructors().length);

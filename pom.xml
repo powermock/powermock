@@ -14,7 +14,8 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -29,10 +30,12 @@
     <url>http://www.powermock.org</url>
     <description>
         PowerMock allows you to unit test code normally regarded as untestable.
-        For instance it is possible to mock static methods, remove static initializers, allow mocking without dependency injection and more.
+        For instance it is possible to mock static methods, remove static initializers, allow mocking without dependency
+        injection and more.
         PowerMock works by bytecode manipulation.
         PowerMock also contain some utilities that gives you easier access to an objects internal state.
-        PowerMock can be used to test otherwise untestable code and also to achieve a cleaner separation between test and production code.
+        PowerMock can be used to test otherwise untestable code and also to achieve a cleaner separation between test
+        and production code.
     </description>
     <inceptionYear>2007</inceptionYear>
     <licenses>
@@ -356,6 +359,12 @@
                 <groupId>cglib</groupId>
                 <artifactId>cglib-nodep</artifactId>
                 <version>2.2.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>3.3.0</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

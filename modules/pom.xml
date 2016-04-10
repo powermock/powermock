@@ -20,11 +20,4 @@
         <module>module-test</module>
     </modules>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>3.3.0</version>
-        </dependency>
-    </dependencies>
 </project>
