@@ -22,7 +22,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 import org.powermock.core.transformers.MockTransformer;
-import org.powermock.core.transformers.impl.MainMockTransformer;
+import org.powermock.core.transformers.impl.ClassMockTransformer;
 import org.powermock.reflect.Whitebox;
 
 import java.lang.annotation.Annotation;
@@ -40,7 +40,7 @@ public class MockClassLoaderTest {
         String name = this.getClass().getPackage().getName() + ".HardToTransform";
         final MockClassLoader mockClassLoader = new MockClassLoader(new String[]{name});
         List<MockTransformer> list = new LinkedList<MockTransformer>();
-        list.add(new MainMockTransformer());
+        list.add(new ClassMockTransformer());
         mockClassLoader.setMockTransformerChain(list);
         Class<?> c = mockClassLoader.loadClass(name);
 
@@ -103,7 +103,7 @@ public class MockClassLoaderTest {
     public void canFindResource() throws Exception {
         final MockClassLoader mockClassLoader = new MockClassLoader(new String[0]);
         List<MockTransformer> list = new LinkedList<MockTransformer>();
-        list.add(new MainMockTransformer());
+        list.add(new ClassMockTransformer());
         mockClassLoader.setMockTransformerChain(list);
 
         // Force a ClassLoader that can find 'foo/bar/baz/test.txt' into
@@ -123,7 +123,7 @@ public class MockClassLoaderTest {
     public void canFindResources() throws Exception {
         final MockClassLoader mockClassLoader = new MockClassLoader(new String[0]);
         List<MockTransformer> list = new LinkedList<MockTransformer>();
-        list.add(new MainMockTransformer());
+        list.add(new ClassMockTransformer());
         mockClassLoader.setMockTransformerChain(list);
 
         // Force a ClassLoader that can find 'foo/bar/baz/test.txt' into
@@ -146,7 +146,7 @@ public class MockClassLoaderTest {
     public void resourcesNotDoubled() throws Exception {
         final MockClassLoader mockClassLoader = new MockClassLoader(new String[0]);
         List<MockTransformer> list = new LinkedList<MockTransformer>();
-        list.add(new MainMockTransformer());
+        list.add(new ClassMockTransformer());
         mockClassLoader.setMockTransformerChain(list);
 
         // MockClassLoader will only be able to find 'foo/bar/baz/test.txt' if it
@@ -175,7 +175,7 @@ public class MockClassLoaderTest {
         };
         final MockClassLoader mockClassLoader = new MockClassLoader(new String[0], useClassPathAdjuster);
         List<MockTransformer> list = new LinkedList<MockTransformer>();
-        list.add(new MainMockTransformer());
+        list.add(new ClassMockTransformer());
         mockClassLoader.setMockTransformerChain(list);
 
         // setup custom classloader providing our dynamic class, for MockClassLoader to defer to
@@ -203,7 +203,7 @@ public class MockClassLoaderTest {
 
         MockClassLoader mockClassLoader = new MockClassLoader(new String[0]);
         List<MockTransformer> list = new LinkedList<MockTransformer>();
-        list.add(new MainMockTransformer());
+        list.add(new ClassMockTransformer());
         mockClassLoader.setMockTransformerChain(list);
 
         // setup custom classloader providing our dynamic class, for MockClassLoader to defer to

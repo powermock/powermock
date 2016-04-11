@@ -8,6 +8,7 @@ Change log next version
 * Fix #634/#632: Add workaround as fix  for Mockito 1+. Wait fix from Mockito team for Mockito 2.
 * Fix #648: TestNG SkipException doesn't work with PowerMock
 * Fix #652: PowerMock stubbing void method don't work for overloaded methods
+* Fix #510: Static method mocking with Mockito 1.9.5 and Powermock fails with Java 8 Consumer Interface
 * Added support for @TestSubject in EasyMock API. This is the equivalent of @InjectMocks in Mockito (big thanks to Arthur Zagretdinov for pull request)
 * Added experimental support for mockito 2.x
 * Upgraded commons-logging dependency to version 1.2

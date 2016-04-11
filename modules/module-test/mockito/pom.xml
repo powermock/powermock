@@ -63,6 +63,7 @@
 
     <modules>
         <module>junit4</module>
+        <module>junit4-java8</module>
         <module>junit49</module>
         <module>junit4-rule-objenesis</module>
         <module>junit4-rule-xstream</module>

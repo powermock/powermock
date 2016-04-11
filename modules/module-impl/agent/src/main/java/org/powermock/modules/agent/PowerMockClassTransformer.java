@@ -1,17 +1,18 @@
 /*
- * Copyright 2011 the original author or authors.
+ *   Copyright 2016 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *        http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ *
  */
 
 package org.powermock.modules.agent;
@@ -20,7 +21,7 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import org.powermock.core.agent.JavaAgentClassRegister;
 import org.powermock.core.transformers.TransformStrategy;
-import org.powermock.core.transformers.impl.MainMockTransformer;
+import org.powermock.core.transformers.impl.ClassMockTransformer;
 
 import java.io.ByteArrayInputStream;
 import java.lang.instrument.ClassFileTransformer;
@@ -43,7 +44,7 @@ class PowerMockClassTransformer extends AbstractClassTransformer implements Clas
         this.javaAgentClassRegister = javaAgentClassRegister;
     }
 
-    private static final MainMockTransformer mainMockTransformer = new MainMockTransformer(TransformStrategy.INST_REDEFINE);
+    private static final ClassMockTransformer CLASS_MOCK_TRANSFORMER = new ClassMockTransformer(TransformStrategy.INST_REDEFINE);
 
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
         if (loader == null || shouldIgnore(className)) {
@@ -60,7 +61,7 @@ class PowerMockClassTransformer extends AbstractClassTransformer implements Clas
                     is.close();
                 }
                 
-                ctClass = mainMockTransformer.transform(ctClass);
+                ctClass = CLASS_MOCK_TRANSFORMER.transform(ctClass);
 
                 /*
                  * ClassPool may cause huge memory consumption if the number of CtClass

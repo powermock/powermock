@@ -1,18 +1,20 @@
 /*
- * Copyright 2011 the original author or authors.
+ *   Copyright 2016 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *        http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ *
  */
+
 package org.powermock.core.transformers.impl;
 
 import javassist.CannotCompileException;
@@ -42,57 +44,17 @@ import static org.powermock.core.transformers.TransformStrategy.CLASSLOADER;
 import static org.powermock.core.transformers.TransformStrategy.INST_REDEFINE;
 import static org.powermock.core.transformers.TransformStrategy.INST_TRANSFORM;
 
-public class MainMockTransformer implements MockTransformer {
+/**
+ *
+ */
+public abstract class AbstractMainMockTransformer implements MockTransformer {
 
     private static final String VOID = "";
+    protected final TransformStrategy strategy;
 
-    private final TransformStrategy strategy;
+    public AbstractMainMockTransformer(TransformStrategy strategy) {this.strategy = strategy;}
 
-    public MainMockTransformer() {
-        this(CLASSLOADER);
-    }
-
-    public MainMockTransformer(TransformStrategy strategy) {
-        this.strategy = strategy;
-    }
-
-    public CtClass transform(final CtClass clazz) throws Exception {
-        if (clazz.isFrozen()) {
-            clazz.defrost();
-        }
-
-        /*
-         * Set class modifier to public to allow for mocking of package private
-         * classes. This is needed because we've changed to CgLib naming policy
-         * to allow for mocking of signed classes.
-         */
-        final String name = allowMockingOfPackagePrivateClasses(clazz);
-
-        suppressStaticInitializerIfRequested(clazz, name);
-
-        if (clazz.isInterface()) {
-            return clazz;
-        }
-
-        // This should probably be configurable
-        removeFinalModifierFromClass(clazz);
-
-        allowMockingOfStaticAndFinalAndNativeMethods(clazz);
-
-        // Convert all constructors to public
-        setAllConstructorsToPublic(clazz);
-
-        // Remove final from all static final fields. Not possible if using a java agent.
-        removeFinalModifierFromAllStaticFinalFields(clazz);
-
-        if (strategy != INST_TRANSFORM) {
-            clazz.instrument(new PowerMockExpressionEditor(clazz));
-        }
-
-        return clazz;
-    }
-
-    private String allowMockingOfPackagePrivateClasses(final CtClass clazz) {
+    protected String allowMockingOfPackagePrivateClasses(final CtClass clazz) {
         final String name = clazz.getName();
         if (strategy != INST_REDEFINE) {
             try {
@@ -109,7 +71,7 @@ public class MainMockTransformer implements MockTransformer {
         return name;
     }
 
-    private void suppressStaticInitializerIfRequested(final CtClass clazz, final String name) throws CannotCompileException {
+    protected void suppressStaticInitializerIfRequested(final CtClass clazz, final String name) throws CannotCompileException {
         if (strategy == CLASSLOADER) {
             if (MockGateway.staticConstructorCall(name) != MockGateway.PROCEED) {
                 CtConstructor classInitializer = clazz.makeClassInitializer();
@@ -118,7 +80,7 @@ public class MainMockTransformer implements MockTransformer {
         }
     }
 
-    private void removeFinalModifierFromClass(final CtClass clazz) {
+    protected void removeFinalModifierFromClass(final CtClass clazz) {
         if (strategy != INST_REDEFINE) {
             if (Modifier.isFinal(clazz.getModifiers())) {
                 clazz.setModifiers(clazz.getModifiers() ^ Modifier.FINAL);
@@ -142,7 +104,7 @@ public class MainMockTransformer implements MockTransformer {
         }
     }
 
-    private void allowMockingOfStaticAndFinalAndNativeMethods(final CtClass clazz) throws NotFoundException, CannotCompileException {
+    protected void allowMockingOfStaticAndFinalAndNativeMethods(final CtClass clazz) throws NotFoundException, CannotCompileException {
         if (strategy != INST_TRANSFORM) {
             for (CtMethod m : clazz.getDeclaredMethods()) {
                 modifyMethod(m);
@@ -150,7 +112,7 @@ public class MainMockTransformer implements MockTransformer {
         }
     }
 
-    private void removeFinalModifierFromAllStaticFinalFields(final CtClass clazz) {
+    protected void removeFinalModifierFromAllStaticFinalFields(final CtClass clazz) {
         if (strategy != INST_REDEFINE) {
             for (CtField f : clazz.getDeclaredFields()) {
                 final int modifiers = f.getModifiers();
@@ -161,7 +123,7 @@ public class MainMockTransformer implements MockTransformer {
         }
     }
 
-    private void setAllConstructorsToPublic(final CtClass clazz) {
+    protected void setAllConstructorsToPublic(final CtClass clazz) {
         if (strategy == CLASSLOADER) {
             for (CtConstructor c : clazz.getDeclaredConstructors()) {
                 final int modifiers = c.getModifiers();
@@ -245,10 +207,21 @@ public class MainMockTransformer implements MockTransformer {
         return returnValue;
     }
 
-    private final class PowerMockExpressionEditor extends ExprEditor {
+    public CtClass transform(final CtClass clazz) throws Exception {
+        if (clazz.isFrozen()) {
+            clazz.defrost();
+        }
+        return transformMockClass(clazz);
+
+
+    }
+
+    protected abstract CtClass transformMockClass(CtClass clazz) throws CannotCompileException, NotFoundException;
+
+    protected final class PowerMockExpressionEditor extends ExprEditor {
         private final CtClass clazz;
 
-        private PowerMockExpressionEditor(CtClass clazz) {
+        protected PowerMockExpressionEditor(CtClass clazz) {
             this.clazz = clazz;
         }
 

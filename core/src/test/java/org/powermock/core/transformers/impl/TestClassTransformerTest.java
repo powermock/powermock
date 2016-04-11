@@ -122,7 +122,7 @@ public class TestClassTransformerTest {
             MockClassLoader mockClassLoader =
                     new MockClassLoader(preparations(prepare4test));
             mockClassLoader.setMockTransformerChain(Arrays.asList(
-                    new MainMockTransformer(),
+                    new ClassMockTransformer(),
                     testClassTransformer));
             return mockClassLoader;
         }

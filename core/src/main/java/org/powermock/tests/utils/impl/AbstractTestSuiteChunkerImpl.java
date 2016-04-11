@@ -1,17 +1,18 @@
 /*
- * Copyright 2011 the original author or authors.
+ *   Copyright 2016 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *        http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ *
  */
 package org.powermock.tests.utils.impl;
 
@@ -27,7 +28,8 @@ import org.powermock.core.reporter.MockingFrameworkReporterFactory;
 import org.powermock.core.spi.PowerMockPolicy;
 import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.core.transformers.MockTransformer;
-import org.powermock.core.transformers.impl.MainMockTransformer;
+import org.powermock.core.transformers.impl.ClassMockTransformer;
+import org.powermock.core.transformers.impl.InterfaceMockTransformer;
 import org.powermock.core.transformers.impl.TestClassTransformer;
 import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.proxyframework.RegisterProxyFramework;
@@ -237,10 +239,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
         if ((classesToLoadByMockClassloader == null || classesToLoadByMockClassloader.length == 0) && !hasMockPolicyProvidedClasses(testClass)) {
             mockLoader = Thread.currentThread().getContextClassLoader();
         } else {
-            List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
-            final MainMockTransformer mainMockTransformer = new MainMockTransformer();
-            mockTransformerChain.add(mainMockTransformer);
-            Collections.addAll(mockTransformerChain, extraMockTransformers);
+            List<MockTransformer> mockTransformerChain = getMockTransformers(extraMockTransformers);
             final UseClassPathAdjuster useClassPathAdjuster = testClass.getAnnotation(UseClassPathAdjuster.class);
             mockLoader = AccessController.doPrivileged(new PrivilegedAction<MockClassLoader>() {
                 @Override
@@ -253,6 +252,16 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
             new MockPolicyInitializerImpl(testClass).initialize(mockLoader);
         }
         return mockLoader;
+    }
+
+    protected List<MockTransformer> getMockTransformers(MockTransformer[] extraMockTransformers) {
+        List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
+
+        mockTransformerChain.add(new ClassMockTransformer());
+        mockTransformerChain.add(new InterfaceMockTransformer());
+
+        Collections.addAll(mockTransformerChain, extraMockTransformers);
+        return mockTransformerChain;
     }
 
     /**
