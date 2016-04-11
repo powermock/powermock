@@ -120,7 +120,7 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements Powe
     /**
      * Returns a test which will fail and log a warning message.
      */
-    private static Test warning(final String message) {
+    public static Test warning(final String message) {
         return new TestCase("warning") {
             @Override
             protected void runTest() {
