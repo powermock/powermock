@@ -32,6 +32,12 @@
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4-common</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>

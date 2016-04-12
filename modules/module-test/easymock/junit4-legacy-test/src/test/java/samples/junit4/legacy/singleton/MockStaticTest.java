@@ -23,6 +23,7 @@ import org.powermock.reflect.Whitebox;
 import samples.singleton.StaticHelper;
 import samples.singleton.StaticService;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
@@ -176,11 +177,11 @@ public class MockStaticTest {
 
 	@Test
 	public void innerClassesWork() {
-		assertEquals(17, StaticService.getNumberFromInner());
+		assertThat(StaticService.getNumberFromInner()).isEqualTo(17);
 	}
 
 	@Test
 	public void innerInstanceClassesWork() {
-		assertEquals(23, StaticService.getNumberFromInnerInstance());
+		assertThat(StaticService.getNumberFromInnerInstance()).isEqualTo(23);
 	}
 }

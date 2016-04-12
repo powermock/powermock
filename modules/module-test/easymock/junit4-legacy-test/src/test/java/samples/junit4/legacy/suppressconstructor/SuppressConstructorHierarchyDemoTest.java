@@ -23,6 +23,7 @@ import samples.suppressconstructor.SuppressConstructorHeirarchyEvilGrandParent;
 import samples.suppressconstructor.SuppressConstructorHierarchy;
 import samples.suppressconstructor.SuppressConstructorHierarchyParent;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
 import static org.powermock.api.support.membermodification.MemberModifier.suppress;
@@ -63,6 +64,6 @@ public class SuppressConstructorHierarchyDemoTest {
 	public void testGetNumber() throws Exception {
 		suppress(constructor(SuppressConstructorHierarchy.class));
 		SuppressConstructorHierarchy tested = new SuppressConstructorHierarchy("message");
-		assertEquals(42, tested.getNumber());
+		assertThat(tested.getNumber()).isEqualTo(42);
 	}
 }

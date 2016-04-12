@@ -24,7 +24,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.8.2</version>
+            <version>${junit.rules.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -38,7 +38,6 @@
                     <argLine>
                         -javaagent:${settings.localRepository}//org/powermock/powermock-module-javaagent/${project.version}/powermock-module-javaagent-${project.version}.jar
                     </argLine>
-                    <useSystemClassloader>true</useSystemClassloader>
                 </configuration>
             </plugin>
         </plugins>

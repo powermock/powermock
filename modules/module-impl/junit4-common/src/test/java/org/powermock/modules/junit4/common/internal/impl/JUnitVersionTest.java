@@ -9,12 +9,12 @@ public class JUnitVersionTest {
 
     @Test public void
     parses_version_numbers_with_chars() {
-        assertThat(JUnitVersion.isGreaterThanOrEqualTo("4.9b2"), is(false));
+        assertThat(JUnitVersion.isGreaterThanOrEqualTo("4.90b2"), is(false));
     }
 
     @Test public void
     parses_version_numbers_with_dash_snapshot() {
-        assertThat(JUnitVersion.isGreaterThanOrEqualTo("4.9-SNAPSHOT"), is(false));
+        assertThat(JUnitVersion.isGreaterThanOrEqualTo("4.19-SNAPSHOT"), is(false));
     }
 
     @Test public void
@@ -29,11 +29,11 @@ public class JUnitVersionTest {
 
     @Test public void
     parses_version_numbers_major_and_several_minor_versions() {
-        assertThat(JUnitVersion.isGreaterThanOrEqualTo("4.10.5.6"), is(false));
+        assertThat(JUnitVersion.isGreaterThanOrEqualTo("4.44.5.6"), is(false));
     }
 
     @Test public void
     parses_4_11_beta_1() {
-        assertThat(JUnitVersion.isGreaterThanOrEqualTo("4.11-beta-1"), is(false));
+        assertThat(JUnitVersion.isGreaterThanOrEqualTo("4.111-beta-1"), is(false));
     }
 }

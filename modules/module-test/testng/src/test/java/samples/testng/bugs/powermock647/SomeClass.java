@@ -1,4 +1,4 @@
-package samples.testng.powermock647;
+package samples.testng.bugs.powermock647;
 
 import org.testng.SkipException;
 
