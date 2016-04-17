@@ -65,6 +65,8 @@ public class ClassMockTransformer extends AbstractMainMockTransformer {
             clazz.instrument(new PowerMockExpressionEditor(clazz));
         }
 
+        ensureJvmMethodSizeLimit(clazz);
+
         return clazz;
     }
 

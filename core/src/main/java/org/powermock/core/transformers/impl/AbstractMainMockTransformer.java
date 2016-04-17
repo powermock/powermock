@@ -28,6 +28,7 @@ import javassist.Modifier;
 import javassist.NotFoundException;
 import javassist.bytecode.AttributeInfo;
 import javassist.bytecode.ClassFile;
+import javassist.bytecode.CodeAttribute;
 import javassist.bytecode.DuplicateMemberException;
 import javassist.bytecode.InnerClassesAttribute;
 import javassist.expr.ConstructorCall;
@@ -50,6 +51,7 @@ import static org.powermock.core.transformers.TransformStrategy.INST_TRANSFORM;
 public abstract class AbstractMainMockTransformer implements MockTransformer {
 
     private static final String VOID = "";
+    private static final int METHOD_CODE_LENGTH_LIMIT = 65536;
     protected final TransformStrategy strategy;
 
     public AbstractMainMockTransformer(TransformStrategy strategy) {this.strategy = strategy;}
@@ -132,6 +134,37 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
                 }
             }
         }
+    }
+
+    /**
+     * According to JVM specification method size must be lower than 65536 bytes.
+     * When that limit is exceeded class loader will fail to load the class.
+     * Since instrumentation can increase method size significantly it must be
+     * ensured that JVM limit is not exceeded.
+     * <p>
+     * When the limit is exceeded method's body is replaced by exception throw.
+     * Method is then instrumented again to allow mocking and suppression.
+     *
+     * @see <a href="http://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3">JVM specification</a>
+     */
+    protected CtClass ensureJvmMethodSizeLimit(CtClass clazz) throws CannotCompileException, NotFoundException {
+        for (CtMethod method : clazz.getDeclaredMethods()) {
+            if (isMethodSizeExceeded(method)) {
+                String code = "{throw new IllegalAccessException(\"" +
+                        "Method was too large and after instrumentation exceeded JVM limit. " +
+                        "PowerMock modified the method to allow JVM to load the class. " +
+                        "You can use PowerMock API to suppress or mock this method behaviour." +
+                        "\");}";
+                method.setBody(code);
+                modifyMethod(method);
+            }
+        }
+        return clazz;
+    }
+
+    private boolean isMethodSizeExceeded(CtMethod method) {
+        CodeAttribute codeAttribute = method.getMethodInfo().getCodeAttribute();
+        return codeAttribute != null && codeAttribute.getCodeLength() >= METHOD_CODE_LENGTH_LIMIT;
     }
 
     private void modifyMethod(final CtMethod method) throws NotFoundException, CannotCompileException {

@@ -18,16 +18,21 @@ package org.powermock.core.transformers.impl;
 
 import javassist.Modifier;
 import org.junit.Test;
+import org.powermock.core.IndicateReloadClass;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.transformers.MockTransformer;
+import powermock.test.support.ClassWithLargeMethods;
 import powermock.test.support.MainMockTransformerTestSupport.SupportClasses;
 
 import java.util.Collections;
-import org.powermock.core.IndicateReloadClass;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 public class ClassMockTransformerTest {
     /**
@@ -36,9 +41,7 @@ public class ClassMockTransformerTest {
      */
     @Test
     public void staticFinalInnerClassesShouldBecomeNonFinal() throws Exception {
-        MockClassLoader mockClassLoader = new MockClassLoader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES });
-        mockClassLoader.setMockTransformerChain(Collections.<MockTransformer> singletonList(new ClassMockTransformer()));
-        Class<?> clazz = Class.forName(SupportClasses.StaticFinalInnerClass.class.getName(), true, mockClassLoader);
+        Class<?> clazz = loadWithMockClassLoader(SupportClasses.StaticFinalInnerClass.class.getName());
         assertFalse(Modifier.isFinal(clazz.getModifiers()));
     }
 
@@ -48,9 +51,7 @@ public class ClassMockTransformerTest {
      */
     @Test
     public void finalInnerClassesShouldBecomeNonFinal() throws Exception {
-        MockClassLoader mockClassLoader = new MockClassLoader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES });
-        mockClassLoader.setMockTransformerChain(Collections.<MockTransformer> singletonList(new ClassMockTransformer()));
-        Class<?> clazz = Class.forName(SupportClasses.FinalInnerClass.class.getName(), true, mockClassLoader);
+        Class<?> clazz = loadWithMockClassLoader(SupportClasses.FinalInnerClass.class.getName());
         assertFalse(Modifier.isFinal(clazz.getModifiers()));
     }
 
@@ -60,30 +61,54 @@ public class ClassMockTransformerTest {
      */
     @Test
     public void enumClassesShouldBecomeNonFinal() throws Exception {
-        MockClassLoader mockClassLoader = new MockClassLoader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES });
-        mockClassLoader.setMockTransformerChain(Collections.<MockTransformer> singletonList(new ClassMockTransformer()));
-        Class<?> clazz = Class.forName(SupportClasses.EnumClass.class.getName(), true, mockClassLoader);
+        Class<?> clazz = loadWithMockClassLoader(SupportClasses.EnumClass.class.getName());
         assertFalse(Modifier.isFinal(clazz.getModifiers()));
     }
 
     @Test
     public void privateInnerClassesShouldBecomeNonFinal() throws Exception {
-        MockClassLoader mockClassLoader = new MockClassLoader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES });
-        mockClassLoader.setMockTransformerChain(Collections.<MockTransformer> singletonList(new ClassMockTransformer()));
-        final Class<?> clazz = Class.forName(SupportClasses.class.getName() + "$PrivateStaticFinalInnerClass", true, mockClassLoader);
+        Class<?> clazz = loadWithMockClassLoader(SupportClasses.class.getName() + "$PrivateStaticFinalInnerClass");
         assertFalse(Modifier.isFinal(clazz.getModifiers()));
     }
 
     @Test
     public void subclassShouldNormallyGetAnAdditionalDeferConstructor() throws Exception {
-        MockClassLoader mockClassLoader = new MockClassLoader(new String[] { MockClassLoader.MODIFY_ALL_CLASSES });
-        mockClassLoader.setMockTransformerChain(Collections.<MockTransformer> singletonList(new ClassMockTransformer()));
-        final Class<?> clazz = Class.forName(SupportClasses.SubClass.class.getName(), true, mockClassLoader);
+        Class<?> clazz = loadWithMockClassLoader(SupportClasses.SubClass.class.getName());
         assertEquals("Original number of constructoprs",
                 1, SupportClasses.SubClass.class.getConstructors().length);
         assertEquals("Number of constructors in modified class",
                 2, clazz.getConstructors().length);
         assertNotNull("Defer-constructor expected",
                 clazz.getConstructor(IndicateReloadClass.class));
+    }
+
+    @Test
+    public void shouldLoadClassWithMethodLowerThanJvmLimit() throws Exception {
+        Class<?> clazz = loadWithMockClassLoader(ClassWithLargeMethods.MethodLowerThanLimit.class.getName());
+        assertNotNull("Class has been loaded", clazz);
+        // There should be no exception since method was not overridden
+        clazz.getMethod("init").invoke(clazz);
+    }
+
+    @Test
+    public void shouldLoadClassAndOverrideMethodGreaterThanJvmLimit() throws Exception {
+        Class<?> clazz = loadWithMockClassLoader(ClassWithLargeMethods.MethodGreaterThanLimit.class.getName());
+        assertNotNull("Class has been loaded", clazz);
+        // There should be exception since method was overridden to satisfy JVM limit
+        try {
+            clazz.getMethod("init").invoke(clazz);
+            fail("Overridden method should throw exception");
+        } catch (Exception e) {
+            Throwable cause = e.getCause();
+            assertThat(cause, instanceOf(IllegalAccessException.class));
+            assertThat(cause.getMessage(),
+                    containsString("Method was too large and after instrumentation exceeded JVM limit"));
+        }
+    }
+
+    private Class<?> loadWithMockClassLoader(String className) throws ClassNotFoundException {
+        MockClassLoader loader = new MockClassLoader(new String[]{MockClassLoader.MODIFY_ALL_CLASSES});
+        loader.setMockTransformerChain(Collections.<MockTransformer>singletonList(new ClassMockTransformer()));
+        return Class.forName(className, true, loader);
     }
 }
