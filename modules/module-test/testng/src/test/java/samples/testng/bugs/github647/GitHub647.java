@@ -1,4 +1,4 @@
-package samples.testng.bugs.powermock647;
+package samples.testng.bugs.github647;
 
 import org.testng.IResultMap;
 import org.testng.TestListenerAdapter;
@@ -12,11 +12,11 @@ import java.net.URLClassLoader;
 
 import static org.testng.Assert.assertEquals;
 
-public class PowerMock647 extends SimpleBaseTest {
+public class GitHub647 extends SimpleBaseTest {
 
   private final TestListenerAdapter tla;
 
-  public PowerMock647() {
+  public GitHub647() {
     tla = new TestListenerAdapter();
   }
 

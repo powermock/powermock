@@ -20,6 +20,7 @@
         <module>easymock</module>
         <module>mockito</module>
         <module>testng</module>
+        <module>junit4</module>
     </modules>
 
     <dependencies>
