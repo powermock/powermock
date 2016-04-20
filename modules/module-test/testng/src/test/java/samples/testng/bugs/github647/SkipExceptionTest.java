@@ -1,4 +1,4 @@
-package samples.testng.bugs.powermock647;
+package samples.testng.bugs.github647;
 
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;

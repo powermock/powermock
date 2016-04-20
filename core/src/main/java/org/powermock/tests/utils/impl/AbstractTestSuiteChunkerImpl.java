@@ -301,51 +301,63 @@ public abstract class AbstractTestSuiteChunkerImpl<T> implements TestSuiteChunke
     private void initEntries(List<TestCaseEntry> entries) {
         for (TestCaseEntry testCaseEntry : entries) {
             final Class<?> testClass = testCaseEntry.getTestClass();
-            Method[] allMethods = testClass.getMethods();
-            for (Method method : allMethods) {
-                if (shouldExecuteTestForMethod(testClass, method)) {
-                    currentTestIndex++;
-                    if (hasChunkAnnotation(method)) {
-                        LinkedList<Method> methodsInThisChunk = new LinkedList<Method>();
-                        methodsInThisChunk.add(method);
-                        final String[] staticSuppressionClasses = getStaticSuppressionClasses(testClass, method);
-                        TestClassTransformer[] extraTransformers = null == testMethodAnnotation()
-                                ? new TestClassTransformer[0]
-                                : new TestClassTransformer[] {
-                                    TestClassTransformer.forTestClass(testClass)
-                                        .removesTestMethodAnnotation(testMethodAnnotation())
-                                        .fromAllMethodsExcept(method)
-                                };
+            findMethods(testCaseEntry, testClass);
+        }
+    }
 
-                        final ClassLoader mockClassloader;
-                        if (method.isAnnotationPresent(PrepareEverythingForTest.class)) {
-                            mockClassloader = createNewClassloader(testClass, new String[] { MockClassLoader.MODIFY_ALL_CLASSES },
-                                    ignorePackagesExtractor.getPackagesToIgnore(testClass), extraTransformers);
-                        } else {
-                            mockClassloader = createNewClassloader(testClass, arrayMerger.mergeArrays(String.class, prepareForTestExtractor
-                                    .getTestClasses(method), staticSuppressionClasses), ignorePackagesExtractor.getPackagesToIgnore(testClass),
-                                    extraTransformers);
-                        }
-                        TestChunkImpl chunk = new TestChunkImpl(mockClassloader, methodsInThisChunk);
-                        testCaseEntry.getTestChunks().add(chunk);
-                        updatedIndexes();
-                    } else {
-                        testCaseEntry.getTestChunks().get(0).getTestMethodsToBeExecutedByThisClassloader().add(method);
-                        // currentClassloaderMethods.add(method);
-                        final int currentDelegateIndex = internalSuites.size() - 1;
-                        /*
-                         * Add this test index to the main junit runner
-                         * delegator.
-                         */
-                        List<Integer> testList = testAtDelegateMapper.get(currentDelegateIndex);
-                        if (testList == null) {
-                            testList = new LinkedList<Integer>();
-                            testAtDelegateMapper.put(currentDelegateIndex, testList);
-                        }
+    private void findMethods(TestCaseEntry testCaseEntry, Class<?> testClass) {
+        Method[] allMethods = testClass.getMethods();
+        for (Method method : allMethods) {
+            putMethodToChunk(testCaseEntry, testClass, method);
+        }
+        testClass = testClass.getSuperclass();
+        if (!Object.class.equals(testClass)){
+            findMethods(testCaseEntry, testClass);
+        }
+    }
 
-                        testList.add(currentTestIndex);
-                    }
+    private void putMethodToChunk(TestCaseEntry testCaseEntry, Class<?> testClass, Method method) {
+        if (shouldExecuteTestForMethod(testClass, method)) {
+            currentTestIndex++;
+            if (hasChunkAnnotation(method)) {
+                LinkedList<Method> methodsInThisChunk = new LinkedList<Method>();
+                methodsInThisChunk.add(method);
+                final String[] staticSuppressionClasses = getStaticSuppressionClasses(testClass, method);
+                TestClassTransformer[] extraTransformers = null == testMethodAnnotation()
+                        ? new TestClassTransformer[0]
+                        : new TestClassTransformer[] {
+                            TestClassTransformer.forTestClass(testClass)
+                                .removesTestMethodAnnotation(testMethodAnnotation())
+                                .fromAllMethodsExcept(method)
+                        };
+
+                final ClassLoader mockClassloader;
+                if (method.isAnnotationPresent(PrepareEverythingForTest.class)) {
+                    mockClassloader = createNewClassloader(testClass, new String[] { MockClassLoader.MODIFY_ALL_CLASSES },
+                            ignorePackagesExtractor.getPackagesToIgnore(testClass), extraTransformers);
+                } else {
+                    mockClassloader = createNewClassloader(testClass, arrayMerger.mergeArrays(String.class, prepareForTestExtractor
+                            .getTestClasses(method), staticSuppressionClasses), ignorePackagesExtractor.getPackagesToIgnore(testClass),
+                            extraTransformers);
                 }
+                TestChunkImpl chunk = new TestChunkImpl(mockClassloader, methodsInThisChunk);
+                testCaseEntry.getTestChunks().add(chunk);
+                updatedIndexes();
+            } else {
+                testCaseEntry.getTestChunks().get(0).getTestMethodsToBeExecutedByThisClassloader().add(method);
+                // currentClassloaderMethods.add(method);
+                final int currentDelegateIndex = internalSuites.size() - 1;
+                /*
+                 * Add this test index to the main junit runner
+                 * delegator.
+                 */
+                List<Integer> testList = testAtDelegateMapper.get(currentDelegateIndex);
+                if (testList == null) {
+                    testList = new LinkedList<Integer>();
+                    testAtDelegateMapper.put(currentDelegateIndex, testList);
+                }
+
+                testList.add(currentTestIndex);
             }
         }
     }
