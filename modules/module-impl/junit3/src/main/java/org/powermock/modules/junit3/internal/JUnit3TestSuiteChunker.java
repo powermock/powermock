@@ -18,12 +18,12 @@ package org.powermock.modules.junit3.internal;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
-import org.powermock.tests.utils.TestSuiteChunker;
+import org.powermock.tests.utils.RunnerTestSuiteChunker;
 
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 
-public interface JUnit3TestSuiteChunker extends TestSuiteChunker {
+public interface JUnit3TestSuiteChunker extends RunnerTestSuiteChunker {
 	
 	/**
 	 * Add a class to the test suite. Methods in this class will be checked
@@ -35,19 +35,19 @@ public interface JUnit3TestSuiteChunker extends TestSuiteChunker {
 	 * @throws Exception
 	 *             If something unexpected goes wrong.
 	 */
-	public void addTestClassToSuite(Class<?> clazz) throws Exception;
+	void addTestClassToSuite(Class<?> clazz) throws Exception;
 
-	public void run(TestResult result);
+	void run(TestResult result);
 
-	public void addTest(Test test) throws Exception;
+	void addTest(Test test) throws Exception;
 
-	public void runTest(Test test, TestResult result);
+	void runTest(Test test, TestResult result);
 
-	public void addTestSuite(Class<? extends TestCase> testClass) throws Exception;
+	void addTestSuite(Class<? extends TestCase> testClass) throws Exception;
 
-	public Test testAt(int index);
+	Test testAt(int index);
 
-	public int countTestCases();
+	int countTestCases();
 
-	public Enumeration<?> tests();
+	Enumeration<?> tests();
 }

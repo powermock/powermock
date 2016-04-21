@@ -28,4 +28,5 @@ public interface TestChunk {
 
 	List<Method> getTestMethodsToBeExecutedByThisClassloader();
 
+	boolean isMethodToBeExecutedByThisClassloader(Method method);
 }

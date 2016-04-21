@@ -19,17 +19,36 @@ package powermock.classloading;
 import javassist.CtClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.powermock.classloading.ClassloaderExecutor;
+import org.powermock.classloading.SingleClassloaderExecutor;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.transformers.MockTransformer;
-import powermock.classloading.classes.*;
+import powermock.classloading.classes.MyArgument;
+import powermock.classloading.classes.MyClass;
+import powermock.classloading.classes.MyCollectionHolder;
+import powermock.classloading.classes.MyEnum;
+import powermock.classloading.classes.MyEnumHolder;
+import powermock.classloading.classes.MyHierarchicalFieldHolder;
+import powermock.classloading.classes.MyHierarchicalOverloadedFieldHolder;
+import powermock.classloading.classes.MyIntegerHolder;
+import powermock.classloading.classes.MyPrimitiveArrayHolder;
+import powermock.classloading.classes.MyReferenceFieldHolder;
+import powermock.classloading.classes.MyReturnValue;
+import powermock.classloading.classes.MyStaticFinalArgumentHolder;
+import powermock.classloading.classes.MyStaticFinalNumberHolder;
+import powermock.classloading.classes.MyStaticFinalPrimitiveHolder;
+import powermock.classloading.classes.ReflectionMethodInvoker;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.Callable;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 @Ignore("Since upgrading to JVM 1.6.0_24 lots of tests started to fail")
 public class ObjenesisClassloaderExecutorTest {
@@ -40,7 +59,7 @@ public class ObjenesisClassloaderExecutorTest {
 		final MyReturnValue expectedConstructorValue = new MyReturnValue(new MyArgument("first value"));
 		final MyClass myClass = new MyClass(expectedConstructorValue);
 		final MyArgument expected = new MyArgument("A value");
-		MyReturnValue[] actual = new ClassloaderExecutor(classloader).execute(new Callable<MyReturnValue[]>() {
+		MyReturnValue[] actual = new SingleClassloaderExecutor(classloader).execute(new Callable<MyReturnValue[]>() {
 			public MyReturnValue[] call() throws Exception {
 				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				return myClass.myMethod(expected);
@@ -60,7 +79,7 @@ public class ObjenesisClassloaderExecutorTest {
 		MockClassLoader classloader = createClassloader();
 		final Integer expected = 42;
 		final MyIntegerHolder myClass = new MyIntegerHolder(expected);
-		Integer actual = new ClassloaderExecutor(classloader).execute(new Callable<Integer>() {
+		Integer actual = new SingleClassloaderExecutor(classloader).execute(new Callable<Integer>() {
 			public Integer call() throws Exception {
 				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				final int myInteger = myClass.getMyInteger();
@@ -80,7 +99,7 @@ public class ObjenesisClassloaderExecutorTest {
 		MockClassLoader classloader = createClassloader();
 		final MyEnum expected = MyEnum.MyEnum1;
 		final MyEnumHolder myClass = new MyEnumHolder(expected);
-		MyEnum actual = new ClassloaderExecutor(classloader).execute(new Callable<MyEnum>() {
+		MyEnum actual = new SingleClassloaderExecutor(classloader).execute(new Callable<MyEnum>() {
 			public MyEnum call() throws Exception {
 				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				MyEnum myEnum = myClass.getMyEnum();
@@ -97,7 +116,7 @@ public class ObjenesisClassloaderExecutorTest {
 	public void clonesStaticFinalObjectFields() throws Exception {
 		MockClassLoader classloader = createClassloader();
 		final MyStaticFinalArgumentHolder expected = new MyStaticFinalArgumentHolder();
-		MyStaticFinalArgumentHolder actual = new ClassloaderExecutor(classloader)
+		MyStaticFinalArgumentHolder actual = new SingleClassloaderExecutor(classloader)
 				.execute(new Callable<MyStaticFinalArgumentHolder>() {
 					public MyStaticFinalArgumentHolder call() throws Exception {
 						assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass()
@@ -116,7 +135,7 @@ public class ObjenesisClassloaderExecutorTest {
 	public void clonesStaticFinalPrimitiveFields() throws Exception {
 		MockClassLoader classloader = createClassloader();
 		final MyStaticFinalPrimitiveHolder expected = new MyStaticFinalPrimitiveHolder();
-		MyStaticFinalPrimitiveHolder actual = new ClassloaderExecutor(classloader)
+		MyStaticFinalPrimitiveHolder actual = new SingleClassloaderExecutor(classloader)
 				.execute(new Callable<MyStaticFinalPrimitiveHolder>() {
 					public MyStaticFinalPrimitiveHolder call() throws Exception {
 						assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass()
@@ -135,7 +154,7 @@ public class ObjenesisClassloaderExecutorTest {
 	public void clonesStaticFinalNumberFields() throws Exception {
 		MockClassLoader classloader = createClassloader();
 		final MyStaticFinalNumberHolder expected = new MyStaticFinalNumberHolder();
-		MyStaticFinalNumberHolder actual = new ClassloaderExecutor(classloader)
+		MyStaticFinalNumberHolder actual = new SingleClassloaderExecutor(classloader)
 				.execute(new Callable<MyStaticFinalNumberHolder>() {
 					public MyStaticFinalNumberHolder call() throws Exception {
 						assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass()
@@ -156,7 +175,7 @@ public class ObjenesisClassloaderExecutorTest {
 		MockClassLoader classloader = createClassloader();
 		final int[] expected = new int[] { 1, 2 };
 		final MyPrimitiveArrayHolder myClass = new MyPrimitiveArrayHolder(expected);
-		int[] actual = new ClassloaderExecutor(classloader).execute(new Callable<int[]>() {
+		int[] actual = new SingleClassloaderExecutor(classloader).execute(new Callable<int[]>() {
 			public int[] call() throws Exception {
 				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				int[] myArray = myClass.getMyArray();
@@ -178,7 +197,7 @@ public class ObjenesisClassloaderExecutorTest {
 		expected.add(new MyReturnValue(new MyArgument("one")));
 		expected.add(new MyReturnValue(new MyArgument("two")));
 		final MyCollectionHolder myClass = new MyCollectionHolder(expected);
-		Collection<?> actual = new ClassloaderExecutor(classloader).execute(new Callable<Collection<?>>() {
+		Collection<?> actual = new SingleClassloaderExecutor(classloader).execute(new Callable<Collection<?>>() {
 			public Collection<?> call() throws Exception {
 				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				Collection<?> myCollection = myClass.getMyCollection();
@@ -204,7 +223,7 @@ public class ObjenesisClassloaderExecutorTest {
 		final MyReferenceFieldHolder tested = new MyReferenceFieldHolder();
 		assertSame(tested.getMyArgument1(), tested.getMyArgument2());
 		assertSame(tested.getMyArgument1(), MyReferenceFieldHolder.MY_ARGUMENT);
-		new ClassloaderExecutor(classloader).execute(new Runnable() {
+		new SingleClassloaderExecutor(classloader).execute(new Runnable() {
 			public void run() {
 				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				assertEquals(tested.getMyArgument1(), tested.getMyArgument2());
@@ -222,7 +241,7 @@ public class ObjenesisClassloaderExecutorTest {
 		final MyHierarchicalFieldHolder tested = new MyHierarchicalFieldHolder();
 		assertSame(tested.getMyArgument1(), tested.getMyArgument2());
 		assertEquals(tested.getMyArgument3(), tested.getMyArgument2());
-		new ClassloaderExecutor(classloader).execute(new Runnable() {
+		new SingleClassloaderExecutor(classloader).execute(new Runnable() {
 			public void run() {
 				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				assertSame(tested.getMyArgument1(), tested.getMyArgument2());
@@ -241,7 +260,7 @@ public class ObjenesisClassloaderExecutorTest {
 		assertSame(tested.getMyArgument3(), MyHierarchicalOverloadedFieldHolder.MY_ARGUMENT);
 		assertNotSame(MyReferenceFieldHolder.MY_ARGUMENT, MyHierarchicalOverloadedFieldHolder.MY_ARGUMENT);
 		assertEquals(MyReferenceFieldHolder.MY_ARGUMENT, MyHierarchicalOverloadedFieldHolder.MY_ARGUMENT);
-		new ClassloaderExecutor(classloader).execute(new Runnable() {
+		new SingleClassloaderExecutor(classloader).execute(new Runnable() {
 			public void run() {
 				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				assertSame(tested.getMyArgument1(), tested.getMyArgument2());
@@ -260,7 +279,7 @@ public class ObjenesisClassloaderExecutorTest {
 		final MyReturnValue instance = new MyReturnValue(myArgument);
 		Method method = instance.getClass().getMethod("getMyArgument");
 		final ReflectionMethodInvoker tested = new ReflectionMethodInvoker(method, instance);
-		new ClassloaderExecutor(classloader).execute(new Runnable() {
+		new SingleClassloaderExecutor(classloader).execute(new Runnable() {
 			public void run() {
 				Object invoke = tested.invoke();
 				assertSame(invoke, myArgument);

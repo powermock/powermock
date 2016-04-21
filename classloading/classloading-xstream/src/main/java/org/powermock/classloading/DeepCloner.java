@@ -31,7 +31,7 @@ public class DeepCloner implements DeepClonerSPI {
 	 */
 	public DeepCloner(ClassLoader classLoader) {
         xStream = new XStream();
-        xStream.omitField(ClassloaderExecutor.class, "classloader");
+        xStream.omitField(SingleClassloaderExecutor.class, "classloader");
         xStream.setClassLoader(classLoader);
 	}
 
@@ -49,6 +49,7 @@ public class DeepCloner implements DeepClonerSPI {
 	 *
 	 * @return A deep clone of the object to clone.
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> T clone(T objectToClone) {
         final String serialized = xStream.toXML(objectToClone);
         return (T) xStream.fromXML(serialized);

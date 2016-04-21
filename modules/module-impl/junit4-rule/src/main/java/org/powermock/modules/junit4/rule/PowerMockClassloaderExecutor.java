@@ -16,7 +16,7 @@
  */
 package org.powermock.modules.junit4.rule;
 
-import org.powermock.classloading.ClassloaderExecutor;
+import org.powermock.classloading.SingleClassloaderExecutor;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.ClassMockTransformer;
@@ -32,25 +32,23 @@ import java.util.List;
 
 public class PowerMockClassloaderExecutor {
 
-    public static ClassloaderExecutor forClass(Class<?> testClass, MockPolicyInitializer mockPolicyInitializer) {
+    public static SingleClassloaderExecutor forClass(Class<?> testClass, MockPolicyInitializer mockPolicyInitializer) {
         List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
         mockTransformerChain.add(new ClassMockTransformer());
         mockTransformerChain.add(new InterfaceMockTransformer());
     
-        String[] classesToLoadByMockClassloader = new String[0];
-        String[] packagesToIgnore = new String[0];
-        MockClassLoader mockLoader = new MockClassLoader(classesToLoadByMockClassloader, packagesToIgnore);
+        MockClassLoader mockLoader = new MockClassLoader(new String[0], new String[0]);
         mockLoader.setMockTransformerChain(mockTransformerChain);
-        PrepareForTestExtractorImpl testClassesExtractor = new PrepareForTestExtractorImpl();
-        StaticConstructorSuppressExtractorImpl staticInitializationExtractor = new StaticConstructorSuppressExtractorImpl();
-        PowerMockIgnorePackagesExtractorImpl ignorePackagesExtractor = new PowerMockIgnorePackagesExtractorImpl();
-    
-        mockLoader.addIgnorePackage(ignorePackagesExtractor.getPackagesToIgnore(testClass));
-        mockLoader.addClassesToModify(testClassesExtractor.getTestClasses(testClass));
-        mockLoader.addClassesToModify(staticInitializationExtractor.getTestClasses(testClass));
+
+        mockLoader.addIgnorePackage(new PowerMockIgnorePackagesExtractorImpl().getPackagesToIgnore(testClass));
+        mockLoader.addClassesToModify(new PrepareForTestExtractorImpl().getTestClasses(testClass));
+        mockLoader.addClassesToModify(new StaticConstructorSuppressExtractorImpl().getTestClasses(testClass));
+
         ClassLoaderRegisterProxyFramework.registerProxyframework(mockLoader);
+
         mockPolicyInitializer.initialize(mockLoader);
-        return new ClassloaderExecutor(mockLoader);
+
+        return new SingleClassloaderExecutor(mockLoader);
     }
 
 

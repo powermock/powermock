@@ -57,13 +57,15 @@ public class AnnotationEnabler extends AbstractPowerMockTestListenerBase impleme
         // different class loaders. Fix will be
 
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+        try {
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
 
-        standardInject(testInstance);
-        injectSpiesAndInjectToSetters(testInstance);
-        injectCaptor(testInstance);
-
-        Thread.currentThread().setContextClassLoader(contextClassLoader);
+            standardInject(testInstance);
+            injectSpiesAndInjectToSetters(testInstance);
+            injectCaptor(testInstance);
+        } finally {
+            Thread.currentThread().setContextClassLoader(contextClassLoader);
+        }
     }
 
     private void injectSpiesAndInjectToSetters(Object testInstance) {

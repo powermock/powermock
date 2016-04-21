@@ -34,6 +34,14 @@ import java.util.Set;
  */
 public class PrepareForTestExtractorImpl extends AbstractTestClassExtractor {
 
+    public PrepareForTestExtractorImpl(){
+        this(false);
+    }
+
+    public PrepareForTestExtractorImpl(boolean includeMethods) {
+        super(includeMethods);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -72,7 +80,7 @@ public class PrepareForTestExtractorImpl extends AbstractTestClassExtractor {
             addFullyQualifiedNames(all, prepareOnlyThisForTestAnnotation);
         }
 
-        return all.toArray(new String[0]);
+        return all.toArray(new String[all.size()]);
 
     }
 

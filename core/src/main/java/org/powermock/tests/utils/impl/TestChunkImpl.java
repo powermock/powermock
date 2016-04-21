@@ -29,10 +29,10 @@ public class TestChunkImpl implements TestChunk {
 	private final ClassLoader classLoader;
 	private final List<Method> testMethodsToBeExecutedByThisClassloader;
 
-	public TestChunkImpl(ClassLoader classLoader, List<Method> testMethodsToBeExecutedByThisClassloader) {
+    public TestChunkImpl(ClassLoader classLoader, List<Method> testMethodsToBeExecutedByThisClassloader) {
 		this.classLoader = classLoader;
 		this.testMethodsToBeExecutedByThisClassloader = testMethodsToBeExecutedByThisClassloader;
-	}
+    }
 
 	/**
 	 * {@inheritDoc}
@@ -50,7 +50,12 @@ public class TestChunkImpl implements TestChunk {
 		return testMethodsToBeExecutedByThisClassloader;
 	}
 
-	@Override
+    @Override
+    public boolean isMethodToBeExecutedByThisClassloader(Method method) {
+        return testMethodsToBeExecutedByThisClassloader.contains(method);
+    }
+
+    @Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Classloader = ").append(classLoader).append("\n");
