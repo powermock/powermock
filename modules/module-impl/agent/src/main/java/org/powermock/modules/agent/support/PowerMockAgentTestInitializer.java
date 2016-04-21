@@ -56,7 +56,7 @@ public class PowerMockAgentTestInitializer {
 
     private static void redefineClassesToPrepare(Class<?> testClass, String[] packagesToIgnore,
                                                  JavaAgentClassRegister agentClassRegister) {
-        final String[] classesToPrepare = new PrepareForTestExtractorImpl().getTestClasses(testClass);
+        final String[] classesToPrepare = new PrepareForTestExtractorImpl(true).getTestClasses(testClass);
         redefine(classesToPrepare, packagesToIgnore, agentClassRegister);
     }
 

@@ -24,13 +24,14 @@ import java.util.List;
 
 public abstract class AbstractClassTransformer {
     
-    protected static final List<String> ALWAYS_IGNORED = new LinkedList<String>();
-    protected final List<String> USER_IGNORED = Collections.synchronizedList(new LinkedList<String>());
+    private static final List<String> ALWAYS_IGNORED = new LinkedList<String>();
+    private final List<String> USER_IGNORED = Collections.synchronizedList(new LinkedList<String>());
 
     static {
         ALWAYS_IGNORED.add("org.powermock.*");
         ALWAYS_IGNORED.add("org.junit.*");
         ALWAYS_IGNORED.add("org.testng.*");
+        ALWAYS_IGNORED.add("org.assertj.*");
         ALWAYS_IGNORED.add("org.mockito.*");
         ALWAYS_IGNORED.add("javassist.*");
         ALWAYS_IGNORED.add("org.objenesis.*");
@@ -52,11 +53,11 @@ public abstract class AbstractClassTransformer {
     }
 
     protected boolean shouldIgnore(String className) {
-        return WildcardMatcher.matchesAny(merge(ALWAYS_IGNORED, USER_IGNORED), replaceSlashWithDots(className));
+        return WildcardMatcher.matchesAny(merge(USER_IGNORED), replaceSlashWithDots(className));
     }
 
-    private List<String> merge(List<String> alwaysIgnored, List<String> userIgnored) {
-        List<String> list = new LinkedList<String>(alwaysIgnored);
+    private List<String> merge(List<String> userIgnored) {
+        List<String> list = new LinkedList<String>(AbstractClassTransformer.ALWAYS_IGNORED);
         list.addAll(userIgnored);
         return Collections.unmodifiableList(list);
     }

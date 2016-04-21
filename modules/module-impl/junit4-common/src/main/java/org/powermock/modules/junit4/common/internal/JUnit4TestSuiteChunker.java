@@ -19,12 +19,12 @@ import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filterable;
 import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.notification.RunNotifier;
-import org.powermock.tests.utils.TestSuiteChunker;
+import org.powermock.tests.utils.RunnerTestSuiteChunker;
 
-public interface JUnit4TestSuiteChunker extends TestSuiteChunker, Filterable, Sortable {
+public interface JUnit4TestSuiteChunker extends RunnerTestSuiteChunker, Filterable, Sortable {
 
-	public Description getDescription();
+	Description getDescription();
 
-	public void run(RunNotifier notifier);
+	void run(RunNotifier notifier);
 
 }

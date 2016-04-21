@@ -15,7 +15,6 @@
  */
 package org.powermock.modules.junit4.common.internal.impl;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
@@ -39,7 +38,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -143,10 +141,7 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 
     @Override
 	public boolean shouldExecuteTestForMethod(Class<?> testClass, Method potentialTestMethod) {
-		return (potentialTestMethod.getName().startsWith("test")
-				&& Modifier.isPublic(potentialTestMethod.getModifiers())
-				&& potentialTestMethod.getReturnType().equals(Void.TYPE) && TestCase.class.isAssignableFrom(testClass) || potentialTestMethod
-				.isAnnotationPresent(Test.class));
+		return new JUnit4TestMethodChecker(testClass, potentialTestMethod).isTestMethod();
 	}
 
 	@Override
@@ -239,4 +234,5 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 			}
 		}
 	}
+
 }
