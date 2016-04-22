@@ -5,6 +5,7 @@ Change log next version
 * PowerMockRunner now processes JUnit Rules correctly (thanks to Stefan Birkner for pull request) (issue 427)
 * Added support for @TestSubject in EasyMock API. This is the equivalent of @InjectMocks in Mockito (big thanks to Arthur Zagretdinov for pull request)
 * Added experimental support for mockito 2.x
+* Ensuring JVM method size limit is never exceeded. Throw an user frendly exception if method size is exceeded. (thanks to Tomasz Przybyla for pull request) (issue #661)
 * Fix #214: Whitebox.invokeConstructor may not work as expected with overloaded constructors
 * Fix #352: PowerMockRunner should run tests defined in super class
 * Fix #510: Static method mocking with Mockito 1.9.5 and Powermock fails with Java 8 Consumer Interface
