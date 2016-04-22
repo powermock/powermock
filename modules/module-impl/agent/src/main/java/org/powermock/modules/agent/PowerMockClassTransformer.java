@@ -22,6 +22,7 @@ import javassist.CtClass;
 import org.powermock.core.agent.JavaAgentClassRegister;
 import org.powermock.core.transformers.TransformStrategy;
 import org.powermock.core.transformers.impl.ClassMockTransformer;
+import org.powermock.core.transformers.impl.InterfaceMockTransformer;
 
 import java.io.ByteArrayInputStream;
 import java.lang.instrument.ClassFileTransformer;
@@ -45,6 +46,7 @@ class PowerMockClassTransformer extends AbstractClassTransformer implements Clas
     }
 
     private static final ClassMockTransformer CLASS_MOCK_TRANSFORMER = new ClassMockTransformer(TransformStrategy.INST_REDEFINE);
+    private static final InterfaceMockTransformer INTERFACE_MOCK_TRANSFORMER = new InterfaceMockTransformer(TransformStrategy.INST_REDEFINE);
 
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
         if (loader == null || shouldIgnore(className)) {
@@ -60,8 +62,12 @@ class PowerMockClassTransformer extends AbstractClassTransformer implements Clas
                 } finally {
                     is.close();
                 }
-                
-                ctClass = CLASS_MOCK_TRANSFORMER.transform(ctClass);
+
+                if (ctClass.isInterface()){
+                    ctClass = INTERFACE_MOCK_TRANSFORMER.transform(ctClass);
+                }else{
+                    ctClass = CLASS_MOCK_TRANSFORMER.transform(ctClass);
+                }
 
                 /*
                  * ClassPool may cause huge memory consumption if the number of CtClass

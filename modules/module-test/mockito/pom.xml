@@ -68,12 +68,14 @@
 
     <modules>
         <module>junit4</module>
-        <module>junit4-java8</module>
         <module>junit49</module>
         <module>junit4-rule-objenesis</module>
         <module>junit4-rule-xstream</module>
         <module>junit4-agent</module>
         <module>junit4-delegate</module>
         <module>testng</module>
+        <module>junit4-java8</module>
+        <module>junit4-java8-agent</module>
+        <module>junit4-java8-rule-xstream</module>
     </modules>
 </project>

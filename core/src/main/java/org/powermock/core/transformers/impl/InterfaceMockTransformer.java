@@ -23,6 +23,7 @@ import javassist.NotFoundException;
 import org.powermock.core.transformers.TransformStrategy;
 
 import static org.powermock.core.transformers.TransformStrategy.CLASSLOADER;
+import static org.powermock.core.transformers.TransformStrategy.INST_TRANSFORM;
 
 /**
  *
