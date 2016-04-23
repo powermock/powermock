@@ -9,4 +9,8 @@ public interface InterfaceWithStatic {
         return "What's up?";
     }
 
+    static  String createAndSay(){
+        return new ConstructorObject().sayHello();
+    }
+
 }

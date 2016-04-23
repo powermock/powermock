@@ -56,6 +56,12 @@ public class InterfaceMockTransformer extends AbstractMainMockTransformer {
 
         allowMockingOfStaticAndFinalAndNativeMethods(clazz);
 
+        if (strategy != INST_TRANSFORM) {
+            clazz.instrument(new PowerMockExpressionEditor(clazz));
+        }
+
+        ensureJvmMethodSizeLimit(clazz);
+
         return clazz;
     }
 }

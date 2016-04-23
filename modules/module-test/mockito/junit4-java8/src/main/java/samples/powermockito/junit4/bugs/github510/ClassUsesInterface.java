@@ -9,4 +9,8 @@ public class ClassUsesInterface {
         return InterfaceWithStatic.sayHello();
     }
 
+    public String createAndSay(){
+        return InterfaceWithStatic.createAndSay();
+    }
+
 }
