@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package powermock.examples.spring;
+package org.powermock.examples.spring.mockito;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import powermock.examples.spring.IdGenerator;
 
-@Component
-public class MyBean {
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(SpringJUnit4ClassRunner.class)
+@PrepareForTest(IdGenerator.class)
+public class SpringWithDelegateRunnerExampleTest extends SpringExampleTest {
 
-    @Autowired
-    private FinalClass finalClass;
-
-    public String sayHello(){
-        return finalClass.sayHello();
-    }
-
-    public Message generateMessage() {
-        final long id = IdGenerator.generateNewId();
-        return new Message(id, "My bean message");
-    }
 }

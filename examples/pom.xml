@@ -34,6 +34,7 @@
         <module>jcl</module>
         <module>jdom</module>
         <module>jmock</module>
+        <module>spring-easymock</module>
         <module>spring-mockito</module>
         <module>spring-mockito-delegate</module>
         <module>spring-mockito-xml-agent</module>

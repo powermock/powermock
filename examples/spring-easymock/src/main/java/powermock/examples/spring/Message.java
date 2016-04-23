@@ -16,21 +16,20 @@
 
 package powermock.examples.spring;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+public class Message {
+    private final long id;
+    private final String content;
 
-@Component
-public class MyBean {
-
-    @Autowired
-    private FinalClass finalClass;
-
-    public String sayHello(){
-        return finalClass.sayHello();
+    public Message(long id, String content) {
+        this.id = id;
+        this.content = content;
     }
 
-    public Message generateMessage() {
-        final long id = IdGenerator.generateNewId();
-        return new Message(id, "My bean message");
+    public long getId() {
+        return id;
+    }
+
+    public String getContent() {
+        return content;
     }
 }

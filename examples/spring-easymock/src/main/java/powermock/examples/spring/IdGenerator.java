@@ -13,24 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package powermock.examples.spring;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+/**
+ * The purpose of the IdGenerator is to generate ID's based on the system time.
+ */
+public class IdGenerator {
 
-@Component
-public class MyBean {
-
-    @Autowired
-    private FinalClass finalClass;
-
-    public String sayHello(){
-        return finalClass.sayHello();
-    }
-
-    public Message generateMessage() {
-        final long id = IdGenerator.generateNewId();
-        return new Message(id, "My bean message");
-    }
+	/**
+	 * @return A new ID based on the current time.
+	 */
+	public static long generateNewId() {
+		return System.currentTimeMillis();
+	}
 }
