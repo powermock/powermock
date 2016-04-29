@@ -20,23 +20,4 @@
         <module>support</module>
         <module>mockito-common</module>
     </modules>
-
-    <profiles>
-        <profile>
-            <id>mockito</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <module>mockito</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>mockito2</id>
-            <modules>
-                <module>mockito2</module>
-            </modules>
-        </profile>
-    </profiles>
-
 </project>

@@ -26,6 +26,12 @@
                     <artifactId>powermock-api-mockito</artifactId>
                     <version>${project.version}</version>
                 </dependency>
+                <dependency>
+                    <groupId>org.mockito</groupId>
+                    <artifactId>mockito-core</artifactId>
+                    <version>${mockito.version}</version>
+                    <scope>test</scope>
+                </dependency>
             </dependencies>
         </profile>
         <profile>
@@ -35,6 +41,12 @@
                     <groupId>org.powermock</groupId>
                     <artifactId>powermock-api-mockito2</artifactId>
                     <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.mockito</groupId>
+                    <artifactId>mockito-core</artifactId>
+                    <version>${mockito2.version}</version>
+                    <scope>test</scope>
                 </dependency>
             </dependencies>
         </profile>
@@ -50,6 +62,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.5.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito-common</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
