@@ -19,5 +19,7 @@
         <module>easymock</module>
         <module>support</module>
         <module>mockito-common</module>
+        <module>mockito</module>
+        <module>mockito2</module>
     </modules>
 </project>

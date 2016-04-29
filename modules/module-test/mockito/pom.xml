@@ -27,16 +27,19 @@
                     <groupId>org.powermock</groupId>
                     <artifactId>powermock-api-mockito-common</artifactId>
                     <version>${project.version}</version>
+                    <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.powermock</groupId>
                     <artifactId>powermock-api-mockito</artifactId>
                     <version>${project.version}</version>
+                    <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.mockito</groupId>
                     <artifactId>mockito-core</artifactId>
-                    <version>${mockito.version}</version>
+                    <version>${mockito1.version}</version>
+                    <scope>test</scope>
                 </dependency>
             </dependencies>
         </profile>
@@ -47,16 +50,19 @@
                     <groupId>org.powermock</groupId>
                     <artifactId>powermock-api-mockito-common</artifactId>
                     <version>${project.version}</version>
+                    <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.powermock</groupId>
                     <artifactId>powermock-api-mockito2</artifactId>
                     <version>${project.version}</version>
+                    <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.mockito</groupId>
                     <artifactId>mockito-core</artifactId>
                     <version>${mockito2.version}</version>
+                    <scope>test</scope>
                 </dependency>
             </dependencies>
         </profile>
@@ -69,10 +75,6 @@
             <artifactId>powermock-tests-utils</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
         </dependency>
     </dependencies>
 

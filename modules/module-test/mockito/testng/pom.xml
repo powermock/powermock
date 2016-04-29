@@ -44,7 +44,7 @@
                     <systemProperties>
                         <property>
                             <name>mockitoVersion</name>
-                            <value>${mockito.version}</value>
+                            <value>${mockito1.version}</value>
                         </property>
                     </systemProperties>
                 </configuration>

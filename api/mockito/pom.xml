@@ -18,6 +18,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
+            <version>${mockito1.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -31,11 +32,6 @@
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito-common</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
         </dependency>
     </dependencies>
 </project>

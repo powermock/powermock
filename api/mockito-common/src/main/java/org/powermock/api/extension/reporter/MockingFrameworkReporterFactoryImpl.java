@@ -1,18 +1,16 @@
 package org.powermock.api.extension.reporter;
 
-import org.mockito.exceptions.Reporter;
-import org.mockito.internal.MockitoCore;
-import org.powermock.api.mockito.expectation.reporter.PowerMockitoReporter;
 import org.powermock.core.reporter.MockingFrameworkReporter;
 import org.powermock.reflect.Whitebox;
 
+import static org.powermock.utils.StringJoiner.join;
+
 /**
- *  The MockingFrameworkReporterFactory which create a new instance of MockingFrameworkReporter
- *  which is loaded by current context class loader.
+ * The MockingFrameworkReporterFactory which create a new instance of MockingFrameworkReporter
+ * which is loaded by current context class loader.
  */
 @SuppressWarnings("WeakerAccess")
 public class MockingFrameworkReporterFactoryImpl extends AbstractMockingFrameworkReporterFactory {
-
 
     @Override
     protected String getImplementerClassName() {
@@ -22,15 +20,15 @@ public class MockingFrameworkReporterFactoryImpl extends AbstractMockingFramewor
     @SuppressWarnings("unused")
     private static class MockitoMockingFrameworkReporter implements MockingFrameworkReporter {
 
-        private Reporter mockitoReporter;
-        private MockitoCore mockitoCore;
+        private org.mockito.exceptions.Reporter mockitoReporter;
+        private org.mockito.internal.MockitoCore mockitoCore;
 
-        private Reporter getMockitoReporter(Object mockitoCore) {
-            
+        private org.mockito.exceptions.Reporter getMockitoReporter(Object mockitoCore) {
+
             return Whitebox.getInternalState(mockitoCore, "reporter");
         }
 
-        private void setMockitoReporter(Reporter reporter, MockitoCore mockitoCore) {
+        private void setMockitoReporter(org.mockito.exceptions.Reporter reporter, org.mockito.internal.MockitoCore mockitoCore) {
             Whitebox.setInternalState(mockitoCore, "reporter", reporter);
         }
 
@@ -38,12 +36,12 @@ public class MockingFrameworkReporterFactoryImpl extends AbstractMockingFramewor
         public void enable() {
             mockitoCore = getMockitoCoreForCurrentClassLoader();
             mockitoReporter = getMockitoReporter(mockitoCore);
-            
+
             PowerMockitoReporter powerMockitoReporter = new PowerMockitoReporter();
             setMockitoReporter(powerMockitoReporter, mockitoCore);
         }
 
-        private MockitoCore getMockitoCoreForCurrentClassLoader() {
+        private org.mockito.internal.MockitoCore getMockitoCoreForCurrentClassLoader() {
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             try {
                 return Whitebox.getInternalState(classLoader.loadClass("org.mockito.Mockito"), "MOCKITO_CORE");
@@ -58,4 +56,33 @@ public class MockingFrameworkReporterFactoryImpl extends AbstractMockingFramewor
         }
     }
 
+    /**
+     * PowerMock reported for Mockito, which replace standard mockito message
+     * to specific message for cases when PowerMock is used.
+     */
+    private static class PowerMockitoReporter extends org.mockito.exceptions.Reporter {
+
+        public void missingMethodInvocation() {
+            throw new org.mockito.exceptions.misusing.MissingMethodInvocationException(join(
+                    "when() requires an argument which has to be 'a method call on a mock'.",
+                    "For example:",
+                    "    when(mock.getArticles()).thenReturn(articles);",
+                    "Or 'a static method call on a prepared class`",
+                    "For example:",
+                    "    @PrepareForTest( { StaticService.class }) ",
+                    "    TestClass{",
+                    "       public void testMethod(){",
+                    "           PowerMockito.mockStatic(StaticService.class);",
+                    "           when(StaticService.say()).thenReturn(expected);",
+                    "       }",
+                    "    }",
+                    "",
+                    "Also, this error might show up because:",
+                    "1. inside when() you don't call method on mock but on some other object.",
+                    "2. inside when() you don't call static method, but class has not been prepared.",
+                    ""
+            ));
+        }
+
+    }
 }
