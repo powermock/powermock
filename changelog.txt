@@ -1,5 +1,5 @@
-Change log next version
------------------------
+Change log 1.6.5 (2015-04-30)
+-----------------------------
 * Add ability to chain returns with doReturn() (thanks to "gauee" for pull request) (issue #599)
 * Code quality improvement, @Override annotation should be used on any method overriding (since Java 5) or implementing (since Java 6) another one
 * PowerMockRunner now processes JUnit Rules correctly (thanks to Stefan Birkner for pull request) (issue 427)
