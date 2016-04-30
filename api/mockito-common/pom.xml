@@ -19,6 +19,10 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
+            <version>${mockito1.version}</version>
+            <!-- Provided since it's only needed for compile time. The consuming API's (powermock-api-mockito and powermock-api-mockito2)
+            will depend on the correct version of mockito-->
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>

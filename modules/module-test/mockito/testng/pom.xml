@@ -14,6 +14,53 @@
         Tests for Mockito module with TestNG.
     </description>
 
+    <profiles>
+        <profile>
+            <id>mockito</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>suite.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <systemProperties>
+                                <property>
+                                    <name>mockitoVersion</name>
+                                    <value>${mockito1.version}</value>
+                                </property>
+                            </systemProperties>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>mockito2</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>suite.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <systemProperties>
+                                <property>
+                                    <name>mockitoVersion</name>
+                                    <value>${mockito2.version}</value>
+                                </property>
+                            </systemProperties>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <dependencies>
         <dependency>
             <groupId>org.testng</groupId>
@@ -32,23 +79,4 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>suite.xml</suiteXmlFile>
-                    </suiteXmlFiles>
-                    <systemProperties>
-                        <property>
-                            <name>mockitoVersion</name>
-                            <value>${mockito.version}</value>
-                        </property>
-                    </systemProperties>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

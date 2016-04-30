@@ -99,6 +99,8 @@
         <junit.rules.version>4.8.2</junit.rules.version>
         <testng.version>6.9.10</testng.version>
         <xstream.version>1.4.9</xstream.version>
+        <mockito1.version>1.10.19</mockito1.version>
+        <mockito2.version>2.0.42-beta</mockito2.version>
     </properties>
     <build>
         <plugins>
@@ -269,21 +271,6 @@
     </reporting>
     <profiles>
         <profile>
-            <id>mockito</id>
-            <properties>
-                <mockito.version>1.10.19</mockito.version>
-            </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-        </profile>
-        <profile>
-            <id>mockito2</id>
-            <properties>
-                <mockito.version>2.0.42-beta</mockito.version>
-            </properties>
-        </profile>
-        <profile>
             <id>implicitDelegateAnnotation</id>
             <build>
                 <plugins>
@@ -357,11 +344,6 @@
                         <artifactId>cglib-nodep</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>${mockito.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.objenesis</groupId>

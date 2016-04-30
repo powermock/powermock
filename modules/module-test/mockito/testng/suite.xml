@@ -27,7 +27,7 @@
                 <script language="beanshell">
                     <![CDATA[
                         String str = System.getProperty("mockitoVersion");
-                        str.startsWith("2")&&str.contains(".46");
+                        str.startsWith("2")&&str.contains(".55");
                       ]]>
                 </script>
             </method-selector>
