@@ -27,9 +27,10 @@ Please note that PowerMock is mainly intended for people with expert knowledge i
 * [Downloads](https://github.com/jayway/powermock/wiki/Downloads)
 * [Motivation](https://github.com/jayway/powermock/wiki/Motivation)
 * Javadoc
-  * [EasyMock API extension](http://www.javadoc.io/doc/org.powermock/powermock-api-easymock/1.6.4) ([PowerMock class](http://static.javadoc.io/org.powermock/powermock-api-easymock/1.6.4/org/powermock/api/easymock/PowerMock.html))
-  * [Mockito API extension](http://www.javadoc.io/doc/org.powermock/powermock-api-mockito/1.6.4) ([PowerMockito class](http://static.javadoc.io/org.powermock/powermock-api-mockito/1.6.4/org/powermock/api/mockito/PowerMockito.html))
-  * [PowerMock Reflect](http://www.javadoc.io/doc/org.powermock/powermock-reflect/1.6.4) ([Whitebox class](http://static.javadoc.io/org.powermock/powermock-reflect/1.6.4/org/powermock/reflect/Whitebox.html))
+  * [EasyMock API extension](http://www.javadoc.io/doc/org.powermock/powermock-api-easymock/1.6.5) ([PowerMock class](http://static.javadoc.io/org.powermock/powermock-api-easymock/1.6.5/org/powermock/api/easymock/PowerMock.html))
+  * [Mockito API extension](http://www.javadoc.io/doc/org.powermock/powermock-api-mockito/1.6.5) ([PowerMockito class](http://static.javadoc.io/org.powermock/powermock-api-mockito/1.6.5/org/powermock/api/mockito/PowerMockito.html))
+  * [Mockito2 API extension](http://www.javadoc.io/doc/org.powermock/powermock-api-mockito2/1.6.5) ([PowerMockito class](http://static.javadoc.io/org.powermock/powermock-api-mockito2/1.6.5/org/powermock/api/mockito/PowerMockito.html))
+  * [PowerMock Reflect](http://www.javadoc.io/doc/org.powermock/powermock-reflect/1.6.5) ([Whitebox class](http://static.javadoc.io/org.powermock/powermock-reflect/1.6.5/org/powermock/reflect/Whitebox.html))
 * [EasyMock](https://github.com/jayway/powermock/wiki/EasyMock)
   * [Mock Static](https://github.com/jayway/powermock/wiki/MockStatic)
   * [Mock Final](https://github.com/jayway/powermock/wiki/MockFinal)
