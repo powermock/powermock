@@ -60,7 +60,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <finalName>powermock-mockito-testng-${project.version}</finalName>
+                    <finalName>powermock-mockito2-testng-${project.version}</finalName>
                     <descriptors>
                         <descriptor>src/assembly/final.xml</descriptor>
                     </descriptors>
