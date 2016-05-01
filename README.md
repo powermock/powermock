@@ -16,9 +16,9 @@ When writing unit tests it is often useful to bypass encapsulation and therefore
 Please note that PowerMock is mainly intended for people with expert knowledge in unit testing. Putting it in the hands of junior developers may cause more harm than good.
 
 ## News
+* 2016-05-01: PowerMock 1.6.5 has been released with new features such as `@TestSubject` support for [EasyMock](http://easymock.org/), experimental support for [Mockito 2](http://mockito.org/) as well as bug fixes and other imporvements. See [release notes](https://github.com/jayway/powermock/wiki/Release-Notes-PowerMock-1.6.5) and [change log](https://raw.githubusercontent.com/jayway/powermock/master/changelog.txt) for details. We also want to give a warm welcome to our new core committer [Arthur Zagretdinov](https://github.com/thekingnothing).
 * 2015-12-11: PowerMock 1.6.4 has been released with better support for [Jacoco](http://eclemma.org/jacoco/) and improvements to the [DelegatingPowerMockRunner](https://github.com/jayway/powermock/wiki/JUnit_Delegating_Runner) as well as some other minor fixes. See [change log](https://raw.githubusercontent.com/jayway/powermock/master/changelog.txt) for details.
 * 2015-10-02: PowerMock 1.6.3 has been released with support for EasyMock 3.4 as well as compatibility with ByteBuddy and various other fixes. See [change log](https://raw.githubusercontent.com/jayway/powermock/master/changelog.txt) for details.
-* 2015-07-25: PowerMock has moved to GitHub. From now on the old <a href="https://code.google.com/p/powermock/">Google Code page</a> should not be used anymore. All issues are reported here on GitHub and the documentation is migrated.
 
 [Older News](https://github.com/jayway/powermock/wiki/OldNews)
 
