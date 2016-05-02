@@ -32,8 +32,8 @@ class AnnotationMockScanner {
         this.annotation = annotation;
     }
 
-    public List<AnnotationMockMetadata> scan(Object instance) throws Exception {
-        final List<AnnotationMockMetadata> mocksMetadata = new ArrayList<AnnotationMockMetadata>();
+    public List<MockMetadata> scan(Object instance) throws Exception {
+        final List<MockMetadata> mocksMetadata = new ArrayList<MockMetadata>();
         final Set<Field> fields = getFields(instance);
         for (Field field : fields) {
             if (field.get(instance) != null) {

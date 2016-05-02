@@ -27,27 +27,27 @@ import java.util.Set;
  */
 class AnnotationGlobalMetadata {
 
-    private final List<AnnotationMockMetadata> qualifiedInjections = new ArrayList<AnnotationMockMetadata>(5);
+    private final List<MockMetadata> qualifiedInjections = new ArrayList<MockMetadata>(5);
 
-    private final List<AnnotationMockMetadata> unqualifiedInjections = new ArrayList<AnnotationMockMetadata>(5);
+    private final List<MockMetadata> unqualifiedInjections = new ArrayList<MockMetadata>(5);
 
     private final Set<String> qualifiers = new HashSet<String>();
 
-    public List<AnnotationMockMetadata> getQualifiedInjections() {
+    public List<MockMetadata> getQualifiedInjections() {
         return qualifiedInjections;
     }
 
-    public List<AnnotationMockMetadata> getUnqualifiedInjections() {
+    public List<MockMetadata> getUnqualifiedInjections() {
         return unqualifiedInjections;
     }
 
-    public void add(List<AnnotationMockMetadata> mocksMetadata) {
-        for (AnnotationMockMetadata mockMetadata : mocksMetadata) {
+    public void add(List<MockMetadata> mocksMetadata) {
+        for (MockMetadata mockMetadata : mocksMetadata) {
             add(mockMetadata);
         }
     }
 
-    private void add(AnnotationMockMetadata mockMetadata) {
+    private void add(MockMetadata mockMetadata) {
 
         String qualifier = mockMetadata.getQualifier();
 
