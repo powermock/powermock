@@ -1,3 +1,7 @@
+Change log next version
+-----------------------
+* Fix #668 @Mock fields are not injected anymore (1.6.5 regression)
+
 Change log 1.6.5 (2015-04-30)
 -----------------------------
 * Add ability to chain returns with doReturn() (thanks to "gauee" for pull request) (issue #599)

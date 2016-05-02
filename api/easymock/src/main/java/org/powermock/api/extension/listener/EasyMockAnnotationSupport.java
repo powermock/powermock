@@ -21,16 +21,16 @@ import org.powermock.api.easymock.EasyMockConfiguration;
 import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.api.easymock.annotation.MockNice;
 import org.powermock.api.easymock.annotation.MockStrict;
-import org.powermock.reflect.Whitebox;
+import org.powermock.api.extension.InjectFieldSearcher;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Set;
 
 /**
  * This class works like as {@link org.easymock.EasyMockSupport} and is used to create and inject mocks to
  * annotated fields of an instance of test class.
+ *
  * @see Mock
  * @see org.easymock.Mock
  * @see org.easymock.TestSubject
@@ -84,17 +84,17 @@ public class EasyMockAnnotationSupport {
 
         AnnotationMockScanner scanner = new AnnotationMockScanner(annotation);
 
-        List<AnnotationMockMetadata> mocksMetadata = scanner.scan(injectCandidateInstance);
+        List<MockMetadata> mocksMetadata = scanner.scan(injectCandidateInstance);
         globalMetadata.add(mocksMetadata);
 
-        for (AnnotationMockMetadata mockMetadata : mocksMetadata) {
-            injectMock(injectCandidateInstance, mockMetadata, mockCreator, new AnnotationInjectFieldSearcher());
+        for (MockMetadata mockMetadata : mocksMetadata) {
+            injectMock(injectCandidateInstance, mockMetadata, mockCreator, new DefaultInjectFieldSearcher());
         }
 
 
     }
 
-    protected void injectMock(Object injectCandidateInstance, AnnotationMockMetadata mockMetadata,
+    protected void injectMock(Object injectCandidateInstance, MockMetadata mockMetadata,
                               AnnotationMockCreator mockCreator, InjectFieldSearcher fieldSearch) throws IllegalAccessException {
         Object mock = createMock(mockCreator, mockMetadata);
         Field field = fieldSearch.findField(injectCandidateInstance, mockMetadata);
@@ -105,7 +105,7 @@ public class EasyMockAnnotationSupport {
     }
 
 
-    protected Object createMock(AnnotationMockCreator mockCreator, AnnotationMockMetadata mockMetadata) {
+    protected Object createMock(AnnotationMockCreator mockCreator, MockMetadata mockMetadata) {
         if (mockMetadata.getMock() == null) {
             Object mock = mockCreator.createMockInstance(mockMetadata.getType(), mockMetadata.getMethods());
             mockMetadata.setMock(mock);
@@ -114,22 +114,4 @@ public class EasyMockAnnotationSupport {
     }
 
 
-    protected interface InjectFieldSearcher {
-        Field findField(Object instance, AnnotationMockMetadata mockMetadata);
-    }
-
-
-    @SuppressWarnings("unchecked")
-    protected static class AnnotationInjectFieldSearcher implements InjectFieldSearcher {
-
-        @Override
-        public Field findField(Object instance, AnnotationMockMetadata mockMetadata) {
-            Set<Field> candidates = Whitebox.getFieldsAnnotatedWith(instance, mockMetadata.getAnnotation());
-            if (candidates.size() == 1) {
-                return candidates.iterator().next();
-            }
-            return null;
-        }
-    }
-    
 }

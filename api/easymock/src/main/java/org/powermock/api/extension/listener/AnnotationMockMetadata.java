@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 @SuppressWarnings("WeakerAccess")
-public class AnnotationMockMetadata {
+public class AnnotationMockMetadata implements MockMetadata {
     private final Class<?> type;
     private final Method[] methods;
     private final String qualifier;
@@ -58,18 +58,22 @@ public class AnnotationMockMetadata {
         }
     }
 
+    @Override
     public String getQualifier() {
         return qualifier;
     }
 
+    @Override
     public Class<? extends Annotation> getAnnotation() {
         return annotation;
     }
 
+    @Override
     public Class<?> getType() {
         return type;
     }
 
+    @Override
     public Method[] getMethods() {
         return methods;
     }
@@ -83,10 +87,12 @@ public class AnnotationMockMetadata {
         return null;
     }
 
+    @Override
     public Object getMock() {
         return mock;
     }
 
+    @Override
     public void setMock(Object mock) {
         this.mock = mock;
     }

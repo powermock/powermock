@@ -68,7 +68,7 @@ class TestSubjectInjector {
 
             InjectionTarget target = new InjectionTarget(targetField);
 
-            AnnotationMockMetadata toAssign = findUniqueAssignable(target);
+            MockMetadata toAssign = findUniqueAssignable(target);
 
             if (toAssign == null) {
                 continue;
@@ -78,9 +78,9 @@ class TestSubjectInjector {
         }
     }
 
-    AnnotationMockMetadata findUniqueAssignable(InjectionTarget target) {
-        AnnotationMockMetadata toAssign = null;
-        for (AnnotationMockMetadata mockMetadata : globalMetadata.getUnqualifiedInjections()) {
+    MockMetadata findUniqueAssignable(InjectionTarget target) {
+        MockMetadata toAssign = null;
+        for (MockMetadata mockMetadata : globalMetadata.getUnqualifiedInjections()) {
             if (target.accepts(mockMetadata)) {
                 if (toAssign != null) {
                     throw new RuntimeException(String.format("At least two mocks can be assigned to '%s': %s and %s", target.getField(), toAssign.getMock(), mockMetadata.getMock()));
@@ -94,7 +94,7 @@ class TestSubjectInjector {
     Set<Field> injectByName(Set<Field> targetFields, Object targetObject) throws IllegalAccessException {
         Class<?> targetClass = targetObject.getClass();
 
-        for (AnnotationMockMetadata mockMetadata : globalMetadata.getQualifiedInjections()) {
+        for (MockMetadata mockMetadata : globalMetadata.getQualifiedInjections()) {
             Field targetField = getFieldByName(targetClass, mockMetadata.getQualifier());
 
             if (targetField == null) {
@@ -135,11 +135,11 @@ class TestSubjectInjector {
             return field;
         }
 
-        public boolean accepts(AnnotationMockMetadata mockMetadata) {
+        public boolean accepts(MockMetadata mockMetadata) {
             return field.getType().isAssignableFrom(mockMetadata.getType());
         }
 
-        public void inject(Object targetObject, AnnotationMockMetadata mockMetadata) throws IllegalAccessException {
+        public void inject(Object targetObject, MockMetadata mockMetadata) throws IllegalAccessException {
             field.setAccessible(true);
 
             Object value = field.get(targetObject);
