@@ -7,7 +7,7 @@ package org.powermock.api.mockito.repackaged.cglib.proxy;
 
 /**
  * All enhanced instances returned by the {@link Enhancer} class implement this interface.
- * Using this interface for new instances is faster than going through the <code>Enhancer</code>
+ * Using this interface for new instances is faster than going through the {@code Enhancer}
  * interface or using reflection. In addition, to intercept methods called during
  * object construction you <b>must</b> use these methods instead of reflection.
  * @author Juozas Baliuka <a href="mailto:baliuka@mwm.lt">baliuka@mwm.lt</a>
@@ -41,7 +41,7 @@ public interface Factory {
     Object newInstance(Class[] types, Object[] args, Callback[] callbacks);
 
     /**
-     * Return the <code>Callback</code> implementation at the specified index.
+     * Return the {@code Callback} implementation at the specified index.
      * @param index the callback index
      * @return the callback implementation
      */

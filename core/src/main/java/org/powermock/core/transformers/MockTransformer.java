@@ -20,7 +20,7 @@ import javassist.CtClass;
 
 /**
  * Interface that all mock transformers must implement. The purpose of a mock
- * transformer is to create a modified version of a <code>Class</code> so that
+ * transformer is to create a modified version of a {@code Class} so that
  * it is mock enabled.
  * 
  * @author Johan Haleby
@@ -28,12 +28,12 @@ import javassist.CtClass;
 public interface MockTransformer {
 
 	/**
-	 * Transforms the <code>clazz</code>.
+	 * Transforms the {@code clazz}.
 	 * 
 	 * @param clazz
 	 *            The class to be
 	 *            transform into a mock enabled class.
-	 * @return A <code>CtClass</code> representation of the mocked class.
+	 * @return A {@code CtClass} representation of the mocked class.
 	 */
 	CtClass transform(CtClass clazz) throws Exception;
 }

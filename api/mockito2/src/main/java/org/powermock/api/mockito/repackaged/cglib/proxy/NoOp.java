@@ -11,7 +11,7 @@ package org.powermock.api.mockito.repackaged.cglib.proxy;
 public interface NoOp extends Callback
 {
     /**
-     * A thread-safe singleton instance of the <code>NoOp</code> callback.
+     * A thread-safe singleton instance of the {@code NoOp} callback.
      */
     public static final NoOp INSTANCE = new NoOp() { };
 }

@@ -29,8 +29,8 @@ public abstract class FieldMatcherStrategy {
      * 
      * @param field
      *            The field to check whether it matches the strategy or not.
-     * @return <code>true</code> if this field matches the strategy,
-     *         <code>false</code> otherwise.
+     * @return {@code true} if this field matches the strategy,
+     *         {@code false} otherwise.
      * 
      */
     public abstract boolean matches(Field field);
@@ -42,8 +42,8 @@ public abstract class FieldMatcherStrategy {
      * @param type
      *            The type of the object that was not found.
      * @param isInstanceField
-     *            <code>true</code> if the field that was looked after was an
-     *            instance field or <code>false</code> if it was a static field.
+     *            {@code true} if the field that was looked after was an
+     *            instance field or {@code false} if it was a static field.
      */
     public abstract void notFound(Class<?> type, boolean isInstanceField) throws FieldNotFoundException;
 }

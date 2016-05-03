@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 /**
  * This annotation can be placed on those fields in your test class that should
  * be mocked in a nice manner (i.e. by default allows all method calls and
- * returns appropriate empty values (0, <code>null</code> or <code>false</code>
+ * returns appropriate empty values (0, {@code null} or {@code false}
  * )). This eliminates the need to setup and tear-down mocks manually which
  * minimizes repetitive test code and makes the test more readable. In order for
  * PowerMock to control the life-cycle of the mocks you must supply the

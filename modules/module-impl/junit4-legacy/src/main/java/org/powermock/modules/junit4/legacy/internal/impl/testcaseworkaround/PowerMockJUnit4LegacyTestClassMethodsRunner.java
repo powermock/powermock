@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Since {@link TestClassMethodsRunner} creates a new instance of
  * TestInterceptor in its constructor we need to manually lookup the additional
- * methods that should be added when extending from <code>TestCase</code>.
+ * methods that should be added when extending from {@code TestCase}.
  */
 public class PowerMockJUnit4LegacyTestClassMethodsRunner extends TestClassMethodsRunner {
 

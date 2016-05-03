@@ -29,7 +29,6 @@ public class ClassUsesInterfaceTest {
     }
 
 
-
     @Test
     public void testSaySomething() throws Exception {
         final String value = "Hi Man";

@@ -49,8 +49,8 @@ public interface Interpreter {
     /**
      * Creates a new value that represents the given type.
      * 
-     * Called for method parameters (including <code>this</code>),
-     * exception handler variable and with <code>null</code> type 
+     * Called for method parameters (including {@code this}),
+     * exception handler variable and with {@code null} type
      * for variables reserved by long and double types.
      * 
      * @param type a primitive or reference type, or <tt>null</tt> to

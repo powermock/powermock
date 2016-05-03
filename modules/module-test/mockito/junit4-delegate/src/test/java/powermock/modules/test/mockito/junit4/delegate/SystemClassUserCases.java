@@ -16,7 +16,9 @@
 package powermock.modules.test.mockito.junit4.delegate;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import samples.system.SystemClassUser;
 
 import java.net.URLEncoder;
@@ -41,6 +43,7 @@ import static org.powermock.api.mockito.PowerMockito.*;
  *
  * </pre>
  */
+@RunWith(PowerMockRunner.class)
 @PrepareForTest({SystemClassUser.class})
 public class SystemClassUserCases {
 

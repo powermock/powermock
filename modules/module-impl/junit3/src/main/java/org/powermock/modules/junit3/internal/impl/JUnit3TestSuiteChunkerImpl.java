@@ -60,9 +60,6 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		this.name = name;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected PowerMockJUnit3RunnerDelegate createDelegatorFromClassloader(ClassLoader classLoader, Class<?> testClass,
 			final List<Method> methodsToTest) throws Exception {
@@ -88,9 +85,6 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		super.chunkClass(testClass);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public int getTestCount() {
 		if (testCount == NOT_INITIALIZED) {
 			testCount = 0;
@@ -101,18 +95,12 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		return testCount;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public boolean shouldExecuteTestForMethod(Class<?> testClass, Method potentialTestMethod) {
 		return potentialTestMethod.getName().startsWith("test")
 				&& Modifier.isPublic(potentialTestMethod.getModifiers())
 				&& potentialTestMethod.getReturnType().equals(Void.TYPE);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void addTest(Test test) throws Exception {
 		if (test == null) {
 			throw new IllegalArgumentException("test cannot be null");
@@ -133,16 +121,10 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void addTestSuite(Class<? extends TestCase> testClass) throws Exception {
 		addTestClassToSuite(testClass);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public int countTestCases() {
 		int count = 0;
 		for (PowerMockJUnit3RunnerDelegate delegate : delegates) {
@@ -151,9 +133,6 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		return count;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void run(TestResult result) {
 		final Iterator<TestChunk> iterator = getChunkIterator();
 		for (PowerMockJUnit3RunnerDelegate delegate : delegates) {
@@ -167,9 +146,6 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void runTest(Test test, TestResult result) {
 		final Iterator<TestChunk> iterator = getChunkIterator();
 		for (PowerMockJUnit3RunnerDelegate delegate : delegates) {
@@ -191,16 +167,10 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		return iterator;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public Test testAt(int index) {
 		return delegates.get(getDelegatorIndex(index)).testAt(getInternalTestIndex(index));
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void addTestClassToSuite(Class<?> clazz) throws Exception {
 		chunkClass(clazz);
 		if (!delegatesCreatedForTheseClasses.contains(clazz)) {
@@ -212,9 +182,6 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public Enumeration<?> tests() {
 		final List<Object> tests = new LinkedList<Object>();
 		for (PowerMockJUnit3RunnerDelegate delegate : delegates) {

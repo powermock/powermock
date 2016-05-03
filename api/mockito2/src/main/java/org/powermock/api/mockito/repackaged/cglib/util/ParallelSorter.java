@@ -121,7 +121,7 @@ abstract public class ParallelSorter extends SorterTemplate {
     /**
      * Sort the arrays using an in-place merge sort.
      * @param index array (column) to sort by
-     * @param cmp
+     * @param cmp comparator to compare elements
      */
     public void mergeSort(int index, Comparator cmp) {
         mergeSort(index, 0, len(), cmp);

@@ -34,9 +34,9 @@ import java.util.Set;
  * <ol>
  * <li>
  * When a class contains a field of it's own type, which would lead to infinite
- * recursion, <code>null</code> is assigned.</li>
+ * recursion, {@code null} is assigned.</li>
  * <li>When the field type is an abstract Java system class with no visible
- * constructor (package-private) <code>null</code> is assigned.</li>
+ * constructor (package-private) {@code null} is assigned.</li>
  * </ol>
  */
 public class DefaultFieldValueGenerator {
@@ -88,7 +88,7 @@ public class DefaultFieldValueGenerator {
      * Substitute class types that are known to cause problems when generating
      * them.
      *
-     * @param fieldType
+     * @param fieldType the field type.
      * @return A field-type substitute or the original class.
      */
     private static Class<?> substituteKnownProblemTypes(Class<?> fieldType) {

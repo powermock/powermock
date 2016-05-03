@@ -33,9 +33,6 @@ import java.util.List;
  */
 public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockitoStubber {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void when(Class<?> classMock) {
         MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository
@@ -44,7 +41,7 @@ public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockito
     }
 
     /**
-     * Supports PowerMockito mocks. If <code>mock</code> is not a PowerMockito
+     * Supports PowerMockito mocks. If {@code mock} is not a PowerMockito
      * mock it will delegate to Mockito.
      *
      * @see Stubber#when(Object)

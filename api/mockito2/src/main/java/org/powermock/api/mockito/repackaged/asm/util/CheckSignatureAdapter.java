@@ -93,7 +93,7 @@ public class CheckSignatureAdapter implements SignatureVisitor {
     private boolean canBeVoid;
 
     /**
-     * Creates a new {@link CheckSignatureAdapter} object.
+     * Creates a new  object.
      * 
      * @param type the type of signature to be checked. See
      *        {@link #CLASS_SIGNATURE}, {@link #METHOD_SIGNATURE} and

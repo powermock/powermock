@@ -85,9 +85,6 @@ public class PowerMockJUnit4LegacyRunnerDelegateImpl extends TestClassRunner imp
 		runner.runProtected();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public int getTestCount() {
 		return testCount;
 	}

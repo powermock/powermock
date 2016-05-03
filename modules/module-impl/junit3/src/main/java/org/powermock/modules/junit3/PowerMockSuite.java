@@ -43,17 +43,11 @@ public class PowerMockSuite extends TestSuite {
 		this(null, testCases);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void run(TestResult result) {
 		testChunker.run(result);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void addTest(Test test) {
 		try {
@@ -67,17 +61,11 @@ public class PowerMockSuite extends TestSuite {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void runTest(Test test, TestResult result) {
 		testChunker.runTest(test, result);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addTestSuite(Class testClass) {
@@ -88,34 +76,22 @@ public class PowerMockSuite extends TestSuite {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Test testAt(int index) {
 		return testChunker.testAt(index);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int testCount() {
 		return testChunker.getTestCount();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Enumeration tests() {
 		return testChunker.tests();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int countTestCases() {
 		return testChunker.countTestCases();

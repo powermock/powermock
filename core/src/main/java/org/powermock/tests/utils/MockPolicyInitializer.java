@@ -26,28 +26,24 @@ public interface MockPolicyInitializer {
 	/**
 	 * Initializes the mock policies for a given class loader. Note that this
 	 * method must <b><i>not</i></b> be called from the class loader (
-	 * <code>classLoader</code>) that you pass in to this method.
+	 * {@code classLoader}) that you pass in to this method.
 	 * <p>
 	 * Note that if the class-loader is not an instance of
 	 * {@link MockClassLoader} this method will return silently.
 	 */
 	void initialize(ClassLoader classLoader);
 
-	/**
-	 * @return <code>true</code> if a client needs to perform initialization for
-	 *         this {@link MockPolicyInitializer}, <code>false</code> otherwise.
-	 */
 	boolean needsInitialization();
 
 	/**
-	 * @return <code>true</code> if the class with the fully-qualified name of
-	 *         <code>fullyQualifiedClassName</code> was prepared for testing by
+	 * @return {@code true} if the class with the fully-qualified name of
+	 *         {@code fullyQualifiedClassName} was prepared for testing by
 	 *         this mock policy initializer.
 	 */
 	boolean isPrepared(String fullyQualifiedClassName);
 
 	/**
-	 * Re executes the {@link MockPolicy#} of all the policies for a given class
+	 * Re executes the {@link org.powermock.core.classloader.annotations.MockPolicy} of all the policies for a given class
 	 * loader. This method must be called after a call to
 	 * {@link MockPolicyInitializer#initialize(ClassLoader)} on the same class
 	 * loader.

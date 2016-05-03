@@ -33,7 +33,7 @@ public class LogPolicySupport {
 	 *            The name of the method that should be mocked.
 	 * @param logFramework
 	 *            The log framework that should be printed if the class
-	 *            <code>fullyQualifiedClassName</code> cannot be found.
+	 *            {@code fullyQualifiedClassName} cannot be found.
 	 * @return The {@link Method[]}'s that should be mocked.
 	 */
 	public Method[] getLoggerMethods(String fullyQualifiedClassName, String methodName, String logFramework) {

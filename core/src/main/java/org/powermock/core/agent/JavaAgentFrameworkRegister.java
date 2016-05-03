@@ -24,7 +24,7 @@ package org.powermock.core.agent;
 public interface JavaAgentFrameworkRegister {
 
     /**
-     * Set the <code>javaAgentClassRegister</code> to current loaded mocking framework.
+     * Set the {@code javaAgentClassRegister} to current loaded mocking framework.
      * @param javaAgentClassRegister - an instance of {@link JavaAgentClassRegister} which should be set to
      *                               frameworks classes.
      */

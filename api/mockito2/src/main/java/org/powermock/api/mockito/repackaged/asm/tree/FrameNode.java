@@ -81,7 +81,7 @@ public class FrameNode extends AbstractInsnNode {
     }
 
     /**
-     * Constructs a new {@link FrameNode}.
+     * Constructs a new .
      * 
      * @param type the type of this frame. Must be {@link Opcodes#F_NEW} for
      *        expanded frames, or {@link Opcodes#F_FULL},

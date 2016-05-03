@@ -44,7 +44,7 @@ import java.io.InputStream;
 public class ClassReader {
 
     /**
-     * Flag to skip method code. If this class is set <code>CODE</code>
+     * Flag to skip method code. If this class is set {@code CODE}
      * attribute won't be visited. This can be used, for example, to retrieve
      * annotations for methods and method parameters.
      */
@@ -132,7 +132,7 @@ public class ClassReader {
     // ------------------------------------------------------------------------
 
     /**
-     * Constructs a new {@link ClassReader} object.
+     * Constructs a new  object.
      * 
      * @param b the bytecode of the class to be read.
      */
@@ -141,7 +141,7 @@ public class ClassReader {
     }
 
     /**
-     * Constructs a new {@link ClassReader} object.
+     * Constructs a new  object.
      * 
      * @param b the bytecode of the class to be read.
      * @param off the start offset of the class data.
@@ -192,7 +192,7 @@ public class ClassReader {
     }
 
     /**
-     * Constructs a new {@link ClassReader} object.
+     * Constructs a new  object.
      *
      * @param is an input stream from which to read the class.
      * @throws IOException if a problem occurs during reading.
@@ -202,7 +202,7 @@ public class ClassReader {
     }
 
     /**
-     * Constructs a new {@link ClassReader} object.
+     * Constructs a new  object.
      *
      * @param name the fully qualified name of the class to be read.
      * @throws IOException if an exception occurs during reading.
@@ -394,7 +394,7 @@ public class ClassReader {
     // ------------------------------------------------------------------------
 
     /**
-     * Makes the given visitor visit the Java class of this {@link ClassReader}.
+     * Makes the given visitor visit the Java class of this .
      * This class is the one specified in the constructor (see
      * {@link #ClassReader(byte[]) ClassReader}).
      * 
@@ -408,7 +408,7 @@ public class ClassReader {
     }
 
     /**
-     * Makes the given visitor visit the Java class of this {@link ClassReader}.
+     * Makes the given visitor visit the Java class of this .
      * This class is the one specified in the constructor (see
      * {@link #ClassReader(byte[]) ClassReader}).
      * 

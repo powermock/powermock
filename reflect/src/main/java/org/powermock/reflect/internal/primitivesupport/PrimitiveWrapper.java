@@ -37,7 +37,7 @@ public class PrimitiveWrapper {
 	}
 
 	/**
-	 * Convert all wrapper types in <code>types</code> to their primitive
+	 * Convert all wrapper types in {@code types} to their primitive
 	 * counter parts.
 	 * 
 	 * @param types
@@ -67,13 +67,13 @@ public class PrimitiveWrapper {
 	 * Get the primitive counter part from a wrapped type. For example:
 	 * <p>
 	 * 
-	 * <code>getPrimitiveFromWrapperType(Integer.class)</code> will return
-	 * <code>int.class</code>.
+	 * {@code getPrimitiveFromWrapperType(Integer.class)} will return
+	 * {@code int.class}.
 	 * 
 	 * 
 	 * @param wrapperType
 	 *            The wrapper type to convert to its primitive counter part.
-	 * @return The primitive counter part or <code>null</code> if the class did
+	 * @return The primitive counter part or {@code null} if the class did
 	 *         not have a primitive counter part.
 	 * 
 	 */
@@ -82,14 +82,14 @@ public class PrimitiveWrapper {
 	}
 
 	/**
-	 * Returns <code>true</code> if <code>type</code> has a primitive
-	 * counter-part. E.g. if <code>type</code> if <code>Integer</code> then this
-	 * method will return <code>true</code>.
+	 * Returns {@code true} if {@code type} has a primitive
+	 * counter-part. E.g. if {@code type} if {@code Integer} then this
+	 * method will return {@code true}.
 	 * 
 	 * @param type
 	 *            The type to check whether or not it has a primitive
 	 *            counter-part.
-	 * @return <code>true</code> if this type has a primitive counter-part.
+	 * @return {@code true} if this type has a primitive counter-part.
 	 */
 	public static boolean hasPrimitiveCounterPart(Class<?> type) {
 		return primitiveWrapper.containsKey(type);

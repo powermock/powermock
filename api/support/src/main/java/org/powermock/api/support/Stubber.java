@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
 public class Stubber {
 	/**
 	 * Add a method that should be intercepted and return another value (
-	 * <code>returnObject</code>) (i.e. the method is stubbed).
+	 * {@code returnObject}) (i.e. the method is stubbed).
 	 */
 	public static void stubMethod(Method method, Object returnObject) {
 		MockRepository.putMethodToStub(method, returnObject);
@@ -33,7 +33,7 @@ public class Stubber {
 
 	/**
 	 * Add a method that should be intercepted and return another value (
-	 * <code>returnObject</code>) (i.e. the method is stubbed).
+	 * {@code returnObject}) (i.e. the method is stubbed).
 	 */
 	public static void stubMethod(Class<?> declaringClass, String methodName, Object returnObject) {
 		if (declaringClass == null) {

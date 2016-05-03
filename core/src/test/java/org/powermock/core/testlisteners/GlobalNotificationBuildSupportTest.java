@@ -114,7 +114,7 @@ public class GlobalNotificationBuildSupportTest {
 
     /**
      * Tests some ConcurrentHashMap functionality that
-     * {@link GlobalNotificationBuildSupport#closePendingTestSuites(java.lang.String)}
+     * {@link GlobalNotificationBuildSupport#closePendingTestSuites(Callback)}
      * depends on.
      */
     @Test

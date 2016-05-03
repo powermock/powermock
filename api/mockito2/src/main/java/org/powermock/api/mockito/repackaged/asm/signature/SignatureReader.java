@@ -44,7 +44,7 @@ public class SignatureReader {
     private final String signature;
 
     /**
-     * Constructs a {@link SignatureReader} for the given signature.
+     * Constructs a  for the given signature.
      * 
      * @param signature A <i>ClassSignature</i>, <i>MethodTypeSignature</i>,
      *        or <i>FieldTypeSignature</i>.
@@ -153,13 +153,13 @@ public class SignatureReader {
 
     /**
      * Makes the given visitor visit the signature of this
-     * {@link SignatureReader}. This signature is the one specified in the
+     * . This signature is the one specified in the
      * constructor (see {@link #SignatureReader(String) SignatureReader}). This
-     * method is intended to be called on a {@link SignatureReader} that was
+     * method is intended to be called on a  that was
      * created using a <i>ClassSignature</i> (such as the
-     * <code>signature</code> parameter of the
+     * {@code signature} parameter of the
      * {@link org.powermock.api.mockito.repackaged.asm.ClassVisitor#visit ClassVisitor.visit} method)
-     * or a <i>MethodTypeSignature</i> (such as the <code>signature</code>
+     * or a <i>MethodTypeSignature</i> (such as the {@code signature}
      * parameter of the
      * {@link org.powermock.api.mockito.repackaged.asm.ClassVisitor#visitMethod ClassVisitor.visitMethod}
      * method).
@@ -211,11 +211,11 @@ public class SignatureReader {
 
     /**
      * Makes the given visitor visit the signature of this
-     * {@link SignatureReader}. This signature is the one specified in the
+     * . This signature is the one specified in the
      * constructor (see {@link #SignatureReader(String) SignatureReader}). This
-     * method is intended to be called on a {@link SignatureReader} that was
+     * method is intended to be called on a  that was
      * created using a <i>FieldTypeSignature</i>, such as the
-     * <code>signature</code> parameter of the
+     * {@code signature} parameter of the
      * {@link org.powermock.api.mockito.repackaged.asm.ClassVisitor#visitField
      * ClassVisitor.visitField} or {@link
      * org.powermock.api.mockito.repackaged.asm.MethodVisitor#visitLocalVariable

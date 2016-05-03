@@ -62,7 +62,7 @@ public class LookupSwitchInsnNode extends AbstractInsnNode {
     public List labels;
 
     /**
-     * Constructs a new {@link LookupSwitchInsnNode}.
+     * Constructs a new .
      * 
      * @param dflt beginning of the default handler block.
      * @param keys the values of the keys.

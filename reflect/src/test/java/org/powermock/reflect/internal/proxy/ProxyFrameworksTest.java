@@ -10,9 +10,6 @@ import java.lang.reflect.Proxy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- *
- */
 public class ProxyFrameworksTest {
     
     private ProxyFrameworks proxyFrameworks;

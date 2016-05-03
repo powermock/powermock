@@ -22,7 +22,7 @@ public interface ClassReplaceStrategy {
 
 	/**
 	 * Replaces all method invocations on class specified class with method
-	 * invocation to <code>cls</code>. Also replaces all constructor
+	 * invocation to {@code cls}. Also replaces all constructor
 	 * invocations. You can see this as duck typing.
 	 * 
 	 * @param cls

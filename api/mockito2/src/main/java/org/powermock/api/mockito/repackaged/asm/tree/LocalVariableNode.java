@@ -71,7 +71,7 @@ public class LocalVariableNode {
     public int index;
 
     /**
-     * Constructs a new {@link LocalVariableNode}.
+     * Constructs a new .
      * 
      * @param name the name of a local variable.
      * @param desc the type descriptor of this local variable.

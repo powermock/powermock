@@ -17,6 +17,7 @@ package org.powermock.api.mockito.internal.verification;
 
 import org.mockito.internal.verification.MockAwareVerificationMode;
 import org.mockito.internal.verification.api.VerificationData;
+import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MockHandler;
 import org.mockito.verification.VerificationMode;
 
@@ -24,7 +25,7 @@ import org.mockito.verification.VerificationMode;
  * A custom extension of {@link MockAwareVerificationMode} for static method
  * verification. The reason for this implementation is that since Mockito 1.8.4
  * the verification code in Mockito
- * {@link MockHandler#handle(org.mockito.internal.invocation.Invocation)} has
+ * {@link MockHandler#handle(Invocation)} has
  * changed and the verification mode MUST be an instance of
  * {@link MockAwareVerificationMode} for the verification to work. Since
  * verifying static methods is a two step process in PowerMock we need to be

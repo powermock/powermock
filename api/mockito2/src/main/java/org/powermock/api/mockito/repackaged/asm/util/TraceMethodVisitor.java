@@ -73,14 +73,14 @@ public class TraceMethodVisitor extends TraceAbstractVisitor implements
     protected String ltab = "   ";
 
     /**
-     * Constructs a new {@link TraceMethodVisitor}.
+     * Constructs a new .
      */
     public TraceMethodVisitor() {
         this(null);
     }
 
     /**
-     * Constructs a new {@link TraceMethodVisitor}.
+     * Constructs a new .
      * 
      * @param mv the {@link MethodVisitor} to which this visitor delegates
      *        calls. May be <tt>null</tt>.

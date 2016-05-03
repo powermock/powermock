@@ -7,11 +7,11 @@ package org.powermock.api.mockito.repackaged.cglib.core;
 /**
  * The default policy used by {@link AbstractClassGenerator}.
  * Generates names such as
- * <p><code>org.powermock.api.mockito.repackaged.cglib.Foo$$EnhancerByCGLIB$$38272841</code><p>
+ * <p>{@code org.powermock.api.mockito.repackaged.cglib.Foo$$EnhancerByCGLIB$$38272841}<p>
  * This is composed of a prefix based on the name of the superclass, a fixed
  * string incorporating the CGLIB class responsible for generation, and a
  * hashcode derived from the parameters used to create the object. If the same
- * name has been previously been used in the same <code>ClassLoader</code>, a
+ * name has been previously been used in the same {@code ClassLoader}, a
  * suffix is added to ensure uniqueness.
  */
 public class DefaultNamingPolicy implements NamingPolicy {

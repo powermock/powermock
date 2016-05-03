@@ -58,7 +58,7 @@ public class FieldInsnNode extends AbstractInsnNode {
     public String desc;
 
     /**
-     * Constructs a new {@link FieldInsnNode}.
+     * Constructs a new .
      * 
      * @param opcode the opcode of the type instruction to be constructed. This
      *        opcode must be GETSTATIC, PUTSTATIC, GETFIELD or PUTFIELD.

@@ -58,7 +58,7 @@ import java.util.List;
  * "i", "D", null)</tt>
  * will <i>not</i> be detected by this class adapter.
  * 
- * <p><code>CheckClassAdapter</code> can be also used to verify bytecode
+ * <p>{@code CheckClassAdapter} can be also used to verify bytecode
  * transformations in order to make sure transformed bytecode is sane. For
  * example:
  * 
@@ -76,7 +76,7 @@ import java.util.List;
  * </pre>
  * 
  * Above code runs transformed bytecode trough the
- * <code>CheckClassAdapter</code>. It won't be exactly the same verification
+ * {@code CheckClassAdapter}. It won't be exactly the same verification
  * as JVM does, but it run data flow analysis for the code of each method and
  * checks that expectations are met for each method instruction.
  * 
@@ -106,13 +106,13 @@ import java.util.List;
  * </pre>
  * 
  * In the above output you can see that variable 1 loaded by
- * <code>ILOAD 1</code> instruction at position <code>00071</code> is not
+ * {@code ILOAD 1} instruction at position {@code 00071} is not
  * initialized. You can also see that at the beginning of the method (code
  * inserted by the transformation) variable 2 is initialized.
  * 
- * <p>Note that when used like that, <code>CheckClassAdapter.verify()</code>
+ * <p>Note that when used like that, {@code CheckClassAdapter.verify()}
  * can trigger additional class loading, because it is using
- * <code>SimpleVerifier</code>.
+ * {@code SimpleVerifier}.
  * 
  * @author Eric Bruneton
  */
@@ -139,7 +139,7 @@ public class CheckClassAdapter extends ClassAdapter {
     private boolean end;
 
     /**
-     * Constructs a new {@link CheckClassAdapter}.
+     * Constructs a new .
      *
      * @param cv the class visitor to which this adapter must delegate calls.
      */
@@ -176,7 +176,7 @@ public class CheckClassAdapter extends ClassAdapter {
     /**
      * Checks a given class
      *
-     * @param cr a <code>ClassReader</code> that contains bytecode for the
+     * @param cr a {@code ClassReader} that contains bytecode for the
      *        analysis.
      * @param dump true if bytecode should be printed out not only when errors
      *        are found.

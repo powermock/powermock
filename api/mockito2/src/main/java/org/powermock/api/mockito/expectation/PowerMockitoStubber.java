@@ -43,7 +43,7 @@ public interface PowerMockitoStubber extends Stubber {
 	 * 
 	 * Read more about those methods:
 	 * <p>
-	 * {@link Mockito#doThrow(Throwable)}
+	 * {@link Mockito#doThrow(Class)}
 	 * <p>
 	 * {@link Mockito#doAnswer(Answer)}
 	 * <p>
@@ -68,7 +68,7 @@ public interface PowerMockitoStubber extends Stubber {
 	 * 
 	 * Read more about those methods:
 	 * <p>
-	 * {@link Mockito#doThrow(Throwable)}
+	 * {@link Mockito#doThrow(Class)}
 	 * <p>
 	 * {@link Mockito#doAnswer(Answer)}
 	 * <p>
@@ -93,7 +93,7 @@ public interface PowerMockitoStubber extends Stubber {
 	 * 
 	 * Read more about those methods:
 	 * <p>
-	 * {@link Mockito#doThrow(Throwable)}
+	 * {@link Mockito#doThrow(Throwable...)}
 	 * <p>
 	 * {@link Mockito#doAnswer(Answer)}
 	 * <p>
@@ -119,7 +119,7 @@ public interface PowerMockitoStubber extends Stubber {
 	 * 
 	 * Read more about those methods:
 	 * <p>
-	 * {@link Mockito#doThrow(Throwable)}
+	 * {@link Mockito#doThrow(Throwable...)}
 	 * <p>
 	 * {@link Mockito#doAnswer(Answer)}
 	 * <p>
@@ -144,7 +144,7 @@ public interface PowerMockitoStubber extends Stubber {
 	 * 
 	 * Read more about those methods:
 	 * <p>
-	 * {@link Mockito#doThrow(Throwable)}
+	 * {@link Mockito#doThrow(Throwable...)}
 	 * <p>
 	 * {@link Mockito#doAnswer(Answer)}
 	 * <p>
@@ -169,7 +169,7 @@ public interface PowerMockitoStubber extends Stubber {
 	 * 
 	 * Read more about those methods:
 	 * <p>
-	 * {@link Mockito#doThrow(Throwable)}
+	 * {@link Mockito#doThrow(Throwable...)}
 	 * <p>
 	 * {@link Mockito#doAnswer(Answer)}
 	 * <p>
@@ -195,7 +195,7 @@ public interface PowerMockitoStubber extends Stubber {
 	 * 
 	 * Read more about those methods:
 	 * <p>
-	 * {@link Mockito#doThrow(Throwable)}
+	 * {@link Mockito#doThrow(Throwable...)}
 	 * <p>
 	 * {@link Mockito#doAnswer(Answer)}
 	 * <p>

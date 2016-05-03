@@ -17,8 +17,12 @@ package samples.powermockito.junit4.whennew;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.junit.rules.ExpectedException;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.exceptions.ConstructorNotFoundException;
 import samples.Service;

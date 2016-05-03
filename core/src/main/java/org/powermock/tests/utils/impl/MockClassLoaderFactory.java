@@ -111,9 +111,9 @@ class MockClassLoaderFactory {
     }
 
     /**
-     * @return <code>true</code> if there are some mock policies that
+     * @return {@code true} if there are some mock policies that
      * contributes with classes that should be loaded by the mock
-     * classloader, <code>false</code> otherwise.
+     * classloader, {@code false} otherwise.
      */
     protected boolean hasMockPolicyProvidedClasses(Class<?> testClass) {
         boolean hasMockPolicyProvidedClasses = false;

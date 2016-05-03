@@ -19,7 +19,7 @@ import java.lang.reflect.AnnotatedElement;
 
 public interface TestClassesExtractor {
 	/**
-	 * @return Returns <code>null</code> if the element was not annotated, an
+	 * @return Returns {@code null} if the element was not annotated, an
 	 *         empty String[] if it is annotated but contains no classes, or a
 	 *         string-array of all class names if interest.
 	 */

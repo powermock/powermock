@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2011 the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>9</version>
+    </parent>
+    <groupId>org.powermock</groupId>
+    <artifactId>powermock</artifactId>
+    <packaging>pom</packaging>
+    <version>1.6.7-SNAPSHOT</version>
+    <name>${project.artifactId}</name>
+    <url>http://www.powermock.org</url>
+    <description>
+        PowerMock allows you to unit test code normally regarded as untestable.
+        For instance it is possible to mock static methods, remove static initializers, allow mocking without dependency
+        injection and more.
+        PowerMock works by bytecode manipulation.
+        PowerMock also contain some utilities that gives you easier access to an objects internal state.
+        PowerMock can be used to test otherwise untestable code and also to achieve a cleaner separation between test
+        and production code.
+    </description>
+    <inceptionYear>2007</inceptionYear>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>johanhaleby</id>
+            <name>Johan Haleby</name>
+            <organization>Jayway</organization>
+            <organizationUrl>http://www.jayway.com</organizationUrl>
+            <email>johan.haleby at jayway.com</email>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <id>jakr</id>
+            <name>Jan Kronquist</name>
+            <organization>Jayway</organization>
+            <organizationUrl>http://www.jayway.com</organizationUrl>
+            <email>jan.kronquist at jayway.com</email>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <id>thekingnothing</id>
+            <name>Arthur Zagretdinov</name>
+            <email>arthur.zagretdinov at outlook.com</email>
+            <timezone>+3</timezone>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>git@github.com:jayway/powermock.git</url>
+        <connection>scm:git:git://github.com/jayway/powermock.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/jayway/powermock.git</developerConnection>
+    </scm>
+
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/jayway/powermock/issues</url>
+    </issueManagement>
+
+</project>

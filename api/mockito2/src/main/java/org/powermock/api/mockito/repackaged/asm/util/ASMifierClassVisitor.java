@@ -149,7 +149,7 @@ public class ASMifierClassVisitor extends ASMifierAbstractVisitor implements
     protected final PrintWriter pw;
 
     /**
-     * Constructs a new {@link ASMifierClassVisitor} object.
+     * Constructs a new  object.
      *
      * @param pw the print writer to be used to print the class.
      */

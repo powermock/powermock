@@ -54,7 +54,7 @@ public class MockGateway {
     /**
      * Tells PowerMock to mock standard methods. These are
      * {@link Object#toString()}, {@link Object#hashCode()} and
-     * {@link Object#equals(Object)}. By default this is <code>true</code>.
+     * {@link Object#equals(Object)}. By default this is {@code true}.
      */
     public static boolean MOCK_STANDARD_METHODS = true;
 
@@ -276,10 +276,10 @@ public class MockGateway {
 
     /**
      * The first parameter of an inner, local or anonymous inner class is
-     * <code>null</code> or the enclosing instance. This should not be included
+     * {@code null} or the enclosing instance. This should not be included
      * in the substitute invocation since it is never expected by the user.
      * <p/>
-     * Seems with Javassist 3.17.1-GA & Java 7, the '<code>null</code>' is passed as the last argument.
+     * Seems with Javassist 3.17.1-GA & Java 7, the '{@code null}' is passed as the last argument.
      */
     private static Object[] copyArgumentsForInnerOrLocalOrAnonymousClass(Object[] args,
                                                                          boolean excludeEnclosingInstance) {

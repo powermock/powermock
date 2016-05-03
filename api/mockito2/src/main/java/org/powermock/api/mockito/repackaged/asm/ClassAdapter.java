@@ -44,7 +44,7 @@ public class ClassAdapter implements ClassVisitor {
     protected ClassVisitor cv;
 
     /**
-     * Constructs a new {@link ClassAdapter} object.
+     * Constructs a new  object.
      * 
      * @param cv the class visitor to which this adapter must delegate calls.
      */

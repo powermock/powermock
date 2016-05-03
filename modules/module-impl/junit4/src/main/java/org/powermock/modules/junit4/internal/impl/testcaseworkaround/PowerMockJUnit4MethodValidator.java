@@ -35,7 +35,7 @@ import java.util.List;
  * annotated by the Test annotation works in JUnit 4.4 with the custom
  * JUnit-runner when the test class is extending {@link TestCase}. This is
  * actually a workaround for JUnit 4.4 when the test case extends from the
- * <code>TestCase</code> class.
+ * {@code TestCase} class.
  */
 @SuppressWarnings("deprecation")
 public class PowerMockJUnit4MethodValidator extends MethodValidator {

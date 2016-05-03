@@ -42,9 +42,6 @@ public class PrepareForTestExtractorImpl extends AbstractTestClassExtractor {
         super(includeMethods);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected String[] getClassesToModify(AnnotatedElement element) {
         Set<String> all = new LinkedHashSet<String>();

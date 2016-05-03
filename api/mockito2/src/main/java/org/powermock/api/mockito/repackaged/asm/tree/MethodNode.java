@@ -140,14 +140,14 @@ public class MethodNode extends MemberNode implements MethodVisitor {
     public List localVariables;
 
     /**
-     * Constructs an unitialized {@link MethodNode}.
+     * Constructs an unitialized .
      */
     public MethodNode() {
         this.instructions = new InsnList();
     }
     
     /**
-     * Constructs a new {@link MethodNode}.
+     * Constructs a new .
      * 
      * @param access the method's access flags (see {@link Opcodes}). This
      *        parameter also indicates if the method is synthetic and/or

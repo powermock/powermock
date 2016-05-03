@@ -34,11 +34,11 @@ import java.lang.annotation.Target;
  * This annotation can be placed at both test classes and individual test
  * methods. If placed on a class all test methods in this test class will be
  * handled by PowerMock (to allow for testability). To override this behavior
- * for a single method just place a <code>&#064;PrepareForTest</code> annotation
+ * for a single method just place a {@code &#064;PrepareForTest} annotation
  * on the specific test method. This is useful in situations where for example
  * you'd like to modify class X in test method A but in test method B you want X
  * to be left intact. In situations like this you place a
- * <code>&#064;PrepareForTest</code> on method B and exclude class X from the
+ * {@code &#064;PrepareForTest} on method B and exclude class X from the
  * {@link #value()} list.
  * <p>
  * Sometimes you need to prepare inner classes for testing, this can be done by
@@ -53,7 +53,7 @@ import java.lang.annotation.Target;
  * 
  * <p>
  * The annotation should always be combined with the
- * <code>&#064;RunWith(PowerMockRunner.class)</code> if using junit 4.x or
+ * {@code &#064;RunWith(PowerMockRunner.class)} if using junit 4.x or
  * 
  * <pre>
  * public static TestSuite suite() throws Exception {

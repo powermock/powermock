@@ -27,7 +27,6 @@ import java.util.Comparator;
  *  for constructor and method invocation.
  *  @see org.powermock.reflect.internal.WhiteboxImpl#getBestMethodCandidate(Class, String, Class[], boolean)
  *  @see org.powermock.reflect.internal.WhiteboxImpl#getBestCandidateConstructor(Class, Class[], Object[])
- *  @see org.powermock.reflect.internal.CandidateConstructorSearcher
  */
 public class ComparatorFactory {
 

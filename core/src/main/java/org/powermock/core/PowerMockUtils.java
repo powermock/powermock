@@ -24,8 +24,8 @@ public class PowerMockUtils {
 	/**
 	 * Get an iterator of all classes loaded by the specific classloader.
 	 * 
-	 * @param classLoader
-	 * @return
+	 * @param classLoader  the class loader for that iterator with all loaded classes should be created.
+	 * @return the iterator with all classes loaded by the given {@code classLoader}
 	 * @throws NoSuchFieldException
 	 * @throws IllegalAccessException
 	 */
@@ -43,7 +43,7 @@ public class PowerMockUtils {
 
 	/**
 	 * 
-	 * @param classLoader
+	 * @param classLoader the class loader for that classes is printed.
 	 * @throws NoSuchFieldException
 	 * @throws IllegalAccessException
 	 */

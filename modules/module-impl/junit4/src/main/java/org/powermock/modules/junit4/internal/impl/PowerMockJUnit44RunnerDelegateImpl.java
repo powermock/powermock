@@ -110,9 +110,6 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void run(final RunNotifier notifier) {
         new ClassRoadie(notifier, testClass, getDescription(), new Runnable() {
@@ -148,9 +145,6 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Description getDescription() {
         Description spec = Description.createSuiteDescription(getName(), classAnnotations());

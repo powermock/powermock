@@ -88,7 +88,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
     private final ClassPool classPool = new ClassPool();
 
     /**
-     * Creates a new instance of the {@link MockClassLoader} based on the
+     * Creates a new instance of the  based on the
      * following parameters:
      *
      * @param classesToMock   The classes that must be modified to prepare for testability.
@@ -131,7 +131,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
     }
 
     /**
-     * Creates a new instance of the {@link MockClassLoader} based on the
+     * Creates a new instance of the  based on the
      * following parameters:
      *
      * @param classesToMock   The classes that must be modified to prepare for testability.
@@ -143,7 +143,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
     }
 
     /**
-     * Creates a new instance of the {@link MockClassLoader} based on the
+     * Creates a new instance of the  based on the
      * following parameters:
      *
      * @param classesToMock The classes that must be modified to prepare for testability.
@@ -153,7 +153,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
     }
 
     /**
-     * Creates a new instance of the {@link MockClassLoader} based on the
+     * Creates a new instance of the  based on the
      * following parameters:
      *
      * @param classesToMock The classes that must be modified to prepare for testability.

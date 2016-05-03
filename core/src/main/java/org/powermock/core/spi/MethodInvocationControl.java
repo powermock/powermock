@@ -33,7 +33,7 @@ public interface MethodInvocationControl extends InvocationHandler, DefaultBehav
 	 * 
 	 * @param method
 	 *            The method that should be checked.
-	 * @return <code>true</code> if the method is mocked, <code>false</code>
+	 * @return {@code true} if the method is mocked, {@code false}
 	 *         otherwise.
 	 */
 	boolean isMocked(Method method);

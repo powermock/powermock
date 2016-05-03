@@ -30,17 +30,11 @@ import static org.powermock.api.easymock.PowerMock.createNiceMock;
  */
 abstract class AbstractEasyMockLogPolicyBase implements PowerMockPolicy {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void applyClassLoadingPolicy(MockPolicyClassLoadingSettings settings) {
 		settings.addFullyQualifiedNamesOfClassesToLoadByMockClassloader(getFullyQualifiedNamesOfClassesToLoadByMockClassloader());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void applyInterceptionPolicy(MockPolicyInterceptionSettings settings) {
 		LogPolicySupport support = new LogPolicySupport();

@@ -30,9 +30,6 @@ import java.util.List;
  */
 public class StaticConstructorSuppressExtractorImpl extends AbstractTestClassExtractor {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getClassesToModify(AnnotatedElement element) {
 		List<String> all = new LinkedList<String>();

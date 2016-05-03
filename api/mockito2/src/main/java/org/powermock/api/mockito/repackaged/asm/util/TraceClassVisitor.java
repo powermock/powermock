@@ -107,7 +107,7 @@ public class TraceClassVisitor extends TraceAbstractVisitor implements
     protected final PrintWriter pw;
 
     /**
-     * Constructs a new {@link TraceClassVisitor}.
+     * Constructs a new .
      *
      * @param pw the print writer to be used to print the class.
      */
@@ -116,7 +116,7 @@ public class TraceClassVisitor extends TraceAbstractVisitor implements
     }
 
     /**
-     * Constructs a new {@link TraceClassVisitor}.
+     * Constructs a new .
      *
      * @param cv the {@link ClassVisitor} to which this visitor delegates calls.
      *        May be <tt>null</tt>.

@@ -81,7 +81,7 @@ final class AnnotationWriter implements AnnotationVisitor {
     // ------------------------------------------------------------------------
 
     /**
-     * Constructs a new {@link AnnotationWriter}.
+     * Constructs a new .
      * 
      * @param cw the class writer to which this annotation must be added.
      * @param named <tt>true<tt> if values are named, <tt>false</tt> otherwise.

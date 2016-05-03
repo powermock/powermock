@@ -44,7 +44,7 @@ import static org.powermock.api.mockito.PowerMockito.mock;
  * captors etc.
  * <p/>
  * It will only inject to fields that haven't been set before (i.e that are
- * <code>null</code>).
+ * {@code null}).
  */
 @SuppressWarnings("deprecation")
 public class AnnotationEnabler extends AbstractPowerMockTestListenerBase implements AnnotationEnablerListener {

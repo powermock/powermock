@@ -48,7 +48,7 @@ public class TypeInsnNode extends AbstractInsnNode {
     public String desc;
 
     /**
-     * Constructs a new {@link TypeInsnNode}.
+     * Constructs a new .
      * 
      * @param opcode the opcode of the type instruction to be constructed. This
      *        opcode must be NEW, ANEWARRAY, CHECKCAST or INSTANCEOF.

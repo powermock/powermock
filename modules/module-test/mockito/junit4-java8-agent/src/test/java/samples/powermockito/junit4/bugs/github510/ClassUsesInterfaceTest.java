@@ -28,8 +28,6 @@ public class ClassUsesInterfaceTest {
         mockStatic(InterfaceWithStatic.class);
     }
 
-
-
     @Test
     public void testSaySomething() throws Exception {
         final String value = "Hi Man";

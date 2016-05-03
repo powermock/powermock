@@ -28,8 +28,8 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { 	NewDemo.class })
-/**
- * Issue <a href="298">http://code.google.com/p/powermock/issues/detail?id=298</a>
+/*
+  Issue <a href="298">http://code.google.com/p/powermock/issues/detail?id=298</a>
  */
 public class DoesntSupportCreatingMocksInFieldsWhenNewDefect {
 

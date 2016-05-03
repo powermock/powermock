@@ -40,13 +40,13 @@ public class BoxedWrapper {
 	 * Get the wrapped counter part from a primitive type. For example:
 	 * <p>
 	 * 
-	 * <code>getBoxedFromPrimitiveType(int.class)</code> will return
-	 * <code>Integer.class</code>.
+	 * {@code getBoxedFromPrimitiveType(int.class)} will return
+	 * {@code Integer.class}.
 	 * 
 	 * 
 	 * @param primitiveType
 	 *            The primitive type to convert to its wrapper counter part.
-	 * @return The boxed counter part or <code>null</code> if the class did
+	 * @return The boxed counter part or {@code null} if the class did
 	 *         not have a boxed counter part.
 	 * 
 	 */
@@ -55,14 +55,14 @@ public class BoxedWrapper {
 	}
 
 	/**
-	 * Returns <code>true</code> if <code>type</code> has a primitive
-	 * counter-part. E.g. if <code>type</code> if <code>Integer</code> then this
-	 * method will return <code>true</code>.
+	 * Returns {@code true} if {@code type} has a primitive
+	 * counter-part. E.g. if {@code type} if {@code Integer} then this
+	 * method will return {@code true}.
 	 * 
 	 * @param type
 	 *            The type to check whether or not it has a primitive
 	 *            counter-part.
-	 * @return <code>true</code> if this type has a primitive counter-part.
+	 * @return {@code true} if this type has a primitive counter-part.
 	 */
 	public static boolean hasBoxedCounterPart(Class<?> type) {
 		return boxedWrapper.containsKey(type);

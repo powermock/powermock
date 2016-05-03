@@ -35,7 +35,7 @@ import java.util.List;
  * @see org.easymock.Mock
  * @see org.easymock.TestSubject
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "JavadocReference"})
 public class EasyMockAnnotationSupport {
 
     private final Object testInstance;

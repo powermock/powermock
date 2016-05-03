@@ -1,0 +1,64 @@
+//vanilla javadoc task does not work for PowerMock also  and it actually fails on java8
+// so I've copied the "javadoc.gradle" from Mockito Project.
+tasks.javadoc.enabled = false
+
+task powerMockJavadoc(type: Javadoc) {
+    description "Creates javadoc html for PowerMock API."
+    tasks.javadoc.dependsOn it //so that when the user invokes 'javadoc' right things happen
+
+    // For more details on the format
+    // see https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javadoc.html
+
+    classpath = configurations.runtime + configurations.provided
+    source = sourceSets.main.allJava
+    destinationDir = file("$buildDir/javadoc")
+    title = "PowerMock ${project.version} API"
+    def javadocJdk6Hack = "jdk6-project-version-insert.min.js"
+
+    options.docTitle = """<h1>PowerMock ${project.version} API.</h1>"""
+    options.windowTitle = "PowerMock ${project.version} API"
+    options.group("Main package", ["org.powerMock"])
+    options.memberLevel = JavadocMemberLevel.PROTECTED
+    options.charSet = 'UTF-8'
+    options.encoding = 'UTF-8'
+    options.docEncoding = 'UTF-8'
+    options.use = true
+    options.splitIndex = true
+    options.noDeprecated = false
+    options.noDeprecatedList = false
+    options.noIndex = false
+    options.noNavBar = false
+    options.noTree = false
+    options.links('http://docs.oracle.com/javase/8/docs/api/')
+    options.header("""<em id="powerMock-version-header-javadoc7-header"><strong>PowerMock ${project.version} API</strong></em>""")
+    options.footer("""<em id="powerMock-version-header-javadoc7-footer"><strong>PowerMock ${project.version} API</strong></em>""")
+    options.bottom("""
+        <script type="text/javascript" src="{@docRoot}/js/${javadocJdk6Hack}"></script>
+        <script type="text/javascript" src="{@docRoot}/js/jquery-1.7.min.js"></script>
+        <script type="text/javascript" src="{@docRoot}/js/highlight-8.6-java/highlight.pack.js"></script>
+        <link rel="stylesheet" type="text/css" href="{@docRoot}/js/highlight-8.6-java/styles/obsidian.css"/>
+
+        <script type="text/javascript">
+          var usingOldIE = \$.browser.msie && parseInt(\$.browser.version) < 9;
+          if(!usingOldIE) {
+              \$("head").append("<link rel=\\"shortcut icon\\" href=\\"{@docRoot}/favicon.ico?v=cafebabe\\">");
+              \$("head", window.parent.document).append("<link rel=\\"shortcut icon\\" href=\\"{@docRoot}/favicon.ico?v=cafebabe\\">");
+              hljs.initHighlightingOnLoad();
+              \$("pre.code").css("font-size", "0.9em");
+              injectProjectVersionForJavadocJDK6("PowerMock ${project.version} API",
+                                                 "em#powerMock-version-header-javadoc7-header",
+                                                 "em#powerMock-version-header-javadoc7-footer");
+          }
+        </script>
+    """.replaceAll(/\r|\n/, ""))
+    if (JavaVersion.current().isJava8Compatible()) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+
+    doLast {
+        copy {
+            from "src/javadoc"
+            into "$buildDir/javadoc"
+        }
+    }
+}

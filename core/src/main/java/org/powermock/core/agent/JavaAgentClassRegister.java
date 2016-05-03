@@ -23,15 +23,15 @@ package org.powermock.core.agent;
 public interface JavaAgentClassRegister {
 
     /**
-     * Check if class with <code>className</code> has been modified for the given class loader
+     * Check if class with {@code className} has been modified for the given class loader
      * @param classLoader - {@link ClassLoader} for that class should be checked
      * @param className - name of class
-     * @return <code>true</code> if the given class has been modified, otherwise <code>false</code>
+     * @return {@code true} if the given class has been modified, otherwise {@code false}
      */
     boolean isModifiedByAgent(ClassLoader classLoader, String className);
 
     /**
-     * Register that the class with name <code>className</code> has been  modified for the given class loader.
+     * Register that the class with name {@code className} has been  modified for the given class loader.
      * @param loader - {@link ClassLoader} for that class has been modified.
      * @param className - name of the class which has been modified.
      */

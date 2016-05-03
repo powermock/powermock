@@ -60,7 +60,7 @@ public class AnnotationNode implements AnnotationVisitor {
     public List values;
 
     /**
-     * Constructs a new {@link AnnotationNode}.
+     * Constructs a new .
      * 
      * @param desc the class descriptor of the annotation class.
      */
@@ -69,7 +69,7 @@ public class AnnotationNode implements AnnotationVisitor {
     }
 
     /**
-     * Constructs a new {@link AnnotationNode} to visit an array value.
+     * Constructs a new  to visit an array value.
      * 
      * @param values where the visited values must be stored.
      */
