@@ -41,7 +41,7 @@ abstract public class StringSwitcher {
      * instead of this static method.
      * @param strings the array of String keys; must be the same length as the value array
      * @param ints the array of integer results; must be the same length as the key array
-     * @param fixedInput if false, an unknown key will be returned from {@link #intValue} as <code>-1</code>; if true,
+     * @param fixedInput if false, an unknown key will be returned from {@link #intValue} as {@code -1}; if true,
      * the result will be undefined, and the resulting code will be faster
      */
     public static StringSwitcher create(String[] strings, int[] ints, boolean fixedInput) {
@@ -55,8 +55,8 @@ abstract public class StringSwitcher {
     /**
      * Return the integer associated with the given key.
      * @param s the key
-     * @return the associated integer value, or <code>-1</code> if the key is unknown (unless
-     * <code>fixedInput</code> was specified when this <code>StringSwitcher</code> was created,
+     * @return the associated integer value, or {@code -1} if the key is unknown (unless
+     * {@code fixedInput} was specified when this {@code StringSwitcher} was created,
      * in which case the return value for an unknown key is undefined)
      */
     abstract public int intValue(String s);
@@ -96,7 +96,7 @@ abstract public class StringSwitcher {
 
         /**
          * Configure how unknown String keys will be handled.
-         * @param fixedInput if false, an unknown key will be returned from {@link #intValue} as <code>-1</code>; if true,
+         * @param fixedInput if false, an unknown key will be returned from {@link #intValue} as {@code -1}; if true,
          * the result will be undefined, and the resulting code will be faster
          */
         public void setFixedInput(boolean fixedInput) {
@@ -108,7 +108,7 @@ abstract public class StringSwitcher {
         }
 
         /**
-         * Generate the <code>StringSwitcher</code>.
+         * Generate the {@code StringSwitcher}.
          */
         public StringSwitcher create() {
             setNamePrefix(StringSwitcher.class.getName());

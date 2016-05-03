@@ -33,17 +33,11 @@ public class PowerMockJUnit4LegacyFilter extends Filter {
 		this.methodNamesToRun = methodNamesToRun;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String describe() {
 		return methodNamesToRun.length + " tests.";
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean shouldRun(Description description) {
 		boolean shouldRun = false;

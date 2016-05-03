@@ -56,7 +56,7 @@ public class SuppressConstructorHierarchyDemoTest {
 
 	/**
 	 * This simple test demonstrate that it's possible to continue execution
-	 * with the default <code>PrepareForTest</code> settings (i.e. using a
+	 * with the default {@code PrepareForTest} settings (i.e. using a
 	 * byte-code manipulated version of the SuppressConstructorHierarchyDemo
 	 * class).
 	 */

@@ -46,8 +46,8 @@ public interface PowerMockTestNotifier {
 	 * method.
 	 * 
 	 * @param successful
-	 *            <code>true</code> if the test was successful,
-	 *            <code>false</code> otherwise.
+	 *            {@code true} if the test was successful,
+	 *            {@code false} otherwise.
 	 */
 	void notifyAfterTestMethod(boolean successful);
 

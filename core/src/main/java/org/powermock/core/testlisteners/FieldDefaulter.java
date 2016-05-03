@@ -27,7 +27,7 @@ import java.util.Set;
 /**
  * A test listener that automatically set all instance fields to their default
  * values after each test method. E.g. an object field is set to
- * <code>null</code>, an <code>int</code> field is set to 0 and so on.
+ * {@code null}, an {@code int} field is set to 0 and so on.
  */
 public class FieldDefaulter extends AbstractPowerMockTestListenerBase {
 

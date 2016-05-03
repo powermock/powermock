@@ -130,7 +130,7 @@ public abstract class DeferSupportingClassLoader extends Loader {
      * Finds the resource with the specified name on the search path.
      *
      * @param name the name of the resource
-     * @return a <code>URL</code> for the resource, or <code>null</code> if the
+     * @return a {@code URL} for the resource, or {@code null} if the
      * resource could not be found.
      */
     @Override

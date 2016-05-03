@@ -58,9 +58,9 @@ public class ClassReplicaCreator {
     }
 
     /**
-     * Create a class that is a replica of type <code>T</code>. To allow for
+     * Create a class that is a replica of type {@code T}. To allow for
      * partial mocking all calls to non-mocked methods will be delegated to the
-     * <code>delegator</code>.
+     * {@code delegator}.
      *
      * @param <T>       The type of the replica class to be created.
      * @param delegator The delegator object that will be invoked to allow for partial
@@ -104,8 +104,8 @@ public class ClassReplicaCreator {
 
     /**
      * Add a field to the replica class that holds the instance delegator. I.e.
-     * if we're creating a instance replica of <code>java.lang.Long</code> this
-     * methods adds a new field of type <code>delegator.getClass()</code> to the
+     * if we're creating a instance replica of {@code java.lang.Long} this
+     * methods adds a new field of type {@code delegator.getClass()} to the
      * replica class.
      */
     private <T> void addDelegatorField(T delegator, final CtClass replicaClass) throws CannotCompileException {

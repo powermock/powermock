@@ -51,7 +51,7 @@ public class TraceAnnotationVisitor extends TraceAbstractVisitor implements
     private int valueNumber = 0;
 
     /**
-     * Constructs a new {@link TraceAnnotationVisitor}.
+     * Constructs a new .
      */
     public TraceAnnotationVisitor() {
         // ignore

@@ -208,8 +208,8 @@ final class Frame {
      */
     private static final int STACK = 0x3000000;
 
-    /**
-     * Computes the stack size variation corresponding to each JVM instruction.
+    /*
+      Computes the stack size variation corresponding to each JVM instruction.
      */
     static {
         int i;

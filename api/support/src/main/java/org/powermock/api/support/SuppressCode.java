@@ -72,7 +72,7 @@ public class SuppressCode {
 	/**
 	 * Suppress all constructors in the given class.
 	 * 
-	 * @param classes
+	 * @param clazz
 	 *            The classes whose constructors will be suppressed.
 	 * @param excludePrivateConstructors
 	 *            optionally keep code in private constructors
@@ -117,7 +117,7 @@ public class SuppressCode {
 	/**
 	 * Suppress multiple methods for a class.
 	 * 
-	 * @param classes
+	 * @param clazz
 	 *            The class whose methods will be suppressed.
 	 * @param fieldNames
 	 *            The names of the methods that'll be suppressed. If field names
@@ -178,9 +178,9 @@ public class SuppressCode {
 	 * @param clazz
 	 *            The class whose methods will be suppressed.
 	 * @param methodName
-	 *            The first method to be suppress in class <code>clazz</code>.
+	 *            The first method to be suppress in class {@code clazz}.
 	 * @param additionalMethodNames
-	 *            Additional methods to suppress in class <code>clazz</code>.
+	 *            Additional methods to suppress in class {@code clazz}.
 	 */
 	public static synchronized void suppressMethod(Class<?> clazz, String methodName, String... additionalMethodNames) {
 		for (Method method : Whitebox.getMethods(clazz, methodName)) {
@@ -199,7 +199,7 @@ public class SuppressCode {
 	 * @param clazz
 	 *            The class whose methods will be suppressed.
 	 * @param methodNames
-	 *            Methods to suppress in class <code>clazz</code>.
+	 *            Methods to suppress in class {@code clazz}.
 	 */
 	public static synchronized void suppressMethod(Class<?> clazz, String[] methodNames) {
 		for (Method method : Whitebox.getMethods(clazz, methodNames)) {
@@ -210,7 +210,7 @@ public class SuppressCode {
 	/**
 	 * suSuppress all methods for this class.
 	 * 
-	 * @param classes
+	 * @param clazz
 	 *            The class which methods will be suppressed.
 	 * @param excludePrivateMethods
 	 *            optionally not suppress private methods

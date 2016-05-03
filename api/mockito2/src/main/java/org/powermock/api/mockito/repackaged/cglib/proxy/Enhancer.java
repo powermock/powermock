@@ -54,23 +54,23 @@ import java.util.Set;
  * and after the invocation of the "super" method. In addition you can modify the
  * arguments before calling the super method, or not call it at all.
  * <p>
- * Although <code>MethodInterceptor</code> is generic enough to meet any
+ * Although {@code MethodInterceptor} is generic enough to meet any
  * interception need, it is often overkill. For simplicity and performance, additional
  * specialized callback types, such as {@link LazyLoader} are also available.
  * Often a single callback will be used per enhanced class, but you can control
  * which callback is used on a per-method basis with a {@link CallbackFilter}.
  * <p>
  * The most common uses of this class are embodied in the static helper methods. For
- * advanced needs, such as customizing the <code>ClassLoader</code> to use, you should create
- * a new instance of <code>Enhancer</code>. Other classes within CGLIB follow a similar pattern.
+ * advanced needs, such as customizing the {@code ClassLoader} to use, you should create
+ * a new instance of {@code Enhancer}. Other classes within CGLIB follow a similar pattern.
  * <p>
  * All enhanced objects implement the {@link Factory} interface, unless {@link #setUseFactory} is
- * used to explicitly disable this feature. The <code>Factory</code> interface provides an API
+ * used to explicitly disable this feature. The {@code Factory} interface provides an API
  * to change the callbacks of an existing object, as well as a faster and easier way to create
  * new instances of the same type.
  * <p>
  * For an almost drop-in replacement for
- * <code>java.lang.reflect.Proxy</code>, see the {@link Proxy} class.
+ * {@code java.lang.reflect.Proxy}, see the {@link Proxy} class.
  */
 public class Enhancer extends AbstractClassGenerator
 {
@@ -145,10 +145,10 @@ public class Enhancer extends AbstractClassGenerator
     private Long serialVersionUID;
     private boolean interceptDuringConstruction = true;
     /**
-     * Create a new <code>Enhancer</code>. A new <code>Enhancer</code>
+     * Create a new {@code Enhancer}. A new {@code Enhancer}
      * object should be used for each generated object, and should not
      * be shared across threads. To create additional instances of a
-     * generated class, use the <code>Factory</code> interface.
+     * generated class, use the {@code Factory} interface.
      * @see Factory
      */
     public Enhancer() {
@@ -199,7 +199,7 @@ public class Enhancer extends AbstractClassGenerator
     /**
      * Call this method to register the {@link Callback} array to use before
      * creating a new instance of the generated class via reflection. If you are using
-     * an instance of <code>Enhancer</code> or the {@link Factory} interface to create
+     * an instance of {@code Enhancer} or the {@link Factory} interface to create
      * new instances, this method is unnecessary. Its primary use is for when you want to
      * cache and reuse a generated class yourself, and the generated class does
      * <i>not</i> implement the {@link Factory} interface.
@@ -209,12 +209,12 @@ public class Enhancer extends AbstractClassGenerator
      * use {@link #registerStaticCallbacks}.
      * <p>
      * The registered callbacks are overwritten and subsequently cleared
-     * when calling any of the <code>create</code> methods (such as
-     * {@link #create}), or any {@link Factory} <code>newInstance</code> method.
+     * when calling any of the {@code create} methods (such as
+     * {@link #create}), or any {@link Factory} {@code newInstance} method.
      * Otherwise they are <i>not</i> cleared, and you should be careful to set them
-     * back to <code>null</code> after creating new instances via reflection if
+     * back to {@code null} after creating new instances via reflection if
      * memory leakage is a concern.
-     * @param generatedClass a class previously created by {@link Enhancer}
+     * @param generatedClass a class previously created by
      * @param callbacks the array of callbacks to use when instances of the generated
      * class are created
      * @see #setUseFactory
@@ -228,7 +228,7 @@ public class Enhancer extends AbstractClassGenerator
      * when multiple threads will be creating instances of the generated class.
      * The thread-level callbacks will always override the static callbacks.
      * Static callbacks are never cleared.
-     * @param generatedClass a class previously created by {@link Enhancer}
+     * @param generatedClass a class previously created by
      * @param callbacks the array of callbacks to use when instances of the generated
      * class are created
      */
@@ -237,9 +237,9 @@ public class Enhancer extends AbstractClassGenerator
     }
 
     /**
-     * Determine if a class was generated using <code>Enhancer</code>.
+     * Determine if a class was generated using {@code Enhancer}.
      * @param type any class
-     * @return whether the class was generated  using <code>Enhancer</code>
+     * @return whether the class was generated  using {@code Enhancer}
      */
     public static boolean isEnhanced(Class type) {
         try {
@@ -274,7 +274,7 @@ public class Enhancer extends AbstractClassGenerator
 
     /**
      * Helper method to create an intercepted object.
-     * For finer control over the generated instance, use a new instance of <code>Enhancer</code>
+     * For finer control over the generated instance, use a new instance of {@code Enhancer}
      * instead of this static method.
      * @param type class to extend or interface to implement
      * @param callback the callback to use for all methods
@@ -288,9 +288,9 @@ public class Enhancer extends AbstractClassGenerator
     
     /**
      * Helper method to create an intercepted object.
-     * For finer control over the generated instance, use a new instance of <code>Enhancer</code>
+     * For finer control over the generated instance, use a new instance of {@code Enhancer}
      * instead of this static method.
-     * @param type class to extend or interface to implement
+     * @param superclass class to extend or interface to implement
      * @param interfaces array of interfaces to implement, or null
      * @param callback the callback to use for all methods
      */
@@ -304,7 +304,7 @@ public class Enhancer extends AbstractClassGenerator
 
     /**
      * Helper method to create an intercepted object.
-     * For finer control over the generated instance, use a new instance of <code>Enhancer</code>
+     * For finer control over the generated instance, use a new instance of {@code Enhancer}
      * instead of this static method.
      * @param superclass class to extend or interface to implement
      * @param interfaces array of interfaces to implement, or null
@@ -326,7 +326,7 @@ public class Enhancer extends AbstractClassGenerator
 
     /**
      * Set the class which the generated class will extend. As a convenience,
-     * if the supplied superclass is actually an interface, <code>setInterfaces</code>
+     * if the supplied superclass is actually an interface, {@code setInterfaces}
      * will be called with the appropriate argument instead.
      * A non-interface argument must not be declared as final, and must have an
      * accessible constructor.
@@ -345,7 +345,7 @@ public class Enhancer extends AbstractClassGenerator
     }
 
     /**
-     * Set the interfaces to implement. The <code>Factory</code> interface will
+     * Set the interfaces to implement. The {@code Factory} interface will
      * always be implemented regardless of what is specified here.
      * @param interfaces array of interfaces to implement, or null
      * @see Factory
@@ -397,9 +397,9 @@ public class Enhancer extends AbstractClassGenerator
      * the {@link Factory} interface.
      * This was added for tools that need for proxies to be more
      * indistinguishable from their targets. Also, in some cases it may
-     * be necessary to disable the <code>Factory</code> interface to
+     * be necessary to disable the {@code Factory} interface to
      * prevent code from changing the underlying callbacks.
-     * @param useFactory whether to implement <code>Factory</code>; default is <code>true</code>
+     * @param useFactory whether to implement {@code Factory}; default is {@code true}
      */
     public void setUseFactory(boolean useFactory) {
         this.useFactory = useFactory;
@@ -458,7 +458,7 @@ public class Enhancer extends AbstractClassGenerator
     /**
      * Generate a new class if necessary and uses the specified
      * callbacks (if any) to create a new object instance.
-     * Uses the constructor of the superclass matching the <code>argumentTypes</code>
+     * Uses the constructor of the superclass matching the {@code argumentTypes}
      * parameter, with the given arguments.
      * @param argumentTypes constructor signature
      * @param arguments compatible wrapped arguments to pass to constructor
@@ -479,7 +479,7 @@ public class Enhancer extends AbstractClassGenerator
      * This ignores any callbacks that have been set.
      * To create a new instance you will have to use reflection, and methods
      * called during the constructor will not be intercepted. To avoid this problem,
-     * use the multi-arg <code>create</code> method.
+     * use the multi-arg {@code create} method.
      * @see #create(Class[], Object[])
      */
     public Class createClass() {

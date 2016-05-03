@@ -39,7 +39,7 @@ import java.lang.reflect.Method;
  * </p>
  * <p>
  * It will only inject to fields that haven't been set before (i.e that are
- * <code>null</code>).
+ * {@code null}).
  * </p>
  *
  * @see org.powermock.api.easymock.annotation.Mock
@@ -47,7 +47,7 @@ import java.lang.reflect.Method;
  * @see org.easymock.TestSubject
  *
  */
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "JavadocReference"})
 public class AnnotationEnabler extends AbstractPowerMockTestListenerBase implements AnnotationEnablerListener {
 
 

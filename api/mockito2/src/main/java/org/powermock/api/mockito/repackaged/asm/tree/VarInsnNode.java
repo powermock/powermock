@@ -49,7 +49,7 @@ public class VarInsnNode extends AbstractInsnNode {
     public int var;
 
     /**
-     * Constructs a new {@link VarInsnNode}.
+     * Constructs a new .
      * 
      * @param opcode the opcode of the local variable instruction to be
      *        constructed. This opcode must be ILOAD, LLOAD, FLOAD, DLOAD,

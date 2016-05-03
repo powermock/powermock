@@ -27,6 +27,7 @@ public interface MethodStubStrategy<T> {
 	 *            The value that will be returned.
 	 * @deprecated Since version 1.4.1, use {@link #toReturn(Object)} instead.
 	 */
+	@Deprecated
 	void andReturn(T returnValue);
 
 	/**

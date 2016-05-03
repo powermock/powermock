@@ -65,8 +65,8 @@ public interface TestSuiteChunker {
      * @param testClass           The class that defines the method.
      * @param potentialTestMethod The method to inspect whether it should be executed in the
      *                            test suite or not.
-     * @return <code>true</code> if the method is a test method and should be
-     * executed, <code>false</code> otherwise.
+     * @return {@code true} if the method is a test method and should be
+     * executed, {@code false} otherwise.
      */
     boolean shouldExecuteTestForMethod(Class<?> testClass, Method potentialTestMethod);
 }

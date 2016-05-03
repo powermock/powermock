@@ -69,7 +69,7 @@ public class FieldNode extends MemberNode implements FieldVisitor {
     public Object value;
 
     /**
-     * Constructs a new {@link FieldNode}.
+     * Constructs a new .
      * 
      * @param access the field's access flags (see
      *        {@link org.powermock.api.mockito.repackaged.asm.Opcodes}). This parameter also indicates

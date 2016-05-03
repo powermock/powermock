@@ -46,7 +46,7 @@ public class Whitebox {
 	 *            The type of the class where the method is located.
 	 * @param fieldName
 	 *            The method names.
-	 * @return A <code>java.lang.reflect.Field</code>.
+	 * @return A {@code java.lang.reflect.Field}.
 	 * @throws FieldNotFoundException
 	 *             If a field cannot be found in the hierarchy.
 	 */
@@ -62,7 +62,7 @@ public class Whitebox {
 	 *            The class that should contain the fields.
 	 * @param fieldNames
 	 *            The names of the fields that will be returned.
-	 * @return An array of Field's. May be of length 0 but not <code>null</code>
+	 * @return An array of Field's. May be of length 0 but not {@code null}
 	 * 
 	 */
 	public static Field[] getFields(Class<?> clazz, String... fieldNames) {
@@ -85,8 +85,8 @@ public class Whitebox {
 	 * @param methodName
 	 *            The method names.
 	 * @param parameterTypes
-	 *            All parameter types of the method (may be <code>null</code>).
-	 * @return A <code>java.lang.reflect.Method</code>.
+	 *            All parameter types of the method (may be {@code null}).
+	 * @return A {@code java.lang.reflect.Method}.
 	 * @throws MethodNotFoundException
 	 *             If a method cannot be found in the hierarchy.
 	 */
@@ -110,8 +110,8 @@ public class Whitebox {
 	 * @param type
 	 *            The type of the class where the method is located.
 	 * @param parameterTypes
-	 *            All parameter types of the method (may be <code>null</code>).
-	 * @return A <code>java.lang.reflect.Method</code>.
+	 *            All parameter types of the method (may be {@code null}).
+	 * @return A {@code java.lang.reflect.Method}.
 	 * @throws MethodNotFoundException
 	 *             If a method cannot be found in the hierarchy.
 	 * @throws TooManyMethodsFoundException
@@ -125,8 +125,8 @@ public class Whitebox {
 	 * Create a new instance of a class without invoking its constructor.
 	 * <p>
 	 * No byte-code manipulation is needed to perform this operation and thus
-	 * it's not necessary use the <code>PowerMockRunner</code> or
-	 * <code>PrepareForTest</code> annotation to use this functionality.
+	 * it's not necessary use the {@code PowerMockRunner} or
+	 * {@code PrepareForTest} annotation to use this functionality.
 	 * 
 	 * @param <T>
 	 *            The type of the instance to create.
@@ -149,8 +149,8 @@ public class Whitebox {
 	 *            The type of the class where the constructor is located.
 	 * @param parameterTypes
 	 *            All parameter types of the constructor (may be
-	 *            <code>null</code>).
-	 * @return A <code>java.lang.reflect.Constructor</code>.
+	 *            {@code null}).
+	 * @return A {@code java.lang.reflect.Constructor}.
 	 * @throws ConstructorNotFoundException
 	 *             if the constructor cannot be found.
 	 */
@@ -374,7 +374,7 @@ public class Whitebox {
 	 * over this method for that reason. This method might be useful to test
 	 * private methods.
 	 * 
-	 * @throws Throwable
+	 * @throws Exception if something wrong.
 	 */
 	public static synchronized <T> T invokeMethod(Object instance, Object... arguments) throws Exception {
 		return WhiteboxImpl.invokeMethod(instance, arguments);
@@ -417,7 +417,7 @@ public class Whitebox {
 
 	/**
 	 * Invoke a private or inner class method in a subclass (defined by
-	 * <code>definedIn</code>) in cases where PowerMock cannot automatically
+	 * {@code definedIn}) in cases where PowerMock cannot automatically
 	 * determine the type of the parameters, for example when mixing primitive
 	 * types and wrapper types in the same method. For most situations use
 	 * {@link #invokeMethod(Object, Object...)} instead.
@@ -513,12 +513,12 @@ public class Whitebox {
 
 	/**
 	 * Get the first parent constructor defined in a super class of
-	 * <code>klass</code>.
+	 * {@code klass}.
 	 * 
 	 * @param klass
-	 *            The class where the constructor is located. <code>null</code>
+	 *            The class where the constructor is located. {@code null}
 	 *            ).
-	 * @return A <code>java.lang.reflect.Constructor</code>.
+	 * @return A {@code java.lang.reflect.Constructor}.
 	 */
 	public static Constructor<?> getFirstParentConstructor(Class<?> klass) {
 		return WhiteboxImpl.getFirstParentConstructor(klass);
@@ -570,7 +570,7 @@ public class Whitebox {
 	 * @param additionalAnnotations
 	 *            Optionally more annotations to look for. If any of the
 	 *            annotations are associated with a particular field it will be
-	 *            added to the resulting <code>Set</code>.
+	 *            added to the resulting {@code Set}.
 	 * @return A set of all fields containing the particular annotation.
 	 */
 	public static Set<Field> getFieldsAnnotatedWith(Object object, Class<? extends Annotation> annotation,
@@ -614,7 +614,7 @@ public class Whitebox {
 	 * 
 	 * @param type
 	 *            The class whose static fields to get.
-	 * @return All static fields in <code>type</code>. All fields are set to
+	 * @return All static fields in {@code type}. All fields are set to
 	 *         accessible.
 	 */
 	public static Set<Field> getAllStaticFields(Class<?> type) {
@@ -657,9 +657,9 @@ public class Whitebox {
 	 *            The class in which the local inner class is declared.
 	 * @param occurrence
 	 *            The occurrence of the local class. For example if you have two
-	 *            local classes in the <code>declaringClass</code> you must pass
-	 *            in <code>1</code> if you want to get the type for the first
-	 *            one or <code>2</code> if you want the second one.
+	 *            local classes in the {@code declaringClass} you must pass
+	 *            in {@code 1} if you want to get the type for the first
+	 *            one or {@code 2} if you want the second one.
 	 * @param name
 	 *            The unqualified name (simple name) of the local class.
 	 * @return The type.
@@ -677,8 +677,8 @@ public class Whitebox {
 	 * @param occurrence
 	 *            The occurrence of the anonymous inner class. For example if
 	 *            you have two anonymous inner classes classes in the
-	 *            <code>declaringClass</code> you must pass in <code>1</code> if
-	 *            you want to get the type for the first one or <code>2</code>
+	 *            {@code declaringClass} you must pass in {@code 1} if
+	 *            you want to get the type for the first one or {@code 2}
 	 *            if you want the second one.
 	 * @return The type.
 	 */
@@ -690,7 +690,7 @@ public class Whitebox {
 	/**
 	 * Set the values of multiple instance fields defined in a context using
 	 * reflection. The values in the context will be assigned to values on the
-	 * <code>instance</code>. This method will traverse the class hierarchy when
+	 * {@code instance}. This method will traverse the class hierarchy when
 	 * searching for the fields. Example usage:
 	 * <p>
 	 * Given:
@@ -714,8 +714,8 @@ public class Whitebox {
 	 * Whitebox.setInternalStateFromContext(new MyInstance(), new MyContext());
 	 * </pre>
 	 * 
-	 * will set the instance variables of <code>myInstance</code> to the values
-	 * specified in <code>MyContext</code>.
+	 * will set the instance variables of {@code myInstance} to the values
+	 * specified in {@code MyContext}.
 	 * <p>
 	 * By default the {@link FieldMatchingStrategy#MATCHING} strategy is used
 	 * which means that the fields defined in the context but not found in the
@@ -737,7 +737,7 @@ public class Whitebox {
 	/**
 	 * Set the values of multiple static fields defined in a context using
 	 * reflection. The values in the context will be assigned to values on the
-	 * <code>classOrInstance</code>. This method will traverse the class
+	 * {@code classOrInstance}. This method will traverse the class
 	 * hierarchy when searching for the fields. Example usage:
 	 * <p>
 	 * Given:
@@ -761,8 +761,8 @@ public class Whitebox {
 	 * Whitebox.setInternalStateFromContext(MyInstance.class, MyContext.class);
 	 * </pre>
 	 * 
-	 * will set the static variables of <code>MyInstance</code> to the values
-	 * specified in <code>MyContext</code>.
+	 * will set the static variables of {@code MyInstance} to the values
+	 * specified in {@code MyContext}.
 	 *<p>
 	 * By default the {@link FieldMatchingStrategy#MATCHING} strategy is used
 	 * which means that the fields defined in the context but not found in the
@@ -784,7 +784,7 @@ public class Whitebox {
 	 * Set the values of multiple instance fields defined in a context using
 	 * reflection and using an explicit {@link FieldMatchingStrategy}. The
 	 * values in the context will be assigned to values on the
-	 * <code>instance</code>. This method will traverse the class hierarchy when
+	 * {@code instance}. This method will traverse the class hierarchy when
 	 * searching for the fields. Example usage:
 	 * <p>
 	 * Given:
@@ -808,8 +808,8 @@ public class Whitebox {
 	 * Whitebox.setInternalStateFromContext(new MyInstance(), new MyContext());
 	 * </pre>
 	 * 
-	 * will set the instance variables of <code>myInstance</code> to the values
-	 * specified in <code>MyContext</code>.
+	 * will set the instance variables of {@code myInstance} to the values
+	 * specified in {@code MyContext}.
 	 * 
 	 * @param instance
 	 *            the object whose fields to modify.
@@ -826,7 +826,7 @@ public class Whitebox {
 	 * Set the values of multiple static fields defined in a context using
 	 * reflection and using an explicit {@link FieldMatchingStrategy}. The
 	 * values in the context will be assigned to values on the
-	 * <code>classOrInstance</code>. This method will traverse the class
+	 * {@code classOrInstance}. This method will traverse the class
 	 * hierarchy when searching for the fields. Example usage:
 	 * <p>
 	 * Given:
@@ -850,8 +850,8 @@ public class Whitebox {
 	 * Whitebox.setInternalStateFromContext(MyInstance.class, MyContext.class);
 	 * </pre>
 	 * 
-	 * will set the static variables of <code>MyInstance</code> to the values
-	 * specified in <code>MyContext</code>.
+	 * will set the static variables of {@code MyInstance} to the values
+	 * specified in {@code MyContext}.
 	 *<p>
 	 * 
 	 * @param instance

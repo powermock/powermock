@@ -44,9 +44,9 @@ public class EasyMockMethodInvocationControl<T> implements MethodInvocationContr
      * @param invocationHandler The mock invocation handler to be associated with this
      *                          instance.
      * @param methodsToMock     The methods that are mocked for this instance. If
-     *                          <code>methodsToMock</code> is null all methods for the
-     *                          <code>invocationHandler</code> are considered to be mocked.
-     * @param mockInstance      The actual mock instance. May be <code>null</code>. Even
+     *                          {@code methodsToMock} is null all methods for the
+     *                          {@code invocationHandler} are considered to be mocked.
+     * @param mockInstance      The actual mock instance. May be {@code null}. Even
      *                          though the mock instance may not be used it's needed to keep a
      *                          reference to this object otherwise it may be garbage collected
      *                          in some situations. For example when mocking static methods we
@@ -73,16 +73,13 @@ public class EasyMockMethodInvocationControl<T> implements MethodInvocationContr
      * @param invocationHandler The mock invocation handler to be associated with this
      *                          instance.
      * @param methodsToMock     The methods that are mocked for this instance. If
-     *                          <code>methodsToMock</code> is null all methods for the
-     *                          <code>invocationHandler</code> are considered to be mocked.
+     *                          {@code methodsToMock} is null all methods for the
+     *                          {@code invocationHandler} are considered to be mocked.
      */
     public EasyMockMethodInvocationControl(MockInvocationHandler invocationHandler, Set<Method> methodsToMock) {
         this(invocationHandler, methodsToMock, null);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isMocked(Method method) {
         return mockedMethods == null || (mockedMethods != null && mockedMethods.contains(method));
@@ -113,9 +110,6 @@ public class EasyMockMethodInvocationControl<T> implements MethodInvocationContr
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public synchronized Object replay(Object... mocks) {
         // Silently ignore replay if someone has replayed the mock before.
@@ -126,9 +120,6 @@ public class EasyMockMethodInvocationControl<T> implements MethodInvocationContr
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public synchronized Object verify(Object... mocks) {
         // Silently ignore verify if someone has verified the mock before.
@@ -139,9 +130,6 @@ public class EasyMockMethodInvocationControl<T> implements MethodInvocationContr
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public synchronized Object reset(Object... mocks) {
         invocationHandler.getControl().reset();

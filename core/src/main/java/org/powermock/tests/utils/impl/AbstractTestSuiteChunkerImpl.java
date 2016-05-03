@@ -101,9 +101,6 @@ public abstract class AbstractTestSuiteChunkerImpl<T> extends AbstractCommonTest
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public final void createTestDelegators(Class<?> testClass, List<TestChunk> chunks) throws Exception {
         for (TestChunk chunk : chunks) {
             ClassLoader classLoader = chunk.getClassLoader();
@@ -130,7 +127,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> extends AbstractCommonTest
      * 
      * @param originalTestIndex
      *            The original test index as seen by the test runner.
-     * @return The internal test index as seen by PowerMock or <code>-1</code>
+     * @return The internal test index as seen by PowerMock or {@code -1}
      *         if no index was found.
      * 
      */
@@ -148,7 +145,7 @@ public abstract class AbstractTestSuiteChunkerImpl<T> extends AbstractCommonTest
 
     /**
      * Get the junit runner delegate that handles the test at index
-     * <code>testIndex</code>. Throws a {@link RuntimeException} if a delegator
+     * {@code testIndex}. Throws a {@link RuntimeException} if a delegator
      * is not found for the specific test index.
      * 
      * @param testIndex

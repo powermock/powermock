@@ -48,7 +48,7 @@ import java.lang.reflect.Method;
  *   The interface above is an example of an interface that can become a
  *   delegate.  It has only one method, and the interface is public.  In
  *   order to create a delegate for that method, all we have to do is
- *   call <code>MethodDelegate.create(this, "alternateMain", MainDelegate.class)</code>.
+ *   call {@code MethodDelegate.create(this, "alternateMain", MainDelegate.class)}.
  *   The following program will show how to use it:
  * </p>
  *
@@ -75,9 +75,9 @@ import java.lang.reflect.Method;
  *   they can be treated like objects, and passed to other methods.  In fact that is
  *   one of the key building blocks of building Intelligent Agents which in tern are
  *   the foundation of artificial intelligence.  In the above program, we could have
- *   easily created the delegate to match the static <code>main</code> method by
+ *   easily created the delegate to match the static {@code main} method by
  *   substituting the delegate creation call with this:
- *   <code>MethodDelegate.createStatic(getClass(), "main", MainDelegate.class)</code>.
+ *   {@code MethodDelegate.createStatic(getClass(), "main", MainDelegate.class)}.
  * </p>
  * <p>
  *   Another key use for Delegates is to register event listeners.  It is much easier
@@ -93,11 +93,11 @@ import java.lang.reflect.Method;
  *  The criteria that we use to test if two delegates are equal are:
  *   <ul>
  *     <li>
- *       They both refer to the same instance.  That is, the <code>instance</code>
+ *       They both refer to the same instance.  That is, the {@code instance}
  *       parameter passed to the newDelegate method was the same for both. The
- *       instances are compared with the identity equality operator, <code>==</code>.
+ *       instances are compared with the identity equality operator, {@code ==}.
  *     </li>
- *     <li>They refer to the same method as resolved by <code>Method.equals</code>.</li>
+ *     <li>They refer to the same method as resolved by {@code Method.equals}.</li>
  *   </ul>
  *
  * @version $Id: MethodDelegate.java,v 1.25 2006/03/05 02:43:19 herbyderby Exp $

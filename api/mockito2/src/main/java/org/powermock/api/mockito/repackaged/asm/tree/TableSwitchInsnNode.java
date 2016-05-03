@@ -67,7 +67,7 @@ public class TableSwitchInsnNode extends AbstractInsnNode {
     public List labels;
 
     /**
-     * Constructs a new {@link TableSwitchInsnNode}.
+     * Constructs a new .
      * 
      * @param min the minimum key value.
      * @param max the maximum key value.

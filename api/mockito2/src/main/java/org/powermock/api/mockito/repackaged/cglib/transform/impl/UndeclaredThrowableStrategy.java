@@ -28,10 +28,10 @@ public class UndeclaredThrowableStrategy extends DefaultGeneratorStrategy {
     /**
      * Create a new instance of this strategy.
      * @param wrapper a class which extends either directly or
-     * indirectly from <code>Throwable</code> and which has at least one
+     * indirectly from {@code Throwable} and which has at least one
      * constructor that takes a single argument of type
-     * <code>Throwable</code>, for example
-     * <code>java.lang.reflect.UndeclaredThrowableException.class</code>
+     * {@code Throwable}, for example
+     * {@code java.lang.reflect.UndeclaredThrowableException.class}
      */
     public UndeclaredThrowableStrategy(Class wrapper) {
         t = new UndeclaredThrowableTransformer(wrapper);

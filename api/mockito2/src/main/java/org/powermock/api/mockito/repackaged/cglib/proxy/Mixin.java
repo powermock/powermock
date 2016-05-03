@@ -18,7 +18,7 @@ import java.util.Map;
 
 
 /**
- * <code>Mixin</code> allows
+ * {@code Mixin} allows
  * multiple objects to be combined into a single larger object. The
  * methods in the generated object simply call the original methods in the
  * underlying "delegate" objects.
@@ -35,7 +35,7 @@ abstract public class Mixin {
 
     /**
      * Helper method to create an interface mixin. For finer control over the
-     * generated instance, use a new instance of <code>Mixin</code>
+     * generated instance, use a new instance of {@code Mixin}
      * instead of this static method.
      * TODO
      */
@@ -47,7 +47,7 @@ abstract public class Mixin {
 
     /**
      * Helper method to create an interface mixin. For finer control over the
-     * generated instance, use a new instance of <code>Mixin</code>
+     * generated instance, use a new instance of {@code Mixin}
      * instead of this static method.
      * TODO
      */
@@ -66,7 +66,7 @@ abstract public class Mixin {
 
     /**
      * Helper method to create a bean mixin. For finer control over the
-     * generated instance, use a new instance of <code>Mixin</code>
+     * generated instance, use a new instance of {@code Mixin}
      * instead of this static method.
      * TODO
      */

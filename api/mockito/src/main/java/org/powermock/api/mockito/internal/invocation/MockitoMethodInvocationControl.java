@@ -77,7 +77,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
      *            The methodInterceptionFilter to be associated with this
      *            instance.
      * @param mockInstance
-     *          The actual mock instance. May be <code>null</code>. Even
+     *          The actual mock instance. May be {@code null}. Even
      *            though the mock instance may not be used it's needed to keep a
      *            reference to this object otherwise it may be garbage collected
      *            in some situations. For example when mocking static methods we
@@ -89,8 +89,8 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
      *            reference to this instance here.
      * @param methodsToMock
      *            The methods that are mocked for this instance. If
-     *            <code>methodsToMock</code> is null or empty, all methods for
-     *            the <code>invocationHandler</code> are considered to be
+     *            {@code methodsToMock} is null or empty, all methods for
+     *            the {@code invocationHandler} are considered to be
      *            mocked.
      */
     public MockitoMethodInvocationControl(MethodInterceptorFilter methodInterceptionFilter, Object mockInstance,  Method... methodsToMock) {
@@ -99,7 +99,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
 
     /**
      * Creates a new instance with a delegator. This delegator may be
-     * <code>null</code> (if it is then no calls will be forwarded to this
+     * {@code null} (if it is then no calls will be forwarded to this
      * instance). If a delegator exists (i.e. not null) all non-mocked calls
      * will be delegated to that instance.
      *  @param methodInterceptionFilter
@@ -109,7 +109,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
      *            If the user spies on an instance the original instance must be
      *            injected here.
      * @param mockInstance
-     *            The actual mock instance. May be <code>null</code>. Even
+     *            The actual mock instance. May be {@code null}. Even
      *            though the mock instance may not be used it's needed to keep a
      *            reference to this object otherwise it may be garbage collected
      *            in some situations. For example when mocking static methods we
@@ -121,8 +121,8 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
      *            reference to this instance here.
      * @param methodsToMock
      *            The methods that are mocked for this instance. If
-     *            <code>methodsToMock</code> is null or empty, all methods for
-     *            the <code>invocationHandler</code> are considered to be
+     *            {@code methodsToMock} is null or empty, all methods for
+     *            the {@code invocationHandler} are considered to be
      */
     public MockitoMethodInvocationControl(MethodInterceptorFilter methodInterceptionFilter, Object delegator,
                                           Object mockInstance, Method... methodsToMock) {
@@ -136,9 +136,6 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
         this.methodInterceptorFilter = methodInterceptionFilter;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isMocked(Method method) {
         return mockedMethods == null || (mockedMethods.contains(method));

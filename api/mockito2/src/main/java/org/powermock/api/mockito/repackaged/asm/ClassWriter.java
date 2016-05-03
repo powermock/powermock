@@ -232,8 +232,8 @@ public class ClassWriter implements ClassVisitor {
      */
     static final int TYPE_MERGED = 15;
 
-    /**
-     * Computes the instruction types of JVM opcodes.
+    /*
+      Computes the instruction types of JVM opcodes.
      */
     static {
         int i;
@@ -493,7 +493,7 @@ public class ClassWriter implements ClassVisitor {
     // ------------------------------------------------------------------------
 
     /**
-     * Constructs a new {@link ClassWriter} object.
+     * Constructs a new  object.
      *
      * @param flags option flags that can be used to modify the default behavior
      *        of this class. See {@link #COMPUTE_MAXS}, {@link #COMPUTE_FRAMES}.
@@ -511,7 +511,7 @@ public class ClassWriter implements ClassVisitor {
     }
 
     /**
-     * Constructs a new {@link ClassWriter} object and enables optimizations for
+     * Constructs a new  object and enables optimizations for
      * "mostly add" bytecode transformations. These optimizations are the
      * following:
      *
@@ -523,7 +523,7 @@ public class ClassWriter implements ClassVisitor {
      * without emitting visit events for all the method instructions), which
      * saves a <i>lot</i> of time. Untransformed methods are detected by the
      * fact that the {@link ClassReader} receives {@link MethodVisitor} objects
-     * that come from a {@link ClassWriter} (and not from a custom
+     * that come from a  (and not from a custom
      * {@link ClassAdapter} or any other {@link ClassVisitor} instance).</li>
      * </ul>
      *

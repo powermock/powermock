@@ -213,7 +213,7 @@ public class InsnList {
      * 
      * @param location an instruction <i>of this list</i>.
      * @param insn another instruction, <i>which must not belong to any
-     *        {@link InsnList}</i>.
+     *        </i>.
      * @throws IllegalArgumentException if {@link #check} is <tt>true</tt>,
      *         and if i does not belong to this list or if insn belongs to an
      *         instruction list.
@@ -252,7 +252,7 @@ public class InsnList {
      * Adds the given instruction to the end of this list.
      * 
      * @param insn an instruction, <i>which must not belong to any
-     *        {@link InsnList}</i>.
+     *        </i>.
      * @throws IllegalArgumentException if {@link #check} is <tt>true</tt>,
      *         and if insn belongs to an instruction list.
      */
@@ -305,7 +305,7 @@ public class InsnList {
      * Inserts the given instruction at the begining of this list.
      * 
      * @param insn an instruction, <i>which must not belong to any
-     *        {@link InsnList}</i>.
+     *        </i>.
      * @throws IllegalArgumentException if {@link #check} is <tt>true</tt>,
      *         and if insn belongs to an instruction list.
      */
@@ -360,7 +360,7 @@ public class InsnList {
      * @param location an instruction <i>of this list</i> after which insn must be
      *        inserted.
      * @param insn the instruction to be inserted, <i>which must not belong to
-     *        any {@link InsnList}</i>.
+     *        any </i>.
      * @throws IllegalArgumentException if {@link #check} is <tt>true</tt>,
      *         and if i does not belong to this list or if insn belongs to an
      *         instruction list.
@@ -422,7 +422,7 @@ public class InsnList {
      * @param location an instruction <i>of this list</i> before which insn must be
      *        inserted.
      * @param insn the instruction to be inserted, <i>which must not belong to
-     *        any {@link InsnList}</i>.
+     *        any </i>.
      * @throws IllegalArgumentException if {@link #check} is <tt>true</tt>,
      *         and if i does not belong to this list or if insn belongs to an
      *         instruction list.
@@ -521,7 +521,7 @@ public class InsnList {
      * Removes all of the instructions of this list.
      * 
      * @param mark if the instructions must be marked as no longer belonging to
-     *        any {@link InsnList}.
+     *        any .
      */
     private void removeAll(final boolean mark) {
         if (mark) {
@@ -550,7 +550,7 @@ public class InsnList {
     /**
      * Reset all labels in the instruction list. This method should be called
      * before reusing same instructions list between several
-     * <code>ClassWriter</code>s.
+     * {@code ClassWriter}s.
      */
     public void resetLabels() {
         AbstractInsnNode insn = first;

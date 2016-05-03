@@ -74,7 +74,7 @@ public class Analyzer implements Opcodes {
     private int top;
 
     /**
-     * Constructs a new {@link Analyzer}.
+     * Constructs a new .
      * 
      * @param interpreter the interpreter to be used to symbolically interpret
      *        the bytecode instructions.

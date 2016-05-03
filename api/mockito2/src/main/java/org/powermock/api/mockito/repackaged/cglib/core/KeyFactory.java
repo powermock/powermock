@@ -13,13 +13,13 @@ import java.lang.reflect.Method;
 
 /**
  * Generates classes to handle multi-valued keys, for use in things such as Maps and Sets.
- * Code for <code>equals</code> and <code>hashCode</code> methods follow the
+ * Code for {@code equals} and {@code hashCode} methods follow the
  * the rules laid out in <i>Effective Java</i> by Joshua Bloch. 
  * <p>
- * To generate a <code>KeyFactory</code>, you need to supply an interface which
+ * To generate a {@code KeyFactory}, you need to supply an interface which
  * describes the structure of the key. The interface should have a
- * single method named <code>newInstance</code>, which returns an
- * <code>Object</code>. The arguments array can be
+ * single method named {@code newInstance}, which returns an
+ * {@code Object}. The arguments array can be
  * <i>anything</i>--Objects, primitive values, or single or
  * multi-dimension arrays of either. For example:
  * <p><pre>
@@ -27,16 +27,16 @@ import java.lang.reflect.Method;
  *         public Object newInstance(int i, String s);
  *     }
  * </pre><p>
- * Once you have made a <code>KeyFactory</code>, you generate a new key by calling
- * the <code>newInstance</code> method defined by your interface.
+ * Once you have made a {@code KeyFactory}, you generate a new key by calling
+ * the {@code newInstance} method defined by your interface.
  * <p><pre>
  *     IntStringKey factory = (IntStringKey)KeyFactory.create(IntStringKey.class);
  *     Object key1 = factory.newInstance(4, "Hello");
  *     Object key2 = factory.newInstance(4, "World");
  * </pre><p>
  * <b>Note:</b>
- * <code>hashCode</code> equality between two keys <code>key1</code> and <code>key2</code> is only guaranteed if
- * <code>key1.equals(key2)</code> <i>and</i> the keys were produced by the same factory.
+ * {@code hashCode} equality between two keys {@code key1} and {@code key2} is only guaranteed if
+ * {@code key1.equals(key2)} <i>and</i> the keys were produced by the same factory.
  *
  * @version $Id: KeyFactory.java,v 1.26 2006/03/05 02:43:19 herbyderby Exp $
  */

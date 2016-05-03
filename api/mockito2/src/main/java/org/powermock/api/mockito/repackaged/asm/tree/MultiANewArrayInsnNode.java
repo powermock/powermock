@@ -52,7 +52,7 @@ public class MultiANewArrayInsnNode extends AbstractInsnNode {
     public int dims;
 
     /**
-     * Constructs a new {@link MultiANewArrayInsnNode}.
+     * Constructs a new .
      * 
      * @param desc an array type descriptor (see {@link org.powermock.api.mockito.repackaged.asm.Type}).
      * @param dims number of dimensions of the array to allocate.

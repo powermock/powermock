@@ -61,7 +61,7 @@ public class SignatureWriter implements SignatureVisitor {
     private int argumentStack;
 
     /**
-     * Constructs a new {@link SignatureWriter} object.
+     * Constructs a new  object.
      */
     public SignatureWriter() {
     }

@@ -23,7 +23,7 @@ import java.lang.annotation.*;
  * <i>not</i> removed.
  * <p>
  * The annotation should always be combined with the
- * <code>&#064;RunWith(PowerMockRunner.class)</code> if using junit 4.x or
+ * {@code &#064;RunWith(PowerMockRunner.class)} if using junit 4.x or
  * 
  * <pre>
  * public static TestSuite suite() throws Exception {

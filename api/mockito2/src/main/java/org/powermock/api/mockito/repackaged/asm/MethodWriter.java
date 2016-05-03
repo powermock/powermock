@@ -152,17 +152,17 @@ class MethodWriter implements MethodVisitor {
 
     /**
      * If not zero, indicates that the code of this method must be copied from
-     * the ClassReader associated to this writer in <code>cw.cr</code>. More
+     * the ClassReader associated to this writer in {@code cw.cr}. More
      * precisely, this field gives the index of the first byte to copied from
-     * <code>cw.cr.b</code>.
+     * {@code cw.cr.b}.
      */
     int classReaderOffset;
 
     /**
      * If not zero, indicates that the code of this method must be copied from
-     * the ClassReader associated to this writer in <code>cw.cr</code>. More
+     * the ClassReader associated to this writer in {@code cw.cr}. More
      * precisely, this field gives the number of bytes to copied from
-     * <code>cw.cr.b</code>.
+     * {@code cw.cr.b}.
      */
     int classReaderLength;
 
@@ -357,7 +357,7 @@ class MethodWriter implements MethodVisitor {
     // ------------------------------------------------------------------------
 
     /**
-     * Constructs a new {@link MethodWriter}.
+     * Constructs a new .
      * 
      * @param cw the class writer in which the method must be added.
      * @param access the method's access flags (see {@link Opcodes}).

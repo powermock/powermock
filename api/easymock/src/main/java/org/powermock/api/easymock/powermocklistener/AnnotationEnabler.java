@@ -27,6 +27,7 @@ import org.powermock.core.classloader.annotations.Mock;
  * @deprecated Test Runners uses an annotation enabling listener per default
  *             since version 1.3. You should just remove this listener.
  */
+@Deprecated
 public class AnnotationEnabler extends org.powermock.api.extension.listener.AnnotationEnabler {
 
 }

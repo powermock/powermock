@@ -54,7 +54,7 @@ public class ASMifierAbstractVisitor extends AbstractVisitor {
     Map labelNames;
 
     /**
-     * Constructs a new {@link ASMifierAbstractVisitor}.
+     * Constructs a new .
      * 
      * @param name the name of the variable for this visitor in the produced
      *        code.

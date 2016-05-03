@@ -31,7 +31,7 @@ public class InterfaceMaker extends AbstractClassGenerator
     private Map signatures = new HashMap();
 
     /**
-     * Create a new <code>InterfaceMaker</code>. A new <code>InterfaceMaker</code>
+     * Create a new {@code InterfaceMaker}. A new {@code InterfaceMaker}
      * object should be used for each generated interface, and should not
      * be shared across threads.
      */
@@ -61,7 +61,7 @@ public class InterfaceMaker extends AbstractClassGenerator
     /**
      * Add all the public methods in the specified class.
      * Methods from superclasses are included, except for methods declared in the base
-     * Object class (e.g. <code>getClass</code>, <code>equals</code>, <code>hashCode</code>).
+     * Object class (e.g. {@code getClass}, {@code equals}, {@code hashCode}).
      * @param clazz the class containing the methods to add to the interface
      */
     public void add(Class clazz) {

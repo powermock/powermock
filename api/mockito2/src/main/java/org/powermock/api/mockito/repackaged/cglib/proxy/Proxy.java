@@ -13,15 +13,15 @@ import java.util.List;
 
 /**
  * This class is meant to be used as replacement for
- * <code>java.lang.reflect.Proxy</code> under JDK 1.2. There are some known
+ * {@code java.lang.reflect.Proxy} under JDK 1.2. There are some known
  * subtle differences:
  * <ul>
- * <li>The exceptions returned by invoking <code>getExceptionTypes</code>
- * on the <code>Method</code> passed to the <code>invoke</code> method
+ * <li>The exceptions returned by invoking {@code getExceptionTypes}
+ * on the {@code Method} passed to the {@code invoke} method
  * <b>are</b> the exact set that can be thrown without resulting in an
- * <code>UndeclaredThrowableException</code> being thrown.
+ * {@code UndeclaredThrowableException} being thrown.
  * <li>{@link UndeclaredThrowableException} is used instead
- * of <code>java.lang.reflect.UndeclaredThrowableException</code>.
+ * of {@code java.lang.reflect.UndeclaredThrowableException}.
  * </ul>
  * <p>
  * @version $Id: Proxy.java,v 1.6 2004/06/24 21:15:19 herbyderby Exp $

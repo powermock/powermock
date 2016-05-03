@@ -49,7 +49,7 @@ public class LdcInsnNode extends AbstractInsnNode {
     public Object cst;
 
     /**
-     * Constructs a new {@link LdcInsnNode}.
+     * Constructs a new .
      * 
      * @param cst the constant to be loaded on the stack. This parameter must be
      *        a non null {@link Integer}, a {@link Float}, a {@link Long}, a

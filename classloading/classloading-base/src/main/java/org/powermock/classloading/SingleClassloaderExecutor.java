@@ -32,8 +32,8 @@ import java.lang.reflect.Method;
  *     });
  * </pre>
  *
- * What happens is that the entire object graph of myObject is deep-cloned into the <code>myClassloader</code> classloader
- * and then the <code>myObject.myMethod()</code> is executed.
+ * What happens is that the entire object graph of myObject is deep-cloned into the {@code myClassloader} classloader
+ * and then the {@code myObject.myMethod()} is executed.
  * <p>
  * You can also execute methods that return something:
  * <pre>
@@ -44,10 +44,10 @@ import java.lang.reflect.Method;
  *          }
  *     });
  * </pre>
- * Here we imagine that <code>myObject.myMethod()</code> returns an object of type <code>MyResult</code>. Again the entire
- * state will be deep-cloned to  <code>myClassloader</code> and then the <code>myObject.myMethod()</code> is executed.
+ * Here we imagine that {@code myObject.myMethod()} returns an object of type {@code MyResult}. Again the entire
+ * state will be deep-cloned to  {@code myClassloader} and then the {@code myObject.myMethod()} is executed.
  * The result of the method call is deep-cloned back into the original classloader (the one that made the call to
- * <code>cle.execute(..)</code>) and is ready for use.
+ * {@code cle.execute(..)}) and is ready for use.
  * </p>
  * <p>
  * Note that the SingleClassloaderExecutor requires a deep cloner implementing the {@link DeepClonerSPI} present in the class-path.

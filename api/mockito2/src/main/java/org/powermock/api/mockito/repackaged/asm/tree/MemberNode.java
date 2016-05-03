@@ -69,7 +69,7 @@ public abstract class MemberNode {
     public List attrs;
 
     /**
-     * Constructs a new {@link MemberNode}.
+     * Constructs a new .
      */
     protected MemberNode() {
     }

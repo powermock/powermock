@@ -89,7 +89,7 @@ public class WhiteboxImpl {
      * is thrown. Since the method name is not specified an
      *
      * @param type           The type of the class where the method is located.
-     * @param parameterTypes All parameter types of the method (may be <code>null</code>).
+     * @param parameterTypes All parameter types of the method (may be {@code null}).
      * @return A . {@link TooManyMethodsFoundException} is thrown if two or more
      * methods matches the same parameter types in the same class.
      */
@@ -151,7 +151,7 @@ public class WhiteboxImpl {
      *
      * @param type           The type of the class where the method is located.
      * @param methodName     The method names.
-     * @param parameterTypes All parameter types of the method (may be <code>null</code>).
+     * @param parameterTypes All parameter types of the method (may be {@code null}).
      * @return A .
      */
     public static Method getMethod(Class<?> type, String methodName, Class<?>... parameterTypes) {
@@ -227,8 +227,8 @@ public class WhiteboxImpl {
      * Create a new instance of a class without invoking its constructor.
      * <p/>
      * No byte-code manipulation is needed to perform this operation and thus
-     * it's not necessary use the <code>PowerMockRunner</code> or
-     * <code>PrepareForTest</code> annotation to use this functionality.
+     * it's not necessary use the {@code PowerMockRunner} or
+     * {@code PrepareForTest} annotation to use this functionality.
      *
      * @param <T>                The type of the instance to create.
      * @param classToInstantiate The type of the instance to create.
@@ -269,7 +269,7 @@ public class WhiteboxImpl {
      *
      * @param type           The type of the class where the constructor is located.
      * @param parameterTypes All parameter types of the constructor (may be
-     *                       <code>null</code>).
+     *                       {@code null}).
      * @return A .
      */
     public static Constructor<?> getConstructor(Class<?> type, Class<?>... parameterTypes) {
@@ -701,7 +701,7 @@ public class WhiteboxImpl {
 
     /**
      * Invoke a private or inner class method in a subclass (defined by
-     * <code>definedIn</code>) in cases where power mock cannot automatically
+     * {@code definedIn}) in cases where power mock cannot automatically
      * determine the type of the parameters, for example when mixing primitive
      * types and wrapper types in the same method. For most situations use
      *
@@ -815,16 +815,17 @@ public class WhiteboxImpl {
      *
      * @param tested          The instance or class containing the method.
      * @param declaringClass  The class where the method is supposed to be declared (may be
-     *                        <code>null</code>).
-     * @param methodToExecute The method name. If <code>null</code> then method will be
+     *                        {@code null}).
+     * @param methodToExecute The method name. If {@code null} then method will be
      *                        looked up based on the argument types only.
      * @param arguments       The arguments of the methods.
      * @return A single method.
-     * @throws {@link org.powermock.reflect.exceptions.MethodNotFoundException} if no method was found
-     * @throws {@link org.powermock.reflect.exceptions.TooManyMethodsFoundException} if too methods matched
+     * @throws MethodNotFoundException if no method was found.
+     * @throws TooManyMethodsFoundException if too methods matched.
+     * @throws IllegalArgumentException if {@code tested} is null.
      */
     public static Method findMethodOrThrowException(Object tested, Class<?> declaringClass, String methodToExecute,
-                                                    Object[] arguments) {
+                                                    Object[] arguments){
         if (tested == null) {
             throw new IllegalArgumentException("The object to perform the operation on cannot be null.");
         }
@@ -914,11 +915,11 @@ public class WhiteboxImpl {
     }
 
     /**
-     * Find the method whose parameter types most closely matches the <code>types</code>.
+     * Find the method whose parameter types most closely matches the {@code types}.
      *
      * @param firstMethodCandidate  The first method candidate
      * @param secondMethodCandidate The second method candidate
-     * @return The method that most closely matches the provided types or <code>null</code> if no method match.
+     * @return The method that most closely matches the provided types or {@code null} if no method match.
      */
     private static Method getMethodWithMostSpecificParameterTypes(Method firstMethodCandidate, Method secondMethodCandidate) {
         Class<?>[] firstMethodCandidateParameterTypes = firstMethodCandidate.getParameterTypes();
@@ -978,9 +979,9 @@ public class WhiteboxImpl {
      * @param cls                     the cls
      * @param methodName              the method name
      * @param signature               the signature
-     * @param exactParameterTypeMatch <code>true</code> if the <code>expectedTypes</code> must match
-     *                                the parameter types must match exactly, <code>false</code> if
-     *                                the <code>expectedTypes</code> are allowed to be converted
+     * @param exactParameterTypeMatch {@code true} if the {@code expectedTypes} must match
+     *                                the parameter types must match exactly, {@code false} if
+     *                                the {@code expectedTypes} are allowed to be converted
      *                                into primitive types if they are of a wrapped type and still
      *                                match.
      * @return the best method candidate
@@ -1027,7 +1028,7 @@ public class WhiteboxImpl {
      *
      * @param type The type where the constructor should be located.
      * @return The found constructor.
-     * @throws {@link org.powermock.reflect.exceptions.TooManyConstructorsFoundException} if too many constructors was found.
+     * @throws TooManyConstructorsFoundException if too many constructors was found.
      */
     public static Constructor<?> findConstructorOrThrowException(Class<?> type) {
         final Constructor<?>[] declaredConstructors = filterPowerMockConstructor(type.getDeclaredConstructors());
@@ -1065,8 +1066,9 @@ public class WhiteboxImpl {
      * @param type      The type where the constructor should be located.
      * @param arguments The arguments passed to the constructor.
      * @return The found constructor.
-     * @throws {@link org.powermock.reflect.exceptions.ConstructorNotFoundException} if no constructor was found
-     * @throws {@link org.powermock.reflect.exceptions.TooManyConstructorsFoundException} if too constructors matched
+     * @throws ConstructorNotFoundException if no constructor was found.
+     * @throws TooManyConstructorsFoundException if too constructors matched.
+     * @throws IllegalArgumentException if {@code type} is null.
      */
     public static Constructor<?> findUniqueConstructorOrThrowException(Class<?> type, Object... arguments) {
         return new ConstructorFinder(type, arguments).findConstructor();
@@ -1433,7 +1435,7 @@ public class WhiteboxImpl {
 
     /**
      * Get all declared constructors in the class and set accessible to
-     * <code>true</code>.
+     * {@code true}.
      *
      * @param clazz The class whose constructors to get.
      * @return All constructors declared in this class hierarchy.
@@ -1542,9 +1544,9 @@ public class WhiteboxImpl {
 
     /**
      * Get the first parent constructor defined in a super class of
-     * <code>klass</code>.
+     * {@code klass}.
      *
-     * @param klass The class where the constructor is located. <code>null</code>
+     * @param klass The class where the constructor is located. {@code null}
      *              ).
      * @return A .
      */
@@ -1558,9 +1560,9 @@ public class WhiteboxImpl {
 
     /**
      * Finds and returns a method based on the input parameters. If no
-     * <code>parameterTypes</code> are present the method will return the first
-     * method with name <code>methodNameToMock</code>. If no method was found,
-     * <code>null</code> will be returned. If no <code>methodName</code> is
+     * {@code parameterTypes} are present the method will return the first
+     * method with name {@code methodNameToMock}. If no method was found,
+     * {@code null} will be returned. If no {@code methodName} is
      * specified the method will be found based on the parameter types. If
      * neither method name nor parameters are specified an
      *
@@ -1745,15 +1747,15 @@ public class WhiteboxImpl {
 
     /**
      * Get an array of {@link Method}'s that matches the method name and whose
-     * argument types are assignable from <code>expectedTypes</code>. Both
+     * argument types are assignable from {@code expectedTypes}. Both
      * instance and static methods are taken into account.
      *
      * @param clazz                   The class that should contain the methods.
      * @param methodName              Names of the methods that will be returned.
      * @param expectedTypes           The methods must match
-     * @param exactParameterTypeMatch <code>true</code> if the <code>expectedTypes</code> must match
-     *                                the parameter types must match exactly, <code>false</code> if
-     *                                the <code>expectedTypes</code> are allowed to be converted
+     * @param exactParameterTypeMatch {@code true} if the {@code expectedTypes} must match
+     *                                the parameter types must match exactly, {@code false} if
+     *                                the {@code expectedTypes} are allowed to be converted
      *                                into primitive types if they are of a wrapped type and still
      *                                match.
      * @return An array of Method's.
@@ -2084,9 +2086,9 @@ public class WhiteboxImpl {
      *
      * @param declaringClass The class in which the local inner class is declared.
      * @param occurrence     The occurrence of the local class. For example if you have two
-     *                       local classes in the <code>declaringClass</code> you must pass
-     *                       in <code>1</code> if you want to get the type for the first
-     *                       one or <code>2</code> if you want the second one.
+     *                       local classes in the {@code declaringClass} you must pass
+     *                       in {@code 1} if you want to get the type for the first
+     *                       one or {@code 2} if you want the second one.
      * @param name           The unqualified name (simple name) of the local class.
      * @return The type.
      * @throws ClassNotFoundException the class not found exception
@@ -2103,8 +2105,8 @@ public class WhiteboxImpl {
      * @param declaringClass The class in which the anonymous inner class is declared.
      * @param occurrence     The occurrence of the anonymous inner class. For example if
      *                       you have two anonymous inner classes classes in the
-     *                       <code>declaringClass</code> you must pass in <code>1</code> if
-     *                       you want to get the type for the first one or <code>2</code>
+     *                       {@code declaringClass} you must pass in {@code 1} if
+     *                       you want to get the type for the first one or {@code 2}
      *                       if you want the second one.
      * @return The type.
      * @throws ClassNotFoundException the class not found exception
@@ -2125,7 +2127,7 @@ public class WhiteboxImpl {
      * @param annotation            The annotation type to look for.
      * @param additionalAnnotations Optionally more annotations to look for. If any of the
      *                              annotations are associated with a particular field it will be
-     *                              added to the resulting <code>Set</code>.
+     *                              added to the resulting {@code Set}.
      * @return A set of all fields containing the particular annotation.
      */
     @SuppressWarnings("unchecked")
@@ -2398,8 +2400,8 @@ public class WhiteboxImpl {
     /**
      * Get the type of an object and convert it to primitive if the type has a
      * primitive counter-part. E.g. if object is an instance of
-     * <code>java.lang.Integer</code> this method will return
-     * <code>int.class</code>.
+     * {@code java.lang.Integer} this method will return
+     * {@code int.class}.
      *
      * @param object The object whose type to get.
      * @return the type as primitive if wrapped
@@ -2417,7 +2419,7 @@ public class WhiteboxImpl {
     /**
      * Set the values of multiple instance fields defined in a context using
      * reflection. The values in the context will be assigned to values on the
-     * <code>instance</code>. This method will traverse the class hierarchy when
+     * {@code instance}. This method will traverse the class hierarchy when
      * searching for the fields. Example usage:
      * <p/>
      * Given:
@@ -2441,8 +2443,8 @@ public class WhiteboxImpl {
      * Whitebox.setInternalStateFromContext(new MyInstance(), new MyContext());
      * </pre>
      * <p/>
-     * will set the instance variables of <code>myInstance</code> to the values
-     * specified in <code>MyContext</code>.
+     * will set the instance variables of {@code myInstance} to the values
+     * specified in {@code MyContext}.
      *
      * @param object             the object
      * @param context            The context where the fields are defined.
@@ -2468,7 +2470,7 @@ public class WhiteboxImpl {
     /**
      * Set the values of multiple static fields defined in a context using
      * reflection. The values in the context will be assigned to values on the
-     * <code>classOrInstance</code>. This method will traverse the class
+     * {@code classOrInstance}. This method will traverse the class
      * hierarchy when searching for the fields. Example usage:
      * <p/>
      * Given:
@@ -2492,8 +2494,8 @@ public class WhiteboxImpl {
      * Whitebox.setInternalStateFromContext(MyInstance.class, MyContext.class);
      * </pre>
      * <p/>
-     * will set the static variables of <code>MyInstance</code> to the values
-     * specified in <code>MyContext</code>.
+     * will set the static variables of {@code MyInstance} to the values
+     * specified in {@code MyContext}.
      *
      * @param object             the object
      * @param context            The context where the fields are defined.

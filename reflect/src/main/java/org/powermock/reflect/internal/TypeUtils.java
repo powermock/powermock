@@ -25,7 +25,7 @@ public class TypeUtils {
 	 * 
 	 * @param type
 	 *            The type whose default value to get.
-	 * @return The default return type of <code>type</code>.
+	 * @return The default return type of {@code type}.
 	 */
 	public static Object getDefaultValue(Class<?> type) {
 		return getDefaultValue(type.getName());
@@ -36,7 +36,7 @@ public class TypeUtils {
 	 * 
 	 * @param fullyQualifiedTypeName
 	 *            The name of the type whose default value to get.
-	 * @return The default value of <code>fullyQualifiedTypeName</code>.
+	 * @return The default value of {@code fullyQualifiedTypeName}.
 	 */
 	public static Object getDefaultValue(String fullyQualifiedTypeName) {
 		if (fullyQualifiedTypeName == null) { // Void
@@ -67,7 +67,7 @@ public class TypeUtils {
 	 * 
 	 * @param fullyQualifiedTypeName
 	 *            The name of the type whose default value to get.
-	 * @return The default value of <code>fullyQualifiedTypeName</code>.
+	 * @return The default value of {@code fullyQualifiedTypeName}.
 	 */
 	public static String getDefaultValueAsString(String fullyQualifiedTypeName) {
 		if (fullyQualifiedTypeName == null) { // Void

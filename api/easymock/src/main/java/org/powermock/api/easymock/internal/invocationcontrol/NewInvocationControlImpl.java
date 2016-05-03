@@ -76,9 +76,6 @@ public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpect
         return EasyMock.expect(substitute.performSubstitutionLogic(arguments));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public synchronized Object replay(Object... mocks) {
         if (!hasReplayed) {
@@ -88,9 +85,6 @@ public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpect
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public synchronized Object verify(Object... mocks) {
         if (!hasVerified) {
@@ -100,9 +94,6 @@ public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpect
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public synchronized Object reset(Object... mocks) {
         EasyMock.reset(substitute);

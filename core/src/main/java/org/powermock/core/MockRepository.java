@@ -200,9 +200,9 @@ public class MockRepository {
 	 * its static initializers suppressed.
 	 * 
 	 * @param className
-	 *            <code>true</code> if class with the fully qualified name
-	 *            <code>className</code> should have its static initializers
-	 *            suppressed, <code>false</code> otherwise.
+	 *            {@code true} if class with the fully qualified name
+	 *            {@code className} should have its static initializers
+	 *            suppressed, {@code false} otherwise.
 	 */
 	public static synchronized boolean shouldSuppressStaticInitializerFor(String className) {
 		return suppressStaticInitializers.contains(className);
@@ -231,7 +231,7 @@ public class MockRepository {
 	 * @param value
 	 *            The value to store under the specified <tt>key</tt>.
 	 * @return The previous object under the specified <tt>key</tt> or
-	 *         <code>null</code>.
+	 *         {@code null}.
 	 */
 	public static synchronized Object putAdditionalState(String key, Object value) {
 		return additionalState.put(key, value);
@@ -295,14 +295,14 @@ public class MockRepository {
 	}
 
 	/**
-	 * @return <code>true</code> if the <tt>method</tt> should be proxied.
+	 * @return {@code true} if the <tt>method</tt> should be proxied.
 	 */
 	public static synchronized boolean hasMethodProxy(Method method) {
 		return methodProxies.containsKey(method);
 	}
 
 	/**
-	 * @return <code>true</code> if the <tt>method</tt> should be suppressed.
+	 * @return {@code true} if the <tt>method</tt> should be suppressed.
 	 */
 	public static synchronized boolean shouldSuppressMethod(Method method,
 			Class<?> objectType) throws ClassNotFoundException {
@@ -321,14 +321,14 @@ public class MockRepository {
 	}
 
 	/**
-	 * @return <code>true</code> if the <tt>field</tt> should be suppressed.
+	 * @return {@code true} if the <tt>field</tt> should be suppressed.
 	 */
 	public static synchronized boolean shouldSuppressField(Field field) {
 		return suppressField.contains(field) || suppressFieldTypes.contains(field.getType().getName());
 	}
 
 	/**
-	 * @return <code>true</code> if the <tt>constructor</tt> should be
+	 * @return {@code true} if the <tt>constructor</tt> should be
 	 *         suppressed.
 	 */
 	public static synchronized boolean shouldSuppressConstructor(Constructor<?> constructor) {
@@ -336,7 +336,7 @@ public class MockRepository {
 	}
 
 	/**
-	 * @return <code>true</code> if the <tt>method</tt> has a substitute return
+	 * @return {@code true} if the <tt>method</tt> has a substitute return
 	 *         value.
 	 */
 	public static synchronized boolean shouldStubMethod(Method method) {
@@ -345,7 +345,7 @@ public class MockRepository {
 
 	/**
 	 * @return The substitute return value for a particular method, may be
-	 *         <code>null</code>.
+	 *         {@code null}.
 	 */
 	public static synchronized Object getMethodToStub(Method method) {
 		return substituteReturnValues.get(method);
@@ -353,7 +353,7 @@ public class MockRepository {
 
 	/**
 	 * Set a substitute return value for a method. Whenever this method will be
-	 * called the <code>value</code> will be returned instead.
+	 * called the {@code value} will be returned instead.
 	 * 
 	 * @return The previous substitute value if any.
 	 */
@@ -362,7 +362,7 @@ public class MockRepository {
 	}
 
 	/**
-	 * @return The proxy for a particular method, may be <code>null</code>.
+	 * @return The proxy for a particular method, may be {@code null}.
 	 */
 	public static synchronized InvocationHandler getMethodProxy(Method method) {
 		return methodProxies.get(method);
@@ -380,7 +380,7 @@ public class MockRepository {
 
     /**
      * Add a {@link Runnable} that will be executed after each test
-     * @param runnable
+     * @param runnable - an instance of {@link Runnable} that will be executed.
      */
     public static synchronized void addAfterMethodRunner(Runnable runnable) {
         afterMethodRunners.add(runnable);

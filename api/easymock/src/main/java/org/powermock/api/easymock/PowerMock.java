@@ -292,7 +292,7 @@ public class PowerMock extends MemberModifier {
      * <i>not</i> be mocked in an easy manner (by just passing in the method
      * names of the method you wish <i>not</i> to mock). Note that you cannot
      * uniquely specify a method to exclude using this method if there are
-     * several methods with the same name in <code>type</code>. This method will
+     * several methods with the same name in {@code type}. This method will
      * mock ALL methods that doesn't match the supplied name(s) regardless of
      * parameter types and signature. If this is not the case you should
      * fall-back on using the {@link #createMock(Class, Method...)} method
@@ -301,9 +301,9 @@ public class PowerMock extends MemberModifier {
      * @param <T>         The type of the mock.
      * @param type        The type that'll be used to create a mock instance.
      * @param methodNames The names of the methods that should be mocked. If
-     *                    <code>null</code>, then this method will have the same effect
+     *                    {@code null}, then this method will have the same effect
      *                    as just calling {@link #createMock(Class, Method...)} with the
-     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    second parameter as {@code new Method[0]} (i.e. all
      *                    methods in that class will be mocked).
      * @return A mock object of type <T>.
      */
@@ -320,7 +320,7 @@ public class PowerMock extends MemberModifier {
      * <i>not</i> be nicely mocked in an easy manner (by just passing in the
      * method names of the method you wish <i>not</i> to mock). Note that you
      * cannot uniquely specify a method to exclude using this method if there
-     * are several methods with the same name in <code>type</code>. This method
+     * are several methods with the same name in {@code type}. This method
      * will mock ALL methods that doesn't match the supplied name(s) regardless
      * of parameter types and signature. If this is not the case you should
      * fall-back on using the {@link #createMock(Class, Method...)} method
@@ -329,9 +329,9 @@ public class PowerMock extends MemberModifier {
      * @param <T>         The type of the mock.
      * @param type        The type that'll be used to create a mock instance.
      * @param methodNames The names of the methods that should be mocked. If
-     *                    <code>null</code>, then this method will have the same effect
+     *                    {@code null}, then this method will have the same effect
      *                    as just calling {@link #createMock(Class, Method...)} with the
-     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    second parameter as {@code new Method[0]} (i.e. all
      *                    methods in that class will be mocked).
      * @return A mock object of type <T>.
      */
@@ -348,7 +348,7 @@ public class PowerMock extends MemberModifier {
      * <i>not</i> be strictly mocked in an easy manner (by just passing in the
      * method names of the method you wish <i>not</i> to mock). Note that you
      * cannot uniquely specify a method to exclude using this method if there
-     * are several methods with the same name in <code>type</code>. This method
+     * are several methods with the same name in {@code type}. This method
      * will mock ALL methods that doesn't match the supplied name(s) regardless
      * of parameter types and signature. If this is not the case you should
      * fall-back on using the {@link #createMock(Class, Method...)} method
@@ -357,9 +357,9 @@ public class PowerMock extends MemberModifier {
      * @param <T>         The type of the mock.
      * @param type        The type that'll be used to create a mock instance.
      * @param methodNames The names of the methods that should be mocked. If
-     *                    <code>null</code>, then this method will have the same effect
+     *                    {@code null}, then this method will have the same effect
      *                    as just calling {@link #createMock(Class, Method...)} with the
-     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    second parameter as {@code new Method[0]} (i.e. all
      *                    methods in that class will be mocked).
      * @return A mock object of type <T>.
      */
@@ -543,7 +543,7 @@ public class PowerMock extends MemberModifier {
      * in an easy way (by just passing in the method names of the method you
      * wish to mock). Note that you cannot uniquely specify a method to mock
      * using this method if there are several methods with the same name in
-     * <code>type</code>. This method will mock ALL methods that match the
+     * {@code type}. This method will mock ALL methods that match the
      * supplied name regardless of parameter types and signature. If this is the
      * case you should fall-back on using the
      * {@link #mockStatic(Class, Method...)} method instead.
@@ -551,9 +551,9 @@ public class PowerMock extends MemberModifier {
      * @param clazz       The class that contains the static methods that should be
      *                    mocked.
      * @param methodNames The names of the methods that should be mocked. If
-     *                    <code>null</code>, then this method will have the same effect
+     *                    {@code null}, then this method will have the same effect
      *                    as just calling {@link #mockStatic(Class, Method...)} with the
-     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    second parameter as {@code new Method[0]} (i.e. all
      *                    methods in that class will be mocked).
      */
     public static synchronized void mockStaticPartial(Class<?> clazz, String... methodNames) {
@@ -565,7 +565,7 @@ public class PowerMock extends MemberModifier {
      * (strict) in an easy way (by just passing in the method names of the
      * method you wish to mock). Note that you cannot uniquely specify a method
      * to mock using this method if there are several methods with the same name
-     * in <code>type</code>. This method will mock ALL methods that match the
+     * in {@code type}. This method will mock ALL methods that match the
      * supplied name regardless of parameter types and signature. If this is the
      * case you should fall-back on using the
      * {@link #mockStaticStrict(Class, Method...)} method instead.
@@ -573,9 +573,9 @@ public class PowerMock extends MemberModifier {
      * @param clazz       The class that contains the static methods that should be
      *                    mocked.
      * @param methodNames The names of the methods that should be mocked. If
-     *                    <code>null</code>, then this method will have the same effect
+     *                    {@code null}, then this method will have the same effect
      *                    as just calling {@link #mockStatic(Class, Method...)} with the
-     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    second parameter as {@code new Method[0]} (i.e. all
      *                    methods in that class will be mocked).
      */
     public static synchronized void mockStaticPartialStrict(Class<?> clazz, String... methodNames) {
@@ -587,7 +587,7 @@ public class PowerMock extends MemberModifier {
      * (nice) in an easy way (by just passing in the method names of the method
      * you wish to mock). Note that you cannot uniquely specify a method to mock
      * using this method if there are several methods with the same name in
-     * <code>type</code>. This method will mock ALL methods that match the
+     * {@code type}. This method will mock ALL methods that match the
      * supplied name regardless of parameter types and signature. If this is the
      * case you should fall-back on using the
      * {@link #mockStaticStrict(Class, Method...)} method instead.
@@ -595,9 +595,9 @@ public class PowerMock extends MemberModifier {
      * @param clazz       The class that contains the static methods that should be
      *                    mocked.
      * @param methodNames The names of the methods that should be mocked. If
-     *                    <code>null</code>, then this method will have the same effect
+     *                    {@code null}, then this method will have the same effect
      *                    as just calling {@link #mockStatic(Class, Method...)} with the
-     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    second parameter as {@code new Method[0]} (i.e. all
      *                    methods in that class will be mocked).
      */
     public static synchronized void mockStaticPartialNice(Class<?> clazz, String... methodNames) {
@@ -639,7 +639,7 @@ public class PowerMock extends MemberModifier {
      * A utility method that may be used to mock several methods in an easy way
      * (by just passing in the method names of the method you wish to mock).
      * Note that you cannot uniquely specify a method to mock using this method
-     * if there are several methods with the same name in <code>type</code>.
+     * if there are several methods with the same name in {@code type}.
      * This method will mock ALL methods that match the supplied name regardless
      * of parameter types and signature. If this is the case you should
      * fall-back on using the {@link #createMock(Class, Method...)} method
@@ -648,9 +648,9 @@ public class PowerMock extends MemberModifier {
      * @param <T>         The type of the mock.
      * @param type        The type that'll be used to create a mock instance.
      * @param methodNames The names of the methods that should be mocked. If
-     *                    <code>null</code>, then this method will have the same effect
+     *                    {@code null}, then this method will have the same effect
      *                    as just calling {@link #createMock(Class, Method...)} with the
-     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    second parameter as {@code new Method[0]} (i.e. all
      *                    methods in that class will be mocked).
      * @return A mock object of type <T>.
      */
@@ -662,7 +662,7 @@ public class PowerMock extends MemberModifier {
      * A utility method that may be used to mock several methods in an easy way
      * (by just passing in the method names of the method you wish to mock).
      * Note that you cannot uniquely specify a method to mock using this method
-     * if there are several methods with the same name in <code>type</code>.
+     * if there are several methods with the same name in {@code type}.
      * This method will mock ALL methods that match the supplied name regardless
      * of parameter types and signature. If this is the case you should
      * fall-back on using the {@link #createMock(Class, Method...)} method
@@ -683,9 +683,9 @@ public class PowerMock extends MemberModifier {
      * @param type        The type that'll be used to create a mock instance.
      * @param where       Where in the class hierarchy the methods resides.
      * @param methodNames The names of the methods that should be mocked. If
-     *                    <code>null</code>, then this method will have the same effect
+     *                    {@code null}, then this method will have the same effect
      *                    as just calling {@link #createMock(Class, Method...)} with the
-     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    second parameter as {@code new Method[0]} (i.e. all
      *                    methods in that class will be mocked).
      * @return A mock object of type <T>.
      */
@@ -698,7 +698,7 @@ public class PowerMock extends MemberModifier {
      * easy way (by just passing in the method names of the method you wish to
      * mock). Note that you cannot uniquely specify a method to mock using this
      * method if there are several methods with the same name in
-     * <code>type</code>. This method will mock ALL methods that match the
+     * {@code type}. This method will mock ALL methods that match the
      * supplied name regardless of parameter types and signature. If this is the
      * case you should fall-back on using the
      * {@link #createMock(Class, Method...)} method instead.
@@ -706,9 +706,9 @@ public class PowerMock extends MemberModifier {
      * @param <T>         The type of the mock.
      * @param type        The type that'll be used to create a mock instance.
      * @param methodNames The names of the methods that should be mocked. If
-     *                    <code>null</code>, then this method will have the same effect
+     *                    {@code null}, then this method will have the same effect
      *                    as just calling {@link #createMock(Class, Method...)} with the
-     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    second parameter as {@code new Method[0]} (i.e. all
      *                    methods in that class will be mocked).
      * @return A mock object of type <T>.
      */
@@ -721,7 +721,7 @@ public class PowerMock extends MemberModifier {
      * easy way (by just passing in the method names of the method you wish to
      * mock). Note that you cannot uniquely specify a method to mock using this
      * method if there are several methods with the same name in
-     * <code>type</code>. This method will mock ALL methods that match the
+     * {@code type}. This method will mock ALL methods that match the
      * supplied name regardless of parameter types and signature. If this is the
      * case you should fall-back on using the
      * {@link #createMock(Class, Method...)} method instead.
@@ -741,9 +741,9 @@ public class PowerMock extends MemberModifier {
      * @param type        The type that'll be used to create a mock instance.
      * @param where       Where in the class hierarchy the methods resides.
      * @param methodNames The names of the methods that should be mocked. If
-     *                    <code>null</code>, then this method will have the same effect
+     *                    {@code null}, then this method will have the same effect
      *                    as just calling {@link #createMock(Class, Method...)} with the
-     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    second parameter as {@code new Method[0]} (i.e. all
      *                    methods in that class will be mocked).
      * @return A mock object of type <T>.
      */
@@ -757,7 +757,7 @@ public class PowerMock extends MemberModifier {
      * easy way (by just passing in the method names of the method you wish to
      * mock). Note that you cannot uniquely specify a method to mock using this
      * method if there are several methods with the same name in
-     * <code>type</code>. This method will mock ALL methods that match the
+     * {@code type}. This method will mock ALL methods that match the
      * supplied name regardless of parameter types and signature. If this is the
      * case you should fall-back on using the
      * {@link #createMock(Class, Method...)} method instead.
@@ -765,9 +765,9 @@ public class PowerMock extends MemberModifier {
      * @param <T>         The type of the mock.
      * @param type        The type that'll be used to create a mock instance.
      * @param methodNames The names of the methods that should be mocked. If
-     *                    <code>null</code>, then this method will have the same effect
+     *                    {@code null}, then this method will have the same effect
      *                    as just calling {@link #createMock(Class, Method...)} with the
-     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    second parameter as {@code new Method[0]} (i.e. all
      *                    methods in that class will be mocked).
      * @return A mock object of type <T>.
      */
@@ -780,7 +780,7 @@ public class PowerMock extends MemberModifier {
      * easy way (by just passing in the method names of the method you wish to
      * mock). Note that you cannot uniquely specify a method to mock using this
      * method if there are several methods with the same name in
-     * <code>type</code>. This method will mock ALL methods that match the
+     * {@code type}. This method will mock ALL methods that match the
      * supplied name regardless of parameter types and signature. If this is the
      * case you should fall-back on using the
      * {@link #createMock(Class, Method...)} method instead.
@@ -800,9 +800,9 @@ public class PowerMock extends MemberModifier {
      * @param type        The type that'll be used to create a mock instance.
      * @param where       Where in the class hierarchy the methods resides.
      * @param methodNames The names of the methods that should be mocked. If
-     *                    <code>null</code>, then this method will have the same effect
+     *                    {@code null}, then this method will have the same effect
      *                    as just calling {@link #createMock(Class, Method...)} with the
-     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    second parameter as {@code new Method[0]} (i.e. all
      *                    methods in that class will be mocked).
      * @return A mock object of type <T>.
      */
@@ -819,9 +819,9 @@ public class PowerMock extends MemberModifier {
      * @param <T>         the type of the mock object
      * @param type        the type of the mock object
      * @param methodNames The names of the methods that should be mocked. If
-     *                    <code>null</code>, then this method will have the same effect
+     *                    {@code null}, then this method will have the same effect
      *                    as just calling {@link #createMock(Class, Method...)} with the
-     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    second parameter as {@code new Method[0]} (i.e. all
      *                    methods in that class will be mocked).
      * @return the mock object.
      */
@@ -840,9 +840,9 @@ public class PowerMock extends MemberModifier {
      * @param <T>         the type of the mock object
      * @param type        the type of the mock object
      * @param methodNames The names of the methods that should be mocked. If
-     *                    <code>null</code>, then this method will have the same effect
+     *                    {@code null}, then this method will have the same effect
      *                    as just calling {@link #createMock(Class, Method...)} with the
-     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    second parameter as {@code new Method[0]} (i.e. all
      *                    methods in that class will be mocked).
      * @return the mock object.
      */
@@ -861,9 +861,9 @@ public class PowerMock extends MemberModifier {
      * @param <T>         the type of the mock object
      * @param type        the type of the mock object
      * @param methodNames The names of the methods that should be mocked. If
-     *                    <code>null</code>, then this method will have the same effect
+     *                    {@code null}, then this method will have the same effect
      *                    as just calling {@link #createMock(Class, Method...)} with the
-     *                    second parameter as <code>new Method[0]</code> (i.e. all
+     *                    second parameter as {@code new Method[0]} (i.e. all
      *                    methods in that class will be mocked).
      * @return the mock object.
      */
@@ -882,9 +882,9 @@ public class PowerMock extends MemberModifier {
      * @param <T>                  the type of the mock object
      * @param type                 the type of the mock object
      * @param methodNames          The names of the methods that should be mocked. If
-     *                             <code>null</code>, then this method will have the same effect
+     *                             {@code null}, then this method will have the same effect
      *                             as just calling {@link #createMock(Class, Method...)} with the
-     *                             second parameter as <code>new Method[0]</code> (i.e. all
+     *                             second parameter as {@code new Method[0]} (i.e. all
      *                             methods in that class will be mocked).
      * @param constructorArguments The constructor arguments that will be used to invoke a
      *                             certain constructor. (optional)
@@ -906,9 +906,9 @@ public class PowerMock extends MemberModifier {
      * @param <T>                  the type of the mock object
      * @param type                 the type of the mock object
      * @param methodNames          The names of the methods that should be mocked. If
-     *                             <code>null</code>, then this method will have the same effect
+     *                             {@code null}, then this method will have the same effect
      *                             as just calling {@link #createMock(Class, Method...)} with the
-     *                             second parameter as <code>new Method[0]</code> (i.e. all
+     *                             second parameter as {@code new Method[0]} (i.e. all
      *                             methods in that class will be mocked).
      * @param constructorArguments The constructor arguments that will be used to invoke a
      *                             certain constructor. (optional)
@@ -930,9 +930,9 @@ public class PowerMock extends MemberModifier {
      * @param <T>                  the type of the mock object
      * @param type                 the type of the mock object
      * @param methodNames          The names of the methods that should be mocked. If
-     *                             <code>null</code>, then this method will have the same effect
+     *                             {@code null}, then this method will have the same effect
      *                             as just calling {@link #createMock(Class, Method...)} with the
-     *                             second parameter as <code>new Method[0]</code> (i.e. all
+     *                             second parameter as {@code new Method[0]} (i.e. all
      *                             methods in that class will be mocked).
      * @param constructorArguments The constructor arguments that will be used to invoke a
      *                             certain constructor. (optional)
@@ -954,9 +954,9 @@ public class PowerMock extends MemberModifier {
      * @param <T>                  the type of the mock object
      * @param type                 the type of the mock object
      * @param methodName           The names of the methods that should be mocked. If
-     *                             <code>null</code>, then this method will have the same effect
+     *                             {@code null}, then this method will have the same effect
      *                             as just calling {@link #createMock(Class, Method...)} with the
-     *                             second parameter as <code>new Method[0]</code> (i.e. all
+     *                             second parameter as {@code new Method[0]} (i.e. all
      *                             methods in that class will be mocked).
      * @param methodParameterTypes Parameter types that defines the method. Note that this is
      *                             only needed to separate overloaded methods.
@@ -982,9 +982,9 @@ public class PowerMock extends MemberModifier {
      * @param <T>                  the type of the mock object
      * @param type                 the type of the mock object
      * @param methodName           The names of the methods that should be mocked. If
-     *                             <code>null</code>, then this method will have the same effect
+     *                             {@code null}, then this method will have the same effect
      *                             as just calling {@link #createMock(Class, Method...)} with the
-     *                             second parameter as <code>new Method[0]</code> (i.e. all
+     *                             second parameter as {@code new Method[0]} (i.e. all
      *                             methods in that class will be mocked).
      * @param methodParameterTypes Parameter types that defines the method. Note that this is
      *                             only needed to separate overloaded methods.
@@ -1010,9 +1010,9 @@ public class PowerMock extends MemberModifier {
      * @param <T>                  the type of the mock object
      * @param type                 the type of the mock object
      * @param methodName           The names of the methods that should be mocked. If
-     *                             <code>null</code>, then this method will have the same effect
+     *                             {@code null}, then this method will have the same effect
      *                             as just calling {@link #createMock(Class, Method...)} with the
-     *                             second parameter as <code>new Method[0]</code> (i.e. all
+     *                             second parameter as {@code new Method[0]} (i.e. all
      *                             methods in that class will be mocked).
      * @param methodParameterTypes Parameter types that defines the method. Note that this is
      *                             only needed to separate overloaded methods.
@@ -1038,9 +1038,9 @@ public class PowerMock extends MemberModifier {
      * @param <T>                       the type of the mock object
      * @param type                      the type of the mock object
      * @param methodName                The names of the methods that should be mocked. If
-     *                                  <code>null</code>, then this method will have the same effect
+     *                                  {@code null}, then this method will have the same effect
      *                                  as just calling {@link #createMock(Class, Method...)} with the
-     *                                  second parameter as <code>new Method[0]</code> (i.e. all
+     *                                  second parameter as {@code new Method[0]} (i.e. all
      *                                  methods in that class will be mocked).
      * @param methodParameterTypes      Parameter types that defines the method. Note that this is
      *                                  only needed to separate overloaded methods.
@@ -1070,9 +1070,9 @@ public class PowerMock extends MemberModifier {
      * @param <T>                       the type of the mock object
      * @param type                      the type of the mock object
      * @param methodName                The names of the methods that should be mocked. If
-     *                                  <code>null</code>, then this method will have the same effect
+     *                                  {@code null}, then this method will have the same effect
      *                                  as just calling {@link #createMock(Class, Method...)} with the
-     *                                  second parameter as <code>new Method[0]</code> (i.e. all
+     *                                  second parameter as {@code new Method[0]} (i.e. all
      *                                  methods in that class will be mocked).
      * @param methodParameterTypes      Parameter types that defines the method. Note that this is
      *                                  only needed to separate overloaded methods.
@@ -1102,9 +1102,9 @@ public class PowerMock extends MemberModifier {
      * @param <T>                       the type of the mock object
      * @param type                      the type of the mock object
      * @param methodName                The names of the methods that should be mocked. If
-     *                                  <code>null</code>, then this method will have the same effect
+     *                                  {@code null}, then this method will have the same effect
      *                                  as just calling {@link #createMock(Class, Method...)} with the
-     *                                  second parameter as <code>new Method[0]</code> (i.e. all
+     *                                  second parameter as {@code new Method[0]} (i.e. all
      *                                  methods in that class will be mocked).
      * @param methodParameterTypes      Parameter types that defines the method. Note that this is
      *                                  only needed to separate overloaded methods.
@@ -1195,7 +1195,7 @@ public class PowerMock extends MemberModifier {
     /**
      * Used to specify expectations on methods using the method name at a
      * specific place in the class hierarchy (specified by the
-     * <code>where</code> parameter). Works on for example private or package
+     * {@code where} parameter). Works on for example private or package
      * private methods.
      * <p/>
      * Use this for overloaded methods.
@@ -1226,7 +1226,7 @@ public class PowerMock extends MemberModifier {
     /**
      * Used to specify expectations on methods using the method name at a
      * specific place in the class hierarchy (specified by the
-     * <code>where</code> parameter). Works on for example private or package
+     * {@code where} parameter). Works on for example private or package
      * private methods.
      */
     public static synchronized <T> IExpectationSetters<T> expectPrivate(Object instance, String methodName,
@@ -1411,7 +1411,7 @@ public class PowerMock extends MemberModifier {
      * method when using PowerMock!
      *
      * @param mocks mock objects or classes loaded by PowerMock.
-     * @throws Exception If something unexpected goes wrong.
+     * @throws RuntimeException If something unexpected goes wrong.
      */
     public static synchronized void replay(Object... mocks) {
         try {
@@ -1501,8 +1501,8 @@ public class PowerMock extends MemberModifier {
      * Convenience method for createMock followed by expectNew when PowerMock
      * cannot determine which constructor to use automatically. This happens
      * when you have one constructor taking a primitive type and another one
-     * taking the wrapper type of the primitive. For example <code>int</code>
-     * and <code>Integer</code>.
+     * taking the wrapper type of the primitive. For example {@code int}
+     * and {@code Integer}.
      *
      * @param type           The class that should be mocked.
      * @param parameterTypes The constructor parameter types.
@@ -1539,7 +1539,7 @@ public class PowerMock extends MemberModifier {
      * PowerMock cannot determine which constructor to use automatically. This
      * happens when you have one constructor taking a primitive type and another
      * one taking the wrapper type of the primitive. For example
-     * <code>int</code> and <code>Integer</code>.
+     * {@code int} and {@code Integer}.
      *
      * @param type           The class that should be mocked.
      * @param parameterTypes The constructor parameter types.
@@ -1576,7 +1576,7 @@ public class PowerMock extends MemberModifier {
      * PowerMock cannot determine which constructor to use automatically. This
      * happens when you have one constructor taking a primitive type and another
      * one taking the wrapper type of the primitive. For example
-     * <code>int</code> and <code>Integer</code>.
+     * {@code int} and {@code Integer}.
      *
      * @param type           The class that should be mocked.
      * @param parameterTypes The constructor parameter types.
@@ -1746,6 +1746,7 @@ public class PowerMock extends MemberModifier {
      *
      * @deprecated Use {@link #suppress(Constructor[])} instead.
      */
+    @Deprecated
     public static synchronized void suppressConstructor(Constructor<?>... constructors) {
         SuppressCode.suppressConstructor(constructors);
     }
@@ -1757,6 +1758,7 @@ public class PowerMock extends MemberModifier {
      * @param parameterTypes The parameter types of the constructor to suppress.
      * @deprecated Use {@link #suppress(Constructor)} instead.
      */
+    @Deprecated
     public static synchronized void suppressSpecificConstructor(Class<?> clazz, Class<?>... parameterTypes) {
         SuppressCode.suppressSpecificConstructor(clazz, parameterTypes);
     }
@@ -1767,6 +1769,7 @@ public class PowerMock extends MemberModifier {
      * @param classes The classes whose constructors will be suppressed.
      * @deprecated Use {@link #suppress(Constructor[])} instead.
      */
+    @Deprecated
     public static synchronized void suppressConstructor(Class<?>... classes) {
         SuppressCode.suppressConstructor(classes);
     }
@@ -1778,6 +1781,7 @@ public class PowerMock extends MemberModifier {
      * @param excludePrivateConstructors optionally keep code in private constructors
      * @deprecated Use {@link #suppress(Constructor[])} instead.
      */
+    @Deprecated
     public static synchronized void suppressConstructor(Class<?> clazz, boolean excludePrivateConstructors) {
         SuppressCode.suppressConstructor(clazz, excludePrivateConstructors);
     }
@@ -1789,6 +1793,7 @@ public class PowerMock extends MemberModifier {
      *
      * @deprecated Use {@link #suppress(Field[])} instead.
      */
+    @Deprecated
     public static synchronized void suppressField(Field... fields) {
         SuppressCode.suppressField(fields);
     }
@@ -1798,6 +1803,7 @@ public class PowerMock extends MemberModifier {
      *
      * @deprecated Use {@link #suppress(Field[])} instead.
      */
+    @Deprecated
     public static synchronized void suppressField(Class<?>[] classes) {
         SuppressCode.suppressField(classes);
     }
@@ -1811,6 +1817,7 @@ public class PowerMock extends MemberModifier {
      *                   suppressed.
      * @deprecated Use {@link #suppress(Field)} instead.
      */
+    @Deprecated
     public static synchronized void suppressField(Class<?> clazz, String... fieldNames) {
         SuppressCode.suppressField(clazz, fieldNames);
     }
@@ -1822,6 +1829,7 @@ public class PowerMock extends MemberModifier {
      *
      * @deprecated Use {@link #suppress(Method[])} instead.
      */
+    @Deprecated
     public static synchronized void suppressMethod(Method... methods) {
         SuppressCode.suppressMethod(methods);
     }
@@ -1833,6 +1841,7 @@ public class PowerMock extends MemberModifier {
      * @param additionalClasses Additional classes whose methods will be suppressed.
      * @deprecated Use {@link #suppress(Method[])} instead.
      */
+    @Deprecated
     public static synchronized void suppressMethod(Class<?> cls, Class<?>... additionalClasses) {
         SuppressCode.suppressMethod(cls, additionalClasses);
     }
@@ -1843,6 +1852,7 @@ public class PowerMock extends MemberModifier {
      * @param classes Classes whose methods will be suppressed.
      * @deprecated Use {@link #suppress(Method[])} instead.
      */
+    @Deprecated
     public static synchronized void suppressMethod(Class<?>[] classes) {
         SuppressCode.suppressMethod(classes);
     }
@@ -1851,10 +1861,11 @@ public class PowerMock extends MemberModifier {
      * Suppress multiple methods for a class.
      *
      * @param clazz                 The class whose methods will be suppressed.
-     * @param methodName            The first method to be suppress in class <code>clazz</code>.
-     * @param additionalMethodNames Additional methods to suppress in class <code>clazz</code>.
+     * @param methodName            The first method to be suppress in class {@code clazz}.
+     * @param additionalMethodNames Additional methods to suppress in class {@code clazz}.
      * @deprecated Use {@link #suppress(Method[])} instead.
      */
+    @Deprecated
     public static synchronized void suppressMethod(Class<?> clazz, String methodName, String... additionalMethodNames) {
         SuppressCode.suppressMethod(clazz, methodName, additionalMethodNames);
     }
@@ -1863,9 +1874,10 @@ public class PowerMock extends MemberModifier {
      * Suppress multiple methods for a class.
      *
      * @param clazz       The class whose methods will be suppressed.
-     * @param methodNames Methods to suppress in class <code>clazz</code>.
+     * @param methodNames Methods to suppress in class {@code clazz}.
      * @deprecated Use {@link #suppress(Method[])} instead.
      */
+    @Deprecated
     public static synchronized void suppressMethod(Class<?> clazz, String[] methodNames) {
         SuppressCode.suppressMethod(clazz, methodNames);
     }
@@ -1877,6 +1889,7 @@ public class PowerMock extends MemberModifier {
      * @param excludePrivateMethods optionally not suppress private methods
      * @deprecated Use {@link #suppress(Method[])} instead.
      */
+    @Deprecated
     public static synchronized void suppressMethod(Class<?> clazz, boolean excludePrivateMethods) {
         SuppressCode.suppressMethod(clazz, excludePrivateMethods);
     }
@@ -1886,6 +1899,7 @@ public class PowerMock extends MemberModifier {
      *
      * @deprecated Use {@link #suppress(Method)} instead.
      */
+    @Deprecated
     public static synchronized void suppressMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
         SuppressCode.suppressMethod(clazz, methodName, parameterTypes);
     }

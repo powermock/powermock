@@ -141,7 +141,7 @@ public abstract class AbstractInsnNode {
     int index;
 
     /**
-     * Constructs a new {@link AbstractInsnNode}.
+     * Constructs a new .
      * 
      * @param opcode the opcode of the instruction to be constructed.
      */

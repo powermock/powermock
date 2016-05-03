@@ -48,7 +48,7 @@ public class ASMifierMethodVisitor extends ASMifierAbstractVisitor implements
 {
 
     /**
-     * Constructs a new {@link ASMifierMethodVisitor} object.
+     * Constructs a new  object.
      */
     public ASMifierMethodVisitor() {
         super("mv");

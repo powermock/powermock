@@ -29,7 +29,7 @@ import java.lang.reflect.Method;
  * on the actual value passed to getLogger. This limitation is acceptable in most real uses cases.
  * <p/>
  * Tests that want to do verifications on the mocked logger can do so by getting the mocked instance as production code
- * does: {@link org.slf4j.LoggerFactory#getLogger(Class)}. However, it is critical that the mocked logger is
+ * does: {@code LoggerFactory.getLogger(Class)}. However, it is critical that the mocked logger is
  * reset after each test in order to avoid crosstalk between test cases.
  * <p/>
  *

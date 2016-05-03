@@ -74,6 +74,7 @@ import java.lang.annotation.*;
  *             annotation will be removed in an upcoming release.
  */
 
+@Deprecated
 @Target( { ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

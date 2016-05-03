@@ -26,10 +26,10 @@ public interface DefaultBehavior {
 	 * Replay the given objects or classes. May throw exception if replay is not
 	 * needed or not supported.
 	 * 
-	 * @param mock
-	 *            The object(s) to replay. May be <code>null</code>.
+	 * @param mocks
+	 *            The object(s) to replay. May be {@code null}.
 	 * 
-	 * @return the result of the replay (may be <code>null</code>).
+	 * @return the result of the replay (may be {@code null}).
 	 */
 	Object replay(Object... mocks);
 
@@ -37,10 +37,10 @@ public interface DefaultBehavior {
 	 * Verify the given objects or classes. May throw exception if verify is not
 	 * needed or not supported.
 	 * 
-	 * @param mock
-	 *            The object(s) to verify. May be <code>null</code>.
+	 * @param mocks
+	 *            The object(s) to verify. May be {@code null}.
 	 * 
-	 * @return the result of the verification (may be <code>null</code>).
+	 * @return the result of the verification (may be {@code null}).
 	 */
 	Object verify(Object... mocks);
 
@@ -48,10 +48,10 @@ public interface DefaultBehavior {
 	 * Reset the given objects or classes. May throw exception if reset is not
 	 * needed or not supported.
 	 * 
-	 * @param mock
-	 *            The object(s) to replay. May be <code>null</code>.
+	 * @param mocks
+	 *            The object(s) to replay. May be {@code null}.
 	 * 
-	 * @return the result of the replay (may be <code>null</code>).
+	 * @return the result of the replay (may be {@code null}).
 	 */
 	Object reset(Object... mocks);
 

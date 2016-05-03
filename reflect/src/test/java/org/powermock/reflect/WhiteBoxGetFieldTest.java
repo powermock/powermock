@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * found in the parent class, the interfaces are checked before the grandparent
  * class. The problem is that the getSuperclass() method will always return null
  * for the Class representing the interface. The current implementation of
- * WhiteboxImpl blindly adds this null to the <code>examine</code> LinkedList.
+ * WhiteboxImpl blindly adds this null to the {@code examine} LinkedList.
  * 
  * @author Ben Chatelain
  */

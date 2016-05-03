@@ -73,8 +73,8 @@ public class DeepCloner implements DeepClonerSPI {
 	/**
 	 * 
 	 * @param includeStandardJavaType
-	 *            <code>true</code> also clones standard java types (using
-	 *            simple serialization), <code>false</code> simply reference to
+	 *            {@code true} also clones standard java types (using
+	 *            simple serialization), {@code false} simply reference to
 	 *            these objects (will be same instance).
 	 * @return A deep clone of the object to clone.
 	 */

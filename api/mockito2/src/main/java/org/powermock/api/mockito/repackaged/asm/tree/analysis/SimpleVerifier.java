@@ -64,14 +64,14 @@ public class SimpleVerifier extends BasicVerifier {
     private final boolean isInterface;
 
     /**
-     * Constructs a new {@link SimpleVerifier}.
+     * Constructs a new .
      */
     public SimpleVerifier() {
         this(null, null, false);
     }
 
     /**
-     * Constructs a new {@link SimpleVerifier} to verify a specific class. This
+     * Constructs a new  to verify a specific class. This
      * class will not be loaded into the JVM since it may be incorrect.
      * 
      * @param currentClass the class that is verified.
@@ -87,7 +87,7 @@ public class SimpleVerifier extends BasicVerifier {
     }
 
     /**
-     * Constructs a new {@link SimpleVerifier} to verify a specific class. This
+     * Constructs a new  to verify a specific class. This
      * class will not be loaded into the JVM since it may be incorrect.
      * 
      * @param currentClass the class that is verified.

@@ -46,7 +46,7 @@ public class IntInsnNode extends AbstractInsnNode {
     public int operand;
 
     /**
-     * Constructs a new {@link IntInsnNode}.
+     * Constructs a new .
      * 
      * @param opcode the opcode of the instruction to be constructed. This
      *        opcode must be BIPUSH, SIPUSH or NEWARRAY.

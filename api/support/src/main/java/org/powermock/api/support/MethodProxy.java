@@ -34,7 +34,7 @@ public class MethodProxy {
 	}
 
 	/**
-	 * Add a proxy for a method declared in class <code>declaringClass</code>.
+	 * Add a proxy for a method declared in class {@code declaringClass}.
 	 * Each call to the method will be routed to the invocationHandler instead.
 	 */
 	public static void proxy(Class<?> declaringClass, String methodName, InvocationHandler invocationHandler) {

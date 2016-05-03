@@ -465,7 +465,7 @@ public class EmitUtils {
      * Branches to the specified label if the top two items on the stack
      * are not equal. The items must both be of the specified
      * class. Equality is determined by comparing primitive values
-     * directly and by invoking the <code>equals</code> method for
+     * directly and by invoking the {@code equals} method for
      * Objects. Arrays are recursively processed in the same manner.
      */
     public static void not_equals(final CodeEmitter e, Type type, final Label notEquals, final Customizer customizer) {

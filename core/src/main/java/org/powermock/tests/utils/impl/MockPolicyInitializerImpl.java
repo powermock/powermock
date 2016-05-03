@@ -88,9 +88,6 @@ public class MockPolicyInitializerImpl implements MockPolicyInitializer {
         return settings.getStaticInitializersToSuppress().length > 0 || settings.getFullyQualifiedNamesOfClassesToLoadByMockClassloader().length > 0;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void initialize(ClassLoader classLoader) {
         if (classLoader instanceof MockClassLoader) {
@@ -98,10 +95,6 @@ public class MockPolicyInitializerImpl implements MockPolicyInitializer {
         }
     }
 
-    /**
-     * 
-     * {@inheritDoc}
-     */
     private void initialize(MockClassLoader classLoader) {
         if (mockPolicies.length > 0) {
             MockPolicyClassLoadingSettings classLoadingSettings = getClassLoadingSettings();

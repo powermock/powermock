@@ -32,7 +32,7 @@ import static org.powermock.api.easymock.PowerMock.*;
  * 
  * <p>
  * The bug was that if there were only one test case and the
- * <code>@PrepareForTest</code> annotation was placed at the test method instead
+ * {@code @PrepareForTest} annotation was placed at the test method instead
  * of the class the PowerMock JUnit runner would detect an extra test case.
  * 
  */

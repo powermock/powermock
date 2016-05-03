@@ -41,7 +41,7 @@ import java.util.Map;
 public class InsnNode extends AbstractInsnNode {
 
     /**
-     * Constructs a new {@link InsnNode}.
+     * Constructs a new .
      * 
      * @param opcode the opcode of the instruction to be constructed. This
      *        opcode must be NOP, ACONST_NULL, ICONST_M1, ICONST_0, ICONST_1,

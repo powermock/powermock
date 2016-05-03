@@ -137,7 +137,7 @@ public class ClassNode extends MemberNode implements ClassVisitor {
     public List methods;
 
     /**
-     * Constructs a new {@link ClassNode}.
+     * Constructs a new .
      */
     public ClassNode() {
         this.interfaces = new ArrayList();

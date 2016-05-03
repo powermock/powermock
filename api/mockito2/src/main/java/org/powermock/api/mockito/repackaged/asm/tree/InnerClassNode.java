@@ -64,7 +64,7 @@ public class InnerClassNode {
     public int access;
 
     /**
-     * Constructs a new {@link InnerClassNode}.
+     * Constructs a new .
      * 
      * @param name the internal name of an inner class (see
      *        {@link org.powermock.api.mockito.repackaged.asm.Type#getInternalName() getInternalName}).

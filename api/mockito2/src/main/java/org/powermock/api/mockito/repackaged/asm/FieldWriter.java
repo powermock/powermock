@@ -90,7 +90,7 @@ final class FieldWriter implements FieldVisitor {
     // ------------------------------------------------------------------------
 
     /**
-     * Constructs a new {@link FieldWriter}.
+     * Constructs a new .
      * 
      * @param cw the class writer to which this field must be added.
      * @param access the field's access flags (see {@link Opcodes}).

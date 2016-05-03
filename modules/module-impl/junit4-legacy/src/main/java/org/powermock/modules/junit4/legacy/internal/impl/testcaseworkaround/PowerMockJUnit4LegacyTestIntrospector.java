@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
  * A custom {@link TestIntrospector} that supports methods not annotated by the
  * Test annotation but should still be executed in the test case. This is
  * actually a workaround for the JUnit 4 test runner when the test case extends
- * from the <code>TestCase</code> class.
+ * from the {@code TestCase} class.
  */
 public class PowerMockJUnit4LegacyTestIntrospector extends TestIntrospector {
 

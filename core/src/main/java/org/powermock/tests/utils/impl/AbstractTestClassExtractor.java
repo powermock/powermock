@@ -38,7 +38,7 @@ public abstract class AbstractTestClassExtractor implements TestClassesExtractor
     protected AbstractTestClassExtractor(boolean includeMethods) {this.includeMethods = includeMethods;}
 
     /**
-     * If <code>element</code> is a class this method traverses the hierarchy
+     * If {@code element} is a class this method traverses the hierarchy
      * and extracts classes that should be prepared for test in all super
      * classes.
      */
@@ -81,12 +81,12 @@ public abstract class AbstractTestClassExtractor implements TestClassesExtractor
 
     /**
      * Get the fully qualified names for classes that must should be modified
-     * for this <code>element</code>.
+     * for this {@code element}.
      *
      * @param element The element that may contain info regarding which classes that
      *                must be modified by PowerMock.
      * @return An array of fully-qualified names to classes that must be
-     * modified by PowerMock for the specific <code>element</code>.
+     * modified by PowerMock for the specific {@code element}.
      */
     protected abstract String[] getClassesToModify(AnnotatedElement element);
 

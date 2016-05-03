@@ -48,7 +48,7 @@ public interface PowerMockTestListener {
 	 *            The test method that is currently executed.
 	 * @param arguments
 	 *            The arguments passed to the test method if any. May be an
-	 *            empty array but never <code>null</code>.
+	 *            empty array but never {@code null}.
 	 * @throws Exception
 	 *             If something unexpected occurs.
 	 */
@@ -63,7 +63,7 @@ public interface PowerMockTestListener {
 	 *            The test method that is currently executed.
 	 * @param arguments
 	 *            The arguments passed to the test method if any. May be an
-	 *            empty array but never <code>null</code>.
+	 *            empty array but never {@code null}.
 	 * @param testResult
 	 *            The outcome of the test method.
 	 * @throws Exception

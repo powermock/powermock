@@ -115,15 +115,15 @@ public interface MethodVisitor {
      * <li>{@link Opcodes#F_SAME} representing frame with exactly the same
      * locals as the previous frame and with the empty stack.</li> <li>{@link Opcodes#F_SAME1}
      * representing frame with exactly the same locals as the previous frame and
-     * with single value on the stack (<code>nStack</code> is 1 and
-     * <code>stack[0]</code> contains value for the type of the stack item).</li>
+     * with single value on the stack ({@code nStack} is 1 and
+     * {@code stack[0]} contains value for the type of the stack item).</li>
      * <li>{@link Opcodes#F_APPEND} representing frame with current locals are
      * the same as the locals in the previous frame, except that additional
-     * locals are defined (<code>nLocal</code> is 1, 2 or 3 and
-     * <code>local</code> elements contains values representing added types).</li>
+     * locals are defined ({@code nLocal} is 1, 2 or 3 and
+     * {@code local} elements contains values representing added types).</li>
      * <li>{@link Opcodes#F_CHOP} representing frame with current locals are
      * the same as the locals in the previous frame, except that the last 1-3
-     * locals are absent and with the empty stack (<code>nLocals</code> is 1,
+     * locals are absent and with the empty stack ({@code nLocals} is 1,
      * 2 or 3). </li> <li>{@link Opcodes#F_FULL} representing complete frame
      * data.</li> </li> </ul>
      * 

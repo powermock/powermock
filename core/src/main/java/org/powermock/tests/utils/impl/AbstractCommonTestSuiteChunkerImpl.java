@@ -75,9 +75,6 @@ public abstract class AbstractCommonTestSuiteChunkerImpl implements TestSuiteChu
         return allChunks;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public List<TestChunk> getTestChunksEntries(Class<?> testClass) {
         for (TestCaseEntry entry : internalSuites) {
             if (entry.getTestClass().equals(testClass)) {

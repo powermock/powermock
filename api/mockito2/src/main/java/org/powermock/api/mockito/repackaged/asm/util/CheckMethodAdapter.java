@@ -301,7 +301,7 @@ public class CheckMethodAdapter extends MethodAdapter {
     // }
 
     /**
-     * Constructs a new {@link CheckMethodAdapter} object.
+     * Constructs a new  object.
      * 
      * @param cv the code visitor to which this adapter must delegate calls.
      */

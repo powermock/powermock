@@ -6,7 +6,7 @@ package org.powermock.api.mockito.repackaged.cglib.proxy;
 
 /**
  * Dispatching {@link Enhancer} callback. This is identical to the
- * {@link LazyLoader} interface but needs to be separate so that <code>Enhancer</code>
+ * {@link LazyLoader} interface but needs to be separate so that {@code Enhancer}
  * knows which type of code to generate.
  */
 public interface Dispatcher extends Callback {

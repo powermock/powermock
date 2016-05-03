@@ -45,7 +45,7 @@ public class MethodAdapter implements MethodVisitor {
     protected MethodVisitor mv;
 
     /**
-     * Constructs a new {@link MethodAdapter} object.
+     * Constructs a new  object.
      * 
      * @param mv the code visitor to which this adapter must delegate calls.
      */

@@ -60,7 +60,7 @@ public class TryCatchBlockNode {
     public String type;
 
     /**
-     * Constructs a new {@link TryCatchBlockNode}.
+     * Constructs a new .
      * 
      * @param start beginning of the exception handler's scope (inclusive).
      * @param end end of the exception handler's scope (exclusive).

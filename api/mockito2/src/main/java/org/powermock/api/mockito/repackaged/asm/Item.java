@@ -101,13 +101,13 @@ final class Item {
     Item next;
 
     /**
-     * Constructs an uninitialized {@link Item}.
+     * Constructs an uninitialized .
      */
     Item() {
     }
 
     /**
-     * Constructs an uninitialized {@link Item} for constant pool element at
+     * Constructs an uninitialized  for constant pool element at
      * given position.
      * 
      * @param index index of the item to be constructed.

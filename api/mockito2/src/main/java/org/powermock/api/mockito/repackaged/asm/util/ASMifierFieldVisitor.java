@@ -42,7 +42,7 @@ public class ASMifierFieldVisitor extends ASMifierAbstractVisitor implements
 {
 
     /**
-     * Constructs a new {@link ASMifierFieldVisitor}.
+     * Constructs a new .
      */
     public ASMifierFieldVisitor() {
         super("fv");

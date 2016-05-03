@@ -34,17 +34,11 @@ public class TestChunkImpl implements TestChunk {
 		this.testMethodsToBeExecutedByThisClassloader = testMethodsToBeExecutedByThisClassloader;
     }
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public ClassLoader getClassLoader() {
 		return classLoader;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public List<Method> getTestMethodsToBeExecutedByThisClassloader() {
 		return testMethodsToBeExecutedByThisClassloader;

@@ -17,13 +17,14 @@
 package org.powermock.api.mockito.powermocklistener;
 
 /**
- * Before each test method all fields annotated with {@link Mock},
- * {@link org.mockito.Mock} or {@link Mock} have mock objects created for them
+ * Before each test method all fields annotated with {@link org.mockito.MockitoAnnotations.Mock},
+ * {@link org.mockito.Mock} or {@link org.powermock.core.classloader.annotations.Mock} have mock objects created for them
  * and injected to the fields.
  * 
  * @deprecated Test Runners uses an annotation enabling listener per default
  *             since version 1.3. You should just remove this listener.
  */
+@Deprecated
 public class AnnotationEnabler extends org.powermock.api.extension.listener.AnnotationEnabler {
 
 }

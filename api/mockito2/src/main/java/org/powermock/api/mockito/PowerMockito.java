@@ -95,8 +95,6 @@ public class PowerMockito extends MemberModifier {
      *            class to mock
      * @param defaultAnswer
      *            default answer for unstubbed methods
-     *
-     * @return mock object
      */
     public static void mockStatic(Class<?> classMock, @SuppressWarnings("rawtypes") Answer defaultAnswer) {
         mockStatic(classMock, withSettings().defaultAnswer(defaultAnswer));
@@ -126,7 +124,6 @@ public class PowerMockito extends MemberModifier {
      *            class to mock
      * @param mockSettings
      *            additional mock settings
-     * @return mock object
      */
     public static void mockStatic(Class<?> classToMock, MockSettings mockSettings) {
         DefaultMockCreator.mock(classToMock, true, false, null, mockSettings, (Method[]) null);
@@ -239,7 +236,7 @@ public class PowerMockito extends MemberModifier {
     /**
      * Verifies certain behavior <b>happened once</b>
      * <p>
-     * Alias to <code>verifyStatic(times(1))</code> E.g:
+     * Alias to {@code verifyStatic(times(1))} E.g:
      *
      * <pre>
      * verifyStatic();
@@ -343,7 +340,7 @@ public class PowerMockito extends MemberModifier {
     /**
      * Verifies certain behavior <b>happened once</b>
      * <p>
-     * Alias to <code>verifyNew(mockClass, times(1))</code> E.g:
+     * Alias to {@code verifyNew(mockClass, times(1))} E.g:
      *
      * <pre>
      * verifyNew(ClassWithStaticMethod.class);

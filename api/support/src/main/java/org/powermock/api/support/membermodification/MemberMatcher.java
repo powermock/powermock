@@ -72,8 +72,8 @@ public class MemberMatcher {
      * @param methodName
      *            The method names.
      * @param parameterTypes
-     *            All parameter types of the method (may be <code>null</code>).
-     * @return A <code>java.lang.reflect.Method</code>.
+     *            All parameter types of the method (may be {@code null}).
+     * @return A {@code java.lang.reflect.Method}.
      * @throws MethodNotFoundException
      *             If a method cannot be found in the hierarchy.
      */
@@ -97,8 +97,8 @@ public class MemberMatcher {
      * @param declaringClass
      *            The declaringClass of the class where the method is located.
      * @param parameterTypes
-     *            All parameter types of the method (may be <code>null</code>).
-     * @return A <code>java.lang.reflect.Method</code>.
+     *            All parameter types of the method (may be {@code null}).
+     * @return A {@code java.lang.reflect.Method}.
      * @throws MethodNotFoundException
      *             If a method cannot be found in the hierarchy.
      * @throws TooManyMethodsFoundException
@@ -119,7 +119,7 @@ public class MemberMatcher {
      * @param additionalMethodNames
      *            Additional names of the methods that will be returned.
      * @return An array of Method's. May be of length 0 but not
-     *         <code>null</code>.
+     *         {@code null}.
      * @throws MethodNotFoundException
      *             If no method was found.
      */
@@ -149,7 +149,7 @@ public class MemberMatcher {
      * @param methodNames
      *            The names of the methods.
      * @return An array of Method's. May be of length 0 but not
-     *         <code>null</code>.
+     *         {@code null}.
      * @throws MethodNotFoundException
      *             If no method was found.
      */
@@ -169,7 +169,7 @@ public class MemberMatcher {
      *            The declaringClass of the class where the method is located.
      * @param fieldName
      *            The method names.
-     * @return A <code>java.lang.reflect.Field</code>.
+     * @return A {@code java.lang.reflect.Field}.
      * @throws FieldNotFoundException
      *             If a field cannot be found in the hierarchy.
      */
@@ -187,7 +187,7 @@ public class MemberMatcher {
      *            The name of the first field.
      * @param additionalfieldNames
      *            The additional names of the fields that will be returned.
-     * @return An array of Field's. May be of length 0 but not <code>null</code>
+     * @return An array of Field's. May be of length 0 but not {@code null}
      * 
      */
     public static Field[] fields(Class<?> clazz, String firstFieldName, String... additionalfieldNames) {
@@ -199,11 +199,7 @@ public class MemberMatcher {
      * 
      * @param clazz
      *            The class that should contain the fields.
-     * @param firstFieldName
-     *            The name of the first field.
-     * @param additionalfieldNames
-     *            The additional names of the fields that will be returned.
-     * @return An array of Field's. May be of length 0 but not <code>null</code>
+     * @return An array of Field's. May be of length 0 but not {@code null}
      * 
      */
     public static Field[] fields(Class<?> clazz) {
@@ -231,7 +227,7 @@ public class MemberMatcher {
      *            The class that should contain the fields.
      * @param fieldNames
      *            The names of the fields that will be returned.
-     * @return An array of Field's. May be of length 0 but not <code>null</code>
+     * @return An array of Field's. May be of length 0 but not {@code null}
      * 
      */
     public static Field[] fields(Class<?> clazz, String[] fieldNames) {
@@ -246,8 +242,8 @@ public class MemberMatcher {
      *            located.
      * @param parameterTypes
      *            All parameter types of the constructor (may be
-     *            <code>null</code>).
-     * @return A <code>java.lang.reflect.Constructor</code>.
+     *            {@code null}).
+     * @return A {@code java.lang.reflect.Constructor}.
      * @throws ConstructorNotFoundException
      *             if the constructor cannot be found.
      */
@@ -259,15 +255,15 @@ public class MemberMatcher {
 
     /**
      * Returns any one constructor specified in declaringClass. Is is useful when you only have ONE constructor
-     * declared in <code>declaringClass</code> but you don't care which parameters it take.
+     * declared in {@code declaringClass} but you don't care which parameters it take.
      * 
      * @param declaringClass
      *            The declaringClass of the class where the constructor is
      *            located.
-     * @return A <code>java.lang.reflect.Constructor</code>.
+     * @return A {@code java.lang.reflect.Constructor}.
      * @throws TooManyConstructorsFoundException
      *             If more than one constructor was present in
-     *             <code>declaringClass</code>
+     *             {@code declaringClass}
      */
     @SuppressWarnings("unchecked")
     public static <T> Constructor<T> constructor(Class<T> declaringClass) {
@@ -275,14 +271,14 @@ public class MemberMatcher {
     }
 
     /**
-     * Returns the default constructor in <code>declaringClass</code>
+     * Returns the default constructor in {@code declaringClass}
      *
      * @param declaringClass
      *            The declaringClass of the class where the constructor is
      *            located.
-     * @return A <code>java.lang.reflect.Constructor</code>.
+     * @return A {@code java.lang.reflect.Constructor}.
      * @throws ConstructorNotFoundException
-     *             If no default constructor was found in  <code>declaringClass</code>
+     *             If no default constructor was found in  {@code declaringClass}
      */
     @SuppressWarnings("unchecked")
     public static <T> Constructor<T> defaultConstructorIn(Class<T> declaringClass) {
@@ -317,7 +313,7 @@ public class MemberMatcher {
      *            The first constructor.
      * @param additionalConstructors
      *            Additional constructors
-     * @return An array of <code>java.lang.reflect.Constructor</code>.
+     * @return An array of {@code java.lang.reflect.Constructor}.
      */
     public static Constructor<?>[] constructors(Constructor<?> constructor, Constructor<?>... additionalConstructors) {
         return merge(constructor, additionalConstructors);

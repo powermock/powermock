@@ -47,7 +47,7 @@ public class ASMifierAnnotationVisitor extends AbstractVisitor implements
     protected final int id;
 
     /**
-     * Constructs a new {@link ASMifierAnnotationVisitor}.
+     * Constructs a new .
      * 
      * @param id identifier of the annotation visitor variable in the produced
      *        code.
