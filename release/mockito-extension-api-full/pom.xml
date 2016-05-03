@@ -29,6 +29,11 @@
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4-common</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -83,6 +88,12 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
+            <version>${project.version}</version>
+            <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito-common</artifactId>
             <version>${project.version}</version>
             <classifier>sources</classifier>
         </dependency>
