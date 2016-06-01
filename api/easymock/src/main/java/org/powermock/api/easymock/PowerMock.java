@@ -392,7 +392,7 @@ public class PowerMock extends MemberModifier {
            */
         final Class<?>[] argumentTypes = mergeArgumentTypes(firstArgumentType, moreTypes);
 
-        return createMock(type, WhiteboxImpl.getAllMetodsExcept(type, methodNameToExclude, argumentTypes));
+        return createMock(type, WhiteboxImpl.getAllMethodsExcept(type, methodNameToExclude, argumentTypes));
     }
 
     /**
@@ -416,7 +416,7 @@ public class PowerMock extends MemberModifier {
            */
         final Class<?>[] argumentTypes = mergeArgumentTypes(firstArgumentType, moreTypes);
 
-        return createNiceMock(type, WhiteboxImpl.getAllMetodsExcept(type, methodNameToExclude, argumentTypes));
+        return createNiceMock(type, WhiteboxImpl.getAllMethodsExcept(type, methodNameToExclude, argumentTypes));
     }
 
     /**
@@ -440,7 +440,7 @@ public class PowerMock extends MemberModifier {
            */
         final Class<?>[] argumentTypes = mergeArgumentTypes(firstArgumentType, moreTypes);
 
-        return createStrictMock(type, WhiteboxImpl.getAllMetodsExcept(type, methodNameToExclude, argumentTypes));
+        return createStrictMock(type, WhiteboxImpl.getAllMethodsExcept(type, methodNameToExclude, argumentTypes));
     }
 
     /**
