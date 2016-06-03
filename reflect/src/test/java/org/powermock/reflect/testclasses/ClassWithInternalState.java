@@ -25,6 +25,8 @@ public class ClassWithInternalState {
 
     private static final int staticFinalState = 15;
 
+    private static final Integer staticFinalStateInteger = 15;
+
     private int internalState = 0;
 
     private int anotherInternalState = -1;
@@ -61,6 +63,10 @@ public class ClassWithInternalState {
 
     public static int getStaticFinalState() {
         return staticFinalState;
+    }
+
+    public static Integer getStaticFinalStateInteger() {
+        return staticFinalStateInteger;
     }
 
     public ClassWithPrivateMethods getClassWithPrivateMethods() {

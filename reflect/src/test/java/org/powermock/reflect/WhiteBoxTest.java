@@ -269,10 +269,13 @@ public class WhiteBoxTest {
 		assertEquals(expected, Whitebox.getInternalState(ClassWithInternalState.class, "staticState"));
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test
 	public void testStaticFinalState() {
-		Whitebox.setInternalState(ClassWithInternalState.class, "staticFinalState", 123);
-		fail("Static final is not possible to change");
+		Integer newValue = ClassWithInternalState.getStaticFinalStateInteger() + 1;
+
+		Whitebox.setInternalState(ClassWithInternalState.class, "staticFinalStateInteger", newValue);
+
+		assertEquals(newValue, ClassWithInternalState.getStaticFinalStateInteger());
 	}
 
 	/**
@@ -530,7 +533,7 @@ public class WhiteBoxTest {
 	@Test
 	public void testGetAllStaticFields() throws Exception {
 		Set<Field> allFields = Whitebox.getAllStaticFields(ClassWithInternalState.class);
-		assertEquals(2, allFields.size());
+		assertEquals(3, allFields.size());
 	}
 
 	@Test

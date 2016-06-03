@@ -2305,9 +2305,25 @@ public class WhiteboxImpl {
     private static void setField(Object object, Object value, Field foundField) {
         foundField.setAccessible(true);
         try {
+            removeFinalModifierIfPresent(foundField);
             foundField.set(object, value);
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Internal error: Failed to set field in method setInternalState.", e);
+        }
+    }
+
+    private static void removeFinalModifierIfPresent(Field fieldToRemoveFinalFrom) throws IllegalAccessException {
+        int fieldModifiersMask = fieldToRemoveFinalFrom.getModifiers();
+        boolean isFinalModifierPresent = (fieldModifiersMask & Modifier.FINAL) == Modifier.FINAL;
+        if (isFinalModifierPresent) {
+            try {
+                Field modifiersField = Field.class.getDeclaredField("modifiers");
+                modifiersField.setAccessible(true);
+                int fieldModifiersMaskWithoutFinal = fieldModifiersMask & ~Modifier.FINAL;
+                modifiersField.setInt(fieldToRemoveFinalFrom, fieldModifiersMaskWithoutFinal);
+            } catch (NoSuchFieldException e) {
+                throw new RuntimeException("Internal error: Failed to find the \"modifiers\" field in method setInternalState.", e);
+            }
         }
     }
 
