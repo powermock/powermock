@@ -27,6 +27,8 @@ public class ClassWithInternalState {
 
     private static final Integer staticFinalIntegerState = 15;
 
+    private static final String staticFinalStringState = "Some String";
+
     private int internalState = 0;
 
     private int anotherInternalState = -1;

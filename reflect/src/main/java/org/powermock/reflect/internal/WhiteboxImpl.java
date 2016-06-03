@@ -2325,9 +2325,19 @@ public class WhiteboxImpl {
     }
 
     private static void checkIfCanSetNewValue(Field fieldToSetNewValueTo) {
-        boolean fieldTypeIsPrimitive = fieldToSetNewValueTo.getType().isPrimitive();
-        if (fieldTypeIsPrimitive) {
-            throw new IllegalArgumentException("You are trying to set a private static final primitive. Try using an object like Integer instead of int!");
+        int fieldModifiersMask = fieldToSetNewValueTo.getModifiers();
+        boolean isFinalModifierPresent = (fieldModifiersMask & Modifier.FINAL) == Modifier.FINAL;
+        boolean isStaticModifierPresent = (fieldModifiersMask & Modifier.STATIC) == Modifier.STATIC;
+
+        if(isFinalModifierPresent && isStaticModifierPresent){
+            boolean fieldTypeIsPrimitive = fieldToSetNewValueTo.getType().isPrimitive();
+            if (fieldTypeIsPrimitive) {
+                throw new IllegalArgumentException("You are trying to set a private static final primitive. Try using an object like Integer instead of int!");
+            }
+            boolean fieldTypeIsString = fieldToSetNewValueTo.getType().equals(String.class);
+            if (fieldTypeIsString) {
+                throw new IllegalArgumentException("You are trying to set a private static final String. Cannot set such fields!");
+            }
         }
     }
 

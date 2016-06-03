@@ -283,6 +283,14 @@ public class WhiteBoxTest {
 	}
 
 	@Test
+	public void testStaticFinalStringState() throws NoSuchFieldException {
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("You are trying to set a private static final String. Cannot set such fields!");
+
+		Whitebox.setInternalState(ClassWithInternalState.class, "staticFinalStringState", "Brand new string");
+	}
+
+	@Test
 	public void testStaticFinalObject() throws NoSuchFieldException {
 		int modifiersBeforeSet = ClassWithInternalState.class.getDeclaredField("staticFinalIntegerState").getModifiers();
 		Integer newValue = ClassWithInternalState.getStaticFinalIntegerState() + 1;
@@ -549,7 +557,7 @@ public class WhiteBoxTest {
 	@Test
 	public void testGetAllStaticFields() throws Exception {
 		Set<Field> allFields = Whitebox.getAllStaticFields(ClassWithInternalState.class);
-		assertEquals(3, allFields.size());
+		assertEquals(4, allFields.size());
 	}
 
 	@Test
