@@ -270,12 +270,15 @@ public class WhiteBoxTest {
 	}
 
 	@Test
-	public void testStaticFinalState() {
+	public void testStaticFinalState() throws NoSuchFieldException {
+		int modifiersBeforeSet = ClassWithInternalState.class.getDeclaredField("staticFinalStateInteger").getModifiers();
 		Integer newValue = ClassWithInternalState.getStaticFinalStateInteger() + 1;
 
 		Whitebox.setInternalState(ClassWithInternalState.class, "staticFinalStateInteger", newValue);
 
+		int modifiersAfterSet = ClassWithInternalState.class.getDeclaredField("staticFinalStateInteger").getModifiers();
 		assertEquals(newValue, ClassWithInternalState.getStaticFinalStateInteger());
+		assertEquals(modifiersBeforeSet, modifiersAfterSet);
 	}
 
 	/**

@@ -2305,8 +2305,10 @@ public class WhiteboxImpl {
     private static void setField(Object object, Object value, Field foundField) {
         foundField.setAccessible(true);
         try {
+            int fieldModifiersMask = foundField.getModifiers();
             removeFinalModifierIfPresent(foundField);
             foundField.set(object, value);
+            restoreModifiersToFieldIfChanged(fieldModifiersMask, foundField);
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Internal error: Failed to set field in method setInternalState.", e);
         }
@@ -2316,14 +2318,27 @@ public class WhiteboxImpl {
         int fieldModifiersMask = fieldToRemoveFinalFrom.getModifiers();
         boolean isFinalModifierPresent = (fieldModifiersMask & Modifier.FINAL) == Modifier.FINAL;
         if (isFinalModifierPresent) {
-            try {
-                Field modifiersField = Field.class.getDeclaredField("modifiers");
-                modifiersField.setAccessible(true);
-                int fieldModifiersMaskWithoutFinal = fieldModifiersMask & ~Modifier.FINAL;
-                modifiersField.setInt(fieldToRemoveFinalFrom, fieldModifiersMaskWithoutFinal);
-            } catch (NoSuchFieldException e) {
-                throw new RuntimeException("Internal error: Failed to find the \"modifiers\" field in method setInternalState.", e);
-            }
+            int fieldModifiersMaskWithoutFinal = fieldModifiersMask & ~Modifier.FINAL;
+            sedModifiersToField(fieldToRemoveFinalFrom, fieldModifiersMaskWithoutFinal);
+        }
+    }
+
+    private static void restoreModifiersToFieldIfChanged(int initialFieldModifiersMask, Field fieldToRestoreModifiersTo) throws IllegalAccessException {
+        int newFieldModifiersMask = fieldToRestoreModifiersTo.getModifiers();
+        if(initialFieldModifiersMask != newFieldModifiersMask){
+            sedModifiersToField(fieldToRestoreModifiersTo, initialFieldModifiersMask);
+        }
+    }
+
+    private static void sedModifiersToField(Field fieldToRemoveFinalFrom, int fieldModifiersMaskWithoutFinal) throws IllegalAccessException {
+        try {
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+            boolean accessibleBeforeSet = modifiersField.isAccessible();
+            modifiersField.setAccessible(true);
+            modifiersField.setInt(fieldToRemoveFinalFrom, fieldModifiersMaskWithoutFinal);
+            modifiersField.setAccessible(accessibleBeforeSet);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException("Internal error: Failed to find the \"modifiers\" field in method setInternalState.", e);
         }
     }
 
