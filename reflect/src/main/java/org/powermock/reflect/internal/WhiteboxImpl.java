@@ -2318,8 +2318,16 @@ public class WhiteboxImpl {
         int fieldModifiersMask = fieldToRemoveFinalFrom.getModifiers();
         boolean isFinalModifierPresent = (fieldModifiersMask & Modifier.FINAL) == Modifier.FINAL;
         if (isFinalModifierPresent) {
+            checkIfCanSetNewValue(fieldToRemoveFinalFrom);
             int fieldModifiersMaskWithoutFinal = fieldModifiersMask & ~Modifier.FINAL;
             sedModifiersToField(fieldToRemoveFinalFrom, fieldModifiersMaskWithoutFinal);
+        }
+    }
+
+    private static void checkIfCanSetNewValue(Field fieldToSetNewValueTo) {
+        boolean fieldTypeIsPrimitive = fieldToSetNewValueTo.getType().isPrimitive();
+        if (fieldTypeIsPrimitive) {
+            throw new IllegalArgumentException("You are trying to set a private static final primitive. Try using an object like Integer instead of int!");
         }
     }
 
