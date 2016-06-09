@@ -56,6 +56,13 @@ public class MockGateway {
      */
     public static boolean MOCK_GET_CLASS_METHOD = false;
 
+    /**
+     * Tells PowerMock whether or not to mock
+     * {@link java.lang.Class#isAnnotationPresent(Class)} ()} and
+     * {@link java.lang.Class#getAnnotation(Class)}.
+     */
+    public static boolean MOCK_ANNOTATION_METHODS = false;
+
     // used for static methods
     @SuppressWarnings("UnusedDeclaration")
     public static Object methodCall(Class<?> type, String methodName, Object[] args, Class<?>[] sig,
@@ -161,6 +168,8 @@ public class MockGateway {
             return false;
         } else if (isGetClassMethod(methodName, sig) && !MOCK_GET_CLASS_METHOD) {
             return false;
+        } else if (isAnnotationMethod(methodName, sig) && !MOCK_ANNOTATION_METHODS){
+            return false;
         } else {
             return true;
         }
@@ -173,6 +182,10 @@ public class MockGateway {
 
     private static boolean isGetClassMethod(String methodName, Class<?>[] sig) {
         return methodName.equals("getClass") && sig.length == 0;
+    }
+    
+    private static boolean isAnnotationMethod(String methodName, Class<?>[] sig) {
+        return (methodName.equals("isAnnotationPresent") && sig.length == 1) || (methodName.equals("getAnnotation") && sig.length == 1);
     }
 
     private static boolean shouldMockThisCall() {
