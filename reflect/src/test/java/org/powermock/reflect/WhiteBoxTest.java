@@ -16,7 +16,9 @@
 package org.powermock.reflect;
 
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.powermock.reflect.context.ClassFieldsNotInTargetContext;
 import org.powermock.reflect.context.InstanceFieldsNotInTargetContext;
 import org.powermock.reflect.context.MyContext;
@@ -78,6 +80,9 @@ import static org.junit.Assert.fail;
  * Tests the WhiteBox's functionality.
  */
 public class WhiteBoxTest {
+
+	@Rule
+	public ExpectedException expectedException = ExpectedException.none();
 
 	static {
 		RegisterProxyFramework.registerProxyFramework(new ProxyFramework() {
@@ -269,10 +274,32 @@ public class WhiteBoxTest {
 		assertEquals(expected, Whitebox.getInternalState(ClassWithInternalState.class, "staticState"));
 	}
 
-	@Test(expected = RuntimeException.class)
-	public void testStaticFinalState() {
-		Whitebox.setInternalState(ClassWithInternalState.class, "staticFinalState", 123);
-		fail("Static final is not possible to change");
+	@Test
+	public void testStaticFinalPrimitiveState() {
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("You are trying to set a private static final primitive. Try using an object like Integer instead of int!");
+
+		Whitebox.setInternalState(ClassWithInternalState.class, "staticFinalIntState", 123);
+	}
+
+	@Test
+	public void testStaticFinalStringState() throws NoSuchFieldException {
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("You are trying to set a private static final String. Cannot set such fields!");
+
+		Whitebox.setInternalState(ClassWithInternalState.class, "staticFinalStringState", "Brand new string");
+	}
+
+	@Test
+	public void testStaticFinalObject() throws NoSuchFieldException {
+		int modifiersBeforeSet = ClassWithInternalState.class.getDeclaredField("staticFinalIntegerState").getModifiers();
+		Integer newValue = ClassWithInternalState.getStaticFinalIntegerState() + 1;
+
+		Whitebox.setInternalState(ClassWithInternalState.class, "staticFinalIntegerState", newValue);
+
+		int modifiersAfterSet = ClassWithInternalState.class.getDeclaredField("staticFinalIntegerState").getModifiers();
+		assertEquals(newValue, ClassWithInternalState.getStaticFinalIntegerState());
+		assertEquals(modifiersBeforeSet, modifiersAfterSet);
 	}
 
 	/**
@@ -530,7 +557,7 @@ public class WhiteBoxTest {
 	@Test
 	public void testGetAllStaticFields() throws Exception {
 		Set<Field> allFields = Whitebox.getAllStaticFields(ClassWithInternalState.class);
-		assertEquals(2, allFields.size());
+		assertEquals(4, allFields.size());
 	}
 
 	@Test

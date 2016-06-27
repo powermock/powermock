@@ -2305,9 +2305,58 @@ public class WhiteboxImpl {
     private static void setField(Object object, Object value, Field foundField) {
         foundField.setAccessible(true);
         try {
+            int fieldModifiersMask = foundField.getModifiers();
+            removeFinalModifierIfPresent(foundField);
             foundField.set(object, value);
+            restoreModifiersToFieldIfChanged(fieldModifiersMask, foundField);
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Internal error: Failed to set field in method setInternalState.", e);
+        }
+    }
+
+    private static void removeFinalModifierIfPresent(Field fieldToRemoveFinalFrom) throws IllegalAccessException {
+        int fieldModifiersMask = fieldToRemoveFinalFrom.getModifiers();
+        boolean isFinalModifierPresent = (fieldModifiersMask & Modifier.FINAL) == Modifier.FINAL;
+        if (isFinalModifierPresent) {
+            checkIfCanSetNewValue(fieldToRemoveFinalFrom);
+            int fieldModifiersMaskWithoutFinal = fieldModifiersMask & ~Modifier.FINAL;
+            sedModifiersToField(fieldToRemoveFinalFrom, fieldModifiersMaskWithoutFinal);
+        }
+    }
+
+    private static void checkIfCanSetNewValue(Field fieldToSetNewValueTo) {
+        int fieldModifiersMask = fieldToSetNewValueTo.getModifiers();
+        boolean isFinalModifierPresent = (fieldModifiersMask & Modifier.FINAL) == Modifier.FINAL;
+        boolean isStaticModifierPresent = (fieldModifiersMask & Modifier.STATIC) == Modifier.STATIC;
+
+        if(isFinalModifierPresent && isStaticModifierPresent){
+            boolean fieldTypeIsPrimitive = fieldToSetNewValueTo.getType().isPrimitive();
+            if (fieldTypeIsPrimitive) {
+                throw new IllegalArgumentException("You are trying to set a private static final primitive. Try using an object like Integer instead of int!");
+            }
+            boolean fieldTypeIsString = fieldToSetNewValueTo.getType().equals(String.class);
+            if (fieldTypeIsString) {
+                throw new IllegalArgumentException("You are trying to set a private static final String. Cannot set such fields!");
+            }
+        }
+    }
+
+    private static void restoreModifiersToFieldIfChanged(int initialFieldModifiersMask, Field fieldToRestoreModifiersTo) throws IllegalAccessException {
+        int newFieldModifiersMask = fieldToRestoreModifiersTo.getModifiers();
+        if(initialFieldModifiersMask != newFieldModifiersMask){
+            sedModifiersToField(fieldToRestoreModifiersTo, initialFieldModifiersMask);
+        }
+    }
+
+    private static void sedModifiersToField(Field fieldToRemoveFinalFrom, int fieldModifiersMaskWithoutFinal) throws IllegalAccessException {
+        try {
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+            boolean accessibleBeforeSet = modifiersField.isAccessible();
+            modifiersField.setAccessible(true);
+            modifiersField.setInt(fieldToRemoveFinalFrom, fieldModifiersMaskWithoutFinal);
+            modifiersField.setAccessible(accessibleBeforeSet);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException("Internal error: Failed to find the \"modifiers\" field in method setInternalState.", e);
         }
     }
 
