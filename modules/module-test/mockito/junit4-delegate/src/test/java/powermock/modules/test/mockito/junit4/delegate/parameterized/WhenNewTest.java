@@ -31,8 +31,9 @@ import org.junit.runners.Parameterized;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import powermock.modules.test.mockito.junit4.delegate.WhenNewCaseMethod;
+import samples.powermockito.junit4.whennew.WhenNewCases;
 
-@PrepareForTest({MyClass.class, ExpectNewDemo.class, DataInputStream.class})
+@PrepareForTest({MyClass.class, ExpectNewDemo.class, DataInputStream.class, WhenNewCases.class})
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(Parameterized.class)
 public class WhenNewTest {

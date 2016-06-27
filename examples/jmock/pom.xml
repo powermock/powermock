@@ -41,27 +41,5 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
-        <!--
-            We depend on the EasyMock API but exclude the EasyMock dependency. The reason
-            is that PowerMock Whitebox needs a "org.powermock.reflect.spi.ProxyFramework"
-            implementation in order to work correctly. This implementation is provided by
-            the extension API:s. Since JMock uses CGLib it can reuse the
-            "org.powermock.api.extension.proxyframework.ProxyFrameworkImpl" in the
-            PowerMock EasyMock API. An alternative to depend on this class would be to simply copy
-            the class it into your code (remember that the class must be named
-            org.powermock.api.extension.proxyframework.ProxyFrameworkImpl).
-        -->
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-easymock</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.easymock</groupId>
-                    <artifactId>easymock</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
     </dependencies>
 </project>

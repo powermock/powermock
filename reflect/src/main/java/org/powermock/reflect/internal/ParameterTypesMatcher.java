@@ -65,7 +65,7 @@ class ParameterTypesMatcher {
 
     private Boolean isParametersMatch() {
         for (int index = 0; index < expectedParameterTypes.length; index++) {
-            final Class<?> actualParameterType = WhiteboxImpl.getType(actualParameterTypes[index]);
+            final Class<?> actualParameterType = actualParameterTypes[index];
             if (isRemainParamsVarArgs(index, actualParameterType)) {
                 return true;
             } else {

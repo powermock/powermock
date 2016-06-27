@@ -23,14 +23,15 @@ import org.powermock.reflect.internal.comparator.ComparatorFactory;
 import org.powermock.reflect.internal.matcherstrategies.*;
 import org.powermock.reflect.internal.primitivesupport.BoxedWrapper;
 import org.powermock.reflect.internal.primitivesupport.PrimitiveWrapper;
+import org.powermock.reflect.internal.proxy.ProxyFrameworks;
 import org.powermock.reflect.matching.FieldMatchingStrategy;
-import org.powermock.reflect.spi.ProxyFramework;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.*;
+import java.lang.reflect.Constructor;
 
 /**
  * Various utilities for accessing internals of a class. Basically a simplified
@@ -41,7 +42,7 @@ public class WhiteboxImpl {
     /**
      * The proxy framework.
      */
-    private static ProxyFramework proxyFramework = null;
+    private static ProxyFrameworks proxyFrameworks = new ProxyFrameworks();
 
     /**
      * Convenience method to get a method from a class type without having to
@@ -1009,7 +1010,7 @@ public class WhiteboxImpl {
      * @param declaredConstructors the declared constructors
      * @return the constructor[]
      */
-    private static Constructor<?>[] filterPowerMockConstructor(Constructor<?>[] declaredConstructors) {
+    static Constructor<?>[] filterPowerMockConstructor(Constructor<?>[] declaredConstructors) {
         Set<Constructor<?>> constructors = new HashSet<Constructor<?>>();
         for (Constructor<?> constructor : declaredConstructors) {
             final Class<?>[] parameterTypes = constructor.getParameterTypes();
@@ -1035,66 +1036,7 @@ public class WhiteboxImpl {
      * @throws {@link org.powermock.reflect.exceptions.TooManyConstructorsFoundException} if too constructors matched
      */
     public static Constructor<?> findUniqueConstructorOrThrowException(Class<?> type, Object... arguments) {
-        if (type == null) {
-            throw new IllegalArgumentException("Class type cannot be null.");
-        }
-
-        Class<?> unmockedType = getUnmockedType(type);
-        if ((unmockedType.isLocalClass() || unmockedType.isAnonymousClass() || unmockedType.isMemberClass())
-                    && !Modifier.isStatic(unmockedType.getModifiers()) && arguments != null) {
-            Object[] argumentsForLocalClass = new Object[arguments.length + 1];
-            argumentsForLocalClass[0] = unmockedType.getEnclosingClass();
-            System.arraycopy(arguments, 0, argumentsForLocalClass, 1, arguments.length);
-            arguments = argumentsForLocalClass;
-        }
-
-        Constructor<?>[] constructors = filterPowerMockConstructor(unmockedType.getDeclaredConstructors());
-        Constructor<?> potentialConstructor = null;
-        for (Constructor<?> constructor : constructors) {
-            Class<?>[] paramTypes = constructor.getParameterTypes();
-            if ((arguments != null && (paramTypes.length == arguments.length))) {
-                if (paramTypes.length == 0) {
-                    potentialConstructor = constructor;
-                    break;
-                }
-                boolean constructorFound = checkArgumentTypesMatchParameterTypes(constructor.isVarArgs(), paramTypes, arguments);
-                if (constructorFound) {
-                    if (potentialConstructor == null) {
-                        potentialConstructor = constructor;
-                    } else {
-                        /*
-                               * We've already found a constructor match before, this
-                               * means that PowerMock cannot determine which method to
-                               * expect since there are two methods with the same name
-                               * and the same number of arguments but one is using
-                               * wrapper types.
-                               */
-                        throwExceptionWhenMultipleConstructorMatchesFound(new Constructor<?>[]{potentialConstructor,
-                                constructor});
-                    }
-                }
-            } else if (isPotentialVarArgsConstructor(constructor, arguments)) {
-                if (potentialConstructor == null) {
-                    potentialConstructor = constructor;
-                } else {
-                    /*
-                          * We've already found a constructor match before, this
-                          * means that PowerMock cannot determine which method to
-                          * expect since there are two methods with the same name and
-                          * the same number of arguments but one is using wrapper
-                          * types.
-                          */
-                    throwExceptionWhenMultipleConstructorMatchesFound(new Constructor<?>[]{potentialConstructor,
-                            constructor});
-                }
-                break;
-            } else if (arguments != null && (paramTypes.length != arguments.length)) {
-                continue;
-            }
-        }
-
-        WhiteboxImpl.throwExceptionIfConstructorWasNotFound(type, potentialConstructor, arguments);
-        return potentialConstructor;
+        return new ConstructorFinder(type, arguments).findConstructor();
     }
 
     /**
@@ -1180,7 +1122,7 @@ public class WhiteboxImpl {
      * @param arguments the arguments
      * @return the argument types as string
      */
-    private static String getArgumentTypesAsString(Object... arguments) {
+    static String getArgumentTypesAsString(Object... arguments) {
         StringBuilder argumentsAsString = new StringBuilder();
         final String noParameters = "<none>";
         if (arguments != null && arguments.length != 0) {
@@ -1195,7 +1137,7 @@ public class WhiteboxImpl {
                     if (argumentArray.length > 0) {
                         for (int j = 0; j < argumentArray.length; j++) {
                             appendArgument(argumentsAsString, j,
-                                    argumentArray[j] == null ? "null" : getType(argumentArray[j]).getName(),
+                                    argumentArray[j] == null ? "null" : getUnproxyType(argumentArray[j]).getName(),
                                     argumentArray);
                         }
                         return argumentsAsString.toString();
@@ -1205,7 +1147,7 @@ public class WhiteboxImpl {
                 } else if (argument == null) {
                     argumentName = "null";
                 } else {
-                    argumentName = getType(argument).getName();
+                    argumentName = getUnproxyType(argument).getName();
                 }
                 appendArgument(argumentsAsString, i, argumentName, arguments);
             }
@@ -1637,15 +1579,6 @@ public class WhiteboxImpl {
         return methodToMock;
     }
 
-    /**
-     * Checks if is proxy.
-     *
-     * @param type the type
-     * @return true, if is proxy
-     */
-    public static boolean isProxy(Class<?> type) {
-        return proxyFramework.isProxy(type);
-    }
 
     /**
      * Gets the unmocked type.
@@ -1655,19 +1588,7 @@ public class WhiteboxImpl {
      * @return the unmocked type
      */
     public static <T> Class<?> getUnmockedType(Class<T> type) {
-        if (type == null) {
-            throw new IllegalArgumentException("type cannot be null");
-        }
-
-        Class<?> unmockedType = null;
-        if (proxyFramework != null && proxyFramework.isProxy(type)) {
-            unmockedType = proxyFramework.getUnproxiedType(type);
-        } else if (Proxy.isProxyClass(type)) {
-            unmockedType = type.getInterfaces()[0];
-        } else {
-            unmockedType = type;
-        }
-        return unmockedType;
+        return proxyFrameworks.getUnproxiedType(type);
     }
 
     /**
@@ -2007,7 +1928,7 @@ public class WhiteboxImpl {
      * @return if all actual parameter types are assignable from the expected
      * arguments, otherwise.
      */
-    private static boolean checkArgumentTypesMatchParameterTypes(boolean isVarArgs, Class<?>[] parameterTypes,
+     static boolean checkArgumentTypesMatchParameterTypes(boolean isVarArgs, Class<?>[] parameterTypes,
                                                                  Object[] arguments) {
         if (parameterTypes == null) {
             throw new IllegalArgumentException("parameter types cannot be null");
@@ -2047,7 +1968,7 @@ public class WhiteboxImpl {
         return true;
     }
 
-    private static boolean isAssignableFrom(Class<?> type, Class<?> from) {
+    static boolean isAssignableFrom(Class<?> type, Class<?> from) {
         boolean assignableFrom;
         Class<?> theType = getComponentType(type);
         Class<?> theFrom = getComponentType(from);
@@ -2076,6 +1997,22 @@ public class WhiteboxImpl {
      * @return The type of the of an object.
      */
     public static Class<?> getType(Object object) {
+        Class<?> type = null;
+        if (isClass(object)) {
+            type = (Class<?>) object;
+        } else if (object != null) {
+            type = object.getClass();
+        }
+        return type;
+    }
+
+    /**
+     * Gets the type.
+     *
+     * @param object the object
+     * @return The type of the of an object.
+     */
+    public static Class<?> getUnproxyType(Object object) {
         Class<?> type = null;
         if (isClass(object)) {
             type = (Class<?>) object;
@@ -2202,7 +2139,7 @@ public class WhiteboxImpl {
      * accessible
      */
     public static Set<Field> getAllInstanceFields(Object object) {
-        return findAllFieldsUsingStrategy(new AllFieldsMatcherStrategy(), object, true, getType(object));
+        return findAllFieldsUsingStrategy(new AllFieldsMatcherStrategy(), object, true, getUnproxyType(object));
     }
 
     /**
@@ -2392,18 +2329,6 @@ public class WhiteboxImpl {
     }
 
     /**
-     * Checks if is potential var args constructor.
-     *
-     * @param constructor the constructor
-     * @param arguments   the arguments
-     * @return true, if is potential var args constructor
-     */
-    private static boolean isPotentialVarArgsConstructor(Constructor<?> constructor, Object[] arguments) {
-        final Class<?>[] parameterTypes = constructor.getParameterTypes();
-        return doesParameterTypesMatchForVarArgsInvocation(constructor.isVarArgs(), parameterTypes, arguments);
-    }
-
-    /**
      * Does parameter types match for var args invocation.
      *
      * @param isVarArgs      the is var args
@@ -2411,7 +2336,7 @@ public class WhiteboxImpl {
      * @param arguments      the arguments
      * @return true, if successful
      */
-    private static boolean doesParameterTypesMatchForVarArgsInvocation(boolean isVarArgs, Class<?>[] parameterTypes,
+     static boolean doesParameterTypesMatchForVarArgsInvocation(boolean isVarArgs, Class<?>[] parameterTypes,
                                                                        Object[] arguments) {
         if (isVarArgs && arguments != null && arguments.length >= 1 && parameterTypes != null
                     && parameterTypes.length >= 1) {
@@ -2435,7 +2360,7 @@ public class WhiteboxImpl {
      * @param object The object whose type to get.
      * @return the type as primitive if wrapped
      */
-    private static Class<?> getTypeAsPrimitiveIfWrapped(Object object) {
+    static Class<?> getTypeAsPrimitiveIfWrapped(Object object) {
         if (object != null) {
             final Class<?> firstArgumentType = getType(object);
             final Class<?> firstArgumentTypeAsPrimitive = PrimitiveWrapper.hasPrimitiveCounterPart(firstArgumentType) ? PrimitiveWrapper

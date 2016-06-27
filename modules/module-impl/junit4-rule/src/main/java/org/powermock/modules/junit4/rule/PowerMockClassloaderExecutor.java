@@ -21,7 +21,6 @@ import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.ClassMockTransformer;
 import org.powermock.core.transformers.impl.InterfaceMockTransformer;
-import org.powermock.reflect.proxyframework.ClassLoaderRegisterProxyFramework;
 import org.powermock.tests.utils.MockPolicyInitializer;
 import org.powermock.tests.utils.impl.PowerMockIgnorePackagesExtractorImpl;
 import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
@@ -43,8 +42,6 @@ public class PowerMockClassloaderExecutor {
         mockLoader.addIgnorePackage(new PowerMockIgnorePackagesExtractorImpl().getPackagesToIgnore(testClass));
         mockLoader.addClassesToModify(new PrepareForTestExtractorImpl().getTestClasses(testClass));
         mockLoader.addClassesToModify(new StaticConstructorSuppressExtractorImpl().getTestClasses(testClass));
-
-        ClassLoaderRegisterProxyFramework.registerProxyframework(mockLoader);
 
         mockPolicyInitializer.initialize(mockLoader);
 

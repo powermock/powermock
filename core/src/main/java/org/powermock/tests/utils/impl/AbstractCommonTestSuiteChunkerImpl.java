@@ -7,7 +7,6 @@ import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.TestClassTransformer;
-import org.powermock.reflect.proxyframework.ClassLoaderRegisterProxyFramework;
 import org.powermock.tests.utils.ArrayMerger;
 import org.powermock.tests.utils.IgnorePackagesExtractor;
 import org.powermock.tests.utils.TestChunk;
@@ -97,10 +96,6 @@ public abstract class AbstractCommonTestSuiteChunkerImpl implements TestSuiteChu
         return null;
     }
 
-    protected void registerProxyframework(ClassLoader classLoader) {
-        ClassLoaderRegisterProxyFramework.registerProxyframework(classLoader);
-    }
-
     protected void chunkClass(final Class<?> testClass) throws Exception {
 
         List<Method> testMethodsForOtherClassLoaders = new ArrayList<Method>();
@@ -110,8 +105,6 @@ public abstract class AbstractCommonTestSuiteChunkerImpl implements TestSuiteChu
         final String[] ignorePackages = ignorePackagesExtractor.getPackagesToIgnore(testClass);
 
         final ClassLoader defaultMockLoader = createDefaultMockLoader(testClass, extraMockTransformers, ignorePackages);
-
-        registerProxyframework(defaultMockLoader);
 
         List<Method> currentClassloaderMethods = new LinkedList<Method>();
         // Put the first suite in the map of internal suites.

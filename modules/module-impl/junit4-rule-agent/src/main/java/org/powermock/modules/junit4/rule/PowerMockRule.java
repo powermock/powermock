@@ -26,7 +26,6 @@ import org.powermock.modules.agent.PowerMockAgent;
 import org.powermock.modules.agent.support.JavaAgentClassRegisterImpl;
 import org.powermock.modules.agent.support.PowerMockAgentTestInitializer;
 import org.powermock.reflect.Whitebox;
-import org.powermock.reflect.proxyframework.ClassLoaderRegisterProxyFramework;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -70,7 +69,6 @@ class PowerMockStatement extends Statement {
         Object annotationEnabler = loadAnnotationEnableIfPresent();
         try {
             injectMocksUsingAnnotationEnabler(target, annotationEnabler);
-            registerProxyFramework();
             setFrameworkAgentClassRegister();
             fNext.evaluate();
         } finally {
@@ -127,9 +125,5 @@ class PowerMockStatement extends Statement {
             Whitebox.invokeMethod(annotationEnabler, "beforeTestMethod", new Class<?>[]{Object.class, Method.class,
                     Object[].class}, target, null, null);
         }
-    }
-
-    private static void registerProxyFramework() {
-        ClassLoaderRegisterProxyFramework.registerProxyframework(Thread.currentThread().getContextClassLoader());
     }
 }

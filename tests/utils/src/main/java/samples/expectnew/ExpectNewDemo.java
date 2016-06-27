@@ -158,4 +158,8 @@ public class ExpectNewDemo {
 	public void fileWriterPrint(String name, String msg) throws IOException {
 		new PrintWriter(new FileWriter(name)).write(msg);
 	}
+
+	public byte[][] newSimpleVarArgs(byte[]... bytes) {
+		return new SimpleVarArgsConstructorDemo(bytes).getByteArrays();
+	}
 }
