@@ -58,7 +58,7 @@ public class MockGateway {
 
     /**
      * Tells PowerMock whether or not to mock
-     * {@link java.lang.Class#isAnnotationPresent(Class)} ()} and
+     * {@link java.lang.Class#isAnnotationPresent(Class)} and
      * {@link java.lang.Class#getAnnotation(Class)}.
      */
     public static boolean MOCK_ANNOTATION_METHODS = false;
