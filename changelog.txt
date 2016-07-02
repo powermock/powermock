@@ -1,8 +1,9 @@
 Change log next version
 -----------------------
 * Fix #668 @Mock fields are not injected anymore (1.6.5 regression)
+* Fix #676 Using Powermock with Roo/AspectJ gives NullPointerException (thanks to Sebastian Saip @ssaip for pull request)
 * Renamed org.powermock.reflect.internal.WhiteboxImpl.getAllMetodsExcept to org.powermock.reflect.internal.WhiteboxImpl.getAllMethodsExcept (typo)
-* Added support for setting private static final fields in Whitebox.setInternalState
+* Added support for setting private static final fields in Whitebox.setInternalState  (thanks to Andrei Petcu @andreicristianpetcu for pull request)
 
 Change log 1.6.5 (2015-04-30)
 -----------------------------
