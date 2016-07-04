@@ -42,6 +42,61 @@ public class WhiteboxImpl {
      * The proxy framework.
      */
     private static ProxyFramework proxyFramework = null;
+    
+    /** Flag to tell if we're running in the IBM JRE */
+    private static final boolean isIBM = System.getProperty("java.vendor").startsWith("IBM");
+    
+    /** Cache of filtered fields */
+    private static final Map<Class<?>, List<Field>> filteredFieldsCache = new HashMap<Class<?>, List<Field>>();
+    
+    /**
+     * A wrapper around {@link Class#getDeclaredFields()} which normalizes the
+     * results between JVMs.<br>
+     * <br>
+     * The Sun/Oracle JVM filters certain fields from appearing in the results
+     * of a <code>getDeclaredFields()</code> call. However, not all
+     * implementations do this. For example, <a
+     * href="https://bugs.openjdk.java.net/browse/JDK-4763881">Oracle filters
+     * out a backtrace</a> field from Throwable, but the IBM J9 VM does not.
+     * This can lead to issues with functions that dig around in the internals
+     * of system classes.
+     * 
+     * @param clazz
+     *            The class for which to obtain the declared fields.
+     * @return A normalized list of declared fields.
+     */
+    private static final List<Field> getDeclaredFieldsFiltered(final Class<?> clazz) {
+        if(isIBM && java.lang.Throwable.class == clazz) {
+            if(filteredFieldsCache.containsKey(clazz)) {
+                return filteredFieldsCache.get(clazz);
+            }
+            else {
+                // Don't really care if this gets run more than once, so not worth synchronizing
+                
+                final Field[] rawFields = clazz.getDeclaredFields();
+                ArrayList<Field> filteredFields = new ArrayList<Field>(rawFields.length - 1);
+                for(final Field field : rawFields) {
+                    final int fieldModifiers = field.getModifiers();
+                    /* We want to filter out two fields:
+                     * - private transient Object walkback (named backtrace in older versions)
+                     * - private transient boolean enableWritableStackTrace
+                     */
+                    if(Modifier.isTransient(fieldModifiers) && Modifier.isPrivate(fieldModifiers)) {
+                        continue;
+                    }
+                    else {
+                        filteredFields.add(field);
+                    }
+                }
+                
+                filteredFieldsCache.put(clazz, filteredFields);
+                return filteredFields;
+            }
+        }
+        else {
+            return Arrays.asList(clazz.getDeclaredFields());
+        }
+    }
 
     /**
      * Convenience method to get a method from a class type without having to
@@ -446,7 +501,7 @@ public class WhiteboxImpl {
         Field foundField = null;
         final Class<?> originalStartClass = startClass;
         while (startClass != null) {
-            final Field[] declaredFields = startClass.getDeclaredFields();
+            final List<Field> declaredFields = getDeclaredFieldsFiltered(startClass);
             for (Field field : declaredFields) {
                 if (strategy.matches(field) && hasFieldProperModifier(object, field)) {
                     if (foundField != null) {
