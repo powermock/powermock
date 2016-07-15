@@ -15,9 +15,12 @@
  */
 package demo.org.powermock.examples;
 
+import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
+@IgnoreJRERequirement
 public class SimpleOps {
     public List<String> doStreamStuff(List<String> inputs) {
         return inputs.stream().collect(Collectors.toList());

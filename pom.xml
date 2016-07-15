@@ -129,7 +129,11 @@
                     <ignores>
                         <!--suppress PackageAccessibility -->
                         <ignore>sun.misc.Unsafe</ignore>
+                        <ignore>org.dom4j.*</ignore>
                     </ignores>
+                    <excludeDependencies>
+                        <excludeDependency>com.ibm.icu:icu4j</excludeDependency>
+                    </excludeDependencies>
                 </configuration>
                 <executions>
                     <execution>
