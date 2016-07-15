@@ -22,7 +22,7 @@ package org.powermock.utils;
  */
 public class StringJoiner {
 
-    private static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
     private static final String EMPTY_STRING = "";
 
 
