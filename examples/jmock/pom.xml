@@ -41,5 +41,19 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- We include powermock-api-easymock because MockingFrameworkReporterFactoryImpl is required and
+         the class right no exist only in the easymock and mockito-api-->
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-easymock</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.easymock</groupId>
+                    <artifactId>easymock</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 </project>

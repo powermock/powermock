@@ -16,7 +16,6 @@ class Constructor {
         return new ParametersMatcher(isVarArgs, parameterTypes, arguments).match();
     }
 
-
     public java.lang.reflect.Constructor<?> getJavaConstructor() {
         return constructor;
     }

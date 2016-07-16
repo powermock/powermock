@@ -48,7 +48,7 @@ public class ToStringGenerator {
         final PrintSettings printSettings = new PrintSettings();
         MatchersPrinter matchersPrinter = new MatchersPrinter();
 
-        String methodName = Whitebox.getType(mock).getName() + "." + method.getName();
+        String methodName = Whitebox.getUnproxyType(mock).getName() + "." + method.getName();
         String invocation = methodName + matchersPrinter.getArgumentsLine(matcherList, printSettings);
         if (printSettings.isMultiline()
                 || (!matcherList.isEmpty() && invocation.length() > Whitebox.<Integer> getInternalState(

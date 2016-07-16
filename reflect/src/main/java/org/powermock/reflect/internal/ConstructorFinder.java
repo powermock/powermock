@@ -7,9 +7,6 @@ import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- *
- */
 class ConstructorFinder {
     private Class<?> type;
     private Object[] arguments;
