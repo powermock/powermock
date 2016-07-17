@@ -13,15 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package powermock.modules.test.mockito.junit4.delegate;
+package samples.powermockito.junit4.whennew;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.exceptions.ConstructorNotFoundException;
+import org.powermock.reflect.exceptions.TooManyConstructorsFoundException;
 import samples.Service;
 import samples.expectnew.ExpectNewDemo;
 import samples.expectnew.ExpectNewServiceUser;
+import samples.expectnew.ExpectNewWithMultipleCtorDemo;
+import samples.expectnew.SimpleVarArgsConstructorDemo;
 import samples.expectnew.VarArgsConstructorDemo;
 import samples.newmocking.MyClass;
 
@@ -30,20 +35,29 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
 
 /**
  * Test class to demonstrate new instance mocking using whenConstructionOf(..).
- *
  */
-@PrepareForTest({MyClass.class, ExpectNewDemo.class, DataInputStream.class})
+@PrepareForTest({MyClass.class, ExpectNewDemo.class, DataInputStream.class, WhenNewCases.class})
 public class WhenNewCases {
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void testNewWithCheckedException() throws Exception {
@@ -281,7 +295,7 @@ public class WhenNewCases {
 
         assertNotNull("The returned inputstream should not be null.", stream);
         assertTrue("The returned inputstream should be an instance of ByteArrayInputStream.",
-                stream instanceof ByteArrayInputStream);
+                   stream instanceof ByteArrayInputStream);
     }
 
     @Test
@@ -329,7 +343,8 @@ public class WhenNewCases {
         Service serviceMock = mock(Service.class);
 
         whenNew(ExpectNewServiceUser.class).withParameterTypes(Service.class, int.class)
-                .withArguments(serviceMock, numberOfTimes).thenReturn(expectNewServiceImplMock);
+                                           .withArguments(serviceMock, numberOfTimes)
+                                           .thenReturn(expectNewServiceImplMock);
         when(expectNewServiceImplMock.useService()).thenReturn(expected);
 
         assertEquals(expected, tested.newWithArguments(serviceMock, numberOfTimes));
@@ -347,7 +362,8 @@ public class WhenNewCases {
         Service serviceMock = mock(Service.class);
 
         whenNew(constructor(ExpectNewServiceUser.class, Service.class, int.class)).withArguments(serviceMock,
-                numberOfTimes).thenReturn(expectNewServiceImplMock);
+                                                                                                 numberOfTimes)
+                                                                                  .thenReturn(expectNewServiceImplMock);
         when(expectNewServiceImplMock.useService()).thenReturn(expected);
 
         assertEquals(expected, tested.newWithArguments(serviceMock, numberOfTimes));
@@ -401,7 +417,7 @@ public class WhenNewCases {
             fail("Should throw ConstructorNotFoundException!");
         } catch (ConstructorNotFoundException e) {
             assertEquals("No constructor found in class '" + VarArgsConstructorDemo.class.getName()
-                    + "' with parameter types: [ " + object.getClass().getName() + " ].", e.getMessage());
+                                 + "' with parameter types: [ " + object.getClass().getName() + " ].", e.getMessage());
         }
     }
 
@@ -522,7 +538,8 @@ public class WhenNewCases {
     }
 
     @Test
-    public void testNewWithArrayVarArgsWhenAllArgumentsAreNull() throws Exception {
+    public void testNewWithArrayVarArgsWhenAllArgumentsAreNullAndOverloadedVarArgsConstructors() throws Exception {
+
         ExpectNewDemo tested = new ExpectNewDemo();
         VarArgsConstructorDemo varArgsConstructorDemoMock = mock(VarArgsConstructorDemo.class);
 
@@ -530,13 +547,33 @@ public class WhenNewCases {
         final byte[] byteArrayTwo = null;
         whenNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(
                 varArgsConstructorDemoMock);
-        when(varArgsConstructorDemoMock.getByteArrays()).thenReturn(new byte[][]{byteArrayTwo});
+
+        when(varArgsConstructorDemoMock.getByteArrays()).thenReturn(new byte[][]{ byteArrayTwo});
 
         byte[][] varArgs = tested.newVarArgs(byteArrayOne, byteArrayTwo);
         assertEquals(1, varArgs.length);
         assertSame(byteArrayTwo, varArgs[0]);
 
         verifyNew(VarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo);
+
+    }
+
+    @Test
+    public void testNewWithArrayVarArgsWhenAllArgumentsAreNull() throws Exception {
+        ExpectNewDemo tested = new ExpectNewDemo();
+        SimpleVarArgsConstructorDemo varArgsConstructorDemoMock = mock(SimpleVarArgsConstructorDemo.class);
+
+        final byte[] byteArrayOne = null;
+        final byte[] byteArrayTwo = null;
+        whenNew(SimpleVarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo).thenReturn(
+                varArgsConstructorDemoMock);
+        when(varArgsConstructorDemoMock.getByteArrays()).thenReturn(new byte[][]{byteArrayTwo});
+
+        byte[][] varArgs = tested.newSimpleVarArgs(byteArrayOne, byteArrayTwo);
+        assertEquals(1, varArgs.length);
+        assertSame(byteArrayTwo, varArgs[0]);
+
+        verifyNew(SimpleVarArgsConstructorDemo.class).withArguments(byteArrayOne, byteArrayTwo);
     }
 
     @Test(expected = NullPointerException.class)
@@ -584,5 +621,63 @@ public class WhenNewCases {
                     "Wanted but not invoked samples.newmocking.MyClass();\nActually, there were zero interactions with this mock.",
                     e.getMessage());
         }
+    }
+
+
+    @Test
+    public void whenNewSupportsVarArgsAsSecondParameter() throws Exception {
+        final int one = 1;
+        final int two = 2;
+        final float myFloat = 3.0f;
+
+        ExpectNewDemo tested = new ExpectNewDemo();
+        VarArgsConstructorDemo varArgsConstructorDemoMock = mock(VarArgsConstructorDemo.class);
+
+        whenNew(VarArgsConstructorDemo.class).withArguments(myFloat, one, two).thenReturn(varArgsConstructorDemoMock);
+        when(varArgsConstructorDemoMock.getInts()).thenReturn(new int[] { one, two});
+
+        int[] varArgs = tested.newVarArgs(myFloat, one, two);
+        assertEquals(2, varArgs.length);
+        assertEquals(one, varArgs[0]);
+        assertEquals(two, varArgs[1]);
+
+        verifyNew(VarArgsConstructorDemo.class).withArguments(myFloat, one, two);
+    }
+
+    @Test
+    public void whenNewAnyArgumentsWorksInClassesWithSingleCtor() throws Exception {
+        ExpectNewDemo tested = new ExpectNewDemo();
+
+        MyClass myClassMock = mock(MyClass.class);
+
+        whenNew(MyClass.class).withAnyArguments().thenReturn(myClassMock);
+
+        when(myClassMock.getMessage()).thenReturn("Hello");
+
+        final String actual = tested.multipleNew();
+
+        verify(myClassMock, times(2)).getMessage();
+        verifyNew(MyClass.class, times(2)).withNoArguments();
+
+        assertEquals("HelloHello", actual);
+    }
+
+    @Test
+    public void whenNewAnyArgumentsWorksInClassesWithMultipleCtors() throws Exception {
+        ExpectNewWithMultipleCtorDemo expectNewWithMultipleCtorDemoMock = mock(ExpectNewWithMultipleCtorDemo.class);
+        Service serviceMock = mock(Service.class);
+
+        whenNew(ExpectNewWithMultipleCtorDemo.class).withAnyArguments().thenReturn(expectNewWithMultipleCtorDemoMock);
+        when(expectNewWithMultipleCtorDemoMock.useService()).thenReturn("message");
+
+        // When
+        final ExpectNewWithMultipleCtorDemo expectNewWithMultipleCtorDemo = new ExpectNewWithMultipleCtorDemo(serviceMock);
+        final String message1 = expectNewWithMultipleCtorDemo.useService();
+        final ExpectNewWithMultipleCtorDemo expectNewWithMultipleCtorDemo1 = new ExpectNewWithMultipleCtorDemo(serviceMock, 5);
+        final String message2 = expectNewWithMultipleCtorDemo1.useService();
+
+
+        assertEquals(message1, "message");
+        assertEquals(message2, "message");
     }
 }

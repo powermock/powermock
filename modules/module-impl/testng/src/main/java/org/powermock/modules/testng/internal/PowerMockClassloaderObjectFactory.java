@@ -17,7 +17,6 @@
 package org.powermock.modules.testng.internal;
 
 import org.powermock.core.MockRepository;
-import org.powermock.reflect.proxyframework.ClassLoaderRegisterProxyFramework;
 import org.testng.IObjectFactory;
 
 import java.lang.reflect.Constructor;
@@ -44,11 +43,7 @@ public class PowerMockClassloaderObjectFactory implements IObjectFactory {
 		 */
         MockRepository.clear();
 
-        Object testInstance = new TestClassInstanceFactory(constructor, classLoaderFactory, params).create();
-
-        ClassLoaderRegisterProxyFramework.registerProxyframework(testInstance.getClass().getClassLoader());
-
-        return testInstance;
+        return new TestClassInstanceFactory(constructor, classLoaderFactory, params).create();
     }
 
 

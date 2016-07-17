@@ -73,8 +73,6 @@ public abstract class AbstractTestSuiteChunkerImpl<T> extends AbstractCommonTest
                 defaultListenerSize = 0;
             }
 
-            registerProxyframework(classLoader);
-
             final Class<?> powerMockTestListenerType = Class.forName(PowerMockTestListener.class.getName(), false, classLoader);
             Object testListeners = null;
             if (clazz.isAnnotationPresent(PowerMockListener.class)) {

@@ -548,6 +548,16 @@ public class Whitebox {
 	}
 
 	/**
+	 * Gets the type.
+	 *
+	 * @param object the object
+	 * @return The type of the of an object.
+	 */
+	public static Class<?> getUnproxyType(Object object) {
+		return WhiteboxImpl.getUnproxyType(object);
+	}
+
+	/**
 	 * Get all fields annotated with a particular annotation. This method
 	 * traverses the class hierarchy when checking for the annotation.
 	 * 
@@ -854,4 +864,5 @@ public class Whitebox {
 	public static void setInternalStateFromContext(Object instance, Class<?> context, FieldMatchingStrategy strategy) {
 		WhiteboxImpl.setInternalStateFromContext(instance, context, strategy);
 	}
+
 }

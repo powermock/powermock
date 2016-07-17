@@ -18,8 +18,6 @@ package org.powermock.modules.agent.support;
 import org.powermock.core.MockRepository;
 import org.powermock.core.agent.JavaAgentClassRegister;
 import org.powermock.modules.agent.PowerMockClassRedefiner;
-import org.powermock.reflect.Whitebox;
-import org.powermock.reflect.proxyframework.RegisterProxyFramework;
 import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
 import org.powermock.tests.utils.impl.PowerMockIgnorePackagesExtractorImpl;
 import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
@@ -29,15 +27,13 @@ public class PowerMockAgentTestInitializer {
 
     public static void initialize(Class<?> testClass, JavaAgentClassRegister agentClassRegister) {
         /*
-		 * For extra safety clear the MockitoRepository.
+         * For extra safety clear the MockitoRepository.
 		 */
         MockRepository.clear();
 
         redefineClasses(testClass, agentClassRegister);
 
         final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-
-        registerProxyFramework(contextClassLoader);
 
         new MockPolicyInitializerImpl(testClass).initialize(contextClassLoader);
     }
@@ -49,7 +45,8 @@ public class PowerMockAgentTestInitializer {
         redefineClassesToSuppress(testClass, packagesToIgnore, agentClassRegister);
     }
 
-    private static void redefineClassesToSuppress(Class<?> testClass, String[] packagesToIgnore, JavaAgentClassRegister agentClassRegister) {
+    private static void redefineClassesToSuppress(Class<?> testClass, String[] packagesToIgnore,
+                                                  JavaAgentClassRegister agentClassRegister) {
         final String[] classesToSuppress = new StaticConstructorSuppressExtractorImpl().getTestClasses(testClass);
         redefine(classesToSuppress, packagesToIgnore, agentClassRegister);
     }
@@ -60,32 +57,9 @@ public class PowerMockAgentTestInitializer {
         redefine(classesToPrepare, packagesToIgnore, agentClassRegister);
     }
 
-    private static void redefine(String[] classes, String[] packagesToIgnore, JavaAgentClassRegister agentClassRegister) {
-        PowerMockClassRedefiner.redefine(classes, packagesToIgnore,agentClassRegister);
+    private static void redefine(String[] classes, String[] packagesToIgnore,
+                                 JavaAgentClassRegister agentClassRegister) {
+        PowerMockClassRedefiner.redefine(classes, packagesToIgnore, agentClassRegister);
     }
 
-    private static void registerProxyFramework(ClassLoader classLoader) {
-        final Class<?> proxyFrameworkClass;
-        try {
-            proxyFrameworkClass = Class.forName("org.powermock.api.extension.proxyframework.ProxyFrameworkImpl", false, classLoader);
-        } catch (ClassNotFoundException e) {
-            throw new IllegalStateException(
-                    "Extension API error: org.powermock.api.extension.proxyframework.ProxyFrameworkImpl could not be located in classpath.");
-        }
-
-        final Class<?> proxyFrameworkRegistrar;
-        try {
-            proxyFrameworkRegistrar = Class.forName(RegisterProxyFramework.class.getName(), false, classLoader);
-        } catch (ClassNotFoundException e) {
-            // Should never happen
-            throw new RuntimeException(e);
-        }
-        try {
-            Whitebox.invokeMethod(proxyFrameworkRegistrar, "registerProxyFramework", Whitebox.newInstance(proxyFrameworkClass));
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

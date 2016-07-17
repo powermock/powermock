@@ -19,6 +19,9 @@ package org.powermock.api.mockito.expectation.reporter;
 
 import org.powermock.api.mockito.ClassNotPreparedException;
 import org.powermock.core.reporter.PowerMockReporter;
+import org.powermock.reflect.exceptions.TooManyConstructorsFoundException;
+
+import java.lang.reflect.Constructor;
 
 import static org.powermock.utils.StringJoiner.join;
 
@@ -26,6 +29,7 @@ import static org.powermock.utils.StringJoiner.join;
  *
  */
 public class MockitoPowerMockReporter implements PowerMockReporter {
+
     @Override
     public <T> void classNotPrepared(Class<T> type) {
         throw new ClassNotPreparedException(join(String.format("The class %s not prepared for test.", type
@@ -33,4 +37,5 @@ public class MockitoPowerMockReporter implements PowerMockReporter {
                 "To prepare this class, add class to the '@PrepareForTest' annotation.",
                 "In case if you don't use this annotation, add the annotation on class or  method level. "));
     }
+
 }

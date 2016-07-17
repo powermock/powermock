@@ -29,5 +29,12 @@
             <artifactId>powermock-classloading-xstream</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-test-mockito-junit4</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
