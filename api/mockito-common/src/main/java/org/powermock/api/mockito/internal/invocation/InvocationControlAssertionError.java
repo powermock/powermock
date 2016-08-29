@@ -15,7 +15,6 @@
  */
 package org.powermock.api.mockito.internal.invocation;
 
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.reflect.Whitebox;
 
@@ -27,6 +26,7 @@ public class InvocationControlAssertionError {
     private static final String COLON_NEWLINE = ":\n";
     private static final String HERE_TEXT = "here:\n";
     private static final String UNDESIRED_INVOCATION_TEXT = " Undesired invocation:";
+    private static final String POWER_MOCKITO_CLASS_NAME = "org.powermock.api.mockito.PowerMockito";
 
     public static void updateErrorMessageForVerifyNoMoreInteractions(AssertionError errorToUpdate) {
         /*
@@ -36,11 +36,11 @@ public class InvocationControlAssertionError {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         for (int i = stackTrace.length - 1; i >= 0; i--) {
             final StackTraceElement stackTraceElement = stackTrace[i];
-            if (stackTraceElement.getClassName().equals(PowerMockito.class.getName())
-                    && stackTraceElement.getMethodName().equals("verifyNoMoreInteractions")) {
+            if (stackTraceElement.getClassName().equals(POWER_MOCKITO_CLASS_NAME)
+                        && stackTraceElement.getMethodName().equals("verifyNoMoreInteractions")) {
                 final int invocationStackTraceIndex;
-                if (stackTrace[i + 1].getClassName().equals(PowerMockito.class.getName())
-                        && stackTrace[i + 1].getMethodName().equals("verifyZeroInteractions")) {
+                if (stackTrace[i + 1].getClassName().equals(POWER_MOCKITO_CLASS_NAME)
+                            && stackTrace[i + 1].getMethodName().equals("verifyZeroInteractions")) {
                     invocationStackTraceIndex = i + 2;
                 } else {
                     invocationStackTraceIndex = i + 1;
@@ -60,7 +60,7 @@ public class InvocationControlAssertionError {
         final int startOfVerifyNoMoreInteractionsInvocation = indexOfFirstAt + AT.length() + 1;
         final int endOfVerifyNoMoreInteractionsInvocation = message.indexOf('\n', indexOfFirstAt + AT.length());
         builder.replace(startOfVerifyNoMoreInteractionsInvocation, endOfVerifyNoMoreInteractionsInvocation,
-                verifyNoMoreInteractionsInvocation);
+                        verifyNoMoreInteractionsInvocation);
         builder.delete(builder.indexOf("\n", endOfVerifyNoMoreInteractionsInvocation + 1), builder.lastIndexOf("\n"));
         Whitebox.setInternalState(errorToUpdate, builder.toString());
     }
@@ -84,11 +84,11 @@ public class InvocationControlAssertionError {
          */
         final String newSubsitutionClassName = InvocationSubstitute.class.getSimpleName();
         final String newSubsitutionClassNameInMockito = newSubsitutionClassName.substring(0, 1).toLowerCase()
-                + newSubsitutionClassName.substring(1);
+                                                                + newSubsitutionClassName.substring(1);
         String message = oldError.getMessage();
         final String newSubsitutionMethodName = InvocationSubstitute.class.getDeclaredMethods()[0].getName();
         message = message.replaceAll(newSubsitutionClassNameInMockito + "." + newSubsitutionMethodName, Matcher
-                .quoteReplacement(type.getName()));
+                                                                                                                .quoteReplacement(type.getName()));
         message = message.replaceAll("method", "constructor");
         throw new AssertionError(changeMessageContent(message));
     }

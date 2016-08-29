@@ -20,8 +20,8 @@ public class MockCreatorTest {
 		final MockSettingsImpl<List<?>> settings = new MockSettingsImpl<List<?>>();
 		settings.name("mylist");
 
-		final List<?> result = MockCreator.mock(List.class, false, false, null,
-				settings, List.class.getMethod("add", Object.class));
+		final List<?> result = DefaultMockCreator.mock(List.class, false, false, null,
+		                                               settings, List.class.getMethod("add", Object.class));
 
 		final MockName mockName = util.getMockName(result);
 		assertNotNull(mockName);
@@ -33,8 +33,8 @@ public class MockCreatorTest {
 			throws NoSuchMethodException, SecurityException {
 		final MockSettingsImpl<List<?>> settings = new MockSettingsImpl<List<?>>();
 
-		final List<?> result = MockCreator.mock(List.class, false, false, null,
-				settings, List.class.getMethod("add", Object.class));
+		final List<?> result = DefaultMockCreator.mock(List.class, false, false, null,
+		                                               settings, List.class.getMethod("add", Object.class));
 
 		final MockName mockName = util.getMockName(result);
 		assertNotNull(mockName);

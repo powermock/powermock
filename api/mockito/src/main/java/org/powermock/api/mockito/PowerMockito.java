@@ -32,7 +32,7 @@ import org.powermock.api.mockito.internal.PowerMockitoCore;
 import org.powermock.api.mockito.internal.expectation.ConstructorAwareExpectationSetup;
 import org.powermock.api.mockito.internal.expectation.DefaultConstructorExpectationSetup;
 import org.powermock.api.mockito.internal.expectation.DefaultMethodExpectationSetup;
-import org.powermock.api.mockito.internal.mockcreation.MockCreator;
+import org.powermock.api.mockito.internal.mockcreation.DefaultMockCreator;
 import org.powermock.api.mockito.internal.stubbing.answers.ChainReturns;
 import org.powermock.api.mockito.internal.verification.DefaultConstructorArgumentsVerfication;
 import org.powermock.api.mockito.internal.verification.DefaultPrivateMethodVerification;
@@ -68,10 +68,10 @@ public class PowerMockito extends MemberModifier {
      *            the class to enable static mocking
      */
     public static synchronized void mockStatic(Class<?> type, Class<?>... types) {
-        MockCreator.mock(type, true, false, null, null, (Method[]) null);
+        DefaultMockCreator.mock(type, true, false, null, null, (Method[]) null);
         if(types != null && types.length > 0) {
             for (Class<?> aClass : types) {
-                MockCreator.mock(aClass, true, false, null, null, (Method[]) null);
+                DefaultMockCreator.mock(aClass, true, false, null, null, (Method[]) null);
             }
         }
     }
@@ -128,7 +128,7 @@ public class PowerMockito extends MemberModifier {
      * @return mock object
      */
     public static void mockStatic(Class<?> classToMock, MockSettings mockSettings) {
-        MockCreator.mock(classToMock, true, false, null, mockSettings, (Method[]) null);
+        DefaultMockCreator.mock(classToMock, true, false, null, mockSettings, (Method[]) null);
     }
 
     /**
@@ -141,7 +141,7 @@ public class PowerMockito extends MemberModifier {
      * @return the mock object.
      */
     public static synchronized <T> T mock(Class<T> type) {
-        return MockCreator.mock(type, false, false, null, null, (Method[]) null);
+        return DefaultMockCreator.mock(type, false, false, null, null, (Method[]) null);
     }
 
     /**
@@ -201,7 +201,7 @@ public class PowerMockito extends MemberModifier {
      * @return mock object
      */
     public static <T> T mock(Class<T> classToMock, MockSettings mockSettings) {
-        return MockCreator.mock(classToMock, false, false, null, mockSettings, (Method[]) null);
+        return DefaultMockCreator.mock(classToMock, false, false, null, mockSettings, (Method[]) null);
     }
 
     /**
@@ -218,7 +218,7 @@ public class PowerMockito extends MemberModifier {
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> T spy(T object) {
-        return MockCreator.mock((Class<T>) Whitebox.getType(object), false, true, object, null, (Method[]) null);
+        return DefaultMockCreator.mock((Class<T>) Whitebox.getType(object), false, true, object, null, (Method[]) null);
     }
 
     /**
@@ -232,7 +232,7 @@ public class PowerMockito extends MemberModifier {
      *            the type of the class mock
      */
     public static synchronized <T> void spy(Class<T> type) {
-        MockCreator.mock(type, true, true, type, null, (Method[]) null);
+        DefaultMockCreator.mock(type, true, true, type, null, (Method[]) null);
     }
 
     /**

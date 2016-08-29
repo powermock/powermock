@@ -26,6 +26,5 @@ package org.powermock.core.spi.support;
  * 
  */
 public interface InvocationSubstitute<T> {
-
-	public T performSubstitutionLogic(Object... arguments) throws Exception;
+    T performSubstitutionLogic(Object... arguments) throws Exception;
 }

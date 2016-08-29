@@ -17,6 +17,8 @@ package org.powermock.api.mockito.internal.invocation;
 
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
+import org.mockito.internal.progress.MockingProgress;
+import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.verification.VerificationMode;
 import org.powermock.core.MockRepository;
@@ -31,15 +33,17 @@ import static org.mockito.Mockito.times;
 
 public class MockitoNewInvocationControl<T> implements NewInvocationControl<OngoingStubbing<T>> {
 	private final InvocationSubstitute<T> substitute;
+	private final MockingProgress mockingProgress;
 
 	public MockitoNewInvocationControl(InvocationSubstitute<T> substitute) {
 		if (substitute == null) {
 			throw new IllegalArgumentException("Internal error: substitute cannot be null.");
 		}
 		this.substitute = substitute;
-	}
+        this.mockingProgress = new ThreadSafeMockingProgress();
+    }
 
-	@Override
+    @Override
 	public Object invoke(Class<?> type, Object[] args, Class<?>[] sig) throws Exception {
 		Constructor<?> constructor = WhiteboxImpl.getConstructor(type, sig);
 		if (constructor.isVarArgs()) {
@@ -64,7 +68,7 @@ public class MockitoNewInvocationControl<T> implements NewInvocationControl<Ongo
 
 	@Override
 	public OngoingStubbing<T> expectSubstitutionLogic(Object... arguments) throws Exception {
-		return Mockito.when(substitute.performSubstitutionLogic(arguments));
+        return Mockito.when(substitute.performSubstitutionLogic(arguments));
 	}
 
 	public InvocationSubstitute<T> getSubstitute() {

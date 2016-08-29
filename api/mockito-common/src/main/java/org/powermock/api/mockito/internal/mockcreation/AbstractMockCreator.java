@@ -4,15 +4,9 @@ import org.powermock.core.agent.JavaAgentClassRegister;
 
 import java.lang.reflect.Method;
 
-/**
- *
- */
-public abstract class AbstractMockCreator {
+public abstract class AbstractMockCreator implements MockCreator {
 
     private JavaAgentClassRegister agentClassRegister;
-
-    protected abstract <T> T createMock(Class<T> type, boolean isStatic, boolean isSpy, Object delegator,
-                                        org.mockito.MockSettings mockSettings, Method... methods);
 
     <T> void validateType(Class<T> type, boolean isStatic, boolean isSpy) {
         createTypeValidator(type, isStatic, isSpy).validate();
