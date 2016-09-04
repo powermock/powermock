@@ -162,4 +162,18 @@ public class ExpectNewDemo {
 	public byte[][] newSimpleVarArgs(byte[]... bytes) {
 		return new SimpleVarArgsConstructorDemo(bytes).getByteArrays();
 	}
+
+    public Target createTarget(ITarget target) {
+        Target domainTarget;
+        try {
+            domainTarget = new Target(getTargetName(target), target.getId());
+        } catch (CreationException e) {
+            domainTarget = new Target("Unknown", -1);
+        }
+        return domainTarget;
+    }
+
+    private String getTargetName(ITarget target) {
+        return target.getName();
+    }
 }

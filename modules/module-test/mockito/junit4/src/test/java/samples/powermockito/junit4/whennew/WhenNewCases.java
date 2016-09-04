@@ -23,10 +23,13 @@ import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.exceptions.ConstructorNotFoundException;
 import org.powermock.reflect.exceptions.TooManyConstructorsFoundException;
 import samples.Service;
+import samples.expectnew.CreationException;
 import samples.expectnew.ExpectNewDemo;
 import samples.expectnew.ExpectNewServiceUser;
 import samples.expectnew.ExpectNewWithMultipleCtorDemo;
+import samples.expectnew.ITarget;
 import samples.expectnew.SimpleVarArgsConstructorDemo;
+import samples.expectnew.Target;
 import samples.expectnew.VarArgsConstructorDemo;
 import samples.newmocking.MyClass;
 
@@ -35,11 +38,13 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
@@ -53,9 +58,13 @@ import static org.powermock.api.support.membermodification.MemberMatcher.constru
 /**
  * Test class to demonstrate new instance mocking using whenConstructionOf(..).
  */
-@PrepareForTest({MyClass.class, ExpectNewDemo.class, DataInputStream.class, WhenNewCases.class})
+@PrepareForTest({MyClass.class, ExpectNewDemo.class, DataInputStream.class, WhenNewCases.class, Target.class})
 public class WhenNewCases {
 
+    public static final String TARGET_NAME = "MyTarget";
+    public static final int TARGET_ID = 1;
+    public static final String UNKNOWN_TARGET_NAME = "Unknown2";
+    public static final int UNKNOWN_TARGET_ID = -11;
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
@@ -679,5 +688,27 @@ public class WhenNewCases {
 
         assertEquals(message1, "message");
         assertEquals(message2, "message");
+    }
+
+    @Test
+    public void canDefineSeveralMockResultForNew() throws Exception {
+
+        final Target expectedTarget = new Target(UNKNOWN_TARGET_NAME,UNKNOWN_TARGET_ID);
+
+        whenNew(Target.class).withArguments(eq(TARGET_NAME),eq(TARGET_ID)).thenThrow(new CreationException());
+        whenNew(Target.class).withArguments(eq("Unknown"), eq(-1)).thenReturn(expectedTarget);
+
+        Target actualTarget = new ExpectNewDemo().createTarget(new ITarget() {
+            @Override
+            public int getId() {
+                return TARGET_ID;
+            }
+
+            @Override
+            public String getName() {
+                return TARGET_NAME;
+            }
+        });
+        assertThat(actualTarget).isEqualToComparingFieldByField(expectedTarget);
     }
 }

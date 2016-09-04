@@ -15,30 +15,11 @@
  */
 package samples.powermockito.junit4.whennew;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.stubbing.OngoingStubbing;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
-import org.powermock.reflect.exceptions.ConstructorNotFoundException;
-import samples.Service;
-import samples.expectnew.ExpectNewDemo;
-import samples.expectnew.ExpectNewServiceUser;
-import samples.expectnew.ExpectNewWithMultipleCtorDemo;
-import samples.expectnew.VarArgsConstructorDemo;
-import samples.newmocking.MyClass;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.doNothing;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
 
@@ -48,6 +29,5 @@ import static org.powermock.api.support.membermodification.MemberMatcher.constru
  */
 @RunWith(PowerMockRunner.class)
 public class WhenNewTest extends WhenNewCases {
-
 
 }
