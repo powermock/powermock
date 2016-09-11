@@ -62,20 +62,36 @@ public abstract class DeferSupportingClassLoader extends Loader {
 
     @Override
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-        SoftReference<Class<?>> reference = classes.get(name);
-        if (reference == null || reference.get() == null) {
-            final Class<?> clazz;
-            if (shouldDefer(deferPackages, name)) {
-                clazz = deferTo.loadClass(name);
-            } else {
-                clazz = loadModifiedClass(name);
-            }
-            if (resolve) {
-                resolveClass(clazz);
-            }
-            classes.put(name, (reference = new SoftReference<Class<?>>(clazz)));
+        Class<?> clazz = findLoadedClass1(name);
+        if (clazz == null){
+            clazz = loadClass1(name, resolve);
         }
-        return reference.get();
+        return clazz;
+    }
+
+    private Class<?> loadClass1(String name, boolean resolve) throws ClassNotFoundException {
+        Class<?> clazz;
+        if (shouldDefer(deferPackages, name)) {
+            clazz = deferTo.loadClass(name);
+        } else {
+            clazz = loadModifiedClass(name);
+        }
+        if (resolve) {
+            resolveClass(clazz);
+        }
+        classes.put(name, new SoftReference<Class<?>>(clazz));
+        return clazz;
+    }
+
+    private Class<?> findLoadedClass1(String name) {SoftReference<Class<?>> reference = classes.get(name);
+        Class<?> clazz = null;
+        if (reference != null) {
+           clazz = reference.get();
+        }
+        if (clazz == null) {
+            clazz = findLoadedClass(name);
+        }
+        return clazz;
     }
 
     boolean shouldDefer(String[] packages, String name) {

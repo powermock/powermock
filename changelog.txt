@@ -1,13 +1,14 @@
 Change log next version
 -----------------------
-* Fix #668 @Mock fields are not injected anymore (1.6.5 regression)
-* Fix #676 Using Powermock with Roo/AspectJ gives NullPointerException (thanks to Sebastian Saip @ssaip for pull request)
-* Fix #656 TooManyActualInvocations when class is prepared for test.
-* Renamed org.powermock.reflect.internal.WhiteboxImpl.getAllMetodsExcept to org.powermock.reflect.internal.WhiteboxImpl.getAllMethodsExcept (typo)
 * Added support for setting private static final fields in Whitebox.setInternalState  (thanks to Andrei Petcu @andreicristianpetcu for pull request)
-* Added support for specifing consturctor parameters for Mockiti for whenNew case (Only mock specific calls to new #31)
+* Added support for specifying constructor parameters for Mockito for whenNew case (Only mock specific calls to new #31)
+* Fixed #668 @Mock fields are not injected anymore (1.6.5 regression)
+* Fixed #676 Using Powermock with Roo/AspectJ gives NullPointerException (thanks to Sebastian Saip @ssaip for pull request)
+* Fixed #656 TooManyActualInvocations when class is prepared for test.
+* Fixed #695 ClassNotFoundException when loading cglib enhanced classes created by Spring
 * Fixed Java 6 compatibility issue in org.powermock.utils.StringJoiner (which accidentally referenced Java 7 API's)
 * Refactoring: Move ProxyFramework from api modules to `reflect` module.
+* Renamed org.powermock.reflect.internal.WhiteboxImpl.getAllMetodsExcept to org.powermock.reflect.internal.WhiteboxImpl.getAllMethodsExcept (typo)
 
 Change log 1.6.5 (2015-04-30)
 -----------------------------

@@ -19,6 +19,7 @@ import javassist.ByteArrayClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
 import junit.framework.Assert;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 import org.powermock.core.transformers.MockTransformer;
@@ -31,7 +32,11 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 import static org.powermock.core.classloader.MockClassLoader.MODIFY_ALL_CLASSES;
 
 public class MockClassLoaderTest {
@@ -46,15 +51,16 @@ public class MockClassLoaderTest {
 
         Object object = c.newInstance();
         Whitebox.invokeMethod(object, "run");
-        Assert.assertEquals(5, Whitebox.invokeMethod(object, "testInt"));
-        Assert.assertEquals(5L, Whitebox.invokeMethod(object, "testLong"));
-        Assert.assertEquals(5f, Whitebox.invokeMethod(object, "testFloat"));
-        Assert.assertEquals(5.0, Whitebox.invokeMethod(object, "testDouble"));
-        Assert.assertEquals(new Short("5"), Whitebox.invokeMethod(object, "testShort"));
-        Assert.assertEquals(new Byte("5"), Whitebox.invokeMethod(object, "testByte"));
-        Assert.assertEquals(true, Whitebox.invokeMethod(object, "testBoolean"));
-        Assert.assertEquals('5', Whitebox.invokeMethod(object, "testChar"));
-        Assert.assertEquals("5", Whitebox.invokeMethod(object, "testString"));
+
+        assertThat(5).isEqualTo(Whitebox.invokeMethod(object, "testInt"));
+        assertThat(5L).isEqualTo(Whitebox.invokeMethod(object, "testLong"));
+        assertThat(5f).isEqualTo(Whitebox.invokeMethod(object, "testFloat"));
+        assertThat(5.0).isEqualTo(Whitebox.invokeMethod(object, "testDouble"));
+        assertThat(new Short("5")).isEqualTo(Whitebox.invokeMethod(object, "testShort"));
+        assertThat(new Byte("5")).isEqualTo(Whitebox.invokeMethod(object, "testByte"));
+        assertThat(true).isEqualTo(Whitebox.invokeMethod(object, "testBoolean"));
+        assertThat('5').isEqualTo(Whitebox.invokeMethod(object, "testChar"));
+        assertThat("5").isEqualTo(Whitebox.invokeMethod(object, "testString"));
     }
 
     @Test
@@ -109,7 +115,7 @@ public class MockClassLoaderTest {
         // Force a ClassLoader that can find 'foo/bar/baz/test.txt' into
         // mockClassLoader.deferTo.
         ResourcePrefixClassLoader resourcePrefixClassLoader = new ResourcePrefixClassLoader(
-                getClass().getClassLoader(), "org/powermock/core/classloader/");
+                                                                                                   getClass().getClassLoader(), "org/powermock/core/classloader/");
         mockClassLoader.deferTo = resourcePrefixClassLoader;
 
         // MockClassLoader will only be able to find 'foo/bar/baz/test.txt' if it
@@ -129,7 +135,7 @@ public class MockClassLoaderTest {
         // Force a ClassLoader that can find 'foo/bar/baz/test.txt' into
         // mockClassLoader.deferTo.
         ResourcePrefixClassLoader resourcePrefixClassLoader = new ResourcePrefixClassLoader(
-                getClass().getClassLoader(), "org/powermock/core/classloader/");
+                                                                                                   getClass().getClassLoader(), "org/powermock/core/classloader/");
         mockClassLoader.deferTo = resourcePrefixClassLoader;
 
         // MockClassLoader will only be able to find 'foo/bar/baz/test.txt' if it
@@ -218,6 +224,20 @@ public class MockClassLoaderTest {
 
         //Try to locate and load a class that is not in MockClassLoader.
         Class<?> dynamicTestClass = Class.forName(DynamicClassHolder.clazz.getName(), false, mockClassLoader);
+
+    }
+
+    @Test
+    public void canLoadDefinedClass() throws Exception {
+        final String className = "my.ABCTestClass";
+        final MockClassLoader mockClassLoader = new MockClassLoader(new String[]{className});
+
+
+        Whitebox.invokeMethod(mockClassLoader, "defineClass", className, DynamicClassHolder.classBytes,
+                              0, DynamicClassHolder.classBytes.length, this.getClass().getProtectionDomain());
+        Class.forName(className, false, mockClassLoader);
+
+        mockClassLoader.loadClass(className);
 
     }
 
