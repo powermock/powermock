@@ -297,7 +297,6 @@ public class MockClassLoader extends DeferSupportingClassLoader {
     }
 
     private boolean shouldLoadWithMockClassloaderWithoutModifications(String className) {
-        //
         if (className.startsWith("org.powermock.example")) {
             return false;
         }
