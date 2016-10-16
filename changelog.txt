@@ -9,6 +9,8 @@ Change log next version
 * Fixed Java 6 compatibility issue in org.powermock.utils.StringJoiner (which accidentally referenced Java 7 API's)
 * Refactoring: Move ProxyFramework from api modules to `reflect` module.
 * Renamed org.powermock.reflect.internal.WhiteboxImpl.getAllMetodsExcept to org.powermock.reflect.internal.WhiteboxImpl.getAllMethodsExcept (typo)
+* Refactoring: Fix performance issues, fix error handling issues, remove unused imports, remove verbose or redundant code constructs. (thanks to Mykhailo Kovalskyi @kovalsky for pull request)
+
 
 Change log 1.6.5 (2015-04-30)
 -----------------------------
