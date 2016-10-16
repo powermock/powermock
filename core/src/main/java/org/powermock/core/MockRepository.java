@@ -219,9 +219,7 @@ public class MockRepository {
 	 * Add classes that should be automatically replayed or verified.
 	 */
 	public static synchronized void addObjectsToAutomaticallyReplayAndVerify(Object... objects) {
-		for (Object mock : objects) {
-			objectsToAutomaticallyReplayAndVerify.add(mock);
-		}
+		Collections.addAll(objectsToAutomaticallyReplayAndVerify, objects);
 	}
 
 	/**

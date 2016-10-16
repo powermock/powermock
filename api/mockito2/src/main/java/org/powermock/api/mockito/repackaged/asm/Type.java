@@ -583,7 +583,7 @@ public class Type {
             case DOUBLE:
                 return "double";
             case ARRAY:
-                StringBuffer b = new StringBuffer(getElementType().getClassName());
+                StringBuilder b = new StringBuilder(getElementType().getClassName());
                 for (int i = getDimensions(); i > 0; --i) {
                     b.append("[]");
                 }

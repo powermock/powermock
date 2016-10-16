@@ -4,6 +4,7 @@ import org.mockito.internal.stubbing.answers.ReturnsElementsOf;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,9 +28,7 @@ public class ChainReturns implements Answer<Object> {
             elements.add(toBeReturnedOthers);
             return;
         }
-        for (Object toBeReturnedOther : toBeReturnedOthers) {
-            elements.add(toBeReturnedOther);
-        }
+        Collections.addAll(elements, toBeReturnedOthers);
     }
 
     @Override

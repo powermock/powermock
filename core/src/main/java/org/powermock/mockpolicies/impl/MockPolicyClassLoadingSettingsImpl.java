@@ -17,6 +17,7 @@ package org.powermock.mockpolicies.impl;
 
 import org.powermock.mockpolicies.MockPolicyClassLoadingSettings;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -57,9 +58,7 @@ public class MockPolicyClassLoadingSettingsImpl implements MockPolicyClassLoadin
 
 	@Override
 	public void addFullyQualifiedNamesOfClassesToLoadByMockClassloader(String[] classes) {
-		for (String clazz : classes) {
-			fullyQualifiedNamesOfClassesToLoadByMockClassloader.add(clazz);
-		}
+		Collections.addAll(fullyQualifiedNamesOfClassesToLoadByMockClassloader, classes);
 	}
 
 	@Override
@@ -70,9 +69,7 @@ public class MockPolicyClassLoadingSettingsImpl implements MockPolicyClassLoadin
 
 	@Override
 	public void addStaticInitializersToSuppress(String[] staticInitializersToSuppress) {
-		for (String staticInitializerToSuppress : staticInitializersToSuppress) {
-			this.staticInitializersToSuppress.add(staticInitializerToSuppress);
-		}
+		Collections.addAll(this.staticInitializersToSuppress, staticInitializersToSuppress);
 	}
 
 	@Override
