@@ -15,21 +15,13 @@
  */
 package samples.junit4.expectnew;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import samples.expectnew.CreationException;
 import samples.expectnew.ExpectNewDemo;
-import samples.expectnew.ITarget;
-import samples.expectnew.Target;
 import samples.newmocking.MyClass;
 
 import java.io.DataInputStream;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.powermock.api.easymock.PowerMock.expectNew;
-import static org.powermock.api.easymock.PowerMock.replay;
 
 /**
  * Test class to demonstrate new instance mocking using expectNew(..).

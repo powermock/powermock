@@ -6,7 +6,6 @@ package org.powermock.api.mockito.repackaged;
 
 import org.mockito.cglib.proxy.MethodProxy;
 
-import java.io.Serializable;
 import java.lang.reflect.Field;
 
 class CGLIBHacker {

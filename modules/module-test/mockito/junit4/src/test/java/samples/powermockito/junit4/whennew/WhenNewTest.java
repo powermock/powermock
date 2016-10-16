@@ -18,11 +18,6 @@ package samples.powermockito.junit4.whennew;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
-
 /**
  * Test class to demonstrate new instance mocking using whenConstructionOf(..).
  *

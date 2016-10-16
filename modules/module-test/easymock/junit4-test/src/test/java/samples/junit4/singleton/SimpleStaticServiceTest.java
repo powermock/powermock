@@ -1,12 +1,10 @@
 package samples.junit4.singleton;
 
-import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import samples.singleton.SimpleStaticService;
-import samples.singleton.StaticService;
 
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;

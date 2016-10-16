@@ -17,8 +17,6 @@
 
 package org.powermock.core.reporter;
 
-import java.lang.reflect.Constructor;
-
 /**
  *  The interface is used to provide a user well-defined exception description.
  */

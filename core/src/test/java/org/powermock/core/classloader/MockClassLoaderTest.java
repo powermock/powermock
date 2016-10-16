@@ -19,7 +19,6 @@ import javassist.ByteArrayClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
 import junit.framework.Assert;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 import org.powermock.core.transformers.MockTransformer;

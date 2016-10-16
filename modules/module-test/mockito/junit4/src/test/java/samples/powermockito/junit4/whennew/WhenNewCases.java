@@ -21,7 +21,6 @@ import org.junit.rules.ExpectedException;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.exceptions.ConstructorNotFoundException;
-import org.powermock.reflect.exceptions.TooManyConstructorsFoundException;
 import samples.Service;
 import samples.expectnew.CreationException;
 import samples.expectnew.ExpectNewDemo;

@@ -18,7 +18,6 @@ import org.powermock.tests.utils.impl.ArrayMergerImpl;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractConstructorExpectationSetup<T> implements ConstructorExpectationSetup<T> {
