@@ -171,8 +171,6 @@ public class EmitUtils {
             }
         } catch (RuntimeException ex) {
             throw ex;
-        } catch (Error ex) {
-            throw ex;
         } catch (Exception ex) {
             throw new CodeGenerationException(ex);
         }
@@ -700,8 +698,6 @@ public class EmitUtils {
             callback.processDefault();
             e.mark(end);
         } catch (RuntimeException ex) {
-            throw ex;
-        } catch (Error ex) {
             throw ex;
         } catch (Exception ex) {
             throw new CodeGenerationException(ex);

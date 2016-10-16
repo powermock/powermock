@@ -604,8 +604,6 @@ public class CodeEmitter extends LocalVariablesSorter {
 
         } catch (RuntimeException e) {
             throw e;
-        } catch (Error e) {
-            throw e;
         } catch (Exception e) {
             throw new CodeGenerationException(e);
         }
