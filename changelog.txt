@@ -7,6 +7,7 @@ Change log next version
 * Fixed #656 TooManyActualInvocations when class is prepared for test.
 * Fixed #695 ClassNotFoundException when loading cglib enhanced classes created by Spring
 * Fixed Java 6 compatibility issue in org.powermock.utils.StringJoiner (which accidentally referenced Java 7 API's)
+* Fixed #701 StackOverflowError mocking final class extending non-public abstract class overriding equals method
 * Refactoring: Move ProxyFramework from api modules to `reflect` module.
 * Renamed org.powermock.reflect.internal.WhiteboxImpl.getAllMetodsExcept to org.powermock.reflect.internal.WhiteboxImpl.getAllMethodsExcept (typo)
 * Refactoring: Fix performance issues, fix error handling issues, remove unused imports, remove verbose or redundant code constructs. (thanks to Mykhailo Kovalskyi @kovalsky for pull request)

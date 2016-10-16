@@ -60,6 +60,14 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
 
     private final Set<Method> mockedMethods;
     private final Object delegator;
+
+    /*
+     * This field is required to fix the problem was that finalize methods could be called before an expected method
+     * because the GC kicked in too soon since now object held a reference to the mock.
+     * Even if it is not used in class we still need keep reference to mock object to prevent calling `finalize`
+     * method.
+     */
+
     private final Object mockInstance;
 
     /**
@@ -133,7 +141,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
      */
     @Override
     public boolean isMocked(Method method) {
-        return mockedMethods == null || (mockedMethods != null && mockedMethods.contains(method));
+        return mockedMethods == null || (mockedMethods.contains(method));
     }
 
     private boolean isInVerificationMode() {
@@ -142,8 +150,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
 
     private VerificationMode getVerificationMode() {
         try {
-            MockingProgress progress = Whitebox.invokeMethod(ThreadSafeMockingProgress.class,
-                    "threadSafely");
+            MockingProgress progress = Whitebox.invokeMethod(ThreadSafeMockingProgress.class, "threadSafely");
             return getVerificationModeFromMockProgress(progress);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -220,33 +227,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
                                     final Method method, Object[] arguments) throws Throwable {
         MockHandler mockHandler = invocationHandler.getHandler();
 
-        final CleanTraceRealMethod cglibProxyRealMethod = new CleanTraceRealMethod(new RealMethod() {
-            private static final long serialVersionUID = 4564320968038564170L;
-
-            @Override
-            public Object invoke(Object target, Object[] arguments) throws Throwable {
-                /*
-                     * Instruct the MockGateway to don't intercept the next call.
-                     * The reason is that when Mockito is spying on objects it
-                     * should call the "real method" (which is proxied by Mockito
-                     * anyways) so that we don't end up in here one more time which
-                     * causes infinite recursion. This should not be done if the
-                     * interceptionObject is a final system class because these are
-                     * never caught by the Mockito proxy.
-                     */
-                final Class<?> type = Whitebox.getType(interceptionObject);
-                final boolean isFinalSystemClass = type.getName().startsWith("java.") && Modifier.isFinal(type.getModifiers());
-                if (!isFinalSystemClass) {
-                    MockRepository.putAdditionalState(MockGateway.DONT_MOCK_NEXT_CALL, true);
-                }
-                try {
-                    return method.invoke(target, arguments);
-                } catch (InvocationTargetException e) {
-                    SafeExceptionRethrower.safeRethrow(e.getCause());
-                }
-                return null;
-            }
-        });
+        final CleanTraceRealMethod cglibProxyRealMethod = new CleanTraceRealMethod(new MockedRealMethod(method, interceptionObject));
 
         Invocation invocation = new InvocationImpl(
                 interceptionObject,
@@ -334,5 +315,51 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
 
     public MethodInterceptorFilter getInvocationHandler() {
         return methodInterceptorFilter;
+    }
+
+    private static class MockedRealMethod implements RealMethod {
+
+        private final Method method;
+        private final Object interceptionObject;
+
+        public MockedRealMethod(Method method, Object interceptionObject) {
+            this.method = method;
+            this.interceptionObject = interceptionObject;
+        }
+
+        @Override
+        public Object invoke(Object target, Object[] arguments) throws Throwable {
+            /*
+                 * Instruct the MockGateway to don't intercept the next call.
+                 * The reason is that when Mockito is spying on objects it
+                 * should call the "real method" (which is proxied by Mockito
+                 * anyways) so that we don't end up in here one more time which
+                 * causes infinite recursion. This should not be done if the
+                 * interceptionObject is a final system class because these are
+                 * never caught by the Mockito proxy.
+                 */
+            notMockNextCallIfRequired();
+            try {
+                return method.invoke(target, arguments);
+            } catch (InvocationTargetException e) {
+                SafeExceptionRethrower.safeRethrow(e.getCause());
+            }
+            return null;
+        }
+
+        private void notMockNextCallIfRequired() {
+            final Class<?> type = Whitebox.getType(interceptionObject);
+            if (isNextCallShouldNotBeMocked(type)) {
+                MockRepository.putAdditionalState(MockGateway.DONT_MOCK_NEXT_CALL, true);
+            }
+        }
+
+        private boolean isNextCallShouldNotBeMocked(Class<?> type) {
+            return !isFinalSystemJavaClass(type);
+        }
+
+        private boolean isFinalSystemJavaClass(Class<?> type) {
+            return type.getName().startsWith("java.") && Modifier.isFinal(type.getModifiers());
+        }
     }
 }

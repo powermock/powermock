@@ -22,6 +22,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.legacy.PowerMockRunner;
 import samples.staticandinstance.StaticAndInstanceDemo;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.easymock.EasyMock.expect;
 import static org.powermock.api.easymock.PowerMock.*;
 
@@ -34,45 +35,25 @@ import static org.powermock.api.easymock.PowerMock.*;
 @PrepareForTest(StaticAndInstanceDemo.class)
 public class NoAnnotationUsageTest extends TestCase {
 
-	public void testGetMessage() throws Exception {
+	public void testShouldMockPrivateAndStaticMethod() throws Exception {
 		mockStaticPartial(StaticAndInstanceDemo.class, "getStaticMessage");
 
 		StaticAndInstanceDemo tested = createPartialMock(StaticAndInstanceDemo.class, "getPrivateMessage");
 
 		final String staticExpected = "a static message";
 		expect(StaticAndInstanceDemo.getStaticMessage()).andReturn(staticExpected);
+
 		final String privateExpected = "A private message ";
 		expectPrivate(tested, "getPrivateMessage").andReturn(privateExpected);
 
 		replay(tested);
 		replay(StaticAndInstanceDemo.class);
 
-		String actual = tested.getMessage();
+        assertThat(tested.getMessage()).isEqualTo(privateExpected + staticExpected);
 
-		verify(tested);
-		verify(StaticAndInstanceDemo.class);
+        verify(tested);
+        verify(StaticAndInstanceDemo.class);
 
-		assertEquals(privateExpected + staticExpected, actual);
 	}
 
-	public void testGetMessage2() throws Exception {
-		mockStaticPartial(StaticAndInstanceDemo.class, "getStaticMessage");
-
-		StaticAndInstanceDemo tested = createPartialMock(StaticAndInstanceDemo.class, "getPrivateMessage");
-
-		final String staticExpected = "a static message";
-		expect(StaticAndInstanceDemo.getStaticMessage()).andReturn(staticExpected);
-		final String privateExpected = "A private message ";
-		expectPrivate(tested, "getPrivateMessage").andReturn(privateExpected);
-
-		replay(tested);
-		replay(StaticAndInstanceDemo.class);
-
-		String actual = tested.getMessage();
-
-		verify(tested);
-		verify(StaticAndInstanceDemo.class);
-
-		assertEquals(privateExpected + staticExpected, actual);
-	}
 }

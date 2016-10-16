@@ -45,9 +45,6 @@ import static org.powermock.core.transformers.TransformStrategy.CLASSLOADER;
 import static org.powermock.core.transformers.TransformStrategy.INST_REDEFINE;
 import static org.powermock.core.transformers.TransformStrategy.INST_TRANSFORM;
 
-/**
- *
- */
 public abstract class AbstractMainMockTransformer implements MockTransformer {
 
     private static final String VOID = "";
@@ -73,7 +70,8 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
         return name;
     }
 
-    protected void suppressStaticInitializerIfRequested(final CtClass clazz, final String name) throws CannotCompileException {
+    protected void suppressStaticInitializerIfRequested(final CtClass clazz,
+                                                        final String name) throws CannotCompileException {
         if (strategy == CLASSLOADER) {
             if (MockGateway.staticConstructorCall(name) != MockGateway.PROCEED) {
                 CtConstructor classInitializer = clazz.makeClassInitializer();
@@ -141,7 +139,7 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
      * When that limit is exceeded class loader will fail to load the class.
      * Since instrumentation can increase method size significantly it must be
      * ensured that JVM limit is not exceeded.
-     * <p>
+     * <p/>
      * When the limit is exceeded method's body is replaced by exception throw.
      * Method is then instrumented again to allow mocking and suppression.
      *
@@ -151,10 +149,10 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
         for (CtMethod method : clazz.getDeclaredMethods()) {
             if (isMethodSizeExceeded(method)) {
                 String code = "{throw new IllegalAccessException(\"" +
-                        "Method was too large and after instrumentation exceeded JVM limit. " +
-                        "PowerMock modified the method to allow JVM to load the class. " +
-                        "You can use PowerMock API to suppress or mock this method behaviour." +
-                        "\");}";
+                                      "Method was too large and after instrumentation exceeded JVM limit. " +
+                                      "PowerMock modified the method to allow JVM to load the class. " +
+                                      "You can use PowerMock API to suppress or mock this method behaviour." +
+                                      "\");}";
                 method.setBody(code);
                 modifyMethod(method);
             }
@@ -169,43 +167,57 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
 
     private void modifyMethod(final CtMethod method) throws NotFoundException, CannotCompileException {
         if (!Modifier.isAbstract(method.getModifiers())) {
+
             // Lookup the method return type
+
             final CtClass returnTypeAsCtClass = method.getReturnType();
             final String returnTypeAsString = getReturnTypeAsString(method);
 
             if (Modifier.isNative(method.getModifiers())) {
-                String methodName = method.getName();
-                String returnValue = "($r)value";
-
-                if (returnTypeAsCtClass.equals(CtClass.voidType)) {
-                    returnValue = VOID;
-                }
-
-                String classOrInstance = "this";
-                if (Modifier.isStatic(method.getModifiers())) {
-                    classOrInstance = "$class";
-                }
-                method.setModifiers(method.getModifiers() - Modifier.NATIVE);
-                String code = "Object value = " + MockGateway.class.getName() + ".methodCall(" + classOrInstance + ", \"" + method.getName()
-                        + "\", $args, $sig, \"" + returnTypeAsString + "\");" + "if (value != " + MockGateway.class.getName() + ".PROCEED) "
-                        + "return " + returnValue + "; " + "throw new java.lang.UnsupportedOperationException(\"" + methodName + " is native\");";
-                method.setBody("{" + code + "}");
-                return;
+                modifyNativeMethod(method, returnTypeAsCtClass, returnTypeAsString);
+            } else {
+                modifyMethod(method, returnTypeAsCtClass, returnTypeAsString);
             }
-
-            final String returnValue = getCorrectReturnValueType(returnTypeAsCtClass);
-
-            String classOrInstance = "this";
-            if (Modifier.isStatic(method.getModifiers())) {
-                classOrInstance = "$class";
-            }
-
-            String code = "Object value = " + MockGateway.class.getName() + ".methodCall(" + classOrInstance + ", \"" + method.getName()
-                    + "\", $args, $sig, \"" + returnTypeAsString + "\");" + "if (value != " + MockGateway.class.getName() + ".PROCEED) " + "return "
-                    + returnValue + "; ";
-
-            method.insertBefore("{ " + code + "}");
         }
+    }
+
+    private void modifyMethod(CtMethod method, CtClass returnTypeAsCtClass,
+                              String returnTypeAsString) throws CannotCompileException {
+        final String returnValue = getCorrectReturnValueType(returnTypeAsCtClass);
+
+        String classOrInstance = classOrInstance(method);
+
+        String code = "Object value = " + MockGateway.class.getName() + ".methodCall(" + classOrInstance + ", \"" + method.getName()
+                              + "\", $args, $sig, \"" + returnTypeAsString + "\");" + "if (value != " + MockGateway.class.getName() + ".PROCEED) " + "return "
+                              + returnValue + "; ";
+
+        method.insertBefore("{ " + code + "}");
+    }
+
+    private String classOrInstance(CtMethod method) {
+        String classOrInstance = "this";
+        if (Modifier.isStatic(method.getModifiers())) {
+            classOrInstance = "$class";
+        }
+        return classOrInstance;
+    }
+
+    private void modifyNativeMethod(CtMethod method, CtClass returnTypeAsCtClass,
+                                    String returnTypeAsString) throws CannotCompileException {
+        String methodName = method.getName();
+        String returnValue = "($r)value";
+
+        if (returnTypeAsCtClass.equals(CtClass.voidType)) {
+            returnValue = VOID;
+        }
+
+        String classOrInstance = classOrInstance(method);
+        method.setModifiers(method.getModifiers() - Modifier.NATIVE);
+        String code = "Object value = " + MockGateway.class.getName() + ".methodCall(" + classOrInstance + ", \"" + method.getName()
+                              + "\", $args, $sig, \"" + returnTypeAsString + "\");" + "if (value != " + MockGateway.class
+                                                                                                                .getName() + ".PROCEED) "
+                              + "return " + returnValue + "; " + "throw new java.lang.UnsupportedOperationException(\"" + methodName + " is native\");";
+        method.setBody("{" + code + "}");
     }
 
     private String getReturnTypeAsString(final CtMethod method) throws NotFoundException {
@@ -219,7 +231,7 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
 
     /**
      * @return The correct return type, i.e. takes care of casting the a wrapper
-     *         type to primitive type if needed.
+     * type to primitive type if needed.
      */
     private String getCorrectReturnValueType(final CtClass returnTypeAsCtClass) {
         final String returnTypeAsString = returnTypeAsCtClass.getName();
@@ -245,8 +257,6 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
             clazz.defrost();
         }
         return transformMockClass(clazz);
-
-
     }
 
     protected abstract CtClass transformMockClass(CtClass clazz) throws CannotCompileException, NotFoundException;
@@ -276,8 +286,13 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
                     return;
                 }
                 StringBuilder code = new StringBuilder();
-                code.append("{Object value =  ").append(MockGateway.class.getName()).append(".fieldCall(").append("$0,$class,\"").append(
-                        f.getFieldName()).append("\",$type);");
+                code.append("{Object value =  ")
+                    .append(MockGateway.class.getName())
+                    .append(".fieldCall(")
+                    .append("$0,$class,\"")
+                    .append(
+                            f.getFieldName())
+                    .append("\",$type);");
                 code.append("if(value == ").append(MockGateway.class.getName()).append(".PROCEED) {");
                 code.append("	$_ = $proceed($$);");
                 code.append("} else {");
@@ -296,8 +311,14 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
                     if (shouldTreatAsSystemClassCall(declaringClass)) {
                         StringBuilder code = new StringBuilder();
                         code.append("{Object classOrInstance = null; if($0!=null){classOrInstance = $0;} else { classOrInstance = $class;}");
-                        code.append("Object value =  ").append(MockGateway.class.getName()).append(".methodCall(").append("classOrInstance,\"")
-                                .append(m.getMethodName()).append("\",$args, $sig,\"").append(getReturnTypeAsString(method)).append("\");");
+                        code.append("Object value =  ")
+                            .append(MockGateway.class.getName())
+                            .append(".methodCall(")
+                            .append("classOrInstance,\"")
+                            .append(m.getMethodName())
+                            .append("\",$args, $sig,\"")
+                            .append(getReturnTypeAsString(method))
+                            .append("\");");
                         code.append("if(value == ").append(MockGateway.class.getName()).append(".PROCEED) {");
                         code.append("	$_ = $proceed($$);");
                         code.append("} else {");
@@ -353,7 +374,9 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
                  */
                 addNewDeferConstructor(clazz);
                 final StringBuilder code = new StringBuilder();
-                code.append("{Object value =").append(MockGateway.class.getName()).append(".constructorCall($class, $args, $sig);");
+                code.append("{Object value =")
+                    .append(MockGateway.class.getName())
+                    .append(".constructorCall($class, $args, $sig);");
                 code.append("if (value != ").append(MockGateway.class.getName()).append(".PROCEED){");
 
                 /*
@@ -385,7 +408,7 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
                 superClass = clazz.getSuperclass();
             } catch (NotFoundException e1) {
                 throw new IllegalArgumentException("Internal error: Failed to get superclass for " + clazz.getName()
-                        + " when about to create a new default constructor.");
+                                                           + " when about to create a new default constructor.");
             }
 
             ClassPool classPool = clazz.getClassPool();
@@ -399,7 +422,7 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
                 constructorType = classPool.get(IndicateReloadClass.class.getName());
             } catch (NotFoundException e) {
                 throw new IllegalArgumentException("Internal error: failed to get the " + IndicateReloadClass.class.getName()
-                        + " when added defer constructor.");
+                                                           + " when added defer constructor.");
             }
             clazz.defrost();
             if (superClass.getName().equals(Object.class.getName())) {
@@ -421,7 +444,9 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
         @Override
         public void edit(NewExpr e) throws CannotCompileException {
             final StringBuilder code = new StringBuilder();
-            code.append("Object instance =").append(MockGateway.class.getName()).append(".newInstanceCall($type,$args,$sig);");
+            code.append("Object instance =")
+                .append(MockGateway.class.getName())
+                .append(".newInstanceCall($type,$args,$sig);");
             code.append("if(instance != ").append(MockGateway.class.getName()).append(".PROCEED) {");
             code.append("	if(instance instanceof java.lang.reflect.Constructor) {");
             // TODO Change to objenisis instead
