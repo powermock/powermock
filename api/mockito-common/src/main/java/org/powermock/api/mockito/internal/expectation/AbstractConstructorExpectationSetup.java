@@ -113,7 +113,7 @@ public abstract class AbstractConstructorExpectationSetup<T> implements Construc
 
     @Override
     public OngoingStubbing<T> withNoArguments() throws Exception {
-        return createNewSubstituteMock(mockType, parameterTypes, new Object[0]);
+        return createNewSubstituteMock(mockType, parameterTypes);
     }
 
     @Override

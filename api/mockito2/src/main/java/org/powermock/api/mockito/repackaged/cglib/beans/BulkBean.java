@@ -40,15 +40,15 @@ abstract public class BulkBean
     }
     
     public Class[] getPropertyTypes() {
-        return (Class[])types.clone();
+        return types.clone();
     }
     
     public String[] getGetters() {
-        return (String[])getters.clone();
+        return getters.clone();
     }
     
     public String[] getSetters() {
-        return (String[])setters.clone();
+        return setters.clone();
     }
 
     interface BulkBeanKey {

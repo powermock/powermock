@@ -74,7 +74,7 @@ public class Proxy implements Serializable {
     public static Object newProxyInstance(ClassLoader loader, Class[] interfaces, InvocationHandler h) {
         try {
             Class clazz = getProxyClass(loader, interfaces);
-            return clazz.getConstructor(new Class[]{ InvocationHandler.class }).newInstance(new Object[]{ h });
+            return clazz.getConstructor(new Class[]{ InvocationHandler.class }).newInstance(h);
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {

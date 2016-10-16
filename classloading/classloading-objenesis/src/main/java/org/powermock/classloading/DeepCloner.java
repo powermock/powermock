@@ -288,7 +288,7 @@ public class DeepCloner implements DeepClonerSPI {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static Enum getEnumValue(final Object enumValueOfSourceClassloader,
 			final Class<Object> enumTypeLoadedByTargetCL) {
-		return Enum.valueOf((Class) enumTypeLoadedByTargetCL, ((Enum) enumValueOfSourceClassloader).toString());
+		return Enum.valueOf((Class) enumTypeLoadedByTargetCL, enumValueOfSourceClassloader.toString());
 	}
 
 	private Object instantiateArray(ClassLoader targetCL, Class<?> arrayClass, Object objectToClone,

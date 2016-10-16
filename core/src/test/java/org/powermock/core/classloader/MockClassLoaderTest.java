@@ -100,7 +100,7 @@ public class MockClassLoaderTest {
     public void shouldAddIgnorePackagesToDefer() throws Exception {
         MockClassLoader mockClassLoader = new MockClassLoader(new String[0]);
         mockClassLoader.addIgnorePackage("test*");
-        String[] deferPackages = Whitebox.<String[]>getInternalState(mockClassLoader, "deferPackages");
+        String[] deferPackages = Whitebox.getInternalState(mockClassLoader, "deferPackages");
         assertTrue(deferPackages.length > 1);
         assertEquals("test*", deferPackages[deferPackages.length - 1]);
     }

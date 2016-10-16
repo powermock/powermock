@@ -79,7 +79,7 @@ abstract public class Mixin {
     }
 
     public static Class[] getClasses(Object[] delegates) {
-        return (Class[])route(delegates).classes.clone();
+        return route(delegates).classes.clone();
     }
 
     private static Route route(Object[] delegates) {

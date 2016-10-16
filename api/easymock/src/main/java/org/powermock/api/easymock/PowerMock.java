@@ -1937,7 +1937,7 @@ public class PowerMock extends MemberModifier {
                 }
                 MockRepository.putInstanceMethodInvocationControl(newInstance,
                         new EasyMockMethodInvocationControl<Object>(h, methodsToMock, replica));
-                if (newInstance instanceof InvocationSubstitute<?> == false) {
+                if (!(newInstance instanceof InvocationSubstitute<?>)) {
                     MockRepository.addObjectsToAutomaticallyReplayAndVerify(newInstance);
                 }
                 return newInstance;
@@ -1954,7 +1954,7 @@ public class PowerMock extends MemberModifier {
         } else {
             MockRepository.putInstanceMethodInvocationControl(mock, new EasyMockMethodInvocationControl<T>(h,
                     methodsToMock));
-            if (mock instanceof InvocationSubstitute<?> == false) {
+            if (!(mock instanceof InvocationSubstitute<?>)) {
                 MockRepository.addObjectsToAutomaticallyReplayAndVerify(mock);
             }
         }
@@ -2070,7 +2070,7 @@ public class PowerMock extends MemberModifier {
     }
 
     private static boolean isNiceReplayAndVerifyMode() {
-        final Boolean mode = (Boolean) MockRepository.getAdditionalState(NICE_REPLAY_AND_VERIFY_KEY);
+        final Boolean mode = MockRepository.getAdditionalState(NICE_REPLAY_AND_VERIFY_KEY);
         return mode != null && mode;
     }
 

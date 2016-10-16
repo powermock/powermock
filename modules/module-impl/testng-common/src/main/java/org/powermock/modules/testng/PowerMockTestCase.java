@@ -151,7 +151,7 @@ public class PowerMockTestCase {
 
     private void clearMockFields() throws Exception, IllegalAccessException {
         if (annotationEnabler != null) {
-            final Class<? extends Annotation>[] mockAnnotations = Whitebox.<Class<? extends Annotation>[]> invokeMethod(annotationEnabler,
+            final Class<? extends Annotation>[] mockAnnotations = Whitebox.invokeMethod(annotationEnabler,
                     "getMockAnnotations");
             Set<Field> mockFields = Whitebox.getFieldsAnnotatedWith(this, mockAnnotations);
             for (Field field : mockFields) {
@@ -168,10 +168,7 @@ public class PowerMockTestCase {
     }
 
     private boolean isLoadedByPowerMockClassloader() {
-        if(this.getClass().getClassLoader() instanceof MockClassLoader) {
-            return true;
-        }
-        return false;
+        return this.getClass().getClassLoader() instanceof MockClassLoader;
     }
 
 }

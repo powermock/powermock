@@ -25,6 +25,6 @@ public class AssignableToFieldTypeMatcherStrategy extends FieldTypeMatcherStrate
 
 	@Override
 	public boolean matches(Field field) {
-		return expectedFieldType.isAssignableFrom((Class<?>) field.getType());
+		return expectedFieldType.isAssignableFrom(field.getType());
 	}
 }

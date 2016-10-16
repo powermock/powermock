@@ -202,7 +202,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
 
         // Check if we extend from TestClass, in that case we must run the setUp
         // and tearDown methods.
-        final boolean extendsFromTestCase = TestCase.class.isAssignableFrom(testClass.getJavaClass()) ? true : false;
+        final boolean extendsFromTestCase = TestCase.class.isAssignableFrom(testClass.getJavaClass());
 
         final TestMethod testMethod = wrapMethod(method);
         createPowerMockRunner(testInstance, testMethod, notifier, description, extendsFromTestCase).run();
@@ -314,7 +314,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
                         }
                     }
                     testMethod.invoke(testInstance);
-                    if ((Boolean) Whitebox.invokeMethod(testMethod, "expectsException")) {
+                    if (Whitebox.invokeMethod(testMethod, "expectsException")) {
                         addFailure(new AssertionError("Expected exception: " + getExpectedExceptionName(testMethod)));
                     }
                 } catch (InvocationTargetException e) {
@@ -364,7 +364,7 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
                                 Throwable.class);
                     }
                     addFailure(actualFailure);
-                } else if ((Boolean) Whitebox.invokeMethod(testMethod, "isUnexpected", actualFailure)) {
+                } else if (Whitebox.invokeMethod(testMethod, "isUnexpected", actualFailure)) {
                     String message = "Unexpected exception, expected<" + getExpectedExceptionName(testMethod) + "> but was<"
                             + actualFailure.getClass().getName() + ">";
                     addFailure(new Exception(message, actualFailure));

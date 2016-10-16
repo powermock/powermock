@@ -144,7 +144,7 @@ abstract public class StringSwitcher {
         }
 
         protected Object firstInstance(Class type) {
-            return (StringSwitcher) ReflectUtils.newInstance(type);
+            return ReflectUtils.newInstance(type);
         }
 
         protected Object nextInstance(Object instance) {

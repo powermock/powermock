@@ -147,7 +147,7 @@ public class MockStaticTest extends TestCase {
 
 		replay(StaticService.class);
 
-		String actual = (String) Whitebox.invokeMethod(StaticService.class, "sayPrivateStatic", "name");
+		String actual = Whitebox.invokeMethod(StaticService.class, "sayPrivateStatic", "name");
 
 		verify(StaticService.class);
 		assertEquals(expected, actual);
@@ -161,7 +161,7 @@ public class MockStaticTest extends TestCase {
 
 		replay(StaticService.class);
 
-		String actual = (String) Whitebox.invokeMethod(StaticService.class, "sayPrivateFinalStatic", "name");
+		String actual = Whitebox.invokeMethod(StaticService.class, "sayPrivateFinalStatic", "name");
 
 		verify(StaticService.class);
 		assertEquals(expected, actual);

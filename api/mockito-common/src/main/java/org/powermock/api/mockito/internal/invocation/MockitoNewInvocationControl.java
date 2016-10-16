@@ -110,7 +110,7 @@ public class MockitoNewInvocationControl<T> implements NewInvocationControl<Ongo
 	@SuppressWarnings("unchecked")
 	@Override
 	public synchronized Object reset(Object... mocks) {
-		Mockito.<InvocationSubstitute<T>> reset(substitute);
+		Mockito.reset(substitute);
 		return null;
 	}
 

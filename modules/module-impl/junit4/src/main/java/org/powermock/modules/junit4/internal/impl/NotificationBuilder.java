@@ -63,7 +63,7 @@ class NotificationBuilder {
             new IdentityHashMap<Object, List<Method>>() {
         @Override
         public List<Method> get(Object key) {
-            if (false == containsKey(key)) {
+            if (!containsKey(key)) {
                 put(key, new LinkedList<Method>());
             }
             return super.get(key);
@@ -188,7 +188,7 @@ class NotificationBuilder {
     private Method reloadMethod(Class<?> testClass, Method m) {
         if (testClass.getClassLoader() == m.getDeclaringClass().getClassLoader()) {
             return m;
-        } else if (false == m.getDeclaringClass().getName()
+        } else if (!m.getDeclaringClass().getName()
                 .equals(testClass.getName())) {
             return reloadMethod(testClass.getSuperclass(), m);
         }
@@ -273,7 +273,7 @@ class NotificationBuilder {
     }
 
     void testIgnored(Description d) {
-        if (false == notify(d, Result.IGNORED)
+        if (!notify(d, Result.IGNORED)
                 && DetectedTestRunBehaviour.TEST_INSTANCE_CREATED_FIRST == behaviour
                 && currentTestInstance != latestTestInstance) {
             /*
