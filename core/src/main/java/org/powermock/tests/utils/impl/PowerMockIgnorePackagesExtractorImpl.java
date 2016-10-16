@@ -20,6 +20,7 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.tests.utils.IgnorePackagesExtractor;
 
 import java.lang.reflect.AnnotatedElement;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,18 +32,14 @@ public class PowerMockIgnorePackagesExtractorImpl implements IgnorePackagesExtra
         PowerMockIgnore annotation = element.getAnnotation(PowerMockIgnore.class);
         if (annotation != null) {
             String[] ignores = annotation.value();
-            for (String ignorePackage : ignores) {
-                ignoredPackages.add(ignorePackage);
-            }
+            Collections.addAll(ignoredPackages, ignores);
         }
         if (element instanceof Class<?>) {
             Class<?> klazz = (Class<?>) element;
             Class<?> superclass = klazz.getSuperclass();
             if (superclass != null && !superclass.equals(Object.class)) {
                 String[] packagesToIgnore = getPackagesToIgnore(superclass);
-                for (String packageToIgnore : packagesToIgnore) {
-                    ignoredPackages.add(packageToIgnore);
-                }
+                Collections.addAll(ignoredPackages, packagesToIgnore);
             }
         }
         return ignoredPackages.toArray(new String[ignoredPackages.size()]);

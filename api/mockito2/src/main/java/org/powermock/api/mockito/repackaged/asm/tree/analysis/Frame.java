@@ -654,7 +654,7 @@ public class Frame {
      * @return a string representation of this frame.
      */
     public String toString() {
-        StringBuffer b = new StringBuffer();
+        StringBuilder b = new StringBuilder();
         for (int i = 0; i < getLocals(); ++i) {
             b.append(getLocal(i));
         }

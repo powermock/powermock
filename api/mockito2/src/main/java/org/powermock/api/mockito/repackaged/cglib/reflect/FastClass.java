@@ -40,7 +40,7 @@ abstract public class FastClass
     }
 
     protected static String getSignatureWithoutReturnType(String name, Class[] parameterTypes) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(name);
         sb.append('(');
         for (int i = 0; i < parameterTypes.length; i++) {

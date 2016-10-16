@@ -20,7 +20,6 @@ import org.junit.Test;
 import org.powermock.classloading.DeepCloner;
 
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -55,7 +54,7 @@ public class XStreamDeepClonerTest {
 }
 
 class UnmodifiableListExample {
-    private List<NotSerializable> cl = Collections.unmodifiableList(Arrays.asList(new NotSerializable()));
+    private List<NotSerializable> cl = Collections.singletonList(new NotSerializable());
 
     @Override
     public int hashCode() {

@@ -45,9 +45,7 @@ public class MockPolicyInterceptionSettingsImpl implements MockPolicyInterceptio
 
 	@Override
 	public void addFieldTypesToSuppress(String[] fieldTypes) {
-		for (String fieldType : fieldTypes) {
-			fieldsTypesToSuppress.add(fieldType);
-		}
+		Collections.addAll(fieldsTypesToSuppress, fieldTypes);
 	}
 
 	@Override
@@ -79,9 +77,7 @@ public class MockPolicyInterceptionSettingsImpl implements MockPolicyInterceptio
 
     @Override
 	public void addFieldToSuppress(Field[] fields) {
-		for (Field field : fields) {
-			fieldsToSuppress.add(field);
-		}
+		Collections.addAll(fieldsToSuppress, fields);
 	}
 
     @Override
@@ -92,9 +88,7 @@ public class MockPolicyInterceptionSettingsImpl implements MockPolicyInterceptio
 
     @Override
 	public void addMethodsToSuppress(Method[] methods) {
-		for (Method method : methods) {
-			methodsToSuppress.add(method);
-		}
+		Collections.addAll(methodsToSuppress, methods);
 	}
 
     @Override

@@ -215,7 +215,7 @@ public class CheckClassAdapter extends ClassAdapter {
             for (int j = 0; j < method.instructions.size(); ++j) {
                 method.instructions.get(j).accept(mv);
 
-                StringBuffer s = new StringBuffer();
+                StringBuilder s = new StringBuilder();
                 Frame f = frames[j];
                 if (f == null) {
                     s.append('?');
