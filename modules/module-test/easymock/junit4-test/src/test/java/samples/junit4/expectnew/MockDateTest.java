@@ -25,7 +25,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import samples.expectnew.ExpectNewDemo;
 
-import java.lang.reflect.Method;
 import java.util.Date;
 
 @RunWith(PowerMockRunner.class)

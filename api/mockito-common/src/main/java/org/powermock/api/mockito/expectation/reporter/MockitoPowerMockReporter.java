@@ -19,9 +19,6 @@ package org.powermock.api.mockito.expectation.reporter;
 
 import org.powermock.api.mockito.ClassNotPreparedException;
 import org.powermock.core.reporter.PowerMockReporter;
-import org.powermock.reflect.exceptions.TooManyConstructorsFoundException;
-
-import java.lang.reflect.Constructor;
 
 import static org.powermock.utils.StringJoiner.join;
 

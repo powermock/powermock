@@ -2,8 +2,6 @@ package org.powermock.api.mockito.internal.mockcreation;
 
 import org.powermock.core.agent.JavaAgentClassRegister;
 
-import java.lang.reflect.Method;
-
 public abstract class AbstractMockCreator implements MockCreator {
 
     private JavaAgentClassRegister agentClassRegister;

@@ -15,30 +15,13 @@
  */
 package samples.junit4.expectnew;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
-import org.powermock.reflect.exceptions.ConstructorNotFoundException;
-import samples.Service;
 import samples.expectnew.ExpectNewDemo;
-import samples.expectnew.ExpectNewServiceUser;
-import samples.expectnew.VarArgsConstructorDemo;
 import samples.newmocking.MyClass;
 
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import static org.easymock.EasyMock.*;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.junit.Assert.*;
-import static org.powermock.api.easymock.PowerMock.createMock;
-import static org.powermock.api.easymock.PowerMock.*;
-import static org.powermock.api.easymock.PowerMock.replay;
-import static org.powermock.api.easymock.PowerMock.verify;
 
 /**
  * Test class to demonstrate new instance mocking using expectNew(..).

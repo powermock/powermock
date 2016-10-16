@@ -24,14 +24,12 @@
  */
 package sun.tools.attach;
 
-import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.AgentLoadException;
 import com.sun.tools.attach.AttachNotSupportedException;
 import com.sun.tools.attach.spi.AttachProvider;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.File;
-import java.util.Properties;
 
 /*
  * Linux implementation of HotSpotVirtualMachine

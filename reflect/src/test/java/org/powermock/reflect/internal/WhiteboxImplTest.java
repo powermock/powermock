@@ -16,7 +16,6 @@
 package org.powermock.reflect.internal;
 
 import org.junit.Test;
-import org.junit.matchers.JUnitMatchers;
 import org.powermock.reflect.testclasses.Child;
 import org.powermock.reflect.testclasses.ClassWithOverloadedMethods;
 import org.powermock.reflect.testclasses.ClassWithStandardMethod;

@@ -33,7 +33,6 @@ import com.sun.tools.attach.spi.AttachProvider;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.Map;
 
 /*
  * The HotSpot implementation of com.sun.tools.attach.VirtualMachine.
