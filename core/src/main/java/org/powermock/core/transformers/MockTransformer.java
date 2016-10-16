@@ -35,5 +35,5 @@ public interface MockTransformer {
 	 *            transform into a mock enabled class.
 	 * @return A <code>CtClass</code> representation of the mocked class.
 	 */
-	public CtClass transform(CtClass clazz) throws Exception;
+	CtClass transform(CtClass clazz) throws Exception;
 }

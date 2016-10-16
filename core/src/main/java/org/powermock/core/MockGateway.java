@@ -36,7 +36,6 @@ public class MockGateway {
     public static final Object PROCEED = new Object();
     public static final Object SUPPRESS = new Object();
 
-
     /**
      * Used to tell the MockGateway that the next call should not be mocked
      * regardless if a {@link MethodInvocationControl} is found in the
@@ -75,42 +74,67 @@ public class MockGateway {
         if (!shouldMockMethod(methodName, sig)) {
             return PROCEED;
         }
+
+        MockInvocation mockInvocation = new MockInvocation(object, methodName, sig);
+        MethodInvocationControl methodInvocationControl = mockInvocation.getMethodInvocationControl();
         Object returnValue = null;
 
-        MethodInvocationControl methodInvocationControl;
-        Class<?> objectType;
+        // The following describes the equals method.
 
-        if (object instanceof Class<?>) {
-            objectType = (Class<?>) object;
-            methodInvocationControl = MockRepository.getStaticMethodInvocationControl(objectType);
-        } else {
-            final Class<?> type = object.getClass();
-            objectType = WhiteboxImpl.getUnmockedType(type);
-            methodInvocationControl = MockRepository.getInstanceMethodInvocationControl(object);
+        if (isEqualsMethod(mockInvocation)) {
+            returnValue = tryHandleEqualsMethod(mockInvocation);
         }
 
-		/*
-         * if invocationControl is null or the method is not mocked, invoke
-		 * original method or suppress the method code otherwise invoke the
-		 * invocation handler.
-		 */
-        Method method;
-        try {
-            method = WhiteboxImpl.getBestMethodCandidate(objectType, methodName, sig, true);
-        } catch (MethodNotFoundException e) {
-			/*
-			 * Dirty hack to get around issue 110
-			 * (http://code.google.com/p/powermock/issues/detail?id=110). Review
-			 * this! What we do here is to try to find a reflective method on
-			 * class. This has begun to fail since version 1.2 when we supported
-			 * mocking static methods in system classes.
-			 */
-            try {
-                method = WhiteboxImpl.getMethod(Class.class, methodName, sig);
-            } catch (MethodNotFoundException e2) {
-                throw e;
+        if (returnValue != null) {
+            return returnValue;
+        }
+        return doMethodCall(object, args, returnTypeAsString, mockInvocation, methodInvocationControl);
+    }
+
+    private static Object doMethodCall(Object object, Object[] args,
+                                       String returnTypeAsString,
+                                       MockInvocation mockInvocation,
+                                       MethodInvocationControl methodInvocationControl) throws Throwable {
+        Object returnValue;
+
+        // At first should be checked that method not suppressed/stubbed, because otherwise for spies real
+        // method is involved.
+        // https://github.com/jayway/powermock/issues/327
+
+        if (MockRepository.shouldSuppressMethod(mockInvocation.getMethod(), mockInvocation.getObjectType())) {
+            returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
+        } else if (MockRepository.shouldStubMethod(mockInvocation.getMethod())) {
+            returnValue = MockRepository.getMethodToStub(mockInvocation.getMethod());
+        } else if (methodInvocationControl != null && methodInvocationControl.isMocked(mockInvocation.getMethod()) && shouldMockThisCall()) {
+            returnValue = methodInvocationControl.invoke(object, mockInvocation.getMethod(), args);
+            if (returnValue == SUPPRESS) {
+                returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
             }
+        } else if (MockRepository.hasMethodProxy(mockInvocation.getMethod())) {
+                /*
+                 * We must temporary remove the method proxy when invoking the
+                 * invocation handler because if the invocation handler delegates
+                 * the call we will end up here again and we'll get a
+                 * StackOverflowError.
+                 */
+            final InvocationHandler invocationHandler = MockRepository.removeMethodProxy(mockInvocation.getMethod());
+            try {
+                returnValue = invocationHandler.invoke(object, mockInvocation.getMethod(), args);
+            } finally {
+                // Set the method proxy again after the invocation
+                MockRepository.putMethodProxy(mockInvocation.getMethod(), invocationHandler);
+            }
+        } else {
+            returnValue = PROCEED;
         }
+        return returnValue;
+    }
+
+
+    /*
+     * Method handles exception cases with equals method.
+     */
+    private static Object tryHandleEqualsMethod(MockInvocation mockInvocation) {
 
         // Fix for Issue http://code.google.com/p/powermock/issues/detail?id=88
         // For some reason the method call to equals() on final methods is
@@ -119,65 +143,46 @@ public class MockGateway {
         // is the result. The following fix changes this by checking if the
         // method to be called is a final equals() method. In that case the
         // original method is called by returning PROCEED.
-        if (    // The following describes the equals method.
-                "equals".equals(method.getName())
-                        && method.getParameterTypes().length == 1
-                        && method.getParameterTypes()[0] == Object.class
-                        && Modifier.isFinal(method.getModifiers())) {
-            returnValue = PROCEED;
-        } else {
 
-            // At first should be checked that method not suppressed/stubbed, because otherwise for spies real
-            // method is involved.
-            // https://github.com/jayway/powermock/issues/327
-
-            if (MockRepository.shouldSuppressMethod(method, objectType)){
-                returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
-            }else if (MockRepository.shouldStubMethod(method)) {
-                returnValue = MockRepository.getMethodToStub(method);
-            } else if (methodInvocationControl != null && methodInvocationControl.isMocked(method) && shouldMockThisCall()) {
-                returnValue = methodInvocationControl.invoke(object, method, args);
-                if (returnValue == SUPPRESS) {
-                    returnValue = TypeUtils.getDefaultValue(returnTypeAsString);
-                }
-            } else if (MockRepository.hasMethodProxy(method)) {
-                /*
-                 * We must temporary remove the method proxy when invoking the
-                 * invocation handler because if the invocation handler delegates
-                 * the call we will end up here again and we'll get a
-                 * StackOverflowError.
-                 */
-                final InvocationHandler invocationHandler = MockRepository.removeMethodProxy(method);
-                try {
-                    returnValue = invocationHandler.invoke(object, method, args);
-                } finally {
-                    // Set the method proxy again after the invocation
-                    MockRepository.putMethodProxy(method, invocationHandler);
-                }
-
-            } else {
-                returnValue = PROCEED;
-            }
+        if (mockInvocation.getMethod().getParameterTypes().length == 1
+                    && mockInvocation.getMethod().getParameterTypes()[0] == Object.class
+                    && Modifier.isFinal(mockInvocation.getMethod().getModifiers())) {
+            return PROCEED;
         }
 
-        return returnValue;
+        if (calledFromMockito()){
+            return PROCEED;
+        }
+
+        return null;
     }
+
+    private static boolean isEqualsMethod(MockInvocation mockInvocation) {
+        return "equals".equals(mockInvocation.getMethod().getName());
+    }
+
+    private static boolean calledFromMockito() {
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        for (StackTraceElement stackTraceElement : stackTrace) {
+            if (stackTraceElement.getClassName().startsWith("org.mockito.")){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private static boolean shouldMockMethod(String methodName, Class<?>[] sig) {
         if (isJavaStandardMethod(methodName, sig) && !MOCK_STANDARD_METHODS) {
             return false;
         } else if (isGetClassMethod(methodName, sig) && !MOCK_GET_CLASS_METHOD) {
             return false;
-        } else if (isAnnotationMethod(methodName, sig) && !MOCK_ANNOTATION_METHODS){
-            return false;
-        } else {
-            return true;
-        }
+        } else { return !(isAnnotationMethod(methodName, sig) && !MOCK_ANNOTATION_METHODS); }
     }
 
     private static boolean isJavaStandardMethod(String methodName, Class<?>[] sig) {
         return (methodName.equals("equals") && sig.length == 1) || (methodName.equals("hashCode") && sig.length == 0)
-                || (methodName.equals("toString") && sig.length == 0);
+                       || (methodName.equals("toString") && sig.length == 0);
     }
 
     private static boolean isGetClassMethod(String methodName, Class<?>[] sig) {
@@ -206,8 +211,8 @@ public class MockGateway {
     public static Object newInstanceCall(Class<?> type, Object[] args, Class<?>[] sig) throws Throwable {
         final NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceControl(type);
         if (newInvocationControl != null) {
-			/*
-			 * We need to deal with inner, local and anonymous inner classes
+            /*
+             * We need to deal with inner, local and anonymous inner classes
 			 * specifically. For example when new is invoked on an inner class
 			 * it seems like null is passed as an argument even though it
 			 * shouldn't. We correct this here.
@@ -264,9 +269,10 @@ public class MockGateway {
      * <p/>
      * Seems with Javassist 3.17.1-GA & Java 7, the '<code>null</code>' is passed as the last argument.
      */
-    private static Object[] copyArgumentsForInnerOrLocalOrAnonymousClass(Object[] args, boolean excludeEnclosingInstance) {
+    private static Object[] copyArgumentsForInnerOrLocalOrAnonymousClass(Object[] args,
+                                                                         boolean excludeEnclosingInstance) {
         Object[] newArgs = new Object[args.length - 1];
-        final int  start;
+        final int start;
         final int end;
         int j = 0;
 
@@ -283,5 +289,70 @@ public class MockGateway {
         }
         args = newArgs;
         return args;
+    }
+
+    private static class MockInvocation {
+        private Object object;
+        private String methodName;
+        private Class<?>[] sig;
+        private Class<?> objectType;
+        private MethodInvocationControl methodInvocationControl;
+        private Method method;
+
+        public MockInvocation(Object object, String methodName, Class<?>... sig) {
+            this.object = object;
+            this.methodName = methodName;
+            this.sig = sig;
+            init();
+        }
+
+        private static Method findMethodToInvoke(String methodName, Class<?>[] sig, Class<?> objectType) {/*
+            * if invocationControl is null or the method is not mocked, invoke
+            * original method or suppress the method code otherwise invoke the
+            * invocation handler.
+            */
+            Method method;
+            try {
+                method = WhiteboxImpl.getBestMethodCandidate(objectType, methodName, sig, true);
+            } catch (MethodNotFoundException e) {
+                /*
+                 * Dirty hack to get around issue 110
+                 * (http://code.google.com/p/powermock/issues/detail?id=110). Review
+                 * this! What we do here is to try to find a reflective method on
+                 * class. This has begun to fail since version 1.2 when we supported
+                 * mocking static methods in system classes.
+                 */
+                try {
+                    method = WhiteboxImpl.getMethod(Class.class, methodName, sig);
+                } catch (MethodNotFoundException e2) {
+                    throw e;
+                }
+            }
+            return method;
+        }
+
+        public Class<?> getObjectType() {
+            return objectType;
+        }
+
+        public MethodInvocationControl getMethodInvocationControl() {
+            return methodInvocationControl;
+        }
+
+        public Method getMethod() {
+            return method;
+        }
+
+        private void init() {
+            if (object instanceof Class<?>) {
+                objectType = (Class<?>) object;
+                methodInvocationControl = MockRepository.getStaticMethodInvocationControl(objectType);
+            } else {
+                final Class<?> type = object.getClass();
+                objectType = WhiteboxImpl.getUnmockedType(type);
+                methodInvocationControl = MockRepository.getInstanceMethodInvocationControl(object);
+            }
+            method = findMethodToInvoke(methodName, sig, objectType);
+        }
     }
 }

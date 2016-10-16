@@ -61,6 +61,14 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
 
     private final Set<Method> mockedMethods;
     private final Object delegator;
+
+    /*
+     * This field is required to fix the problem was that finalize methods could be called before an expected method
+     * because the GC kicked in too soon since now object held a reference to the mock.
+     * Even if it is not used in class we still need keep reference to mock object to prevent calling `finalize`
+     * method.
+     */
+
     private final Object mockInstance;
 
     /**
@@ -134,7 +142,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
      */
     @Override
     public boolean isMocked(Method method) {
-        return mockedMethods == null || (mockedMethods != null && mockedMethods.contains(method));
+        return mockedMethods == null || (mockedMethods.contains(method));
     }
 
     private boolean isInVerificationMode() {
