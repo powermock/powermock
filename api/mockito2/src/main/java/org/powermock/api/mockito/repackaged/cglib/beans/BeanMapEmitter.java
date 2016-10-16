@@ -79,7 +79,7 @@ class BeanMapEmitter extends ClassEmitter {
     private Map makePropertyMap(PropertyDescriptor[] props) {
         Map names = new HashMap();
         for (int i = 0; i < props.length; i++) {
-            names.put(((PropertyDescriptor)props[i]).getName(), props[i]);
+            names.put(props[i].getName(), props[i]);
         }
         return names;
     }

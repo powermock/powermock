@@ -117,8 +117,8 @@ public class PowerMockTestNotifierImpl implements PowerMockTestNotifier {
 	@Override
 	public void notifyAfterTestMethod(boolean successful) {
 		final Object test = MockRepository.getAdditionalState(Keys.CURRENT_TEST_INSTANCE);
-		final Method testMethod = (Method) MockRepository.getAdditionalState(Keys.CURRENT_TEST_METHOD);
-		final Object[] testArguments = (Object[]) MockRepository.getAdditionalState(Keys.CURRENT_TEST_METHOD_ARGUMENTS);
+		final Method testMethod = MockRepository.getAdditionalState(Keys.CURRENT_TEST_METHOD);
+		final Object[] testArguments = MockRepository.getAdditionalState(Keys.CURRENT_TEST_METHOD_ARGUMENTS);
 		final TestMethodResult testResult = new TestMethodResultImpl((successful ? Result.SUCCESSFUL : Result.FAILED));
 		notifyAfterTestMethod(test, testMethod, testArguments, testResult);
 	}

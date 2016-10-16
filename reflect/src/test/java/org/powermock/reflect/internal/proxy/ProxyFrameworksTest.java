@@ -24,7 +24,7 @@ public class ProxyFrameworksTest {
 
     @Test
     public void should_throw_illegal_argument_exception_if_class_is_null() throws Exception {
-        assertThat(proxyFrameworks.getUnproxiedType((Class<?>) null)).isNull();
+        assertThat(proxyFrameworks.getUnproxiedType(null)).isNull();
     }
 
     @Test(expected = IllegalArgumentException.class)

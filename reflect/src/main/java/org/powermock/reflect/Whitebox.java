@@ -289,7 +289,7 @@ public class Whitebox {
 	 *            the name of the field
 	 */
 	public static <T> T getInternalState(Object object, String fieldName) {
-		return WhiteboxImpl.<T> getInternalState(object, fieldName);
+		return WhiteboxImpl.getInternalState(object, fieldName);
 	}
 
 	/**
@@ -305,7 +305,7 @@ public class Whitebox {
 	 *            which class the field is defined
 	 */
 	public static <T> T getInternalState(Object object, String fieldName, Class<?> where) {
-		return WhiteboxImpl.<T> getInternalState(object, fieldName, where);
+		return WhiteboxImpl.getInternalState(object, fieldName, where);
 	}
 
 	/**
@@ -329,7 +329,7 @@ public class Whitebox {
 	 */
 	@Deprecated
 	public static <T> T getInternalState(Object object, String fieldName, Class<?> where, Class<T> type) {
-		return Whitebox.<T> getInternalState(object, fieldName, where);
+		return Whitebox.getInternalState(object, fieldName, where);
 	}
 
 	/**
@@ -344,7 +344,7 @@ public class Whitebox {
 	 *            the type of the field
 	 */
 	public static <T> T getInternalState(Object object, Class<T> fieldType) {
-		return WhiteboxImpl.<T> getInternalState(object, fieldType);
+		return WhiteboxImpl.getInternalState(object, fieldType);
 
 	}
 
@@ -364,7 +364,7 @@ public class Whitebox {
 	 *            which class the field is defined
 	 */
 	public static <T> T getInternalState(Object object, Class<T> fieldType, Class<?> where) {
-		return WhiteboxImpl.<T> getInternalState(object, fieldType, where);
+		return WhiteboxImpl.getInternalState(object, fieldType, where);
 	}
 
 	/**
@@ -377,7 +377,7 @@ public class Whitebox {
 	 * @throws Throwable
 	 */
 	public static synchronized <T> T invokeMethod(Object instance, Object... arguments) throws Exception {
-		return WhiteboxImpl.<T> invokeMethod(instance, arguments);
+		return WhiteboxImpl.invokeMethod(instance, arguments);
 	}
 
 	/**
@@ -389,7 +389,7 @@ public class Whitebox {
 	 * 
 	 */
 	public static synchronized <T> T invokeMethod(Class<?> klass, Object... arguments) throws Exception {
-		return WhiteboxImpl.<T> invokeMethod(klass, arguments);
+		return WhiteboxImpl.invokeMethod(klass, arguments);
 	}
 
 	/**
@@ -398,7 +398,7 @@ public class Whitebox {
 	 */
 	public static synchronized <T> T invokeMethod(Object instance, String methodToExecute, Object... arguments)
 			throws Exception {
-		return WhiteboxImpl.<T> invokeMethod(instance, methodToExecute, arguments);
+		return WhiteboxImpl.invokeMethod(instance, methodToExecute, arguments);
 	}
 
 	/**
@@ -412,7 +412,7 @@ public class Whitebox {
 	 */
 	public static synchronized <T> T invokeMethod(Object instance, String methodToExecute, Class<?>[] argumentTypes,
 			Object... arguments) throws Exception {
-		return WhiteboxImpl.<T> invokeMethod(instance, methodToExecute, argumentTypes, arguments);
+		return WhiteboxImpl.invokeMethod(instance, methodToExecute, argumentTypes, arguments);
 	}
 
 	/**
@@ -427,7 +427,7 @@ public class Whitebox {
 	 */
 	public static synchronized <T> T invokeMethod(Object instance, String methodToExecute, Class<?> definedIn,
 			Class<?>[] argumentTypes, Object... arguments) throws Exception {
-		return WhiteboxImpl.<T> invokeMethod(instance, methodToExecute, definedIn, argumentTypes, arguments);
+		return WhiteboxImpl.invokeMethod(instance, methodToExecute, definedIn, argumentTypes, arguments);
 	}
 
 	/**
@@ -439,7 +439,7 @@ public class Whitebox {
 	 */
 	public static synchronized <T> T invokeMethod(Object instance, Class<?> declaringClass, String methodToExecute,
 			Object... arguments) throws Exception {
-		return WhiteboxImpl.<T> invokeMethod(instance, declaringClass, methodToExecute, arguments);
+		return WhiteboxImpl.invokeMethod(instance, declaringClass, methodToExecute, arguments);
 	}
 
 	/**
@@ -453,7 +453,7 @@ public class Whitebox {
 	 */
 	public static synchronized <T> T invokeMethod(Object object, Class<?> declaringClass, String methodToExecute,
 			Class<?>[] parameterTypes, Object... arguments) throws Exception {
-		return WhiteboxImpl.<T> invokeMethod(object, declaringClass, methodToExecute, parameterTypes, arguments);
+		return WhiteboxImpl.invokeMethod(object, declaringClass, methodToExecute, parameterTypes, arguments);
 	}
 
 	/**
@@ -463,7 +463,7 @@ public class Whitebox {
 	 */
 	public static synchronized <T> T invokeMethod(Class<?> clazz, String methodToExecute, Object... arguments)
 			throws Exception {
-		return WhiteboxImpl.<T> invokeMethod(clazz, methodToExecute, arguments);
+		return WhiteboxImpl.invokeMethod(clazz, methodToExecute, arguments);
 	}
 
 	/**

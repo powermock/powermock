@@ -11,7 +11,7 @@ public class ClassTransformerChain extends AbstractClassTransformer {
     private ClassTransformer[] chain;
     
     public ClassTransformerChain(ClassTransformer[] chain) {
-        this.chain = (ClassTransformer[])chain.clone();
+        this.chain = chain.clone();
     }
 
     public void setTarget(ClassVisitor v) {

@@ -70,11 +70,11 @@ public class JUnit3TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 		final Class<?> powerMockTestListenerArrayType = Class.forName(PowerMockTestListener[].class.getName(), false,
 				classLoader);
 		Class<?> delegateClass = Class.forName(PowerMockJUnit3RunnerDelegateImpl.class.getName(), false, classLoader);
-		Constructor<?> con = delegateClass.getConstructor(new Class[] { Class.class, Method[].class,
-				powerMockTestListenerArrayType });
-		final PowerMockJUnit3RunnerDelegate newDelegate = (PowerMockJUnit3RunnerDelegate) con.newInstance(new Object[] {
+		Constructor<?> con = delegateClass.getConstructor(Class.class, Method[].class,
+				powerMockTestListenerArrayType);
+		final PowerMockJUnit3RunnerDelegate newDelegate = (PowerMockJUnit3RunnerDelegate) con.newInstance(
 				testClassLoadedByMockedClassLoader, methodsToTest.toArray(new Method[0]),
-				getPowerMockTestListenersLoadedByASpecificClassLoader(testClass, classLoader) });
+				getPowerMockTestListenersLoadedByASpecificClassLoader(testClass, classLoader));
 		newDelegate.setName(name);
 		return newDelegate;
 	}

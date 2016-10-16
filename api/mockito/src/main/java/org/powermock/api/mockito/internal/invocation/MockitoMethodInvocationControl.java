@@ -142,7 +142,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
 
     private VerificationMode getVerificationMode() {
         try {
-            MockingProgress progress = (MockingProgress) Whitebox.invokeMethod(ThreadSafeMockingProgress.class,
+            MockingProgress progress = Whitebox.invokeMethod(ThreadSafeMockingProgress.class,
                     "threadSafely");
             return getVerificationModeFromMockProgress(progress);
         } catch (Exception e) {
@@ -308,7 +308,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
         try {
             final MockHandler mockHandler = methodInterceptorFilter.getHandler();
             if (mockHandler instanceof MockHandler) {
-                InvocationContainer invocationContainer = Whitebox.<InvocationContainer>invokeMethod(mockHandler, "getInvocationContainer");
+                InvocationContainer invocationContainer = Whitebox.invokeMethod(mockHandler, "getInvocationContainer");
                 VerificationDataImpl data = new VerificationDataImpl(invocationContainer, null);
                 VerificationModeFactory.noMoreInteractions().verify(data);
             } else {

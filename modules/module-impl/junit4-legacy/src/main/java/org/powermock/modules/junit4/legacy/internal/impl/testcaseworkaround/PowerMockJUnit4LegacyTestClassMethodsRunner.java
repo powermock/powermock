@@ -30,7 +30,7 @@ public class PowerMockJUnit4LegacyTestClassMethodsRunner extends TestClassMethod
 	public PowerMockJUnit4LegacyTestClassMethodsRunner(Class<?> klass, PowerMockTestListener[] powerMockTestListeners) {
 		super(klass);
 		this.powerMockTestNotifier = new PowerMockTestNotifierImpl(powerMockTestListeners);
-		List<Method> testMethods = (List<Method>) Whitebox.getInternalState(this, "fTestMethods", TestClassMethodsRunner.class);
+		List<Method> testMethods = Whitebox.getInternalState(this, "fTestMethods", TestClassMethodsRunner.class);
 		testMethods.addAll(getAdditionalTestMethods(klass));
 	}
 
@@ -54,11 +54,8 @@ public class PowerMockJUnit4LegacyTestClassMethodsRunner extends TestClassMethod
 	}
 
 	private boolean isAdditionalTestMethod(Method method) {
-		if (!method.isAnnotationPresent(Ignore.class) && method.getName().startsWith("test") && Modifier.isPublic(method.getModifiers())
-				&& method.getReturnType().equals(Void.TYPE) && method.getAnnotation(Test.class) == null) {
-			return true;
-		}
-		return false;
+		return !method.isAnnotationPresent(Ignore.class) && method.getName().startsWith("test") && Modifier.isPublic(method.getModifiers())
+				&& method.getReturnType().equals(Void.TYPE) && method.getAnnotation(Test.class) == null;
 	}
 
 	@Override
@@ -69,7 +66,7 @@ public class PowerMockJUnit4LegacyTestClassMethodsRunner extends TestClassMethod
 	@SuppressWarnings("unchecked")
 	@Override
 	public void run(RunNotifier notifier) {
-		final List<Method> methods = (List<Method>) Whitebox.getInternalState(this, "fTestMethods");
+		final List<Method> methods = Whitebox.getInternalState(this, "fTestMethods");
 		if (methods.isEmpty())
 			notifier.testAborted(getDescription(), new Exception("No runnable methods"));
 		for (Method method : methods) {

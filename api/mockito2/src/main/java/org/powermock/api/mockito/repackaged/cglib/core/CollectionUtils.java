@@ -22,7 +22,7 @@ public class CollectionUtils {
     public static Map bucket(Collection c, Transformer t) {
         Map buckets = new HashMap();
         for (Iterator it = c.iterator(); it.hasNext();) {
-            Object value = (Object)it.next();
+            Object value = it.next();
             Object key = t.transform(value);
             List bucket = (List)buckets.get(key);
             if (bucket == null) {

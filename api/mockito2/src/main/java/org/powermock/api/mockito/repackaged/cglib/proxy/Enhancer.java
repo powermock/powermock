@@ -269,7 +269,7 @@ public class Enhancer extends AbstractClassGenerator
     }
 
     private static Method getCallbacksSetter(Class type, String methodName) throws NoSuchMethodException {
-        return type.getDeclaredMethod(methodName, new Class[]{ Callback[].class });
+        return type.getDeclaredMethod(methodName, Callback[].class);
     }
 
     /**

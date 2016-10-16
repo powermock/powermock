@@ -787,7 +787,7 @@ public class WhiteBoxTest {
     @Test
     public void assertThatWhiteboxWorksWithGenericsWhenSpecifyingFieldName() throws Exception {
         ClassWithInternalState object = new ClassWithInternalState();
-        Set<String> state = Whitebox.<Set<String>>getInternalState(object, "genericState");
+        Set<String> state = Whitebox.getInternalState(object, "genericState");
         assertSame(object.getGenericState(), state);
     }
 

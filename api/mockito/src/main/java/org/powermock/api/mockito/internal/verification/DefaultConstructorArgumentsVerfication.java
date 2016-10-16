@@ -55,7 +55,7 @@ public class DefaultConstructorArgumentsVerfication<T> implements ConstructorArg
 
     @Override
     public void withNoArguments() throws Exception {
-        invokeSubstitute(new Object[0]);
+        invokeSubstitute();
     }
 
 }

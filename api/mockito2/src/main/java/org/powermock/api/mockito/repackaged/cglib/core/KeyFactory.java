@@ -186,8 +186,8 @@ abstract public class KeyFactory {
             
             // hash code
             e = ce.begin_method(Constants.ACC_PUBLIC, HASH_CODE, null);
-            int hc = (constant != 0) ? constant : PRIMES[(int)(Math.abs(seed) % PRIMES.length)];
-            int hm = (multiplier != 0) ? multiplier : PRIMES[(int)(Math.abs(seed * 13) % PRIMES.length)];
+            int hc = (constant != 0) ? constant : PRIMES[Math.abs(seed) % PRIMES.length];
+            int hm = (multiplier != 0) ? multiplier : PRIMES[Math.abs(seed * 13) % PRIMES.length];
             e.push(hc);
             for (int i = 0; i < parameterTypes.length; i++) {
                 e.load_this();

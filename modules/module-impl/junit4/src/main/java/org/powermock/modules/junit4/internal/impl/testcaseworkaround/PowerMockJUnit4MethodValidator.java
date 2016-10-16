@@ -68,9 +68,9 @@ public class PowerMockJUnit4MethodValidator extends MethodValidator {
         validateTestMethods(Before.class, false);
         validateTestMethods(Test.class, false);
 
-        TestClass testClass = (TestClass) Whitebox.getInternalState(this, TEST_CLASS_FIELD, MethodValidator.class);
-        Class<?> classUnderTest = (Class<?>) Whitebox.getInternalState(testClass, CLASS_UNDER_TEST_FIELD);
-        List<Throwable> fErrors = (List<Throwable>) Whitebox.getInternalState(this, ERRORS_FIELD, MethodValidator.class);
+        TestClass testClass = Whitebox.getInternalState(this, TEST_CLASS_FIELD, MethodValidator.class);
+        Class<?> classUnderTest = Whitebox.getInternalState(testClass, CLASS_UNDER_TEST_FIELD);
+        List<Throwable> fErrors = Whitebox.getInternalState(this, ERRORS_FIELD, MethodValidator.class);
 
         List<Method> methods = getTestMethods(testClass, classUnderTest);
         if (methods.size() == 0)
@@ -94,8 +94,8 @@ public class PowerMockJUnit4MethodValidator extends MethodValidator {
      */
     @SuppressWarnings("unchecked")
     private void validateTestMethods(Class<? extends Annotation> annotation, boolean isStatic) {
-        TestClass testClass = (TestClass) Whitebox.getInternalState(this, TEST_CLASS_FIELD, MethodValidator.class);
-        Class<?> classUnderTest = (Class<?>) Whitebox.getInternalState(testClass, CLASS_UNDER_TEST_FIELD);
+        TestClass testClass = Whitebox.getInternalState(this, TEST_CLASS_FIELD, MethodValidator.class);
+        Class<?> classUnderTest = Whitebox.getInternalState(testClass, CLASS_UNDER_TEST_FIELD);
         final List<Method> methods;
         if (TestCase.class.equals(classUnderTest.getSuperclass()) && !isStatic) {
             methods = getTestMethodsWithNoAnnotation(classUnderTest);
@@ -103,7 +103,7 @@ public class PowerMockJUnit4MethodValidator extends MethodValidator {
             methods = testClass.getAnnotatedMethods(annotation);
         }
 
-        List<Throwable> fErrors = (List<Throwable>) Whitebox.getInternalState(this, ERRORS_FIELD, MethodValidator.class);
+        List<Throwable> fErrors = Whitebox.getInternalState(this, ERRORS_FIELD, MethodValidator.class);
         for (Method each : methods) {
             if (Modifier.isStatic(each.getModifiers()) != isStatic) {
                 String state = isStatic ? "should" : "should not";

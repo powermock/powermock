@@ -113,8 +113,7 @@ public abstract class TestClassTransformer implements MockTransformer {
                             @Override
                             boolean mustHaveTestAnnotationRemoved(CtMethod method)
                             throws Exception {
-                                return false == signatureOf(method)
-                                        .equals(targetMethodSignature);
+                                return !signatureOf(method).equals(targetMethodSignature);
                             }
                         };
                     }
@@ -240,7 +239,7 @@ public abstract class TestClassTransformer implements MockTransformer {
              * work-in-progress clazz doesn't cause NotFoundException ...
              */
             return null != superClazz
-                    && false == "java.lang.Object".equals(superClazz.getName());
+                    && !"java.lang.Object".equals(superClazz.getName());
         } catch (NotFoundException noWasSuperClassFound) {
             return false;
         }
@@ -251,7 +250,7 @@ public abstract class TestClassTransformer implements MockTransformer {
         final String notificationCode =
                 GlobalNotificationBuildSupport.class.getName()
                 + ".testInstanceCreated(this);";
-        final boolean asFinally = false == hasSuperClass(clazz);
+        final boolean asFinally = !hasSuperClass(clazz);
         for (final CtConstructor constr : clazz.getDeclaredConstructors()) {
             constr.insertAfter(
                     notificationCode,
@@ -266,7 +265,7 @@ public abstract class TestClassTransformer implements MockTransformer {
                 : Class.forName(clazz.getName(), true, testClass.getClassLoader());
         for (final CtConstructor ctConstr : clazz.getConstructors()) {
             int ctModifiers = ctConstr.getModifiers();
-            if (false == Modifier.isPublic(ctModifiers)) {
+            if (!Modifier.isPublic(ctModifiers)) {
                 /* Probably a defer-constructor */
                 continue;
             }
@@ -277,7 +276,7 @@ public abstract class TestClassTransformer implements MockTransformer {
                 ctConstr.setModifiers(Modifier.setPrivate(ctModifiers));
             } else if (Modifier.isProtected(desiredAccessModifiers)) {
                 ctConstr.setModifiers(Modifier.setProtected(ctModifiers));
-            } else if (false == Modifier.isPublic(desiredAccessModifiers)) {
+            } else if (!Modifier.isPublic(desiredAccessModifiers)) {
                 ctConstr.setModifiers(Modifier.setPackage(ctModifiers));
             } else {
                 /* ctConstr remains public */

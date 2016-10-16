@@ -51,7 +51,7 @@ implements GlobalNotificationBuildSupport.Callback {
         @Override
         protected NotificationBuilder initialValue() {
             return new NotificationBuilder(
-                    (Method[]) testMethods.clone(),
+                    testMethods.clone(),
                     powerMockTestNotifier,
                     pendingTestInstancesOnMotherThread);
         }

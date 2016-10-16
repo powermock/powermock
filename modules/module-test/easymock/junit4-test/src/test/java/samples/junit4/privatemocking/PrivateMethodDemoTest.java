@@ -56,7 +56,7 @@ public class PrivateMethodDemoTest {
 		PrivateMethodDemo tested = new PrivateMethodDemo();
 		String expected = "Hello altered World";
 
-		String actual = (String) Whitebox.invokeMethod(tested, "sayIt",
+		String actual = Whitebox.invokeMethod(tested, "sayIt",
 				"altered World");
 
 		assertEquals("Expected and actual did not match", expected, actual);
@@ -68,7 +68,7 @@ public class PrivateMethodDemoTest {
 		PrivateMethodDemo tested = new PrivateMethodDemo();
 		String expected = "Hello world";
 
-		String actual = (String) Whitebox.invokeMethod(tested, "sayIt");
+		String actual = Whitebox.invokeMethod(tested, "sayIt");
 
 		assertEquals("Expected and actual did not match", expected, actual);
 	}

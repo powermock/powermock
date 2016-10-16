@@ -52,11 +52,11 @@ public class ReflectUtils {
                 try {
                     Class loader = Class.forName("java.lang.ClassLoader"); // JVM crash w/o this
                     DEFINE_CLASS = loader.getDeclaredMethod("defineClass",
-                                                            new Class[]{ String.class,
-                                                                         byte[].class,
-                                                                         Integer.TYPE,
-                                                                         Integer.TYPE,
-                                                                         ProtectionDomain.class });
+                                                            String.class,
+                                                            byte[].class,
+                                                            Integer.TYPE,
+                                                            Integer.TYPE,
+                                                            ProtectionDomain.class);
                     DEFINE_CLASS.setAccessible(true);
                 } catch (ClassNotFoundException e) {
                     throw new CodeGenerationException(e);

@@ -66,7 +66,7 @@ public class MethodProxy {
         try {
             Method m = type.getDeclaredMethod(MethodInterceptorGenerator.FIND_PROXY_NAME,
                                               MethodInterceptorGenerator.FIND_PROXY_TYPES);
-            return (MethodProxy)m.invoke(null, new Object[]{ sig });
+            return (MethodProxy)m.invoke(null, sig);
         } catch (NoSuchMethodException e) {
             throw new IllegalArgumentException("Class " + type + " does not use a MethodInterceptor");
         } catch (IllegalAccessException e) {

@@ -166,7 +166,7 @@ public class WhiteboxImpl {
         LinkedList<Class<?>> examine = new LinkedList<Class<?>>();
         examine.add(type);
         Set<Class<?>> done = new HashSet<Class<?>>();
-        while (examine.isEmpty() == false) {
+        while (!examine.isEmpty()) {
             Class<?> thisType = examine.removeFirst();
             done.add(thisType);
             final Field[] declaredField = thisType.getDeclaredFields();
@@ -246,9 +246,9 @@ public class WhiteboxImpl {
             constructor.setAccessible(true);
             return constructor;
         } catch (RuntimeException e) {
-            throw (RuntimeException) e;
+            throw e;
         } catch (Error e) {
-            throw (Error) e;
+            throw e;
         } catch (Throwable e) {
             throw new ConstructorNotFoundException(String.format(
                     "Failed to lookup constructor with parameter types [ %s ] in class %s.",
@@ -458,7 +458,7 @@ public class WhiteboxImpl {
             }
             if (foundField != null) {
                 break;
-            } else if (checkHierarchy == false) {
+            } else if (!checkHierarchy) {
                 break;
             }
             startClass = startClass.getSuperclass();
