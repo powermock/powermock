@@ -13,7 +13,7 @@ Change log next version
 * Refactoring: Fix performance issues, fix error handling issues, remove unused imports, remove verbose or redundant code constructs. (thanks to Mykhailo Kovalskyi @kovalsky for pull request)
 
 
-Change log 1.6.5 (2015-04-30)
+Change log 1.6.5 (2016-04-30)
 -----------------------------
 * Add ability to chain returns with doReturn() (thanks to "gauee" for pull request) (issue #599)
 * Code quality improvement, @Override annotation should be used on any method overriding (since Java 5) or implementing (since Java 6) another one
