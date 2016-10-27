@@ -19,6 +19,10 @@ package powermock.test.support;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.transformers.impl.ClassMockTransformerTest;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
 /**
  * This class is used when running tests in {@link ClassMockTransformerTest}. It is
  * placed in this package because classes in org.powermock.core.* are deferred by:
@@ -55,6 +59,39 @@ public class MainMockTransformerTestSupport {
             MultipleConstructors(int i) {}
             private MultipleConstructors(Boolean[] array) {}
             protected MultipleConstructors(int[] iarray, boolean b, String[] sarray) {}
+        }
+    }
+
+    public static class SuperClassWithObjectMethod {
+        public void doSomething(Object o){
+
+        }
+    }
+
+    public static class SubclassWithBridgeMethod extends SuperClassWithObjectMethod{
+        public void doSomething(String s){
+
+        }
+    }
+
+    public static class CallSpy{
+        private final static List<String> methodCalls = new LinkedList<String>();
+        private final static List<String> fieldCalls = new LinkedList<String>();
+
+        public static void registerMethodCall(String methodName){
+            methodCalls.add(methodName);
+        }
+
+        public static void registerFieldCall(String fieldName){
+            fieldCalls.add(fieldName);
+        }
+
+        public static List<String> getMethodCalls() {
+            return methodCalls;
+        }
+
+        public static List<String> getFieldCalls() {
+            return fieldCalls;
         }
     }
 }
