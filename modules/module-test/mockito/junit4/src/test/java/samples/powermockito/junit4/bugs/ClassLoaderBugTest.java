@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package samples.powermockito.junit4;
+package samples.powermockito.junit4.bugs;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

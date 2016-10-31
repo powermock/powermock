@@ -49,6 +49,62 @@ public class MockGateway {
      * {@link Object#equals(Object)}. By default this is <code>true</code>.
      */
     public static boolean MOCK_STANDARD_METHODS = true;
+
+    @SuppressWarnings("UnusedDeclaration")
+    public static Object newInstanceCall(Class<?> type, Object[] args, Class<?>[] sig) throws Throwable {
+        final NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceControl(type);
+        if (newInvocationControl != null) {
+            /*
+             * We need to deal with inner, local and anonymous inner classes
+			 * specifically. For example when new is invoked on an inner class
+			 * it seems like null is passed as an argument even though it
+			 * shouldn't. We correct this here.
+			 *
+			 * Seems with Javassist 3.17.1-GA & Java 7, the 'null' is passed as the last argument.
+			 */
+            if (type.isMemberClass() && Modifier.isStatic(type.getModifiers())) {
+                if (args.length > 0 && (args[0] == null || args[args.length - 1] == null) && sig.length > 0) {
+                    args = copyArgumentsForInnerOrLocalOrAnonymousClass(args, false);
+                }
+            } else if (type.isLocalClass() || type.isAnonymousClass() || type.isMemberClass()) {
+                if (args.length > 0 && sig.length > 0 && sig[0].equals(type.getEnclosingClass())) {
+                    args = copyArgumentsForInnerOrLocalOrAnonymousClass(args, true);
+                }
+            }
+            return newInvocationControl.invoke(type, args, sig);
+        }
+        // Check if we should suppress the constructor code
+        if (MockRepository.shouldSuppressConstructor(WhiteboxImpl.getConstructor(type, sig))) {
+            return WhiteboxImpl.getFirstParentConstructor(type);
+        }
+        return PROCEED;
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    public static Object fieldCall(Object instanceOrClassContainingTheField, Class<?> classDefiningField,
+                                   String fieldName, Class<?> fieldType) {
+        if (MockRepository.shouldSuppressField(WhiteboxImpl.getField(classDefiningField, fieldName))) {
+            return TypeUtils.getDefaultValue(fieldType);
+        }
+        return PROCEED;
+    }
+
+    public static Object staticConstructorCall(String className) {
+        if (MockRepository.shouldSuppressStaticInitializerFor(className)) {
+            return "suppress";
+        }
+        return PROCEED;
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    public static Object constructorCall(Class<?> type, Object[] args, Class<?>[] sig) throws Throwable {
+        final Constructor<?> constructor = WhiteboxImpl.getConstructor(type, sig);
+        if (MockRepository.shouldSuppressConstructor(constructor)) {
+            return null;
+        }
+        return PROCEED;
+    }
+
     /**
      * Tells PowerMock whether or not to mock
      * {@link java.lang.Object#getClass()}.
@@ -62,12 +118,20 @@ public class MockGateway {
      */
     public static boolean MOCK_ANNOTATION_METHODS = false;
 
+    // used for instance methods
+    @SuppressWarnings("UnusedDeclaration")
+    public static Object methodCall(Object instance, String methodName, Object[] args, Class<?>[] sig,
+                                    String returnTypeAsString) throws Throwable {
+        return doMethodCall(instance, methodName, args, sig, returnTypeAsString);
+    }
+
     // used for static methods
     @SuppressWarnings("UnusedDeclaration")
     public static Object methodCall(Class<?> type, String methodName, Object[] args, Class<?>[] sig,
                                     String returnTypeAsString) throws Throwable {
         return doMethodCall(type, methodName, args, sig, returnTypeAsString);
     }
+
 
     private static Object doMethodCall(Object object, String methodName, Object[] args, Class<?>[] sig,
                                        String returnTypeAsString) throws Throwable {
@@ -130,7 +194,6 @@ public class MockGateway {
         return returnValue;
     }
 
-
     /*
      * Method handles exception cases with equals method.
      */
@@ -157,6 +220,7 @@ public class MockGateway {
         return null;
     }
 
+
     private static boolean isEqualsMethod(MockInvocation mockInvocation) {
         return "equals".equals(mockInvocation.getMethod().getName());
     }
@@ -170,7 +234,6 @@ public class MockGateway {
         }
         return false;
     }
-
 
     private static boolean shouldMockMethod(String methodName, Class<?>[] sig) {
         if (isJavaStandardMethod(methodName, sig) && !MOCK_STANDARD_METHODS) {
@@ -188,7 +251,7 @@ public class MockGateway {
     private static boolean isGetClassMethod(String methodName, Class<?>[] sig) {
         return methodName.equals("getClass") && sig.length == 0;
     }
-    
+
     private static boolean isAnnotationMethod(String methodName, Class<?>[] sig) {
         return (methodName.equals("isAnnotationPresent") && sig.length == 1) || (methodName.equals("getAnnotation") && sig.length == 1);
     }
@@ -198,68 +261,6 @@ public class MockGateway {
         final boolean shouldMockThisCall = shouldSkipMockingOfNextCall == null;
         MockRepository.removeAdditionalState(DONT_MOCK_NEXT_CALL);
         return shouldMockThisCall;
-    }
-
-    // used for instance methods
-    @SuppressWarnings("UnusedDeclaration")
-    public static Object methodCall(Object instance, String methodName, Object[] args, Class<?>[] sig,
-                                    String returnTypeAsString) throws Throwable {
-        return doMethodCall(instance, methodName, args, sig, returnTypeAsString);
-    }
-
-    @SuppressWarnings("UnusedDeclaration")
-    public static Object newInstanceCall(Class<?> type, Object[] args, Class<?>[] sig) throws Throwable {
-        final NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceControl(type);
-        if (newInvocationControl != null) {
-            /*
-             * We need to deal with inner, local and anonymous inner classes
-			 * specifically. For example when new is invoked on an inner class
-			 * it seems like null is passed as an argument even though it
-			 * shouldn't. We correct this here.
-			 * 
-			 * Seems with Javassist 3.17.1-GA & Java 7, the 'null' is passed as the last argument.
-			 */
-            if (type.isMemberClass() && Modifier.isStatic(type.getModifiers())) {
-                if (args.length > 0 && (args[0] == null || args[args.length - 1] == null) && sig.length > 0) {
-                    args = copyArgumentsForInnerOrLocalOrAnonymousClass(args, false);
-                }
-            } else if (type.isLocalClass() || type.isAnonymousClass() || type.isMemberClass()) {
-                if (args.length > 0 && sig.length > 0 && sig[0].equals(type.getEnclosingClass())) {
-                    args = copyArgumentsForInnerOrLocalOrAnonymousClass(args, true);
-                }
-            }
-            return newInvocationControl.invoke(type, args, sig);
-        }
-        // Check if we should suppress the constructor code
-        if (MockRepository.shouldSuppressConstructor(WhiteboxImpl.getConstructor(type, sig))) {
-            return WhiteboxImpl.getFirstParentConstructor(type);
-        }
-        return PROCEED;
-    }
-
-    @SuppressWarnings("UnusedDeclaration")
-    public static Object fieldCall(Object instanceOrClassContainingTheField, Class<?> classDefiningField,
-                                   String fieldName, Class<?> fieldType) {
-        if (MockRepository.shouldSuppressField(WhiteboxImpl.getField(classDefiningField, fieldName))) {
-            return TypeUtils.getDefaultValue(fieldType);
-        }
-        return PROCEED;
-    }
-
-    public static Object staticConstructorCall(String className) {
-        if (MockRepository.shouldSuppressStaticInitializerFor(className)) {
-            return "suppress";
-        }
-        return PROCEED;
-    }
-
-    @SuppressWarnings("UnusedDeclaration")
-    public static Object constructorCall(Class<?> type, Object[] args, Class<?>[] sig) throws Throwable {
-        final Constructor<?> constructor = WhiteboxImpl.getConstructor(type, sig);
-        if (MockRepository.shouldSuppressConstructor(constructor)) {
-            return null;
-        }
-        return PROCEED;
     }
 
     /**

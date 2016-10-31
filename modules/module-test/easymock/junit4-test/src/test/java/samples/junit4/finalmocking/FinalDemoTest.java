@@ -28,7 +28,6 @@ import static org.powermock.api.easymock.PowerMock.*;
 
 /**
  * Test class to demonstrate non-static final mocking.
- * 
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(FinalDemo.class)

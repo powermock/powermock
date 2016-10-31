@@ -22,6 +22,12 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.core</artifactId>
+            <version>0.7.5.201505241946</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

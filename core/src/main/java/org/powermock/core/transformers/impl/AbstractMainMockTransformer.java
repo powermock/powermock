@@ -26,10 +26,12 @@ import javassist.CtMethod;
 import javassist.CtNewConstructor;
 import javassist.Modifier;
 import javassist.NotFoundException;
+import javassist.bytecode.AccessFlag;
 import javassist.bytecode.AttributeInfo;
 import javassist.bytecode.ClassFile;
 import javassist.bytecode.CodeAttribute;
 import javassist.bytecode.DuplicateMemberException;
+import javassist.bytecode.FieldInfo;
 import javassist.bytecode.InnerClassesAttribute;
 import javassist.expr.ConstructorCall;
 import javassist.expr.ExprEditor;
@@ -52,6 +54,15 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
     protected final TransformStrategy strategy;
 
     public AbstractMainMockTransformer(TransformStrategy strategy) {this.strategy = strategy;}
+
+    public CtClass transform(final CtClass clazz) throws Exception {
+        if (clazz.isFrozen()) {
+            clazz.defrost();
+        }
+        return transformMockClass(clazz);
+    }
+
+    protected abstract CtClass transformMockClass(CtClass clazz) throws CannotCompileException, NotFoundException;
 
     protected String allowMockingOfPackagePrivateClasses(final CtClass clazz) {
         final String name = clazz.getName();
@@ -166,7 +177,8 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
     }
 
     private void modifyMethod(final CtMethod method) throws NotFoundException, CannotCompileException {
-        if (!Modifier.isAbstract(method.getModifiers())) {
+
+        if (!shouldSkipMethod(method)) {
 
             // Lookup the method return type
 
@@ -181,18 +193,36 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
         }
     }
 
+    private boolean shouldSkipMethod(CtMethod method) {
+        return isAccessFlagSynthetic(method) || Modifier.isAbstract(method.getModifiers());
+    }
+
+    private boolean isAccessFlagSynthetic(CtMethod method) {
+        int accessFlags = method.getMethodInfo2().getAccessFlags();
+        return ((accessFlags & AccessFlag.SYNTHETIC) != 0) && !isBridgeMethod(method);
+    }
+
     private void modifyMethod(CtMethod method, CtClass returnTypeAsCtClass,
                               String returnTypeAsString) throws CannotCompileException {
         final String returnValue = getCorrectReturnValueType(returnTypeAsCtClass);
 
         String classOrInstance = classOrInstance(method);
 
-        String code = "Object value = " + MockGateway.class.getName() + ".methodCall(" + classOrInstance + ", \"" + method.getName()
-                              + "\", $args, $sig, \"" + returnTypeAsString + "\");" + "if (value != " + MockGateway.class.getName() + ".PROCEED) " + "return "
+        String code = "Object value = "
+                              + MockGateway.class.getName()
+                              + ".methodCall("
+                                + classOrInstance + ", \""
+                                + method.getName()
+                                + "\", $args, $sig, \""
+                                + returnTypeAsString
+                              + "\");"
+                              + "if (value != " + MockGateway.class.getName() + ".PROCEED) " + "return "
                               + returnValue + "; ";
 
         method.insertBefore("{ " + code + "}");
     }
+
+    private boolean isBridgeMethod(CtMethod method) {return (method.getMethodInfo2().getAccessFlags() & AccessFlag.BRIDGE) != 0;}
 
     private String classOrInstance(CtMethod method) {
         String classOrInstance = "this";
@@ -213,10 +243,20 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
 
         String classOrInstance = classOrInstance(method);
         method.setModifiers(method.getModifiers() - Modifier.NATIVE);
-        String code = "Object value = " + MockGateway.class.getName() + ".methodCall(" + classOrInstance + ", \"" + method.getName()
-                              + "\", $args, $sig, \"" + returnTypeAsString + "\");" + "if (value != " + MockGateway.class
-                                                                                                                .getName() + ".PROCEED) "
-                              + "return " + returnValue + "; " + "throw new java.lang.UnsupportedOperationException(\"" + methodName + " is native\");";
+        String code = "Object value = "
+                              + MockGateway.class.getName()
+                              + ".methodCall("
+                                + classOrInstance
+                                + ", \""
+                                + method.getName()
+                                + "\", $args, $sig, \""
+                                + returnTypeAsString
+                              + "\");"
+                              + "if (value != "
+                                + MockGateway.class.getName() + ".PROCEED) "
+                                + "return "
+                                + returnValue + "; "
+                                    + "throw new java.lang.UnsupportedOperationException(\"" + methodName + " is native\");";
         method.setBody("{" + code + "}");
     }
 
@@ -252,14 +292,9 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
         return returnValue;
     }
 
-    public CtClass transform(final CtClass clazz) throws Exception {
-        if (clazz.isFrozen()) {
-            clazz.defrost();
-        }
-        return transformMockClass(clazz);
+    private boolean isNotSyntheticField(FieldInfo fieldInfo) {
+        return (fieldInfo.getAccessFlags() & AccessFlag.SYNTHETIC) == 0;
     }
-
-    protected abstract CtClass transformMockClass(CtClass clazz) throws CannotCompileException, NotFoundException;
 
     protected final class PowerMockExpressionEditor extends ExprEditor {
         private final CtClass clazz;
@@ -272,9 +307,12 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
         public void edit(FieldAccess f) throws CannotCompileException {
             if (f.isReader()) {
                 CtClass returnTypeAsCtClass;
+                FieldInfo fieldInfo;
 
                 try {
-                    returnTypeAsCtClass = f.getField().getType();
+                    CtField field = f.getField();
+                    returnTypeAsCtClass = field.getType();
+                    fieldInfo = field.getFieldInfo2();
                 } catch (NotFoundException e) {
                         /*
                          * If multiple java agents are active (in INST_REDEFINE mode), the types implicitly loaded by javassist from disk
@@ -285,20 +323,21 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
                          */
                     return;
                 }
-                StringBuilder code = new StringBuilder();
-                code.append("{Object value =  ")
-                    .append(MockGateway.class.getName())
-                    .append(".fieldCall(")
-                    .append("$0,$class,\"")
-                    .append(
-                            f.getFieldName())
-                    .append("\",$type);");
-                code.append("if(value == ").append(MockGateway.class.getName()).append(".PROCEED) {");
-                code.append("	$_ = $proceed($$);");
-                code.append("} else {");
-                code.append("	$_ = ").append(getCorrectReturnValueType(returnTypeAsCtClass)).append(";");
-                code.append("}}");
-                f.replace(code.toString());
+
+                if (isNotSyntheticField(fieldInfo)) {
+                    String code = "{Object value =  " +
+                                          MockGateway.class.getName() +
+                                          ".fieldCall(" +
+                                          "$0,$class,\"" +
+                                          f.getFieldName() +
+                                          "\",$type);" +
+                                          "if(value == " + MockGateway.class.getName() + ".PROCEED) {" +
+                                          "	$_ = $proceed($$);" +
+                                          "} else {" +
+                                          "	$_ = " + getCorrectReturnValueType(returnTypeAsCtClass) + ";" +
+                                          "}}";
+                    f.replace(code);
+                }
             }
         }
 
@@ -307,6 +346,7 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
             try {
                 final CtMethod method = m.getMethod();
                 final CtClass declaringClass = method.getDeclaringClass();
+
                 if (declaringClass != null) {
                     if (shouldTreatAsSystemClassCall(declaringClass)) {
                         StringBuilder code = new StringBuilder();
