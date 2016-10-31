@@ -268,13 +268,16 @@ public class ClassMockTransformerTest {
 
             Object instance = clazz.newInstance();
 
-            method.setAccessible(true);
+            if (method != null) {
+                method.setAccessible(true);
+            }
             method.invoke(instance, "");
 
             assertThat(CallSpy.getMethodCalls()).isEmpty();
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static class ShouldIgnoreCallToSyntheticNonBridgeMethods {
         public static void main(String[] args) throws Exception {
             Class clazz = SuperClassWithObjectMethod.class;

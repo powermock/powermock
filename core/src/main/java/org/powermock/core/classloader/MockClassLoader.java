@@ -19,7 +19,6 @@ package org.powermock.core.classloader;
 import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
-import javassist.CtMethod;
 import org.powermock.core.ClassReplicaCreator;
 import org.powermock.core.WildcardMatcher;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
@@ -27,7 +26,6 @@ import org.powermock.core.spi.PowerMockPolicy;
 import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.core.transformers.MockTransformer;
 
-import java.lang.reflect.Method;
 import java.security.ProtectionDomain;
 import java.util.Collections;
 import java.util.HashSet;

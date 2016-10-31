@@ -15,7 +15,13 @@
  */
 package org.powermock.core;
 
-import javassist.*;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtConstructor;
+import javassist.CtMethod;
+import javassist.CtNewMethod;
+import javassist.Modifier;
+import javassist.NotFoundException;
 import org.powermock.reflect.internal.TypeUtils;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -38,7 +44,7 @@ public class ConcreteClassGenerator {
 		}
 		ClassPool classpool = ClassPool.getDefault();
 		final String originalClassName = clazz.getName();
-		CtClass originalClassAsCtClass = null;
+		final CtClass originalClassAsCtClass;
 		final CtClass newClass = classpool.makeClass(generateClassName(clazz));
 		try {
 			newClass.setSuperclass(classpool.get(clazz.getName()));

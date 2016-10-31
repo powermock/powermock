@@ -16,5 +16,5 @@
 package org.powermock.core.spi.testresult;
 
 public enum Result {
-	SUCCESSFUL, FAILED, IGNORED;
+	SUCCESSFUL, FAILED, IGNORED
 }

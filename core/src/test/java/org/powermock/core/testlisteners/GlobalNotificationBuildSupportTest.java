@@ -15,14 +15,18 @@
  */
 package org.powermock.core.testlisteners;
 
-import java.util.Collection;
-import java.util.concurrent.ConcurrentHashMap;
 import org.junit.AfterClass;
 import org.junit.Test;
 import org.powermock.core.testlisteners.GlobalNotificationBuildSupport.Callback;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 /**
  * The design of this test-class does only allow it to be run once per JVM
@@ -31,12 +35,14 @@ import static org.mockito.Mockito.*;
  * because it will test some class instantiation, which can only occur one per
  * class.
  */
+@SuppressWarnings({"SameParameterValue", "ResultOfMethodCallIgnored"})
 public class GlobalNotificationBuildSupportTest {
 
     static boolean initiationOfNormalClassIsUnderWay;
 
     static final Callback mockCallback = mock(Callback.class);
 
+    @SuppressWarnings("SameParameterValue")
     static class NormalClass {
         static {
             initiationOfNormalClassIsUnderWay = true;
@@ -53,6 +59,7 @@ public class GlobalNotificationBuildSupportTest {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     static class SubClass extends NormalClass {
         public SubClass() {
             super("dummy");

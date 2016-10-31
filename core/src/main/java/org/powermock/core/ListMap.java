@@ -15,7 +15,13 @@
  */
 package org.powermock.core;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ListMap<K, V> implements Map<K, V> {
 
@@ -48,7 +54,7 @@ public class ListMap<K, V> implements Map<K, V> {
             return old;
         }
 
-    };
+    }
 
     @Override
     public V remove(Object key) {
@@ -69,8 +75,7 @@ public class ListMap<K, V> implements Map<K, V> {
 
     @Override
     public V get(Object key) {
-        for (Iterator<Map.Entry<K, V>> i = entries.iterator(); i.hasNext();) {
-            Map.Entry<K, V> entry = i.next();
+        for (Entry<K, V> entry : entries) {
             if (entry.getKey() == key) {
                 return entry.getValue();
             }
@@ -80,8 +85,7 @@ public class ListMap<K, V> implements Map<K, V> {
 
     @Override
     public V put(K key, V value) {
-        for (Iterator<Map.Entry<K, V>> i = entries.iterator(); i.hasNext();) {
-            Map.Entry<K, V> entry = i.next();
+        for (Entry<K, V> entry : entries) {
             if (entry.getKey() == key) {
                 return entry.setValue(value);
             }
@@ -98,8 +102,7 @@ public class ListMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean containsValue(Object value) {
-        for (Iterator<Map.Entry<K, V>> i = entries.iterator(); i.hasNext();) {
-            Map.Entry<K, V> entry = i.next();
+        for (Entry<K, V> entry : entries) {
             if (entry.getValue() == value) {
                 return true;
             }

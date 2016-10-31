@@ -17,5 +17,5 @@
 package org.powermock.core.transformers;
 
 public enum TransformStrategy {
-    CLASSLOADER, INST_REDEFINE, INST_TRANSFORM;
+    CLASSLOADER, INST_REDEFINE, INST_TRANSFORM
 }

@@ -15,14 +15,6 @@
  */
 package org.powermock.tests.utils.impl;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Map.Entry;
-
 import org.powermock.core.MockRepository;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.classloader.annotations.MockPolicy;
@@ -33,6 +25,14 @@ import org.powermock.mockpolicies.impl.MockPolicyClassLoadingSettingsImpl;
 import org.powermock.mockpolicies.impl.MockPolicyInterceptionSettingsImpl;
 import org.powermock.reflect.Whitebox;
 import org.powermock.tests.utils.MockPolicyInitializer;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Map.Entry;
 
 /**
  * The default implementation of the {@link MockPolicyInitializer} interface for
@@ -53,7 +53,7 @@ public class MockPolicyInitializerImpl implements MockPolicyInitializer {
     }
 
     private MockPolicyInitializerImpl(Class<? extends PowerMockPolicy>[] mockPolicies, boolean internal) {
-        this(mockPolicies, null, false);
+        this(mockPolicies, null, internal);
     }
 
     private MockPolicyInitializerImpl(Class<? extends PowerMockPolicy>[] mockPolicies, Class<?> testClass, boolean internal) {

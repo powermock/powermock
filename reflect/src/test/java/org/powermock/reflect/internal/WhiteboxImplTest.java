@@ -25,9 +25,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assume.assumeTrue;
-import static org.junit.matchers.JUnitMatchers.hasItem;
+
 
 /**
  * Unit tests specific to the WhiteboxImpl.
@@ -43,7 +43,7 @@ public class WhiteboxImplTest {
 				Class[].class, Class[].class);
 		boolean invokeMethod = (Boolean) method.invoke(WhiteboxImpl.class, false, new Class<?>[] { Class.class },
 				new Class<?>[] { String.class });
-		assertFalse(invokeMethod);
+		assertThat(invokeMethod).isFalse();
 	}
 
 	@Test
@@ -52,7 +52,7 @@ public class WhiteboxImplTest {
 				Class[].class, Class[].class);
 		boolean invokeMethod = (Boolean) method.invoke(WhiteboxImpl.class, false, new Class<?>[] { Class.class },
 				new Class<?>[] { Class.class });
-		assertTrue(invokeMethod);
+		assertThat(invokeMethod).isTrue();
 	}
 
 	@Test
@@ -60,7 +60,7 @@ public class WhiteboxImplTest {
 		final Method expectedMethod = ClassWithStandardMethod.class.getDeclaredMethod("myMethod", double.class);
 		final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithStandardMethod.class, "myMethod",
 				new Class<?>[] { double.class }, false);
-		assertEquals(expectedMethod, actualMethod);
+		assertThat(actualMethod).isEqualTo(expectedMethod);
 	}
 
 	@Test
@@ -69,7 +69,7 @@ public class WhiteboxImplTest {
 				Child.class);
 		final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithOverloadedMethods.class, "overloaded",
 				new Class<?>[] { double.class, Child.class }, false);
-		assertEquals(expectedMethod, actualMethod);
+		assertThat(actualMethod).isEqualTo(expectedMethod);
 	}
 
     @Test
@@ -82,6 +82,6 @@ public class WhiteboxImplTest {
             methodNames.add(method.getName());
         }
 
-        assertThat(methodNames, hasItem("stream"));
+        assertThat(methodNames).contains("stream");
     }
 }

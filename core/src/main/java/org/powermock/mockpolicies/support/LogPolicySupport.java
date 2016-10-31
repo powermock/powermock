@@ -60,7 +60,7 @@ public class LogPolicySupport {
 	 *             cannot be found.
 	 */
 	public Class<?> getType(String name, String logFramework) throws Exception {
-		Class<?> loggerType = null;
+		final Class<?> loggerType;
 		try {
 			loggerType = Class.forName(name);
 		} catch (ClassNotFoundException e) {

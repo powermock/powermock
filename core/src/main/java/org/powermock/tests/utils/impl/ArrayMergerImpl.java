@@ -41,8 +41,7 @@ public class ArrayMergerImpl implements ArrayMerger {
 		final T[] finalArray = (T[]) Array.newInstance(type, size);
 
 		int lastIndex = 0;
-		for (int i = 0; i < arraysToMerge.length; i++) {
-			final T[] currentArray = arraysToMerge[i];
+		for (final T[] currentArray : arraysToMerge) {
 			if (currentArray != null) {
 				final int currentArrayLength = currentArray.length;
 				System.arraycopy(currentArray, 0, finalArray, lastIndex, currentArrayLength);

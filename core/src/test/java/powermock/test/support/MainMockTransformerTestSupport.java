@@ -21,7 +21,6 @@ import org.powermock.core.transformers.impl.ClassMockTransformerTest;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 /**
  * This class is used when running tests in {@link ClassMockTransformerTest}. It is
@@ -42,7 +41,7 @@ public class MainMockTransformerTestSupport {
         }
 
         public enum EnumClass {
-            VALUE;
+            VALUE
         }
 
         class SuperClass {

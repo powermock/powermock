@@ -15,11 +15,12 @@
  */
 package org.powermock.reflect;
 
-import junit.framework.Assert;
 import org.junit.Test;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
 import java.lang.reflect.Field;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * A test case to demonstrate an issue
@@ -58,6 +59,6 @@ public class WhiteBoxGetFieldTest {
 	@Test
 	public void testGetField() {
 		Field fieldA = WhiteboxImpl.getField(ClassUnderTest.class, "fieldA");
-		Assert.assertNotNull(fieldA);
+		assertThat(fieldA).isNotNull();
 	}
 }

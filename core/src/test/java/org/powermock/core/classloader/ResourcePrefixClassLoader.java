@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 
-public class ResourcePrefixClassLoader extends ClassLoader{
+@SuppressWarnings("SameParameterValue")
+public class ResourcePrefixClassLoader extends ClassLoader {
 
     private final String prefix;
 

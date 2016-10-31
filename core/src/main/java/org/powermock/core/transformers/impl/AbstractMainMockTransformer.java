@@ -425,7 +425,7 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
                 if (superclass.getName().equals(Object.class.getName())) {
                     code.append(" super();");
                 } else {
-                    code.append(" super((" + IndicateReloadClass.class.getName() + ") null);");
+                    code.append(" super((").append(IndicateReloadClass.class.getName()).append(") null);");
                 }
                 code.append("} else {");
                 code.append("   $proceed($$);");
@@ -483,22 +483,21 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
 
         @Override
         public void edit(NewExpr e) throws CannotCompileException {
-            final StringBuilder code = new StringBuilder();
-            code.append("Object instance =")
-                .append(MockGateway.class.getName())
-                .append(".newInstanceCall($type,$args,$sig);");
-            code.append("if(instance != ").append(MockGateway.class.getName()).append(".PROCEED) {");
-            code.append("	if(instance instanceof java.lang.reflect.Constructor) {");
+            String code = "Object instance =" +
+                                  MockGateway.class.getName() +
+                                  ".newInstanceCall($type,$args,$sig);" +
+                                  "if(instance != " + MockGateway.class.getName() + ".PROCEED) {" +
+                                  "	if(instance instanceof java.lang.reflect.Constructor) {"
+                                  +
+                                  "		$_ = ($r) sun.reflect.ReflectionFactory.getReflectionFactory().newConstructorForSerialization($type, java.lang.Object.class.getDeclaredConstructor(null)).newInstance(null);" +
+                                  "	} else {" +
+                                  "		$_ = ($r) instance;" +
+                                  "	}" +
+                                  "} else {" +
+                                  "	$_ = $proceed($$);" +
+                                  "}";
             // TODO Change to objenisis instead
-            code
-                    .append("		$_ = ($r) sun.reflect.ReflectionFactory.getReflectionFactory().newConstructorForSerialization($type, java.lang.Object.class.getDeclaredConstructor(null)).newInstance(null);");
-            code.append("	} else {");
-            code.append("		$_ = ($r) instance;");
-            code.append("	}");
-            code.append("} else {");
-            code.append("	$_ = $proceed($$);");
-            code.append("}");
-            e.replace(code.toString());
+            e.replace(code);
         }
     }
 }

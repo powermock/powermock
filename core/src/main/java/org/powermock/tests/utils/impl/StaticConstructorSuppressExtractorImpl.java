@@ -51,6 +51,6 @@ public class StaticConstructorSuppressExtractorImpl extends AbstractTestClassExt
 			}
 		}
 
-		return all.toArray(new String[0]);
+		return all.toArray(new String[all.size()]);
 	}
 }

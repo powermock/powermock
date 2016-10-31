@@ -65,7 +65,7 @@ import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.util.Set;
 
-import static junit.framework.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -236,14 +236,14 @@ public class WhiteBoxTest {
 
     @Test
     public void testMethodWithPrimitiveIntAndString_primitive() throws Exception {
-        assertEquals("My int value is: " + 8, (String) Whitebox.invokeMethod(new ClassWithPrivateMethods(),
-                                                                             "methodWithPrimitiveIntAndString", 8, "My int value is: "));
+        assertEquals("My int value is: " + 8, Whitebox.invokeMethod(new ClassWithPrivateMethods(),
+                                                                    "methodWithPrimitiveIntAndString", 8, "My int value is: "));
     }
 
     @Test
     public void testMethodWithPrimitiveIntAndString_Wrapped() throws Exception {
-        assertEquals("My int value is: " + 8, (String) Whitebox.invokeMethod(new ClassWithPrivateMethods(),
-                                                                             "methodWithPrimitiveIntAndString", Integer.valueOf(8), "My int value is: "));
+        assertEquals("My int value is: " + 8, Whitebox.invokeMethod(new ClassWithPrivateMethods(),
+                                                                    "methodWithPrimitiveIntAndString", Integer.valueOf(8), "My int value is: "));
     }
 
     @Test
@@ -450,6 +450,7 @@ public class WhiteBoxTest {
                                                                 ClassWithChildThatHasInternalState.class, Integer.class));
     }
 
+    @Test
     public void testSetInternalStateBasedOnObjectTypeWhenArgumentIsAPrimitiveTypeUsingGenerics() throws Exception {
         final int value = 22;
         ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
@@ -651,8 +652,7 @@ public class WhiteBoxTest {
     public void testSetInternalStateFromContext_contextIsAClass() throws Exception {
         ClassWithSimpleInternalState tested = new ClassWithSimpleInternalState();
         Whitebox.setInternalStateFromContext(tested, MyContext.class);
-        assertEquals((Long) Whitebox.getInternalState(MyContext.class, long.class), (Long) tested
-                                                                                                   .getSomeStaticLongState());
+        assertEquals(Whitebox.getInternalState(MyContext.class, long.class), (Long) tested.getSomeStaticLongState());
     }
 
     @Test
@@ -692,7 +692,8 @@ public class WhiteBoxTest {
             throws Exception {
         ClassWithSimpleInternalState tested = new ClassWithSimpleInternalState();
         InstanceFieldsNotInTargetContext fieldsNotInTargetContext = new InstanceFieldsNotInTargetContext();
-        assertFalse(tested.getSomeStringState().equals(fieldsNotInTargetContext.getString()));
+        assertThat(tested.getSomeStringState()).isNotEqualTo(fieldsNotInTargetContext.getString());
+
         Whitebox.setInternalStateFromContext(tested, fieldsNotInTargetContext);
         assertEquals(tested.getSomeStringState(), fieldsNotInTargetContext.getString());
     }
@@ -702,7 +703,7 @@ public class WhiteBoxTest {
             throws Exception {
         ClassWithSimpleInternalState tested = new ClassWithSimpleInternalState();
         InstanceFieldsNotInTargetContext fieldsNotInTargetContext = new InstanceFieldsNotInTargetContext();
-        assertFalse(tested.getSomeStringState().equals(fieldsNotInTargetContext.getString()));
+        assertThat(tested.getSomeStringState()).isNotEqualTo(fieldsNotInTargetContext.getString());
         Whitebox.setInternalStateFromContext(tested, fieldsNotInTargetContext, FieldMatchingStrategy.MATCHING);
         assertEquals(tested.getSomeStringState(), fieldsNotInTargetContext.getString());
     }
@@ -712,7 +713,7 @@ public class WhiteBoxTest {
             throws Exception {
         ClassWithSimpleInternalState tested = new ClassWithSimpleInternalState();
         InstanceFieldsNotInTargetContext fieldsNotInTargetContext = new InstanceFieldsNotInTargetContext();
-        assertFalse(tested.getSomeStringState().equals(fieldsNotInTargetContext.getString()));
+        assertThat(tested.getSomeStringState()).isNotEqualTo(fieldsNotInTargetContext.getString());
         Whitebox.setInternalStateFromContext(tested, fieldsNotInTargetContext, FieldMatchingStrategy.STRICT);
         assertEquals(tested.getSomeStringState(), fieldsNotInTargetContext.getString());
     }
@@ -721,7 +722,7 @@ public class WhiteBoxTest {
     public void setInternalStateFromClassContextCopiesMatchingContextFieldsToTargetObjectByDefault() throws Exception {
         long state = ClassWithSimpleInternalState.getLong();
         try {
-            assertFalse(state == ClassFieldsNotInTargetContext.getLong());
+            assertThat(state).isNotEqualTo(ClassFieldsNotInTargetContext.getLong());
             Whitebox.setInternalStateFromContext(ClassWithSimpleInternalState.class,
                                                  ClassFieldsNotInTargetContext.class);
             assertEquals(ClassFieldsNotInTargetContext.getLong(), ClassWithSimpleInternalState.getLong());
@@ -736,7 +737,7 @@ public class WhiteBoxTest {
             throws Exception {
         long state = ClassWithSimpleInternalState.getLong();
         try {
-            assertFalse(state == ClassFieldsNotInTargetContext.getLong());
+            assertThat(state).isNotEqualTo(ClassFieldsNotInTargetContext.getLong());
             Whitebox.setInternalStateFromContext(ClassWithSimpleInternalState.class,
                                                  ClassFieldsNotInTargetContext.class, FieldMatchingStrategy.MATCHING);
             assertEquals(ClassFieldsNotInTargetContext.getLong(), ClassWithSimpleInternalState.getLong());
@@ -751,7 +752,7 @@ public class WhiteBoxTest {
             throws Exception {
         long state = ClassWithSimpleInternalState.getLong();
         try {
-            assertFalse(state == ClassFieldsNotInTargetContext.getLong());
+            assertThat(state).isNotEqualTo(ClassFieldsNotInTargetContext.getLong());
             Whitebox.setInternalStateFromContext(ClassWithSimpleInternalState.class,
                                                  ClassFieldsNotInTargetContext.class, FieldMatchingStrategy.STRICT);
         } finally {
@@ -890,12 +891,12 @@ public class WhiteBoxTest {
 
     @Test
     public void canPassNullParamToPrivateStaticMethod() throws Exception {
-        assertEquals("hello", Whitebox.invokeMethod(ClassWithStaticMethod.class, "aStaticMethod", null));
+        assertEquals("hello", Whitebox.invokeMethod(ClassWithStaticMethod.class, "aStaticMethod", (Object[])null));
     }
 
     @Test
     public void canPassNullParamToPrivateStaticMethodWhenDefiningParameterTypes() throws Exception {
-        assertEquals("hello", Whitebox.invokeMethod(ClassWithStaticMethod.class, "aStaticMethod", new Class<?>[]{byte[].class}, null));
+        assertEquals("hello", Whitebox.invokeMethod(ClassWithStaticMethod.class, "aStaticMethod", new Class<?>[]{byte[].class}, (Object[])null));
     }
 
     @Test
@@ -944,7 +945,8 @@ public class WhiteBoxTest {
 
         assertEquals(instance.getName(), name);
         assertTrue(instance.isBool());
-        assertFalse(instance.isBool1());
+
+        assertThat(instance.isBool1()).isFalse();
     }
 
     @Test

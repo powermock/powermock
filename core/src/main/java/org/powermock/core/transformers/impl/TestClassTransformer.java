@@ -16,11 +16,6 @@
  */
 package org.powermock.core.transformers.impl;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.HashSet;
 import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtConstructor;
@@ -32,6 +27,12 @@ import javassist.bytecode.AnnotationsAttribute;
 import org.powermock.core.IndicateReloadClass;
 import org.powermock.core.testlisteners.GlobalNotificationBuildSupport;
 import org.powermock.core.transformers.MockTransformer;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * MockTransformer implementation that will make PowerMock test-class
@@ -64,7 +65,7 @@ public abstract class TestClassTransformer implements MockTransformer {
     public interface ForTestClass {
         RemovesTestMethodAnnotation removesTestMethodAnnotation(Class<? extends Annotation> testMethodAnnotation);
 
-        public interface RemovesTestMethodAnnotation {
+        interface RemovesTestMethodAnnotation {
             TestClassTransformer fromMethods(Collection<Method> testMethodsThatRunOnOtherClassLoaders);
             TestClassTransformer fromAllMethodsExcept(Method singleMethodToRunOnThisClassLoader);
         }

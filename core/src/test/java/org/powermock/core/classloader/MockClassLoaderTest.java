@@ -18,7 +18,6 @@ package org.powermock.core.classloader;
 import javassist.ByteArrayClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
-import junit.framework.Assert;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 import org.powermock.core.transformers.MockTransformer;
@@ -34,7 +33,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 import static org.powermock.core.classloader.MockClassLoader.MODIFY_ALL_CLASSES;
 
@@ -113,15 +111,13 @@ public class MockClassLoaderTest {
 
         // Force a ClassLoader that can find 'foo/bar/baz/test.txt' into
         // mockClassLoader.deferTo.
-        ResourcePrefixClassLoader resourcePrefixClassLoader = new ResourcePrefixClassLoader(
-                                                                                                   getClass().getClassLoader(), "org/powermock/core/classloader/");
-        mockClassLoader.deferTo = resourcePrefixClassLoader;
+        mockClassLoader.deferTo = new ResourcePrefixClassLoader(getClass().getClassLoader(), "org/powermock/core/classloader/");
 
         // MockClassLoader will only be able to find 'foo/bar/baz/test.txt' if it
         // properly defers the resource lookup to its deferTo ClassLoader.
         URL resource = mockClassLoader.getResource("foo/bar/baz/test.txt");
-        Assert.assertNotNull(resource);
-        Assert.assertTrue(resource.getPath().endsWith("test.txt"));
+        assertThat(resource).isNotNull();
+        assertThat(resource.getPath()).endsWith("test.txt");
     }
 
     @Test
@@ -133,18 +129,13 @@ public class MockClassLoaderTest {
 
         // Force a ClassLoader that can find 'foo/bar/baz/test.txt' into
         // mockClassLoader.deferTo.
-        ResourcePrefixClassLoader resourcePrefixClassLoader = new ResourcePrefixClassLoader(
-                                                                                                   getClass().getClassLoader(), "org/powermock/core/classloader/");
-        mockClassLoader.deferTo = resourcePrefixClassLoader;
+        mockClassLoader.deferTo = new ResourcePrefixClassLoader(getClass().getClassLoader(), "org/powermock/core/classloader/");
 
         // MockClassLoader will only be able to find 'foo/bar/baz/test.txt' if it
         // properly defers the resources lookup to its deferTo ClassLoader.
         Enumeration<URL> resources = mockClassLoader.getResources("foo/bar/baz/test.txt");
-        Assert.assertNotNull(resources);
-        Assert.assertTrue(resources.hasMoreElements());
-        URL resource = resources.nextElement();
-        Assert.assertTrue(resource.getPath().endsWith("test.txt"));
-        Assert.assertFalse(resources.hasMoreElements());
+
+        assertThat(resources.nextElement().getPath()).endsWith("test.txt");
     }
 
     @Test
@@ -157,11 +148,9 @@ public class MockClassLoaderTest {
         // MockClassLoader will only be able to find 'foo/bar/baz/test.txt' if it
         // properly defers the resources lookup to its deferTo ClassLoader.
         Enumeration<URL> resources = mockClassLoader.getResources("org/powermock/core/classloader/foo/bar/baz/test.txt");
-        Assert.assertNotNull(resources);
-        Assert.assertTrue(resources.hasMoreElements());
-        URL resource = resources.nextElement();
-        Assert.assertTrue(resource.getPath().endsWith("test.txt"));
-        Assert.assertFalse(resources.hasMoreElements());
+
+        assertThat(resources.nextElement().getPath()).endsWith("test.txt");
+        assertThat(resources.hasMoreElements()).isFalse();
     }
 
     @Test
@@ -197,10 +186,8 @@ public class MockClassLoaderTest {
 
         // verify that MockClassLoader can successfully load the class
         Class<?> dynamicTestClass = Class.forName(DynamicClassHolder.clazz.getName(), false, mockClassLoader);
-        Assert.assertNotNull(dynamicTestClass);
-        // .. and that MockClassLoader really loaded the class itself rather
-        // than just providing the class from the deferred classloader
-        assertNotSame(DynamicClassHolder.clazz, dynamicTestClass);
+
+        assertThat(dynamicTestClass).isNotSameAs(DynamicClassHolder.clazz);
     }
 
     @Test(expected = ClassNotFoundException.class)
@@ -222,8 +209,7 @@ public class MockClassLoaderTest {
         };
 
         //Try to locate and load a class that is not in MockClassLoader.
-        Class<?> dynamicTestClass = Class.forName(DynamicClassHolder.clazz.getName(), false, mockClassLoader);
-
+        Class.forName(DynamicClassHolder.clazz.getName(), false, mockClassLoader);
     }
 
     @Test
@@ -237,7 +223,6 @@ public class MockClassLoaderTest {
         Class.forName(className, false, mockClassLoader);
 
         mockClassLoader.loadClass(className);
-
     }
 
     // helper class for canFindDynamicClassFromAdjustedClasspath()
@@ -265,6 +250,7 @@ public class MockClassLoaderTest {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     static class MyClassloader extends MockClassLoader {
 
         public MyClassloader(String[] classesToMock) {

@@ -55,8 +55,7 @@ public class PowerMockTestNotifierImpl implements PowerMockTestNotifier {
 	 */
 	@Override
 	public void notifyAfterTestMethod(Object testInstance, Method method, Object[] arguments, TestMethodResult testResult) {
-		for (int i = 0; i < powerMockTestListeners.length; i++) {
-			final PowerMockTestListener testListener = powerMockTestListeners[i];
+		for (final PowerMockTestListener testListener : powerMockTestListeners) {
 			try {
 				testListener.afterTestMethod(testInstance, method, arguments, testResult);
 			} catch (Exception e) {
@@ -87,8 +86,7 @@ public class PowerMockTestNotifierImpl implements PowerMockTestNotifier {
 		MockRepository.putAdditionalState(Keys.CURRENT_TEST_INSTANCE, testInstance);
 		MockRepository.putAdditionalState(Keys.CURRENT_TEST_METHOD, testMethod);
 		MockRepository.putAdditionalState(Keys.CURRENT_TEST_METHOD_ARGUMENTS, arguments);
-		for (int i = 0; i < powerMockTestListeners.length; i++) {
-			final PowerMockTestListener testListener = powerMockTestListeners[i];
+		for (final PowerMockTestListener testListener : powerMockTestListeners) {
 			try {
 				testListener.beforeTestMethod(testInstance, testMethod, arguments);
 			} catch (Exception e) {
