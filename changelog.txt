@@ -8,6 +8,9 @@ Change log next version
 * Fixed #695 ClassNotFoundException when loading cglib enhanced classes created by Spring
 * Fixed Java 6 compatibility issue in org.powermock.utils.StringJoiner (which accidentally referenced Java 7 API's)
 * Fixed #701 StackOverflowError mocking final class extending non-public abstract class overriding equals method
+* Fixed #707 PowerMock should ignore and keep synthetic method/fields when modifies class
+* Fixed #645 jacoco offline instrumentation incompatibility with powermock byte-code manipulation when using @SuppressStaticInitializationFor 
+* Fixed #422 PowerMock disables EclEmma code coverage 
 * Refactoring: Move ProxyFramework from api modules to `reflect` module.
 * Renamed org.powermock.reflect.internal.WhiteboxImpl.getAllMetodsExcept to org.powermock.reflect.internal.WhiteboxImpl.getAllMethodsExcept (typo)
 * Refactoring: Fix performance issues, fix error handling issues, remove unused imports, remove verbose or redundant code constructs. (thanks to Mykhailo Kovalskyi @kovalsky for pull request)
