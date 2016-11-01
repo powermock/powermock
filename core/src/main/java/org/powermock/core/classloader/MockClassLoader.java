@@ -189,7 +189,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
 
         Class<?> deferClass = deferTo.loadClass(s);
         if (shouldModify(s) && !shouldLoadWithMockClassloaderWithoutModifications(s)) {
-            loadedClass = loadMockClass(s);
+            loadedClass = loadMockClass(s, deferClass.getProtectionDomain());
         } else {
             loadedClass = loadUnmockedClass(s, deferClass.getProtectionDomain());
         }
@@ -253,7 +253,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
     /**
      * Load a mocked version of the class.
      */
-    private Class<?> loadMockClass(String name) {
+    private Class<?> loadMockClass(String name, ProtectionDomain protectionDomain) {
 
         final byte[] clazz;
 
@@ -284,7 +284,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
                     + e.getMessage(), e);
         }
 
-        return defineClass(name, clazz, 0, clazz.length);
+        return defineClass(name, clazz, 0, clazz.length, protectionDomain);
     }
 
     public void setMockTransformerChain(List<MockTransformer> mockTransformerChain) {
