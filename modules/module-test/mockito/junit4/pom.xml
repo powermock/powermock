@@ -28,6 +28,12 @@
             <version>0.7.5.201505241946</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.jdt</groupId>
+            <artifactId>core</artifactId>
+            <version>3.3.0-v_771</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
