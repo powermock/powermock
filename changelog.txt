@@ -1,4 +1,4 @@
-Change log 1.6.5 (2016-11-04)
+Change log 1.6.6 (2016-11-04)
 -----------------------------
 * Added support for setting private static final fields in Whitebox.setInternalState  (thanks to Andrei Petcu @andreicristianpetcu for pull request)
 * Added support for specifying constructor parameters for Mockito for whenNew case (Only mock specific calls to new #31)
