@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.powermock</groupId>
         <artifactId>powermock-modules-test-mockito</artifactId>
-        <version>1.6.6</version>
+        <version>1.6.7-SNAPSHOT</version>
     </parent>
 
     <artifactId>powermock-module-test-mockito-junit4</artifactId>
