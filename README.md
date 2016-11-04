@@ -16,9 +16,9 @@ When writing unit tests it is often useful to bypass encapsulation and therefore
 Please note that PowerMock is mainly intended for people with expert knowledge in unit testing. Putting it in the hands of junior developers may cause more harm than good.
 
 ## News
+* 2016-11-04: PowerMock 1.6.6 is released with bug fixes and other imporvements. See [release notes](https://github.com/jayway/powermock/wiki/Release-Notes-PowerMock-1.6.6) and [change log](https://raw.githubusercontent.com/jayway/powermock/master/changelog.txt) for details.
 * 2016-05-01: PowerMock 1.6.5 has been released with new features such as `@TestSubject` support for [EasyMock](http://easymock.org/), experimental support for [Mockito 2](http://mockito.org/) as well as bug fixes and other imporvements. See [release notes](https://github.com/jayway/powermock/wiki/Release-Notes-PowerMock-1.6.5) and [change log](https://raw.githubusercontent.com/jayway/powermock/master/changelog.txt) for details. We also want to give a warm welcome to our new core committer [Arthur Zagretdinov](https://github.com/thekingnothing).
 * 2015-12-11: PowerMock 1.6.4 has been released with better support for [Jacoco](http://eclemma.org/jacoco/) and improvements to the [DelegatingPowerMockRunner](https://github.com/jayway/powermock/wiki/JUnit_Delegating_Runner) as well as some other minor fixes. See [change log](https://raw.githubusercontent.com/jayway/powermock/master/changelog.txt) for details.
-* 2015-10-02: PowerMock 1.6.3 has been released with support for EasyMock 3.4 as well as compatibility with ByteBuddy and various other fixes. See [change log](https://raw.githubusercontent.com/jayway/powermock/master/changelog.txt) for details.
 
 [Older News](https://github.com/jayway/powermock/wiki/OldNews)
 
@@ -27,10 +27,10 @@ Please note that PowerMock is mainly intended for people with expert knowledge i
 * [Downloads](https://github.com/jayway/powermock/wiki/Downloads)
 * [Motivation](https://github.com/jayway/powermock/wiki/Motivation)
 * Javadoc
-  * [EasyMock API extension](http://www.javadoc.io/doc/org.powermock/powermock-api-easymock/1.6.5) ([PowerMock class](http://static.javadoc.io/org.powermock/powermock-api-easymock/1.6.5/org/powermock/api/easymock/PowerMock.html))
-  * [Mockito API extension](http://www.javadoc.io/doc/org.powermock/powermock-api-mockito/1.6.5) ([PowerMockito class](http://static.javadoc.io/org.powermock/powermock-api-mockito/1.6.5/org/powermock/api/mockito/PowerMockito.html))
-  * [Mockito2 API extension](http://www.javadoc.io/doc/org.powermock/powermock-api-mockito2/1.6.5) ([PowerMockito class](http://static.javadoc.io/org.powermock/powermock-api-mockito2/1.6.5/org/powermock/api/mockito/PowerMockito.html))
-  * [PowerMock Reflect](http://www.javadoc.io/doc/org.powermock/powermock-reflect/1.6.5) ([Whitebox class](http://static.javadoc.io/org.powermock/powermock-reflect/1.6.5/org/powermock/reflect/Whitebox.html))
+  * [EasyMock API extension](http://www.javadoc.io/doc/org.powermock/powermock-api-easymock/1.6.6) ([PowerMock class](http://static.javadoc.io/org.powermock/powermock-api-easymock/1.6.6/org/powermock/api/easymock/PowerMock.html))
+  * [Mockito API extension](http://www.javadoc.io/doc/org.powermock/powermock-api-mockito/1.6.6) ([PowerMockito class](http://static.javadoc.io/org.powermock/powermock-api-mockito/1.6.6/org/powermock/api/mockito/PowerMockito.html))
+  * [Mockito2 API extension](http://www.javadoc.io/doc/org.powermock/powermock-api-mockito2/1.6.6) ([PowerMockito class](http://static.javadoc.io/org.powermock/powermock-api-mockito2/1.6.6/org/powermock/api/mockito/PowerMockito.html))
+  * [PowerMock Reflect](http://www.javadoc.io/doc/org.powermock/powermock-reflect/1.6.6) ([Whitebox class](http://static.javadoc.io/org.powermock/powermock-reflect/1.6.6/org/powermock/reflect/Whitebox.html))
 * [EasyMock](https://github.com/jayway/powermock/wiki/EasyMock)
   * [Mock Static](https://github.com/jayway/powermock/wiki/MockStatic)
   * [Mock Final](https://github.com/jayway/powermock/wiki/MockFinal)
