@@ -19,7 +19,6 @@ Change log 1.6.6 (2016-11-04)
 * Upgraded Javaassist dependency from 3.20.0-GA to version 3.21.0-GA
 * Upgraded Objenesis dependency from 2.2 to version 3.4
 
-
 Change log 1.6.5 (2016-04-30)
 -----------------------------
 * Add ability to chain returns with doReturn() (thanks to "gauee" for pull request) (issue #599)
