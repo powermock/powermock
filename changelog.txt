@@ -10,7 +10,6 @@ Change log 1.6.6 (2016-11-04)
 * Fixed #701 StackOverflowError mocking final class extending non-public abstract class overriding equals method
 * Fixed #707 PowerMock should ignore and keep synthetic method/fields when modifies class
 * Fixed #645 jacoco offline instrumentation incompatibility with powermock byte-code manipulation when using @SuppressStaticInitializationFor 
-* Fixed #422 PowerMock disables EclEmma code coverage 
 * Fixed #704 PowerMockito 1.6.5 throws java.lang.SecurityException signer information mismatch 
 * Refactoring: Move ProxyFramework from api modules to `reflect` module.
 * Renamed org.powermock.reflect.internal.WhiteboxImpl.getAllMetodsExcept to org.powermock.reflect.internal.WhiteboxImpl.getAllMethodsExcept (typo)
