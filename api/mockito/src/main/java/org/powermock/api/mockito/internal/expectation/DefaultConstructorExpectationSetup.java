@@ -15,12 +15,8 @@
  */
 package org.powermock.api.mockito.internal.expectation;
 
-import org.mockito.internal.matchers.LocalizedMatcher;
 import org.powermock.api.mockito.internal.mockcreation.DefaultMockCreator;
 import org.powermock.api.mockito.internal.mockcreation.MockCreator;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DefaultConstructorExpectationSetup<T> extends AbstractConstructorExpectationSetup<T> {
 
@@ -30,12 +26,4 @@ public class DefaultConstructorExpectationSetup<T> extends AbstractConstructorEx
 
      MockCreator getMockCreator() {return new DefaultMockCreator();}
 
-    @Override
-    protected List<LocalizedMatcherAdapter> getMatcherAdapters(List<LocalizedMatcher> matchers) {
-        List<LocalizedMatcherAdapter> matcherAdapters = new ArrayList<LocalizedMatcherAdapter>();
-        for (LocalizedMatcher matcher : matchers) {
-            matcherAdapters.add(new DefaultLocalizedMatcherAdapter(matcher));
-        }
-        return matcherAdapters;
-    }
 }

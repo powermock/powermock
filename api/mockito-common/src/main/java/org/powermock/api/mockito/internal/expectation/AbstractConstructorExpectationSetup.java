@@ -1,9 +1,6 @@
 package org.powermock.api.mockito.internal.expectation;
 
 import org.mockito.Matchers;
-import org.mockito.internal.matchers.LocalizedMatcher;
-import org.mockito.internal.progress.MockingProgress;
-import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.stubbing.OngoingStubbing;
 import org.powermock.api.mockito.expectation.ConstructorExpectationSetup;
 import org.powermock.api.mockito.expectation.WithExpectedArguments;
@@ -18,19 +15,16 @@ import org.powermock.tests.utils.impl.ArrayMergerImpl;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.List;
 
 public abstract class AbstractConstructorExpectationSetup<T> implements ConstructorExpectationSetup<T> {
 
     protected final Class<T> mockType;
     protected final ArrayMerger arrayMerger;
     private Class<?>[] parameterTypes = null;
-    private final MockingProgress mockingProgress;
 
     public AbstractConstructorExpectationSetup(Class<T> mockType) {
         this.arrayMerger = new ArrayMergerImpl();
         this.mockType = mockType;
-        this.mockingProgress = new ThreadSafeMockingProgress();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -59,20 +53,8 @@ public abstract class AbstractConstructorExpectationSetup<T> implements Construc
             MockRepository.addObjectsToAutomaticallyReplayAndVerify(WhiteboxImpl.getUnmockedType(type));
         }
 
-        return expectSubstitutionLogic(newInvocationControl, arguments);
+        return newInvocationControl.expectSubstitutionLogic(arguments);
     }
-
-    private <S> OngoingStubbing<S> expectSubstitutionLogic(NewInvocationControl<OngoingStubbing<S>> newInvocationControl, Object[] arguments) throws Exception {
-        final List<LocalizedMatcher> matchers = mockingProgress.getArgumentMatcherStorage().pullLocalizedMatchers();
-        if (matchers.isEmpty()){
-            return newInvocationControl.expectSubstitutionLogic(arguments);
-        }else{
-            List<LocalizedMatcherAdapter> matcherAdapters = getMatcherAdapters(matchers);
-            return newInvocationControl.expectSubstitutionLogic(matcherAdapters.toArray());
-        }
-    }
-
-    protected abstract List<LocalizedMatcherAdapter> getMatcherAdapters(List<LocalizedMatcher> matchers);
 
     abstract MockCreator getMockCreator();
 
