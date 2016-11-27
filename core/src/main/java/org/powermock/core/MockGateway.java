@@ -33,6 +33,7 @@ import java.lang.reflect.Modifier;
  */
 public class MockGateway {
 
+    private static boolean noMockito = Package.getPackage("org.mockito") == null;
     public static final Object PROCEED = new Object();
     public static final Object SUPPRESS = new Object();
 
@@ -226,6 +227,9 @@ public class MockGateway {
     }
 
     private static boolean calledFromMockito() {
+        if (noMockito) {
+            return false;
+        }
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         for (StackTraceElement stackTraceElement : stackTrace) {
             if (stackTraceElement.getClassName().startsWith("org.mockito.")){
