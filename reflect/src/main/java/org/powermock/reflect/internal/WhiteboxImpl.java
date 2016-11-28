@@ -75,7 +75,7 @@ public class WhiteboxImpl {
      * "Strong" map prevent class and method objects from being GCed and unloaded.
      * TODO replace with ClassValue when Powermock drops Java 6 support.
      */
-    private static ConcurrentMap<Class, Method[]> allClassMethodsCache = new ConcurrentHashMap<>();
+    private static ConcurrentMap<Class, Method[]> allClassMethodsCache = new ConcurrentHashMap<Class, Method[]>();
 
     /**
      * Convenience method to get a method from a class type without having to
