@@ -33,6 +33,14 @@ import java.lang.reflect.Modifier;
  */
 public class MockGateway {
 
+    /**
+     * {@link #noMockito} is wrapped into it's own static class to make sure it is initialized not earlier than
+     * {@link #calledFromMockito()} is called for the first time.
+     */
+    private static final class NoMockito {
+        static final boolean noMockito = Package.getPackage("org.mockito") == null;
+        private NoMockito() {}
+    }
     public static final Object PROCEED = new Object();
     public static final Object SUPPRESS = new Object();
 
@@ -226,6 +234,9 @@ public class MockGateway {
     }
 
     private static boolean calledFromMockito() {
+        if (NoMockito.noMockito) {
+            return false;
+        }
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         for (StackTraceElement stackTraceElement : stackTrace) {
             if (stackTraceElement.getClassName().startsWith("org.mockito.")){

@@ -57,6 +57,8 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Various utilities for accessing internals of a class. Basically a simplified
@@ -68,6 +70,12 @@ public class WhiteboxImpl {
      * The proxy framework.
      */
     private static ProxyFrameworks proxyFrameworks = new ProxyFrameworks();
+
+    /**
+     * "Strong" map prevent class and method objects from being GCed and unloaded.
+     * TODO replace with ClassValue when Powermock drops Java 6 support.
+     */
+    private static ConcurrentMap<Class, Method[]> allClassMethodsCache = new ConcurrentHashMap<Class, Method[]>();
 
     /**
      * Convenience method to get a method from a class type without having to
@@ -1448,6 +1456,17 @@ public class WhiteboxImpl {
      * @return All methods declared in this class hierarchy.
      */
     public static Method[] getAllMethods(Class<?> clazz) {
+        Method[] allMethods = allClassMethodsCache.get(clazz);
+        if (allMethods == null) {
+            // Allows a race between concurrent threads coming for clazz's methods at the same time,
+            // but the race seems to be harmless.
+            allMethods = doGetAllMethods(clazz);
+            allClassMethodsCache.put(clazz, allMethods);
+        }
+        return allMethods;
+    }
+
+    private static Method[] doGetAllMethods(Class<?> clazz) {
         if (clazz == null) {
             throw new IllegalArgumentException("You must specify a class in order to get the methods.");
         }
