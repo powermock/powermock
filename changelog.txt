@@ -1,5 +1,6 @@
 Change log 1.6.7
 -----------------------------
+* Fix Issue #722 IllegalArgumentException is output to standard error (thanks to Kotaro Nanri @k-nanri for pull request)
 * #724 Optimizations in powermock-reflect (thanks to Roman Leventov @leventov for pull request)
 
 Change log 1.6.6 (2016-11-04)
