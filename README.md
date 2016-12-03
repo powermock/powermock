@@ -1,6 +1,6 @@
 ![PowerMock](powermock.png)
 
-[![Build Status](https://travis-ci.org/jayway/powermock.svg?branch=master)](https://travis-ci.org/jayway/powermock)
+[![Build Status](https://travis-ci.org/powermock/powermock.svg?branch=master)](https://travis-ci.org/powermock/powermock)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.powermock/powermock/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.powermock/powermock)
 [![Javadoc](https://javadoc-emblem.rhcloud.com/doc/org.powermock/powermock/badge.svg)](http://www.javadoc.io/doc/org.powermock/powermock)
 [![Dependency Status](https://www.versioneye.com/user/projects/570b66ddfcc96900102d09f6/badge.svg?style=flat)](https://www.versioneye.com/user/projects/570b66ddfcc96900102d09f6)
