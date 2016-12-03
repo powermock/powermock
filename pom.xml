@@ -347,12 +347,6 @@
             </build>
         </profile>
         <profile>
-            <id>acceptance</id>
-            <modules>
-                <module>examples</module>
-            </modules>
-        </profile>
-        <profile>
             <id>release</id>
             <modules>
                 <module>release</module>

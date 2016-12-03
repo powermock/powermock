@@ -5,7 +5,4 @@ script:
   - mvn install -DskipTests=true
   - mvn test
   - mvn test -Pmockito2
-  - mvn install -DskipTests=true -Pacceptance -Pmockito
-  - mvn test -Pacceptance -Pmockito
-  - mvn test -Pacceptance -Pmockito2
 
