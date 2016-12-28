@@ -6,3 +6,7 @@ script:
   - mvn test
   - mvn test -Pmockito2
 
+before_install:
+  - pip install --user codecov
+after_success:
+  - codecov
