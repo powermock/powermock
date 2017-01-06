@@ -15,7 +15,13 @@ class DelegatingMockitoMethodProxy implements MockitoMethodProxy {
         this.methodProxy = methodProxy;
     }
 
-    public Object invokeSuper(Object target, Object[] arguments) throws Throwable {
-        return methodProxy.invokeSuper(target, arguments);
+    @Override
+    public Object invokeSuper(Object target, Object[] arguments) {
+        try {
+            return methodProxy.invokeSuper(target, arguments);
+        }
+        catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
     }
 }

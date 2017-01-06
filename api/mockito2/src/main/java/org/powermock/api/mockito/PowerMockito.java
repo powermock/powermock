@@ -23,6 +23,7 @@ import org.mockito.internal.stubbing.answers.CallsRealMethods;
 import org.mockito.internal.stubbing.answers.DoesNothing;
 import org.mockito.internal.stubbing.answers.Returns;
 import org.mockito.internal.stubbing.answers.ThrowsException;
+import org.mockito.listeners.VerificationListener;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.verification.VerificationMode;
@@ -47,6 +48,7 @@ import org.powermock.reflect.Whitebox;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Set;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.withSettings;

@@ -22,6 +22,7 @@ import org.mockito.exceptions.misusing.NotAMockException;
 import org.mockito.internal.InternalMockHandler;
 import org.mockito.internal.creation.DelegatingMethod;
 import org.mockito.internal.debugging.Localized;
+import org.mockito.internal.debugging.LocationImpl;
 import org.mockito.internal.exceptions.stacktrace.StackTraceFilter;
 import org.mockito.internal.invocation.InvocationImpl;
 import org.mockito.internal.invocation.MatchersBinder;
@@ -262,7 +263,8 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
                 new DelegatingMethod(method),
                 arguments,
                 SequenceNumber.next(),
-                cglibProxyRealMethod) {
+                cglibProxyRealMethod,
+                new LocationImpl()) {
             private static final long serialVersionUID = -3679957412502758558L;
 
             @Override

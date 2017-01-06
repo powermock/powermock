@@ -35,7 +35,7 @@ public class ChainReturnsTest {
 
     @Test
     public void returnsFirstAnswerAndNullValue() throws Throwable {
-        ChainReturns chainReturns = new ChainReturns(ANSWER_FIRST, null);
+        ChainReturns chainReturns = new ChainReturns(ANSWER_FIRST, (Object)null);
 
         assertThat((String) chainReturns.answer(invocationOnMock), is(equalTo(ANSWER_FIRST)));
         assertThat(chainReturns.answer(invocationOnMock), is(nullValue()));

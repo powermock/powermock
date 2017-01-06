@@ -26,6 +26,8 @@ import org.powermock.api.mockito.internal.expectation.PowerMockitoStubberImpl;
 import org.powermock.api.mockito.internal.verification.StaticMockAwareVerificationMode;
 import org.powermock.reflect.Whitebox;
 
+import java.util.Set;
+
 public class PowerMockitoCore {
     @SuppressWarnings("rawtypes")
     public PowerMockitoStubber doAnswer(Answer answer) {
@@ -47,10 +49,10 @@ public class PowerMockitoCore {
     }
 
     public MockAwareVerificationMode wrapInMockitoSpecificVerificationMode(Object mock, VerificationMode mode) {
-        return new MockAwareVerificationMode(mock, mode);
+        return new MockAwareVerificationMode(mock, mode, getMockingProgress().verificationListeners());
     }
 
     public MockAwareVerificationMode wrapInStaticVerificationMode(VerificationMode mode) {
-        return new StaticMockAwareVerificationMode(mode);
+        return new StaticMockAwareVerificationMode(mode, getMockingProgress().verificationListeners());
     }
 }

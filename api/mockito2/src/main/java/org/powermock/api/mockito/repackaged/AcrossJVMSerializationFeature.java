@@ -46,19 +46,19 @@ import static org.mockito.internal.util.StringJoiner.join;
  * </p>
  * <p/>
  * <p>
- *     Then in the {@link org.mockito.internal.creation.cglib.MethodInterceptorFilter} of mockito, if the <code>writeReplace</code> method is called,
+ *     Then in the {@link org.powermock.api.mockito.repackaged.MethodInterceptorFilter} of mockito, if the <code>writeReplace</code> method is called,
  *     it will use the custom implementation of this class {@link #writeReplace(Object)}. This method has a specific
  *     knowledge on how to serialize a mockito mock that is based on CGLIB.
  * </p>
  *
- * <p><strong>Only one instance per mock! See {@link org.mockito.internal.creation.cglib.MethodInterceptorFilter}</strong></p>
+ * <p><strong>Only one instance per mock! See {@link org.powermock.api.mockito.repackaged.MethodInterceptorFilter}</strong></p>
  *
  * TODO use a proper way to add the interface
  * TODO offer a way to disable completely this behavior, or maybe enable this behavior only with a specific setting
  * TODO check the class is mockable in the deserialization side
  *
- * @see org.mockito.internal.creation.cglib.CglibMockMaker
- * @see org.mockito.internal.creation.cglib.MethodInterceptorFilter
+ * @see org.powermock.api.mockito.repackaged.CglibMockMaker
+ * @see org.powermock.api.mockito.repackaged.MethodInterceptorFilter
  * @author Brice Dutheil
  * @since 1.10.0
  */
@@ -130,9 +130,8 @@ class AcrossJVMSerializationFeature implements Serializable {
 
             return new AcrossJVMMockSerializationProxy(mockitoMock);
         } catch (IOException ioe) {
-            MockUtil mockUtil = new MockUtil();
-            MockName mockName = mockUtil.getMockName(mockitoMock);
-            String mockedType = mockUtil.getMockSettings(mockitoMock).getTypeToMock().getCanonicalName();
+            MockName mockName = MockUtil.getMockName(mockitoMock);
+            String mockedType = MockUtil.getMockSettings(mockitoMock).getTypeToMock().getCanonicalName();
             throw new MockitoSerializationIssue(join(
                     "The mock '" + mockName + "' of type '" + mockedType + "'",
                     "The Java Standard Serialization reported an '" + ioe.getClass().getSimpleName() + "' saying :",
@@ -230,7 +229,7 @@ class AcrossJVMSerializationFeature implements Serializable {
             objectOutputStream.close();
             out.close();
 
-            MockCreationSettings mockSettings = new MockUtil().getMockSettings(mockitoMock);
+            MockCreationSettings mockSettings = MockUtil.getMockSettings(mockitoMock);
             this.serializedMock = out.toByteArray();
             this.typeToMock = mockSettings.getTypeToMock();
             this.extraInterfaces = mockSettings.getExtraInterfaces();
@@ -284,9 +283,9 @@ class AcrossJVMSerializationFeature implements Serializable {
      * </p>
      * <p/>
      * <p>
-     *     When this marker is found, {@link org.mockito.internal.creation.cglib.ClassImposterizer} methods are being used to create the mock class.
+     *     When this marker is found, {@link org.powermock.api.mockito.repackaged.ClassImposterizer} methods are being used to create the mock class.
      *     <em>Note that behind the <code>ClassImposterizer</code> there is CGLIB and the
-     *     {@link org.mockito.internal.creation.util.SearchingClassLoader} that will look if this enhanced class has
+     *     {@link org.powermock.api.mockito.repackaged.SearchingClassLoader} that will look if this enhanced class has
      *     already been created in an accessible classloader ; so basically this code trusts the ClassImposterizer
      *     code.</em>
      * </p>
@@ -357,7 +356,7 @@ class AcrossJVMSerializationFeature implements Serializable {
         private void hackClassNameToMatchNewlyCreatedClass(ObjectStreamClass descInstance, Class<?> proxyClass) throws ObjectStreamException {
             try {
                 Field classNameField = descInstance.getClass().getDeclaredField("name");
-                new FieldSetter(descInstance, classNameField).set(proxyClass.getCanonicalName());
+                FieldSetter.setField(descInstance, classNameField, proxyClass.getCanonicalName());
             } catch (NoSuchFieldException nsfe) {
                 // TODO use our own mockito mock serialization exception
                 throw new MockitoSerializationIssue(join(

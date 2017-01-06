@@ -118,7 +118,7 @@ public class DefaultMockCreator extends AbstractMockCreator {
         settings.setMockName(new MockNameImpl(mockName));
         settings.setTypeToMock(type);
 
-        InternalMockHandler mockHandler = new MockHandlerFactory().create(settings);
+        InternalMockHandler mockHandler = MockHandlerFactory.createMockHandler(settings);
         MethodInterceptorFilter filter = new PowerMockMethodInterceptorFilter(mockHandler, settings);
         final T mock = new ClassImposterizer(new DefaultInstantiatorProvider().getInstantiator(settings)).imposterise(filter, type);
         ClassLoader classLoader = mock.getClass().getClassLoader();

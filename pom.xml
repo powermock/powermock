@@ -99,7 +99,7 @@
         <testng.version>6.9.10</testng.version>
         <xstream.version>1.4.9</xstream.version>
         <mockito1.version>1.10.19</mockito1.version>
-        <mockito2.version>2.0.42-beta</mockito2.version>
+        <mockito2.version>2.4.0</mockito2.version>
     </properties>
     <build>
         <plugins>

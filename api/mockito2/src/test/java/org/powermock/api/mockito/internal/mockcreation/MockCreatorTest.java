@@ -12,8 +12,6 @@ import static org.junit.Assert.assertNotNull;
 
 public class MockCreatorTest {
 
-	private final MockUtil util = new MockUtil();
-
 	@Test
 	public void testMock_shouldReturnMockNameWhenSettingsHaveName()
 			throws NoSuchMethodException, SecurityException {
@@ -23,7 +21,7 @@ public class MockCreatorTest {
 		final List<?> result = DefaultMockCreator.mock(List.class, false, false, null,
 		                                               settings, List.class.getMethod("add", Object.class));
 
-		final MockName mockName = util.getMockName(result);
+		final MockName mockName = MockUtil.getMockName(result);
 		assertNotNull(mockName);
 		assertEquals("mylist", mockName.toString());
 	}
@@ -36,7 +34,7 @@ public class MockCreatorTest {
 		final List<?> result = DefaultMockCreator.mock(List.class, false, false, null,
 		                                               settings, List.class.getMethod("add", Object.class));
 
-		final MockName mockName = util.getMockName(result);
+		final MockName mockName = MockUtil.getMockName(result);
 		assertNotNull(mockName);
 		assertEquals("list", mockName.toString());
 	}
