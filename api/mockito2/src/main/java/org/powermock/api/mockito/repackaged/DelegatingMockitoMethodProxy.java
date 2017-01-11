@@ -5,6 +5,7 @@
 package org.powermock.api.mockito.repackaged;
 
 import org.mockito.internal.creation.util.MockitoMethodProxy;
+import org.powermock.api.mockito.internal.mockcreation.RuntimeExceptionProxy;
 import org.powermock.api.mockito.repackaged.cglib.proxy.MethodProxy;
 
 class DelegatingMockitoMethodProxy implements MockitoMethodProxy {
@@ -21,7 +22,7 @@ class DelegatingMockitoMethodProxy implements MockitoMethodProxy {
             return methodProxy.invokeSuper(target, arguments);
         }
         catch (Throwable t) {
-            throw new RuntimeException(t);
+            throw new RuntimeExceptionProxy(t);
         }
     }
 }
