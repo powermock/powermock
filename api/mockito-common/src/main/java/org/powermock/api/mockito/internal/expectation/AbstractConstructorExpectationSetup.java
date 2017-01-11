@@ -1,10 +1,8 @@
 package org.powermock.api.mockito.internal.expectation;
 
-import org.mockito.Matchers;
 import org.mockito.stubbing.OngoingStubbing;
 import org.powermock.api.mockito.expectation.ConstructorExpectationSetup;
 import org.powermock.api.mockito.expectation.WithExpectedArguments;
-import org.powermock.api.mockito.internal.invocation.MockitoNewInvocationControl;
 import org.powermock.api.mockito.internal.mockcreation.MockCreator;
 import org.powermock.core.MockRepository;
 import org.powermock.core.spi.NewInvocationControl;
@@ -15,6 +13,7 @@ import org.powermock.tests.utils.impl.ArrayMergerImpl;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 public abstract class AbstractConstructorExpectationSetup<T> implements ConstructorExpectationSetup<T> {
 
@@ -44,11 +43,11 @@ public abstract class AbstractConstructorExpectationSetup<T> implements Construc
         /*
         * Check if this type has been mocked before
         */
-        NewInvocationControl<OngoingStubbing<T>> newInvocationControl = (NewInvocationControl<OngoingStubbing<T>>) MockRepository
-                                                                                                                           .getNewInstanceControl(unmockedType);
+        NewInvocationControl<OngoingStubbing<T>> newInvocationControl =
+                (NewInvocationControl<OngoingStubbing<T>>) MockRepository.getNewInstanceControl(unmockedType);
         if (newInvocationControl == null) {
             InvocationSubstitute<T> mock = getMockCreator().createMock(InvocationSubstitute.class, false, false, null, null, (Method[]) null);
-            newInvocationControl = new MockitoNewInvocationControl(mock);
+            newInvocationControl = createNewInvocationControl(mock);
             MockRepository.putNewInstanceControl(type, newInvocationControl);
             MockRepository.addObjectsToAutomaticallyReplayAndVerify(WhiteboxImpl.getUnmockedType(type));
         }
@@ -57,6 +56,7 @@ public abstract class AbstractConstructorExpectationSetup<T> implements Construc
     }
 
     abstract MockCreator getMockCreator();
+    abstract <T> NewInvocationControl<OngoingStubbing<T>> createNewInvocationControl(InvocationSubstitute<T> mock);
 
     void setParameterTypes(Class<?>[] parameterTypes) {
         this.parameterTypes = parameterTypes;
@@ -84,13 +84,15 @@ public abstract class AbstractConstructorExpectationSetup<T> implements Construc
         Object[] paramArgs = new Object[parameterTypes.length];
         for (int i = 0; i < parameterTypes.length; i++) {
             Class<?> paramType = parameterTypes[i];
-            paramArgs[i] = Matchers.any(paramType);
+            paramArgs[i] = createParamArgMatcher(paramType);
         }
         final OngoingStubbing<T> ongoingStubbing = createNewSubstituteMock(mockType, parameterTypes, paramArgs);
         Constructor<?>[] otherCtors = new Constructor<?>[allConstructors.length - 1];
         System.arraycopy(allConstructors, 1, otherCtors, 0, allConstructors.length - 1);
         return new DelegatingToConstructorsOngoingStubbing<T>(otherCtors, ongoingStubbing);
     }
+
+    abstract Object createParamArgMatcher(Class<?> paramType);
 
     @Override
     public OngoingStubbing<T> withNoArguments() throws Exception {

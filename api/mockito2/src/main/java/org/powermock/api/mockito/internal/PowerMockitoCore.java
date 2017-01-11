@@ -18,6 +18,7 @@ package org.powermock.api.mockito.internal;
 
 import org.mockito.Mockito;
 import org.mockito.internal.progress.MockingProgress;
+import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.internal.verification.MockAwareVerificationMode;
 import org.mockito.stubbing.Answer;
 import org.mockito.verification.VerificationMode;
@@ -45,7 +46,7 @@ public class PowerMockitoCore {
     }
 
     private MockingProgress getMockingProgress() {
-        return Whitebox.getInternalState(Mockito.class, MockingProgress.class);
+        return ThreadSafeMockingProgress.mockingProgress();
     }
 
     public MockAwareVerificationMode wrapInMockitoSpecificVerificationMode(Object mock, VerificationMode mode) {

@@ -19,6 +19,7 @@ package org.powermock.api.mockito;
 import org.mockito.MockSettings;
 import org.mockito.Mockito;
 import org.mockito.internal.progress.MockingProgress;
+import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.internal.stubbing.answers.CallsRealMethods;
 import org.mockito.internal.stubbing.answers.DoesNothing;
 import org.mockito.internal.stubbing.answers.Returns;
@@ -289,7 +290,7 @@ public class PowerMockito extends MemberModifier {
      *            times(x), atLeastOnce() or never()
      */
     public static synchronized void verifyStatic(VerificationMode verificationMode) {
-        Whitebox.getInternalState(Mockito.class, MockingProgress.class).verificationStarted(
+        ThreadSafeMockingProgress.mockingProgress().verificationStarted(
                 POWERMOCKITO_CORE.wrapInStaticVerificationMode(verificationMode));
     }
 
@@ -313,7 +314,7 @@ public class PowerMockito extends MemberModifier {
      */
     public static PrivateMethodVerification verifyPrivate(Object object, VerificationMode verificationMode)
             throws Exception {
-        Whitebox.getInternalState(Mockito.class, MockingProgress.class).verificationStarted(
+        ThreadSafeMockingProgress.mockingProgress().verificationStarted(
                 POWERMOCKITO_CORE.wrapInMockitoSpecificVerificationMode(object, verificationMode));
         return new DefaultPrivateMethodVerification(object);
     }

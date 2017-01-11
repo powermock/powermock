@@ -152,8 +152,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
 
     private VerificationMode getVerificationMode() {
         try {
-            MockingProgress progress = Whitebox.invokeMethod(ThreadSafeMockingProgress.class,
-                    "threadSafely");
+            MockingProgress progress = ThreadSafeMockingProgress.mockingProgress();
             return getVerificationModeFromMockProgress(progress);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -165,13 +164,8 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
         if (mockingProgress == null) {
             return null;
         }
-        if (mockingProgress instanceof ThreadSafeMockingProgress) {
-            ThreadLocal<MockingProgress> threadLocal = Whitebox.getInternalState(mockingProgress, ThreadLocal.class);
-            return getVerificationModeFromMockProgress(threadLocal.get());
-        } else {
-            Localized<VerificationMode> verificationMode = Whitebox.getInternalState(mockingProgress, Localized.class);
-            return verificationMode == null ? null : verificationMode.getObject();
-        }
+        Localized<VerificationMode> verificationMode = Whitebox.getInternalState(mockingProgress, Localized.class);
+        return verificationMode == null ? null : verificationMode.getObject();
     }
 
     @Override

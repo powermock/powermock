@@ -25,7 +25,9 @@ import org.powermock.reflect.Whitebox;
 class MockitoStateCleaner {
     
     void clearMockProgress() {
-        clearThreadLocalIn(ThreadSafeMockingProgress.class);
+// FIXME?: ThreadSafeMockingProgress has ThreadLocal variable with initial value in mockito2
+//        If you clear it MockingProgress for all following tests will be null
+//       clearThreadLocalIn(ThreadSafeMockingProgress.class);
     }
 
     void clearConfiguration() {

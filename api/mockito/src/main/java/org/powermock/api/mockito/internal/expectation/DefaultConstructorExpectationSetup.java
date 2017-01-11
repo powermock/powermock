@@ -15,8 +15,13 @@
  */
 package org.powermock.api.mockito.internal.expectation;
 
+import org.mockito.Matchers;
+import org.mockito.stubbing.OngoingStubbing;
+import org.powermock.api.mockito.internal.invocation.MockitoNewInvocationControl;
 import org.powermock.api.mockito.internal.mockcreation.DefaultMockCreator;
 import org.powermock.api.mockito.internal.mockcreation.MockCreator;
+import org.powermock.core.spi.NewInvocationControl;
+import org.powermock.core.spi.support.InvocationSubstitute;
 
 public class DefaultConstructorExpectationSetup<T> extends AbstractConstructorExpectationSetup<T> {
 
@@ -24,6 +29,13 @@ public class DefaultConstructorExpectationSetup<T> extends AbstractConstructorEx
         super(mockType);
     }
 
-     MockCreator getMockCreator() {return new DefaultMockCreator();}
+    MockCreator getMockCreator() {return new DefaultMockCreator();}
 
+    <T> NewInvocationControl<OngoingStubbing<T>> createNewInvocationControl(InvocationSubstitute<T> mock) {
+        return new MockitoNewInvocationControl(mock);
+    }
+
+    Object createParamArgMatcher(Class<?> paramType) {
+        return Matchers.any(paramType);
+    }
 }
