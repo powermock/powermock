@@ -1,5 +1,3 @@
-assert project == rootProject
-
 def v = Version.versionFile(project.file("version.properties"))
 
 allprojects{
