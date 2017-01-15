@@ -1,0 +1,165 @@
+
+List mockito1Libs = [
+    project(":powermock-api:powermock-api-mockito"),"org.mockito:mockito-core:${mockito1Version}"
+]
+
+List mockito2Lbs = [
+        project(":powermock-api:powermock-api-mockito2"),"org.mockito:mockito-core:${mockito2Version}"
+]
+
+configure(project.subprojects){ subproject ->
+
+    dependencies {
+        testCompile project(":tests:utils")
+
+        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testCompile("org.assertj:assertj-core:${assertjVersion}")
+
+        testCompile mockito1Libs
+        testCompile project(path:":powermock-api:powermock-api-mockito-common")
+
+        mockito2 mockito2Lbs
+        mockito2 project(path:":powermock-api:powermock-api-mockito-common", configuration: "mockito2")
+
+    }
+
+    check.dependsOn mockito2Test
+}
+
+project(":tests:mockito:junit4") {
+    description = "Tests for Mockito module with JUnit 4.x."
+
+    dependencies {
+        testCompile project(":powermock-modules:powermock-module-junit4")
+
+        testCompile("junit:junit:${junitVersion}"){
+            exclude group:'org.hamcrest', module:'hamcrest-core'
+        }
+
+        testCompile ("org.jacoco:org.jacoco.core:${jacocoVersion}")
+        testCompile ("org.eclipse.jdt:core:${eclipseJdt}")
+    }
+
+    test{
+        exclude "**/*Cases*"
+    }
+}
+
+project(":tests:mockito:junit49") {
+    description = "Tests for Mockito module with JUnit 4.9.x."
+
+    dependencies {
+        testCompile project(":tests:utils")
+        testCompile project(":powermock-modules:powermock-module-junit4")
+
+        testCompile("junit:junit:4.9"){
+            exclude group:'org.hamcrest', module:'hamcrest-core'
+        }
+    }
+}
+
+project(":tests:mockito:junit4-agent"){
+    description = "Tests for PowerMock Java agent with JUnit4 and Mockito."
+
+    dependencies {
+
+        testCompile project(":powermock-modules:powermock-module-junit4-rule-agent")
+
+        testCompile("junit:junit:${junitVersion}"){
+            exclude group:'org.hamcrest', module:'hamcrest-core'
+        }
+
+        testCompile files(project(":tests:mockito:junit4").sourceSets.test.output)
+    }
+
+    def pathToAgent = project(":powermock-modules:powermock-module-javaagent").jar.outputs.files.getFiles().getAt(0)
+
+    test {
+        jvmArgs "-javaagent:${pathToAgent}"
+    }
+
+    mockito2Test {
+        jvmArgs "-javaagent:${pathToAgent}"
+    }
+}
+
+
+project(":tests:mockito:junit4-rule-objenesis") {
+    description = "Tests for PowerMock Rule using Objenesis Deepcloning."
+
+    dependencies {
+        testCompile project(":powermock-modules:powermock-module-junit4-rule")
+        testCompile project(":powermock-classloading:powermock-classloading-objenesis")
+
+        testCompile("junit:junit:${junitVersion}"){
+            exclude group:'org.hamcrest', module:'hamcrest-core'
+        }
+
+        testCompile files(project(":tests:mockito:junit4").sourceSets.test.output)
+    }
+}
+
+project(":tests:mockito:junit4-rule-xstream") {
+    description = "Tests for PowerMock Rule using Xstream Deepcloning."
+
+    dependencies {
+        testCompile project(":powermock-modules:powermock-module-junit4-rule")
+        testCompile project(":powermock-classloading:powermock-classloading-xstream")
+
+        testCompile("junit:junit:${junitVersion}"){
+            exclude group:'org.hamcrest', module:'hamcrest-core'
+        }
+
+        testCompile files(project(":tests:mockito:junit4").sourceSets.test.output)
+    }
+}
+
+project(":tests:mockito:junit4-delegate") {
+    description = "Tests for PowerMock JUnit4 runner-delegate and Mockito."
+
+    dependencies {
+        testCompile project(":powermock-modules:powermock-module-junit4")
+
+        testCompile("junit:junit:${junitVersion}"){
+            exclude group:'org.hamcrest', module:'hamcrest-core'
+        }
+
+        testCompile files(project(":tests:mockito:junit4").sourceSets.test.output)
+    }
+
+    test{
+        scanForTestClasses = false
+        include(["**/*Tests.class", "**/*Test.class"])
+        // Since we set scanForTestClasses to false, we need to filter out inner
+        // classes with the "$" pattern; otherwise, using -Dtest.single=MyTests to
+        // run MyTests by itself will fail if MyTests contains any inner classes.
+        exclude(["**/Abstract*.class", '**/*$*'])
+    }
+}
+
+project(":tests:mockito:testng"){
+    description = "Tests for Mockito module with TestNG."
+
+    dependencies {
+        testCompile(project(":powermock-core"))
+        testCompile(project(":powermock-modules:powermock-module-testng"))
+
+        testCompile("org.testng:testng:${testngVersion}")
+
+        testCompile files(project(":tests:mockito:junit4").sourceSets.test.output)
+    }
+
+    test{
+        useTestNG(){
+            suites 'suite.xml'
+            environment "mockitoVersion", "${mockito1Version}"
+        }
+    }
+
+    mockito2Test{
+        useTestNG(){
+            suites 'suite.xml'
+            environment "mockitoVersion", "${mockito2Version}"
+        }
+    }
+}

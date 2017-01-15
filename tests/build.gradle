@@ -1,0 +1,59 @@
+def subprojects = project(":tests").subprojects  - project(":tests:easymock")
+
+configure(subprojects) { project ->
+
+    javadoc{
+        enabled = false
+    }
+
+    install {
+        enabled = false
+    }
+
+    sourcesJar{
+        enabled = false
+    }
+}
+
+project(":tests:utils"){
+    description = "Common set of classes to test PowerMock features in mocking framework modules."
+
+    dependencies {
+        compile(project(":powermock-core"))
+        compile("javax.servlet:servlet-api:${servletVersion}")
+    }
+}
+
+project(":tests:junit4"){
+    description = "Tests for junit4."
+
+    dependencies {
+        compile(project(":powermock-core"))
+        testCompile(project(":powermock-modules:powermock-module-junit4"))
+        testCompile("junit:junit:${junitVersion}"){
+            exclude group:'org.hamcrest', module:'hamcrest-core'
+        }
+        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testCompile("org.easymock:easymock:${easymockVersion}")
+        testCompile("org.assertj:assertj-core:${assertjVersion}")
+        testCompile("com.github.stefanbirkner:system-rules:${systemRulesVersion}")
+    }
+}
+
+project(":tests:testng") {
+    description = "Tests for testng module."
+
+    dependencies {
+        compile(project(":powermock-core"))
+        testCompile(project(":powermock-modules:powermock-module-testng"))
+        testCompile("org.testng:testng:${testngVersion}")
+        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testCompile("org.assertj:assertj-core:${assertjVersion}")
+    }
+
+    test {
+        useTestNG() {
+            suites 'suite.xml'
+        }
+    }
+}

@@ -1,0 +1,60 @@
+def mockitoDependsModules = [
+        project(":powermock-core"),
+        project(":powermock-api:powermock-api-mockito-common"),
+        project("powermock-api:powermock-api-mockito"),
+        project("powermock-api:powermock-api-mockito2"),
+]
+
+mockitoDependsModules += project(":tests:mockito").subprojects
+mockitoDependsModules += project(":tests:java8").subprojects
+
+configure(mockitoDependsModules){ project ->
+    sourceSets {
+        main {
+            compileClasspath = compileClasspath + configurations.provided
+        }
+        test {
+            compileClasspath = compileClasspath + configurations.provided
+        }
+        mainMockito2 {
+            java.srcDirs = ['src/main/java']
+            resources.srcDirs = ['src/main/resources']
+            output.resourcesDir = 'build/classes/mockito2'
+            output.classesDir   = 'build/classes/mockito2'
+            compileClasspath = sourceSets.main.compileClasspath + configurations.mockito2 + configurations.provided
+            runtimeClasspath = output + compileClasspath  + configurations.mockito2
+            sourceCompatibility = 1.6
+            targetCompatibility = 1.6
+        }
+        testMockito2 {
+            java.srcDirs = ['src/test']
+            resources.srcDirs = ['src/test/resources']
+            output.resourcesDir = 'build/classes/testmockito2'
+            output.classesDir   = 'build/classes/testmockito2'
+            compileClasspath = sourceSets.test.compileClasspath + configurations.mockito2 + configurations.provided
+            runtimeClasspath = output + compileClasspath  + configurations.mockito2
+            sourceCompatibility = 1.6
+            targetCompatibility = 1.6
+        }
+    }
+
+    task mockito2Test(type: Test) {
+        description = 'Runs the test with Mockito 2'
+        group = 'verification'
+        testClassesDir = sourceSets.testMockito2.output.classesDir
+        classpath = sourceSets.testMockito2.runtimeClasspath
+
+        scanForTestClasses = false
+        include(["**/*Tests.class", "**/*Test.class"])
+        // Since we set scanForTestClasses to false, we need to filter out inner
+        // classes with the "$" pattern; otherwise, using -Dtest.single=MyTests to
+        // run MyTests by itself will fail if MyTests contains any inner classes.
+        exclude(["**/Abstract*.class", '**/*$*'])
+
+        reports.junitXml.destination = 'build/mockito2-test-results'
+        reports.html.destination = 'build/reports/mockito2Test'
+    }
+
+    mockito2Test.mustRunAfter test
+
+}

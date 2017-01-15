@@ -1,0 +1,85 @@
+List mockito1Libs = [
+        project(":powermock-api:powermock-api-mockito"),"org.mockito:mockito-core:${mockito1Version}"
+]
+
+List mockito2Lbs = [
+        project(":powermock-api:powermock-api-mockito2"),"org.mockito:mockito-core:${mockito2Version}"
+]
+
+configure(project.subprojects){ subproject ->
+
+    dependencies {
+        testCompile("junit:junit:${junitVersion}"){
+            exclude group:'org.hamcrest', module:'hamcrest-core'
+        }
+        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testCompile("org.assertj:assertj-core:${assertjVersion}")
+
+        testCompile mockito1Libs
+        testCompile project(path:":powermock-api:powermock-api-mockito-common")
+
+        mockito2 mockito2Lbs
+        mockito2 project(path:":powermock-api:powermock-api-mockito-common", configuration: "mockito2")
+
+        testCompile files(project(":tests:mockito:junit4").sourceSets.test.output)
+    }
+
+    compileJava {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+    compileTestJava {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+    compileMainMockito2Java{
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+    compileTestMockito2Java{
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+    check.dependsOn mockito2Test
+}
+
+project(":tests:java8:mockito-junit4") {
+    description = "Tests for Mockito module with JUnit 4.x. and Java8."
+
+    dependencies {
+        testCompile project(":powermock-modules:powermock-module-junit4")
+    }
+}
+
+project(":tests:java8:mockito-junit4-agent") {
+    description = "Tests for Mockito module with JUnit 4.x. and Java8."
+
+    dependencies {
+        testCompile project(":powermock-modules:powermock-module-junit4-rule-agent")
+    }
+
+    def pathToAgent = project(":powermock-modules:powermock-module-javaagent").jar.outputs.files.getFiles().getAt(0)
+
+    test {
+        jvmArgs "-javaagent:${pathToAgent}"
+    }
+
+    mockito2Test {
+        jvmArgs "-javaagent:${pathToAgent}"
+    }
+}
+
+project(":tests:java8:mockito-junit4-rule-xstream") {
+    description = "Tests for Mockito module with JUnit 4.x, Java8 and rules-xstream."
+
+    dependencies {
+        testCompile project(":powermock-modules:powermock-module-junit4-rule")
+        testCompile project(":powermock-classloading:powermock-classloading-xstream")
+
+        testCompile files(project(":tests:mockito:junit4").sourceSets.test.output)
+    }
+}

@@ -1,0 +1,66 @@
+apply plugin: "propdeps-maven"
+
+install {
+    repositories.mavenInstaller {
+        customizePom(pom, project)
+    }
+}
+
+
+def customizePom(pom, gradleProject) {
+    pom.whenConfigured { generatedPom ->
+        // eliminate test-scoped dependencies (no need in maven central poms)
+        generatedPom.dependencies.removeAll { dep ->
+            dep.scope == "test"
+        }
+
+        // sort to make pom dependencies order consistent to ease comparison of older poms
+        generatedPom.dependencies = generatedPom.dependencies.sort { dep ->
+            "$dep.scope:$dep.groupId:$dep.artifactId"
+        }
+
+        // add all items necessary for maven central publication
+        generatedPom.project {
+            name = "powermock"
+            description = gradleProject.description
+            url = "https://github.com/spring-projects/spring-framework"
+            organization {
+                name = "PowerMock"
+                url = "http://www.powermock.org"
+            }
+            licenses {
+                license {
+                    name "The Apache Software License, Version 2.0"
+                    url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                    distribution "repo"
+                }
+            }
+            scm {
+                url = "https://github.com/powermock/powermock"
+                connection = "scm:git:git://github.com/powermock/powermock"
+                developerConnection = "scm:git:git://github.com/powermock/powermock"
+            }
+            developers {
+                developer {
+                    id = "johanhaleby"
+                    name = "Johan Haleby"
+                    email = "johan.haleby at jayway.com"
+                }
+                developer {
+                    id = "jakr"
+                    name = "Jan Kronquist"
+                    email = "jan.kronquist at jayway.com"
+                }
+                developer {
+                    id = "thekingnothing"
+                    name = "Arthur Zagretdinov"
+                    email = "arthur.zagretdinov at outlook.com"
+                }
+            }
+            issueManagement {
+                system = "Github"
+                url = "https://github.com/powermock/powermock/issues"
+            }
+        }
+    }
+}

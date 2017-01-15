@@ -1,0 +1,185 @@
+List easymock = [
+        "org.easymock:easymock:${easymockVersion}",
+        "org.assertj:assertj-core:${assertjVersion}",
+        "org.hamcrest:hamcrest-core:${hamcrestVersion}",
+        project(":powermock-api:powermock-api-easymock"),
+        project(":tests:utils")
+]
+
+project(":tests:easymock:junit3"){
+    description = "Tests for EasyMock module with JUnit 3.x."
+
+    dependencies {
+        compile(project(":powermock-core"))
+        testCompile("junit:junit:3.8.2")
+        testCompile easymock
+        testCompile(project(":powermock-modules:powermock-module-junit3"))
+    }
+
+    test{
+        exclude "**/StupidPrivateFinalTest*"
+    }
+}
+
+project(":tests:easymock:junit4-agent") {
+    description = "Tests for PowerMock Java agent with JUnit4 and Easymock"
+
+    dependencies {
+        compile(project(":powermock-core"))
+        testCompile("junit:junit:${junitVersion}")
+        testCompile easymock
+        testCompile(project(":powermock-modules:powermock-module-javaagent"))
+        testCompile(project(":powermock-modules:powermock-module-junit4-rule-agent"))
+    }
+
+    def pathToAgent = project(":powermock-modules:powermock-module-javaagent").jar.outputs.files.getFiles().getAt(0)
+
+    test {
+        jvmArgs "-javaagent:${pathToAgent}"
+    }
+}
+
+project(":tests:easymock:junit4-legacy"){
+    description = "Tests for EasyMock module with JUnit 4.0-4.3."
+
+    dependencies {
+        compile(project(":powermock-core"))
+        testCompile("junit:junit:4.3")
+        testCompile easymock
+        testCompile(project(":powermock-modules:powermock-module-junit4-legacy"))
+    }
+}
+
+project(":tests:easymock:junit4"){
+    description = " Tests for EasyMock module with JUnit 4.x"
+
+    dependencies {
+        compile(project(":powermock-core"))
+        testCompile("junit:junit:4.4")
+        testCompile easymock
+        testCompile(project(":powermock-modules:powermock-module-junit4")){
+            exclude group: 'junit', module: 'junit'
+        }
+    }
+
+    test{
+        exclude "**/*Defect*"
+    }
+}
+
+project(":tests:easymock:junit45"){
+    description = " Tests for EasyMock module with JUnit 4.5."
+
+    dependencies {
+        compile(project(":powermock-core"))
+        testCompile("junit:junit:4.5")
+        testCompile easymock
+        testCompile(project(":powermock-modules:powermock-module-junit4")){
+            exclude group: 'junit', module: 'junit'
+        }
+        testCompile files(project(":tests:easymock:junit4").sourceSets.test.output)
+    }
+
+    test{
+        exclude "**/*Defect*"
+    }
+}
+
+project(":tests:easymock:junit47"){
+    description = " Tests for EasyMock module with JUnit 4.7."
+
+    dependencies {
+        compile(project(":powermock-core"))
+        testCompile("junit:junit:4.7")
+        testCompile easymock
+        testCompile(project(":powermock-modules:powermock-module-junit4")){
+            exclude group: 'junit', module: 'junit'
+        }
+        testCompile files(project(":tests:easymock:junit4").sourceSets.test.output)
+    }
+}
+
+project(":tests:easymock:junit48"){
+    description = " Tests for EasyMock module with JUnit 4.8."
+
+    dependencies {
+        compile(project(":powermock-core"))
+        testCompile("junit:junit:4.8.2")
+        testCompile easymock
+        testCompile(project(":powermock-modules:powermock-module-junit4")){
+            exclude group: 'junit', module: 'junit'
+        }
+        testCompile files(project(":tests:easymock:junit4").sourceSets.test.output)
+    }
+}
+
+project(":tests:easymock:junit410"){
+    description = " Tests for EasyMock module with JUnit 4.10."
+
+    dependencies {
+        compile(project(":powermock-core"))
+        testCompile("junit:junit:4.10")
+        testCompile easymock
+        testCompile(project(":powermock-modules:powermock-module-junit4")){
+            exclude group: 'junit', module: 'junit'
+        }
+        testCompile files(project(":tests:easymock:junit4").sourceSets.test.output)
+    }
+}
+
+project(":tests:easymock:junit412"){
+    description = " Tests for EasyMock module with JUnit 4.12."
+
+    dependencies {
+        compile(project(":powermock-core"))
+        testCompile("junit:junit:4.12")
+        testCompile easymock
+        testCompile(project(":powermock-modules:powermock-module-junit4")){
+            exclude group: 'junit', module: 'junit'
+        }
+        testCompile files(project(":tests:easymock:junit4").sourceSets.test.output)
+    }
+}
+
+project(":tests:easymock:testng"){
+    description = "Tests for EasyMock module with TestNG."
+
+    dependencies {
+        compile(project(":powermock-core"))
+        compile(project(":powermock-modules:powermock-module-testng"))
+        testCompile easymock
+        testCompile("org.testng:testng:${testngVersion}")
+        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testCompile("org.assertj:assertj-core:${assertjVersion}")
+    }
+
+    test{
+        useTestNG(){
+            suites 'suite.xml'
+        }
+    }
+}
+
+project(":tests:easymock:testng-agent"){
+    description = "Tests for EasyMock module with TestNG."
+
+    dependencies {
+        compile(project(":powermock-core"))
+        compile(project(":powermock-modules:powermock-module-testng"))
+        testCompile easymock
+        testCompile("org.testng:testng:${testngVersion}")
+        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testCompile("org.assertj:assertj-core:${assertjVersion}")
+        testCompile(project(":powermock-modules:powermock-module-testng-agent"))
+    }
+
+    def pathToAgent = project(":powermock-modules:powermock-module-javaagent").jar.outputs.files.getFiles().getAt(0)
+
+    test {
+        useTestNG(){
+            suites 'suite.xml'
+        }
+
+        jvmArgs "-javaagent:${pathToAgent}"
+    }
+}

@@ -1,103 +1,45 @@
-rootProject.name = "powermock"
-
-include("reflect")
-include("core")
-include("api")
-include("api:support")
-include("api:easymock")
-include("api:mockito-common")
-include("api:mockito")
-include("api:mockito2")
+include("powermock-reflect")
+include("powermock-core")
+include("powermock-api:powermock-api-support")
+include("powermock-api:powermock-api-easymock")
+include("powermock-api:powermock-api-mockito-common")
+include("powermock-api:powermock-api-mockito")
+include("powermock-api:powermock-api-mockito2")
+include("powermock-classloading:powermock-classloading-base")
+include("powermock-classloading:powermock-classloading-objenesis")
+include("powermock-classloading:powermock-classloading-xstream")
+include("powermock-modules:powermock-module-javaagent")
+include("powermock-modules:powermock-module-junit3")
+include("powermock-modules:powermock-module-junit4-common")
+include("powermock-modules:powermock-module-junit4")
+include("powermock-modules:powermock-module-junit4-legacy")
+include("powermock-modules:powermock-module-junit4-rule")
+include("powermock-modules:powermock-module-junit4-rule-agent")
+include("powermock-modules:powermock-module-testng-common")
+include("powermock-modules:powermock-module-testng")
+include("powermock-modules:powermock-module-testng-agent")
 include("tests")
 include("tests:utils")
-include("classloading")
-include("classloading:classloading-base")
-include("classloading:classloading-objenesis")
-include("classloading:classloading-xstream")
-include("modules")
-include("modules:module-impl")
-include("modules:module-impl:javaagent")
-include("modules:module-impl:junit3")
-include("modules:module-impl:junit4-common")
-include("modules:module-impl:junit4")
-include("modules:module-impl:junit4-legacy")
-include("modules:module-impl:junit4-rule")
-include("modules:module-impl:junit4-rule-agent")
-include("modules:module-impl:testng-common")
-include("modules:module-impl:testng")
-include("modules:module-impl:testng-agent")
-include("modules:module-test")
-include("modules:module-test:junit4")
-include("modules:module-test:testng")
-include("modules:module-test:easymock")
-include("modules:module-test:easymock:junit3-test")
-include("modules:module-test:easymock:junit4-agent")
-include("modules:module-test:easymock:junit4-legacy-test")
-include("modules:module-test:easymock:junit4-test")
-include("modules:module-test:easymock:junit45-test")
-include("modules:module-test:easymock:junit47-test")
-include("modules:module-test:easymock:junit48-test")
-include("modules:module-test:easymock:junit410-test")
-include("modules:module-test:easymock:junit412-test")
-include("modules:module-test:easymock:testng-test")
-include("modules:module-test:easymock:testng-agent-test")
-include("modules:module-test:mockito:junit4")
-include("modules:module-test:mockito:junit49")
-include("modules:module-test:mockito:junit4-rule-objenesis")
-include("modules:module-test:mockito:junit4-rule-xstream")
-include("modules:module-test:mockito:junit4-agent")
-include("modules:module-test:mockito:junit4-delegate")
-include("modules:module-test:mockito:testng")
-include("modules:module-test:mockito:junit4-java8")
-include("modules:module-test:mockito:junit4-java8-agent")
-include("modules:module-test:mockito:junit4-java8-rule-xstream")
-
-
-addPrefixToProject(rootProject)
-
-def addPrefixToProject(ProjectDescriptor project){
-    if (project.parent){
-        addPrefixToProjectName(project)
-    }
-    project.children.each {subproject ->
-        addPrefixToProject(subproject)
-    }
-}
-
-def addPrefixToProjectName(ProjectDescriptor project){
-
-    def projectName = project.name
-    def before = projectName
-
-    if (projectName.contains("classloading-")){
-        def x = "classloading-".length()
-        projectName = projectName.substring(x,projectName.length())
-        project.name = project.parent.name + "-" + projectName
-    }else if (projectName == "module-impl"){
-        project.name = "powermock-modules-impl"
-    }else if (projectName == "module-test"){
-        project.name = "powermock-modules-test"
-    }else if (project.parent.name == "powermock-modules-impl"){
-        project.name = "powermock-module-" + projectName
-    }else if (project.parent.name == "powermock-modules-test"){
-        project.name = "powermock-module-test-" + projectName
-    }else if (projectName.endsWith("-test")){
-        if (project.parent.name.endsWith("easymock")){
-            projectName = "easymock-" + projectName
-        }
-        def y = projectName.length()-"-test".length()
-        project.name = "powermock-module-test-" + projectName.substring(0,y)
-    }else if (projectName.endsWith("-agent")){
-        if (project.parent.name.endsWith("easymock")){
-            projectName = "easymock-" + projectName
-        }else if (project.parent.name.endsWith("mockito")){
-            projectName = "mockito-" + projectName
-        }
-        project.name = "powermock-module-test-" + projectName
-    }else{
-        project.name = project.parent.name + "-" + projectName
-    }
-
-    def after = project.name
-    println "Transform ${before} -> ${after}"
-}
+include("tests:junit4")
+include("tests:testng")
+include("tests:easymock:junit3")
+include("tests:easymock:junit4-agent")
+include("tests:easymock:junit4-legacy")
+include("tests:easymock:junit4")
+include("tests:easymock:junit45")
+include("tests:easymock:junit47")
+include("tests:easymock:junit48")
+include("tests:easymock:junit410")
+include("tests:easymock:junit412")
+include("tests:easymock:testng")
+include("tests:easymock:testng-agent")
+include("tests:mockito:junit4")
+include("tests:mockito:junit49")
+include("tests:mockito:junit4-agent")
+include("tests:mockito:junit4-delegate")
+include("tests:mockito:junit4-rule-objenesis")
+include("tests:mockito:junit4-rule-xstream")
+include("tests:mockito:testng")
+include("tests:java8:mockito-junit4")
+include("tests:java8:mockito-junit4-agent")
+include("tests:java8:mockito-junit4-rule-xstream")
