@@ -19,10 +19,12 @@ package org.powermock.api.mockito.internal.mockcreation;
 import org.mockito.MockSettings;
 import org.mockito.Mockito;
 import org.mockito.internal.InternalMockHandler;
+import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.internal.creation.MockSettingsImpl;
 import org.mockito.internal.creation.instance.DefaultInstantiatorProvider;
 import org.mockito.internal.handler.MockHandlerFactory;
 import org.mockito.internal.util.MockNameImpl;
+import org.mockito.internal.util.MockUtil;
 import org.mockito.internal.util.reflection.LenientCopyTool;
 import org.powermock.api.mockito.internal.invocation.MockitoMethodInvocationControl;
 import org.powermock.api.mockito.repackaged.ClassImposterizer;
@@ -104,6 +106,7 @@ public class DefaultMockCreator extends AbstractMockCreator {
             Thread.currentThread().setContextClassLoader(DefaultMockCreator.class.getClassLoader());
             try {
                 settings = (MockSettingsImpl) Mockito.withSettings();
+                Plugins.getMockMaker();
             } finally {
                 Thread.currentThread().setContextClassLoader(originalCL);
             }
