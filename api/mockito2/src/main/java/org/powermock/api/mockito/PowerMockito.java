@@ -72,6 +72,7 @@ public class PowerMockito extends MemberModifier {
      *            the class to enable static mocking
      */
     public static synchronized void mockStatic(Class<?> type, Class<?>... types) {
+        ThreadSafeMockingProgress.mockingProgress().reset();
         DefaultMockCreator.mock(type, true, false, null, null, (Method[]) null);
         if(types != null && types.length > 0) {
             for (Class<?> aClass : types) {
@@ -132,6 +133,7 @@ public class PowerMockito extends MemberModifier {
      * @return mock object
      */
     public static void mockStatic(Class<?> classToMock, MockSettings mockSettings) {
+        ThreadSafeMockingProgress.mockingProgress().reset();
         DefaultMockCreator.mock(classToMock, true, false, null, mockSettings, (Method[]) null);
     }
 
@@ -236,6 +238,7 @@ public class PowerMockito extends MemberModifier {
      *            the type of the class mock
      */
     public static synchronized <T> void spy(Class<T> type) {
+        ThreadSafeMockingProgress.mockingProgress().reset();
         DefaultMockCreator.mock(type, true, true, type, null, (Method[]) null);
     }
 

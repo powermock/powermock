@@ -1,6 +1,5 @@
 package samples.powermockito.junit4.largemethod;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
@@ -18,7 +17,6 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 import static org.powermock.api.support.membermodification.MemberModifier.suppress;
 
-@Ignore("Flickering tests with Mockito2")
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(MethodExceedingJvmLimit.class)
 public class LargeMethodTest {
