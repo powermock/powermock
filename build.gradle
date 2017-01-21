@@ -397,10 +397,11 @@ project(":powermock-modules:powermock-module-testng-agent"){
 }
 
 configure(publishableModules) { project ->
-    //apply from: "${gradleScriptDir}/release.gradle"
     apply from: "${gradleScriptDir}/publish-maven.gradle"
     apply from: "${gradleScriptDir}/publish.gradle"
 }
+
+apply from: "${gradleScriptDir}/release.gradle"
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.2.1'

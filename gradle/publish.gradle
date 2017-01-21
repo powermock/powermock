@@ -1,7 +1,6 @@
 apply plugin: 'com.jfrog.bintray'
 
 tasks.bintrayUpload.mustRunAfter "build"
-afterReleaseBuild.dependsOn bintrayUpload
 
 def theVcsTag = "v" + project.version
 
