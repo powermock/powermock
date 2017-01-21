@@ -1,0 +1,46 @@
+apply from: "${gradleScriptDir}/java-module.gradle"
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayAutoPublish = true
+    mavenCentralSync = false
+}
+
+jar {
+    manifest.attributes["Created-By"] =
+            "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
+    manifest.attributes["Implementation-Title"] = project.name
+    manifest.attributes["Implementation-Version"] = project.version
+
+    from("${rootProject.projectDir}") {
+        include "LICENSE.txt"
+        into "META-INF"
+        expand(copyright: new Date().format("yyyy"), version: project.version)
+    }
+}
+
+javadoc {
+    description = "Generates project-level javadoc for use in -javadoc jar"
+
+    options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+    options.author = true
+    options.header = project.name
+    options.addStringOption('-quiet')
+
+    failOnError = false
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}

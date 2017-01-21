@@ -8,40 +8,40 @@ allprojects{
 logger.lifecycle "Version: $project.version"
 
 class Version{
-    static def VersionFile versionFile(def file) {
-        return new VersionFile(file);
+    static VersionFile versionFile(file) {
+        return new VersionFile(file)
     }
 }
 
 class VersionFile{
 
-    private final def File file;
-    private def version;
+    private final File file
+    private version
 
-    VersionFile(def file){
-        this.file = file;
+    VersionFile(file){
+        this.file = file
     }
 
     def getVersion() {
         if (version == null){
-            readVersion();
+            readVersion()
         }
-        return version;
+        return version
     }
 
-    private def readVersion() {
-        Properties p = new Properties();
-        FileReader reader = null;
+    private readVersion() {
+        Properties p = new Properties()
+        FileReader reader = null
         try {
-            reader = new FileReader(file);
-            p.load(reader);
-        } catch (Exception e) {
-            throw new RuntimeException("Cannot read version file: " + file);
+            reader = new FileReader(file)
+            p.load(reader)
+        } catch (Exception ignored) {
+            throw new RuntimeException("Cannot read version file: " + file)
         } finally {
             if (reader != null){
-                reader.close();
+                reader.close()
             }
         }
-        version = p.getProperty("version");
+        version = p.getProperty("version")
     }
 }

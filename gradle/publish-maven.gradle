@@ -1,66 +1,86 @@
-apply plugin: "propdeps-maven"
+apply plugin: 'maven-publish'
 
-install {
-    repositories.mavenInstaller {
-        customizePom(pom, project)
+publishing {
+    publications {
+        modulesJar(MavenPublication) {
+            from components.java
+            artifactId project.name
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
+}
+
+publishing.publications.all {
+    def devs = ['johanhaleby:Johan Haleby:johan.haleby at jayway.com', 'jakr:Jan Kronquist:jan.kronquist at jayway.com', 'thekingnothing:Arthur Zagretdinov:arthur.zagretdinov at outlook.com']
+
+    pom.withXml {
+        def root = asNode()
+        root.appendNode('name', 'PowerMock')
+        root.appendNode('packaging', 'jar')
+        root.appendNode('description', project.description)
+        root.appendNode('url', 'http://www.powermock.org')
+
+        def license = root.appendNode('licenses').appendNode('license')
+        license.appendNode('name', 'The Apache Software License, Version 2.0')
+        license.appendNode('url', 'http://www.apache.org/licenses/LICENSE-2.0.txt')
+        license.appendNode('distribution', 'repo')
+
+        def scm = root.appendNode('scm')
+        scm.appendNode('url', 'http://github.com/mockito/mockito')
+        scm.appendNode('connection', 'scm:git:git://github.com/powermock/powermock')
+        scm.appendNode('developerConnection', 'scm:git:git://github.com/powermock/powermock')
+
+        def issues = root.appendNode('issueManagement')
+        issues.appendNode('url', 'https://github.com/powermock/powermock/issues')
+        issues.appendNode('system', 'GitHub')
+
+        def developers = root.appendNode('developers')
+        devs.each {
+            def split = it.split(':')
+            assert split.length == 3
+            def d = developers.appendNode('developer')
+            d.appendNode('id', split[0])
+            d.appendNode('name', split[1])
+            d.appendNode('email', split[2])
+        }
+
+        root.dependencies.'*'.findAll() {
+            it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
+                dep.name == it.artifactId.text()
+            }
+        }.each() {
+            it.scope*.value = 'compile'
+        }
+
+        def depends
+        if (root.dependencies.size() > 0) {
+            depends = root.dependencies.get(0)
+        }else{
+            depends = root.appendNode('dependencies')
+        }
+
+        if (project.configurations.hasProperty('provided')) {
+            project.configurations.provided.allDependencies.each {
+                def dep = depends.appendNode('dependency')
+                dep.appendNode('groupId', it.group)
+                dep.appendNode('artifactId', it.name)
+                dep.appendNode('version', it.version)
+                dep.appendNode('scope', 'provided')
+            }
+        }
+
+        if (project.configurations.hasProperty('mockito2')){
+            project.configurations.mockito2.allDependencies.each {
+                def dep = depends.appendNode('dependency')
+                dep.appendNode('groupId', it.group)
+                dep.appendNode('artifactId', it.name)
+                dep.appendNode('version', it.version)
+                dep.appendNode('scope', 'compile')
+            }
+        }
+
     }
 }
 
 
-def customizePom(pom, gradleProject) {
-    pom.whenConfigured { generatedPom ->
-        // eliminate test-scoped dependencies (no need in maven central poms)
-        generatedPom.dependencies.removeAll { dep ->
-            dep.scope == "test"
-        }
-
-        // sort to make pom dependencies order consistent to ease comparison of older poms
-        generatedPom.dependencies = generatedPom.dependencies.sort { dep ->
-            "$dep.scope:$dep.groupId:$dep.artifactId"
-        }
-
-        // add all items necessary for maven central publication
-        generatedPom.project {
-            name = "powermock"
-            description = gradleProject.description
-            url = "https://github.com/spring-projects/spring-framework"
-            organization {
-                name = "PowerMock"
-                url = "http://www.powermock.org"
-            }
-            licenses {
-                license {
-                    name "The Apache Software License, Version 2.0"
-                    url "http://www.apache.org/licenses/LICENSE-2.0.txt"
-                    distribution "repo"
-                }
-            }
-            scm {
-                url = "https://github.com/powermock/powermock"
-                connection = "scm:git:git://github.com/powermock/powermock"
-                developerConnection = "scm:git:git://github.com/powermock/powermock"
-            }
-            developers {
-                developer {
-                    id = "johanhaleby"
-                    name = "Johan Haleby"
-                    email = "johan.haleby at jayway.com"
-                }
-                developer {
-                    id = "jakr"
-                    name = "Jan Kronquist"
-                    email = "jan.kronquist at jayway.com"
-                }
-                developer {
-                    id = "thekingnothing"
-                    name = "Arthur Zagretdinov"
-                    email = "arthur.zagretdinov at outlook.com"
-                }
-            }
-            issueManagement {
-                system = "Github"
-                url = "https://github.com/powermock/powermock/issues"
-            }
-        }
-    }
-}

@@ -1,18 +1,18 @@
 def subprojects = project(":tests").subprojects  - project(":tests:easymock")
 
+ext {
+    bintrayAutoPublish = false
+    mavenCentralSync = false
+}
+
 configure(subprojects) { project ->
+    apply from: "${gradleScriptDir}/java-module.gradle"
+}
 
-    javadoc{
-        enabled = false
-    }
+def mockitoDependsModules = project(":tests:mockito").subprojects + project(":tests:java8").subprojects
 
-    install {
-        enabled = false
-    }
-
-    sourcesJar{
-        enabled = false
-    }
+configure(mockitoDependsModules) { project ->
+    apply from: "${gradleScriptDir}/mockito-module.gradle"
 }
 
 project(":tests:utils"){
