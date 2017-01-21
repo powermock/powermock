@@ -1,0 +1,39 @@
+import java.util.regex.Matcher
+
+apply plugin: 'net.researchgate.release'
+
+release {
+    failOnCommitNeeded = true
+    failOnPublishNeeded = true
+    failOnSnapshotDependencies = true
+    failOnUnversionedFiles = true
+    failOnUpdateNeeded = true
+    revertOnFail = true
+    preCommitText = ''
+    preTagCommitMessage = '[Gradle Release Plugin] - pre tag commit: '
+    tagCommitMessage = '[Gradle Release Plugin] - creating tag: '
+    newVersionCommitMessage = '[Gradle Release Plugin] - new version commit: '
+    tagTemplate = 'powermock-${version}'
+    versionPropertyFile = 'version.properties'
+    versionPatterns = [
+            /(\d+)\.(\d+)\.(\d+)((\w+)(\d+))?/: {
+                Matcher m, Project p ->
+                    int major = m[0][1] as int
+                    int minor = m[0][2] as int
+                    int patch = m[0][3] as int
+                    if (m[0][4] != null) {
+                        int rcVersion = m[0][6] as int
+                        rcVersion = rcVersion + 1
+                        return "" + major + "." + minor + "." + patch +  m[0][5] + rcVersion
+                    }
+                    return "" + major + "." + minor + "." + (patch + 1)
+            }
+    ]
+
+    git {
+        requireBranch = 'master'
+        pushToRemote = 'origin'
+        pushToBranchPrefix = ''
+        commitVersionFileOnly = true
+    }
+}
