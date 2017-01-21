@@ -1,0 +1,41 @@
+apply plugin: 'com.jfrog.bintray'
+
+tasks.bintrayUpload.mustRunAfter "build"
+afterReleaseBuild.dependsOn bintrayUpload
+
+def theVcsTag = "v" + project.version
+
+def versionDescription = "PowerMock ${project.version} Final"
+if (project.version.toString().contains("beta")){
+    versionDescription = "PowerMock ${project.version} Develop"
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_API_KEY')
+
+    publications = ['modulesJar']
+
+    publish = project.ext.bintrayAutoPublish
+
+    pkg {
+        repo = project.ext.bintrayRepo
+
+        name = 'powermock'
+        desc = project.description
+        websiteUrl = 'http://powermock.org'
+        issueTrackerUrl = 'https://powermock.com/powermock/powermock/issues'
+        vcsUrl = 'https://github.com/powermock/powermock.git'
+        licenses = ['Apache-2.0']
+        labels = ['java', 'mock', 'mocking', 'tests']
+        publicDownloadNumbers = true
+
+        // optional version attributes
+        version {
+            name = project.version
+            desc = versionDescription
+            vcsTag = theVcsTag
+        }
+    }
+}
+

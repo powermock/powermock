@@ -1,28 +1,24 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url 'http://repo.spring.io/plugins-release' }
+        jcenter()
+        maven {
+            url 'http://repo.spring.io/plugins-release'
+        }
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
     }
     dependencies {
         classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.7'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath 'net.researchgate:gradle-release:2.4.0'
     }
 }
 
 ext{
     gradleScriptDir = "${rootProject.projectDir}/gradle"
-}
 
-apply from: "${gradleScriptDir}/version.gradle"
-
-description = 'PowerMock allows you to unit test code normally regarded as untestable.\n' +
-        '        For instance it is possible to mock static methods, remove static initializers, allow mocking without dependency\n' +
-        '        injection and more.\n' +
-        '        PowerMock works by bytecode manipulation.\n' +
-        '        PowerMock also contain some utilities that gives you easier access to an objects internal state.\n' +
-        '        PowerMock can be used to test otherwise untestable code and also to achieve a cleaner separation between test\n' +
-        '        and production code.'
-
-ext{
     easymockVersion = "3.4"
     hamcrestVersion = "1.3"
     assertjVersion = "2.6.0"
@@ -41,8 +37,32 @@ ext{
     eclipseJdt = "3.3.0-v_771"
 }
 
-apply from: "${gradleScriptDir}/modules.gradle"
-apply from: "${gradleScriptDir}/mockito.gradle"
+apply from: "${gradleScriptDir}/version.gradle"
+
+description = 'PowerMock allows you to unit test code normally regarded as untestable.\n' +
+        '        For instance it is possible to mock static methods, remove static initializers, allow mocking without dependency\n' +
+        '        injection and more.\n' +
+        '        PowerMock works by bytecode manipulation.\n' +
+        '        PowerMock also contain some utilities that gives you easier access to an objects internal state.\n' +
+        '        PowerMock can be used to test otherwise untestable code and also to achieve a cleaner separation between test\n' +
+        '        and production code.'
+
+def publishableModules = allprojects - project(":powermock-api")  - project(":powermock-classloading") - project(":powermock-modules") - project(":tests") - project(":tests").subprojects
+
+configure(publishableModules) { project ->
+    apply from: "${gradleScriptDir}/publishable-module.gradle"
+}
+
+def mockitoDependsModules = [
+        project(":powermock-core"),
+        project(":powermock-api:powermock-api-mockito-common"),
+        project(":powermock-api:powermock-api-mockito"),
+        project(":powermock-api:powermock-api-mockito2"),
+]
+
+configure(mockitoDependsModules) { project ->
+    apply from: "${gradleScriptDir}/mockito-module.gradle"
+}
 
 project("powermock-reflect") {
     description = "Various utilities for accessing internals of a class."
@@ -374,6 +394,12 @@ project(":powermock-modules:powermock-module-testng-agent"){
         testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
         testCompile("org.assertj:assertj-core:${assertjVersion}")
     }
+}
+
+configure(publishableModules) { project ->
+    //apply from: "${gradleScriptDir}/release.gradle"
+    apply from: "${gradleScriptDir}/publish-maven.gradle"
+    apply from: "${gradleScriptDir}/publish.gradle"
 }
 
 task wrapper(type: Wrapper) {
