@@ -1,0 +1,53 @@
+def fullJars = [
+        project(":powermock-release:powermock-easymock"),
+        project(":powermock-release:powermock-mockito"),
+        project(":powermock-release:powermock-mockito2")
+]
+
+configure(fullJars){ project ->
+
+    ext {
+        bintrayRepo = 'generic'
+        bintrayAutoPublish = true
+        mavenCentralSync = false
+    }
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    group = "org.powermock"
+
+    apply plugin: 'java'
+    apply plugin: 'com.github.johnrengelman.shadow'
+
+    jar{
+        enabled = false
+    }
+
+    shadowJar {
+        baseName = project.name
+        version = project.version
+        classifier = "full"
+
+        manifest.attributes["Created-By"] =
+                "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
+        manifest.attributes["Implementation-Title"] = project.name + "-full"
+        manifest.attributes["Implementation-Version"] = project.version
+
+        from("${rootProject.projectDir}") {
+            include "LICENSE.txt"
+            into "META-INF"
+            expand(copyright: new Date().format("yyyy"), version: project.version)
+        }
+
+        dependencies {
+            exclude(dependency {
+                !it.name.toString().contains('powermock')
+            })
+        }
+    }
+
+    apply from: "${gradleScriptDir}/release/publish-fullJar.gradle"
+}

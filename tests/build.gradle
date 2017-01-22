@@ -5,7 +5,16 @@ ext {
     mavenCentralSync = false
 }
 
+jar{
+    enabled = false
+}
+
 configure(subprojects) { project ->
+    ext {
+        bintrayAutoPublish = false
+        mavenCentralSync = false
+    }
+
     apply from: "${gradleScriptDir}/java-module.gradle"
 }
 

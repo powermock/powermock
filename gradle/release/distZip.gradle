@@ -1,0 +1,33 @@
+def fullJars = [
+        project(":powermock-release:powermock-easymock-junit"),
+        project(":powermock-release:powermock-easymock-testng"),
+        project(":powermock-release:powermock-mockito-junit"),
+        project(":powermock-release:powermock-mockito-testng")
+]
+
+configure(fullJars) { project ->
+    ext {
+        bintrayRepo = 'generic'
+        bintrayAutoPublish = true
+        mavenCentralSync = false
+    }
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    group = "org.powermock"
+
+    apply plugin: 'distribution'
+
+    distributions {
+        main {
+            contents {
+                from(project.configurations.compile)
+            }
+        }
+    }
+
+    apply from: "${gradleScriptDir}/release/publish-distZip.gradle"
+}

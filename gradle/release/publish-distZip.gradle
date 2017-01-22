@@ -1,0 +1,14 @@
+apply from: "${gradleScriptDir}/publishing/publish.gradle"
+
+tasks.bintrayUpload.mustRunAfter "assembleDist"
+
+bintray {
+    filesSpec{
+        from "$buildDir/distributions"
+        include '*.zip'
+        include '*.tar'
+        into 'distributions/'
+    }
+}
+
+
