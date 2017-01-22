@@ -5,9 +5,15 @@ repositories {
 
 group = "org.powermock"
 
+ext {
+    bintrayRepo = 'maven'
+    bintrayAutoPublish = true
+    mavenCentralSync = false
+    bintrayPublications = ['modulesJar']
+}
+
 apply plugin: 'propdeps'
 apply plugin: 'propdeps-maven'
-apply plugin: 'propdeps-idea'
 apply plugin: 'java'
 
 targetCompatibility = 1.6
@@ -16,3 +22,4 @@ sourceCompatibility = 1.6
 tasks.withType(JavaCompile) {
     options.warnings = false
 }
+

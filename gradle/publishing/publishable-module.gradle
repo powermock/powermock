@@ -1,11 +1,3 @@
-apply from: "${gradleScriptDir}/java-module.gradle"
-
-ext {
-    bintrayRepo = 'maven'
-    bintrayAutoPublish = true
-    mavenCentralSync = false
-}
-
 jar {
     manifest.attributes["Created-By"] =
             "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"

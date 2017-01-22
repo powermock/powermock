@@ -1,7 +1,5 @@
 apply plugin: 'com.jfrog.bintray'
 
-tasks.bintrayUpload.mustRunAfter "build"
-
 def theVcsTag = "v" + project.version
 
 def versionDescription = "PowerMock ${project.version} Final"
@@ -13,14 +11,14 @@ bintray {
     user = System.getenv('BINTRAY_USER')
     key = System.getenv('BINTRAY_API_KEY')
 
-    publications = ['modulesJar']
-
     publish = project.ext.bintrayAutoPublish
 
     pkg {
         repo = project.ext.bintrayRepo
 
         name = 'powermock'
+        userOrg ='powermock'
+
         desc = project.description
         websiteUrl = 'http://powermock.org'
         issueTrackerUrl = 'https://powermock.com/powermock/powermock/issues'
@@ -31,9 +29,21 @@ bintray {
 
         // optional version attributes
         version {
+
             name = project.version
             desc = versionDescription
             vcsTag = theVcsTag
+
+            gpg {
+                sign = true
+            }
+
+            //Automatically syncs to central repository (https://oss.sonatype.org/)
+            mavenCentralSync {
+                sync = project.ext.mavenCentralSync
+                user = System.env.NEXUS_TOKEN_USER
+                password = System.env.NEXUS_TOKEN_PWD
+            }
         }
     }
 }
