@@ -21,8 +21,8 @@ public class MockStaticNotPreparedTest extends PowerMockTestCase {
     }
 
 
-    @Test(expectedExceptions = MissingMethodInvocationException.class, expectedExceptionsMessageRegExp =
-                                                                               "(?s).*PrepareForTest(?s).*")
+    //FIXME? Cannot override reporter in Mockito2 @Test(expectedExceptions = MissingMethodInvocationException.class, expectedExceptionsMessageRegExp = "(?s).*PrepareForTest(?s).*")
+    @Test(expectedExceptions = MissingMethodInvocationException.class)
     public void testWhenNotPrepared() throws Exception {
 
         when(StaticService.say("Hello")).thenReturn("Hello World!");

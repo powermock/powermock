@@ -20,7 +20,10 @@ import org.mockito.internal.verification.MockAwareVerificationMode;
 import org.mockito.internal.verification.api.VerificationData;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MockHandler;
+import org.mockito.listeners.VerificationListener;
 import org.mockito.verification.VerificationMode;
+
+import java.util.Set;
 
 /**
  * A custom extension of {@link MockAwareVerificationMode} for static method
@@ -44,8 +47,8 @@ public class StaticMockAwareVerificationMode extends MockAwareVerificationMode {
 
     private Class<?> clsMock;
 
-    public StaticMockAwareVerificationMode(VerificationMode mode) {
-        super(null, mode);
+    public StaticMockAwareVerificationMode(VerificationMode mode, Set<VerificationListener> listeners) {
+        super(null, mode, listeners);
     }
 
     public void setClassMock(Class<?> clsMock) {

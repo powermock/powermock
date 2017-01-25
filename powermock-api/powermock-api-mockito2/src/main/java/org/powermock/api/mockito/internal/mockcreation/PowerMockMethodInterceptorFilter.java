@@ -34,7 +34,12 @@ class PowerMockMethodInterceptorFilter extends MethodInterceptorFilter {
     @Override
     public Object intercept(Object proxy, Method method, Object[] args,
             MethodProxy methodProxy) throws Throwable {
-        Object intercept = super.intercept(proxy, method, args, methodProxy);
+        Object intercept;
+        try {
+            intercept = super.intercept(proxy, method, args, methodProxy);
+        } catch (RuntimeExceptionProxy p) {
+            throw p.getCause();
+        }
         if ("finalize".equals(method.getName())) {
             MockitoStateCleaner cleaner = new MockitoStateCleaner();
             cleaner.clearConfiguration();

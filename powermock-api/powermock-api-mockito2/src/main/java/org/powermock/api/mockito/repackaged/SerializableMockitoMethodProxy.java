@@ -5,7 +5,7 @@
 package org.powermock.api.mockito.repackaged;
 
 import org.mockito.internal.creation.util.MockitoMethodProxy;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.powermock.api.mockito.internal.mockcreation.RuntimeExceptionProxy;
 import org.powermock.api.mockito.repackaged.cglib.proxy.MethodProxy;
 
 import java.io.Serializable;
@@ -38,7 +38,12 @@ class SerializableMockitoMethodProxy implements MockitoMethodProxy, Serializable
         return methodProxy;
     }
 
-    public Object invokeSuper(Object target, Object[] arguments) throws Throwable {
-        return getMethodProxy().invokeSuper(target, arguments);
+    public Object invokeSuper(Object target, Object[] arguments) {
+        try {
+            return getMethodProxy().invokeSuper(target, arguments);
+        }
+        catch (Throwable t) {
+            throw new RuntimeExceptionProxy(t);
+        }
     }
 }

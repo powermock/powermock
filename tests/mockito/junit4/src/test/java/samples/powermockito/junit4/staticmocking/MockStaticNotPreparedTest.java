@@ -1,5 +1,6 @@
 package samples.powermockito.junit4.staticmocking;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -23,6 +24,7 @@ public class MockStaticNotPreparedTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
+    @Ignore("Mockito2 uses static methods, so call cannot be intercept and exception cannot be changed")
     @Test
     public void testWhenNotPrepared() throws Exception {
 
@@ -30,6 +32,7 @@ public class MockStaticNotPreparedTest {
 
     }
 
+    @Ignore("Mockito2 uses static methods, so call cannot be intercept and exception cannot be changed")
     @PrepareForTest(StaticService.class)
     @Test
     public void testWhenPreparedButMockStaticIsNotCalled() throws Exception {

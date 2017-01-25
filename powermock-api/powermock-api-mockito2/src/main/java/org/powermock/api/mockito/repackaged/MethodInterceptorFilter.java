@@ -8,12 +8,12 @@ package org.powermock.api.mockito.repackaged;
 import org.mockito.internal.InternalMockHandler;
 import org.mockito.internal.creation.DelegatingMethod;
 import org.mockito.internal.creation.util.MockitoMethodProxy;
+import org.mockito.internal.debugging.LocationImpl;
 import org.mockito.internal.invocation.InvocationImpl;
 import org.mockito.internal.invocation.MockitoMethod;
 import org.mockito.internal.invocation.SerializableMethod;
 import org.mockito.internal.invocation.realmethod.CleanTraceRealMethod;
 import org.mockito.internal.progress.SequenceNumber;
-import org.mockito.internal.util.ObjectMethodsGuru;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;
@@ -29,7 +29,6 @@ import java.lang.reflect.Method;
 public class MethodInterceptorFilter implements MethodInterceptor, Serializable {
 
     private static final long serialVersionUID = 6182795666612683784L;
-    final ObjectMethodsGuru objectMethodsGuru = new ObjectMethodsGuru();
     private final InternalMockHandler handler;
     private final MockCreationSettings mockSettings;
     private final AcrossJVMSerializationFeature acrossJVMSerializationFeature = new AcrossJVMSerializationFeature();
@@ -41,9 +40,9 @@ public class MethodInterceptorFilter implements MethodInterceptor, Serializable 
 
     public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy)
             throws Throwable {
-        if (objectMethodsGuru.isEqualsMethod(method)) {
+        if (isEqualsMethod(method)) {
             return proxy == args[0];
-        } else if (objectMethodsGuru.isHashCodeMethod(method)) {
+        } else if (isHashCodeMethod(method)) {
             return hashCodeForMock(proxy);
         } else if (acrossJVMSerializationFeature.isWriteReplace(method)) {
             return acrossJVMSerializationFeature.writeReplace(proxy);
@@ -55,10 +54,21 @@ public class MethodInterceptorFilter implements MethodInterceptor, Serializable 
         MockitoMethod mockitoMethod = createMockitoMethod(method);
         
         CleanTraceRealMethod realMethod = new CleanTraceRealMethod(mockitoMethodProxy);
-        Invocation invocation = new InvocationImpl(proxy, mockitoMethod, args, SequenceNumber.next(), realMethod);
+        Invocation invocation = new InvocationImpl(proxy, mockitoMethod, args, SequenceNumber.next(), realMethod, new LocationImpl());
         return handler.handle(invocation);
     }
-   
+
+    private static boolean isEqualsMethod(Method method) {
+        return method.getName().equals("equals")
+                && method.getParameterTypes().length == 1
+                && method.getParameterTypes()[0] == Object.class;
+    }
+
+    private static boolean isHashCodeMethod(Method method) {
+        return method.getName().equals("hashCode")
+                && method.getParameterTypes().length == 0;
+    }
+
     public MockHandler getHandler() {
         return handler;
     }

@@ -33,14 +33,12 @@ import static org.mockito.Mockito.times;
 
 public class MockitoNewInvocationControl<T> implements NewInvocationControl<OngoingStubbing<T>> {
 	private final InvocationSubstitute<T> substitute;
-	private final MockingProgress mockingProgress;
 
 	public MockitoNewInvocationControl(InvocationSubstitute<T> substitute) {
 		if (substitute == null) {
 			throw new IllegalArgumentException("Internal error: substitute cannot be null.");
 		}
 		this.substitute = substitute;
-        this.mockingProgress = new ThreadSafeMockingProgress();
     }
 
     @Override
