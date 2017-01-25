@@ -5,8 +5,9 @@
 package org.powermock.api.mockito.repackaged;
 
 import org.mockito.internal.creation.util.MockitoMethodProxy;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.powermock.api.mockito.internal.mockcreation.RuntimeExceptionProxy;
 import org.powermock.api.mockito.repackaged.cglib.proxy.MethodProxy;
+import org.powermock.reflect.Whitebox;
 
 import java.io.Serializable;
 
@@ -18,13 +19,13 @@ class SerializableMockitoMethodProxy implements MockitoMethodProxy, Serializable
     private final String desc;
     private final String name;
     private final String superName;
-    transient MethodProxy methodProxy;
+    private transient MethodProxy methodProxy;
 
     public SerializableMockitoMethodProxy(MethodProxy methodProxy) {
         assert methodProxy != null;
         Object info = Whitebox.getInternalState(methodProxy, "createInfo");
-        c1 = (Class<?>) Whitebox.getInternalState(info, "c1");
-        c2 = (Class<?>) Whitebox.getInternalState(info, "c2");
+        c1 = Whitebox.getInternalState(info, "c1");
+        c2 = Whitebox.getInternalState(info, "c2");
         desc = methodProxy.getSignature().getDescriptor();
         name = methodProxy.getSignature().getName();
         superName = methodProxy.getSuperName();
@@ -38,7 +39,12 @@ class SerializableMockitoMethodProxy implements MockitoMethodProxy, Serializable
         return methodProxy;
     }
 
-    public Object invokeSuper(Object target, Object[] arguments) throws Throwable {
-        return getMethodProxy().invokeSuper(target, arguments);
+    public Object invokeSuper(Object target, Object[] arguments) {
+        try {
+            return getMethodProxy().invokeSuper(target, arguments);
+        }
+        catch (Throwable t) {
+            throw new RuntimeExceptionProxy(t);
+        }
     }
 }

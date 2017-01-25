@@ -25,7 +25,6 @@ import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.MockMaker;
 import org.mockito.stubbing.Answer;
-import org.mockito.stubbing.VoidMethodStubbable;
 import org.powermock.api.mockito.repackaged.CglibMockMaker;
 import org.powermock.core.classloader.MockClassLoader;
 
@@ -94,12 +93,7 @@ public class PowerMockMaker implements MockMaker {
         }
 
         @Override
-        public VoidMethodStubbable<Object> voidMethodStubbable(Object mock) {
-            return null;
-        }
-
-        @Override
-        public void setAnswersForStubbing(List<Answer> answers) {
+        public void setAnswersForStubbing(List<Answer<?>> list) {
         }
 
         @Override

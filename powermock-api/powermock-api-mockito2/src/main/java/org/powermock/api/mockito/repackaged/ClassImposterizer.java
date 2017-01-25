@@ -7,7 +7,6 @@ package org.powermock.api.mockito.repackaged;
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.creation.instance.InstantiationException;
 import org.mockito.internal.creation.instance.Instantiator;
-import org.mockito.internal.creation.util.SearchingClassLoader;
 import org.powermock.api.mockito.repackaged.cglib.core.CodeGenerationException;
 import org.powermock.api.mockito.repackaged.cglib.core.NamingPolicy;
 import org.powermock.api.mockito.repackaged.cglib.core.Predicate;

@@ -20,7 +20,7 @@ import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.MockSettings;
-import org.mockito.MockitoAnnotations.Mock;
+import org.mockito.Mock;
 import org.mockito.exceptions.base.MockitoException;
 import org.mockito.internal.configuration.InjectingAnnotationEngine;
 import org.mockito.internal.util.reflection.GenericMaster;

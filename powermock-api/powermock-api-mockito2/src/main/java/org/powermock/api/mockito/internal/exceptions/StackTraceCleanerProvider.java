@@ -24,8 +24,8 @@ public class StackTraceCleanerProvider implements org.mockito.plugins.StackTrace
     public StackTraceCleaner getStackTraceCleaner(final StackTraceCleaner defaultCleaner) {
         return new StackTraceCleaner() {
             @Override
-            public boolean isOut(StackTraceElement candidate) {
-                return defaultCleaner.isOut(candidate) || candidate.getClassName().startsWith("org.powermock.api.mockito");
+            public boolean isIn(StackTraceElement candidate) {
+                return defaultCleaner.isIn(candidate) && !candidate.getClassName().startsWith("org.powermock.api.mockito");
             }
         };
     }

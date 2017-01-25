@@ -19,10 +19,12 @@ package org.powermock.api.mockito;
 import org.mockito.MockSettings;
 import org.mockito.Mockito;
 import org.mockito.internal.progress.MockingProgress;
+import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.internal.stubbing.answers.CallsRealMethods;
 import org.mockito.internal.stubbing.answers.DoesNothing;
 import org.mockito.internal.stubbing.answers.Returns;
 import org.mockito.internal.stubbing.answers.ThrowsException;
+import org.mockito.listeners.VerificationListener;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.verification.VerificationMode;
@@ -47,6 +49,7 @@ import org.powermock.reflect.Whitebox;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Set;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.withSettings;
@@ -69,6 +72,7 @@ public class PowerMockito extends MemberModifier {
      *            the class to enable static mocking
      */
     public static synchronized void mockStatic(Class<?> type, Class<?>... types) {
+        ThreadSafeMockingProgress.mockingProgress().reset();
         DefaultMockCreator.mock(type, true, false, null, null, (Method[]) null);
         if(types != null && types.length > 0) {
             for (Class<?> aClass : types) {
@@ -126,6 +130,7 @@ public class PowerMockito extends MemberModifier {
      *            additional mock settings
      */
     public static void mockStatic(Class<?> classToMock, MockSettings mockSettings) {
+        ThreadSafeMockingProgress.mockingProgress().reset();
         DefaultMockCreator.mock(classToMock, true, false, null, mockSettings, (Method[]) null);
     }
 
@@ -230,13 +235,14 @@ public class PowerMockito extends MemberModifier {
      *            the type of the class mock
      */
     public static synchronized <T> void spy(Class<T> type) {
+        ThreadSafeMockingProgress.mockingProgress().reset();
         DefaultMockCreator.mock(type, true, true, type, null, (Method[]) null);
     }
 
     /**
      * Verifies certain behavior <b>happened once</b>
      * <p>
-     * Alias to {@code verifyStatic(times(1))} E.g:
+     * Alias to <code>verifyStatic(times(1))</code> E.g:
      *
      * <pre>
      * verifyStatic();
@@ -284,7 +290,7 @@ public class PowerMockito extends MemberModifier {
      *            times(x), atLeastOnce() or never()
      */
     public static synchronized void verifyStatic(VerificationMode verificationMode) {
-        Whitebox.getInternalState(Mockito.class, MockingProgress.class).verificationStarted(
+        ThreadSafeMockingProgress.mockingProgress().verificationStarted(
                 POWERMOCKITO_CORE.wrapInStaticVerificationMode(verificationMode));
     }
 
@@ -308,7 +314,7 @@ public class PowerMockito extends MemberModifier {
      */
     public static PrivateMethodVerification verifyPrivate(Object object, VerificationMode verificationMode)
             throws Exception {
-        Whitebox.getInternalState(Mockito.class, MockingProgress.class).verificationStarted(
+        ThreadSafeMockingProgress.mockingProgress().verificationStarted(
                 POWERMOCKITO_CORE.wrapInMockitoSpecificVerificationMode(object, verificationMode));
         return new DefaultPrivateMethodVerification(object);
     }
@@ -340,7 +346,7 @@ public class PowerMockito extends MemberModifier {
     /**
      * Verifies certain behavior <b>happened once</b>
      * <p>
-     * Alias to {@code verifyNew(mockClass, times(1))} E.g:
+     * Alias to <code>verifyNew(mockClass, times(1))</code> E.g:
      *
      * <pre>
      * verifyNew(ClassWithStaticMethod.class);

@@ -18,7 +18,7 @@
 package org.powermock.api.mockito.internal.invocation;
 
 import org.mockito.ArgumentMatcher;
-import org.mockito.exceptions.Reporter;
+import org.mockito.internal.exceptions.Reporter;
 import org.mockito.internal.invocation.InvocationMatcher;
 import org.mockito.internal.invocation.MatchersBinder;
 import org.mockito.internal.matchers.LocalizedMatcher;
@@ -67,7 +67,7 @@ public class PowerMockMatchersBinder extends MatchersBinder {
             int recordedMatchersSize = lastMatchers.size();
             int expectedMatchersSize = invocation.getArguments().length;
             if (expectedMatchersSize != recordedMatchersSize) {
-                new Reporter().invalidUseOfMatchers(expectedMatchersSize, lastMatchers);
+                Reporter.invalidUseOfMatchers(expectedMatchersSize, lastMatchers);
             }
         }
     }

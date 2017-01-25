@@ -33,7 +33,7 @@ import java.util.List;
  * qualifiedName method does
  *
  * <pre>
- * new MockUtil().getMockName(mock)
+ * MockUtil.getMockName(mock)
  * </pre>
  *
  * which later will call the "isMockitoMock" method which will

@@ -40,7 +40,7 @@ public class PowerMockitoSpyAnnotationEngine extends SpyAnnotationEngine {
 			if (field.isAnnotationPresent(Spy.class)) {
 				try {
 					Whitebox.invokeMethod(this, Spy.class, field, new Class<?>[] { Mock.class,
-							org.mockito.MockitoAnnotations.Mock.class, Captor.class });
+							org.mockito.Mock.class, Captor.class });
 				} catch (RuntimeException e) {
 					throw e;
 				} catch (Exception e1) {

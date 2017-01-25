@@ -43,7 +43,7 @@ public class MockFinalUsingAnnotationsTest {
     private FinalDemo usingMockitoMockAnnotation;
 
     @SuppressWarnings("deprecation")
-    @org.mockito.MockitoAnnotations.Mock
+    @org.mockito.Mock
     private FinalDemo usingDeprecatedMockitoMockAnnotation;
 
     @SuppressWarnings("deprecation")

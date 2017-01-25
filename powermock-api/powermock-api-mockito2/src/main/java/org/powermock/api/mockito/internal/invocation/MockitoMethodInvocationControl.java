@@ -22,6 +22,7 @@ import org.mockito.exceptions.misusing.NotAMockException;
 import org.mockito.internal.InternalMockHandler;
 import org.mockito.internal.creation.DelegatingMethod;
 import org.mockito.internal.debugging.Localized;
+import org.mockito.internal.debugging.LocationImpl;
 import org.mockito.internal.exceptions.stacktrace.StackTraceFilter;
 import org.mockito.internal.invocation.InvocationImpl;
 import org.mockito.internal.invocation.MatchersBinder;
@@ -148,8 +149,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
 
     private VerificationMode getVerificationMode() {
         try {
-            MockingProgress progress = Whitebox.invokeMethod(ThreadSafeMockingProgress.class,
-                    "threadSafely");
+            MockingProgress progress = ThreadSafeMockingProgress.mockingProgress();
             return getVerificationModeFromMockProgress(progress);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -161,13 +161,8 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
         if (mockingProgress == null) {
             return null;
         }
-        if (mockingProgress instanceof ThreadSafeMockingProgress) {
-            ThreadLocal<MockingProgress> threadLocal = Whitebox.getInternalState(mockingProgress, ThreadLocal.class);
-            return getVerificationModeFromMockProgress(threadLocal.get());
-        } else {
-            Localized<VerificationMode> verificationMode = Whitebox.getInternalState(mockingProgress, Localized.class);
-            return verificationMode == null ? null : verificationMode.getObject();
-        }
+        Localized<VerificationMode> verificationMode = Whitebox.getInternalState(mockingProgress, Localized.class);
+        return verificationMode == null ? null : verificationMode.getObject();
     }
 
     @Override
@@ -259,7 +254,8 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
                 new DelegatingMethod(method),
                 arguments,
                 SequenceNumber.next(),
-                cglibProxyRealMethod) {
+                cglibProxyRealMethod,
+                new LocationImpl()) {
             private static final long serialVersionUID = -3679957412502758558L;
 
             @Override
