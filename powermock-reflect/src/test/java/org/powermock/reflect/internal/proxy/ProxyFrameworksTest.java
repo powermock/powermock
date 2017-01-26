@@ -1,5 +1,10 @@
 package org.powermock.reflect.internal.proxy;
 
+import net.sf.cglib.asm.AnnotationVisitor;
+import net.sf.cglib.asm.ClassWriter;
+import net.sf.cglib.asm.FieldVisitor;
+import net.sf.cglib.asm.MethodVisitor;
+import net.sf.cglib.asm.Opcodes;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.InvocationHandler;
 import org.junit.Before;
@@ -7,6 +12,7 @@ import org.junit.Test;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.URLClassLoader;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -57,4 +63,82 @@ public class ProxyFrameworksTest {
         });
         assertThat(proxyFrameworks.getUnproxiedType(someClass)).isEqualTo(SomeClass.class);
     }
+    
+    @Test
+    public void should_not_detect_synthetic_classes_as_cglib_proxy() throws Exception {
+        String className = "Some$$SyntheticClass$$Lambda";
+        byte[] bytes = ClassFactory.create(className);
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        CustomClassLoader customClassLoader = new CustomClassLoader(classLoader);
+    
+        Class<?> defineClass = customClassLoader.defineClass(className, bytes);
+    
+        assertThat(proxyFrameworks.getUnproxiedType(defineClass.newInstance())).isEqualTo(defineClass);
+    }
+    
+    private static class CustomClassLoader extends URLClassLoader{
+    
+        public CustomClassLoader(ClassLoader parent) {
+            super(((URLClassLoader)parent).getURLs(), parent);
+        }
+    
+        public Class<?> defineClass(String name, byte[] b) {
+            return defineClass(name, b, 0, b.length);
+        }
+    }
+    
+    private static class ClassFactory implements Opcodes {
+    
+        private static byte[] create(String className) throws Exception {
+            
+            ClassWriter cw = new ClassWriter(0);
+            FieldVisitor fv;
+            MethodVisitor mv;
+            AnnotationVisitor av0;
+            
+            cw.visit(49,
+                     ACC_PUBLIC + ACC_SUPER,
+                     className,
+                     null,
+                     "java/lang/Object",
+                     null);
+            
+            cw.visitSource("Hello.java", null);
+            
+            {
+                mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
+                mv.visitVarInsn(ALOAD, 0);
+                mv.visitMethodInsn(INVOKESPECIAL,
+                                   "java/lang/Object",
+                                   "<init>",
+                                   "()V");
+                mv.visitInsn(RETURN);
+                mv.visitMaxs(1, 1);
+                mv.visitEnd();
+            }
+            {
+                mv = cw.visitMethod(ACC_PUBLIC + ACC_STATIC,
+                                    "main",
+                                    "([Ljava/lang/String;)V",
+                                    null,
+                                    null);
+                mv.visitFieldInsn(GETSTATIC,
+                                  "java/lang/System",
+                                  "out",
+                                  "Ljava/io/PrintStream;");
+                mv.visitLdcInsn("hello");
+                mv.visitMethodInsn(INVOKEVIRTUAL,
+                                   "java/io/PrintStream",
+                                   "println",
+                                   "(Ljava/lang/String;)V");
+                mv.visitInsn(RETURN);
+                mv.visitMaxs(2, 1);
+                mv.visitEnd();
+            }
+            cw.visitEnd();
+            
+            return cw.toByteArray();
+        }
+    }
+    
 }
