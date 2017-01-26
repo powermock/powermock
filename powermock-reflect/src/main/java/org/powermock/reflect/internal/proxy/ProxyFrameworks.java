@@ -1,16 +1,9 @@
 package org.powermock.reflect.internal.proxy;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-/**
- *
- */
 public class ProxyFrameworks {
-
-    /**
-     * The CGLIB class separator character "$$"
-     */
-    public static final String CGLIB_CLASS_SEPARATOR = "$$";
 
     public Class<?> getUnproxiedType(Class<?> type) {
 
@@ -47,15 +40,19 @@ public class ProxyFrameworks {
      * @param clazz the class to check
      */
     public boolean isCglibProxyClass(Class<?> clazz) {
-        return (clazz != null && isCglibProxyClassName(clazz.getName()));
+        if (clazz == null){
+            return false;
+        }
+        Method[] methods = clazz.getDeclaredMethods();
+        for(Method m: methods){
+            if(isCglibCallbackMethod(m)) {
+                return true;
+            }
+        }
+        return false;
     }
-
-    /**
-     * Check whether the specified class name is a CGLIB-generated class.
-     *
-     * @param className the class name to check
-     */
-    public boolean isCglibProxyClassName(String className) {
-        return (className != null && className.contains(CGLIB_CLASS_SEPARATOR));
+    
+    private boolean isCglibCallbackMethod(Method m) {
+        return "CGLIB$SET_THREAD_CALLBACKS".equals(m.getName()) && m.getParameterTypes().length == 1;
     }
 }
