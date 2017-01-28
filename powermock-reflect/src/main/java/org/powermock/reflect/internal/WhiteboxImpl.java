@@ -35,6 +35,7 @@ import org.powermock.reflect.internal.matcherstrategies.FieldNameMatcherStrategy
 import org.powermock.reflect.internal.primitivesupport.BoxedWrapper;
 import org.powermock.reflect.internal.primitivesupport.PrimitiveWrapper;
 import org.powermock.reflect.internal.proxy.ProxyFrameworks;
+import org.powermock.reflect.internal.proxy.UnproxiedType;
 import org.powermock.reflect.matching.FieldMatchingStrategy;
 
 import java.lang.annotation.Annotation;
@@ -129,7 +130,7 @@ public class WhiteboxImpl {
         if (foundMethods.isEmpty()) {
             throw new MethodNotFoundException("No method was found with parameter types: [ "
                                                       + getArgumentTypesAsString((Object[]) parameterTypes) + " ] in class "
-                                                      + getUnmockedType(type).getName() + ".");
+                                                      + getOriginalUnmockedType(type).getName() + ".");
         } else {
             throwExceptionWhenMultipleMethodMatchesFound("method name",
                     foundMethods.toArray(new Method[foundMethods.size()]));
@@ -273,7 +274,7 @@ public class WhiteboxImpl {
      * @return A .
      */
     public static Constructor<?> getConstructor(Class<?> type, Class<?>... parameterTypes) {
-        Class<?> unmockedType = WhiteboxImpl.getUnmockedType(type);
+        Class<?> unmockedType = WhiteboxImpl.getOriginalUnmockedType(type);
         try {
             final Constructor<?> constructor = unmockedType.getDeclaredConstructor(parameterTypes);
             constructor.setAccessible(true);
@@ -1117,7 +1118,7 @@ public class WhiteboxImpl {
                 methodNameData = "with name '" + methodName + "' ";
             }
             throw new MethodNotFoundException("No method found " + methodNameData + "with parameter types: [ "
-                                                      + getArgumentTypesAsString(arguments) + " ] in class " + getUnmockedType(type)
+                                                      + getArgumentTypesAsString(arguments) + " ] in class " + getOriginalUnmockedType(type)
                                                                                                                        .getName() + ".");
         }
     }
@@ -1132,7 +1133,7 @@ public class WhiteboxImpl {
     public static void throwExceptionIfFieldWasNotFound(Class<?> type, String fieldName, Field field) {
         if (field == null) {
             throw new FieldNotFoundException("No field was found with name '" + fieldName + "' in class "
-                                                     + getUnmockedType(type).getName() + ".");
+                                                     + getOriginalUnmockedType(type).getName() + ".");
         }
     }
 
@@ -1146,7 +1147,7 @@ public class WhiteboxImpl {
     static void throwExceptionIfConstructorWasNotFound(Class<?> type, Constructor<?> potentialConstructor,
                                                        Object... arguments) {
         if (potentialConstructor == null) {
-            String message = "No constructor found in class '" + getUnmockedType(type).getName() + "' with "
+            String message = "No constructor found in class '" + getOriginalUnmockedType(type).getName() + "' with "
                                      + "parameter types: [ " + getArgumentTypesAsString(arguments) + " ].";
             throw new ConstructorNotFoundException(message);
         }
@@ -1553,7 +1554,7 @@ public class WhiteboxImpl {
      */
     public static Constructor<?> getFirstParentConstructor(Class<?> klass) {
         try {
-            return getUnmockedType(klass).getSuperclass().getDeclaredConstructors()[0];
+            return getOriginalUnmockedType(klass).getSuperclass().getDeclaredConstructors()[0];
         } catch (Exception e) {
             throw new ConstructorNotFoundException("Failed to lookup constructor.", e);
         }
@@ -1634,10 +1635,14 @@ public class WhiteboxImpl {
      * @param type the type
      * @return the unmocked type
      */
-    public static <T> Class<?> getUnmockedType(Class<T> type) {
+    public static <T> Class<?> getOriginalUnmockedType(Class<T> type) {
+        return getUnproxiedType(type).getOriginalType();
+    }
+    
+    public static <T> UnproxiedType getUnproxiedType(Class<T> type) {
         return proxyFrameworks.getUnproxiedType(type);
     }
-
+    
     /**
      * Throw exception when multiple method matches found.
      *
@@ -1898,7 +1903,7 @@ public class WhiteboxImpl {
                     final Class<?>[] args = method.getParameterTypes();
                     if (args != null && args.length == argumentTypes.length) {
                         for (int i = 0; i < args.length; i++) {
-                            if (args[i].isAssignableFrom(getUnmockedType(argumentTypes[i]))) {
+                            if (args[i].isAssignableFrom(getOriginalUnmockedType(argumentTypes[i]))) {
                                 /*
                                          * Method was not found thus it should not be
                                          * mocked. Continue to investigate the next
@@ -2066,7 +2071,7 @@ public class WhiteboxImpl {
         } else if (object != null) {
             type = object.getClass();
         }
-        return type == null ? null : getUnmockedType(type);
+        return type == null ? null : getOriginalUnmockedType(type);
     }
 
     /**

@@ -4,42 +4,38 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 public class ProxyFrameworks {
+    
+    private static final UnproxiedTypeFactory UNPROXIED_TYPE_FACTORY = new UnproxiedTypeFactory();
 
-    public Class<?> getUnproxiedType(Class<?> type) {
+    public UnproxiedType getUnproxiedType(Class<?> type) {
 
         if (type == null){
             return null;
         }
 
         if (isJavaProxy(type)){
-            return type.getInterfaces()[0];
+            return UNPROXIED_TYPE_FACTORY.createFromInterfaces(type.getInterfaces());
         }
 
         if (isCglibProxyClass(type)) {
-            return type.getSuperclass();
+            return UNPROXIED_TYPE_FACTORY.createFromSuperclassAndInterfaces(type.getSuperclass(), type.getInterfaces());
         }
 
-
-        return type;
+        return UNPROXIED_TYPE_FACTORY.createFromType(type);
+    }
+    
+    public UnproxiedType getUnproxiedType(Object o) {
+        if (o == null) {
+            return null;
+        }
+        return getUnproxiedType(o.getClass());
     }
 
     private boolean isJavaProxy(Class<?> clazz) {
         return (clazz != null && Proxy.isProxyClass(clazz));
     }
 
-    public Class<?> getUnproxiedType(Object o) {
-        if (o == null) {
-            throw new IllegalArgumentException("type cannot be null");
-        }
-        return getUnproxiedType(o.getClass());
-    }
-
-    /**
-     * Check whether the specified class is a CGLIB-generated class.
-     *
-     * @param clazz the class to check
-     */
-    public boolean isCglibProxyClass(Class<?> clazz) {
+    private boolean isCglibProxyClass(Class<?> clazz) {
         if (clazz == null){
             return false;
         }

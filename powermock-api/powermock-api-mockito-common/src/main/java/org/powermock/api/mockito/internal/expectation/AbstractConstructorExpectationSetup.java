@@ -13,7 +13,6 @@ import org.powermock.tests.utils.impl.ArrayMergerImpl;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 public abstract class AbstractConstructorExpectationSetup<T> implements ConstructorExpectationSetup<T> {
 
@@ -33,7 +32,7 @@ public abstract class AbstractConstructorExpectationSetup<T> implements Construc
             throw new IllegalArgumentException("type cannot be null");
         }
 
-        final Class<T> unmockedType = (Class<T>) WhiteboxImpl.getUnmockedType(type);
+        final Class<T> unmockedType = (Class<T>) WhiteboxImpl.getOriginalUnmockedType(type);
         if (parameterTypes == null) {
             WhiteboxImpl.findUniqueConstructorOrThrowException(type, arguments);
         } else {
@@ -49,7 +48,7 @@ public abstract class AbstractConstructorExpectationSetup<T> implements Construc
             InvocationSubstitute<T> mock = getMockCreator().createMock(InvocationSubstitute.class, false, false, null, null, (Method[]) null);
             newInvocationControl = createNewInvocationControl(mock);
             MockRepository.putNewInstanceControl(type, newInvocationControl);
-            MockRepository.addObjectsToAutomaticallyReplayAndVerify(WhiteboxImpl.getUnmockedType(type));
+            MockRepository.addObjectsToAutomaticallyReplayAndVerify(WhiteboxImpl.getOriginalUnmockedType(type));
         }
 
         return newInvocationControl.expectSubstitutionLogic(arguments);
@@ -77,7 +76,7 @@ public abstract class AbstractConstructorExpectationSetup<T> implements Construc
         if (mockType == null) {
             throw new IllegalArgumentException("Class to expected cannot be null");
         }
-        final Class<T> unmockedType = (Class<T>) WhiteboxImpl.getUnmockedType(mockType);
+        final Class<T> unmockedType = (Class<T>) WhiteboxImpl.getOriginalUnmockedType(mockType);
         final Constructor<?>[] allConstructors = WhiteboxImpl.getAllConstructors(unmockedType);
         final Constructor<?> constructor = allConstructors[0];
         final Class<?>[] parameterTypes = constructor.getParameterTypes();
