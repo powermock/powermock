@@ -20,7 +20,7 @@ class ConstructorFinder {
 
         this.type = type;
         this.arguments = arguments;
-        this.unmockedType = WhiteboxImpl.getUnmockedType(type);
+        this.unmockedType = WhiteboxImpl.getOriginalUnmockedType(type);
 
         if (isNestedClass() && arguments != null) {
             addArgumentForNestedClass();
@@ -119,7 +119,7 @@ class ConstructorFinder {
 
     private void throwExceptionIfConstructorWasNotFound() {
         if (potentialConstructor == null) {
-            String message = "No constructor found in class '" + WhiteboxImpl.getUnmockedType(type).getName() + "' " +
+            String message = "No constructor found in class '" + WhiteboxImpl.getOriginalUnmockedType(type).getName() + "' " +
                                      "with "
                                      + "parameter types: [ " + WhiteboxImpl.getArgumentTypesAsString(arguments) + " ].";
             throw new ConstructorNotFoundException(message);

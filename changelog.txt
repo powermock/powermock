@@ -5,6 +5,7 @@ Change log 1.7.0
 * Support Mockito 2.4.0 for PowerMock 1.x (thanks to Gregor Stamac @gstamac for pull request)
 * Fix issue #722 IllegalArgumentException is output to standard error (thanks to Kotaro Nanri @k-nanri for pull request)
 * Fix issue #717 Regression: MethodNotFoundException
+* Fix issue #731 No methods matching the name(s) get were found in the class hierarchy for interfaces
 
 Change log 1.6.6 (2016-11-04)
 -----------------------------

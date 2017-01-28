@@ -1618,7 +1618,7 @@ public class PowerMock extends MemberModifier {
 
         final boolean isNiceMock = mockStrategy instanceof NiceMockStrategy;
 
-        final Class<T> unmockedType = (Class<T>) WhiteboxImpl.getUnmockedType(type);
+        final Class<T> unmockedType = (Class<T>) WhiteboxImpl.getOriginalUnmockedType(type);
         if (!isNiceMock) {
             if (parameterTypes == null) {
                 WhiteboxImpl.findUniqueConstructorOrThrowException(type, arguments);
@@ -1637,7 +1637,7 @@ public class PowerMock extends MemberModifier {
                     (Method[]) null);
             newInvocationControl = new NewInvocationControlImpl<T>(mock, type);
             MockRepository.putNewInstanceControl(type, newInvocationControl);
-            MockRepository.addObjectsToAutomaticallyReplayAndVerify(WhiteboxImpl.getUnmockedType(type));
+            MockRepository.addObjectsToAutomaticallyReplayAndVerify(WhiteboxImpl.getOriginalUnmockedType(type));
         }
 
         if (isNiceMock && (arguments == null || arguments.length == 0)) {
