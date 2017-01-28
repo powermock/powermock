@@ -30,7 +30,7 @@ bintray {
         // optional version attributes
         version {
 
-            name = project.version
+            name = "powermock-${project.version}"
             desc = versionDescription
             vcsTag = theVcsTag
 

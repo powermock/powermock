@@ -5,13 +5,6 @@ repositories {
 
 group = "org.powermock"
 
-ext {
-    bintrayRepo = 'maven'
-    bintrayAutoPublish = true
-    mavenCentralSync = false
-    bintrayPublications = ['modulesJar']
-}
-
 apply plugin: 'propdeps'
 apply plugin: 'propdeps-maven'
 apply plugin: 'java'

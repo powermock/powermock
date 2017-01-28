@@ -1,3 +1,10 @@
+ext {
+    bintrayRepo = 'maven'
+    bintrayAutoPublish = true
+    mavenCentralSync = true
+    bintrayPublications = ['modulesJar']
+}
+
 jar {
     manifest.attributes["Created-By"] =
             "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
