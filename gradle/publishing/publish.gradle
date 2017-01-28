@@ -1,7 +1,5 @@
 apply plugin: 'com.jfrog.bintray'
 
-def theVcsTag = "v" + project.version
-
 def versionDescription = "PowerMock ${project.version} Final"
 if (project.version.toString().contains("beta")){
     versionDescription = "PowerMock ${project.version} Develop"
@@ -32,7 +30,7 @@ bintray {
 
             name = "powermock-${project.version}"
             desc = versionDescription
-            vcsTag = theVcsTag
+            vcsTag = "powermock-${project.version}"
 
             gpg {
                 sign = true
