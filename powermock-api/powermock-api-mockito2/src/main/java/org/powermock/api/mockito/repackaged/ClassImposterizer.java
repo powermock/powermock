@@ -23,7 +23,7 @@ import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.List;
 
-import static org.mockito.internal.util.StringJoiner.join;
+import static org.powermock.utils.StringJoiner.join;
 
 /**
  * Inspired on jMock (thanks jMock guys!!!)
