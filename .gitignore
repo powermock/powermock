@@ -8,3 +8,6 @@ target
 .springBeans
 repo
 .idea
+**/build/**
+.gradle
+**/classes/**

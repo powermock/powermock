@@ -18,13 +18,11 @@ package org.powermock.api.mockito;
 
 import org.mockito.MockSettings;
 import org.mockito.Mockito;
-import org.mockito.internal.progress.MockingProgress;
 import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.internal.stubbing.answers.CallsRealMethods;
 import org.mockito.internal.stubbing.answers.DoesNothing;
 import org.mockito.internal.stubbing.answers.Returns;
 import org.mockito.internal.stubbing.answers.ThrowsException;
-import org.mockito.listeners.VerificationListener;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.verification.VerificationMode;
@@ -49,7 +47,6 @@ import org.powermock.reflect.Whitebox;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.Set;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.withSettings;
@@ -68,13 +65,12 @@ public class PowerMockito extends MemberModifier {
     /**
      * Enable static mocking for all methods of a class.
      *
-     * @param type
-     *            the class to enable static mocking
+     * @param type the class to enable static mocking
      */
     public static synchronized void mockStatic(Class<?> type, Class<?>... types) {
         ThreadSafeMockingProgress.mockingProgress().reset();
         DefaultMockCreator.mock(type, true, false, null, null, (Method[]) null);
-        if(types != null && types.length > 0) {
+        if (types != null && types.length > 0) {
             for (Class<?> aClass : types) {
                 DefaultMockCreator.mock(aClass, true, false, null, null, (Method[]) null);
             }
@@ -89,16 +85,14 @@ public class PowerMockito extends MemberModifier {
      * <p>
      * It is the default answer so it will be used <b>only when you don't</b>
      * stub the method call.
-     *
+     * <p>
      * <pre>
      * mockStatic(Foo.class, RETURNS_SMART_NULLS);
      * mockStatic(Foo.class, new YourOwnAnswer());
      * </pre>
      *
-     * @param classMock
-     *            class to mock
-     * @param defaultAnswer
-     *            default answer for unstubbed methods
+     * @param classMock     class to mock
+     * @param defaultAnswer default answer for unstubbed methods
      */
     public static void mockStatic(Class<?> classMock, @SuppressWarnings("rawtypes") Answer defaultAnswer) {
         mockStatic(classMock, withSettings().defaultAnswer(defaultAnswer));
@@ -110,13 +104,13 @@ public class PowerMockito extends MemberModifier {
      * The number of configuration points for a mock grows so we need a fluent
      * way to introduce new configuration without adding more and more
      * overloaded PowerMockito.mockStatic() methods. Hence {@link MockSettings}.
-     *
+     * <p>
      * <pre>
      *   mockStatic(Listener.class, withSettings()
      *     .name(&quot;firstListner&quot;).defaultBehavior(RETURNS_SMART_NULLS));
      *   );
      * </pre>
-     *
+     * <p>
      * <b>Use it carefully and occasionally</b>. What might be reason your test
      * needs non-standard mocks? Is the code under test so complicated that it
      * requires non-standard mocks? Wouldn't you prefer to refactor the code
@@ -124,10 +118,8 @@ public class PowerMockito extends MemberModifier {
      * <p>
      * See also {@link Mockito#withSettings()}
      *
-     * @param classToMock
-     *            class to mock
-     * @param mockSettings
-     *            additional mock settings
+     * @param classToMock  class to mock
+     * @param mockSettings additional mock settings
      */
     public static void mockStatic(Class<?> classToMock, MockSettings mockSettings) {
         ThreadSafeMockingProgress.mockingProgress().reset();
@@ -137,10 +129,8 @@ public class PowerMockito extends MemberModifier {
     /**
      * Creates a mock object that supports mocking of final and native methods.
      *
-     * @param <T>
-     *            the type of the mock object
-     * @param type
-     *            the type of the mock object
+     * @param <T>  the type of the mock object
+     * @param type the type of the mock object
      * @return the mock object.
      */
     public static synchronized <T> T mock(Class<T> type) {
@@ -154,21 +144,18 @@ public class PowerMockito extends MemberModifier {
      * <p>
      * It is the default answer so it will be used <b>only when you don't</b>
      * stub the method call.
-     *
+     * <p>
      * <pre>
      * Foo mock = mock(Foo.class, RETURNS_SMART_NULLS);
      * Foo mockTwo = mock(Foo.class, new YourOwnAnswer());
      * </pre>
-     *
+     * <p>
      * <p>
      * See examples in javadoc for {@link Mockito} class
      * </p>
      *
-     * @param classToMock
-     *            class or interface to mock
-     * @param defaultAnswer
-     *            default answer for unstubbed methods
-     *
+     * @param classToMock   class or interface to mock
+     * @param defaultAnswer default answer for unstubbed methods
      * @return mock object
      */
     public static <T> T mock(Class<T> classToMock, @SuppressWarnings("rawtypes") Answer defaultAnswer) {
@@ -181,13 +168,13 @@ public class PowerMockito extends MemberModifier {
      * The number of configuration points for a mock grows so we need a fluent
      * way to introduce new configuration without adding more and more
      * overloaded Mockito.mock() methods. Hence {@link MockSettings}.
-     *
+     * <p>
      * <pre>
      *   Listener mock = mock(Listener.class, withSettings()
      *     .name(&quot;firstListner&quot;).defaultBehavior(RETURNS_SMART_NULLS));
      *   );
      * </pre>
-     *
+     * <p>
      * <b>Use it carefully and occasionally</b>. What might be reason your test
      * needs non-standard mocks? Is the code under test so complicated that it
      * requires non-standard mocks? Wouldn't you prefer to refactor the code
@@ -197,10 +184,8 @@ public class PowerMockito extends MemberModifier {
      * <p>
      * See examples in javadoc for {@link Mockito} class
      *
-     * @param classToMock
-     *            class or interface to mock
-     * @param mockSettings
-     *            additional mock settings
+     * @param classToMock  class or interface to mock
+     * @param mockSettings additional mock settings
      * @return mock object
      */
     public static <T> T mock(Class<T> classToMock, MockSettings mockSettings) {
@@ -211,13 +196,10 @@ public class PowerMockito extends MemberModifier {
      * Spy on objects that are final or otherwise not &quot;spyable&quot; from
      * normal Mockito.
      *
-     * @see Mockito#spy(Object)
-     *
-     * @param <T>
-     *            the type of the mock object
-     * @param object
-     *            the object to spy on
+     * @param <T>    the type of the mock object
+     * @param object the object to spy on
      * @return the spy object.
+     * @see Mockito#spy(Object)
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> T spy(T object) {
@@ -227,12 +209,9 @@ public class PowerMockito extends MemberModifier {
     /**
      * Spy on classes (not &quot;spyable&quot; from normal Mockito).
      *
+     * @param <T>  the type of the class mock
+     * @param type the type of the class mock
      * @see Mockito#spy(Object)
-     *
-     * @param <T>
-     *            the type of the class mock
-     * @param type
-     *            the type of the class mock
      */
     public static synchronized <T> void spy(Class<T> type) {
         ThreadSafeMockingProgress.mockingProgress().reset();
@@ -243,19 +222,19 @@ public class PowerMockito extends MemberModifier {
      * Verifies certain behavior <b>happened once</b>
      * <p>
      * Alias to <code>verifyStatic(times(1))</code> E.g:
-     *
+     * <p>
      * <pre>
      * verifyStatic();
      * ClassWithStaticMethod.someStaticMethod(&quot;some arg&quot;);
      * </pre>
-     *
+     * <p>
      * Above is equivalent to:
-     *
+     * <p>
      * <pre>
      * verifyStatic(times(1));
      * ClassWithStaticMethod.someStaticMethod(&quot;some arg&quot;);
      * </pre>
-     *
+     * <p>
      * <p>
      * Although it is possible to verify a stubbed invocation, usually <b>it's
      * just redundant</b>. Let's say you've stubbed foo.bar(). If your code
@@ -270,7 +249,7 @@ public class PowerMockito extends MemberModifier {
     /**
      * Verifies certain behavior happened at least once / exact number of times
      * / never. E.g:
-     *
+     * <p>
      * <pre>
      *   verifyStatic(times(5));
      *   ClassWithStaticMethod.someStaticMethod(&quot;was called five times&quot;);
@@ -282,12 +261,11 @@ public class PowerMockito extends MemberModifier {
      *   verifyStatic(atLeastOnce());
      *   ClassWithStaticMethod.someMethod(&lt;b&gt;anyString()&lt;/b&gt;);
      * </pre>
-     *
+     * <p>
      * <b>times(1) is the default</b> and can be omitted
      * <p>
      *
-     * @param verificationMode
-     *            times(x), atLeastOnce() or never()
+     * @param verificationMode times(x), atLeastOnce() or never()
      */
     public static synchronized void verifyStatic(VerificationMode verificationMode) {
         ThreadSafeMockingProgress.mockingProgress().verificationStarted(
@@ -297,9 +275,8 @@ public class PowerMockito extends MemberModifier {
     /**
      * Verify a private method invocation for an instance.
      *
+     * @throws Exception If something unexpected goes wrong.
      * @see {@link Mockito#verify(Object)}
-     * @throws Exception
-     *             If something unexpected goes wrong.
      */
     public static PrivateMethodVerification verifyPrivate(Object object) throws Exception {
         return verifyPrivate(object, times(1));
@@ -308,9 +285,8 @@ public class PowerMockito extends MemberModifier {
     /**
      * Verify a private method invocation with a given verification mode.
      *
+     * @throws Exception If something unexpected goes wrong.
      * @see {@link Mockito#verify(Object)}
-     * @throws Exception
-     *             If something unexpected goes wrong.
      */
     public static PrivateMethodVerification verifyPrivate(Object object, VerificationMode verificationMode)
             throws Exception {
@@ -322,9 +298,8 @@ public class PowerMockito extends MemberModifier {
     /**
      * Verify a private method invocation for a class.
      *
+     * @throws Exception If something unexpected goes wrong.
      * @see {@link Mockito#verify(Object)}
-     * @throws Exception
-     *             If something unexpected goes wrong.
      */
     public static PrivateMethodVerification verifyPrivate(Class<?> clazz) throws Exception {
         return verifyPrivate((Object) clazz);
@@ -334,9 +309,8 @@ public class PowerMockito extends MemberModifier {
      * Verify a private method invocation for a class with a given verification
      * mode.
      *
+     * @throws Exception If something unexpected goes wrong.
      * @see {@link Mockito#verify(Object)}
-     * @throws Exception
-     *             If something unexpected goes wrong.
      */
     public static PrivateMethodVerification verifyPrivate(Class<?> clazz, VerificationMode verificationMode)
             throws Exception {
@@ -347,21 +321,20 @@ public class PowerMockito extends MemberModifier {
      * Verifies certain behavior <b>happened once</b>
      * <p>
      * Alias to <code>verifyNew(mockClass, times(1))</code> E.g:
-     *
+     * <p>
      * <pre>
      * verifyNew(ClassWithStaticMethod.class);
      * </pre>
-     *
+     * <p>
      * Above is equivalent to:
-     *
+     * <p>
      * <pre>
      * verifyNew(ClassWithStaticMethod.class, times(1));
      * </pre>
-     *
+     * <p>
      * <p>
      *
-     * @param mock
-     *            Class mocked by PowerMock.
+     * @param mock Class mocked by PowerMock.
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> ConstructorArgumentsVerification verifyNew(Class<T> mock) {
@@ -380,7 +353,7 @@ public class PowerMockito extends MemberModifier {
     /**
      * Verifies certain behavior happened at least once / exact number of times
      * / never. E.g:
-     *
+     * <p>
      * <pre>
      * verifyNew(ClassWithStaticMethod.class, times(5));
      *
@@ -389,14 +362,12 @@ public class PowerMockito extends MemberModifier {
      * //you can use flexible argument matchers, e.g:
      * verifyNew(ClassWithStaticMethod.class, atLeastOnce());
      * </pre>
-     *
+     * <p>
      * <b>times(1) is the default</b> and can be omitted
      * <p>
      *
-     * @param mock
-     *            to be verified
-     * @param mode
-     *            times(x), atLeastOnce() or never()
+     * @param mock to be verified
+     * @param mode times(x), atLeastOnce() or never()
      */
     @SuppressWarnings("unchecked")
     public static <T> ConstructorArgumentsVerification verifyNew(Class<?> mock, VerificationMode mode) {
@@ -423,20 +394,18 @@ public class PowerMockito extends MemberModifier {
     /**
      * Expect calls to private methods.
      *
+     * @throws Exception If something unexpected goes wrong.
      * @see {@link Mockito#when(Object)}
-     * @throws Exception
-     *             If something unexpected goes wrong.
      */
     public static <T> OngoingStubbing<T> when(Object instance, String methodName, Object... arguments) throws Exception {
-        return Mockito.when(Whitebox.<T> invokeMethod(instance, methodName, arguments));
+        return Mockito.when(Whitebox.<T>invokeMethod(instance, methodName, arguments));
     }
 
     /**
      * Expect calls to private methods.
      *
+     * @throws Exception If something unexpected goes wrong.
      * @see {@link Mockito#when(Object)}
-     * @throws Exception
-     *             If something unexpected goes wrong.
      */
     public static <T> WithOrWithoutExpectedArguments<T> when(Object instance, Method method) throws Exception {
         return new DefaultMethodExpectationSetup<T>(instance, method);
@@ -445,9 +414,8 @@ public class PowerMockito extends MemberModifier {
     /**
      * Expect calls to private static methods.
      *
+     * @throws Exception If something unexpected goes wrong.
      * @see {@link Mockito#when(Object)}
-     * @throws Exception
-     *             If something unexpected goes wrong.
      */
     public static <T> WithOrWithoutExpectedArguments<T> when(Class<?> cls, Method method) throws Exception {
         return new DefaultMethodExpectationSetup<T>(cls, method);
@@ -458,24 +426,22 @@ public class PowerMockito extends MemberModifier {
      * name. The method will be looked up using the parameter types (if
      * possible).
      *
+     * @throws Exception If something unexpected goes wrong.
      * @see {@link Mockito#when(Object)}
-     * @throws Exception
-     *             If something unexpected goes wrong.
      */
     public static <T> OngoingStubbing<T> when(Object instance, Object... arguments) throws Exception {
-        return Mockito.when(Whitebox.<T> invokeMethod(instance, arguments));
+        return Mockito.when(Whitebox.<T>invokeMethod(instance, arguments));
     }
 
     /**
      * Expect a static private or inner class method call.
      *
+     * @throws Exception If something unexpected goes wrong.
      * @see {@link Mockito#when(Object)}
-     * @throws Exception
-     *             If something unexpected goes wrong.
      */
     public static <T> OngoingStubbing<T> when(Class<?> clazz, String methodToExpect, Object... arguments)
             throws Exception {
-        return Mockito.when(Whitebox.<T> invokeMethod(clazz, methodToExpect, arguments));
+        return Mockito.when(Whitebox.<T>invokeMethod(clazz, methodToExpect, arguments));
     }
 
     /**
@@ -483,12 +449,11 @@ public class PowerMockito extends MemberModifier {
      * method name. The method will be looked up using the parameter types if
      * possible
      *
+     * @throws Exception If something unexpected goes wrong.
      * @see {@link Mockito#when(Object)}
-     * @throws Exception
-     *             If something unexpected goes wrong.
      */
     public static <T> OngoingStubbing<T> when(Class<?> klass, Object... arguments) throws Exception {
-        return Mockito.when(Whitebox.<T> invokeMethod(klass, arguments));
+        return Mockito.when(Whitebox.<T>invokeMethod(klass, arguments));
     }
 
     /**
@@ -521,9 +486,8 @@ public class PowerMockito extends MemberModifier {
      * (inner) classes, local or anonymous classes. For example you might want
      * to throw an exception or return a mock.
      *
-     * @param fullyQualifiedName
-     *            The fully-qualified name of the inner/local/anonymous type to
-     *            expect.
+     * @param fullyQualifiedName The fully-qualified name of the inner/local/anonymous type to
+     *                           expect.
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> ConstructorExpectationSetup<T> whenNew(String fullyQualifiedName) throws Exception {
@@ -559,10 +523,10 @@ public class PowerMockito extends MemberModifier {
      * the test method, for example: in setUp(), &#064;Before method or in
      * constructor. Consider writing nice code that makes interactions only in
      * test methods.
-     *
+     * <p>
      * <p>
      * Example:
-     *
+     * <p>
      * <pre>
      * //interactions
      * mock.doSomething();
@@ -575,11 +539,10 @@ public class PowerMockito extends MemberModifier {
      * verifyNoMoreInteractions(mock);
      *
      * </pre>
-     *
+     * <p>
      * See examples in javadoc for {@link Mockito} class
      *
-     * @param mocks
-     *            to be verified
+     * @param mocks to be verified
      */
     public static void verifyNoMoreInteractions(Object... mocks) {
         VerifyNoMoreInteractions.verifyNoMoreInteractions(mocks);
@@ -590,11 +553,11 @@ public class PowerMockito extends MemberModifier {
      * instance and class mocks). Delegates to the orignal
      * {@link Mockito#verifyNoMoreInteractions(Object...)} if the mock is not a
      * PowerMockito mock.
-     *
+     * <p>
      * <pre>
      * verifyZeroInteractions(mockOne, mockTwo);
      * </pre>
-     *
+     * <p>
      * This method will also detect invocations that occurred before the test
      * method, for example: in setUp(), &#064;Before method or in constructor.
      * Consider writing nice code that makes interactions only in test methods.
@@ -604,8 +567,7 @@ public class PowerMockito extends MemberModifier {
      * <p>
      * See examples in javadoc for {@link Mockito} class
      *
-     * @param mocks
-     *            to be verified
+     * @param mocks to be verified
      */
     public static void verifyZeroInteractions(Object... mocks) {
         VerifyNoMoreInteractions.verifyNoMoreInteractions(mocks);
@@ -620,7 +582,7 @@ public class PowerMockito extends MemberModifier {
      * methods inside brackets...
      * <p>
      * Example:
-     *
+     * <p>
      * <pre>
      * doAnswer(new Answer() {
      *     public Object answer(InvocationOnMock invocation) {
@@ -633,8 +595,7 @@ public class PowerMockito extends MemberModifier {
      * <p>
      * See examples in javadoc for {@link Mockito} class
      *
-     * @param answer
-     *            to answer when the stubbed method is called
+     * @param answer to answer when the stubbed method is called
      * @return stubber - to select a method for stubbing
      */
     public static PowerMockitoStubber doAnswer(Answer<?> answer) {
@@ -649,13 +610,12 @@ public class PowerMockito extends MemberModifier {
      * methods inside brackets...
      * <p>
      * Example:
-     *
+     * <p>
      * <pre>
      * doThrow(new RuntimeException()).when(mock).someVoidMethod();
      * </pre>
      *
-     * @param toBeThrown
-     *            to be thrown when the stubbed method is called
+     * @param toBeThrown to be thrown when the stubbed method is called
      * @return stubber - to select a method for stubbing
      */
     public static PowerMockitoStubber doThrow(Throwable toBeThrown) {
@@ -686,7 +646,7 @@ public class PowerMockito extends MemberModifier {
      * the object passed to spy() method.
      * <p>
      * Example:
-     *
+     * <p>
      * <pre>
      * Foo mock = mock(Foo.class);
      * doCallRealMethod().when(mock).someVoidMethod();
@@ -709,7 +669,7 @@ public class PowerMockito extends MemberModifier {
      * situations when doNothing() comes handy:
      * <p>
      * 1. Stubbing consecutive calls on a void method:
-     *
+     * <p>
      * <pre>
      * doNothing().doThrow(new RuntimeException()).when(mock).someVoidMethod();
      *
@@ -719,9 +679,9 @@ public class PowerMockito extends MemberModifier {
      * //throws RuntimeException the next time:
      * mock.someVoidMethod();
      * </pre>
-     *
+     * <p>
      * 2. When you spy real objects and you want the void method to do nothing:
-     *
+     * <p>
      * <pre>
      * List list = new LinkedList();
      * List spy = spy(list);
@@ -740,7 +700,7 @@ public class PowerMockito extends MemberModifier {
      * @return stubber - to select a method for stubbing
      */
     public static PowerMockitoStubber doNothing() {
-        return POWERMOCKITO_CORE.doAnswer(new DoesNothing());
+        return POWERMOCKITO_CORE.doAnswer(DoesNothing.doesNothing());
     }
 
     /**
@@ -753,10 +713,10 @@ public class PowerMockito extends MemberModifier {
      * <p>
      * Here are those rare occasions when doReturn() comes handy:
      * <p>
-     *
+     * <p>
      * 1. When spying real objects and calling real methods on a spy brings side
      * effects
-     *
+     * <p>
      * <pre>
      * List list = new LinkedList();
      * List spy = spy(list);
@@ -767,9 +727,9 @@ public class PowerMockito extends MemberModifier {
      * //You have to use doReturn() for stubbing:
      * doReturn(&quot;foo&quot;).when(spy).get(0);
      * </pre>
-     *
+     * <p>
      * 2. Overriding a previous exception-stubbing:
-     *
+     * <p>
      * <pre>
      * when(mock.foo()).thenThrow(new RuntimeException());
      *
@@ -779,15 +739,14 @@ public class PowerMockito extends MemberModifier {
      * //You have to use doReturn() for stubbing:
      * doReturn(&quot;bar&quot;).when(mock).foo();
      * </pre>
-     *
+     * <p>
      * Above scenarios shows a tradeoff of Mockito's ellegant syntax. Note that
      * the scenarios are very rare, though. Spying should be sporadic and
      * overriding exception-stubbing is very rare.
      * <p>
      * See examples in javadoc for {@link Mockito} class
      *
-     * @param toBeReturned
-     *            to be returned when the stubbed method is called
+     * @param toBeReturned to be returned when the stubbed method is called
      * @return stubber - to select a method for stubbing
      */
     public static PowerMockitoStubber doReturn(Object toBeReturned) {

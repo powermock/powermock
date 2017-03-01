@@ -31,7 +31,7 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static org.mockito.internal.util.StringJoiner.join;
+import static org.powermock.utils.StringJoiner.join;
 
 /**
  * This is responsible for serializing a mock, it is enabled if the mock is implementing
