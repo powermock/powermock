@@ -6,6 +6,7 @@ Change log 1.7.0
 * Fix issue #722 IllegalArgumentException is output to standard error (thanks to Kotaro Nanri @k-nanri for pull request)
 * Fix issue #717 Regression: MethodNotFoundException
 * Fix issue #731 No methods matching the name(s) get were found in the class hierarchy for interfaces
+* Fix issue #753 fix to upgrade code to be compatible with later versions of Mockito (thanks to emmaLP @emmaLP for pull request)
 
 Change log 1.6.6 (2016-11-04)
 -----------------------------
