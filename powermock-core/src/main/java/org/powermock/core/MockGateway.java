@@ -61,20 +61,23 @@ public class MockGateway {
         final NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceControl(type);
         if (newInvocationControl != null) {
             /*
-             * We need to deal with inner, local and anonymous inner classes
-			 * specifically. For example when new is invoked on an inner class
-			 * it seems like null is passed as an argument even though it
-			 * shouldn't. We correct this here.
-			 *
-			 * Seems with Javassist 3.17.1-GA & Java 7, the 'null' is passed as the last argument.
-			 */
+            * We need to deal with inner, local and anonymous inner classes
+            * specifically. For example when new is invoked on an inner class
+            * it seems like null is passed as an argument even though it
+            * shouldn't. We correct this here.
+            *
+            * Seems with Javassist 3.17.1-GA & Java 7, the 'null' is passed as the last argument.
+            */
             if (type.isMemberClass() && Modifier.isStatic(type.getModifiers())) {
-                if (args.length > 0 && (args[0] == null || args[args.length - 1] == null) && sig.length > 0) {
-                    args = copyArgumentsForInnerOrLocalOrAnonymousClass(args, false);
+                if (args.length > 0
+                        && ((args[0] == null && sig[0].getCanonicalName() == null)
+                        || (args[args.length - 1] == null && sig[args.length - 1].getCanonicalName() == null))
+                        && sig.length > 0) {
+                    args = copyArgumentsForInnerOrLocalOrAnonymousClass(args, sig[0], false);
                 }
             } else if (type.isLocalClass() || type.isAnonymousClass() || type.isMemberClass()) {
                 if (args.length > 0 && sig.length > 0 && sig[0].equals(type.getEnclosingClass())) {
-                    args = copyArgumentsForInnerOrLocalOrAnonymousClass(args, true);
+                    args = copyArgumentsForInnerOrLocalOrAnonymousClass(args, sig[0], true);
                 }
             }
             return newInvocationControl.invoke(type, args, sig);
@@ -279,14 +282,14 @@ public class MockGateway {
      * <p/>
      * Seems with Javassist 3.17.1-GA & Java 7, the '{@code null}' is passed as the last argument.
      */
-    private static Object[] copyArgumentsForInnerOrLocalOrAnonymousClass(Object[] args,
+    private static Object[] copyArgumentsForInnerOrLocalOrAnonymousClass(Object[] args, Class<?> sig,
                                                                          boolean excludeEnclosingInstance) {
         Object[] newArgs = new Object[args.length - 1];
         final int start;
         final int end;
         int j = 0;
 
-        if (args[0] == null || excludeEnclosingInstance) {
+        if ((args[0] == null && sig == null)|| excludeEnclosingInstance) {
             start = 1;
             end = args.length;
         } else {
@@ -300,5 +303,5 @@ public class MockGateway {
         args = newArgs;
         return args;
     }
-    
+
 }
