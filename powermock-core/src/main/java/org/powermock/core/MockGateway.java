@@ -60,23 +60,6 @@ public class MockGateway {
     public static Object newInstanceCall(Class<?> type, Object[] args, Class<?>[] sig) throws Throwable {
         final NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceControl(type);
         if (newInvocationControl != null) {
-            /*
-             * We need to deal with inner, local and anonymous inner classes
-			 * specifically. For example when new is invoked on an inner class
-			 * it seems like null is passed as an argument even though it
-			 * shouldn't. We correct this here.
-			 *
-			 * Seems with Javassist 3.17.1-GA & Java 7, the 'null' is passed as the last argument.
-			 */
-            if (type.isMemberClass() && Modifier.isStatic(type.getModifiers())) {
-                if (args.length > 0 && (args[0] == null || args[args.length - 1] == null) && sig.length > 0) {
-                    args = copyArgumentsForInnerOrLocalOrAnonymousClass(args, false);
-                }
-            } else if (type.isLocalClass() || type.isAnonymousClass() || type.isMemberClass()) {
-                if (args.length > 0 && sig.length > 0 && sig[0].equals(type.getEnclosingClass())) {
-                    args = copyArgumentsForInnerOrLocalOrAnonymousClass(args, true);
-                }
-            }
             return newInvocationControl.invoke(type, args, sig);
         }
         // Check if we should suppress the constructor code
@@ -272,33 +255,4 @@ public class MockGateway {
         return shouldMockThisCall;
     }
 
-    /**
-     * The first parameter of an inner, local or anonymous inner class is
-     * {@code null} or the enclosing instance. This should not be included
-     * in the substitute invocation since it is never expected by the user.
-     * <p/>
-     * Seems with Javassist 3.17.1-GA & Java 7, the '{@code null}' is passed as the last argument.
-     */
-    private static Object[] copyArgumentsForInnerOrLocalOrAnonymousClass(Object[] args,
-                                                                         boolean excludeEnclosingInstance) {
-        Object[] newArgs = new Object[args.length - 1];
-        final int start;
-        final int end;
-        int j = 0;
-
-        if (args[0] == null || excludeEnclosingInstance) {
-            start = 1;
-            end = args.length;
-        } else {
-            start = 0;
-            end = args.length - 1;
-        }
-
-        for (int i = start; i < end; i++) {
-            newArgs[j++] = args[i];
-        }
-        args = newArgs;
-        return args;
-    }
-    
 }
