@@ -23,145 +23,149 @@ import java.util.Date;
 
 public class ExpectNewDemo {
 
-	private int dummyField;
+    private int dummyField;
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + dummyField;
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + dummyField;
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final ExpectNewDemo other = (ExpectNewDemo) obj;
-		if (dummyField != other.dummyField)
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final ExpectNewDemo other = (ExpectNewDemo) obj;
+        if (dummyField != other.dummyField)
+            return false;
+        return true;
+    }
 
-	public String getMessage() {
-		MyClass myClass = new MyClass();
-		return myClass.getMessage();
-	}
+    public String getMessage() {
+        MyClass myClass = new MyClass();
+        return myClass.getMessage();
+    }
 
-	public String getMessageWithArgument() {
-		MyClass myClass = new MyClass();
-		return myClass.getMessage("test");
-	}
+    public String getMessageWithArgument() {
+        MyClass myClass = new MyClass();
+        return myClass.getMessage("test");
+    }
 
-	public void invokeVoidMethod() {
-		MyClass myClass = new MyClass();
-		myClass.voidMethod();
-	}
+    public void invokeVoidMethod() {
+        MyClass myClass = new MyClass();
+        myClass.voidMethod();
+    }
 
-	/**
-	 * The purpose of the method is to demonstrate that a test case can mock the
-	 * new instance call and throw an exception upon instantiation.
-	 */
-	public void throwExceptionWhenInvoction() {
-		new MyClass();
-	}
+    /**
+     * The purpose of the method is to demonstrate that a test case can mock the
+     * new instance call and throw an exception upon instantiation.
+     */
+    public void throwExceptionWhenInvoction() {
+        new MyClass();
+    }
 
-	/**
-	 * The purpose of the method is to demonstrate that a test case can mock the
-	 * new instance call and throw an exception upon instantiation.
-	 */
-	public void throwExceptionAndWrapInRunTimeWhenInvoction() {
-		try {
-			new MyClass();
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage(), e);
-		}
-	}
+    /**
+     * The purpose of the method is to demonstrate that a test case can mock the
+     * new instance call and throw an exception upon instantiation.
+     */
+    public void throwExceptionAndWrapInRunTimeWhenInvoction() {
+        try {
+            new MyClass();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
 
-	public String multipleNew() {
-		MyClass myClass1 = new MyClass();
-		MyClass myClass2 = new MyClass();
+    public String multipleNew() {
+        MyClass myClass1 = new MyClass();
+        MyClass myClass2 = new MyClass();
 
-		final String message1 = myClass1.getMessage();
-		final String message2 = myClass2.getMessage();
-		return message1 + message2;
-	}
+        final String message1 = myClass1.getMessage();
+        final String message2 = myClass2.getMessage();
+        return message1 + message2;
+    }
 
-	public void simpleMultipleNew() {
-		new MyClass();
-		new MyClass();
-		new MyClass();
-	}
+    public void simpleMultipleNew() {
+        new MyClass();
+        new MyClass();
+        new MyClass();
+    }
 
-	@SuppressWarnings("unused")
-	private void simpleMultipleNewPrivate() {
-		new MyClass();
-		new MyClass();
-		new MyClass();
-	}
+    @SuppressWarnings("unused")
+    private void simpleMultipleNewPrivate() {
+        new MyClass();
+        new MyClass();
+        new MyClass();
+    }
 
-	public void simpleSingleNew() {
-		new MyClass();
-	}
+    public MyInnerClass makeNewInnerClass(String arg1, String arg2, String arg3) {
+        return new MyInnerClass(arg1, arg2, arg3);
+    }
 
-	public Date makeDate() {
-		return new Date();
-	}
-	
-	public boolean fileExists(String name) {
-		return new File(name).exists();
-	}
+    public void simpleSingleNew() {
+        new MyClass();
+    }
 
-	public InputStream alternativePath() {
-		try {
-			return new DataInputStream(null);
-		} catch (RuntimeException e) {
-			return new ByteArrayInputStream(new byte[0]);
-		}
-	}
+    public Date makeDate() {
+        return new Date();
+    }
+    
+    public boolean fileExists(String name) {
+        return new File(name).exists();
+    }
 
-	public String newWithArguments(Service service, int times) {
-		return new ExpectNewServiceUser(service, times).useService();
-	}
+    public InputStream alternativePath() {
+        try {
+            return new DataInputStream(null);
+        } catch (RuntimeException e) {
+            return new ByteArrayInputStream(new byte[0]);
+        }
+    }
 
-	public String newWithWrongArguments(Service service, int times) {
-		return new ExpectNewServiceUser(service, times * 2).useService();
-	}
+    public String newWithArguments(Service service, int times) {
+        return new ExpectNewServiceUser(service, times).useService();
+    }
 
-	public String[] newVarArgs(String... strings) {
-		return new VarArgsConstructorDemo(strings).getAllMessages();
-	}
+    public String newWithWrongArguments(Service service, int times) {
+        return new ExpectNewServiceUser(service, times * 2).useService();
+    }
 
-	public Service[] newVarArgs(Service... services) {
-		return new VarArgsConstructorDemo(services).getAllServices();
-	}
+    public String[] newVarArgs(String... strings) {
+        return new VarArgsConstructorDemo(strings).getAllMessages();
+    }
+
+    public Service[] newVarArgs(Service... services) {
+        return new VarArgsConstructorDemo(services).getAllServices();
+    }
     public int[] newVarArgs(float myFloat, int ... ints) {
-		return new VarArgsConstructorDemo(myFloat, ints).getInts();
-	}
+        return new VarArgsConstructorDemo(myFloat, ints).getInts();
+    }
 
-	public byte[][] newVarArgs(byte[]... bytes) {
-		return new VarArgsConstructorDemo(bytes).getByteArrays();
-	}
+    public byte[][] newVarArgs(byte[]... bytes) {
+        return new VarArgsConstructorDemo(bytes).getByteArrays();
+    }
 
-	public byte[][] newVarArgsWithMatchers() {
-		return new VarArgsConstructorDemo(new byte[] { 42 }, new byte[] { 17 }).getByteArrays();
-	}
+    public byte[][] newVarArgsWithMatchers() {
+        return new VarArgsConstructorDemo(new byte[] { 42 }, new byte[] { 17 }).getByteArrays();
+    }
 
-	public void fileWriter(String name, String msg) throws IOException {
-		new FileWriter(name).write(msg);
-	}
+    public void fileWriter(String name, String msg) throws IOException {
+        new FileWriter(name).write(msg);
+    }
 
-	public void fileWriterPrint(String name, String msg) throws IOException {
-		new PrintWriter(new FileWriter(name)).write(msg);
-	}
+    public void fileWriterPrint(String name, String msg) throws IOException {
+        new PrintWriter(new FileWriter(name)).write(msg);
+    }
 
-	public byte[][] newSimpleVarArgs(byte[]... bytes) {
-		return new SimpleVarArgsConstructorDemo(bytes).getByteArrays();
-	}
+    public byte[][] newSimpleVarArgs(byte[]... bytes) {
+        return new SimpleVarArgsConstructorDemo(bytes).getByteArrays();
+    }
 
     public Target createTarget(ITarget target) {
         Target domainTarget;
@@ -175,5 +179,30 @@ public class ExpectNewDemo {
 
     private String getTargetName(ITarget target) {
         return target.getName();
+    }
+
+    public static class MyInnerClass {
+
+        private String mArg1;
+        private String mArg2;
+        private String mArg3;
+
+        private MyInnerClass(String arg1, String arg2, String arg3) {
+            mArg1 = arg1;
+            mArg2 = arg2;
+            mArg3 = arg3;
+        }
+
+        public String getArg1() {
+            return mArg1;
+        }
+
+        public String getArg2() {
+            return mArg2;
+        }
+
+        public String getArg3() {
+            return mArg3;
+        }
     }
 }
