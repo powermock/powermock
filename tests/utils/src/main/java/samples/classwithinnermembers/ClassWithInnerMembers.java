@@ -20,96 +20,187 @@ package samples.classwithinnermembers;
  */
 public class ClassWithInnerMembers {
 
-	private interface InnerInterface {
-		String doStuff();
-	}
+    private interface InnerInterface {
+        String doStuff();
+    }
 
-	private static class MyInnerClass implements InnerInterface {
+    public static class MyInnerClassWithPrivateConstructorWithDiffMultArgs {
 
-		@Override
-		public String doStuff() {
-			return "member class";
-		}
-	}
+        private String mArg1;
+        private int mArg2;
+        private String mArg3;
 
-	private static class StaticInnerClassWithConstructorArgument implements InnerInterface {
+        private MyInnerClassWithPrivateConstructorWithDiffMultArgs(String arg1, int arg2, String arg3) {
+            mArg1 = arg1;
+            mArg2 = arg2;
+            mArg3 = arg3;
+        }
+    }
 
-		private final String value;
+    public MyInnerClassWithPrivateConstructorWithDiffMultArgs makeMyInnerClassWithPrivateConstructorWithDiffMultArgs(
+            String arg1, int arg2, String arg3) {
+        return new MyInnerClassWithPrivateConstructorWithDiffMultArgs(arg1, arg2, arg3);
+    }
 
-		public StaticInnerClassWithConstructorArgument(String value) {
-			this.value = value;
-		}
+    public static class MyInnerClassWithPrivateConstructorWithMultArgs {
 
-		@Override
-		public String doStuff() {
-			return value;
-		}
-	}
+        private String mArg1;
+        private String mArg2;
+        private String mArg3;
 
-	private class MyInnerClassWithConstructorArgument implements InnerInterface {
+        private MyInnerClassWithPrivateConstructorWithMultArgs(String arg1, String arg2, String arg3) {
+            mArg1 = arg1;
+            mArg2 = arg2;
+            mArg3 = arg3;
+        }
+    }
 
-		private final String value;
+    public MyInnerClassWithPrivateConstructorWithMultArgs makeMyInnerClassWithPrivateConstructorWithMultArgs(
+            String arg1, String arg2, String arg3) {
+        return new MyInnerClassWithPrivateConstructorWithMultArgs(arg1, arg2, arg3);
+    }
 
-		public MyInnerClassWithConstructorArgument(String value) {
-			this.value = value;
-		}
+    public static class MyInnerClassWithPublicConstructorWithMultArgs {
 
-		@Override
-		public String doStuff() {
-			return value;
-		}
-	}
+        private String mArg1;
+        private String mArg2;
+        private String mArg3;
 
-	public String getValue() {
-		return new MyInnerClass().doStuff();
-	}
+        private MyInnerClassWithPublicConstructorWithMultArgs(String arg1, String arg2, String arg3) {
+            mArg1 = arg1;
+            mArg2 = arg2;
+            mArg3 = arg3;
+        }
+    }
 
-	public String getValueForInnerClassWithConstructorArgument() {
-		return new MyInnerClassWithConstructorArgument("value").doStuff();
-	}
+    public MyInnerClassWithPublicConstructorWithMultArgs makeMyInnerClassWithPublicConstructorWithMultArgs(
+            String arg1, String arg2, String arg3) {
+        return new MyInnerClassWithPublicConstructorWithMultArgs(arg1, arg2, arg3);
+    }
 
-	public String getValueForStaticInnerClassWithConstructorArgument() {
-		return new StaticInnerClassWithConstructorArgument("value").doStuff();
-	}
+    public static class MyInnerClassWithPackageConstructorWithMultArgs {
 
-	public String getLocalClassValue() {
-		class MyLocalClass implements InnerInterface {
-			@Override
-			public String doStuff() {
-				return "local class";
-			}
-		}
+        private String mArg1;
+        private String mArg2;
+        private String mArg3;
 
-		return new MyLocalClass().doStuff();
-	}
+        MyInnerClassWithPackageConstructorWithMultArgs(String arg1, String arg2, String arg3) {
+            mArg1 = arg1;
+            mArg2 = arg2;
+            mArg3 = arg3;
+        }
+    }
 
-	public String getLocalClassValueWithArgument() {
-		class MyLocalClass implements InnerInterface {
+    public MyInnerClassWithPackageConstructorWithMultArgs makeMyInnerClassWithPackageConstructorWithMultArgs(
+            String arg1, String arg2, String arg3) {
+        return new MyInnerClassWithPackageConstructorWithMultArgs(arg1, arg2, arg3);
+    }
 
-			private final String value;
+    public static class MyInnerClassWithProtectedConstructorWithMultArgs {
 
-			public MyLocalClass(String value) {
-				this.value = value;
-			}
+        private String mArg1;
+        private String mArg2;
+        private String mArg3;
 
-			@Override
-			public String doStuff() {
-				return value;
-			}
-		}
+        MyInnerClassWithProtectedConstructorWithMultArgs(String arg1, String arg2, String arg3) {
+            mArg1 = arg1;
+            mArg2 = arg2;
+            mArg3 = arg3;
+        }
+    }
 
-		return new MyLocalClass("my value").doStuff();
-	}
+    public MyInnerClassWithProtectedConstructorWithMultArgs makeMyInnerClassWithProtectedConstructorWithMultArgs(
+            String arg1, String arg2, String arg3) {
+        return new MyInnerClassWithProtectedConstructorWithMultArgs(arg1, arg2, arg3);
+    }
 
-	public String getValueForAnonymousInnerClass() {
+    private static class MyInnerClass implements InnerInterface {
 
-		InnerInterface inner = new InnerInterface() {
-			@Override
-			public String doStuff() {
-				return "value";
-			}
-		};
+        @Override
+        public String doStuff() {
+            return "member class";
+        }
+    }
 
-		return inner.doStuff();
-	}
+    private static class StaticInnerClassWithConstructorArgument implements InnerInterface {
+
+        private final String value;
+
+        public StaticInnerClassWithConstructorArgument(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String doStuff() {
+            return value;
+        }
+    }
+
+    private class MyInnerClassWithConstructorArgument implements InnerInterface {
+
+        private final String value;
+
+        public MyInnerClassWithConstructorArgument(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String doStuff() {
+            return value;
+        }
+    }
+
+    public String getValue() {
+        return new MyInnerClass().doStuff();
+    }
+
+    public String getValueForInnerClassWithConstructorArgument() {
+        return new MyInnerClassWithConstructorArgument("value").doStuff();
+    }
+
+    public String getValueForStaticInnerClassWithConstructorArgument() {
+        return new StaticInnerClassWithConstructorArgument("value").doStuff();
+    }
+
+    public String getLocalClassValue() {
+        class MyLocalClass implements InnerInterface {
+            @Override
+            public String doStuff() {
+                return "local class";
+            }
+        }
+
+        return new MyLocalClass().doStuff();
+    }
+
+    public String getLocalClassValueWithArgument() {
+        class MyLocalClass implements InnerInterface {
+
+            private final String value;
+
+            public MyLocalClass(String value) {
+                this.value = value;
+            }
+
+            @Override
+            public String doStuff() {
+                return value;
+            }
+        }
+
+        return new MyLocalClass("my value").doStuff();
+    }
+
+    public String getValueForAnonymousInnerClass() {
+
+        InnerInterface inner = new InnerInterface() {
+
+            @Override
+            public String doStuff() {
+                return "value";
+            }
+        };
+
+        return inner.doStuff();
+    }
 }
