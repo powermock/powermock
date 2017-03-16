@@ -17,15 +17,15 @@ package samples.powermockito.junit4.whennew;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.exceptions.ConstructorNotFoundException;
 import samples.Service;
+import samples.classwithinnermembers.ClassWithInnerMembers;
+import samples.classwithinnermembers.ClassWithInnerMembers.*;
 import samples.expectnew.CreationException;
 import samples.expectnew.ExpectNewDemo;
 import samples.expectnew.ExpectNewServiceUser;
@@ -52,16 +52,14 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
 
 /**
  * Test class to demonstrate new instance mocking using whenConstructionOf(..).
  */
-@PrepareForTest({MyClass.class, ExpectNewDemo.class, DataInputStream.class, WhenNewCases.class, Target.class})
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({MyClass.class, ExpectNewDemo.class, ClassWithInnerMembers.class, DataInputStream.class, WhenNewCases.class, Target.class})
 public class WhenNewCases {
 
     public static final String TARGET_NAME = "MyTarget";
@@ -70,6 +68,196 @@ public class WhenNewCases {
     public static final int UNKNOWN_TARGET_ID = -11;
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+
+    @Test
+    public void testStaticMemberClassMockingWorksWithNoConstructorArguments() throws Exception {
+        Class<Object> innerClassType = Whitebox.getInnerClassType(ClassWithInnerMembers.class, "MyInnerClass");
+        Object mockMyInnerClass = mock(innerClassType);
+        whenNew(innerClassType).withNoArguments().thenReturn(mockMyInnerClass);
+        doReturn("something else").when(mockMyInnerClass, "doStuff");
+
+        assertEquals("something else", new ClassWithInnerMembers().getValue());
+    }
+
+    @Test
+    public void testStaticMemberClassMockingWorksWithConstructorArguments() throws Exception {
+        Class<Object> innerClassType = Whitebox.getInnerClassType(
+                ClassWithInnerMembers.class, "StaticInnerClassWithConstructorArgument");
+        Object mockMyInnerClass = mock(innerClassType);
+        whenNew(innerClassType).withArguments("value").thenReturn(mockMyInnerClass);
+        doReturn("something else").when(mockMyInnerClass, "doStuff");
+
+        assertEquals(
+                "something else", new ClassWithInnerMembers().getValueForStaticInnerClassWithConstructorArgument());
+    }
+
+    @Test
+    public void testLocalClassMockingWorksWithNoConstructorArguments() throws Exception {
+        Class<Object> innerClassType = Whitebox.getLocalClassType(ClassWithInnerMembers.class, 1, "MyLocalClass");
+        Object mockMyInnerClass = mock(innerClassType);
+        whenNew(innerClassType).withNoArguments().thenReturn(mockMyInnerClass);
+        doReturn("something else").when(mockMyInnerClass, "doStuff");
+
+        assertEquals("something else", new ClassWithInnerMembers().getLocalClassValue());
+    }
+
+    @Test
+    public void testLocalClassMockingWorksWithConstructorArguments() throws Exception {
+        Class<Object> innerClassType = Whitebox.getLocalClassType(ClassWithInnerMembers.class, 2, "MyLocalClass");
+        Object mockMyInnerClass = mock(innerClassType);
+        whenNew(innerClassType).withArguments("my value").thenReturn(mockMyInnerClass);
+        doReturn("something else").when(mockMyInnerClass, "doStuff");
+
+        assertEquals("something else", new ClassWithInnerMembers().getLocalClassValueWithArgument());
+    }
+
+    @Test
+    public void testNonStaticMemberClassMockingWorksWithArguments() throws Exception {
+        Class<Object> innerClassType = Whitebox.getInnerClassType(
+                ClassWithInnerMembers.class, "MyInnerClassWithConstructorArgument");
+        Object mockMyInnerClass = mock(innerClassType);
+        whenNew(innerClassType).withArguments("value").thenReturn(mockMyInnerClass);
+        doReturn("something else").when(mockMyInnerClass, "doStuff");
+
+        assertEquals("something else", new ClassWithInnerMembers().getValueForInnerClassWithConstructorArgument());
+    }
+
+    @Test
+    public void testNewInnerWithDiffParams() throws Exception {
+        ClassWithInnerMembers outerClass = new ClassWithInnerMembers();
+        MyInnerClassWithPrivateConstructorWithDiffMultArgs mockMyInnerClassWithPrivateConstructorWithDiffMultArgs
+                = mock(MyInnerClassWithPrivateConstructorWithDiffMultArgs.class);
+
+        whenNew(MyInnerClassWithPrivateConstructorWithDiffMultArgs.class)
+                .withArguments(null, 2, "3").thenReturn(mockMyInnerClassWithPrivateConstructorWithDiffMultArgs);
+
+        assertEquals("Expected and actual did not match", mockMyInnerClassWithPrivateConstructorWithDiffMultArgs,
+                outerClass.makeMyInnerClassWithPrivateConstructorWithDiffMultArgs(null, 2, "3"));
+    }
+
+    @Test
+    public void testNewInnerWithNoNullParams() throws Exception {
+        ClassWithInnerMembers outerClass = new ClassWithInnerMembers();
+        MyInnerClassWithPublicConstructorWithMultArgs mockMyInnerClassWithPublicConstructorWithMultArgs
+                = mock(MyInnerClassWithPublicConstructorWithMultArgs.class);
+        MyInnerClassWithProtectedConstructorWithMultArgs mockMyInnerClassWithProtectedConstructorWithMultArgs
+                = mock(MyInnerClassWithProtectedConstructorWithMultArgs.class);
+        MyInnerClassWithPackageConstructorWithMultArgs mockMyInnerClassWithPackageConstructorWithMultArgs
+                = mock(MyInnerClassWithPackageConstructorWithMultArgs.class);
+        MyInnerClassWithPrivateConstructorWithMultArgs mockMyInnerClassWithPrivateConstructorWithMultArgs
+                = mock(MyInnerClassWithPrivateConstructorWithMultArgs.class);
+
+        whenNew(MyInnerClassWithPublicConstructorWithMultArgs.class)
+                .withArguments("1", "2", "3").thenReturn(mockMyInnerClassWithPublicConstructorWithMultArgs);
+        whenNew(MyInnerClassWithProtectedConstructorWithMultArgs.class)
+                .withArguments("1", "2", "3").thenReturn(mockMyInnerClassWithProtectedConstructorWithMultArgs);
+        whenNew(MyInnerClassWithPackageConstructorWithMultArgs.class)
+                .withArguments("1", "2", "3").thenReturn(mockMyInnerClassWithPackageConstructorWithMultArgs);
+        whenNew(MyInnerClassWithPrivateConstructorWithMultArgs.class)
+                .withArguments("1", "2", "3").thenReturn(mockMyInnerClassWithPrivateConstructorWithMultArgs);
+
+        assertEquals("Expected and actual did not match", mockMyInnerClassWithPublicConstructorWithMultArgs,
+                outerClass.makeMyInnerClassWithPublicConstructorWithMultArgs("1", "2", "3"));
+        assertEquals("Expected and actual did not match", mockMyInnerClassWithProtectedConstructorWithMultArgs,
+                outerClass.makeMyInnerClassWithProtectedConstructorWithMultArgs("1", "2", "3"));
+        assertEquals("Expected and actual did not match", mockMyInnerClassWithPackageConstructorWithMultArgs,
+                outerClass.makeMyInnerClassWithPackageConstructorWithMultArgs("1", "2", "3"));
+        assertEquals("Expected and actual did not match", mockMyInnerClassWithPrivateConstructorWithMultArgs,
+                outerClass.makeMyInnerClassWithPrivateConstructorWithMultArgs("1", "2", "3"));
+    }
+
+    @Test
+    public void testNewInnerWithMiddleParamNull() throws Exception {
+        ClassWithInnerMembers outerClass = new ClassWithInnerMembers();
+        MyInnerClassWithPublicConstructorWithMultArgs mockMyInnerClassWithPublicConstructorWithMultArgs
+                = mock(MyInnerClassWithPublicConstructorWithMultArgs.class);
+        MyInnerClassWithProtectedConstructorWithMultArgs mockMyInnerClassWithProtectedConstructorWithMultArgs
+                = mock(MyInnerClassWithProtectedConstructorWithMultArgs.class);
+        MyInnerClassWithPackageConstructorWithMultArgs mockMyInnerClassWithPackageConstructorWithMultArgs
+                = mock(MyInnerClassWithPackageConstructorWithMultArgs.class);
+        MyInnerClassWithPrivateConstructorWithMultArgs mockMyInnerClassWithPrivateConstructorWithMultArgs
+                = mock(MyInnerClassWithPrivateConstructorWithMultArgs.class);
+
+        whenNew(MyInnerClassWithPublicConstructorWithMultArgs.class)
+                .withArguments("1", null, "3").thenReturn(mockMyInnerClassWithPublicConstructorWithMultArgs);
+        whenNew(MyInnerClassWithProtectedConstructorWithMultArgs.class)
+                .withArguments("1", null, "3").thenReturn(mockMyInnerClassWithProtectedConstructorWithMultArgs);
+        whenNew(MyInnerClassWithPackageConstructorWithMultArgs.class)
+                .withArguments("1", null, "3").thenReturn(mockMyInnerClassWithPackageConstructorWithMultArgs);
+        whenNew(MyInnerClassWithPrivateConstructorWithMultArgs.class)
+                .withArguments("1", null, "3").thenReturn(mockMyInnerClassWithPrivateConstructorWithMultArgs);
+
+        assertEquals("Expected and actual did not match", mockMyInnerClassWithPublicConstructorWithMultArgs,
+                outerClass.makeMyInnerClassWithPublicConstructorWithMultArgs("1", null, "3"));
+        assertEquals("Expected and actual did not match", mockMyInnerClassWithProtectedConstructorWithMultArgs,
+                outerClass.makeMyInnerClassWithProtectedConstructorWithMultArgs("1", null, "3"));
+        assertEquals("Expected and actual did not match", mockMyInnerClassWithPackageConstructorWithMultArgs,
+                outerClass.makeMyInnerClassWithPackageConstructorWithMultArgs("1", null, "3"));
+        assertEquals("Expected and actual did not match", mockMyInnerClassWithPrivateConstructorWithMultArgs,
+                outerClass.makeMyInnerClassWithPrivateConstructorWithMultArgs("1", null, "3"));
+    }
+
+    @Test
+    public void testNewInnerWithFirstParamNull() throws Exception {
+        ClassWithInnerMembers outerClass = new ClassWithInnerMembers();
+        MyInnerClassWithPublicConstructorWithMultArgs mockMyInnerClassWithPublicConstructorWithMultArgs
+                = mock(MyInnerClassWithPublicConstructorWithMultArgs.class);
+        MyInnerClassWithProtectedConstructorWithMultArgs mockMyInnerClassWithProtectedConstructorWithMultArgs
+                = mock(MyInnerClassWithProtectedConstructorWithMultArgs.class);
+        MyInnerClassWithPackageConstructorWithMultArgs mockMyInnerClassWithPackageConstructorWithMultArgs
+                = mock(MyInnerClassWithPackageConstructorWithMultArgs.class);
+        MyInnerClassWithPrivateConstructorWithMultArgs mockMyInnerClassWithPrivateConstructorWithMultArgs
+                = mock(MyInnerClassWithPrivateConstructorWithMultArgs.class);
+
+        whenNew(MyInnerClassWithPublicConstructorWithMultArgs.class)
+                .withArguments(null, "2", "3").thenReturn(mockMyInnerClassWithPublicConstructorWithMultArgs);
+        whenNew(MyInnerClassWithProtectedConstructorWithMultArgs.class)
+                .withArguments(null, "2", "3").thenReturn(mockMyInnerClassWithProtectedConstructorWithMultArgs);
+        whenNew(MyInnerClassWithPackageConstructorWithMultArgs.class)
+                .withArguments(null, "2", "3").thenReturn(mockMyInnerClassWithPackageConstructorWithMultArgs);
+        whenNew(MyInnerClassWithPrivateConstructorWithMultArgs.class)
+                .withArguments(null, "2", "3").thenReturn(mockMyInnerClassWithPrivateConstructorWithMultArgs);
+
+        assertEquals("Expected and actual did not match", mockMyInnerClassWithPublicConstructorWithMultArgs,
+                outerClass.makeMyInnerClassWithPublicConstructorWithMultArgs(null, "2", "3"));
+        assertEquals("Expected and actual did not match", mockMyInnerClassWithProtectedConstructorWithMultArgs,
+                outerClass.makeMyInnerClassWithProtectedConstructorWithMultArgs(null, "2", "3"));
+        assertEquals("Expected and actual did not match", mockMyInnerClassWithPackageConstructorWithMultArgs,
+                outerClass.makeMyInnerClassWithPackageConstructorWithMultArgs(null, "2", "3"));
+        assertEquals("Expected and actual did not match", mockMyInnerClassWithPrivateConstructorWithMultArgs,
+                outerClass.makeMyInnerClassWithPrivateConstructorWithMultArgs(null, "2", "3"));
+    }
+
+    @Test
+    public void testNewInnerWithLastParamNull() throws Exception {
+        ClassWithInnerMembers outerClass = new ClassWithInnerMembers();
+        MyInnerClassWithPublicConstructorWithMultArgs mockMyInnerClassWithPublicConstructorWithMultArgs
+                = mock(MyInnerClassWithPublicConstructorWithMultArgs.class);
+        MyInnerClassWithProtectedConstructorWithMultArgs mockMyInnerClassWithProtectedConstructorWithMultArgs
+                = mock(MyInnerClassWithProtectedConstructorWithMultArgs.class);
+        MyInnerClassWithPackageConstructorWithMultArgs mockMyInnerClassWithPackageConstructorWithMultArgs
+                = mock(MyInnerClassWithPackageConstructorWithMultArgs.class);
+        MyInnerClassWithPrivateConstructorWithMultArgs mockMyInnerClassWithPrivateConstructorWithMultArgs
+                = mock(MyInnerClassWithPrivateConstructorWithMultArgs.class);
+
+        whenNew(MyInnerClassWithPublicConstructorWithMultArgs.class)
+                .withArguments("1", "2", null).thenReturn(mockMyInnerClassWithPublicConstructorWithMultArgs);
+        whenNew(MyInnerClassWithProtectedConstructorWithMultArgs.class)
+                .withArguments("1", "2", null).thenReturn(mockMyInnerClassWithProtectedConstructorWithMultArgs);
+        whenNew(MyInnerClassWithPackageConstructorWithMultArgs.class)
+                .withArguments("1", "2", null).thenReturn(mockMyInnerClassWithPackageConstructorWithMultArgs);
+        whenNew(MyInnerClassWithPrivateConstructorWithMultArgs.class)
+                .withArguments("1", "2", null).thenReturn(mockMyInnerClassWithPrivateConstructorWithMultArgs);
+
+        assertEquals("Expected and actual did not match", mockMyInnerClassWithPublicConstructorWithMultArgs,
+                outerClass.makeMyInnerClassWithPublicConstructorWithMultArgs("1", "2", null));
+        assertEquals("Expected and actual did not match", mockMyInnerClassWithProtectedConstructorWithMultArgs,
+                outerClass.makeMyInnerClassWithProtectedConstructorWithMultArgs("1", "2", null));
+        assertEquals("Expected and actual did not match", mockMyInnerClassWithPackageConstructorWithMultArgs,
+                outerClass.makeMyInnerClassWithPackageConstructorWithMultArgs("1", "2", null));
+        assertEquals("Expected and actual did not match", mockMyInnerClassWithPrivateConstructorWithMultArgs,
+                outerClass.makeMyInnerClassWithPrivateConstructorWithMultArgs("1", "2", null));
+    }
 
     @Test
     public void testNewWithCheckedException() throws Exception {
