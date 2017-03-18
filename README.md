@@ -39,7 +39,7 @@ Please note that PowerMock is mainly intended for people with expert knowledge i
   * [Mock Partial](https://github.com/jayway/powermock/wiki/MockPartial)
   * [Replay and verify all](https://github.com/jayway/powermock/wiki/ReplayAllAndVerifyAll)
 * Mockito
-  * [Mockito 2.0](https://github.com/jayway/powermock/wiki/Mockito2_maven) (experimental)
+  * [Mockito 2.0](https://github.com/jayway/powermock/wiki/Mockito-2-(Maven)) (experimental)
   * [Mockito 1.8+](https://github.com/jayway/powermock/wiki/MockitoUsage)
   * [Mockito 1.7](https://github.com/jayway/powermock/wiki/MockitoUsage_Legacy)
 * Common
