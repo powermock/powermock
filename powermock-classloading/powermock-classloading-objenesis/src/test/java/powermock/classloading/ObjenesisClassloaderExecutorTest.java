@@ -21,6 +21,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.powermock.classloading.SingleClassloaderExecutor;
 import org.powermock.core.classloader.MockClassLoader;
+import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
+import org.powermock.core.transformers.ClassWrapper;
 import org.powermock.core.transformers.MockTransformer;
 import powermock.classloading.classes.MyArgument;
 import powermock.classloading.classes.MyClass;
@@ -50,7 +52,6 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-@Ignore("Since upgrading to JVM 1.6.0_24 lots of tests started to fail")
 public class ObjenesisClassloaderExecutorTest {
 
 	@Test
@@ -61,7 +62,7 @@ public class ObjenesisClassloaderExecutorTest {
 		final MyArgument expected = new MyArgument("A value");
 		MyReturnValue[] actual = new SingleClassloaderExecutor(classloader).execute(new Callable<MyReturnValue[]>() {
 			public MyReturnValue[] call() throws Exception {
-				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+				assertEquals(JavassistMockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				return myClass.myMethod(expected);
 			}
 		});
@@ -81,7 +82,7 @@ public class ObjenesisClassloaderExecutorTest {
 		final MyIntegerHolder myClass = new MyIntegerHolder(expected);
 		Integer actual = new SingleClassloaderExecutor(classloader).execute(new Callable<Integer>() {
 			public Integer call() throws Exception {
-				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+				assertEquals(JavassistMockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				final int myInteger = myClass.getMyInteger();
 				assertEquals((int) expected, myInteger);
 				return myInteger;
@@ -101,7 +102,7 @@ public class ObjenesisClassloaderExecutorTest {
 		final MyEnumHolder myClass = new MyEnumHolder(expected);
 		MyEnum actual = new SingleClassloaderExecutor(classloader).execute(new Callable<MyEnum>() {
 			public MyEnum call() throws Exception {
-				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+				assertEquals(JavassistMockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				MyEnum myEnum = myClass.getMyEnum();
 				assertEquals(expected, myEnum);
 				return myEnum;
@@ -112,62 +113,6 @@ public class ObjenesisClassloaderExecutorTest {
 		assertEquals(expected, actual);
 	}
 
-	@Test
-	public void clonesStaticFinalObjectFields() throws Exception {
-		MockClassLoader classloader = createClassloader();
-		final MyStaticFinalArgumentHolder expected = new MyStaticFinalArgumentHolder();
-		MyStaticFinalArgumentHolder actual = new SingleClassloaderExecutor(classloader)
-				.execute(new Callable<MyStaticFinalArgumentHolder>() {
-					public MyStaticFinalArgumentHolder call() throws Exception {
-						assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass()
-								.getName());
-						MyStaticFinalArgumentHolder actual = new MyStaticFinalArgumentHolder();
-						assertEquals(expected.getMyObject(), actual.getMyObject());
-						return actual;
-					}
-				});
-
-		assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
-		assertEquals(expected.getMyObject(), actual.getMyObject());
-	}
-
-	@Test
-	public void clonesStaticFinalPrimitiveFields() throws Exception {
-		MockClassLoader classloader = createClassloader();
-		final MyStaticFinalPrimitiveHolder expected = new MyStaticFinalPrimitiveHolder();
-		MyStaticFinalPrimitiveHolder actual = new SingleClassloaderExecutor(classloader)
-				.execute(new Callable<MyStaticFinalPrimitiveHolder>() {
-					public MyStaticFinalPrimitiveHolder call() throws Exception {
-						assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass()
-								.getName());
-						MyStaticFinalPrimitiveHolder actual = new MyStaticFinalPrimitiveHolder();
-						assertEquals(expected.getMyInt(), actual.getMyInt());
-						return actual;
-					}
-				});
-
-		assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
-		assertEquals(expected.getMyInt(), actual.getMyInt());
-	}
-
-	@Test
-	public void clonesStaticFinalNumberFields() throws Exception {
-		MockClassLoader classloader = createClassloader();
-		final MyStaticFinalNumberHolder expected = new MyStaticFinalNumberHolder();
-		MyStaticFinalNumberHolder actual = new SingleClassloaderExecutor(classloader)
-				.execute(new Callable<MyStaticFinalNumberHolder>() {
-					public MyStaticFinalNumberHolder call() throws Exception {
-						assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass()
-								.getName());
-						MyStaticFinalNumberHolder actual = new MyStaticFinalNumberHolder();
-						assertEquals(expected.getMyLong(), actual.getMyLong());
-						return actual;
-					}
-				});
-
-		assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
-		assertEquals(expected.getMyLong(), actual.getMyLong());
-	}
 
 	@Test
 	public void loadsObjectGraphThatIncludesPrimitiveArraysInSpecifiedClassloaderAndReturnsResultInOriginalClassloader()
@@ -177,7 +122,7 @@ public class ObjenesisClassloaderExecutorTest {
 		final MyPrimitiveArrayHolder myClass = new MyPrimitiveArrayHolder(expected);
 		int[] actual = new SingleClassloaderExecutor(classloader).execute(new Callable<int[]>() {
 			public int[] call() throws Exception {
-				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+				assertEquals(JavassistMockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				int[] myArray = myClass.getMyArray();
 				assertArrayEquals(expected, myArray);
 				return myArray;
@@ -188,35 +133,6 @@ public class ObjenesisClassloaderExecutorTest {
 		assertArrayEquals(expected, actual);
 	}
 
-	@Ignore("It seems like this test works on certain JVM's and fails on others. WHY!??!")
-	@Test
-	public void loadsObjectGraphThatIncludesCollectionInSpecifiedClassloaderAndReturnsResultInOriginalClassloader()
-			throws Exception {
-		final MockClassLoader classloader = createClassloader();
-		final Collection<MyReturnValue> expected = new LinkedList<MyReturnValue>();
-		expected.add(new MyReturnValue(new MyArgument("one")));
-		expected.add(new MyReturnValue(new MyArgument("two")));
-		final MyCollectionHolder myClass = new MyCollectionHolder(expected);
-		Collection<?> actual = new SingleClassloaderExecutor(classloader).execute(new Callable<Collection<?>>() {
-			public Collection<?> call() throws Exception {
-				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
-				Collection<?> myCollection = myClass.getMyCollection();
-				for (Object object : myCollection) {
-					assertEquals(MockClassLoader.class.getName(), object.getClass().getClassLoader().getClass()
-							.getName());
-				}
-				return myCollection;
-			}
-		});
-
-		assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
-		assertEquals(2, actual.size());
-		for (Object object : actual) {
-			final String value = ((MyReturnValue) object).getMyArgument().getValue();
-			assertTrue(value.equals("one") || value.equals("two"));
-		}
-	}
-
 	@Test
 	public void usesReferenceCloningWhenTwoFieldsPointToSameInstance() throws Exception {
 		final MockClassLoader classloader = createClassloader();
@@ -225,7 +141,7 @@ public class ObjenesisClassloaderExecutorTest {
 		assertSame(tested.getMyArgument1(), MyReferenceFieldHolder.MY_ARGUMENT);
 		new SingleClassloaderExecutor(classloader).execute(new Runnable() {
 			public void run() {
-				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+				assertEquals(JavassistMockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				assertEquals(tested.getMyArgument1(), tested.getMyArgument2());
 				assertEquals(tested.getMyArgument1(), MyReferenceFieldHolder.MY_ARGUMENT);
 				assertSame(tested.getMyArgument1(), tested.getMyArgument2());
@@ -243,31 +159,9 @@ public class ObjenesisClassloaderExecutorTest {
 		assertEquals(tested.getMyArgument3(), tested.getMyArgument2());
 		new SingleClassloaderExecutor(classloader).execute(new Runnable() {
 			public void run() {
-				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+				assertEquals(JavassistMockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				assertSame(tested.getMyArgument1(), tested.getMyArgument2());
 				assertEquals(tested.getMyArgument3(), tested.getMyArgument2());
-			}
-		});
-	}
-
-	@Test
-	@Ignore("It seems like this test works on certain JVM's and fails on others. WHY!??!")
-	public void worksWithObjectHierarchyAndOverloadedFields() throws Exception {
-		final MockClassLoader classloader = createClassloader();
-		final MyHierarchicalOverloadedFieldHolder tested = new MyHierarchicalOverloadedFieldHolder();
-		assertSame(tested.getMyArgument1(), tested.getMyArgument2());
-		assertEquals(tested.getMyArgument1(), tested.getMyArgument3());
-		assertSame(tested.getMyArgument3(), MyHierarchicalOverloadedFieldHolder.MY_ARGUMENT);
-		assertNotSame(MyReferenceFieldHolder.MY_ARGUMENT, MyHierarchicalOverloadedFieldHolder.MY_ARGUMENT);
-		assertEquals(MyReferenceFieldHolder.MY_ARGUMENT, MyHierarchicalOverloadedFieldHolder.MY_ARGUMENT);
-		new SingleClassloaderExecutor(classloader).execute(new Runnable() {
-			public void run() {
-				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
-				assertSame(tested.getMyArgument1(), tested.getMyArgument2());
-				assertEquals(tested.getMyArgument1(), tested.getMyArgument3());
-				assertSame(tested.getMyArgument3(), MyHierarchicalOverloadedFieldHolder.MY_ARGUMENT);
-				assertNotSame(MyReferenceFieldHolder.MY_ARGUMENT, MyHierarchicalOverloadedFieldHolder.MY_ARGUMENT);
-				assertEquals(MyReferenceFieldHolder.MY_ARGUMENT, MyHierarchicalOverloadedFieldHolder.MY_ARGUMENT);
 			}
 		});
 	}
@@ -288,10 +182,11 @@ public class ObjenesisClassloaderExecutorTest {
 	}
 
 	private MockClassLoader createClassloader() {
-		MockClassLoader classloader = new MockClassLoader(new String[] { MyClass.class.getName(),
+		MockClassLoader classloader = new JavassistMockClassLoader(new String[] { MyClass.class.getName(),
 				MyArgument.class.getName(), MyReturnValue.class.getName() });
 		MockTransformer mainMockTransformer = new MockTransformer() {
-			public CtClass transform(CtClass clazz) throws Exception {
+			@Override
+			public <T> ClassWrapper<T> transform(ClassWrapper<T> clazz) throws Exception {
 				return clazz;
 			}
 		};

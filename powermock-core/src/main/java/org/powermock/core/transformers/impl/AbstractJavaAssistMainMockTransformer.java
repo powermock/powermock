@@ -40,6 +40,7 @@ import javassist.expr.MethodCall;
 import javassist.expr.NewExpr;
 import org.powermock.core.IndicateReloadClass;
 import org.powermock.core.MockGateway;
+import org.powermock.core.transformers.ClassWrapper;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.TransformStrategy;
 
@@ -47,23 +48,14 @@ import static org.powermock.core.transformers.TransformStrategy.CLASSLOADER;
 import static org.powermock.core.transformers.TransformStrategy.INST_REDEFINE;
 import static org.powermock.core.transformers.TransformStrategy.INST_TRANSFORM;
 
-public abstract class AbstractMainMockTransformer implements MockTransformer {
+public abstract class AbstractJavaAssistMainMockTransformer extends AbstractJavaAssistMockTransformer {
 
     private static final String VOID = "";
     private static final int METHOD_CODE_LENGTH_LIMIT = 65536;
     protected final TransformStrategy strategy;
 
-    public AbstractMainMockTransformer(TransformStrategy strategy) {this.strategy = strategy;}
-
-    public CtClass transform(final CtClass clazz) throws Exception {
-        if (clazz.isFrozen()) {
-            clazz.defrost();
-        }
-        return transformMockClass(clazz);
-    }
-
-    protected abstract CtClass transformMockClass(CtClass clazz) throws CannotCompileException, NotFoundException;
-
+    public AbstractJavaAssistMainMockTransformer(TransformStrategy strategy) {this.strategy = strategy;}
+    
     protected String allowMockingOfPackagePrivateClasses(final CtClass clazz) {
         final String name = clazz.getName();
         if (strategy != INST_REDEFINE) {

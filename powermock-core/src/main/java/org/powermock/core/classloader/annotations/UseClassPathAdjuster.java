@@ -16,7 +16,7 @@
 
 package org.powermock.core.classloader.annotations;
 
-import org.powermock.core.classloader.ClassPathAdjuster;
+import org.powermock.core.classloader.javassist.ClassPathAdjuster;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

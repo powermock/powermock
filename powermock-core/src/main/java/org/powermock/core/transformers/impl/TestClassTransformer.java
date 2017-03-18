@@ -57,7 +57,7 @@ import java.util.HashSet;
  * The #3 and #4 enhancements will also be enforced on the constructors
  * of classes that are nested within the test-class.
  */
-public abstract class TestClassTransformer implements MockTransformer {
+public abstract class TestClassTransformer extends AbstractJavaAssistMockTransformer {
 
     private final Class<?> testClass;
     private final Class<? extends Annotation> testMethodAnnotationType;

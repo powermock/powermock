@@ -17,13 +17,16 @@
 
 package org.powermock.core.classloader;
 
+import org.powermock.core.transformers.ClassWrapper;
+
 /**
- * Factory class for MockClassLoaderBuilder
+ * Instance of this interface can be used to mark a class that it was created and loaded by PowerMock
  */
-public class MockClassLoaderBuilders {
-
-    public static MockClassLoaderBuilder mockClassLoaderBuilder() {
-        return new MockClassLoaderBuilder();
-    }
-
+public interface ClassMarker {
+    /**
+     * Mark type as loaded by PowerMock
+     *
+     * @param type to mark.
+     */
+    <T> void mark(ClassWrapper<T> type);
 }

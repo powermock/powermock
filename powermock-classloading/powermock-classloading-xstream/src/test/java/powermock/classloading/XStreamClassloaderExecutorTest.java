@@ -16,10 +16,11 @@
 
 package powermock.classloading;
 
-import javassist.CtClass;
 import org.junit.Test;
 import org.powermock.classloading.SingleClassloaderExecutor;
 import org.powermock.core.classloader.MockClassLoader;
+import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
+import org.powermock.core.transformers.ClassWrapper;
 import org.powermock.core.transformers.MockTransformer;
 import powermock.classloading.classes.MyArgument;
 import powermock.classloading.classes.MyClass;
@@ -59,12 +60,12 @@ public class XStreamClassloaderExecutorTest {
 		final MyArgument expected = new MyArgument("A value");
 		MyReturnValue[] actual = new SingleClassloaderExecutor(classloader).execute(new Callable<MyReturnValue[]>() {
 			public MyReturnValue[] call() throws Exception {
-				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+				assertEquals(JavassistMockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				return myClass.myMethod(expected);
 			}
 		});
 
-		assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
+		assertFalse(JavassistMockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
 
 		final MyReturnValue myReturnValue = actual[0];
 		assertEquals(expectedConstructorValue.getMyArgument().getValue(), myReturnValue.getMyArgument().getValue());
@@ -79,14 +80,14 @@ public class XStreamClassloaderExecutorTest {
 		final MyIntegerHolder myClass = new MyIntegerHolder(expected);
 		Integer actual = new SingleClassloaderExecutor(classloader).execute(new Callable<Integer>() {
 			public Integer call() throws Exception {
-				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+				assertEquals(JavassistMockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				final int myInteger = myClass.getMyInteger();
 				assertEquals((int) expected, myInteger);
 				return myInteger;
 			}
 		});
 
-		assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
+		assertFalse(JavassistMockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
 
 		assertEquals(expected, actual);
 	}
@@ -99,14 +100,14 @@ public class XStreamClassloaderExecutorTest {
 		final MyEnumHolder myClass = new MyEnumHolder(expected);
 		MyEnum actual = new SingleClassloaderExecutor(classloader).execute(new Callable<MyEnum>() {
 			public MyEnum call() throws Exception {
-				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+				assertEquals(JavassistMockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				MyEnum myEnum = myClass.getMyEnum();
 				assertEquals(expected, myEnum);
 				return myEnum;
 			}
 		});
 
-		assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
+		assertFalse(JavassistMockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
 		assertEquals(expected, actual);
 	}
 
@@ -117,7 +118,7 @@ public class XStreamClassloaderExecutorTest {
 		MyStaticFinalArgumentHolder actual = new SingleClassloaderExecutor(classloader)
 				.execute(new Callable<MyStaticFinalArgumentHolder>() {
 					public MyStaticFinalArgumentHolder call() throws Exception {
-						assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass()
+						assertEquals(JavassistMockClassLoader.class.getName(), this.getClass().getClassLoader().getClass()
 								.getName());
 						MyStaticFinalArgumentHolder actual = new MyStaticFinalArgumentHolder();
 						assertEquals(expected.getMyObject(), actual.getMyObject());
@@ -125,7 +126,7 @@ public class XStreamClassloaderExecutorTest {
 					}
 				});
 
-		assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
+		assertFalse(JavassistMockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
 		assertEquals(expected.getMyObject(), actual.getMyObject());
 	}
 
@@ -136,7 +137,7 @@ public class XStreamClassloaderExecutorTest {
 		MyStaticFinalPrimitiveHolder actual = new SingleClassloaderExecutor(classloader)
 				.execute(new Callable<MyStaticFinalPrimitiveHolder>() {
 					public MyStaticFinalPrimitiveHolder call() throws Exception {
-						assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass()
+						assertEquals(JavassistMockClassLoader.class.getName(), this.getClass().getClassLoader().getClass()
 								.getName());
 						MyStaticFinalPrimitiveHolder actual = new MyStaticFinalPrimitiveHolder();
 						assertEquals(expected.getMyInt(), actual.getMyInt());
@@ -144,7 +145,7 @@ public class XStreamClassloaderExecutorTest {
 					}
 				});
 
-		assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
+		assertFalse(JavassistMockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
 		assertEquals(expected.getMyInt(), actual.getMyInt());
 	}
 
@@ -155,7 +156,7 @@ public class XStreamClassloaderExecutorTest {
 		MyStaticFinalNumberHolder actual = new SingleClassloaderExecutor(classloader)
 				.execute(new Callable<MyStaticFinalNumberHolder>() {
 					public MyStaticFinalNumberHolder call() throws Exception {
-						assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass()
+						assertEquals(JavassistMockClassLoader.class.getName(), this.getClass().getClassLoader().getClass()
 								.getName());
 						MyStaticFinalNumberHolder actual = new MyStaticFinalNumberHolder();
 						assertEquals(expected.getMyLong(), actual.getMyLong());
@@ -163,7 +164,7 @@ public class XStreamClassloaderExecutorTest {
 					}
 				});
 
-		assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
+		assertFalse(JavassistMockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
 		assertEquals(expected.getMyLong(), actual.getMyLong());
 	}
 
@@ -175,14 +176,14 @@ public class XStreamClassloaderExecutorTest {
 		final MyPrimitiveArrayHolder myClass = new MyPrimitiveArrayHolder(expected);
 		int[] actual = new SingleClassloaderExecutor(classloader).execute(new Callable<int[]>() {
 			public int[] call() throws Exception {
-				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+				assertEquals(JavassistMockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				int[] myArray = myClass.getMyArray();
 				assertArrayEquals(expected, myArray);
 				return myArray;
 			}
 		});
 
-		assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
+		assertFalse(JavassistMockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
 		assertArrayEquals(expected, actual);
 	}
 
@@ -196,17 +197,17 @@ public class XStreamClassloaderExecutorTest {
 		final MyCollectionHolder myClass = new MyCollectionHolder(expected);
 		Collection<?> actual = new SingleClassloaderExecutor(classloader).execute(new Callable<Collection<?>>() {
 			public Collection<?> call() throws Exception {
-				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+				assertEquals(JavassistMockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				Collection<?> myCollection = myClass.getMyCollection();
 				for (Object object : myCollection) {
-					assertEquals(MockClassLoader.class.getName(), object.getClass().getClassLoader().getClass()
+					assertEquals(JavassistMockClassLoader.class.getName(), object.getClass().getClassLoader().getClass()
 							.getName());
 				}
 				return myCollection;
 			}
 		});
 
-		assertFalse(MockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
+		assertFalse(JavassistMockClassLoader.class.getName().equals(this.getClass().getClassLoader().getClass().getName()));
 		assertEquals(2, actual.size());
 		for (Object object : actual) {
 			final String value = ((MyReturnValue) object).getMyArgument().getValue();
@@ -222,7 +223,7 @@ public class XStreamClassloaderExecutorTest {
 		assertSame(tested.getMyArgument1(), MyReferenceFieldHolder.MY_ARGUMENT);
 		new SingleClassloaderExecutor(classloader).execute(new Runnable() {
 			public void run() {
-				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+				assertEquals(JavassistMockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				assertEquals(tested.getMyArgument1(), tested.getMyArgument2());
 				assertEquals(tested.getMyArgument1(), MyReferenceFieldHolder.MY_ARGUMENT);
 				assertSame(tested.getMyArgument1(), tested.getMyArgument2());
@@ -240,7 +241,7 @@ public class XStreamClassloaderExecutorTest {
 		assertEquals(tested.getMyArgument3(), tested.getMyArgument2());
 		new SingleClassloaderExecutor(classloader).execute(new Runnable() {
 			public void run() {
-				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+				assertEquals(JavassistMockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				assertSame(tested.getMyArgument1(), tested.getMyArgument2());
 				assertEquals(tested.getMyArgument3(), tested.getMyArgument2());
 			}
@@ -258,7 +259,7 @@ public class XStreamClassloaderExecutorTest {
 		assertEquals(MyReferenceFieldHolder.MY_ARGUMENT, MyHierarchicalOverloadedFieldHolder.MY_ARGUMENT);
 		new SingleClassloaderExecutor(classloader).execute(new Runnable() {
 			public void run() {
-				assertEquals(MockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
+				assertEquals(JavassistMockClassLoader.class.getName(), this.getClass().getClassLoader().getClass().getName());
 				assertSame(tested.getMyArgument1(), tested.getMyArgument2());
 				assertEquals(tested.getMyArgument1(), tested.getMyArgument3());
                 // Note: Cannot be same using X-Stream
@@ -285,10 +286,11 @@ public class XStreamClassloaderExecutorTest {
 	}
 
 	private MockClassLoader createClassloader() {
-		MockClassLoader classloader = new MockClassLoader(new String[] { MyClass.class.getName(),
+		MockClassLoader classloader = new JavassistMockClassLoader(new String[] { MyClass.class.getName(),
 				MyArgument.class.getName(), MyReturnValue.class.getName() });
 		MockTransformer mainMockTransformer = new MockTransformer() {
-			public CtClass transform(CtClass clazz) throws Exception {
+			@Override
+			public <T> ClassWrapper<T> transform(ClassWrapper<T> clazz) throws Exception {
 				return clazz;
 			}
 		};

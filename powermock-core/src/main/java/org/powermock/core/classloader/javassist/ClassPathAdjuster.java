@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.powermock.core.classloader;
+package org.powermock.core.classloader.javassist;
 
 import javassist.ClassPool;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;

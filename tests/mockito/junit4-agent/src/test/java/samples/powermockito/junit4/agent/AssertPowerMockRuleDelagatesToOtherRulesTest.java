@@ -27,64 +27,66 @@ import org.powermock.modules.junit4.rule.PowerMockRule;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * This test demonstrates that the PowerMockRule delegates to other rules.
  */
 public class AssertPowerMockRuleDelagatesToOtherRulesTest {
-	private static final MyObject BEFORE = new MyObject();
-
-	private final List<Object> objects = new LinkedList<Object>();
-
-	@Rule
-	public PowerMockRule powerMockRule = new PowerMockRule();
-
-	@Rule
-	public MyRule rule = new MyRule();
-
-	@Rule
-	public TestName testName = new TestName();
-
-	@Test
-	public void assertPowerMockRuleDelegatesToOtherRules() throws Exception {
-		assertFalse(this.getClass().getClassLoader().getClass().getName().contains(MockClassLoader.class.getName()));
-		assertEquals(1, objects.size());
-        // Not same using X-Stream
-		assertEquals(BEFORE, objects.get(0));
-		assertEquals("assertPowerMockRuleDelegatesToOtherRules", testName.getMethodName());
-	}
-
-	private class MyRule implements MethodRule {
-		@Override
-		public Statement apply(final Statement base, FrameworkMethod method, Object target) {
-			return new Statement() {
-				@Override
-				public void evaluate() throws Throwable {
-					objects.add(BEFORE);
-					base.evaluate();
-				}
-			};
-		}
-	}
-
+    private static final MyObject BEFORE = new MyObject();
+    
+    private final List<Object> objects = new LinkedList<Object>();
+    
+    @Rule
+    public PowerMockRule powerMockRule = new PowerMockRule();
+    
+    @Rule
+    public MyRule rule = new MyRule();
+    
+    @Rule
+    public TestName testName = new TestName();
+    
+    @Test
+    public void assertPowerMockRuleDelegatesToOtherRules() throws Exception {
+        
+        assertThat(this.getClass().getClassLoader()).isNotInstanceOf(MockClassLoader.class);
+        
+        assertThat(objects)
+            .hasSize(1)
+            .containsExactly(BEFORE);
+        
+        assertThat(testName.getMethodName()).isEqualTo("assertPowerMockRuleDelegatesToOtherRules");
+    }
+    
     private static class MyObject {
         private final String state = "state";
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            MyObject myObject = (MyObject) o;
-
-	        return state != null ? state.equals(myObject.state) : myObject.state == null;
-        }
-
+        
         @Override
         public int hashCode() {
             return state.hashCode();
+        }
+        
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) { return true; }
+            if (o == null || getClass() != o.getClass()) { return false; }
+            
+            MyObject myObject = (MyObject) o;
+            
+            return state.equals(myObject.state);
+        }
+    }
+    
+    private class MyRule implements MethodRule {
+        @Override
+        public Statement apply(final Statement base, FrameworkMethod method, Object target) {
+            return new Statement() {
+                @Override
+                public void evaluate() throws Throwable {
+                    objects.add(BEFORE);
+                    base.evaluate();
+                }
+            };
         }
     }
 }

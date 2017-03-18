@@ -30,6 +30,7 @@ import org.junit.Test;
 import org.powermock.core.IndicateReloadClass;
 import org.powermock.core.MockGateway;
 import org.powermock.core.classloader.MockClassLoader;
+import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
 import org.powermock.core.transformers.MockTransformer;
 import powermock.test.support.ClassWithLargeMethods;
 import powermock.test.support.MainMockTransformerTestSupport.CallSpy;
@@ -112,7 +113,9 @@ public class ClassMockTransformerTest {
     @Test
     public void shouldLoadClassAndOverrideMethodGreaterThanJvmLimit() throws Exception {
         Class<?> clazz = loadWithMockClassLoader(ClassWithLargeMethods.MethodGreaterThanLimit.class.getName());
+        
         assertNotNull("Class has been loaded", clazz);
+        
         // There should be exception since method was overridden to satisfy JVM limit
         try {
             clazz.getMethod("init").invoke(clazz);
@@ -200,7 +203,7 @@ public class ClassMockTransformerTest {
 
 
     private Class<?> loadWithMockClassLoader(String className) throws ClassNotFoundException {
-        MockClassLoader loader = new MockClassLoader(new String[]{MockClassLoader.MODIFY_ALL_CLASSES});
+        MockClassLoader loader = new JavassistMockClassLoader(new String[]{MockClassLoader.MODIFY_ALL_CLASSES});
         loader.setMockTransformerChain(Collections.<MockTransformer>singletonList(new ClassMockTransformer()));
         return Class.forName(className, true, loader);
     }

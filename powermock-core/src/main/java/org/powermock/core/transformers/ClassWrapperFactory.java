@@ -1,11 +1,12 @@
 /*
- *   Copyright 2016 the original author or authors.
+ *
+ *   Copyright 2017 the original author or authors.
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
  *   You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
  *   Unless required by applicable law or agreed to in writing, software
  *   distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,17 +16,12 @@
  *
  */
 
-package org.powermock.core.classloader;
+package org.powermock.core.transformers;
 
 import javassist.CtClass;
 
-/**
- *  Instance of this interface can be used to mark {@link CtClass} that it was created and loaded by PowerMock
- */
-public interface JavaAssistClassMarker {
-    /**
-     * Mark type as loaded by PowerMock
-     * @param type to mark.
-     */
-    void mark(CtClass type);
+public class ClassWrapperFactory {
+    public ClassWrapper<CtClass> wrap(CtClass ctClass){
+        return new JavaAssistClassWrapper(ctClass);
+    }
 }

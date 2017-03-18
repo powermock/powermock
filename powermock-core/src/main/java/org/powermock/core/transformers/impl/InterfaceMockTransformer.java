@@ -28,7 +28,7 @@ import static org.powermock.core.transformers.TransformStrategy.INST_TRANSFORM;
 /**
  *
  */
-public class InterfaceMockTransformer extends AbstractMainMockTransformer {
+public class InterfaceMockTransformer extends AbstractJavaAssistMainMockTransformer {
 
     public InterfaceMockTransformer() {
         this(CLASSLOADER);
@@ -39,7 +39,7 @@ public class InterfaceMockTransformer extends AbstractMainMockTransformer {
     }
 
     @Override
-    protected CtClass transformMockClass(CtClass clazz) throws CannotCompileException, NotFoundException {
+    protected CtClass transform(CtClass clazz) throws CannotCompileException, NotFoundException {
         if (!clazz.isInterface()) {
             return clazz;
         }

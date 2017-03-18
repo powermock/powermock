@@ -20,6 +20,8 @@ package org.powermock.modules.agent;
 import javassist.ClassPool;
 import javassist.CtClass;
 import org.powermock.core.agent.JavaAgentClassRegister;
+import org.powermock.core.transformers.ClassWrapper;
+import org.powermock.core.transformers.ClassWrapperFactory;
 import org.powermock.core.transformers.TransformStrategy;
 import org.powermock.core.transformers.impl.ClassMockTransformer;
 import org.powermock.core.transformers.impl.InterfaceMockTransformer;
@@ -36,6 +38,12 @@ class PowerMockClassTransformer extends AbstractClassTransformer implements Clas
 
 	private volatile Set<String> classesToTransform;
     private volatile JavaAgentClassRegister javaAgentClassRegister;
+    private final ClassWrapperFactory wrapperFactory;
+    
+    PowerMockClassTransformer() {
+        super();
+        wrapperFactory = new ClassWrapperFactory();
+    }
     
     public void setClassesToTransform(Collection<String> classesToTransform) {
     	this.classesToTransform = new HashSet<String>(classesToTransform);
@@ -62,12 +70,8 @@ class PowerMockClassTransformer extends AbstractClassTransformer implements Clas
                 } finally {
                     is.close();
                 }
-
-                if (ctClass.isInterface()){
-                    ctClass = INTERFACE_MOCK_TRANSFORMER.transform(ctClass);
-                }else{
-                    ctClass = CLASS_MOCK_TRANSFORMER.transform(ctClass);
-                }
+    
+                ctClass = transform(ctClass);
 
                 /*
                  * ClassPool may cause huge memory consumption if the number of CtClass
@@ -90,5 +94,15 @@ class PowerMockClassTransformer extends AbstractClassTransformer implements Clas
         }
         
 
+    }
+    
+    private CtClass transform(CtClass ctClass) throws Exception {
+        ClassWrapper<CtClass> wrapped = wrapperFactory.wrap(ctClass);
+        if (wrapped.isInterface()){
+            wrapped = INTERFACE_MOCK_TRANSFORMER.transform(wrapped);
+        }else{
+            wrapped = CLASS_MOCK_TRANSFORMER.transform(wrapped);
+        }
+        return wrapped.unwrap();
     }
 }

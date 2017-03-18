@@ -15,40 +15,53 @@
  *
  */
 
-package org.powermock.core.classloader;
+package org.powermock.core.classloader.javassist;
 
 import javassist.ClassPool;
 import javassist.CtClass;
+import org.powermock.core.classloader.ClassMarker;
+import org.powermock.core.classloader.PowerMockModified;
+import org.powermock.core.transformers.ClassWrapper;
 
-/**
- *
- */
-public class JavaAssistClassMarkerFactory {
-
-    public static JavaAssistClassMarker createClassMarker(ClassPool classPool) {
-        return new InterfaceJavaAssistClassMarker(classPool);
+class JavaAssistClassMarkerFactory {
+    
+    static ClassMarker createClassMarker(ClassPool classPool) {
+        return new InterfaceClassMarker(classPool);
     }
-
+    
     /**
-     * The implementation of the {@link JavaAssistClassMarker} which use an interface to mark type.
+     * The implementation of the {@link ClassMarker} which use an interface to mark type.
+     *
      * @see PowerMockModified
      */
-    private static class InterfaceJavaAssistClassMarker implements JavaAssistClassMarker {
-
+    private static class InterfaceClassMarker implements ClassMarker {
+        
         private final ClassPool classPool;
-
-        InterfaceJavaAssistClassMarker(ClassPool classPool) {
+        
+        InterfaceClassMarker(ClassPool classPool) {
             this.classPool = classPool;
         }
-
+        
+        /**
+         * Mark type as loaded by PowerMock
+         *
+         * @param type to mark.
+         */
         @Override
+        public <T> void mark(ClassWrapper<T> type) {
+            T unwrapped = type.unwrap();
+            if (unwrapped instanceof CtClass) {
+                mark((CtClass) unwrapped);
+            }
+        }
+        
         public void mark(CtClass type) {
             CtClass powerMockInterface = classPool.makeInterface("org.powermock.core.classloader.PowerMockModified");
-
+            
             type.addInterface(powerMockInterface);
-
+            
             powerMockInterface.detach();
-
+            
         }
     }
 }

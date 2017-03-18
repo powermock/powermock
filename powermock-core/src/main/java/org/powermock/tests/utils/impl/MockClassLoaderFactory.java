@@ -20,6 +20,7 @@ package org.powermock.tests.utils.impl;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.classloader.annotations.MockPolicy;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
+import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
 import org.powermock.core.spi.PowerMockPolicy;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.ClassMockTransformer;
@@ -64,7 +65,7 @@ class MockClassLoaderFactory {
         ClassLoader mockLoader = AccessController.doPrivileged(new PrivilegedAction<MockClassLoader>() {
             @Override
             public MockClassLoader run() {
-                return new MockClassLoader(classesToLoadByMockClassloader, packagesToIgnore, useClassPathAdjuster);
+                return new JavassistMockClassLoader(classesToLoadByMockClassloader, packagesToIgnore, useClassPathAdjuster);
             }
         });
 
