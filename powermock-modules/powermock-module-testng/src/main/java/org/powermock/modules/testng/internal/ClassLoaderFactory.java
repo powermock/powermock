@@ -18,52 +18,29 @@
 package org.powermock.modules.testng.internal;
 
 import org.powermock.core.classloader.MockClassLoaderBuilder;
-import org.powermock.core.transformers.MockTransformer;
-import org.powermock.core.transformers.impl.ClassMockTransformer;
-import org.powermock.core.transformers.impl.InterfaceMockTransformer;
 import org.powermock.tests.utils.IgnorePackagesExtractor;
 import org.powermock.tests.utils.TestClassesExtractor;
 import org.powermock.tests.utils.impl.PowerMockIgnorePackagesExtractorImpl;
 import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
 import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- *
- */
 class ClassLoaderFactory {
     
     private final TestClassesExtractor testClassesExtractor;
     private final IgnorePackagesExtractor ignorePackagesExtractor;
     private final StaticConstructorSuppressExtractorImpl staticConstructorSuppressExtractor;
     private final ExpectedExceptionsExtractor expectedExceptionsExtractor;
-    private final List<MockTransformer> mockTransformerChain;
     
     ClassLoaderFactory() {
-        
         testClassesExtractor = new PrepareForTestExtractorImpl();
         ignorePackagesExtractor = new PowerMockIgnorePackagesExtractorImpl();
         expectedExceptionsExtractor = new PowerMockExpectedExceptionsExtractorImpl();
         staticConstructorSuppressExtractor = new StaticConstructorSuppressExtractorImpl();
-        
-        mockTransformerChain = getMockTransformers();
-        
     }
     
-    private List<MockTransformer> getMockTransformers() {
-        List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
-        
-        mockTransformerChain.add(new ClassMockTransformer());
-        mockTransformerChain.add(new InterfaceMockTransformer());
-        
-        return mockTransformerChain;
-    }
     
     ClassLoader createClassLoader(Class<?> testClass) {
         return MockClassLoaderBuilder.create()
-                                     .addMockTransformerChain(mockTransformerChain)
                                      .addIgnorePackage(ignorePackagesExtractor.getPackagesToIgnore(testClass))
                                      .addIgnorePackage(expectedExceptionsExtractor.getPackagesToIgnore(testClass))
                                      .addClassesToModify(testClassesExtractor.getTestClasses(testClass))

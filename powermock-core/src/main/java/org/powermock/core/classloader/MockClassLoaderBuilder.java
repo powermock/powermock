@@ -19,6 +19,9 @@ package org.powermock.core.classloader;
 
 import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
 import org.powermock.core.transformers.MockTransformer;
+import org.powermock.core.transformers.MockTransformerChainFactory;
+import org.powermock.core.transformers.javassist.JavassistMockTransformerChainFactory;
+import org.powermock.core.transformers.support.DefaultMockTransformerChain;
 import org.powermock.utils.ArrayUtil;
 
 import java.util.ArrayList;
@@ -29,7 +32,7 @@ import java.util.List;
  */
 public class MockClassLoaderBuilder {
 
-    private final List<MockTransformer> mockTransformerChain;
+    private final MockTransformerChainFactory transformerChainFactory;
     private String[] packagesToIgnore;
     private String[] classesToModify;
     
@@ -38,23 +41,20 @@ public class MockClassLoaderBuilder {
     }
     
     private MockClassLoaderBuilder() {
-        mockTransformerChain = new ArrayList<MockTransformer>(3);
+        transformerChainFactory = new JavassistMockTransformerChainFactory();
     }
 
     public MockClassLoader build() {
     
-        MockClassLoader classLoader = new JavassistMockClassLoader(new MockClassLoaderConfiguration(classesToModify, packagesToIgnore));
+        MockClassLoader classLoader = new JavassistMockClassLoader(
+            new MockClassLoaderConfiguration(classesToModify, packagesToIgnore)
+        );
 
-        classLoader.setMockTransformerChain(mockTransformerChain);
+        classLoader.setMockTransformerChain(transformerChainFactory.createDefaultChain());
 
         return classLoader;
     }
-
-    public MockClassLoaderBuilder addMockTransformerChain(List<MockTransformer> mockTransformerChain) {
-        this.mockTransformerChain.addAll(mockTransformerChain);
-        return this;
-    }
-
+    
     public MockClassLoaderBuilder addIgnorePackage(String[] packagesToIgnore) {
         this.packagesToIgnore = ArrayUtil.addAll(this.packagesToIgnore, packagesToIgnore);
         return this;

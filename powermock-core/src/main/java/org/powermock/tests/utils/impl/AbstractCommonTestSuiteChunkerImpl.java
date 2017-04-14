@@ -6,7 +6,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.core.transformers.MockTransformer;
-import org.powermock.core.transformers.impl.TestClassTransformer;
+import org.powermock.core.transformers.javassist.TestClassTransformer;
 import org.powermock.tests.utils.ArrayMerger;
 import org.powermock.tests.utils.IgnorePackagesExtractor;
 import org.powermock.tests.utils.TestChunk;

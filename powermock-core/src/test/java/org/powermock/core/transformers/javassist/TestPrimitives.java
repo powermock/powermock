@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.core.transformers.impl;
+package org.powermock.core.transformers.javassist;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import javassist.CtClass;
 import javassist.CtPrimitiveType;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-
-import static org.junit.Assert.assertEquals;
+import org.powermock.core.transformers.javassist.support.Primitives;
 
 @RunWith(Parameterized.class)
 public class TestPrimitives {
@@ -49,7 +49,7 @@ public class TestPrimitives {
     @Test
     public void testMapping() {
         Class<?> mapping = Primitives.getClassFor(ctType);
-        assertEquals("Mapping for ctType=" + ctType.getName(),
-                ctType.getSimpleName(), mapping.getSimpleName());
+        Assert.assertEquals("Mapping for ctType=" + ctType.getName(),
+                            ctType.getSimpleName(), mapping.getSimpleName());
     }
 }

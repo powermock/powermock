@@ -16,79 +16,81 @@
 
 package powermock.test.support;
 
-import org.powermock.core.classloader.MockClassLoader;
-import org.powermock.core.transformers.impl.ClassMockTransformerTest;
+import org.powermock.core.classloader.MockClassLoaderConfiguration;
 
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * This class is used when running tests in {@link ClassMockTransformerTest}. It is
+ * This class is used when running tests for different {@link org.powermock.core.transformers.MockTransformer}. It is
  * placed in this package because classes in org.powermock.core.* are deferred by:
- * {@link MockClassLoader#packagesToBeDeferred}. Additionally, the class must be modified when it is loaded, and as such
- * not in {@link MockClassLoader#packagesToLoadButNotModify}.
+ * {@link MockClassLoaderConfiguration#getDeferPackages()}.
+ * Additionally, the class must be modified when it is loaded, and as such not in {@link MockClassLoaderConfiguration#shouldLoadWithMockClassloaderWithoutModifications(String)}.
  */
 public class MainMockTransformerTestSupport {
     public static class SupportClasses {
-        public final static class StaticFinalInnerClass {
-        }
-
-        public final static class FinalInnerClass {
-        }
-
-
-        private final static class PrivateStaticFinalInnerClass {
-        }
-
         public enum EnumClass {
             VALUE
         }
-
+        
+        public final static class StaticFinalInnerClass {
+        }
+        
+        public final static class FinalInnerClass {
+        }
+        
+        private final static class PrivateStaticFinalInnerClass {
+        }
+        
+        public static class MultipleConstructors {
+            
+            public MultipleConstructors() {}
+            
+            protected MultipleConstructors(String s) {}
+            
+            MultipleConstructors(int i) {}
+            
+            private MultipleConstructors(Boolean[] array) {}
+            
+            protected MultipleConstructors(int[] iarray, boolean b, String[] sarray) {}
+        }
+        
         class SuperClass {
         }
-
+        
         public class SubClass extends SuperClass {
             public void dummyMethod() {}
         }
-
-        public static class MultipleConstructors {
-
-            public MultipleConstructors() {}
-            protected MultipleConstructors(String s) {}
-            MultipleConstructors(int i) {}
-            private MultipleConstructors(Boolean[] array) {}
-            protected MultipleConstructors(int[] iarray, boolean b, String[] sarray) {}
-        }
     }
-
+    
     public static class SuperClassWithObjectMethod {
-        public void doSomething(Object o){
-
+        public void doSomething(Object o) {
+            
         }
     }
-
-    public static class SubclassWithBridgeMethod extends SuperClassWithObjectMethod{
-        public void doSomething(String s){
-
+    
+    public static class SubclassWithBridgeMethod extends SuperClassWithObjectMethod {
+        public void doSomething(String s) {
+            
         }
     }
-
-    public static class CallSpy{
+    
+    public static class CallSpy {
         private final static List<String> methodCalls = new LinkedList<String>();
         private final static List<String> fieldCalls = new LinkedList<String>();
-
-        public static void registerMethodCall(String methodName){
+        
+        public static void registerMethodCall(String methodName) {
             methodCalls.add(methodName);
         }
-
-        public static void registerFieldCall(String fieldName){
+        
+        public static void registerFieldCall(String fieldName) {
             fieldCalls.add(fieldName);
         }
-
+        
         public static List<String> getMethodCalls() {
             return methodCalls;
         }
-
+        
         public static List<String> getFieldCalls() {
             return fieldCalls;
         }

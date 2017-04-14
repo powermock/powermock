@@ -18,14 +18,14 @@ package org.powermock.core.classloader;
 import javassist.ByteArrayClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 import org.powermock.core.classloader.javassist.ClassPathAdjuster;
 import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
-import org.powermock.core.transformers.ClassWrapper;
 import org.powermock.core.transformers.MockTransformer;
-import org.powermock.core.transformers.impl.ClassMockTransformer;
+import org.powermock.core.transformers.MockTransformerChain;
+import org.powermock.core.transformers.javassist.JavassistMockTransformerChainFactory;
 import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
@@ -34,6 +34,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.security.ProtectionDomain;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,23 +42,27 @@ import java.util.List;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.powermock.core.classloader.MockClassLoader.MODIFY_ALL_CLASSES;
-import static org.powermock.core.classloader.javassist.JavassistMockClassLoader.CGLIB_ENHANCER;
-import static org.powermock.core.classloader.javassist.JavassistMockClassLoader.CGLIB_METHOD_WRAPPER;
 
 public class MockClassLoaderTest {
     
-    private MockClassLoaderFactory<JavassistMockClassLoader> mockClassLoaderFactory = new MockClassLoaderFactory(JavassistMockClassLoader.class);
+    private MockClassLoaderFactory<JavassistMockClassLoader> mockClassLoaderFactory =
+        new MockClassLoaderFactory<JavassistMockClassLoader>(JavassistMockClassLoader.class);
     
+    
+    private MockTransformerChain transformerChain;
+    
+    @Before
+    public void setUp() throws Exception {
+        transformerChain = new JavassistMockTransformerChainFactory().createDefaultChain(Collections.<MockTransformer>emptyList());
+    }
     
     @Test
     public void autoboxingWorks() throws Exception {
         String name = this.getClass().getPackage().getName() + ".HardToTransform";
         final MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[]{name});
-        List<MockTransformer> list = new LinkedList<MockTransformer>();
-        list.add(new ClassMockTransformer());
-        mockClassLoader.setMockTransformerChain(list);
+        mockClassLoader.setMockTransformerChain(transformerChain);
+        
         Class<?> c = mockClassLoader.loadClass(name);
         
         Object object = c.newInstance();
@@ -83,7 +88,7 @@ public class MockClassLoaderTest {
     @Test
     public void powerMockIgnoreAnnotatedPackagesAreIgnored() throws Exception {
         MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[]{"org.ikk.Jux"});
-    
+        
         MockClassLoaderConfiguration configuration = mockClassLoader.getConfiguration();
         
         Whitebox.setInternalState(configuration, "deferPackages", new String[]{"*mytest*"}, MockClassLoaderConfiguration.class);
@@ -95,9 +100,9 @@ public class MockClassLoaderTest {
     public void powerMockIgnoreAnnotatedPackagesHavePrecedenceOverPrepareEverythingForTest() throws Exception {
         MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[]{MODIFY_ALL_CLASSES});
         MockClassLoaderConfiguration configuration = mockClassLoader.getConfiguration();
-    
+        
         Whitebox.setInternalState(configuration, "deferPackages", new String[]{"*mytest*"}, MockClassLoaderConfiguration.class);
-    
+        
         assertFalse(configuration.shouldModify("org.mytest.myclass"));
     }
     
@@ -105,8 +110,7 @@ public class MockClassLoaderTest {
     public void canFindResource() throws Exception {
         final MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[0]);
         List<MockTransformer> list = new LinkedList<MockTransformer>();
-        list.add(new ClassMockTransformer());
-        mockClassLoader.setMockTransformerChain(list);
+        mockClassLoader.setMockTransformerChain(transformerChain);
         
         // Force a ClassLoader that can find 'foo/bar/baz/test.txt' into
         // mockClassLoader.deferTo.
@@ -122,9 +126,7 @@ public class MockClassLoaderTest {
     @Test
     public void canFindResources() throws Exception {
         final MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[0]);
-        List<MockTransformer> list = new LinkedList<MockTransformer>();
-        list.add(new ClassMockTransformer());
-        mockClassLoader.setMockTransformerChain(list);
+        mockClassLoader.setMockTransformerChain(transformerChain);
         
         // Force a ClassLoader that can find 'foo/bar/baz/test.txt' into
         // mockClassLoader.deferTo.
@@ -140,9 +142,7 @@ public class MockClassLoaderTest {
     @Test
     public void resourcesNotDoubled() throws Exception {
         final MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[0]);
-        List<MockTransformer> list = new LinkedList<MockTransformer>();
-        list.add(new ClassMockTransformer());
-        mockClassLoader.setMockTransformerChain(list);
+        mockClassLoader.setMockTransformerChain(transformerChain);
         
         // MockClassLoader will only be able to find 'foo/bar/baz/test.txt' if it
         // properly defers the resources lookup to its deferTo ClassLoader.
@@ -159,9 +159,7 @@ public class MockClassLoaderTest {
         // class to the MockClassLoader's classpool.
         UseClassPathAdjuster useClassPathAdjuster = new TestUseClassPathAdjuster();
         final MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[0], useClassPathAdjuster);
-        List<MockTransformer> list = new LinkedList<MockTransformer>();
-        list.add(new ClassMockTransformer());
-        mockClassLoader.setMockTransformerChain(list);
+        mockClassLoader.setMockTransformerChain(transformerChain);
         
         // setup custom classloader providing our dynamic class, for MockClassLoader to defer to
         mockClassLoader.deferTo = new ClassLoader(getClass().getClassLoader()) {
@@ -187,8 +185,7 @@ public class MockClassLoaderTest {
         
         MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[0]);
         List<MockTransformer> list = new LinkedList<MockTransformer>();
-        list.add(new ClassMockTransformer());
-        mockClassLoader.setMockTransformerChain(list);
+        mockClassLoader.setMockTransformerChain(transformerChain);
         
         // setup custom classloader providing our dynamic class, for MockClassLoader to defer to
         mockClassLoader.deferTo = new ClassLoader(getClass().getClassLoader()) {
@@ -243,12 +240,16 @@ public class MockClassLoaderTest {
     }
     
     @SuppressWarnings("SameParameterValue")
-    static class MyClassloader extends MockClassLoader {
+    static class MyClassloader extends JavassistMockClassLoader {
         
         private final ClassPool classPool = new ClassPool();
         
         public MyClassloader(String[] classesToMock) {
-            super(classesToMock, new String[0]);
+            super(classesToMock);
+        }
+        
+        public Class<?> findClassPublic(String s) throws ClassNotFoundException {
+            return findClass(s);
         }
         
         @Override
@@ -258,85 +259,11 @@ public class MockClassLoaderTest {
             }
             return super.findClass(name);
         }
-        
-        public Class<?> findClassPublic(String s) throws ClassNotFoundException {
-            return findClass(s);
-        }
-        
-        @Override
-        protected Class<?> loadUnmockedClass(String name, ProtectionDomain protectionDomain)
-            throws ClassFormatError, ClassNotFoundException {
-            byte bytes[] = null;
-            try {
-                /*
-                 * TODO This if-statement is a VERY ugly hack to avoid the
-                 * java.lang.ExceptionInInitializerError caused by
-                 * "javassist.NotFoundException:
-                 * net.sf.cglib.proxy.Enhancer$EnhancerKey$$KeyFactoryByCGLIB$$7fb24d72
-                 * ". This happens after the
-                 * se.jayway.examples.tests.privatefield.
-                 * SimplePrivateFieldServiceClassTest#testUseService(..) tests has
-                 * been run and all other tests will fail if this class is tried to
-                 * be loaded. Atm I have found no solution other than this ugly hack
-                 * to make it work. We really need to investigate the real cause of
-                 * this behavior.
-                 */
-                if (!name.startsWith(CGLIB_ENHANCER) && !name.startsWith(CGLIB_METHOD_WRAPPER)) {
-                    final CtClass ctClass = classPool.get(name);
-                    if (ctClass.isFrozen()) {
-                        ctClass.defrost();
-                    }
-                    bytes = ctClass.toBytecode();
-                }
-            } catch (Exception e) {
-                if (e instanceof javassist.NotFoundException) {
-                    throw new ClassNotFoundException();
-                } else {
-                    throw new RuntimeException(e);
-                }
-                
-            }
-            return bytes == null ? null : defineClass(name, bytes, 0, bytes.length, protectionDomain);
-        }
-        
         @Override
         protected Class<?> loadMockClass(String name, ProtectionDomain protectionDomain) {
-            
             final byte[] clazz = loadAndTransform(name);
             
             return defineClass(name, clazz, 0, clazz.length, protectionDomain);
-        }
-        
-        protected byte[] loadAndTransform(String name) {
-            final byte[] clazz;
-            
-            ClassPool.doPruning = false;
-            try {
-                CtClass type = classPool.get(name);
-                
-                ClassWrapper<CtClass> wrappedType = classWrapperFactory.wrap(type);
-                
-                wrappedType = transformClass(wrappedType);
-                
-                type = wrappedType.unwrap();
-    
-                /*
-                 * ClassPool may cause huge memory consumption if the number of CtClass
-                 * objects becomes amazingly large (this rarely happens since Javassist
-                 * tries to reduce memory consumption in various ways). To avoid this
-                 * problem, you can explicitly remove an unnecessary CtClass object from
-                 * the ClassPool. If you call detach() on a CtClass object, then that
-                 * CtClass object is removed from the ClassPool.
-                 */
-                type.detach();
-                
-                
-                clazz = type.toBytecode();
-            } catch (Exception e) {
-                throw new IllegalStateException("Failed to transform class with name " + name + ". Reason: "
-                                                    + e.getMessage(), e);
-            }
-            return clazz;
         }
     }
     
@@ -348,19 +275,19 @@ public class MockClassLoaderTest {
             this.classLoaderClass = classLoaderClass;
         }
         
-        private T getInstance(String[] param) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-            MockClassLoaderConfiguration configuration = new MockClassLoaderConfiguration(param, new String[0]);
-            return getInstance(configuration);
-        }
-        
         T getInstance(String[] param, UseClassPathAdjuster useClassPathAdjuster) throws IllegalAccessException, InvocationTargetException, InstantiationException {
             Constructor<?> constructor = WhiteboxImpl.getConstructor(classLoaderClass, param.getClass(), param.getClass(), UseClassPathAdjuster.class);
             return (T) constructor.newInstance(param, new String[0], useClassPathAdjuster);
         }
-    
+        
         public T getInstance(MockClassLoaderConfiguration configuration) throws IllegalAccessException, InvocationTargetException, InstantiationException {
             Constructor<?> constructor = WhiteboxImpl.getConstructor(classLoaderClass, configuration.getClass());
             return (T) constructor.newInstance(new Object[]{configuration});
+        }
+        
+        private T getInstance(String[] param) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+            MockClassLoaderConfiguration configuration = new MockClassLoaderConfiguration(param, new String[0]);
+            return getInstance(configuration);
         }
     }
     

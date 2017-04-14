@@ -22,6 +22,7 @@ import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
 import org.powermock.core.transformers.ClassWrapper;
 import org.powermock.core.transformers.MockTransformer;
+import org.powermock.core.transformers.support.DefaultMockTransformerChain;
 import powermock.classloading.classes.MyArgument;
 import powermock.classloading.classes.MyClass;
 import powermock.classloading.classes.MyCollectionHolder;
@@ -294,9 +295,7 @@ public class XStreamClassloaderExecutorTest {
 				return clazz;
 			}
 		};
-		LinkedList<MockTransformer> linkedList = new LinkedList<MockTransformer>();
-		linkedList.add(mainMockTransformer);
-		classloader.setMockTransformerChain(linkedList);
+		classloader.setMockTransformerChain(DefaultMockTransformerChain.newBuilder().append(mainMockTransformer).build());
 		return classloader;
 	}
 }

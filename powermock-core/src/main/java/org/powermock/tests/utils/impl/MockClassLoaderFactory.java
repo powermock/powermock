@@ -23,26 +23,30 @@ import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
 import org.powermock.core.spi.PowerMockPolicy;
 import org.powermock.core.transformers.MockTransformer;
-import org.powermock.core.transformers.impl.ClassMockTransformer;
-import org.powermock.core.transformers.impl.InterfaceMockTransformer;
+import org.powermock.core.transformers.MockTransformerChain;
+import org.powermock.core.transformers.MockTransformerChainFactory;
+import org.powermock.core.transformers.javassist.JavassistMockTransformerChainFactory;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 class MockClassLoaderFactory {
+    
     private final String[] packagesToIgnore;
     private final Class<?> testClass;
     private final String[] classesToLoadByMockClassloader;
-    private final MockTransformer[] extraMockTransformers;
+    private final List<MockTransformer> extraMockTransformers;
+    private final MockTransformerChainFactory transformerChainFactory;
 
     public MockClassLoaderFactory(Class<?> testClass, String[] classesToLoadByMockClassloader, String[] packagesToIgnore, MockTransformer... extraMockTransformers) {
         this.testClass = testClass;
         this.classesToLoadByMockClassloader = classesToLoadByMockClassloader;
         this.packagesToIgnore = packagesToIgnore;
-        this.extraMockTransformers = extraMockTransformers;
+        this.extraMockTransformers = Arrays.asList(extraMockTransformers);
+        this.transformerChainFactory = new JavassistMockTransformerChainFactory();
     }
 
     public ClassLoader create() {
@@ -59,34 +63,38 @@ class MockClassLoaderFactory {
 
     protected ClassLoader createMockClassLoader(final String[] classesToLoadByMockClassloader) {
 
-        List<MockTransformer> mockTransformerChain = getMockTransformers(extraMockTransformers);
+        MockTransformerChain mockTransformerChain = getMockTransformers();
         final UseClassPathAdjuster useClassPathAdjuster = testClass.getAnnotation(UseClassPathAdjuster.class);
 
         ClassLoader mockLoader = AccessController.doPrivileged(new PrivilegedAction<MockClassLoader>() {
             @Override
             public MockClassLoader run() {
-                return new JavassistMockClassLoader(classesToLoadByMockClassloader, packagesToIgnore, useClassPathAdjuster);
+                return MockClassLoaderFactory.this.createMockClassLoader(classesToLoadByMockClassloader, useClassPathAdjuster);
             }
         });
 
         MockClassLoader mockClassLoader = (MockClassLoader) mockLoader;
         mockClassLoader.setMockTransformerChain(mockTransformerChain);
-        new MockPolicyInitializerImpl(testClass).initialize(mockLoader);
+    
+        initialize(mockLoader);
+    
         return mockLoader;
     }
-
+    
+    private JavassistMockClassLoader createMockClassLoader(final String[] classesToLoadByMockClassloader, final UseClassPathAdjuster useClassPathAdjuster) {
+        return new JavassistMockClassLoader(classesToLoadByMockClassloader, packagesToIgnore, useClassPathAdjuster);
+    }
+    
+    private void initialize(final ClassLoader mockLoader) {
+        new MockPolicyInitializerImpl(testClass).initialize(mockLoader);
+    }
+    
     protected boolean isContextClassLoaderShouldBeUsed(String[] classesToLoadByMockClassloader) {
         return (classesToLoadByMockClassloader == null || classesToLoadByMockClassloader.length == 0) && !hasMockPolicyProvidedClasses(testClass);
     }
 
-    protected List<MockTransformer> getMockTransformers(MockTransformer[] extraMockTransformers) {
-        List<MockTransformer> mockTransformerChain = new ArrayList<MockTransformer>();
-
-        mockTransformerChain.add(new ClassMockTransformer());
-        mockTransformerChain.add(new InterfaceMockTransformer());
-
-        Collections.addAll(mockTransformerChain, extraMockTransformers);
-        return mockTransformerChain;
+    protected MockTransformerChain getMockTransformers() {
+        return transformerChainFactory.createDefaultChain(extraMockTransformers);
     }
 
     private String[] makeSureArrayContainsTestClassName(String[] arrayOfClassNames, String testClassName) {

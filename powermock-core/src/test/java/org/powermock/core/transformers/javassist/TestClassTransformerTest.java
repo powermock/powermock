@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.powermock.core.transformers.impl;
+package org.powermock.core.transformers.javassist;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -23,6 +24,7 @@ import org.powermock.core.IndicateReloadClass;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
 import org.powermock.core.transformers.MockTransformer;
+import org.powermock.core.transformers.MockTransformerChainFactory;
 import powermock.test.support.MainMockTransformerTestSupport.SupportClasses;
 
 import java.lang.reflect.Constructor;
@@ -41,6 +43,8 @@ import static org.junit.Assert.fail;
 @RunWith(Parameterized.class)
 public class TestClassTransformerTest {
     
+    private MockTransformerChainFactory transformerChainFactory;
+    
     @Parameterized.Parameter(0)
     public MockClassLoaderCase classLoaderCase;
     
@@ -49,23 +53,32 @@ public class TestClassTransformerTest {
         MockClassLoaderCase[] factoryAlternatives = MockClassLoaderCase.values();
         List<Object[]> values = Arrays.asList(new Object[factoryAlternatives.length][]);
         for (MockClassLoaderCase eachFactoryAlternative : factoryAlternatives) {
-            values.set(eachFactoryAlternative.ordinal(),
-                       new Object[]{eachFactoryAlternative});
+            values.set(eachFactoryAlternative.ordinal(), new Object[]{eachFactoryAlternative});
         }
         return values;
     }
     
+    @Before
+    public void setUp() throws Exception {
+        transformerChainFactory = new JavassistMockTransformerChainFactory();
+    }
+    
     @Test
     public void preparedSubclassShouldNotGetPublicDeferConstructor() throws Exception {
-        MockClassLoader mockClassLoader = classLoaderCase
-                                              .createMockClassLoaderThatPrepare(SupportClasses.SubClass.class);
+        MockClassLoader mockClassLoader = classLoaderCase.createMockClassLoaderThatPrepare(
+            SupportClasses.SubClass.class,
+            transformerChainFactory
+        );
+        
         final Class<?> clazz = Class.forName(SupportClasses.SubClass.class.getName(), true, mockClassLoader);
+        
         assertEquals("Original number of constructoprs",
                      1, SupportClasses.SubClass.class.getConstructors().length);
         try {
-            fail("A public defer-constructor is not expected: "
-                     + clazz.getConstructor(IndicateReloadClass.class));
-        } catch (NoSuchMethodException is_expected) {}
+            fail("A public defer-constructor is not expected: " + clazz.getConstructor(IndicateReloadClass.class));
+        } catch (NoSuchMethodException is_expected) {
+            
+        }
         assertEquals("Number of (public) constructors in modified class",
                      1, clazz.getConstructors().length);
         
@@ -75,11 +88,16 @@ public class TestClassTransformerTest {
     
     @Test
     public void preparedClassConstructorsShouldKeepTheirAccessModifier() throws Exception {
-        MockClassLoader mockClassLoader = classLoaderCase
-                                              .createMockClassLoaderThatPrepare(SupportClasses.MultipleConstructors.class);
+        MockClassLoader mockClassLoader = classLoaderCase.createMockClassLoaderThatPrepare(
+            SupportClasses.MultipleConstructors.class,
+            transformerChainFactory
+        );
+        
         final Class<?> clazz = Class.forName(
             SupportClasses.MultipleConstructors.class.getName(),
-            true, mockClassLoader);
+            true, mockClassLoader
+        );
+        
         for (Constructor<?> originalConstructor : SupportClasses
                                                       .MultipleConstructors.class.getDeclaredConstructors()) {
             Class[] paramTypes = originalConstructor.getParameterTypes();
@@ -125,16 +143,14 @@ public class TestClassTransformerTest {
         
         abstract String[] preparations(Class<?> prepare4test);
         
-        MockClassLoader createMockClassLoaderThatPrepare(Class<?> prepare4test) {
+        MockClassLoader createMockClassLoaderThatPrepare(Class<?> prepare4test, MockTransformerChainFactory chainFactory) {
             MockTransformer testClassTransformer = TestClassTransformer
                                                        .forTestClass(chooseTestClass(prepare4test))
                                                        .removesTestMethodAnnotation(Test.class)
                                                        .fromMethods(Collections.<Method>emptyList());
-            MockClassLoader mockClassLoader =
-                new JavassistMockClassLoader(preparations(prepare4test));
-            mockClassLoader.setMockTransformerChain(Arrays.asList(
-                new ClassMockTransformer(),
-                testClassTransformer));
+            
+            MockClassLoader mockClassLoader = new JavassistMockClassLoader(preparations(prepare4test));
+            mockClassLoader.setMockTransformerChain(chainFactory.createTestClassChain(testClassTransformer));
             return mockClassLoader;
         }
     }

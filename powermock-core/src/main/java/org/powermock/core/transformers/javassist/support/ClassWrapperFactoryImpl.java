@@ -16,11 +16,15 @@
  *
  */
 
-package org.powermock.core.transformers;
+package org.powermock.core.transformers.javassist.support;
 
 import javassist.CtClass;
 import org.powermock.core.transformers.ClassWrapper;
+import org.powermock.core.transformers.ClassWrapperFactory;
+import org.powermock.core.transformers.javassist.support.JavaAssistClassWrapper;
 
-public interface ClassWrapperFactory {
-    ClassWrapper<CtClass> wrap(CtClass ctClass);
+public class ClassWrapperFactoryImpl implements ClassWrapperFactory {
+    @Override public ClassWrapper<CtClass> wrap(CtClass ctClass){
+        return new JavaAssistClassWrapper(ctClass);
+    }
 }

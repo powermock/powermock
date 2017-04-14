@@ -16,26 +16,18 @@
  *
  */
 
-package org.powermock.core.transformers.impl;
+package org.powermock.core.transformers;
 
-import javassist.CtClass;
-import org.powermock.core.transformers.ClassWrapper;
-import org.powermock.core.transformers.MockTransformer;
+import org.powermock.core.transformers.support.DefaultMockTransformerChain.MockTransformerChainBuilder;
 
-/**
- *
- */
-public abstract class AbstractJavaAssistMockTransformer implements MockTransformer {
-    @Override
-    public <T> ClassWrapper<T> transform(final ClassWrapper<T> clazz) throws Exception {
-        T classImpl = clazz.unwrap();
-        
-        if (classImpl instanceof CtClass) {
-            transform((CtClass) classImpl);
-        }
-        
-        return clazz;
-    }
+import java.util.List;
+
+public interface MockTransformerChainFactory {
+    MockTransformerChain createDefaultChain();
     
-    protected abstract CtClass transform(CtClass clazz) throws Exception;
+    MockTransformerChain createDefaultChain(TransformStrategy transformStrategy);
+    
+    MockTransformerChain createTestClassChain(MockTransformer testClassTransformer);
+    
+    MockTransformerChain createDefaultChain(List<MockTransformer> extraMockTransformers);
 }

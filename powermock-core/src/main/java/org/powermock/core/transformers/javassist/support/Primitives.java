@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.powermock.core.transformers.impl;
+package org.powermock.core.transformers.javassist.support;
 
 import javassist.CtPrimitiveType;
 
@@ -35,12 +35,12 @@ import static javassist.CtClass.voidType;
  * Simple utility that maps constant fields of {@link javassist.CtClass} to
  * their corresponding java class-objects for primitive types.
  */
-class Primitives {
+public class Primitives {
 
     private static final Map<CtPrimitiveType,Class<?>> ct2primitiveClass =
             lookupMappings();
-
-    static Class<?> getClassFor(CtPrimitiveType ctPrimitiveType) {
+    
+    public static Class<?> getClassFor(CtPrimitiveType ctPrimitiveType) {
         return ct2primitiveClass.get(ctPrimitiveType);
     }
 

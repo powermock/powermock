@@ -18,23 +18,9 @@
 
 package org.powermock.core.transformers;
 
-import javassist.CtClass;
- 
-class JavaAssistClassWrapper implements ClassWrapper<CtClass>{
-    
-    private final CtClass ctClass;
-    
-    JavaAssistClassWrapper(CtClass ctClass) {
-        this.ctClass = ctClass;
-    }
-    
-    @Override
-    public boolean isInterface() {
-        return ctClass.isInterface();
-    }
-    
-    @Override
-    public CtClass unwrap() {
-        return ctClass;
-    }
+/**
+ *
+ */
+public interface MockTransformerChain {
+    <T> ClassWrapper<T> transform(ClassWrapper<T> clazz) throws Exception;
 }
