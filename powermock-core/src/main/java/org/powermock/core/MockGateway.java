@@ -15,13 +15,14 @@
  */
 package org.powermock.core;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Modifier;
 import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.core.spi.NewInvocationControl;
 import org.powermock.reflect.internal.TypeUtils;
 import org.powermock.reflect.internal.WhiteboxImpl;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Modifier;
 
 /**
  * All mock invocations are routed through this gateway. This includes method
