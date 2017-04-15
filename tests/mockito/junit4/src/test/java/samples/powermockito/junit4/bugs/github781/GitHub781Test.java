@@ -6,7 +6,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
 
 @RunWith(PowerMockRunner.class)
@@ -22,6 +22,6 @@ public class GitHub781Test {
         PowerMockito.when(EqualsStatic.equals()).thenReturn(result);
         partialMock = spy(new SpyObject());
 
-        assertEquals(result, partialMock.callEquals());
+        assertThat(partialMock.callEquals()).isEqualTo(result);
     }
 }
