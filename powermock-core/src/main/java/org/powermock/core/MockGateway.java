@@ -152,9 +152,9 @@ public class MockGateway {
         MethodInvocationControl methodInvocationControl = mockInvocation.getMethodInvocationControl();
         Object returnValue = null;
 
-        // The following describes the equals method.
+        // The following describes the equals non-static method.
 
-        if (isEqualsMethod(mockInvocation)) {
+        if (isEqualsMethod(mockInvocation) && !isStaticMethod(mockInvocation)) {
             returnValue = tryHandleEqualsMethod(mockInvocation);
         }
 
@@ -232,6 +232,10 @@ public class MockGateway {
 
     private static boolean isEqualsMethod(MockInvocation mockInvocation) {
         return "equals".equals(mockInvocation.getMethod().getName());
+    }
+
+    private static boolean isStaticMethod(MockInvocation mockInvocation) {
+        return Modifier.isStatic(mockInvocation.getMethod().getModifiers());
     }
 
     private static boolean calledFromMockito() {
