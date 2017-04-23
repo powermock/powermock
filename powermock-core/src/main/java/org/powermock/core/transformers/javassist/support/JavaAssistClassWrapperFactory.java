@@ -21,10 +21,34 @@ package org.powermock.core.transformers.javassist.support;
 import javassist.CtClass;
 import org.powermock.core.transformers.ClassWrapper;
 import org.powermock.core.transformers.ClassWrapperFactory;
-import org.powermock.core.transformers.javassist.support.JavaAssistClassWrapper;
 
-public class ClassWrapperFactoryImpl implements ClassWrapperFactory {
-    @Override public ClassWrapper<CtClass> wrap(CtClass ctClass){
+public class JavaAssistClassWrapperFactory implements ClassWrapperFactory<CtClass> {
+    @Override
+    public ClassWrapper<CtClass> wrap(CtClass ctClass) {
         return new JavaAssistClassWrapper(ctClass);
+    }
+    
+    public static class JavaAssistClassWrapper implements ClassWrapper<CtClass> {
+        
+        private final CtClass ctClass;
+        
+        private JavaAssistClassWrapper(CtClass ctClass) {
+            this.ctClass = ctClass;
+        }
+        
+        @Override
+        public boolean isInterface() {
+            return ctClass.isInterface();
+        }
+        
+        @Override
+        public CtClass unwrap() {
+            return ctClass;
+        }
+
+        @Override
+        public ClassWrapper<CtClass> wrap(final CtClass original) {
+            return new JavaAssistClassWrapper(original);
+        }
     }
 }

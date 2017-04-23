@@ -42,16 +42,16 @@ public class JavassistMockTransformerChainFactory implements MockTransformerChai
     }
     
     @Override
-    public MockTransformerChain createTestClassChain(final MockTransformer testClassTransformer) {
+    public MockTransformerChain createDefaultChain(final List<MockTransformer> extraMockTransformers) {
         return createDefaultChainBuilder(DEFAULT)
-                   .append(testClassTransformer)
+                   .append(extraMockTransformers)
                    .build();
     }
     
     @Override
-    public MockTransformerChain createDefaultChain(final List<MockTransformer> extraMockTransformers) {
+    public MockTransformerChain createTestClassChain(final MockTransformer testClassTransformer) {
         return createDefaultChainBuilder(DEFAULT)
-                   .append(extraMockTransformers)
+                   .append(testClassTransformer)
                    .build();
     }
     
@@ -61,6 +61,7 @@ public class JavassistMockTransformerChainFactory implements MockTransformerChai
                                           .append(new ConstructorsMockTransformer(transformStrategy))
                                           .append(new InstrumentMockTransformer(transformStrategy))
                                           .append(new PackagePrivateClassesMockTransformer(transformStrategy))
+                                          .append(new StaticFinalFieldsMockTransformer(transformStrategy))
                                           .append(new StaticFinalNativeMethodMockTransformer(transformStrategy))
                                           .append(new SuppressStaticInitializerMockTransformer(transformStrategy))
                                           .append(new MethodSizeMockTransformer(transformStrategy));

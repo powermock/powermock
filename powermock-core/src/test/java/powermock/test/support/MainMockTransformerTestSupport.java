@@ -28,6 +28,15 @@ import java.util.List;
  * Additionally, the class must be modified when it is loaded, and as such not in {@link MockClassLoaderConfiguration#shouldLoadWithMockClassloaderWithoutModifications(String)}.
  */
 public class MainMockTransformerTestSupport {
+    
+    public static class StaticInitialization {
+        public static String value;
+        
+        static {
+            value = "Init";
+        }
+    }
+    
     public static class SupportClasses {
         public enum EnumClass {
             VALUE
@@ -76,13 +85,10 @@ public class MainMockTransformerTestSupport {
     }
     
     public static class CallSpy {
-        private final static List<String> methodCalls = new LinkedList<String>();
-        private final static List<String> fieldCalls = new LinkedList<String>();
-        
         public static void registerMethodCall(String methodName) {
             methodCalls.add(methodName);
         }
-        
+
         public static void registerFieldCall(String fieldName) {
             fieldCalls.add(fieldName);
         }
@@ -94,5 +100,7 @@ public class MainMockTransformerTestSupport {
         public static List<String> getFieldCalls() {
             return fieldCalls;
         }
+        private final static List<String> methodCalls = new LinkedList<String>();
+        private final static List<String> fieldCalls = new LinkedList<String>();
     }
 }

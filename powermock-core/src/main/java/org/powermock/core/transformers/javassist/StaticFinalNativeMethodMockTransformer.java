@@ -41,6 +41,4 @@ public class StaticFinalNativeMethodMockTransformer extends MethodMockTransforme
         }
         return clazz;
     }
-    
-    
 }

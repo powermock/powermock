@@ -16,42 +16,64 @@
  *
  */
 
-package org.powermock.core.transformers.javassist;
+package org.powermock.core.transformers;
 
 import javassist.Modifier;
 import org.junit.Test;
-import org.powermock.core.transformers.TransformStrategy;
+import org.junit.runners.Parameterized;
+import org.powermock.core.transformers.javassist.ClassFinalModifierMockTransformer;
 import powermock.test.support.MainMockTransformerTestSupport.SupportClasses;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assume.assumeThat;
 
 public class ClassFinalModifierMockTransformerTest extends AbstractBaseMockTransformerTest {
     
-    @Override
-    protected ClassFinalModifierMockTransformer createMockTransformer() {
-        return new ClassFinalModifierMockTransformer(TransformStrategy.CLASSLOADER);
+    @Parameterized.Parameters(name = "strategy: {0}, transformer: {1}")
+    public static Iterable<Object[]> data() {
+        return MockTransformerTestHelper.createTransformerTestData(
+            ClassFinalModifierMockTransformer.class
+        );
+    }
+    
+    public ClassFinalModifierMockTransformerTest(final TransformStrategy strategy, final MockTransformerChain mockTransformerChain) {
+        super(strategy, mockTransformerChain);
     }
     
     @Test
-    public void staticFinalInnerClassesShouldBecomeNonFinal() throws Exception {
+    public void should_remove_final_modifier_from_static_final_inner_classes() throws Exception {
+    
+        assumeThat(strategy, not(equalTo(TransformStrategy.INST_REDEFINE)));
+        
         Class<?> clazz = loadWithMockClassLoader(SupportClasses.StaticFinalInnerClass.class.getName());
         assertFalse(Modifier.isFinal(clazz.getModifiers()));
     }
     
     @Test
-    public void finalInnerClassesShouldBecomeNonFinal() throws Exception {
+    public void should_remove_final_modifier_from_final_inner_classes() throws Exception {
+    
+        assumeThat(strategy, not(equalTo(TransformStrategy.INST_REDEFINE)));
+        
         Class<?> clazz = loadWithMockClassLoader(SupportClasses.FinalInnerClass.class.getName());
         assertFalse(Modifier.isFinal(clazz.getModifiers()));
     }
     
     @Test
-    public void enumClassesShouldBecomeNonFinal() throws Exception {
+    public void should_remove_final_modifier_from_enums() throws Exception {
+    
+        assumeThat(strategy, not(equalTo(TransformStrategy.INST_REDEFINE)));
+        
         Class<?> clazz = loadWithMockClassLoader(SupportClasses.EnumClass.class.getName());
         assertFalse(Modifier.isFinal(clazz.getModifiers()));
     }
     
     @Test
-    public void privateInnerClassesShouldBecomeNonFinal() throws Exception {
+    public void should_remove_final_modifier_from_private_static_final_inner_classes() throws Exception {
+    
+        assumeThat(strategy, not(equalTo(TransformStrategy.INST_REDEFINE)));
+        
         Class<?> clazz = loadWithMockClassLoader(SupportClasses.class.getName() + "$PrivateStaticFinalInnerClass");
         assertFalse(Modifier.isFinal(clazz.getModifiers()));
     }

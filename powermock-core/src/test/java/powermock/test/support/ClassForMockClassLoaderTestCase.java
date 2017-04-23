@@ -16,26 +16,13 @@
  *
  */
 
-package org.powermock.core.transformers.javassist.support;
+package powermock.test.support;
 
-import javassist.CtClass;
-import org.powermock.core.transformers.ClassWrapper;
 
-public class JavaAssistClassWrapper implements ClassWrapper<CtClass> {
+public class ClassForMockClassLoaderTestCase {
     
-    private final CtClass ctClass;
-    
-    JavaAssistClassWrapper(CtClass ctClass) {
-        this.ctClass = ctClass;
+    public String description() {
+        return "This class is used for MockClassLoaderTest and located here only because package 'org.powermock.core' is always ignored.";
     }
     
-    @Override
-    public boolean isInterface() {
-        return ctClass.isInterface();
-    }
-    
-    @Override
-    public CtClass unwrap() {
-        return ctClass;
-    }
 }

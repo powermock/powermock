@@ -19,8 +19,18 @@
 package org.powermock.core.transformers;
 
 /**
+ * Interface represent chain of {@link MockTransformer}.
+ * Each transformer in chain instruments a class to enable one of mocking feature.
  *
+ * @author Arthur Zagretdinov
  */
 public interface MockTransformerChain {
+    
+    /**
+     * Go thought all transformers in chain and instrument the {@code clazz}.
+     *
+     * @param clazz The class to be instrument to enabled class mocking.
+     * @return A {@code ClassWrapper} representation of the instrumented class.
+     */
     <T> ClassWrapper<T> transform(ClassWrapper<T> clazz) throws Exception;
 }

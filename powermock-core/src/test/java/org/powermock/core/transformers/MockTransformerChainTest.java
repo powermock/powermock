@@ -43,11 +43,11 @@ public class MockTransformerChainTest {
     }
     
     
-    private static class MockTransformerSpy implements MockTransformer {
+    private static class MockTransformerSpy implements MockTransformer<Object> {
         public boolean classTransformed = false;
         
         @Override
-        public <T> ClassWrapper<T> transform(final ClassWrapper<T> clazz) throws Exception {
+        public ClassWrapper<Object> transform(final ClassWrapper<Object> clazz) throws Exception {
             classTransformed = true;
             return clazz;
         }
@@ -65,6 +65,11 @@ public class MockTransformerChainTest {
         
         @Override
         public Object unwrap() {
+            return null;
+        }
+    
+        @Override
+        public ClassWrapper<Object> wrap(final Object original) {
             return null;
         }
     }

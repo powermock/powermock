@@ -19,7 +19,6 @@
 package org.powermock.core.transformers.support;
 
 
-import org.powermock.core.classloader.MockClassLoaderBuilder;
 import org.powermock.core.transformers.ClassWrapper;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.MockTransformerChain;
@@ -60,12 +59,12 @@ public class DefaultMockTransformerChain implements MockTransformerChain {
             transformers.add(transformer);
             return this;
         }
-    
+        
         public MockTransformerChainBuilder append(final List<MockTransformer> mockTransformerChain) {
             transformers.addAll(mockTransformerChain);
             return this;
         }
-    
+        
         public MockTransformerChain build() {
             return new DefaultMockTransformerChain(transformers);
         }

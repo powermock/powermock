@@ -25,7 +25,7 @@ import org.powermock.core.transformers.ClassWrapperFactory;
 import org.powermock.core.transformers.MockTransformerChain;
 import org.powermock.core.transformers.TransformStrategy;
 import org.powermock.core.transformers.javassist.JavassistMockTransformerChainFactory;
-import org.powermock.core.transformers.javassist.support.ClassWrapperFactoryImpl;
+import org.powermock.core.transformers.javassist.support.JavaAssistClassWrapperFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -46,7 +46,7 @@ class PowerMockClassTransformer extends AbstractClassTransformer implements Clas
     
     PowerMockClassTransformer() {
         super();
-        wrapperFactory = new ClassWrapperFactoryImpl();
+        wrapperFactory = new JavaAssistClassWrapperFactory();
     }
     
     public void setClassesToTransform(Collection<String> classesToTransform) {

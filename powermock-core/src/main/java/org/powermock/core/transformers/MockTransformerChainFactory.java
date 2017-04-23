@@ -18,16 +18,40 @@
 
 package org.powermock.core.transformers;
 
-import org.powermock.core.transformers.support.DefaultMockTransformerChain.MockTransformerChainBuilder;
-
 import java.util.List;
 
+/**
+ * An implementation of interface should create a {@link MockTransformerChain} with full set of required transformers to enable all mocking features.
+ *
+ * @author Arthur Zagretdinov
+ */
 public interface MockTransformerChainFactory {
+    
+    /**
+     * Create an {@link MockTransformerChain} with using default strategy {@link TransformStrategy#CLASSLOADER}
+     *
+     * @return an instance of MockTransformerChain
+     */
     MockTransformerChain createDefaultChain();
     
+    /**
+     * Create an {@link MockTransformerChain} with using the given <code>transformStrategy</code>
+     *
+     * @return an instance of MockTransformerChain
+     */
     MockTransformerChain createDefaultChain(TransformStrategy transformStrategy);
     
-    MockTransformerChain createTestClassChain(MockTransformer testClassTransformer);
-    
+    /**
+     * Create an {@link MockTransformerChain} with using default strategy {@link TransformStrategy#CLASSLOADER} and with the given <code>extraMockTransformers</code>
+     *
+     * @return an instance of MockTransformerChain
+     */
     MockTransformerChain createDefaultChain(List<MockTransformer> extraMockTransformers);
+    
+    /**
+     * Create an {@link MockTransformerChain} with using the given <code>testClassTransformer</code> as transformer for test class.
+     *
+     * @return an instance of MockTransformerChain
+     */
+    MockTransformerChain createTestClassChain(MockTransformer testClassTransformer);
 }

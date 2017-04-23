@@ -16,7 +16,7 @@
  *
  */
 
-package org.powermock.core.transformers.javassist;
+package org.powermock.core.transformers;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -26,9 +26,10 @@ import javassist.CtMethod;
 import javassist.NotFoundException;
 import javassist.bytecode.AccessFlag;
 import org.junit.Test;
+import org.junit.runners.Parameterized;
 import org.powermock.core.IndicateReloadClass;
-import org.powermock.core.transformers.MockTransformer;
-import org.powermock.core.transformers.TransformStrategy;
+import org.powermock.core.transformers.javassist.ClassFinalModifierMockTransformer;
+import org.powermock.core.transformers.javassist.InstrumentMockTransformer;
 import powermock.test.support.MainMockTransformerTestSupport.CallSpy;
 import powermock.test.support.MainMockTransformerTestSupport.SuperClassWithObjectMethod;
 import powermock.test.support.MainMockTransformerTestSupport.SupportClasses;
@@ -36,18 +37,29 @@ import powermock.test.support.MainMockTransformerTestSupport.SupportClasses;
 import java.lang.reflect.Field;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assume.assumeThat;
 
 public class InstrumentMockTransformerTest extends AbstractBaseMockTransformerTest {
     
     private static final String SYNTHETIC_FIELD_VALUE = "Synthetic Field Value";
     
-    @Override
-    protected MockTransformer createMockTransformer() {
-        return new InstrumentMockTransformer(TransformStrategy.CLASSLOADER);
+    @Parameterized.Parameters(name = "strategy: {0}, transformer: {1}")
+    public static Iterable<Object[]> data() {
+        return MockTransformerTestHelper.createTransformerTestData(
+            InstrumentMockTransformer.class
+        );
     }
     
+    public InstrumentMockTransformerTest(final TransformStrategy strategy, final MockTransformerChain mockTransformerChain) {
+        super(strategy, mockTransformerChain);
+    }
+
     @Test
-    public void subclassShouldNormallyGetAnAdditionalDeferConstructor() throws Exception {
+    public void should_add_additional_defer_constructor() throws Exception {
+    
+        assumeThat(strategy, equalTo(TransformStrategy.CLASSLOADER));
+        
         Class<?> clazz = loadWithMockClassLoader(SupportClasses.SubClass.class.getName());
         
         assertThat(SupportClasses.SubClass.class.getConstructors())
@@ -65,7 +77,7 @@ public class InstrumentMockTransformerTest extends AbstractBaseMockTransformerTe
     
     
     @Test
-    public void shouldIgnoreCallToSyntheticField() throws Throwable {
+    public void should_ignore_call_to_synthetic_field() throws Throwable {
         final ClassPool classPool = new ClassPool(true);
         CtClass ctClass = prepareClassesForFieldTests(classPool);
         

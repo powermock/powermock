@@ -16,12 +16,13 @@
  *
  */
 
-package org.powermock.core.transformers.javassist;
+package org.powermock.core.transformers;
 
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
-import org.powermock.core.transformers.MockTransformer;
-import org.powermock.core.transformers.MockTransformerChain;
+import org.junit.runners.Parameterized;
+import org.powermock.core.transformers.javassist.InstrumentMockTransformer;
+import org.powermock.core.transformers.javassist.JavassistMockTransformerChainFactory;
 import powermock.test.support.ClassWithLargeMethods;
 
 import java.util.Collections;
@@ -29,12 +30,25 @@ import java.util.Collections;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 public class MethodSizeMockTransformerTest extends AbstractBaseMockTransformerTest {
     
+    
+    @Parameterized.Parameters(name = "strategy: {0}, transformer: {1}")
+    public static Iterable<Object[]> data() {
+        return MockTransformerTestHelper.createTransformerTestData(createMockTransformerChain());
+    }
+    
+    private static MockTransformerChain createMockTransformerChain() {
+        return new JavassistMockTransformerChainFactory().createDefaultChain(Collections.<MockTransformer>emptyList());
+    }
+    
+    public MethodSizeMockTransformerTest(final TransformStrategy strategy, final MockTransformerChain mockTransformerChain) {
+        super(strategy, mockTransformerChain);
+    }
+    
     @Test
-    public void shouldLoadClassWithMethodLowerThanJvmLimit() throws Exception {
+    public void should_load_class_with_method_lower_than_jvm_limit() throws Exception {
         Class<?> clazz = loadWithMockClassLoader(ClassWithLargeMethods.MethodLowerThanLimit.class.getName());
         assertNotNull("Class has been loaded", clazz);
         // There should be no exception since method was not overridden
@@ -42,7 +56,7 @@ public class MethodSizeMockTransformerTest extends AbstractBaseMockTransformerTe
     }
     
     @Test
-    public void shouldLoadClassAndOverrideMethodGreaterThanJvmLimit() throws Exception {
+    public void should_load_class_and_override_method_greater_than_jvm_limit() throws Exception {
         final Class<?> clazz = loadWithMockClassLoader(ClassWithLargeMethods.MethodGreaterThanLimit.class.getName());
         
         Throwable throwable = catchThrowable(new ThrowingCallable() {
@@ -60,10 +74,5 @@ public class MethodSizeMockTransformerTest extends AbstractBaseMockTransformerTe
             .as("Clause of exception should be IllegalAccessException")
             .isInstanceOf(IllegalAccessException.class)
             .hasMessageContaining("Method was too large and after instrumentation exceeded JVM limit");
-    }
-    
-    @Override
-    protected MockTransformerChain createMockTransformerChain() {
-        return new JavassistMockTransformerChainFactory().createDefaultChain(Collections.<MockTransformer>emptyList());
     }
 }

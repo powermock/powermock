@@ -16,7 +16,7 @@
  *
  */
 
-package org.powermock.core.transformers.javassist;
+package org.powermock.core.transformers;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -26,8 +26,8 @@ import javassist.CtNewMethod;
 import javassist.NotFoundException;
 import javassist.bytecode.AccessFlag;
 import org.junit.Test;
-import org.powermock.core.transformers.MockTransformer;
-import org.powermock.core.transformers.TransformStrategy;
+import org.junit.runners.Parameterized;
+import org.powermock.core.transformers.javassist.StaticFinalNativeMethodMockTransformer;
 import powermock.test.support.MainMockTransformerTestSupport.CallSpy;
 import powermock.test.support.MainMockTransformerTestSupport.SubclassWithBridgeMethod;
 import powermock.test.support.MainMockTransformerTestSupport.SuperClassWithObjectMethod;
@@ -36,16 +36,25 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assume.assumeThat;
 
 public class StaticFinalNativeMethodMockTransformerTest extends AbstractBaseMockTransformerTest {
     
-    @Override
-    protected MockTransformer createMockTransformer() {
-        return new StaticFinalNativeMethodMockTransformer(TransformStrategy.CLASSLOADER);
+    @Parameterized.Parameters(name = "strategy: {0}, transformer: {1}")
+    public static Iterable<Object[]> data() {
+        return MockTransformerTestHelper.createTransformerTestData(
+            StaticFinalNativeMethodMockTransformer.class
+        );
+    }
+    
+    public StaticFinalNativeMethodMockTransformerTest(final TransformStrategy strategy, final MockTransformerChain mockTransformerChain) {
+        super(strategy, mockTransformerChain);
     }
     
     @Test
-    public void shouldIgnoreSyntheticNonBridgeMethods() throws Throwable {
+    public void should_ignore_synthetic_non_bridge_methods() throws Throwable {
         
         final ClassPool classPool = new ClassPool(true);
         CtClass ctClass = prepareClassesForTest(classPool, "return;");
@@ -56,10 +65,13 @@ public class StaticFinalNativeMethodMockTransformerTest extends AbstractBaseMock
     }
     
     @Test
-    public void shouldIgnoreCallToSyntheticNonBridgeMethods() throws Throwable {
+    public void should_ignore_call_to_synthetic_non_bridge_methods() throws Throwable {
+    
+        assumeThat(strategy, not(equalTo(TransformStrategy.INST_TRANSFORM)));
+        
         final ClassPool classPool = new ClassPool(true);
         CtClass ctClass = prepareClassesForTest(classPool, "powermock.test.support.MainMockTransformerTestSupport.CallSpy.registerMethodCall($1);");
-    
+        
         mockTransformerChain.transform(wrap(ctClass));
         
         runTestWithNewClassLoader(classPool, ShouldIgnoreCallToSyntheticNonBridgeMethods.class.getName());
@@ -67,7 +79,10 @@ public class StaticFinalNativeMethodMockTransformerTest extends AbstractBaseMock
     
     
     @Test
-    public void shouldModifyBridgeMethods() throws Throwable {
+    public void should_modify_bridge_methods() throws Throwable {
+    
+        assumeThat(strategy, not(equalTo(TransformStrategy.INST_TRANSFORM)));
+        
         final ClassPool classPool = new ClassPool(true);
         addCallInterceptorToMockGateway(classPool);
         

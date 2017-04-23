@@ -29,6 +29,16 @@ public class TransformerHelper {
     
     public static final String VOID = "";
     
+    private static boolean isAccessFlagSynthetic(CtMethod method) {
+        int accessFlags = method.getMethodInfo2().getAccessFlags();
+        return ((accessFlags & AccessFlag.SYNTHETIC) != 0) && !isBridgeMethod(method);
+    }
+    
+    private static boolean isBridgeMethod(CtMethod method) {
+        return (method.getMethodInfo2()
+                      .getAccessFlags() & AccessFlag.BRIDGE) != 0;
+    }
+    
     /**
      * @return The correct return type, i.e. takes care of casting the a wrapper
      * type to primitive type if needed.
@@ -52,7 +62,6 @@ public class TransformerHelper {
         return returnValue;
     }
     
-    
     public static boolean isNotSyntheticField(FieldInfo fieldInfo) {
         return (fieldInfo.getAccessFlags() & AccessFlag.SYNTHETIC) == 0;
     }
@@ -73,15 +82,5 @@ public class TransformerHelper {
     public static boolean shouldTreatAsSystemClassCall(CtClass declaringClass) {
         final String className = declaringClass.getName();
         return className.startsWith("java.");
-    }
-    
-    private static boolean isAccessFlagSynthetic(CtMethod method) {
-        int accessFlags = method.getMethodInfo2().getAccessFlags();
-        return ((accessFlags & AccessFlag.SYNTHETIC) != 0) && !isBridgeMethod(method);
-    }
-    
-    private static boolean isBridgeMethod(CtMethod method) {
-        return (method.getMethodInfo2()
-                      .getAccessFlags() & AccessFlag.BRIDGE) != 0;
     }
 }

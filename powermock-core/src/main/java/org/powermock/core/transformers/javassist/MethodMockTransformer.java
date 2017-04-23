@@ -51,7 +51,7 @@ abstract class MethodMockTransformer extends AbstractJavaAssistMockTransformer {
             }
         }
     }
- 
+    
     
     private void modifyNativeMethod(CtMethod method, CtClass returnTypeAsCtClass,
                                     String returnTypeAsString) throws CannotCompileException {
@@ -108,5 +108,5 @@ abstract class MethodMockTransformer extends AbstractJavaAssistMockTransformer {
         
         method.insertBefore("{ " + code + "}");
     }
-  
+    
 }

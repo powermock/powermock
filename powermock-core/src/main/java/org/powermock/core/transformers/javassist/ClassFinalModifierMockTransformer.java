@@ -43,7 +43,7 @@ public class ClassFinalModifierMockTransformer extends AbstractJavaAssistMockTra
             if (Modifier.isFinal(clazz.getModifiers())) {
                 clazz.setModifiers(clazz.getModifiers() ^ Modifier.FINAL);
             }
-    
+            
             ClassFile classFile = clazz.getClassFile2();
             AttributeInfo attribute = classFile.getAttribute(InnerClassesAttribute.tag);
             if (attribute != null && attribute instanceof InnerClassesAttribute) {

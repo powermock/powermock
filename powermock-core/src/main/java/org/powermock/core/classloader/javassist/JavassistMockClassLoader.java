@@ -24,6 +24,7 @@ import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.classloader.MockClassLoaderConfiguration;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 import org.powermock.core.transformers.ClassWrapper;
+import org.powermock.core.transformers.javassist.support.JavaAssistClassWrapperFactory;
 
 import java.security.ProtectionDomain;
 
@@ -49,7 +50,7 @@ public class JavassistMockClassLoader extends MockClassLoader {
     
     public JavassistMockClassLoader(MockClassLoaderConfiguration configuration,
                                     UseClassPathAdjuster useClassPathAdjuster) {
-        super(configuration);
+        super(configuration, new JavaAssistClassWrapperFactory());
         classPool = new ClassPoolFactory(useClassPathAdjuster).create();
         classMarker = JavaAssistClassMarkerFactory.createClassMarker(classPool);
     }
@@ -91,15 +92,7 @@ public class JavassistMockClassLoader extends MockClassLoader {
         return bytes == null ? null : defineClass(name, bytes, 0, bytes.length, protectionDomain);
     }
     
-    @Override
-    protected Class<?> loadMockClass(String name, ProtectionDomain protectionDomain) {
-        
-        final byte[] clazz = loadAndTransform(name);
-        
-        return defineClass(name, clazz, 0, clazz.length, protectionDomain);
-    }
-    
-    protected byte[] loadAndTransform(String name) {
+    protected byte[] defineAndTransformClass(String name) {
         final byte[] clazz;
         
         ClassPool.doPruning = false;
@@ -125,8 +118,7 @@ public class JavassistMockClassLoader extends MockClassLoader {
             
             clazz = type.toBytecode();
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to transform class with name " + name + ". Reason: "
-                                                + e.getMessage(), e);
+            throw new IllegalStateException("Failed to transform class with name " + name + ". Reason: " + e.getMessage(), e);
         }
         return clazz;
     }

@@ -192,9 +192,9 @@ public class ObjenesisClassloaderExecutorTest {
     private MockClassLoader createClassloader() {
         MockClassLoader classloader = new JavassistMockClassLoader(new String[]{MyClass.class.getName(),
             MyArgument.class.getName(), MyReturnValue.class.getName()});
-        MockTransformer mainMockTransformer = new MockTransformer() {
+        MockTransformer mainMockTransformer = new MockTransformer<Object>() {
             @Override
-            public <T> ClassWrapper<T> transform(ClassWrapper<T> clazz) throws Exception {
+            public ClassWrapper<Object> transform(ClassWrapper<Object> clazz) throws Exception {
                 return clazz;
             }
         };

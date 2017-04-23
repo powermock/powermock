@@ -18,9 +18,32 @@
 
 package org.powermock.core.transformers;
 
+/**
+ * An interface represents an abstraction of the class to be able to pass class to different byte-code instrumentation frameworks.
+ *
+ * @param <T> - original class specific for byte-code modification framework.
+ * @author Arthur Zagretdinov
+ */
 public interface ClassWrapper<T> {
     
+    /**
+     * Check if class is interface
+     *
+     * @return <code>true</code> if class is an interface.
+     */
     boolean isInterface();
     
+    /**
+     * Get original object which represent class
+     *
+     * @return instance of original object.
+     */
     T unwrap();
+    
+    /**
+     * Wrap changed implementation to get a new instance of ClassWrapper
+     * @param original -  original class specific for byte-code modification framework.
+     * @return a new instance of ClassWrapper
+     */
+    ClassWrapper<T> wrap(T original);
 }

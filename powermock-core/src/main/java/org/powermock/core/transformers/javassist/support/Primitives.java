@@ -36,17 +36,13 @@ import static javassist.CtClass.voidType;
  * their corresponding java class-objects for primitive types.
  */
 public class Primitives {
-
-    private static final Map<CtPrimitiveType,Class<?>> ct2primitiveClass =
-            lookupMappings();
     
-    public static Class<?> getClassFor(CtPrimitiveType ctPrimitiveType) {
-        return ct2primitiveClass.get(ctPrimitiveType);
-    }
-
+    private static final Map<CtPrimitiveType, Class<?>> ct2primitiveClass =
+        lookupMappings();
+    
     private static Map<CtPrimitiveType, Class<?>> lookupMappings() {
-        Map<CtPrimitiveType,Class<?>> mappings = new IdentityHashMap<CtPrimitiveType, Class<?>>(10);
-        for (Object[] each : new Object[][] {
+        Map<CtPrimitiveType, Class<?>> mappings = new IdentityHashMap<CtPrimitiveType, Class<?>>(10);
+        for (Object[] each : new Object[][]{
             {booleanType, boolean.class},
             {byteType, byte.class},
             {charType, char.class},
@@ -57,8 +53,12 @@ public class Primitives {
             {shortType, short.class},
             {voidType, void.class}
         }) {
-            mappings.put( (CtPrimitiveType)each[0], (Class<?>)each[1]);
+            mappings.put((CtPrimitiveType) each[0], (Class<?>) each[1]);
         }
         return Collections.unmodifiableMap(mappings);
+    }
+    
+    public static Class<?> getClassFor(CtPrimitiveType ctPrimitiveType) {
+        return ct2primitiveClass.get(ctPrimitiveType);
     }
 }

@@ -18,14 +18,22 @@ package org.powermock.core.classloader;
 import javassist.ByteArrayClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
-import org.junit.Before;
+import javassist.CtMethod;
+import net.bytebuddy.description.type.TypeDescription;
+import net.bytebuddy.dynamic.DynamicType.Builder;
+import net.bytebuddy.implementation.FixedValue;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
+import org.powermock.core.classloader.bytebuddy.ByteBuddyMockClassLoader;
 import org.powermock.core.classloader.javassist.ClassPathAdjuster;
 import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
+import org.powermock.core.transformers.ClassWrapper;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.MockTransformerChain;
-import org.powermock.core.transformers.javassist.JavassistMockTransformerChainFactory;
+import org.powermock.core.transformers.bytebuddy.support.ByteBuddyClass;
+import org.powermock.core.transformers.support.DefaultMockTransformerChain;
 import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
@@ -33,60 +41,110 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.security.ProtectionDomain;
-import java.util.Collections;
 import java.util.Enumeration;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static java.util.Arrays.asList;
+import static net.bytebuddy.matcher.ElementMatchers.isDeclaredBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assume.assumeThat;
 import static org.powermock.core.classloader.MockClassLoader.MODIFY_ALL_CLASSES;
 
+@RunWith(Parameterized.class)
 public class MockClassLoaderTest {
     
-    private MockClassLoaderFactory<JavassistMockClassLoader> mockClassLoaderFactory =
-        new MockClassLoaderFactory<JavassistMockClassLoader>(JavassistMockClassLoader.class);
     
+    @Parameterized.Parameters(name = "ClassLoader: {0}")
+    public static List<Object[]> data() {
+        return asList(
+            new Object[]{
+                JavassistMockClassLoader.class,
+                new JavassistMockTransformer()
+            },
+            new Object[]{
+                ByteBuddyMockClassLoader.class,
+                new BytebuddyMockTransformer()
+            }
+        );
+    }
     
-    private MockTransformerChain transformerChain;
+    private final MockClassLoaderFactory mockClassLoaderFactory;
+    private final Class<? extends MockClassLoader> clazz;
+    private final MockTransformerChain mockTransformerChain;
     
-    @Before
-    public void setUp() throws Exception {
-        transformerChain = new JavassistMockTransformerChainFactory().createDefaultChain(Collections.<MockTransformer>emptyList());
+    public MockClassLoaderTest(Class<? extends MockClassLoader> clazz, MockTransformer transformer) {
+        this.mockClassLoaderFactory = new MockClassLoaderFactory(clazz);
+        this.clazz = clazz;
+        this.mockTransformerChain = DefaultMockTransformerChain.newBuilder()
+                                                          .append(transformer)
+                                                          .build();
     }
     
     @Test
-    public void autoboxingWorks() throws Exception {
-        String name = this.getClass().getPackage().getName() + ".HardToTransform";
-        final MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[]{name});
-        mockClassLoader.setMockTransformerChain(transformerChain);
+    public void should_load_and_modify_class_from_package_which_specified() throws Exception {
         
-        Class<?> c = mockClassLoader.loadClass(name);
+        String className = "powermock.test.support.ClassForMockClassLoaderTestCase";
         
-        Object object = c.newInstance();
-        Whitebox.invokeMethod(object, "run");
+        MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[]{
+            className
+        });
+        mockClassLoader.setMockTransformerChain(mockTransformerChain);
         
-        assertThat(5).isEqualTo(Whitebox.invokeMethod(object, "testInt"));
-        assertThat(5L).isEqualTo(Whitebox.invokeMethod(object, "testLong"));
-        assertThat(5f).isEqualTo(Whitebox.invokeMethod(object, "testFloat"));
-        assertThat(5.0).isEqualTo(Whitebox.invokeMethod(object, "testDouble"));
-        assertThat(new Short("5")).isEqualTo(Whitebox.invokeMethod(object, "testShort"));
-        assertThat(new Byte("5")).isEqualTo(Whitebox.invokeMethod(object, "testByte"));
-        assertThat(true).isEqualTo(Whitebox.invokeMethod(object, "testBoolean"));
-        assertThat('5').isEqualTo(Whitebox.invokeMethod(object, "testChar"));
-        assertThat("5").isEqualTo(Whitebox.invokeMethod(object, "testString"));
+        Class<?> clazz = Class.forName(className, false, mockClassLoader);
+        
+        assertClassIsLoaded(clazz, mockClassLoader);
+        
+        assertThatInstanceCouldBeCreateAndMethodReturnMockedValue(clazz);
     }
     
     @Test
-    public void callFindClassWorks() throws Exception {
-        MyClassloader myClassloader = new MyClassloader(new String[]{"org.mytest.myclass"});
-        assertEquals(String.class, myClassloader.findClassPublic("java.lang.String"));
+    public void should_load_and_not_modify_class_from_package_which_are_not_specified_as_ignored_or_class_to_mock() throws Exception {
+        
+        String className = "powermock.test.support.ClassForMockClassLoaderTestCase";
+        
+        MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[0]);
+        mockClassLoader.setMockTransformerChain(mockTransformerChain);
+        
+        Class<?> clazz = Class.forName(className, false, mockClassLoader);
+        
+        assertClassIsLoaded(clazz, mockClassLoader);
+        
+        assertThatInstanceCouldBeCreateAndMethodReturnNotMockedValue(clazz);
     }
     
     @Test
-    public void powerMockIgnoreAnnotatedPackagesAreIgnored() throws Exception {
+    public void should_load_system_classes() throws Exception {
+        MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[]{"org.mytest.myclass"});
+        
+        Class<?> clazz = Class.forName("java.lang.String", false, mockClassLoader);
+        
+        assertThat(clazz)
+            .as("System class is loaded")
+            .isEqualTo(String.class);
+    }
+    
+    
+    @Test
+    public void should_load_defined_class() throws Exception {
+        final String className = "my.ABCTestClass";
+        final MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[]{className});
+        
+        Whitebox.invokeMethod(mockClassLoader, "defineClass", className, DynamicClassHolder.classBytes,
+                              0, DynamicClassHolder.classBytes.length, this.getClass().getProtectionDomain());
+        
+        Class<?> clazz = Class.forName(className, false, mockClassLoader);
+        
+        assertThat(clazz)
+            .as("Defined class is loaded")
+            .isNotNull();
+    }
+    
+    @Test
+    public void should_ignore_pagackage_added_powerMockIgnore_Annotated() throws Exception {
         MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[]{"org.ikk.Jux"});
         
         MockClassLoaderConfiguration configuration = mockClassLoader.getConfiguration();
@@ -107,10 +165,8 @@ public class MockClassLoaderTest {
     }
     
     @Test
-    public void canFindResource() throws Exception {
+    public void should_find_and_return_a_one_resource_which_exist() throws Exception {
         final MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[0]);
-        List<MockTransformer> list = new LinkedList<MockTransformer>();
-        mockClassLoader.setMockTransformerChain(transformerChain);
         
         // Force a ClassLoader that can find 'foo/bar/baz/test.txt' into
         // mockClassLoader.deferTo.
@@ -124,9 +180,8 @@ public class MockClassLoaderTest {
     }
     
     @Test
-    public void canFindResources() throws Exception {
+    public void should_find_and_return_resources_which_exist() throws Exception {
         final MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[0]);
-        mockClassLoader.setMockTransformerChain(transformerChain);
         
         // Force a ClassLoader that can find 'foo/bar/baz/test.txt' into
         // mockClassLoader.deferTo.
@@ -142,7 +197,7 @@ public class MockClassLoaderTest {
     @Test
     public void resourcesNotDoubled() throws Exception {
         final MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[0]);
-        mockClassLoader.setMockTransformerChain(transformerChain);
+        //mockClassLoader.setMockTransformerChain(transformerChain);
         
         // MockClassLoader will only be able to find 'foo/bar/baz/test.txt' if it
         // properly defers the resources lookup to its deferTo ClassLoader.
@@ -154,12 +209,14 @@ public class MockClassLoaderTest {
     
     @Test
     public void canFindDynamicClassFromAdjustedClasspath() throws Exception {
+        
+        assumeThat(clazz.getName(), equalTo(JavassistMockClassLoader.class.getName()));
+        
         // Construct MockClassLoader with @UseClassPathAdjuster annotation.
         // It activates our MyClassPathAdjuster class which appends our dynamic
         // class to the MockClassLoader's classpool.
         UseClassPathAdjuster useClassPathAdjuster = new TestUseClassPathAdjuster();
         final MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[0], useClassPathAdjuster);
-        mockClassLoader.setMockTransformerChain(transformerChain);
         
         // setup custom classloader providing our dynamic class, for MockClassLoader to defer to
         mockClassLoader.deferTo = new ClassLoader(getClass().getClassLoader()) {
@@ -181,18 +238,14 @@ public class MockClassLoaderTest {
     
     @Test(expected = ClassNotFoundException.class)
     @Ignore
-    public void cannotFindDynamicClassInDeferredClassLoader() throws Exception {
+    public void should_throw_ClassNotFoundException_if_cannot_find_dynamic_class_in_deferred_class_loader() throws Exception {
         
         MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[0]);
-        List<MockTransformer> list = new LinkedList<MockTransformer>();
-        mockClassLoader.setMockTransformerChain(transformerChain);
         
         // setup custom classloader providing our dynamic class, for MockClassLoader to defer to
         mockClassLoader.deferTo = new ClassLoader(getClass().getClassLoader()) {
-            
             @Override
-            public Class<?> loadClass(String name)
-                throws ClassNotFoundException {
+            public Class<?> loadClass(String name) throws ClassNotFoundException {
                 return super.loadClass(name);
             }
         };
@@ -202,17 +255,61 @@ public class MockClassLoaderTest {
     }
     
     @Test
-    public void canLoadDefinedClass() throws Exception {
-        final String className = "my.ABCTestClass";
-        final MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[]{className});
+    public void should_autobox_primitive_values() throws Exception {
+        String name = this.getClass().getPackage().getName() + ".HardToTransform";
+        final MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[]{name});
         
+        Class<?> c = mockClassLoader.loadClass(name);
         
-        Whitebox.invokeMethod(mockClassLoader, "defineClass", className, DynamicClassHolder.classBytes,
-                              0, DynamicClassHolder.classBytes.length, this.getClass().getProtectionDomain());
-        Class.forName(className, false, mockClassLoader);
+        Object object = c.newInstance();
+        Whitebox.invokeMethod(object, "run");
         
-        mockClassLoader.loadClass(className);
+        assertThat(5).isEqualTo(Whitebox.invokeMethod(object, "testInt"));
+        assertThat(5L).isEqualTo(Whitebox.invokeMethod(object, "testLong"));
+        assertThat(5f).isEqualTo(Whitebox.invokeMethod(object, "testFloat"));
+        assertThat(5.0).isEqualTo(Whitebox.invokeMethod(object, "testDouble"));
+        assertThat(new Short("5")).isEqualTo(Whitebox.invokeMethod(object, "testShort"));
+        assertThat(new Byte("5")).isEqualTo(Whitebox.invokeMethod(object, "testByte"));
+        assertThat(true).isEqualTo(Whitebox.invokeMethod(object, "testBoolean"));
+        assertThat('5').isEqualTo(Whitebox.invokeMethod(object, "testChar"));
+        assertThat("5").isEqualTo(Whitebox.invokeMethod(object, "testString"));
     }
+    
+    
+    private void assertThatInstanceCouldBeCreateAndMethodReturnMockedValue(final Class<?> clazz) throws Exception {
+        Object instance = Whitebox.newInstance(clazz);
+        
+        assertThat(instance)
+            .as("Instance of class is created.")
+            .isNotNull();
+        
+        assertThat((String) Whitebox.invokeMethod(instance, "description"))
+            .as("Method of instance of loaded class returns mocked value.")
+            .isNull();
+    }
+    
+    private void assertThatInstanceCouldBeCreateAndMethodReturnNotMockedValue(final Class<?> clazz) throws Exception {
+        Object instance = Whitebox.newInstance(clazz);
+    
+        assertThat(instance)
+            .as("Instance of class is created.")
+            .isNotNull();
+    
+        assertThat((String) Whitebox.invokeMethod(instance, "description"))
+            .as("Method of instance of loaded class returns not mocked value.")
+            .isNotNull();
+    }
+    
+    private void assertClassIsLoaded(final Class<?> clazz, final MockClassLoader mockClassLoader) {
+        assertThat(clazz)
+            .as("Test class is loaded.")
+            .isNotNull();
+        
+        assertThat(clazz.getClassLoader())
+            .as("Class is loaded by mock classloader")
+            .isSameAs(mockClassLoader);
+    }
+    
     
     // helper class for canFindDynamicClassFromAdjustedClasspath()
     public static class MyClassPathAdjuster implements ClassPathAdjuster {
@@ -239,54 +336,27 @@ public class MockClassLoaderTest {
         }
     }
     
-    @SuppressWarnings("SameParameterValue")
-    static class MyClassloader extends JavassistMockClassLoader {
+    private static class MockClassLoaderFactory {
         
-        private final ClassPool classPool = new ClassPool();
+        private final Class<? extends MockClassLoader> classLoaderClass;
         
-        public MyClassloader(String[] classesToMock) {
-            super(classesToMock);
-        }
-        
-        public Class<?> findClassPublic(String s) throws ClassNotFoundException {
-            return findClass(s);
-        }
-        
-        @Override
-        protected Class findClass(String name) throws ClassNotFoundException {
-            if (name.startsWith("java.lang")) {
-                return this.getClass().getClassLoader().loadClass(name);
-            }
-            return super.findClass(name);
-        }
-        @Override
-        protected Class<?> loadMockClass(String name, ProtectionDomain protectionDomain) {
-            final byte[] clazz = loadAndTransform(name);
-            
-            return defineClass(name, clazz, 0, clazz.length, protectionDomain);
-        }
-    }
-    
-    private static class MockClassLoaderFactory<T extends MockClassLoader> {
-        
-        private final Class<T> classLoaderClass;
-        
-        private MockClassLoaderFactory(Class<T> classLoaderClass) {
+        private MockClassLoaderFactory(Class<? extends MockClassLoader> classLoaderClass) {
             this.classLoaderClass = classLoaderClass;
         }
         
-        T getInstance(String[] param, UseClassPathAdjuster useClassPathAdjuster) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-            Constructor<?> constructor = WhiteboxImpl.getConstructor(classLoaderClass, param.getClass(), param.getClass(), UseClassPathAdjuster.class);
-            return (T) constructor.newInstance(param, new String[0], useClassPathAdjuster);
+        private MockClassLoader getInstance(String[] classesToMock,
+                                            UseClassPathAdjuster useClassPathAdjuster) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+            Constructor<?> constructor = WhiteboxImpl.getConstructor(classLoaderClass, classesToMock.getClass(), classesToMock.getClass(), UseClassPathAdjuster.class);
+            return (MockClassLoader) constructor.newInstance(classesToMock, new String[0], useClassPathAdjuster);
         }
         
-        public T getInstance(MockClassLoaderConfiguration configuration) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        private MockClassLoader getInstance(MockClassLoaderConfiguration configuration) throws IllegalAccessException, InvocationTargetException, InstantiationException {
             Constructor<?> constructor = WhiteboxImpl.getConstructor(classLoaderClass, configuration.getClass());
-            return (T) constructor.newInstance(new Object[]{configuration});
+            return (MockClassLoader) constructor.newInstance(new Object[]{configuration});
         }
         
-        private T getInstance(String[] param) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-            MockClassLoaderConfiguration configuration = new MockClassLoaderConfiguration(param, new String[0]);
+        private MockClassLoader getInstance(String[] classesToMock) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+            MockClassLoaderConfiguration configuration = new MockClassLoaderConfiguration(classesToMock, new String[0]);
             return getInstance(configuration);
         }
     }
@@ -298,6 +368,41 @@ public class MockClassLoaderTest {
         
         public Class<? extends ClassPathAdjuster> value() {
             return MyClassPathAdjuster.class;
+        }
+    }
+    
+    private static class JavassistMockTransformer implements MockTransformer<CtClass> {
+        
+        @Override
+        public ClassWrapper<CtClass> transform(final ClassWrapper<CtClass> clazz) throws Exception {
+            
+            CtClass ctClass = clazz.unwrap();
+            
+            for (CtMethod ctMethod : ctClass.getMethods()) {
+                CtClass returnType = ctMethod.getReturnType();
+                if (returnType.getName().equals(String.class.getName())) {
+                    ctMethod.setBody("return null;");
+                }
+            }
+            
+            return clazz;
+        }
+    }
+    
+    private static class BytebuddyMockTransformer implements MockTransformer<ByteBuddyClass> {
+        @Override
+        public ClassWrapper<ByteBuddyClass> transform(final ClassWrapper<ByteBuddyClass> clazz) throws Exception {
+    
+            ByteBuddyClass bytebuddy = clazz.unwrap();
+    
+            Builder builder = bytebuddy.getBuilder();
+            TypeDescription typeDefinitions = bytebuddy.getTypeDefinitions();
+    
+            builder = builder.method(isDeclaredBy(typeDefinitions))
+                             .intercept(FixedValue.nullValue());
+    
+            
+            return clazz.wrap(new ByteBuddyClass(typeDefinitions, builder));
         }
     }
 }

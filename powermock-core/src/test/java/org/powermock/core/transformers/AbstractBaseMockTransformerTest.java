@@ -16,7 +16,7 @@
  *
  */
 
-package org.powermock.core.transformers.javassist;
+package org.powermock.core.transformers;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -24,31 +24,30 @@ import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.Loader;
 import javassist.NotFoundException;
-import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.powermock.core.MockGateway;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
-import org.powermock.core.transformers.ClassWrapper;
-import org.powermock.core.transformers.MockTransformer;
-import org.powermock.core.transformers.MockTransformerChain;
-import org.powermock.core.transformers.javassist.support.ClassWrapperFactoryImpl;
-import org.powermock.core.transformers.support.DefaultMockTransformerChain;
+import org.powermock.core.transformers.javassist.support.JavaAssistClassWrapperFactory;
 
 import static org.junit.Assert.assertNotNull;
 
-public abstract class AbstractBaseMockTransformerTest {
+@RunWith(Parameterized.class)
+abstract class AbstractBaseMockTransformerTest {
     
-    public static final String SYNTHETIC_METHOD_NAME = "$synth";
-    public static final String SYNTH_FIELD = "$_synthField";
+    static final String SYNTHETIC_METHOD_NAME = "$synth";
+    static final String SYNTH_FIELD = "$_synthField";
     
-    protected MockTransformerChain mockTransformerChain;
+    final TransformStrategy strategy;
+    final MockTransformerChain mockTransformerChain;
     
-    @Before
-    public void setUp() throws Exception {
-        mockTransformerChain = createMockTransformerChain();
+    AbstractBaseMockTransformerTest(TransformStrategy strategy, MockTransformerChain mockTransformerChain){
+        this.strategy = strategy;
+        this.mockTransformerChain = mockTransformerChain;
     }
     
-    protected Class<?> loadWithMockClassLoader(String className) throws ClassNotFoundException {
+    Class<?> loadWithMockClassLoader(String className) throws ClassNotFoundException {
         MockClassLoader loader = new JavassistMockClassLoader(new String[]{MockClassLoader.MODIFY_ALL_CLASSES});
         loader.setMockTransformerChain(mockTransformerChain);
         
@@ -84,16 +83,7 @@ public abstract class AbstractBaseMockTransformerTest {
         }
     }
     
-    
-    protected MockTransformerChain createMockTransformerChain() {
-        return DefaultMockTransformerChain.newBuilder().append(createMockTransformer()).build();
-    }
-    
-    protected MockTransformer createMockTransformer(){
-        return null;
-    }
-    
     ClassWrapper<CtClass> wrap(final CtClass ctClass) {
-        return new ClassWrapperFactoryImpl().wrap(ctClass);
+        return new JavaAssistClassWrapperFactory().wrap(ctClass);
     }
 }

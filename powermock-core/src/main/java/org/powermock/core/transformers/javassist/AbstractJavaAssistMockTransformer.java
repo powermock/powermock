@@ -23,7 +23,7 @@ import org.powermock.core.transformers.ClassWrapper;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.TransformStrategy;
 
-public abstract class AbstractJavaAssistMockTransformer implements MockTransformer {
+public abstract class AbstractJavaAssistMockTransformer implements MockTransformer<CtClass> {
     
     private final TransformStrategy strategy;
     
@@ -32,11 +32,11 @@ public abstract class AbstractJavaAssistMockTransformer implements MockTransform
     }
     
     @Override
-    public <T> ClassWrapper<T> transform(final ClassWrapper<T> clazz) throws Exception {
-        T classImpl = clazz.unwrap();
+    public ClassWrapper<CtClass> transform(final ClassWrapper<CtClass> clazz) throws Exception {
+        CtClass classImpl = clazz.unwrap();
         
-        if (classImpl instanceof CtClass) {
-            transform((CtClass) classImpl);
+        if (classImpl != null) {
+            transform(classImpl);
         }
         
         return clazz;

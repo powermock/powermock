@@ -18,9 +18,17 @@
 
 package org.powermock.core.transformers;
 
-import javassist.CtClass;
-import org.powermock.core.transformers.ClassWrapper;
-
-public interface ClassWrapperFactory {
-    ClassWrapper<CtClass> wrap(CtClass ctClass);
+/**
+ * An implementation should wrap original instance.
+ *
+ * @param <T> - original class specific for byte-code modification framework.
+ * @author Arthur Zagretdinov
+ */
+public interface ClassWrapperFactory<T> {
+    
+    /**
+     * @param original - original class specific for byte-code modification framework.
+     * @return wrapped original class as {@link ClassWrapper}
+     */
+    ClassWrapper<T> wrap(T original);
 }

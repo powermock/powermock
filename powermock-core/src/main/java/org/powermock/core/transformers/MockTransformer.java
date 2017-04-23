@@ -23,7 +23,7 @@ package org.powermock.core.transformers;
  *
  * @author Johan Haleby
  */
-public interface MockTransformer {
+public interface MockTransformer<T> {
     
     /**
      * Transforms the {@code clazz}.
@@ -32,5 +32,5 @@ public interface MockTransformer {
      *              transform into a mock enabled class.
      * @return A {@code ClassWrapper} representation of the mocked class.
      */
-    <T> ClassWrapper<T> transform(ClassWrapper<T> clazz) throws Exception;
+    ClassWrapper<T> transform(ClassWrapper<T> clazz) throws Exception;
 }
