@@ -18,46 +18,39 @@
 
 package org.powermock.core.transformers.bytebuddy;
 
-import net.bytebuddy.asm.AsmVisitorWrapper;
 import net.bytebuddy.asm.AsmVisitorWrapper.AbstractBase;
 import net.bytebuddy.description.field.FieldDescription.InDefinedShape;
 import net.bytebuddy.description.field.FieldList;
 import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.description.method.MethodList;
-import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.implementation.Implementation;
 import net.bytebuddy.jar.asm.ClassVisitor;
 import net.bytebuddy.jar.asm.MethodVisitor;
 import net.bytebuddy.jar.asm.Opcodes;
-import net.bytebuddy.matcher.ElementMatchers;
 import net.bytebuddy.pool.TypePool;
 import org.powermock.core.transformers.TransformStrategy;
 import org.powermock.core.transformers.bytebuddy.support.ByteBuddyClass;
 
-public class ConstructorModifiersMockTransformer extends VisitorByteBuddyMockTransformer {
+import static org.powermock.core.MockRepository.shouldSuppressStaticInitializerFor;
+
+public class StaticInitializerMockTransformer extends VisitorByteBuddyMockTransformer {
     
-    public ConstructorModifiersMockTransformer(final TransformStrategy strategy) {
+    public StaticInitializerMockTransformer(final TransformStrategy strategy) {
         super(strategy);
     }
     
     @Override
     protected boolean classShouldTransformed(final TypeDescription typeDefinitions) {
-        return getStrategy() == TransformStrategy.CLASSLOADER;
+        return shouldSuppressStaticInitializerFor(typeDefinitions.getName()) && getStrategy() == TransformStrategy.CLASSLOADER;
     }
     
     @Override
     public ByteBuddyClass transform(final ByteBuddyClass clazz) throws Exception {
-        ElementMatchers.anyOf(clazz.getTypeDefinitions().getDeclaredMethods().get(0));
-        return visit(clazz, new ConstructorModifiers(Visibility.PUBLIC));
+        return visit(clazz, new StaticInitializer());
     }
     
-    private static class ConstructorModifiers extends AbstractBase {
-        
-        private final Visibility visibility;
-    
-        private ConstructorModifiers(final Visibility visibility) {this.visibility = visibility;}
-        
+    private static class StaticInitializer extends AbstractBase {
         @Override
         public ClassVisitor wrap(TypeDescription instrumentedType,
                                  ClassVisitor classVisitor,
@@ -68,26 +61,27 @@ public class ConstructorModifiersMockTransformer extends VisitorByteBuddyMockTra
                                  int writerFlags,
                                  int readerFlags
         ) {
-            return new ConstructorModifiersClassVisitor(classVisitor, visibility);
+            return new StaticInitializerClassVisitor(classVisitor);
         }
         
     }
     
-    private static class ConstructorModifiersClassVisitor extends ClassVisitor {
+    private static class StaticInitializerClassVisitor extends ClassVisitor {
         
-        private final Visibility visibility;
-        
-        private ConstructorModifiersClassVisitor(final ClassVisitor classVisitor, final Visibility visibility) {
+        private StaticInitializerClassVisitor(final ClassVisitor classVisitor) {
             super(Opcodes.ASM5, classVisitor);
-            this.visibility = visibility;
         }
         
         @Override
         public MethodVisitor visitMethod(int modifiers, String internalName, String descriptor, String signature, String[] exception) {
-            if (MethodDescription.CONSTRUCTOR_INTERNAL_NAME.equals(internalName)) {
-                modifiers = (modifiers & ~visibility.getRange()) | visibility.getMask();
+            if (MethodDescription.TYPE_INITIALIZER_INTERNAL_NAME.equals(internalName)) {
+                return new MethodVisitor(Opcodes.ASM5) {
+                
+                    
+                };
             }
             return super.visitMethod(modifiers, internalName, descriptor, signature, exception);
         }
+        
     }
 }

@@ -39,7 +39,7 @@ public abstract class AbstractByteBuddyMockTransformer implements MockTransforme
         if (byteBuddyClass != null) {
             TypeDescription typeDefinitions = byteBuddyClass.getTypeDefinitions();
     
-            if (classShouldBeIgnored(typeDefinitions)) {
+            if (!classShouldTransformed(typeDefinitions)) {
                 return clazz;
             }
             
@@ -49,7 +49,7 @@ public abstract class AbstractByteBuddyMockTransformer implements MockTransforme
         return clazz.wrap(byteBuddyClass);
     }
     
-    protected abstract boolean classShouldBeIgnored(final TypeDescription typeDefinitions);
+    protected abstract boolean classShouldTransformed(final TypeDescription typeDefinitions);
     
     public abstract ByteBuddyClass transform(ByteBuddyClass clazz) throws Exception;
     

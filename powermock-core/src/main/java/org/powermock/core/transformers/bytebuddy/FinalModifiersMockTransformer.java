@@ -49,8 +49,8 @@ public class FinalModifiersMockTransformer extends VisitorByteBuddyMockTransform
         return visit(clazz, new RemoveFinalModifier());
     }
     
-    protected boolean classShouldBeIgnored(final TypeDescription typeDefinitions) {
-        return getStrategy() == INST_REDEFINE || typeDefinitions.isInterface();
+    protected boolean classShouldTransformed(final TypeDescription typeDefinitions) {
+        return getStrategy() != INST_REDEFINE && !typeDefinitions.isInterface();
     }
     
     private static class RemoveFinalModifier extends AbstractBase {
