@@ -22,13 +22,12 @@ import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
-import javassist.Loader;
 import javassist.NotFoundException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.powermock.core.MockGateway;
-import org.powermock.core.classloader.MockClassLoader;
-import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
+import org.powermock.core.test.ClassLoaderTestHelper;
+import org.powermock.core.test.MockClassLoaderFactory;
 import org.powermock.core.transformers.javassist.support.JavaAssistClassWrapperFactory;
 
 import static org.junit.Assert.assertNotNull;
@@ -39,28 +38,20 @@ abstract class AbstractBaseMockTransformerTest {
     static final String SYNTHETIC_METHOD_NAME = "$synth";
     static final String SYNTH_FIELD = "$_synthField";
     
-    final TransformStrategy strategy;
-    final MockTransformerChain mockTransformerChain;
+    protected final TransformStrategy strategy;
+    protected final MockTransformerChain mockTransformerChain;
+    private final MockClassLoaderFactory mockClassloaderFactory;
     
-    AbstractBaseMockTransformerTest(TransformStrategy strategy, MockTransformerChain mockTransformerChain){
+    AbstractBaseMockTransformerTest(final TransformStrategy strategy,
+                                    final MockTransformerChain mockTransformerChain,
+                                    final MockClassLoaderFactory mockClassloaderFactory){
         this.strategy = strategy;
         this.mockTransformerChain = mockTransformerChain;
+        this.mockClassloaderFactory = mockClassloaderFactory;
     }
     
-    Class<?> loadWithMockClassLoader(String className) throws ClassNotFoundException {
-        MockClassLoader loader = new JavassistMockClassLoader(new String[]{MockClassLoader.MODIFY_ALL_CLASSES});
-        loader.setMockTransformerChain(mockTransformerChain);
-        
-        Class<?> clazz = Class.forName(className, true, loader);
-    
-        assertNotNull("Class has been loaded", clazz);
-        
-        return clazz;
-    }
-    
-    void runTestWithNewClassLoader(ClassPool classPool, String name) throws Throwable {
-        Loader loader = new Loader(classPool);
-        loader.run(name, new String[0]);
+    protected Class<?> loadWithMockClassLoader(final String name) throws Exception {
+        return ClassLoaderTestHelper.loadWithMockClassLoader(name, mockTransformerChain, mockClassloaderFactory);
     }
     
     void addCallInterceptorToMockGateway(ClassPool classPool) throws NotFoundException, CannotCompileException {

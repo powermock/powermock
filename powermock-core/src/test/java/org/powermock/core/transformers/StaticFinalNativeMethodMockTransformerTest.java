@@ -27,6 +27,7 @@ import javassist.NotFoundException;
 import javassist.bytecode.AccessFlag;
 import org.junit.Test;
 import org.junit.runners.Parameterized;
+import org.powermock.core.test.MockClassLoaderFactory;
 import org.powermock.core.transformers.javassist.StaticFinalNativeMethodMockTransformer;
 import powermock.test.support.MainMockTransformerTestSupport.CallSpy;
 import powermock.test.support.MainMockTransformerTestSupport.SubclassWithBridgeMethod;
@@ -39,6 +40,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assume.assumeThat;
+import static org.powermock.core.test.ClassLoaderTestHelper.runTestWithNewClassLoader;
 
 public class StaticFinalNativeMethodMockTransformerTest extends AbstractBaseMockTransformerTest {
     
@@ -49,8 +51,9 @@ public class StaticFinalNativeMethodMockTransformerTest extends AbstractBaseMock
         );
     }
     
-    public StaticFinalNativeMethodMockTransformerTest(final TransformStrategy strategy, final MockTransformerChain mockTransformerChain) {
-        super(strategy, mockTransformerChain);
+    public StaticFinalNativeMethodMockTransformerTest(final TransformStrategy strategy, final MockTransformerChain mockTransformerChain,
+                                                      final MockClassLoaderFactory mockClassloaderFactory) {
+        super(strategy, mockTransformerChain, mockClassloaderFactory);
     }
     
     @Test

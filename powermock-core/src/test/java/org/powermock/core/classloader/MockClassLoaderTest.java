@@ -29,17 +29,15 @@ import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 import org.powermock.core.classloader.bytebuddy.ByteBuddyMockClassLoader;
 import org.powermock.core.classloader.javassist.ClassPathAdjuster;
 import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
+import org.powermock.core.test.MockClassLoaderFactory;
 import org.powermock.core.transformers.ClassWrapper;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.MockTransformerChain;
 import org.powermock.core.transformers.bytebuddy.support.ByteBuddyClass;
 import org.powermock.core.transformers.support.DefaultMockTransformerChain;
 import org.powermock.reflect.Whitebox;
-import org.powermock.reflect.internal.WhiteboxImpl;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.List;
@@ -333,31 +331,6 @@ public class MockClassLoaderTest {
             } catch (Exception e) {
                 throw new RuntimeException("Problem constructing custom class", e);
             }
-        }
-    }
-    
-    private static class MockClassLoaderFactory {
-        
-        private final Class<? extends MockClassLoader> classLoaderClass;
-        
-        private MockClassLoaderFactory(Class<? extends MockClassLoader> classLoaderClass) {
-            this.classLoaderClass = classLoaderClass;
-        }
-        
-        private MockClassLoader getInstance(String[] classesToMock,
-                                            UseClassPathAdjuster useClassPathAdjuster) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-            Constructor<?> constructor = WhiteboxImpl.getConstructor(classLoaderClass, classesToMock.getClass(), classesToMock.getClass(), UseClassPathAdjuster.class);
-            return (MockClassLoader) constructor.newInstance(classesToMock, new String[0], useClassPathAdjuster);
-        }
-        
-        private MockClassLoader getInstance(MockClassLoaderConfiguration configuration) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-            Constructor<?> constructor = WhiteboxImpl.getConstructor(classLoaderClass, configuration.getClass());
-            return (MockClassLoader) constructor.newInstance(new Object[]{configuration});
-        }
-        
-        private MockClassLoader getInstance(String[] classesToMock) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-            MockClassLoaderConfiguration configuration = new MockClassLoaderConfiguration(classesToMock, new String[0]);
-            return getInstance(configuration);
         }
     }
     

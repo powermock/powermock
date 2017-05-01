@@ -37,6 +37,10 @@ public class MainMockTransformerTestSupport {
         }
     }
     
+    public interface SomeInterface {
+    
+    }
+    
     public static class SupportClasses {
         public enum EnumClass {
             VALUE

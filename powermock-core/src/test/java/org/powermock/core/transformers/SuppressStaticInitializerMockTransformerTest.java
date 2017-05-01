@@ -22,6 +22,7 @@ package org.powermock.core.transformers;
 import org.junit.Test;
 import org.junit.runners.Parameterized;
 import org.powermock.core.MockRepository;
+import org.powermock.core.test.MockClassLoaderFactory;
 import org.powermock.core.transformers.javassist.SuppressStaticInitializerMockTransformer;
 import org.powermock.reflect.Whitebox;
 import powermock.test.support.MainMockTransformerTestSupport.StaticInitialization;
@@ -40,12 +41,16 @@ public class SuppressStaticInitializerMockTransformerTest extends AbstractBaseMo
         );
     }
     
-    public SuppressStaticInitializerMockTransformerTest(final TransformStrategy strategy, final MockTransformerChain mockTransformerChain) {
-        super(strategy, mockTransformerChain);
+    public SuppressStaticInitializerMockTransformerTest(
+            final TransformStrategy strategy,
+            final MockTransformerChain mockTransformerChain,
+            final MockClassLoaderFactory mockClassloaderFactory
+    ) {
+        super(strategy, mockTransformerChain, mockClassloaderFactory);
     }
     
     @Test
-    public void should_suppress_static_initialization_if_class_is_added_to_mock_repository() throws ClassNotFoundException {
+    public void should_suppress_static_initialization_if_class_is_added_to_mock_repository() throws Exception {
         assumeThat(strategy, equalTo(TransformStrategy.CLASSLOADER));
         
         String className = StaticInitialization.class.getName();
@@ -62,7 +67,7 @@ public class SuppressStaticInitializerMockTransformerTest extends AbstractBaseMo
     }
     
     @Test
-    public void should_not_suppress_static_initialization_if_class_is_not_added_to_mock_repository() throws ClassNotFoundException {
+    public void should_not_suppress_static_initialization_if_class_is_not_added_to_mock_repository() throws Exception {
         assumeThat(strategy, equalTo(TransformStrategy.CLASSLOADER));
     
         Class<?> clazz = loadWithMockClassLoader(StaticInitialization.class.getName());

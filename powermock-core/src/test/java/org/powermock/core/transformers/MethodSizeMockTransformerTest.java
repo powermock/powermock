@@ -21,11 +21,14 @@ package org.powermock.core.transformers;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
 import org.junit.runners.Parameterized;
-import org.powermock.core.transformers.javassist.InstrumentMockTransformer;
+import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
+import org.powermock.core.test.MockClassLoaderFactory;
 import org.powermock.core.transformers.javassist.JavassistMockTransformerChainFactory;
 import powermock.test.support.ClassWithLargeMethods;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -36,15 +39,24 @@ public class MethodSizeMockTransformerTest extends AbstractBaseMockTransformerTe
     
     @Parameterized.Parameters(name = "strategy: {0}, transformer: {1}")
     public static Iterable<Object[]> data() {
-        return MockTransformerTestHelper.createTransformerTestData(createMockTransformerChain());
+        List<Object[]> data = new ArrayList<Object[]>();
+    
+        for (TransformStrategy strategy : TransformStrategy.values()) {
+            data.add(new Object[]{
+                strategy,
+                new JavassistMockTransformerChainFactory().createDefaultChain(Collections.<MockTransformer>emptyList()),
+                new MockClassLoaderFactory(JavassistMockClassLoader.class)
+            });
+        }
+    
+        return data;
     }
     
-    private static MockTransformerChain createMockTransformerChain() {
-        return new JavassistMockTransformerChainFactory().createDefaultChain(Collections.<MockTransformer>emptyList());
-    }
-    
-    public MethodSizeMockTransformerTest(final TransformStrategy strategy, final MockTransformerChain mockTransformerChain) {
-        super(strategy, mockTransformerChain);
+    public MethodSizeMockTransformerTest(final TransformStrategy strategy,
+                                         final MockTransformerChain mockTransformerChain,
+                                         final MockClassLoaderFactory mockClassloaderFactory)
+    {
+        super(strategy, mockTransformerChain, mockClassloaderFactory);
     }
     
     @Test

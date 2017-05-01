@@ -18,23 +18,30 @@
 
 package org.powermock.core.transformers;
 
+import org.powermock.core.classloader.bytebuddy.ByteBuddyMockClassLoader;
+import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
+import org.powermock.core.test.MockClassLoaderFactory;
+import org.powermock.core.transformers.javassist.AbstractJavaAssistMockTransformer;
 import org.powermock.core.transformers.support.DefaultMockTransformerChain;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 class MockTransformerTestHelper {
     
-    static <T extends MockTransformer> Iterable<Object[]> createTransformerTestData(final Class<T>... transformerClass) {
+    static Collection<Object[]> createTransformerTestData(final Class<?>... transformerClass) {
         List<Object[]> data = new ArrayList<Object[]>();
         
         for (TransformStrategy strategy : TransformStrategy.values()) {
             List<MockTransformerChain> transformer = createTransformers(strategy, transformerClass);
+            
             for (MockTransformerChain mockTransformer : transformer) {
                 data.add(new Object[]{
                     strategy,
-                    mockTransformer
+                    mockTransformer,
+                    createClassLoaderFactory(transformerClass[0])
                 });
             }
         }
@@ -42,24 +49,19 @@ class MockTransformerTestHelper {
         return data;
     }
     
-    static Iterable<Object[]> createTransformerTestData(final MockTransformerChain mockTransformerChain) {
-        List<Object[]> data = new ArrayList<Object[]>();
-        
-        for (TransformStrategy strategy : TransformStrategy.values()) {
-            data.add(new Object[]{
-                strategy,
-                mockTransformerChain
-            });
+    private static MockClassLoaderFactory createClassLoaderFactory(final Class<?> transformerClass) {
+        if (AbstractJavaAssistMockTransformer.class.isAssignableFrom(transformerClass)){
+            return new MockClassLoaderFactory(JavassistMockClassLoader.class);
+        }else {
+            return new MockClassLoaderFactory(ByteBuddyMockClassLoader.class);
         }
-        
-        return data;
+    
     }
     
-    private static <T extends MockTransformer> List<MockTransformerChain> createTransformers(final TransformStrategy strategy,
-                                                                                             final Class<T>... classes) {
+    private static List<MockTransformerChain> createTransformers(final TransformStrategy strategy, final Class<?>... classes) {
         List<MockTransformerChain> transformers = new ArrayList<MockTransformerChain>();
         
-        for (Class<T> transformerClass : classes) {
+        for (Class<?> transformerClass : classes) {
             MockTransformer transformer = getInstance(strategy, transformerClass);
             
             transformers.add(createChainFrom(transformer));
@@ -68,11 +70,10 @@ class MockTransformerTestHelper {
         return transformers;
     }
     
-    private static <T extends MockTransformer> MockTransformer getInstance(final TransformStrategy strategy,
-                                                                           final Class<T> transformerClass) {
+    private static MockTransformer getInstance(final TransformStrategy strategy, final Class<?> transformerClass) {
         try {
-            Constructor<T> constructor = transformerClass.getConstructor(TransformStrategy.class);
-            return constructor.newInstance(strategy);
+            Constructor<?> constructor = transformerClass.getConstructor(TransformStrategy.class);
+            return (MockTransformer) constructor.newInstance(strategy);
         } catch (Exception e) {
             throw new RuntimeException("Cannot create an instance of transformer.", e);
         }

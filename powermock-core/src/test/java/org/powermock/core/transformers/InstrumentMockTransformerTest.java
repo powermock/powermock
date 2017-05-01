@@ -28,7 +28,7 @@ import javassist.bytecode.AccessFlag;
 import org.junit.Test;
 import org.junit.runners.Parameterized;
 import org.powermock.core.IndicateReloadClass;
-import org.powermock.core.transformers.javassist.ClassFinalModifierMockTransformer;
+import org.powermock.core.test.MockClassLoaderFactory;
 import org.powermock.core.transformers.javassist.InstrumentMockTransformer;
 import powermock.test.support.MainMockTransformerTestSupport.CallSpy;
 import powermock.test.support.MainMockTransformerTestSupport.SuperClassWithObjectMethod;
@@ -39,6 +39,7 @@ import java.lang.reflect.Field;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assume.assumeThat;
+import static org.powermock.core.test.ClassLoaderTestHelper.runTestWithNewClassLoader;
 
 public class InstrumentMockTransformerTest extends AbstractBaseMockTransformerTest {
     
@@ -51,8 +52,9 @@ public class InstrumentMockTransformerTest extends AbstractBaseMockTransformerTe
         );
     }
     
-    public InstrumentMockTransformerTest(final TransformStrategy strategy, final MockTransformerChain mockTransformerChain) {
-        super(strategy, mockTransformerChain);
+    public InstrumentMockTransformerTest(final TransformStrategy strategy, final MockTransformerChain mockTransformerChain,
+                                         final MockClassLoaderFactory mockClassloaderFactory) {
+        super(strategy, mockTransformerChain, mockClassloaderFactory);
     }
 
     @Test
