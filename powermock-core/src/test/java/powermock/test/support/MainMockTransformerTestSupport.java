@@ -17,6 +17,7 @@
 package powermock.test.support;
 
 import org.powermock.core.classloader.MockClassLoaderConfiguration;
+import powermock.test.support.MainMockTransformerTestSupport.ConstructorCall.SupperClassThrowsException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -41,7 +42,57 @@ public class MainMockTransformerTestSupport {
     
     }
     
+    public interface ParameterInterface {
+    
+    }
+    
+    public static class ConstructorCall {
+        
+        public static class SupperClassThrowsException {
+    
+            public static final String MESSAGE = "Constructor of super class has been called";
+    
+            public SupperClassThrowsException(String name, double value) {
+                throw new IllegalArgumentException(MESSAGE);
+            }
+    
+            public SupperClassThrowsException(final ParameterImpl value) {
+                throw new IllegalArgumentException(MESSAGE);
+            }
+    
+            public SupperClassThrowsException(final long... array) {
+                throw new IllegalArgumentException(MESSAGE);
+            }
+    
+            public void aVoid() {
+        
+            }
+    
+            public void bVoid(final String lname, final long lvalue) {
+        
+            }
+        }
+    
+    }
+    
+    public static class SuperClassWithObjectMethod {
+        public void doSomething(Object o) {
+            
+        }
+    }
+    
+    public static class SubclassWithBridgeMethod extends SuperClassWithObjectMethod {
+        public void doSomething(String s) {
+            
+        }
+    }
+    
     public static class SupportClasses {
+        
+        private static final Object finalStaticField = new Object();
+        private static transient final Object finalStaticTransientField = new Object();
+        private final Object finalField = new Object();
+        
         public enum EnumClass {
             VALUE
         }
@@ -68,6 +119,15 @@ public class MainMockTransformerTestSupport {
             protected MultipleConstructors(int[] iarray, boolean b, String[] sarray) {}
         }
         
+        public static class PublicSuperClass {
+    
+            public PublicSuperClass(String name) {
+            
+            }
+            
+        }
+        
+        
         class SuperClass {
         }
         
@@ -76,23 +136,11 @@ public class MainMockTransformerTestSupport {
         }
     }
     
-    public static class SuperClassWithObjectMethod {
-        public void doSomething(Object o) {
-            
-        }
-    }
-    
-    public static class SubclassWithBridgeMethod extends SuperClassWithObjectMethod {
-        public void doSomething(String s) {
-            
-        }
-    }
-    
     public static class CallSpy {
         public static void registerMethodCall(String methodName) {
             methodCalls.add(methodName);
         }
-
+    
         public static void registerFieldCall(String fieldName) {
             fieldCalls.add(fieldName);
         }
@@ -104,7 +152,45 @@ public class MainMockTransformerTestSupport {
         public static List<String> getFieldCalls() {
             return fieldCalls;
         }
+    
         private final static List<String> methodCalls = new LinkedList<String>();
         private final static List<String> fieldCalls = new LinkedList<String>();
+    }
+    
+    public static class SuperClassCallSuperConstructor extends SupperClassThrowsException {
+        private final String field;
+    
+        public SuperClassCallSuperConstructor(final String name, String field, final double value) {
+            super(name, value);
+            this.field = field;
+        
+            String lname = name + "(a)";
+            long lvalue = (long) value * 2;
+        
+            if (lname == null) {
+                aVoid();
+            } else {
+                bVoid(lname, lvalue);
+            }
+        }
+    }
+    
+    public static class SuperClassCallSuperConstructorWithCast extends SupperClassThrowsException {
+        
+        public SuperClassCallSuperConstructorWithCast(final ParameterInterface value) {
+            super((ParameterImpl) value);
+        }
+    }
+    
+    public static class SuperClassCallSuperConstructorWithVararg extends SupperClassThrowsException {
+        
+        public SuperClassCallSuperConstructorWithVararg(final long... array) {
+            super(array);
+        }
+    }
+    
+    public static class ParameterImpl implements ParameterInterface {
+    
+    
     }
 }

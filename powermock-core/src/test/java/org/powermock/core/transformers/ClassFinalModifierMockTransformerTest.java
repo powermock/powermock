@@ -18,16 +18,15 @@
 
 package org.powermock.core.transformers;
 
-import javassist.Modifier;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
 import org.junit.runners.Parameterized;
 import org.powermock.core.test.MockClassLoaderFactory;
-import org.powermock.core.transformers.bytebuddy.FinalModifiersMockTransformer;
-import org.powermock.core.transformers.javassist.ClassFinalModifierMockTransformer;
+import org.powermock.core.transformers.bytebuddy.ClassFinalModifierMockTransformer;
 import powermock.test.support.MainMockTransformerTestSupport.SomeInterface;
 import powermock.test.support.MainMockTransformerTestSupport.SupportClasses;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -45,8 +44,8 @@ public class ClassFinalModifierMockTransformerTest extends AbstractBaseMockTrans
     public static Iterable<Object[]> data() {
         Collection<Object[]> data = new ArrayList<Object[]>();
         
+        data.addAll(MockTransformerTestHelper.createTransformerTestData(org.powermock.core.transformers.javassist.ClassFinalModifierMockTransformer.class));
         data.addAll(MockTransformerTestHelper.createTransformerTestData(ClassFinalModifierMockTransformer.class));
-        data.addAll(MockTransformerTestHelper.createTransformerTestData(FinalModifiersMockTransformer.class));
         
         return data;
     }

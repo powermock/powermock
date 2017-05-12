@@ -24,9 +24,7 @@ import org.junit.Test;
 import org.junit.runners.Parameterized;
 import org.powermock.core.MockRepository;
 import org.powermock.core.test.MockClassLoaderFactory;
-import org.powermock.core.transformers.bytebuddy.FinalModifiersMockTransformer;
 import org.powermock.core.transformers.bytebuddy.StaticInitializerMockTransformer;
-import org.powermock.core.transformers.javassist.ClassFinalModifierMockTransformer;
 import org.powermock.core.transformers.javassist.SuppressStaticInitializerMockTransformer;
 import org.powermock.reflect.Whitebox;
 import powermock.test.support.MainMockTransformerTestSupport.StaticInitialization;
@@ -62,6 +60,7 @@ public class SuppressStaticInitializerMockTransformerTest extends AbstractBaseMo
     
     @Before
     public void setUp() throws Exception {
+        super.setUp();
         MockRepository.removeSuppressStaticInitializer(StaticInitialization.class.getName());
     }
     

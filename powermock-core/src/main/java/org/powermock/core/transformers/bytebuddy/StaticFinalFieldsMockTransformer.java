@@ -19,27 +19,26 @@
 package org.powermock.core.transformers.bytebuddy;
 
 import net.bytebuddy.asm.ModifierAdjustment;
-import net.bytebuddy.description.modifier.Visibility;
+import net.bytebuddy.description.modifier.FieldManifestation;
 import net.bytebuddy.description.type.TypeDescription;
 import org.powermock.core.transformers.TransformStrategy;
 import org.powermock.core.transformers.bytebuddy.support.ByteBuddyClass;
 
-import static net.bytebuddy.matcher.ElementMatchers.isConstructor;
+import static net.bytebuddy.matcher.ElementMatchers.isFinal;
+import static net.bytebuddy.matcher.ElementMatchers.isStatic;
 
-public class ConstructorModifiersMockTransformer extends VisitorByteBuddyMockTransformer {
-    
-    public ConstructorModifiersMockTransformer(final TransformStrategy strategy) {
+public class StaticFinalFieldsMockTransformer extends VisitorByteBuddyMockTransformer {
+    public StaticFinalFieldsMockTransformer(final TransformStrategy strategy) {
         super(strategy);
     }
     
     @Override
     protected boolean classShouldTransformed(final TypeDescription typeDefinitions) {
-        return getStrategy() == TransformStrategy.CLASSLOADER;
+        return getStrategy() != TransformStrategy.INST_REDEFINE;
     }
     
     @Override
     public ByteBuddyClass transform(final ByteBuddyClass clazz) throws Exception {
-        return visit(clazz, new ModifierAdjustment().withConstructorModifiers(Visibility.PUBLIC));
+        return visit(clazz, new ModifierAdjustment().withFieldModifiers(isFinal().and(isStatic()), FieldManifestation.PLAIN));
     }
-    
 }

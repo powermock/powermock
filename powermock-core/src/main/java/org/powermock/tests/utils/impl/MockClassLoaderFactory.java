@@ -81,7 +81,7 @@ class MockClassLoaderFactory {
         return mockLoader;
     }
     
-    private JavassistMockClassLoader createMockClassLoader(final String[] classesToLoadByMockClassloader, final UseClassPathAdjuster useClassPathAdjuster) {
+    private MockClassLoader createMockClassLoader(final String[] classesToLoadByMockClassloader, final UseClassPathAdjuster useClassPathAdjuster) {
         return new JavassistMockClassLoader(classesToLoadByMockClassloader, packagesToIgnore, useClassPathAdjuster);
     }
     

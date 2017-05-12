@@ -76,8 +76,6 @@ public class StaticInitializerMockTransformer extends VisitorByteBuddyMockTransf
         public MethodVisitor visitMethod(int modifiers, String internalName, String descriptor, String signature, String[] exception) {
             if (MethodDescription.TYPE_INITIALIZER_INTERNAL_NAME.equals(internalName)) {
                 return new MethodVisitor(Opcodes.ASM5) {
-                
-                    
                 };
             }
             return super.visitMethod(modifiers, internalName, descriptor, signature, exception);

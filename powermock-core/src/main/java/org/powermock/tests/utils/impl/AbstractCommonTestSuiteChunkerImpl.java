@@ -6,7 +6,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.core.transformers.MockTransformer;
-import org.powermock.core.transformers.javassist.TestClassTransformer;
+import org.powermock.core.transformers.TestClassTransformer;
 import org.powermock.tests.utils.ArrayMerger;
 import org.powermock.tests.utils.IgnorePackagesExtractor;
 import org.powermock.tests.utils.TestChunk;
@@ -159,7 +159,7 @@ public abstract class AbstractCommonTestSuiteChunkerImpl implements TestSuiteChu
             return new MockTransformer[0];
         } else {
             return new MockTransformer[]{
-                    TestClassTransformer
+                TestClassTransformer
                             .forTestClass(testClass)
                             .removesTestMethodAnnotation(testMethodAnnotation())
                             .fromMethods(testMethodsThatRunOnOtherClassLoaders)
@@ -199,8 +199,8 @@ public abstract class AbstractCommonTestSuiteChunkerImpl implements TestSuiteChu
                 TestClassTransformer[] extraTransformers = null == testMethodAnnotation()
                                                                    ? new TestClassTransformer[0]
                                                                    : new TestClassTransformer[]{
-                        TestClassTransformer.forTestClass(testClass)
-                                            .removesTestMethodAnnotation(testMethodAnnotation())
+                    TestClassTransformer.forTestClass(testClass)
+                                        .removesTestMethodAnnotation(testMethodAnnotation())
                                 .fromAllMethodsExcept(method)
                 };
 

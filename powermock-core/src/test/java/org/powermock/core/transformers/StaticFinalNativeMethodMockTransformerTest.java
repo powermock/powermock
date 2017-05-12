@@ -70,8 +70,6 @@ public class StaticFinalNativeMethodMockTransformerTest extends AbstractBaseMock
     @Test
     public void should_ignore_call_to_synthetic_non_bridge_methods() throws Throwable {
     
-        assumeThat(strategy, not(equalTo(TransformStrategy.INST_TRANSFORM)));
-        
         final ClassPool classPool = new ClassPool(true);
         CtClass ctClass = prepareClassesForTest(classPool, "powermock.test.support.MainMockTransformerTestSupport.CallSpy.registerMethodCall($1);");
         
@@ -84,8 +82,6 @@ public class StaticFinalNativeMethodMockTransformerTest extends AbstractBaseMock
     @Test
     public void should_modify_bridge_methods() throws Throwable {
     
-        assumeThat(strategy, not(equalTo(TransformStrategy.INST_TRANSFORM)));
-        
         final ClassPool classPool = new ClassPool(true);
         addCallInterceptorToMockGateway(classPool);
         

@@ -33,12 +33,14 @@ public abstract class AbstractJavaAssistMockTransformer implements MockTransform
     
     @Override
     public ClassWrapper<CtClass> transform(final ClassWrapper<CtClass> clazz) throws Exception {
-        CtClass classImpl = clazz.unwrap();
+        if (clazz.unwrap() instanceof  CtClass) {
+            CtClass classImpl = clazz.unwrap();
         
-        if (classImpl != null) {
-            transform(classImpl);
+            if (classImpl != null) {
+                transform(classImpl);
+            }
         }
-        
+    
         return clazz;
     }
     

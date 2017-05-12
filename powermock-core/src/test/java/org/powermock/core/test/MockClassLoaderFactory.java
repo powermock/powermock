@@ -21,6 +21,7 @@ package org.powermock.core.test;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.classloader.MockClassLoaderConfiguration;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
+import org.powermock.core.classloader.bytebuddy.ByteBuddyMockClassLoader;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
 import java.lang.reflect.Constructor;
@@ -48,6 +49,10 @@ public class MockClassLoaderFactory {
     private MockClassLoader getInstance(MockClassLoaderConfiguration configuration) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         Constructor<?> constructor = WhiteboxImpl.getConstructor(classLoaderClass, configuration.getClass());
         return (MockClassLoader) constructor.newInstance(new Object[]{configuration});
+    }
+    
+    public boolean isByteBuddy(){
+        return classLoaderClass.isAssignableFrom(ByteBuddyMockClassLoader.class);
     }
     
     @Override

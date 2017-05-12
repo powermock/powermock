@@ -22,8 +22,6 @@ import org.junit.Test;
 import org.junit.runners.Parameterized;
 import org.powermock.core.test.MockClassLoaderFactory;
 import org.powermock.core.transformers.bytebuddy.ConstructorModifiersMockTransformer;
-import org.powermock.core.transformers.bytebuddy.FinalModifiersMockTransformer;
-import org.powermock.core.transformers.javassist.ClassFinalModifierMockTransformer;
 import org.powermock.core.transformers.javassist.ConstructorsMockTransformer;
 import powermock.test.support.MainMockTransformerTestSupport.SupportClasses;
 
@@ -85,8 +83,8 @@ public class ConstructorsMockTransformerTest extends AbstractBaseMockTransformer
             .usingElementComparator(new Comparator<Constructor<?>>() {
                 @Override
                 public int compare(final Constructor<?> o1, final Constructor<?> o2) {
-                    return o1.getModifiers() == o2.getModifiers() ?
-                               o1.getParameterTypes().length - o2.getParameterTypes().length : o1.getModifiers() - o2.getModifiers();
+                    return o1.getModifiers() == o2.getModifiers()
+                               ? o1.getParameterTypes().length - o2.getParameterTypes().length : o1.getModifiers() - o2.getModifiers();
                 }
             })
             .contains(clazz.getConstructors());

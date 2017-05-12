@@ -31,7 +31,7 @@ import java.security.ProtectionDomain;
  * </p>
  * <ol>
  * <li>system classes. They are deferred to system classloader</li>
- * <li>classes that locate in packages that specified as packages to ignore with using {@link #addIgnorePackage(String...)}</li>
+ * <li>classes that locate in packages that specified as packages to ignore with using {@link MockClassLoaderConfiguration#addIgnorePackage(String...)}</li>
  * </ol>
  * <p>
  * Testing frameworks classes are loaded, but not modified.
@@ -43,6 +43,8 @@ import java.security.ProtectionDomain;
  * @author Johan Haleby
  * @author Jan Kronquist
  * @author Artur Zagretdinov
+ *
+ * @see MockClassLoaderConfiguration
  * @see ClassLoader#getSystemClassLoader()
  * @see IgnorePackagesExtractor
  */
@@ -110,7 +112,7 @@ public abstract class MockClassLoader extends DeferSupportingClassLoader {
     protected abstract Class<?> loadUnmockedClass(String name, ProtectionDomain protectionDomain) throws ClassFormatError, ClassNotFoundException;
     
     private Class<?> loadMockClass(String name, ProtectionDomain protectionDomain) throws ClassNotFoundException {
-        final byte[] clazz = defineAndTransformClass(name);
+        final byte[] clazz = defineAndTransformClass(name, protectionDomain);
     
         return defineClass(name, protectionDomain, clazz);
     }
@@ -128,5 +130,5 @@ public abstract class MockClassLoader extends DeferSupportingClassLoader {
         return wrappedType;
     }
     
-    protected abstract byte[] defineAndTransformClass(final String name) throws ClassNotFoundException;
+    protected abstract byte[] defineAndTransformClass(final String name, final ProtectionDomain protectionDomain) throws ClassNotFoundException;
 }

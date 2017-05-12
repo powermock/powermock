@@ -25,6 +25,7 @@ import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.MockTransformerChainFactory;
+import org.powermock.core.transformers.TestClassTransformer;
 import powermock.test.support.MainMockTransformerTestSupport.SupportClasses;
 
 import java.lang.reflect.Constructor;
@@ -41,7 +42,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 @RunWith(Parameterized.class)
-public class TestClassTransformerTest {
+public class TestClassTransformerJavaAssistTest {
     
     private MockTransformerChainFactory transformerChainFactory;
     

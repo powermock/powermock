@@ -18,13 +18,16 @@
 
 package org.powermock.core.transformers;
 
+import org.powermock.core.MockGateway;
 import org.powermock.core.classloader.bytebuddy.ByteBuddyMockClassLoader;
 import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
 import org.powermock.core.test.MockClassLoaderFactory;
 import org.powermock.core.transformers.javassist.AbstractJavaAssistMockTransformer;
 import org.powermock.core.transformers.support.DefaultMockTransformerChain;
+import org.powermock.reflect.internal.WhiteboxImpl;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -32,12 +35,16 @@ import java.util.List;
 class MockTransformerTestHelper {
     
     static Collection<Object[]> createTransformerTestData(final Class<?>... transformerClass) {
+        return createTransformerTestDataWithMockGateway(MockGateway.class, transformerClass);
+    }
+    
+    static Collection<Object[]> createTransformerTestDataWithMockGateway(final Class<?> mockGateway, final Class<?>... transformerClass) {
         List<Object[]> data = new ArrayList<Object[]>();
         
         for (TransformStrategy strategy : TransformStrategy.values()) {
-            List<MockTransformerChain> transformer = createTransformers(strategy, transformerClass);
+            List<MockTransformerChain> transformerChains = createTransformers(mockGateway, strategy, transformerClass);
             
-            for (MockTransformerChain mockTransformer : transformer) {
+            for (MockTransformerChain mockTransformer : transformerChains) {
                 data.add(new Object[]{
                     strategy,
                     mockTransformer,
@@ -58,22 +65,35 @@ class MockTransformerTestHelper {
     
     }
     
-    private static List<MockTransformerChain> createTransformers(final TransformStrategy strategy, final Class<?>... classes) {
+    private static List<MockTransformerChain> createTransformers(final Class<?> mockGateway, final TransformStrategy strategy, final Class<?>... classes) {
         List<MockTransformerChain> transformers = new ArrayList<MockTransformerChain>();
         
         for (Class<?> transformerClass : classes) {
-            MockTransformer transformer = getInstance(strategy, transformerClass);
-            
+            MockTransformer transformer = getInstance(mockGateway, strategy, transformerClass);
             transformers.add(createChainFrom(transformer));
         }
         
         return transformers;
     }
     
-    private static MockTransformer getInstance(final TransformStrategy strategy, final Class<?> transformerClass) {
+    private static MockTransformer getInstance(final Class<?> mockGateway, final TransformStrategy strategy, final Class<?> transformerClass) {
         try {
             Constructor<?> constructor = transformerClass.getConstructor(TransformStrategy.class);
-            return (MockTransformer) constructor.newInstance(strategy);
+            Object instance = constructor.newInstance(strategy);
+    
+            Field mockGetawayClassField = null;
+            try {
+                mockGetawayClassField = WhiteboxImpl.getField(transformerClass, "mockGetawayClass");
+            } catch (Exception e) {
+                // do nothing
+            }
+    
+            if (mockGetawayClassField != null){
+                mockGetawayClassField.setAccessible(true);
+                mockGetawayClassField.set(instance, mockGateway);
+            }
+    
+            return (MockTransformer) instance;
         } catch (Exception e) {
             throw new RuntimeException("Cannot create an instance of transformer.", e);
         }

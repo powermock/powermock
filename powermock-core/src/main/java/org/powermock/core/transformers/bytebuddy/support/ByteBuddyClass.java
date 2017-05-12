@@ -22,11 +22,10 @@ import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.DynamicType.Builder;
 
 public class ByteBuddyClass {
-    
     private final Builder builder;
     private final TypeDescription typeDefinitions;
     
-    public ByteBuddyClass (final TypeDescription typeDefinitions, final Builder builder) {
+    public ByteBuddyClass(final TypeDescription typeDefinitions, final Builder builder) {
         this.builder = builder;
         this.typeDefinitions = typeDefinitions;
     }

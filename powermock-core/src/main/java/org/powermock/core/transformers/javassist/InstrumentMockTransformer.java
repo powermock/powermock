@@ -20,22 +20,25 @@ package org.powermock.core.transformers.javassist;
 
 import javassist.CannotCompileException;
 import javassist.CtClass;
+import org.powermock.core.MockGateway;
 import org.powermock.core.transformers.TransformStrategy;
 import org.powermock.core.transformers.javassist.support.PowerMockExpressionEditor;
 
-import static org.powermock.core.transformers.TransformStrategy.INST_TRANSFORM;
+import java.io.File;
+import java.io.OutputStream;
 
 public class InstrumentMockTransformer extends AbstractJavaAssistMockTransformer {
     
+    private Class<?> mockGetawayClass;
+    
     public InstrumentMockTransformer(final TransformStrategy strategy) {
         super(strategy);
+        this.mockGetawayClass = MockGateway.class;
     }
     
     @Override
     public CtClass transform(final CtClass clazz) throws CannotCompileException {
-        if (getStrategy() != INST_TRANSFORM) {
-            clazz.instrument(new PowerMockExpressionEditor(getStrategy(), clazz));
-        }
+        clazz.instrument(new PowerMockExpressionEditor(getStrategy(), clazz, mockGetawayClass));
         return clazz;
     }
 }

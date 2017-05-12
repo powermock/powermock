@@ -26,52 +26,29 @@ import javassist.NotFoundException;
 import javassist.bytecode.AnnotationsAttribute;
 import org.powermock.core.IndicateReloadClass;
 import org.powermock.core.testlisteners.GlobalNotificationBuildSupport;
+import org.powermock.core.transformers.ClassWrapper;
+import org.powermock.core.transformers.TestClassTransformer;
 import org.powermock.core.transformers.javassist.support.Primitives;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.HashSet;
 
-/**
- * MockTransformer implementation that will make PowerMock test-class
- * enhancements for four purposes...
- * 1) Make test-class static initializer and constructor send crucial details
- * (for PowerMockTestListener events) to GlobalNotificationBuildSupport so that
- * this information can be forwarded to whichever
- * facility is used for composing the PowerMockTestListener events.
- * 2) Removal of test-method annotations as a mean to achieve test-suite
- * chunking!
- * 3) Restore original test-class constructors` accesses
- * (in case they have all been made public by {@link ConstructorsMockTransformer})
- * - to avoid that multiple <i>public</i> test-class constructors cause
- * a delegate runner from JUnit (or 3rd party) to bail out with an
- * error message such as "Test class can only have one constructor".
- * 4) Set test-class defer constructor (if exist) as protected instead of public.
- * Otherwise a delegate runner from JUnit (or 3rd party) might get confused by
- * the presence of more than one test-class constructor and bail out with an
- * error message such as "Test class can only have one constructor".
- * <p>
- * The #3 and #4 enhancements will also be enforced on the constructors
- * of classes that are nested within the test-class.
- */
-public abstract class TestClassTransformer extends AbstractJavaAssistMockTransformer {
+public abstract class JavaAssistTestClassTransformer extends TestClassTransformer<CtClass> {
     
-    private final Class<?> testClass;
-    private final Class<? extends Annotation> testMethodAnnotationType;
-    
-    private TestClassTransformer(
-                                    Class<?> testClass, Class<? extends Annotation> testMethodAnnotationType) {
-        super(null);
-        this.testClass = testClass;
-        this.testMethodAnnotationType = testMethodAnnotationType;
+    protected JavaAssistTestClassTransformer(Class<?> testClass, Class<? extends Annotation> testMethodAnnotationType) {
+        super(testClass, testMethodAnnotationType);
     }
     
-    abstract boolean mustHaveTestAnnotationRemoved(CtMethod method) throws Exception;
+    protected abstract boolean mustHaveTestAnnotationRemoved(CtMethod method) throws Exception;
     
     @Override
-    public CtClass transform(final CtClass clazz) throws Exception {
+    public ClassWrapper<CtClass> transform(final ClassWrapper<CtClass> clazz) throws Exception {
+            transform(clazz.unwrap());
+            return clazz;
+    }
+    
+    private CtClass transform(final CtClass clazz) throws Exception {
         if (clazz.isFrozen()) {
             clazz.defrost();
         }
@@ -145,8 +122,7 @@ public abstract class TestClassTransformer extends AbstractJavaAssistMockTransfo
     private void removeTestAnnotationsForTestMethodsThatRunOnOtherClassLoader(CtClass clazz)
         throws Exception {
         for (CtMethod m : clazz.getDeclaredMethods()) {
-            if (m.hasAnnotation(testMethodAnnotationType)
-                    && mustHaveTestAnnotationRemoved(m)) {
+            if (m.hasAnnotation(testMethodAnnotationType) && mustHaveTestAnnotationRemoved(m)) {
                 removeTestMethodAnnotationFrom(m);
             }
         }
@@ -244,7 +220,7 @@ public abstract class TestClassTransformer extends AbstractJavaAssistMockTransfo
         }
     }
     
-    private static String signatureOf(Method m) {
+    public static String signatureOf(Method m) {
         Class<?>[] paramTypes = m.getParameterTypes();
         String[] paramTypeNames = new String[paramTypes.length];
         for (int i = 0; i < paramTypeNames.length; ++i) {
@@ -256,7 +232,7 @@ public abstract class TestClassTransformer extends AbstractJavaAssistMockTransfo
             m.getName(), paramTypeNames);
     }
     
-    private static String signatureOf(CtMethod m) throws NotFoundException {
+    protected static String signatureOf(CtMethod m) throws NotFoundException {
         CtClass[] paramTypes = m.getParameterTypes();
         String[] paramTypeNames = new String[paramTypes.length];
         for (int i = 0; i < paramTypeNames.length; ++i) {
@@ -280,66 +256,4 @@ public abstract class TestClassTransformer extends AbstractJavaAssistMockTransfo
         return builder.toString();
     }
     
-    public interface ForTestClass {
-        RemovesTestMethodAnnotation removesTestMethodAnnotation(Class<? extends Annotation> testMethodAnnotation);
-        
-        interface RemovesTestMethodAnnotation {
-            TestClassTransformer fromMethods(Collection<Method> testMethodsThatRunOnOtherClassLoaders);
-            
-            TestClassTransformer fromAllMethodsExcept(Method singleMethodToRunOnThisClassLoader);
-        }
-    }
-    
-    public static ForTestClass forTestClass(final Class<?> testClass) {
-        return new ForTestClass() {
-            @Override
-            public RemovesTestMethodAnnotation removesTestMethodAnnotation(
-                                                                              final Class<? extends Annotation> testMethodAnnotation) {
-                return new RemovesTestMethodAnnotation() {
-                    
-                    @Override
-                    public TestClassTransformer fromMethods(
-                                                               final Collection<Method> testMethodsThatRunOnOtherClassLoaders) {
-                        return new TestClassTransformer(testClass, testMethodAnnotation) {
-                            /**
-                             * Is lazily initilized because of
-                             * AbstractTestSuiteChunkerImpl#chunkClass(Class)
-                             */
-                            Collection<String> methodsThatRunOnOtherClassLoaders;
-                            
-                            @Override
-                            boolean mustHaveTestAnnotationRemoved(CtMethod method)
-                                throws NotFoundException {
-                                if (null == methodsThatRunOnOtherClassLoaders) {
-                                    /* This lazy initialization is necessary - see above */
-                                    methodsThatRunOnOtherClassLoaders = new HashSet<String>();
-                                    for (Method m : testMethodsThatRunOnOtherClassLoaders) {
-                                        methodsThatRunOnOtherClassLoaders.add(
-                                            signatureOf(m));
-                                    }
-                                    testMethodsThatRunOnOtherClassLoaders.clear();
-                                }
-                                return methodsThatRunOnOtherClassLoaders
-                                           .contains(signatureOf(method));
-                            }
-                        };
-                    }
-                    
-                    @Override
-                    public TestClassTransformer fromAllMethodsExcept(
-                                                                        Method singleMethodToRunOnTargetClassLoader) {
-                        final String targetMethodSignature =
-                            signatureOf(singleMethodToRunOnTargetClassLoader);
-                        return new TestClassTransformer(testClass, testMethodAnnotation) {
-                            @Override
-                            boolean mustHaveTestAnnotationRemoved(CtMethod method)
-                                throws Exception {
-                                return !signatureOf(method).equals(targetMethodSignature);
-                            }
-                        };
-                    }
-                };
-            }
-        };
-    }
 }

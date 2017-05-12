@@ -22,6 +22,7 @@ import javassist.CtMethod;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.DynamicType.Builder;
 import net.bytebuddy.implementation.FixedValue;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -235,7 +236,7 @@ public class MockClassLoaderTest {
     }
     
     @Test(expected = ClassNotFoundException.class)
-    @Ignore
+    @Ignore("Has to be decided desirable behaviour in this case")
     public void should_throw_ClassNotFoundException_if_cannot_find_dynamic_class_in_deferred_class_loader() throws Exception {
         
         MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[0]);

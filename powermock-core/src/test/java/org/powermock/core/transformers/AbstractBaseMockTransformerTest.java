@@ -23,6 +23,7 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.powermock.core.MockGateway;
@@ -40,7 +41,7 @@ abstract class AbstractBaseMockTransformerTest {
     
     protected final TransformStrategy strategy;
     protected final MockTransformerChain mockTransformerChain;
-    private final MockClassLoaderFactory mockClassloaderFactory;
+    protected final MockClassLoaderFactory mockClassloaderFactory;
     
     AbstractBaseMockTransformerTest(final TransformStrategy strategy,
                                     final MockTransformerChain mockTransformerChain,
@@ -48,6 +49,11 @@ abstract class AbstractBaseMockTransformerTest {
         this.strategy = strategy;
         this.mockTransformerChain = mockTransformerChain;
         this.mockClassloaderFactory = mockClassloaderFactory;
+    }
+    
+    @Before
+    public void setUp() throws Exception {
+        ClassLoaderTestHelper.clearCache();
     }
     
     protected Class<?> loadWithMockClassLoader(final String name) throws Exception {

@@ -80,15 +80,34 @@ public class MockClassLoaderConfiguration {
     private final Set<String> modify = Collections.synchronizedSet(new HashSet<String>());
     private String[] deferPackages;
     
+    /**
+     * Create an instance of configuration without any classes to mock or ignore.
+     */
     public MockClassLoaderConfiguration() {
         this(new String[0], new String[0]);
     }
     
+    /**
+     * Create an instance of configuration
+     * @param classesToMock classes that should be modified by {@link MockClassLoader}.
+     * @param packagesToDefer classes/packages that should be deferred to system class loader.
+     */
     public MockClassLoaderConfiguration(String[] classesToMock, String[] packagesToDefer) {
         deferPackages = getPackagesToDefer(packagesToDefer);
         addClassesToModify(classesToMock);
     }
     
+    /**
+     * Add packages or classes to ignore. Loading of all classes that locate in the added packages will be delegate to a system classloader.
+     * <p>
+     * Package should be specified with using mask. Example:
+     * </p>
+     * <pre>
+     *     configuration.addIgnorePackage("org.powermock.example.*");
+     * </pre>
+     *
+     * @param packagesToIgnore fully qualified names of classes or names of packages that end by <code>.*</code>
+     */
     public void addIgnorePackage(String... packagesToIgnore) {
         if (packagesToIgnore != null && packagesToIgnore.length > 0) {
             final int previousLength = deferPackages.length;

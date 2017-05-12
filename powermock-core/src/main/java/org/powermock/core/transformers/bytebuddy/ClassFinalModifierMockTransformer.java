@@ -19,27 +19,32 @@
 package org.powermock.core.transformers.bytebuddy;
 
 import net.bytebuddy.asm.ModifierAdjustment;
-import net.bytebuddy.description.modifier.Visibility;
+import net.bytebuddy.description.modifier.TypeManifestation;
 import net.bytebuddy.description.type.TypeDescription;
 import org.powermock.core.transformers.TransformStrategy;
 import org.powermock.core.transformers.bytebuddy.support.ByteBuddyClass;
 
-import static net.bytebuddy.matcher.ElementMatchers.isConstructor;
+import static net.bytebuddy.matcher.ElementMatchers.isFinal;
+import static net.bytebuddy.matcher.ElementMatchers.isInterface;
+import static net.bytebuddy.matcher.ElementMatchers.not;
+import static org.powermock.core.transformers.TransformStrategy.INST_REDEFINE;
 
-public class ConstructorModifiersMockTransformer extends VisitorByteBuddyMockTransformer {
+public class ClassFinalModifierMockTransformer extends VisitorByteBuddyMockTransformer {
     
-    public ConstructorModifiersMockTransformer(final TransformStrategy strategy) {
+    public ClassFinalModifierMockTransformer(final TransformStrategy strategy) {
         super(strategy);
     }
     
     @Override
-    protected boolean classShouldTransformed(final TypeDescription typeDefinitions) {
-        return getStrategy() == TransformStrategy.CLASSLOADER;
+    public ByteBuddyClass transform(final ByteBuddyClass clazz) throws Exception {
+        return visit(clazz, new ModifierAdjustment().withTypeModifiers(
+            isFinal(),
+            TypeManifestation.PLAIN
+        ));
     }
     
-    @Override
-    public ByteBuddyClass transform(final ByteBuddyClass clazz) throws Exception {
-        return visit(clazz, new ModifierAdjustment().withConstructorModifiers(Visibility.PUBLIC));
+    protected boolean classShouldTransformed(final TypeDescription typeDefinitions) {
+        return getStrategy() != INST_REDEFINE && !typeDefinitions.isInterface();
     }
     
 }

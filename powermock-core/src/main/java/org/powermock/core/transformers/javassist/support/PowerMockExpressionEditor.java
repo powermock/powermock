@@ -45,11 +45,13 @@ import static org.powermock.core.transformers.javassist.support.TransformerHelpe
 public final class PowerMockExpressionEditor extends ExprEditor {
     
     private final CtClass clazz;
+    private final Class<?> mockGetawayClass;
     private final TransformStrategy strategy;
     
-    public PowerMockExpressionEditor(final TransformStrategy strategy, final CtClass clazz) {
+    public PowerMockExpressionEditor(final TransformStrategy strategy, final CtClass clazz, final Class<?> mockGetawayClass) {
         this.strategy = strategy;
         this.clazz = clazz;
+        this.mockGetawayClass = mockGetawayClass;
     }
     
     @Override
@@ -140,9 +142,9 @@ public final class PowerMockExpressionEditor extends ExprEditor {
             addNewDeferConstructor(clazz);
             final StringBuilder code = new StringBuilder();
             code.append("{Object value =")
-                .append(MockGateway.class.getName())
+                .append(mockGetawayClass.getName())
                 .append(".constructorCall($class, $args, $sig);");
-            code.append("if (value != ").append(MockGateway.class.getName()).append(".PROCEED){");
+            code.append("if (value != ").append(mockGetawayClass.getName()).append(".PROCEED){");
 
             /*
              * TODO Suppress and lazy inject field (when this feature is ready).

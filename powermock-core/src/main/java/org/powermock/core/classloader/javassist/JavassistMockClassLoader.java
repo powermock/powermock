@@ -20,6 +20,7 @@ package org.powermock.core.classloader.javassist;
 
 import javassist.ClassPool;
 import javassist.CtClass;
+import javassist.NotFoundException;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.classloader.MockClassLoaderConfiguration;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
@@ -81,18 +82,15 @@ public class JavassistMockClassLoader extends MockClassLoader {
                 }
                 bytes = ctClass.toBytecode();
             }
+        } catch (NotFoundException e) {
+            return ClassLoader.getSystemClassLoader().loadClass(name);
         } catch (Exception e) {
-            if (e instanceof javassist.NotFoundException) {
-                throw new ClassNotFoundException();
-            } else {
-                throw new RuntimeException(e);
-            }
-            
+            throw new RuntimeException("Failed to loaded class " + name, e);
         }
         return bytes == null ? null : defineClass(name, bytes, 0, bytes.length, protectionDomain);
     }
     
-    protected byte[] defineAndTransformClass(String name) {
+    protected byte[] defineAndTransformClass(String name, ProtectionDomain protectionDomain) {
         final byte[] clazz;
         
         ClassPool.doPruning = false;

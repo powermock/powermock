@@ -15,8 +15,6 @@
  */
 package org.powermock.core.classloader;
 
-import javassist.Loader;
-import org.powermock.core.WildcardMatcher;
 import org.powermock.reflect.Whitebox;
 
 import java.io.IOException;
@@ -36,32 +34,23 @@ import java.util.concurrent.ConcurrentMap;
  */
 abstract class DeferSupportingClassLoader extends ClassLoader {
     private final ConcurrentMap<String, SoftReference<Class<?>>> classes;
-
+    
     private final MockClassLoaderConfiguration configuration;
     ClassLoader deferTo;
-/**
-     * Add packages or classes to ignore. Loading of all classes that locate in the added packages will be delegate to a system classloader.
-     * <p>
-     * Package should be specified with using mask. Example:
-     * </p>
-     * <pre>
-     *     classLoader.addIgnorePackage("org.powermock.example.*");
-     * </pre>
-     *
-     * @param packagesToIgnore fully qualified names of classes or names of packages that end by <code>.*</code>
-     */
+    
     DeferSupportingClassLoader(ClassLoader classloader, MockClassLoaderConfiguration configuration) {
         
-            this.configuration = configuration;
-            this.classes = new ConcurrentHashMap<String, SoftReference<Class<?>>>();
-            
+        this.configuration = configuration;
+        this.classes = new ConcurrentHashMap<String, SoftReference<Class<?>>>();
+        
         if (classloader == null) {
             deferTo = ClassLoader.getSystemClassLoader();
         } else {
             deferTo = classloader;
         }
     }
-@Override
+    
+    @Override
     public URL getResource(String s) {
         return deferTo.getResource(s);
     }
@@ -95,15 +84,16 @@ abstract class DeferSupportingClassLoader extends ClassLoader {
         }
     }
     
+    protected abstract Class<?> loadModifiedClass(String s) throws ClassFormatError, ClassNotFoundException;
+    
     @Override
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
         Class<?> clazz = findLoadedClass1(name);
-        if (clazz == null) {
+        if (clazz == null){
             clazz = loadClass1(name, resolve);
         }
         return clazz;
     }
-
     
     /**
      * Finds the resource with the specified name on the search path.
@@ -120,6 +110,8 @@ abstract class DeferSupportingClassLoader extends ClassLoader {
             throw new RuntimeException(e);
         }
     }
+    
+    
     @Override
     protected Enumeration<URL> findResources(String name) throws IOException {
         try {
@@ -129,29 +121,26 @@ abstract class DeferSupportingClassLoader extends ClassLoader {
         }
     }
     
-    @Override
-    public URL getResource(String s) {
-        return deferTo.getResource(s);
-    }
-    
-    @Override
-    public InputStream getResourceAsStream(String s) {
-        return deferTo.getResourceAsStream(s);
-    }
-    
-    @Override
-    public Enumeration<URL> getResources(String name) throws IOException {
-        // If deferTo is already the parent, then we'd end up returning two copies of each resource...
-        if (deferTo.equals(getParent())) { return deferTo.getResources(name); } else { return super.getResources(name); }
+    private Class<?> loadClass1(String name, boolean resolve) throws ClassNotFoundException {
+        Class<?> clazz;
+        if (shouldDefer(name)) {
+            clazz = deferTo.loadClass(name);
+        } else {
+            clazz = loadModifiedClass(name);
+        }
+        if (resolve) {
+            resolveClass(clazz);
+        }
+        classes.put(name, new SoftReference<Class<?>>(clazz));
+        return clazz;
     }
     
     private boolean shouldDefer(String name) {
         return configuration.shouldDefer(name);
     }
-
+    
     private Class<?> findLoadedClass1(String name) {SoftReference<Class<?>> reference = classes.get(name);
-
-    Class<?> clazz = null;
+        Class<?> clazz = null;
         if (reference != null) {
             clazz = reference.get();
         }

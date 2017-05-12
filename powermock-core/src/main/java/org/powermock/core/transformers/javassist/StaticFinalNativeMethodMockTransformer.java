@@ -24,7 +24,6 @@ import javassist.CtMethod;
 import javassist.NotFoundException;
 import org.powermock.core.transformers.TransformStrategy;
 
-import static org.powermock.core.transformers.TransformStrategy.INST_TRANSFORM;
 
 public class StaticFinalNativeMethodMockTransformer extends MethodMockTransformer {
     
@@ -34,11 +33,9 @@ public class StaticFinalNativeMethodMockTransformer extends MethodMockTransforme
     
     @Override
     public CtClass transform(final CtClass clazz) throws NotFoundException, CannotCompileException {
-        if (getStrategy() != INST_TRANSFORM) {
             for (CtMethod m : clazz.getDeclaredMethods()) {
                 modifyMethod(m);
             }
-        }
         return clazz;
     }
 }

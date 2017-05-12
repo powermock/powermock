@@ -21,9 +21,9 @@ package org.powermock.core.classloader.bytebuddy;
 
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.type.TypeDescription;
+import net.bytebuddy.description.type.TypeDescription.Generic;
 import net.bytebuddy.dynamic.ClassFileLocator.ForClassLoader;
 import net.bytebuddy.dynamic.DynamicType.Builder;
-import net.bytebuddy.implementation.FixedValue;
 import net.bytebuddy.pool.TypePool;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.classloader.MockClassLoaderConfiguration;
@@ -32,8 +32,6 @@ import org.powermock.core.transformers.bytebuddy.support.ByteBuddyClass;
 import org.powermock.core.transformers.bytebuddy.support.ByteBuddyClassWrapperFactory;
 
 import java.security.ProtectionDomain;
-
-import static net.bytebuddy.matcher.ElementMatchers.isDeclaredBy;
 
 public class ByteBuddyMockClassLoader extends MockClassLoader {
     
@@ -54,7 +52,7 @@ public class ByteBuddyMockClassLoader extends MockClassLoader {
                                          final ProtectionDomain protectionDomain) throws ClassFormatError, ClassNotFoundException {
         
         final TypeDescription typeDefinitions = getTypeDefinitions(name);
-        
+    
         byte[] clazz = createByteBuddyBuilder(typeDefinitions)
                            .make()
                            .getBytes();
@@ -62,9 +60,11 @@ public class ByteBuddyMockClassLoader extends MockClassLoader {
         return defineClass(name, protectionDomain, clazz);
     }
     
-    protected byte[] defineAndTransformClass(final String name) throws ClassNotFoundException {
+    protected byte[] defineAndTransformClass(final String name, ProtectionDomain protectionDomain) throws ClassNotFoundException {
         TypeDescription typeDefinitions = getTypeDefinitions(name);
     
+        loadParentFirst(typeDefinitions);
+        
         Builder<Object> builder = createByteBuddyBuilder(typeDefinitions);
         
         ClassWrapper<ByteBuddyClass> wrap = classWrapperFactory.wrap(new ByteBuddyClass(typeDefinitions, builder));
@@ -76,10 +76,20 @@ public class ByteBuddyMockClassLoader extends MockClassLoader {
         }
         
         return wrap.unwrap().getBuilder()
-                   .method(isDeclaredBy(typeDefinitions))
-                   .intercept(FixedValue.nullValue())
                    .make()
                    .getBytes();
+    }
+    
+    private void loadParentFirst(final TypeDescription typeDefinitions) throws ClassNotFoundException {
+        Generic superClass = typeDefinitions.getSuperClass();
+        
+        if (parentShouldBeLoaded(typeDefinitions, superClass)) {
+            loadClass(superClass.getTypeName());
+        }
+    }
+    
+    private boolean parentShouldBeLoaded(final TypeDescription typeDefinitions, final Generic superClass) {
+        return !typeDefinitions.isInterface() && !typeDefinitions.isEnum() &&  !"java.lang.Object".equals(superClass.getTypeName());
     }
     
     private Builder<Object> createByteBuddyBuilder(final TypeDescription typeDefinitions) {

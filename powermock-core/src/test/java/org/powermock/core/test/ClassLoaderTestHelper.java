@@ -23,15 +23,37 @@ import javassist.Loader;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.transformers.MockTransformerChain;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.Assert.assertNotNull;
 
 public class ClassLoaderTestHelper {
     
+    public static Map<MockClassLoaderFactory, Map<MockTransformerChain, MockClassLoader>> cache;
+    
+    static {
+        cache = new HashMap<MockClassLoaderFactory, Map<MockTransformerChain, MockClassLoader>>();
+    }
+    
     public static Class<?> loadWithMockClassLoader(final String className, final MockTransformerChain mockTransformerChain,
                                                    final MockClassLoaderFactory mockClassloaderFactory) throws Exception {
+        MockClassLoader loader = null;
         
-        MockClassLoader loader = mockClassloaderFactory.getInstance(new String[]{MockClassLoader.MODIFY_ALL_CLASSES});
-        loader.setMockTransformerChain(mockTransformerChain);
+        Map<MockTransformerChain, MockClassLoader> classloaders = cache.get(mockClassloaderFactory);
+        
+        if (classloaders != null){
+            loader = classloaders.get(mockTransformerChain);
+        }else{
+            classloaders = new HashMap<MockTransformerChain, MockClassLoader>();
+            cache.put(mockClassloaderFactory, classloaders);
+        }
+    
+        if (loader == null) {
+            loader = mockClassloaderFactory.getInstance(new String[]{MockClassLoader.MODIFY_ALL_CLASSES});
+            loader.setMockTransformerChain(mockTransformerChain);
+            classloaders.put(mockTransformerChain, loader);
+        }
         
         Class<?> clazz = Class.forName(className, true, loader);
         
@@ -46,4 +68,7 @@ public class ClassLoaderTestHelper {
     }
     
     
+    public static void clearCache() {
+        cache.clear();
+    }
 }

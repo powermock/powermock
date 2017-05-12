@@ -56,30 +56,9 @@ public class InstrumentMockTransformerTest extends AbstractBaseMockTransformerTe
                                          final MockClassLoaderFactory mockClassloaderFactory) {
         super(strategy, mockTransformerChain, mockClassloaderFactory);
     }
-
-    @Test
-    public void should_add_additional_defer_constructor() throws Exception {
-    
-        assumeThat(strategy, equalTo(TransformStrategy.CLASSLOADER));
-        
-        Class<?> clazz = loadWithMockClassLoader(SupportClasses.SubClass.class.getName());
-        
-        assertThat(SupportClasses.SubClass.class.getConstructors())
-            .as("Original number of constructors")
-            .hasSize(1);
-        
-        assertThat(clazz.getConstructors())
-            .as("Number of constructors in modified class")
-            .hasSize(2);
-        
-        assertThat(clazz.getConstructor(IndicateReloadClass.class))
-            .as("Defer-constructor expected")
-            .isNotNull();
-    }
-    
     
     @Test
-    public void should_ignore_call_to_synthetic_field() throws Throwable {
+    public void should_ignore_call_to_synthetic_field_when_instrument_call_to_method() throws Throwable {
         final ClassPool classPool = new ClassPool(true);
         CtClass ctClass = prepareClassesForFieldTests(classPool);
         
