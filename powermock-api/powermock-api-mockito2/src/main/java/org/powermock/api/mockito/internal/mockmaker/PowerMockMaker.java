@@ -18,6 +18,7 @@ package org.powermock.api.mockito.internal.mockmaker;
 
 import org.mockito.internal.InternalMockHandler;
 import org.mockito.internal.creation.MockSettingsImpl;
+import org.mockito.internal.creation.bytebuddy.ByteBuddyMockMaker;
 import org.mockito.internal.stubbing.InvocationContainer;
 import org.mockito.internal.util.MockNameImpl;
 import org.mockito.invocation.Invocation;
@@ -25,6 +26,7 @@ import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.MockMaker;
 import org.mockito.stubbing.Answer;
+import org.powermock.api.mockito.internal.pluginswitch.PowerMockPluginSwitch;
 import org.powermock.api.mockito.repackaged.CglibMockMaker;
 import org.powermock.core.classloader.MockClassLoader;
 
@@ -40,10 +42,16 @@ import java.util.List;
  * For more details see the {@link org.powermock.api.mockito.internal.invocation.ToStringGenerator}.
  */
 public class PowerMockMaker implements MockMaker {
+
+    private static boolean isEnabled = true;
     private final MockMaker cglibMockMaker = new CglibMockMaker();
+    private final MockMaker byteBuddyMockMaker = new ByteBuddyMockMaker();
 
     @Override
     public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
+        if(!isEnabled) {
+            return byteBuddyMockMaker.createMock(settings, handler);
+        }
         T mock = cglibMockMaker.createMock(settings, handler);
         ClassLoader classLoader = cglibMockMaker.getClass().getClassLoader();
         if (classLoader instanceof MockClassLoader) {
@@ -56,8 +64,9 @@ public class PowerMockMaker implements MockMaker {
 
     @Override
     public MockHandler getHandler(Object mock) {
-        // Return a fake mock handler for static method mocks
-        if (mock instanceof Class) {
+        if(!isEnabled) {
+            return byteBuddyMockMaker.getHandler(mock);
+        } else if (mock instanceof Class) { // Return a fake mock handler for static method mocks
             return new PowerMockInternalMockHandler((Class<?>) mock);
         } else {
             return cglibMockMaker.getHandler(mock);
@@ -66,11 +75,18 @@ public class PowerMockMaker implements MockMaker {
 
     @Override
     public void resetMock(Object mock, MockHandler newHandler, MockCreationSettings settings) {
+        if(!isEnabled) {
+            byteBuddyMockMaker.resetMock(mock, newHandler, settings);
+            return;
+        }
         cglibMockMaker.resetMock(mock, newHandler, settings);
     }
 
     @Override
     public TypeMockability isTypeMockable(Class<?> type) {
+        if (!isEnabled) {
+            byteBuddyMockMaker.isTypeMockable(type);
+        }
         return cglibMockMaker.isTypeMockable(type);
     }
 
@@ -105,5 +121,21 @@ public class PowerMockMaker implements MockMaker {
         public Object handle(Invocation invocation) throws Throwable {
             return null;
         }
+    }
+
+    /**
+     * @deprecated Please use {@link PowerMockPluginSwitch#disablePowerMockMaker} instead
+     */
+    @Deprecated
+    public static void disablePowerMockMaker() {
+        isEnabled = false;
+    }
+
+    /**
+     * @deprecated Please use {@link PowerMockPluginSwitch#enablePowerMockMaker} instead
+     */
+    @Deprecated
+    public static void enablePowerMockMaker() {
+        isEnabled = true;
     }
 }
