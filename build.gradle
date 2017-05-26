@@ -31,7 +31,7 @@ ext{
     testngVersion = "6.9.10"
     xstreamVersion = "1.4.9"
     mockito1Version = "1.10.19"
-    mockito2Version = "2.7.5"
+    mockito2Version = "2.8.9"
     servletVersion = "2.5"
     systemRulesVersion = "1.16.0"
     jacocoVersion = "0.7.7.201606060606"

@@ -71,9 +71,11 @@ public class MockClassLoader extends DeferSupportingClassLoader {
             "org.powermock.modules.junit3.internal.",
             "org.powermock"};
 
-    private final String[] specificClassesToLoadButNotModify = new String[]{InvocationSubstitute.class.getName(),
+    private final String[] specificClassesToLoadButNotModify = new String[]{
+            InvocationSubstitute.class.getName(),
             PowerMockPolicy.class.getName(),
-            ClassReplicaCreator.class.getName()};
+            ClassReplicaCreator.class.getName()
+    };
 
     /*
      * Classes that should always be deferred regardless of what the user
@@ -241,7 +243,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
             }
         } catch (Exception e) {
             if (e instanceof javassist.NotFoundException) {
-                throw new ClassNotFoundException();
+                return ClassLoader.getSystemClassLoader().loadClass(name);
             } else {
                 throw new RuntimeException(e);
             }

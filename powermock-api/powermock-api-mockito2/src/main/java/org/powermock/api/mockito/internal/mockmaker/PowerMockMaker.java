@@ -18,6 +18,7 @@ package org.powermock.api.mockito.internal.mockmaker;
 
 import org.mockito.internal.InternalMockHandler;
 import org.mockito.internal.creation.MockSettingsImpl;
+import org.mockito.internal.creation.bytebuddy.ByteBuddyMockMaker;
 import org.mockito.internal.stubbing.InvocationContainer;
 import org.mockito.internal.util.MockNameImpl;
 import org.mockito.invocation.Invocation;
@@ -25,8 +26,6 @@ import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.MockMaker;
 import org.mockito.stubbing.Answer;
-import org.powermock.api.mockito.repackaged.CglibMockMaker;
-import org.powermock.core.classloader.MockClassLoader;
 
 import java.util.List;
 
@@ -40,18 +39,11 @@ import java.util.List;
  * For more details see the {@link org.powermock.api.mockito.internal.invocation.ToStringGenerator}.
  */
 public class PowerMockMaker implements MockMaker {
-    private final MockMaker cglibMockMaker = new CglibMockMaker();
+    private final MockMaker mockMaker = new ByteBuddyMockMaker();
 
     @Override
     public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
-        T mock = cglibMockMaker.createMock(settings, handler);
-        ClassLoader classLoader = cglibMockMaker.getClass().getClassLoader();
-        if (classLoader instanceof MockClassLoader) {
-            MockClassLoader mcl = (MockClassLoader) classLoader;
-            // The generated class is not picked up by PowerMock so we cache it here
-            mcl.cache(mock.getClass());
-        }
-        return mock;
+        return mockMaker.createMock(settings, handler);
     }
 
     @Override
@@ -60,35 +52,35 @@ public class PowerMockMaker implements MockMaker {
         if (mock instanceof Class) {
             return new PowerMockInternalMockHandler((Class<?>) mock);
         } else {
-            return cglibMockMaker.getHandler(mock);
+            return mockMaker.getHandler(mock);
         }
     }
 
     @Override
     public void resetMock(Object mock, MockHandler newHandler, MockCreationSettings settings) {
-        cglibMockMaker.resetMock(mock, newHandler, settings);
+        mockMaker.resetMock(mock, newHandler, settings);
     }
 
     @Override
     public TypeMockability isTypeMockable(Class<?> type) {
-        return cglibMockMaker.isTypeMockable(type);
+        return mockMaker.isTypeMockable(type);
     }
 
     /**
      * It needs to extend InternalMockHandler because Mockito requires the type to be of InternalMockHandler and not MockHandler
      */
-    private static class PowerMockInternalMockHandler implements InternalMockHandler<Object> {
+    private static class PowerMockInternalMockHandler implements InternalMockHandler<Class> {
         private final Class<?> mock;
-
-        public PowerMockInternalMockHandler(Class<?> mock) {
+    
+        private PowerMockInternalMockHandler(Class<?> mock) {
             this.mock = mock;
         }
 
         @Override
-        public MockCreationSettings getMockSettings() {
-            final MockSettingsImpl mockSettings = new MockSettingsImpl();
+        public MockCreationSettings<Class> getMockSettings() {
+            final MockSettingsImpl<Class> mockSettings = new MockSettingsImpl<Class>();
             mockSettings.setMockName(new MockNameImpl(mock.getName()));
-            mockSettings.setTypeToMock(mock);
+            mockSettings.setTypeToMock((Class<Class>) mock);
             return mockSettings;
         }
 
