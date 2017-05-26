@@ -26,9 +26,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 
-/**
- *
- */
 public abstract class AbstractClassloaderExecutor implements ClassloaderExecutor {
     @Override
     @SuppressWarnings("unchecked")
@@ -55,12 +52,22 @@ public abstract class AbstractClassloaderExecutor implements ClassloaderExecutor
         final DeepClonerSPI deepCloner = createDeepCloner(classloader);
         final Object objectLoadedWithClassloader = deepCloner.clone(instance);
         final Object[] argumentsLoadedByClassLoader = cloneArguments(arguments, deepCloner);
-
-        Object result = getResult(method, objectLoadedWithClassloader, argumentsLoadedByClassLoader);
-
-        return cloneResult(result);
+    
+        return invokeWithClassLoader(classloader, method, objectLoadedWithClassloader, argumentsLoadedByClassLoader);
     }
-
+    
+    private Object invokeWithClassLoader(final ClassLoader classloader, final Method method, final Object objectLoadedWithClassloader,
+                                         final Object[] argumentsLoadedByClassLoader) {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(classloader);
+            Object result = getResult(method, objectLoadedWithClassloader, argumentsLoadedByClassLoader);
+            return cloneResult(result);
+        } finally {
+            Thread.currentThread().setContextClassLoader(classLoader);
+        }
+    }
+    
     private Object cloneResult(Object result) {return result == null ? null : createDeepCloner(getClass().getClassLoader()).clone(result);}
 
     private Object getResult(Method method, Object objectLoadedWithClassloader, Object[] argumentsLoadedByClassLoader) {

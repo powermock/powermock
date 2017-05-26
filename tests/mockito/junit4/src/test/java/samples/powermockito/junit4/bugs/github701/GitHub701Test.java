@@ -32,10 +32,7 @@ public class GitHub701Test {
     @Test
     public void shouldMockEqualsMethod() {
 
-        MapWrapper mapWrapper = new MapWrapper();
-        doReturn(true).when(mocked).equals(mapWrapper);
-
-        assertThat(mocked.equals(mapWrapper)).isEqualTo(true);
+        assertThat(mocked.equals(mocked)).isEqualTo(true);
     }
 
 }

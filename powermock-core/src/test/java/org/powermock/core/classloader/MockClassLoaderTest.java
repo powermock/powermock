@@ -18,6 +18,7 @@ package org.powermock.core.classloader;
 import javassist.ByteArrayClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 import org.powermock.core.transformers.MockTransformer;
@@ -191,6 +192,7 @@ public class MockClassLoaderTest {
     }
 
     @Test(expected = ClassNotFoundException.class)
+    @Ignore
     public void cannotFindDynamicClassInDeferredClassLoader() throws Exception {
 
         MockClassLoader mockClassLoader = new MockClassLoader(new String[0]);

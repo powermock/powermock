@@ -26,6 +26,9 @@ import org.mockito.internal.handler.MockHandlerFactory;
 import org.mockito.internal.util.MockNameImpl;
 import org.mockito.internal.util.MockUtil;
 import org.mockito.internal.util.reflection.LenientCopyTool;
+import org.mockito.invocation.MockHandler;
+import org.mockito.mock.MockCreationSettings;
+import org.mockito.plugins.MockMaker;
 import org.powermock.api.mockito.internal.invocation.MockitoMethodInvocationControl;
 import org.powermock.api.mockito.repackaged.ClassImposterizer;
 import org.powermock.api.mockito.repackaged.MethodInterceptorFilter;
@@ -37,6 +40,8 @@ import org.powermock.reflect.Whitebox;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+
+import static org.mockito.internal.handler.MockHandlerFactory.createMockHandler;
 
 public class DefaultMockCreator extends AbstractMockCreator {
 
@@ -69,8 +74,7 @@ public class DefaultMockCreator extends AbstractMockCreator {
             typeToMock = type;
         }
 
-        final MockData<T> mockData = createMethodInvocationControl(mockName, typeToMock, methods, isSpy, delegator,
-                mockSettings);
+        final MockData<T> mockData = createMethodInvocationControl(mockName, typeToMock, methods, isSpy, delegator, mockSettings);
 
         T mock = mockData.getMock();
         if (isFinalJavaSystemClass(type) && !isStatic) {
@@ -98,7 +102,8 @@ public class DefaultMockCreator extends AbstractMockCreator {
     @SuppressWarnings("unchecked")
     private static <T> MockData<T> createMethodInvocationControl(final String mockName, Class<T> type,
                                                                  Method[] methods, boolean isSpy, Object delegator, MockSettings mockSettings) {
-        final MockSettingsImpl settings;
+        final MockSettingsImpl<T> settings;
+        MockMaker mockMaker;
         if (mockSettings == null) {
             // We change the context classloader to the current CL in order for the Mockito
             // framework to load it's plugins (such as MockMaker) correctly.
@@ -106,12 +111,13 @@ public class DefaultMockCreator extends AbstractMockCreator {
             Thread.currentThread().setContextClassLoader(DefaultMockCreator.class.getClassLoader());
             try {
                 settings = (MockSettingsImpl) Mockito.withSettings();
-                Plugins.getMockMaker();
+                mockMaker = Plugins.getMockMaker();
             } finally {
                 Thread.currentThread().setContextClassLoader(originalCL);
             }
         } else {
             settings = (MockSettingsImpl) mockSettings;
+            mockMaker = Plugins.getMockMaker();
         }
 
         if (isSpy) {
@@ -123,7 +129,10 @@ public class DefaultMockCreator extends AbstractMockCreator {
 
         InternalMockHandler mockHandler = MockHandlerFactory.createMockHandler(settings);
         MethodInterceptorFilter filter = new PowerMockMethodInterceptorFilter(mockHandler, settings);
-        final T mock = new ClassImposterizer(new DefaultInstantiatorProvider().getInstantiator(settings)).imposterise(filter, type);
+        //final T mock = new ClassImposterizer(new DefaultInstantiatorProvider().getInstantiator(settings)).imposterise(filter, type);
+    
+        T mock = mockMaker.createMock(settings, mockHandler);
+        
         ClassLoader classLoader = mock.getClass().getClassLoader();
         if (classLoader instanceof MockClassLoader) {
             MockClassLoader mcl = (MockClassLoader) classLoader;
@@ -134,7 +143,7 @@ public class DefaultMockCreator extends AbstractMockCreator {
                 isSpy && delegator == null ? new Object() : delegator,
                 mock,
                 methods);
-
+    
         return new MockData<T>(invocationControl, mock);
     }
 

@@ -1,10 +1,12 @@
 
 List mockito1Libs = [
-    project(":powermock-api:powermock-api-mockito"),"org.mockito:mockito-core:${mockito1Version}"
+        project(":powermock-api:powermock-api-mockito2"),
+        "org.mockito:mockito-core:${mockito2Version}"
 ]
 
 List mockito2Lbs = [
-        project(":powermock-api:powermock-api-mockito2"),"org.mockito:mockito-core:${mockito2Version}"
+        project(":powermock-api:powermock-api-mockito2"),
+        "org.mockito:mockito-core:${mockito2Version}"
 ]
 
 configure(project.subprojects){ subproject ->
@@ -18,9 +20,8 @@ configure(project.subprojects){ subproject ->
         testCompile mockito1Libs
         testCompile project(path:":powermock-api:powermock-api-mockito-common")
 
-        mockito2 mockito2Lbs
-        mockito2 project(path:":powermock-api:powermock-api-mockito-common", configuration: "mockito2")
-
+//        mockito2 mockito2Lbs
+//        mockito2 project(path:":powermock-api:powermock-api-mockito-common", configuration: "mockito2")
     }
 
     check.dependsOn mockito2Test
@@ -38,6 +39,22 @@ project(":tests:mockito:junit4") {
 
         testCompile ("org.jacoco:org.jacoco.core:${jacocoVersion}")
         testCompile ("org.eclipse.jdt:core:${eclipseJdt}")
+    }
+
+    test{
+        exclude "**/*Cases*"
+    }
+}
+
+project(":tests:mockito:inline") {
+    description = "Tests for Mockito 2 inline mock maker"
+
+    dependencies {
+        testCompile project(":powermock-modules:powermock-module-junit4")
+
+        testCompile("junit:junit:${junitVersion}"){
+            exclude group:'org.hamcrest', module:'hamcrest-core'
+        }
     }
 
     test{
