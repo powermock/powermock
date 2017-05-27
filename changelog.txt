@@ -10,6 +10,7 @@ Change log 1.7.0
 * Fix issue #753 fix to upgrade code to be compatible with later versions of Mockito (thanks to emmaLP @emmaLP for pull request)
 * Fix issue #763 whenNew not matching constructor when null is passed as first or last argument. (thanks to @podarsmarty podarsmarty for pull request)
 * Fix issue #781 Call mocked equals static method instead of real (thanks to @Ilya-Gh Ilya Ghirici for pull request)
+* Fix issue #772: PowerMockIgnorePackagesExtractorImpl should visit interfaces. (thanks to François Jacques @hypnoce for pull request)
 
 Change log 1.6.6 (2016-11-04)
 -----------------------------

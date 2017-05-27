@@ -23,6 +23,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -30,7 +31,7 @@ public class PowerMockIgnorePackagesExtractorImpl implements IgnorePackagesExtra
 
     @Override
     public String[] getPackagesToIgnore(AnnotatedElement element) {
-        Set<String> ignoredPackages = new LinkedHashSet<String>();
+        Set<String> ignoredPackages = new HashSet<String>();
         PowerMockIgnore annotation = element.getAnnotation(PowerMockIgnore.class);
         if (annotation != null) {
             String[] ignores = annotation.value();

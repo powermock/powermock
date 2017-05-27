@@ -15,6 +15,7 @@
  */
 package org.powermock.tests.utils.impl;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 
@@ -22,27 +23,31 @@ import static org.junit.Assert.assertEquals;
 
 public class PowerMockIgnorePackagesExtractorImplTest {
 
-    /**
-     * Makes sure that issue <a
-     * href="http://code.google.com/p/powermock/issues/detail?id=150">150</a> is
-     * solved.
-     */
     @Test
-    public void shouldFindIgnorePackagesInTheWholeClassHierarchy() throws Exception {
+    public void should_find_ignore_packages_in_the_whole_class_hierarchy() throws Exception {
         final PowerMockIgnorePackagesExtractorImpl tested = new PowerMockIgnorePackagesExtractorImpl();
         final String[] packagesToIgnore = tested.getPackagesToIgnore(IgnoreAnnotatedDemoClass.class);
-        assertEquals(7, packagesToIgnore.length);
-        assertEquals("ignore0", packagesToIgnore[0]);
-        assertEquals("ignore1", packagesToIgnore[1]);
-        assertEquals("ignore2", packagesToIgnore[2]);
-        assertEquals("ignore3", packagesToIgnore[3]);
-        assertEquals("ignore4", packagesToIgnore[4]);
-        assertEquals("ignore5", packagesToIgnore[5]);
-        assertEquals("ignore6", packagesToIgnore[6]);
+    
+        Assertions.assertThat(packagesToIgnore)
+                  .as("Packages added to ignore")
+                  .hasSize(4)
+                  .containsExactlyInAnyOrder("ignore0", "ignore1","ignore2","ignore3");
+    }
+    
+    @Test
+    public void should_scan_interfaces_when_search_package_to_ignore() {
+        final PowerMockIgnorePackagesExtractorImpl tested = new PowerMockIgnorePackagesExtractorImpl();
+        final String[] packagesToIgnore = tested.getPackagesToIgnore(IgnoreAnnotationFromInterfaces.class);
+    
+        Assertions.assertThat(packagesToIgnore)
+                  .as("Packages from interfaces added to ignore")
+                  .hasSize(3)
+                  .containsExactlyInAnyOrder("ignore4", "ignore5","ignore6");
+        
     }
 
     @PowerMockIgnore( { "ignore0", "ignore1" })
-    private class IgnoreAnnotatedDemoClass extends IgnoreAnnotatedDemoClassParent implements IgnoreAnnotatedDemoInterfaceParent2 {
+    private class IgnoreAnnotatedDemoClass extends IgnoreAnnotatedDemoClassParent {
 
     }
 
@@ -52,22 +57,25 @@ public class PowerMockIgnorePackagesExtractorImplTest {
     }
 
     @PowerMockIgnore("ignore3")
-    private class IgnoreAnnotatedDemoClassGrandParent implements IgnoreAnnotatedDemoInterfaceParent1 {
+    private class IgnoreAnnotatedDemoClassGrandParent {
 
     }
-
-    @PowerMockIgnore("ignore4")
-    private interface IgnoreAnnotatedDemoInterfaceParent1 extends IgnoreAnnotatedDemoInterfaceGrandParent {
-
+    
+    private static class IgnoreAnnotationFromInterfaces implements IgnoreAnnotatedDemoInterfaceParent1, IgnoreAnnotatedDemoInterfaceParent2{
+    
     }
-
+    
     @PowerMockIgnore("ignore5")
     private interface IgnoreAnnotatedDemoInterfaceGrandParent {
-
+    
     }
-
+    
+    @PowerMockIgnore("ignore4")
+    private interface IgnoreAnnotatedDemoInterfaceParent1 extends IgnoreAnnotatedDemoInterfaceGrandParent {
+    
+    }
+    
     @PowerMockIgnore("ignore6")
     private interface IgnoreAnnotatedDemoInterfaceParent2 extends IgnoreAnnotatedDemoInterfaceGrandParent {
-        // Test diamond interface hierarchies
     }
 }
