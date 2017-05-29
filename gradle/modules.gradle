@@ -42,6 +42,7 @@ project(":powermock-core") {
         }
         testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
         testCompile("org.assertj:assertj-core:${assertjVersion}")
+        testCompile(project(":tests:utils"))
 
         testCompile("org.mockito:mockito-core:${mockito1Version}")
         mockito2("org.mockito:mockito-core:${mockito2Version}")
@@ -155,6 +156,8 @@ project(":powermock-api:powermock-api-mockito2"){
         }
         testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
         testCompile("org.assertj:assertj-core:${assertjVersion}")
+        
+        testCompile(project(":tests:utils"))
     }
 }
 
