@@ -155,6 +155,8 @@ project(":powermock-api:powermock-api-mockito2"){
         }
         testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
         testCompile("org.assertj:assertj-core:${assertjVersion}")
+        
+        testCompile(project(":tests:utils"))
     }
 }
 
