@@ -21,7 +21,9 @@ package samples.powermockito.inline.bugs.github793;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.exceptions.verification.NoInteractionsWanted;
 import org.mockito.exceptions.verification.WantedButNotInvoked;
+import org.mockito.verification.VerificationMode;
 import org.powermock.api.mockito.MockitoVersion;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -30,7 +32,9 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assume.assumeTrue;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
@@ -67,11 +71,11 @@ public class PowerMockStaticMockingTest {
         assertThatThrownBy(new ThrowingCallable() {
             @Override
             public void call() throws Throwable {
-                PowerMockito.verifyStatic();
                 StaticClass.say(value);
+                PowerMockito.verifyNoMoreInteractions(StaticClass.class);
             }
         }).as("Verify exception is thrown")
-          .isInstanceOf(WantedButNotInvoked.class);
+          .isInstanceOf(NoInteractionsWanted.class);
         
     }
     

@@ -1,6 +1,5 @@
 package org.powermock.api.mockito.internal.mockcreation;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.internal.creation.MockSettingsImpl;
 import org.mockito.internal.util.MockUtil;
@@ -14,8 +13,7 @@ import static org.junit.Assert.assertNotNull;
 public class MockCreatorTest {
 
 	@Test
-	@Ignore
-	public void testMock_shouldReturnMockNameWhenSettingsHaveName()
+	public void should_return_mock_name_when_settings_have_name()
 			throws NoSuchMethodException, SecurityException {
 		final MockSettingsImpl<List<?>> settings = new MockSettingsImpl<List<?>>();
 		settings.name("mylist");
@@ -29,8 +27,7 @@ public class MockCreatorTest {
 	}
 
 	@Test
-	@Ignore
-	public void testMock_shouldReturnClassNameWhenSettingsHaveNoName()
+	public void should_return_class_name_when_settings_have_no_name()
 			throws NoSuchMethodException, SecurityException {
 		final MockSettingsImpl<List<?>> settings = new MockSettingsImpl<List<?>>();
 

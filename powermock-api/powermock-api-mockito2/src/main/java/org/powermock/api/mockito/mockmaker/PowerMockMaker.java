@@ -14,11 +14,10 @@
  *   limitations under the License.
  *
  */
-package org.powermock.api.mockito.internal.mockmaker;
+package org.powermock.api.mockito.mockmaker;
 
 import org.mockito.internal.InternalMockHandler;
 import org.mockito.internal.creation.MockSettingsImpl;
-import org.mockito.internal.creation.bytebuddy.ByteBuddyMockMaker;
 import org.mockito.internal.stubbing.InvocationContainer;
 import org.mockito.internal.util.MockNameImpl;
 import org.mockito.invocation.Invocation;
@@ -26,6 +25,7 @@ import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.MockMaker;
 import org.mockito.stubbing.Answer;
+import org.powermock.configuration.GlobalConfiguration;
 
 import java.util.List;
 
@@ -39,8 +39,12 @@ import java.util.List;
  * For more details see the {@link org.powermock.api.mockito.internal.invocation.ToStringGenerator}.
  */
 public class PowerMockMaker implements MockMaker {
-    private final MockMaker mockMaker = new ByteBuddyMockMaker();
-
+    private final MockMaker mockMaker;
+    
+    public PowerMockMaker() {
+        mockMaker = new MockMakerLoader().load(GlobalConfiguration.mockitoConfiguration());
+    }
+    
     @Override
     public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
         return mockMaker.createMock(settings, handler);
@@ -65,7 +69,11 @@ public class PowerMockMaker implements MockMaker {
     public TypeMockability isTypeMockable(Class<?> type) {
         return mockMaker.isTypeMockable(type);
     }
-
+    
+    MockMaker getMockMaker() {
+        return mockMaker;
+    }
+    
     /**
      * It needs to extend InternalMockHandler because Mockito requires the type to be of InternalMockHandler and not MockHandler
      */

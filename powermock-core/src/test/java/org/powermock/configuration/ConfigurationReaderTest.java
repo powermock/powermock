@@ -20,23 +20,27 @@ package org.powermock.configuration;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.powermock.configuration.support.ConfigurationReaderImpl;
+import org.powermock.configuration.support.ConfigurationReaderBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ConfigurationReaderTest {
     
+    private static final String CONF_PATH = "org/powermock/configuration";
+    private static final String CONFIGURATION_FILE = CONF_PATH + "/test.properties";
     private ConfigurationReader reader;
     
     @Before
     public void setUp() throws Exception {
-        reader = new ConfigurationReaderImpl("org/powermock/configuration/test.properties");
+        reader = ConfigurationReaderBuilder.newBuilder()
+                                           .forConfigurationFile(CONFIGURATION_FILE)
+                                           .build();
     }
     
     @Test
     public void should_read_configuration_from_properties() {
         
-        Configuration configuration =  reader.read();
+        Configuration configuration =  reader.read(MockitoConfiguration.class);
         
         assertThat(configuration)
             .as("Configuration is read")
@@ -45,7 +49,7 @@ public class ConfigurationReaderTest {
     
     @Test
     public void should_read_mock_maker_class_from_configuration() {
-        MockitoConfiguration configuration = (MockitoConfiguration) reader.read();
+        MockitoConfiguration configuration = reader.read(MockitoConfiguration.class);
     
         assertThat(configuration.getMockMakerClass())
             .as("Configuration is read")
@@ -53,10 +57,42 @@ public class ConfigurationReaderTest {
     }
     
     @Test
+    public void should_not_read_mock_maker_class_from_configuration_without_prefix() {
+        reader = ConfigurationReaderBuilder.newBuilder()
+                                           .forConfigurationFile(CONF_PATH + "/test_without_prefix.properties")
+                                           .build();
+    
+        MockitoConfiguration configuration = reader.read(MockitoConfiguration.class);
+    
+        assertThat(configuration.getMockMakerClass())
+            .as("Configuration is read")
+            .isNull();
+    }
+    
+    @Test
     public void should_return_null_when_configuration_file_non_exist() {
         
-        assertThat(new ConfigurationReaderImpl("test.properties").read())
+        assertThat(ConfigurationReaderBuilder.newBuilder()
+                                             .forConfigurationFile("test.properties")
+                                             .build()
+                                             .read(MockitoConfiguration.class))
             .as("Null is returned")
             .isNull();
+    }
+    
+    @Test
+    public void should_return_real_value_instead_alias() {
+    
+        String value = "value";
+        reader = ConfigurationReaderBuilder.newBuilder()
+                                           .forConfigurationFile(CONF_PATH + "/test_with_alias.properties")
+                                           .withValueAlias("alias", value)
+                                           .build();
+    
+        MockitoConfiguration configuration = reader.read(MockitoConfiguration.class);
+    
+        assertThat(configuration.getMockMakerClass())
+            .as("Configuration is read")
+            .isEqualTo(value);
     }
 }

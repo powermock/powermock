@@ -103,21 +103,12 @@ public class DefaultMockCreator extends AbstractMockCreator {
     private static <T> MockData<T> createMethodInvocationControl(final String mockName, Class<T> type,
                                                                  Method[] methods, boolean isSpy, Object delegator, MockSettings mockSettings) {
         final MockSettingsImpl<T> settings;
-        MockMaker mockMaker;
+        final MockMaker mockMaker = getMockMaker();
+        
         if (mockSettings == null) {
-            // We change the context classloader to the current CL in order for the Mockito
-            // framework to load it's plugins (such as MockMaker) correctly.
-            final ClassLoader originalCL = Thread.currentThread().getContextClassLoader();
-            Thread.currentThread().setContextClassLoader(DefaultMockCreator.class.getClassLoader());
-            try {
-                settings = (MockSettingsImpl) Mockito.withSettings();
-                mockMaker = Plugins.getMockMaker();
-            } finally {
-                Thread.currentThread().setContextClassLoader(originalCL);
-            }
+            settings = (MockSettingsImpl) Mockito.withSettings();
         } else {
             settings = (MockSettingsImpl) mockSettings;
-            mockMaker = Plugins.getMockMaker();
         }
 
         if (isSpy) {
@@ -126,13 +117,12 @@ public class DefaultMockCreator extends AbstractMockCreator {
 
         settings.setMockName(new MockNameImpl(mockName));
         settings.setTypeToMock(type);
-
+    
         InternalMockHandler mockHandler = MockHandlerFactory.createMockHandler(settings);
         MethodInterceptorFilter filter = new PowerMockMethodInterceptorFilter(mockHandler, settings);
-        //final T mock = new ClassImposterizer(new DefaultInstantiatorProvider().getInstantiator(settings)).imposterise(filter, type);
     
         T mock = mockMaker.createMock(settings, mockHandler);
-        
+    
         ClassLoader classLoader = mock.getClass().getClassLoader();
         if (classLoader instanceof MockClassLoader) {
             MockClassLoader mcl = (MockClassLoader) classLoader;
@@ -146,7 +136,19 @@ public class DefaultMockCreator extends AbstractMockCreator {
     
         return new MockData<T>(invocationControl, mock);
     }
-
+    
+    private static MockMaker getMockMaker() {
+        final ClassLoader originalCL = Thread.currentThread().getContextClassLoader();
+        
+        Thread.currentThread().setContextClassLoader(DefaultMockCreator.class.getClassLoader());
+        
+        try {
+            return Plugins.getMockMaker();
+        } finally {
+            Thread.currentThread().setContextClassLoader(originalCL);
+        }
+    }
+    
     private  String toInstanceName(Class<?> clazz, final MockSettings mockSettings) {
         // if the settings define a mock name, use it
         if (mockSettings instanceof MockSettingsImpl<?>) {

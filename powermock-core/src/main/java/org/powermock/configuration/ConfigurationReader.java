@@ -19,5 +19,5 @@
 package org.powermock.configuration;
 
 public interface ConfigurationReader {
-    Configuration read();
+    <T extends Configuration> T read(final Class<T> configurationType);
 }

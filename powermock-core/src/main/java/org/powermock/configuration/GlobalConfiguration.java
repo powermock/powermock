@@ -20,27 +20,27 @@ package org.powermock.configuration;
 
 public final class GlobalConfiguration {
     
-    private static final ThreadLocal<Configuration> GLOBAL_CONFIGURATION = new ThreadLocal<Configuration>();
+    private static final ThreadLocal<MockitoConfiguration> MOCKITO_CONFIGURATION = new ThreadLocal<MockitoConfiguration>();
     
     public static MockitoConfiguration mockitoConfiguration() {
-        return (MockitoConfiguration) new GlobalConfiguration().get();
+        return new GlobalConfiguration().getMockitoConfiguration();
     }
     
     private GlobalConfiguration() {
-        if (GLOBAL_CONFIGURATION.get() == null) {
-            GLOBAL_CONFIGURATION.set(createConfig());
+        if (MOCKITO_CONFIGURATION.get() == null) {
+            MOCKITO_CONFIGURATION.set(createConfig(MockitoConfiguration.class));
         }
     }
     
     public static void clear() {
-        GLOBAL_CONFIGURATION.remove();
+        MOCKITO_CONFIGURATION.remove();
     }
     
-    private Configuration get() {
-        return GLOBAL_CONFIGURATION.get();
+    private MockitoConfiguration getMockitoConfiguration() {
+        return MOCKITO_CONFIGURATION.get();
     }
     
-    private Configuration createConfig() {
-        return new ConfigurationFactory().create();
+    private <T extends Configuration> T createConfig(Class<T> configurationClass) {
+        return new ConfigurationFactory().create(configurationClass);
     }
 }

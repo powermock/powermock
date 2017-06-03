@@ -23,17 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.powermock.api.mockito.ConfigurationTestUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.powermock.utils.IOUtils.copyFileUsingStream;
 
 public class ConfigurationFactoryTest {
     
@@ -56,7 +46,7 @@ public class ConfigurationFactoryTest {
     
         util.copyTemplateToPropertiesFile();
     
-        MockitoConfiguration configuration = (MockitoConfiguration) configurationFactory.create();
+        MockitoConfiguration configuration = configurationFactory.create(MockitoConfiguration.class);
         
         assertThat(configuration)
             .as("Configuration is created")
@@ -69,7 +59,7 @@ public class ConfigurationFactoryTest {
     
     @Test
     public void should_return_default_configuration_if_configuration_file_not_exist() {
-        MockitoConfiguration configuration = (MockitoConfiguration) configurationFactory.create();
+        MockitoConfiguration configuration = configurationFactory.create(MockitoConfiguration.class);
     
         assertThat(configuration)
             .as("Configuration is created")

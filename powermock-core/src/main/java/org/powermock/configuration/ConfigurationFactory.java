@@ -18,26 +18,27 @@
 
 package org.powermock.configuration;
 
-import org.powermock.configuration.support.ConfigurationReaderImpl;
+import static org.powermock.configuration.support.ConfigurationReaderBuilder.newBuilder;
 
 public class ConfigurationFactory {
     
     private static final String USER_CONFIGURATION = "org/powermock/configuration.properties";
     private static final String DEFAULT_CONFIGURATION = "org/powermock/default.properties";
     
-    public Configuration create() {
-        Configuration configuration = readUserConfiguration();
+    public <T extends Configuration> T create(final Class<T> configurationType) {
+        T configuration = readUserConfiguration(configurationType);
         if (configuration == null){
-            configuration = readDefault();
+            configuration = readDefault(configurationType);
         }
         return configuration;
     }
     
-    private Configuration readDefault() {
-        
-        System.out.print("Reading default configuration.");
-        
-        final Configuration configuration = new ConfigurationReaderImpl(DEFAULT_CONFIGURATION).read();
+    private <T extends Configuration> T  readDefault(final Class<T> configurationType) {
+    
+        final T configuration = newBuilder()
+                                    .forConfigurationFile(DEFAULT_CONFIGURATION)
+                                    .build()
+                                    .read(configurationType);
         if (configuration == null){
             throw new RuntimeException("It should never happen. If you see this exception, it means that something wrong with build." +
                                            " Please report to PowerMock issues tracker.");
@@ -45,7 +46,11 @@ public class ConfigurationFactory {
         return configuration;
     }
     
-    private Configuration readUserConfiguration() {
-        return new ConfigurationReaderImpl(USER_CONFIGURATION).read();
+    private <T extends Configuration> T  readUserConfiguration(final Class<T> configurationType) {
+        return newBuilder()
+                   .forConfigurationFile(USER_CONFIGURATION)
+                   .withValueAlias("mock-maker-inline", "org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker")
+                   .build()
+                   .read(configurationType);
     }
 }

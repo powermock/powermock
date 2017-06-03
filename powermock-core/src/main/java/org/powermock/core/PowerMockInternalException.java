@@ -16,17 +16,11 @@
  *
  */
 
-package org.powermock.configuration;
+package org.powermock.core;
 
-public class MockitoConfiguration implements Configuration {
+public class PowerMockInternalException extends RuntimeException{
     
-    private String mockMakerClass;
-    
-    public String getMockMakerClass() {
-        return mockMakerClass;
-    }
-    
-    public void setMockMakerClass(final String mockMakerClass) {
-        this.mockMakerClass = mockMakerClass;
+    public PowerMockInternalException(final Throwable cause) {
+        super("PowerMock internal error has happened. This exception is thrown in unexpected cases, that normally should never happen. Please, report about the issue to PowerMock issues tacker.", cause);
     }
 }

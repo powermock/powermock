@@ -18,15 +18,20 @@
 
 package org.powermock.configuration;
 
-public class MockitoConfiguration implements Configuration {
+public enum ConfigurationType {
+    Mockito("mockito");
     
-    private String mockMakerClass;
+    private final String prefix;
     
-    public String getMockMakerClass() {
-        return mockMakerClass;
+    ConfigurationType(final String prefix) {
+        this.prefix = prefix;
     }
     
-    public void setMockMakerClass(final String mockMakerClass) {
-        this.mockMakerClass = mockMakerClass;
+    public String getPrefix() {
+        return prefix;
+    }
+    
+    public static <T extends Configuration> ConfigurationType forClass(final Class<T> configurationClass) {
+        return Mockito;
     }
 }
