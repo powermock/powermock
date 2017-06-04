@@ -27,184 +27,231 @@ import java.lang.reflect.Method;
  * methods, or static (final) methods.
  */
 public interface PowerMockitoStubber extends Stubber {
-	/**
-	 * Allows to choose a static method when stubbing in
-	 * doThrow()|doAnswer()|doNothing()|doReturn() style
-	 * <p>
-	 * Example:
-	 * 
-	 * <pre>
-	 * doThrow(new RuntimeException()).when(StaticList.class);
-	 * StaticList.clear();
-	 * 
-	 * //following throws RuntimeException:
-	 * StaticList.clear();
-	 * </pre>
-	 * 
-	 * Read more about those methods:
-	 * <p>
-	 * {@link Mockito#doThrow(Class)}
-	 * <p>
-	 * {@link Mockito#doAnswer(Answer)}
-	 * <p>
-	 * {@link Mockito#doNothing()}
-	 * <p>
-	 * {@link Mockito#doReturn(Object)}
-	 * <p>
-	 * 
-	 * See examples in javadoc for {@link Mockito}
-	 */
-	void when(Class<?> classMock);
-
-	/**
-	 * Allows to mock a private instance method when stubbing in
-	 * doThrow()|doAnswer()|doNothing()|doReturn() style.
-	 * <p>
-	 * Example:
-	 * 
-	 * <pre>
-	 * doThrow(new RuntimeException()).when(instance, method(&quot;myMethod&quot;)).withNoArguments();
-	 * </pre>
-	 * 
-	 * Read more about those methods:
-	 * <p>
-	 * {@link Mockito#doThrow(Class)}
-	 * <p>
-	 * {@link Mockito#doAnswer(Answer)}
-	 * <p>
-	 * {@link Mockito#doNothing()}
-	 * <p>
-	 * {@link Mockito#doReturn(Object)}
-	 * <p>
-	 * 
-	 * See examples in javadoc for {@link Mockito}
-	 */
-	<T> PrivatelyExpectedArguments when(T mock, Method method) throws Exception;
-
-	/**
-	 * Allows to mock a private instance method based on the parameters when
-	 * stubbing in doThrow()|doAnswer()|doNothing()|doReturn() style.
-	 * <p>
-	 * Example:
-	 * 
-	 * <pre>
-	 * doThrow(new RuntimeException()).when(instance, parameter1, parameter2);
-	 * </pre>
-	 * 
-	 * Read more about those methods:
-	 * <p>
-	 * {@link Mockito#doThrow(Throwable...)}
-	 * <p>
-	 * {@link Mockito#doAnswer(Answer)}
-	 * <p>
-	 * {@link Mockito#doNothing()}
-	 * <p>
-	 * {@link Mockito#doReturn(Object)}
-	 * <p>
-	 * 
-	 * See examples in javadoc for {@link Mockito}
-	 */
-	<T> void when(T mock, Object... arguments) throws Exception;
-
-	/**
-	 * Allows to mock a private instance method based on method name and
-	 * parameters when stubbing in doThrow()|doAnswer()|doNothing()|doReturn()
-	 * style.
-	 * <p>
-	 * Example:
-	 * 
-	 * <pre>
-	 * doThrow(new RuntimeException()).when(instance, &quot;methodName&quot;, parameter1, parameter2);
-	 * </pre>
-	 * 
-	 * Read more about those methods:
-	 * <p>
-	 * {@link Mockito#doThrow(Throwable...)}
-	 * <p>
-	 * {@link Mockito#doAnswer(Answer)}
-	 * <p>
-	 * {@link Mockito#doNothing()}
-	 * <p>
-	 * {@link Mockito#doReturn(Object)}
-	 * <p>
-	 * 
-	 * See examples in javadoc for {@link Mockito}
-	 */
-	<T> void when(T mock, String methodToExpect, Object... arguments) throws Exception;
-
-	/**
-	 * Allows to mock a static private method when stubbing in
-	 * doThrow()|doAnswer()|doNothing()|doReturn() style.
-	 * <p>
-	 * Example:
-	 * 
-	 * <pre>
-	 * doThrow(new RuntimeException()).when(MyClass.class, method(&quot;myMethod&quot;)).withNoArguments();
-	 * </pre>
-	 * 
-	 * Read more about those methods:
-	 * <p>
-	 * {@link Mockito#doThrow(Throwable...)}
-	 * <p>
-	 * {@link Mockito#doAnswer(Answer)}
-	 * <p>
-	 * {@link Mockito#doNothing()}
-	 * <p>
-	 * {@link Mockito#doReturn(Object)}
-	 * <p>
-	 * 
-	 * See examples in javadoc for {@link Mockito}
-	 */
-	<T> PrivatelyExpectedArguments when(Class<T> classMock, Method method) throws Exception;
-
-	/**
-	 * Allows to mock a static private method based on the parameters when
-	 * stubbing in doThrow()|doAnswer()|doNothing()|doReturn() style.
-	 * <p>
-	 * Example:
-	 * 
-	 * <pre>
-	 * doThrow(new RuntimeException()).when(MyClass.class, parameter1, parameter2);
-	 * </pre>
-	 * 
-	 * Read more about those methods:
-	 * <p>
-	 * {@link Mockito#doThrow(Throwable...)}
-	 * <p>
-	 * {@link Mockito#doAnswer(Answer)}
-	 * <p>
-	 * {@link Mockito#doNothing()}
-	 * <p>
-	 * {@link Mockito#doReturn(Object)}
-	 * <p>
-	 * 
-	 * See examples in javadoc for {@link Mockito}
-	 */
-	<T> void when(Class<T> classMock, Object... arguments) throws Exception;
-
-	/**
-	 * Allows to mock a static private method based on method name and
-	 * parameters when stubbing in doThrow()|doAnswer()|doNothing()|doReturn()
-	 * style.
-	 * <p>
-	 * Example:
-	 * 
-	 * <pre>
-	 * doThrow(new RuntimeException()).when(MyClass.class, &quot;methodName&quot;, parameter1, parameter2);
-	 * </pre>
-	 * 
-	 * Read more about those methods:
-	 * <p>
-	 * {@link Mockito#doThrow(Throwable...)}
-	 * <p>
-	 * {@link Mockito#doAnswer(Answer)}
-	 * <p>
-	 * {@link Mockito#doNothing()}
-	 * <p>
-	 * {@link Mockito#doReturn(Object)}
-	 * <p>
-	 * 
-	 * See examples in javadoc for {@link Mockito}
-	 */
-	<T> void when(Class<T> classMock, String methodToExpect, Object... parameters) throws Exception;
+    
+    /**
+     * Allows to choose a static method when stubbing in
+     * doThrow()|doAnswer()|doNothing()|doReturn() style
+     * <p>
+     * Example:
+     * </p>
+     * <pre>
+     * doThrow(new RuntimeException()).when(StaticList.class);
+     * StaticList.clear();
+     *
+     * //following throws RuntimeException:
+     * StaticList.clear();
+     * </pre>
+     * <p>
+     * Read more about those methods:
+     * </p>
+     * <p>
+     * {@link Mockito#doThrow(Class)}
+     * </p>
+     * <p>
+     * {@link Mockito#doAnswer(Answer)}
+     * </p>
+     * <p>
+     * {@link Mockito#doNothing()}
+     * </p>
+     * <p>
+     * {@link Mockito#doReturn(Object)}
+     * </p>
+     *
+     * @param classMock the mock class
+     * @see Mockito
+     */
+    void when(Class<?> classMock);
+    
+    /**
+     * Allows to mock a private instance method when stubbing in
+     * doThrow()|doAnswer()|doNothing()|doReturn() style.
+     * <p>
+     * Example:
+     * <pre>
+     * doThrow(new RuntimeException()).when(instance, method(&quot;myMethod&quot;)).withNoArguments();
+     * </pre>
+     * </p>
+     * <p>
+     * Read more about those methods:
+     * </p>
+     * <p>
+     * {@link Mockito#doThrow(Class)}
+     * </p>
+     * <p>
+     * {@link Mockito#doAnswer(Answer)}
+     * </p>
+     * <p>
+     * {@link Mockito#doNothing()}
+     * </p>
+     * <p>
+     * {@link Mockito#doReturn(Object)}
+     * </p>
+     *
+     * @param mock   the method
+     * @param method private  method to be mocked
+     * @see Mockito
+     */
+    <T> PrivatelyExpectedArguments when(T mock, Method method) throws Exception;
+    
+    /**
+     * Allows to mock a private instance method based on the parameters when
+     * stubbing in doThrow()|doAnswer()|doNothing()|doReturn() style.
+     * <p>
+     * Example:
+     * </p>
+     * <p>
+     * <pre>
+     * doThrow(new RuntimeException()).when(instance, parameter1, parameter2);
+     * </pre>
+     * </p>
+     * <p>
+     * Read more about those methods:
+     * </p>
+     * <p>
+     * {@link Mockito#doThrow(Throwable...)}
+     * </p>
+     * <p>
+     * {@link Mockito#doAnswer(Answer)}
+     * </p>
+     * <p>
+     * {@link Mockito#doNothing()}
+     * </p>
+     * <p>
+     * {@link Mockito#doReturn(Object)}
+     * </p>
+     *
+     * @param mock      the Mock
+     * @param arguments array of arguments is used to find suitable method to be mocked.
+     * @see Mockito
+     */
+    <T> void when(T mock, Object... arguments) throws Exception;
+    
+    /**
+     * Allows to mock a private instance method based on method name and
+     * parameters when stubbing in doThrow()|doAnswer()|doNothing()|doReturn()
+     * style.
+     * <p>
+     * Example:
+     * </p>
+     * <pre>
+     * doThrow(new RuntimeException()).when(instance, &quot;methodName&quot;, parameter1, parameter2);
+     * </pre>
+     * </p>
+     * <p>
+     * Read more about those methods:
+     * </p>
+     * <p>
+     * {@link Mockito#doThrow(Throwable...)}
+     * </p>
+     * <p>
+     * {@link Mockito#doAnswer(Answer)}
+     * </p>
+     * <p>
+     * {@link Mockito#doNothing()}
+     * </p>
+     * <p>
+     * {@link Mockito#doReturn(Object)}
+     * </p>
+     *
+     * @param mock           the Mock
+     * @param methodToExpect name of method which have to mocked
+     * @param arguments      array of arguments of <code>methodToExpect</code>
+     * @see Mockito
+     */
+    <T> void when(T mock, String methodToExpect, Object... arguments) throws Exception;
+    
+    /**
+     * Allows to mock a static private method when stubbing in
+     * doThrow()|doAnswer()|doNothing()|doReturn() style.
+     * <p>
+     * Example:
+     * <pre>
+     * doThrow(new RuntimeException()).when(MyClass.class, method(&quot;myMethod&quot;)).withNoArguments();
+     * </pre>
+     * </p>
+     * <p>
+     * Read more about those methods:
+     * </p>
+     * <p>
+     * {@link Mockito#doThrow(Throwable...)}
+     * </p>
+     * <p>
+     * {@link Mockito#doAnswer(Answer)}
+     * </p>
+     * <p>
+     * {@link Mockito#doNothing()}
+     * </p>
+     * <p>
+     * {@link Mockito#doReturn(Object)}
+     * </p>
+     *
+     * @param classMock class owner of private static method
+     * @param method    private static method to be mocked
+     * @see Mockito
+     */
+    <T> PrivatelyExpectedArguments when(Class<T> classMock, Method method) throws Exception;
+    
+    /**
+     * Allows to mock a static private method based on the parameters when
+     * stubbing in doThrow()|doAnswer()|doNothing()|doReturn() style.
+     * <p>
+     * Example:
+     * <pre>
+     * doThrow(new RuntimeException()).when(MyClass.class, parameter1, parameter2);
+     * </pre>
+     * </p>
+     * <p>
+     * Read more about those methods:
+     * </p>
+     * <p>
+     * {@link Mockito#doThrow(Throwable...)}
+     * </p>
+     * <p>
+     * {@link Mockito#doAnswer(Answer)}
+     * </p>
+     * <p>
+     * {@link Mockito#doNothing()}
+     * </p>
+     * <p>
+     * {@link Mockito#doReturn(Object)}
+     * </p>
+     *
+     * @param classMock class owner of private static method
+     * @param arguments array of arguments is used to find suitable method to be mocked.
+     * @see Mockito
+     */
+    <T> void when(Class<T> classMock, Object... arguments) throws Exception;
+    
+    /**
+     * Allows to mock a static private method based on method name and
+     * parameters when stubbing in doThrow()|doAnswer()|doNothing()|doReturn()
+     * style.
+     * <p>
+     * Example:
+     * <pre>
+     * doThrow(new RuntimeException()).when(MyClass.class, &quot;methodName&quot;, parameter1, parameter2);
+     * </pre>
+     * </p>
+     * <p>
+     * Read more about those methods:
+     * </p>
+     * <p>
+     * {@link Mockito#doThrow(Throwable...)}
+     * </p>
+     * <p>
+     * {@link Mockito#doAnswer(Answer)}
+     * </p>
+     * <p>
+     * {@link Mockito#doNothing()}
+     * </p>
+     * <p>
+     * {@link Mockito#doReturn(Object)}
+     * </p>
+     *
+     * @param classMock      the class owner of static private method
+     * @param methodToExpect name of method which have to mocked
+     * @param arguments      array of arguments of <code>methodToExpect</code>
+     * @see Mockito
+     */
+    <T> void when(Class<T> classMock, String methodToExpect, Object... arguments) throws Exception;
 }
