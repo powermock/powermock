@@ -276,7 +276,7 @@ public class PowerMockito extends MemberModifier {
      * Verify a private method invocation for an instance.
      *
      * @throws Exception If something unexpected goes wrong.
-     * @see {@link Mockito#verify(Object)}
+     * @see Mockito#verify(Object)
      */
     public static PrivateMethodVerification verifyPrivate(Object object) throws Exception {
         return verifyPrivate(object, times(1));
@@ -286,7 +286,7 @@ public class PowerMockito extends MemberModifier {
      * Verify a private method invocation with a given verification mode.
      *
      * @throws Exception If something unexpected goes wrong.
-     * @see {@link Mockito#verify(Object)}
+     * @see Mockito#verify(Object)
      */
     public static PrivateMethodVerification verifyPrivate(Object object, VerificationMode verificationMode)
             throws Exception {
@@ -299,7 +299,7 @@ public class PowerMockito extends MemberModifier {
      * Verify a private method invocation for a class.
      *
      * @throws Exception If something unexpected goes wrong.
-     * @see {@link Mockito#verify(Object)}
+     * @see Mockito#verify(Object)
      */
     public static PrivateMethodVerification verifyPrivate(Class<?> clazz) throws Exception {
         return verifyPrivate((Object) clazz);
@@ -310,7 +310,7 @@ public class PowerMockito extends MemberModifier {
      * mode.
      *
      * @throws Exception If something unexpected goes wrong.
-     * @see {@link Mockito#verify(Object)}
+     * @see Mockito#verify(Object)
      */
     public static PrivateMethodVerification verifyPrivate(Class<?> clazz, VerificationMode verificationMode)
             throws Exception {
@@ -395,7 +395,7 @@ public class PowerMockito extends MemberModifier {
      * Expect calls to private methods.
      *
      * @throws Exception If something unexpected goes wrong.
-     * @see {@link Mockito#when(Object)}
+     * @see Mockito#when(Object)
      */
     public static <T> OngoingStubbing<T> when(Object instance, String methodName, Object... arguments) throws Exception {
         return Mockito.when(Whitebox.<T>invokeMethod(instance, methodName, arguments));
@@ -405,7 +405,7 @@ public class PowerMockito extends MemberModifier {
      * Expect calls to private methods.
      *
      * @throws Exception If something unexpected goes wrong.
-     * @see {@link Mockito#when(Object)}
+     * @see Mockito#when(Object)
      */
     public static <T> WithOrWithoutExpectedArguments<T> when(Object instance, Method method) throws Exception {
         return new DefaultMethodExpectationSetup<T>(instance, method);
@@ -415,7 +415,7 @@ public class PowerMockito extends MemberModifier {
      * Expect calls to private static methods.
      *
      * @throws Exception If something unexpected goes wrong.
-     * @see {@link Mockito#when(Object)}
+     * @see Mockito#when(Object)
      */
     public static <T> WithOrWithoutExpectedArguments<T> when(Class<?> cls, Method method) throws Exception {
         return new DefaultMethodExpectationSetup<T>(cls, method);
@@ -427,7 +427,7 @@ public class PowerMockito extends MemberModifier {
      * possible).
      *
      * @throws Exception If something unexpected goes wrong.
-     * @see {@link Mockito#when(Object)}
+     * @see Mockito#when(Object)
      */
     public static <T> OngoingStubbing<T> when(Object instance, Object... arguments) throws Exception {
         return Mockito.when(Whitebox.<T>invokeMethod(instance, arguments));
@@ -437,7 +437,7 @@ public class PowerMockito extends MemberModifier {
      * Expect a static private or inner class method call.
      *
      * @throws Exception If something unexpected goes wrong.
-     * @see {@link Mockito#when(Object)}
+     * @see Mockito#when(Object)
      */
     public static <T> OngoingStubbing<T> when(Class<?> clazz, String methodToExpect, Object... arguments)
             throws Exception {
@@ -450,7 +450,7 @@ public class PowerMockito extends MemberModifier {
      * possible
      *
      * @throws Exception If something unexpected goes wrong.
-     * @see {@link Mockito#when(Object)}
+     * @see Mockito#when(Object)
      */
     public static <T> OngoingStubbing<T> when(Class<?> klass, Object... arguments) throws Exception {
         return Mockito.when(Whitebox.<T>invokeMethod(klass, arguments));
@@ -459,7 +459,7 @@ public class PowerMockito extends MemberModifier {
     /**
      * Just delegates to the original {@link Mockito#when(Object)} method.
      *
-     * @see {@link Mockito#when(Object)}
+     * @see Mockito#when(Object)
      */
     public static <T> OngoingStubbing<T> when(T methodCall) {
         return Mockito.when(methodCall);
