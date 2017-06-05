@@ -16,6 +16,8 @@
 
 package org.powermock.tests.utils.impl;
 
+import org.powermock.configuration.GlobalConfiguration;
+import org.powermock.configuration.PowerMockConfiguration;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.tests.utils.IgnorePackagesExtractor;
 
@@ -28,28 +30,63 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class PowerMockIgnorePackagesExtractorImpl implements IgnorePackagesExtractor {
-
+    
     @Override
     public String[] getPackagesToIgnore(AnnotatedElement element) {
         Set<String> ignoredPackages = new HashSet<String>();
+        
+        extractPackageToIgnore(element, ignoredPackages);
+        
+        final String[] packageToIgnore = ignoredPackages.toArray(new String[ignoredPackages.size()]);
+        final String[] allPackageToIgnore;
+        
+        final PowerMockConfiguration powerMockConfiguration = GlobalConfiguration.powerMockConfiguration();
+        
+        String[] globalIgnore = powerMockConfiguration.getGlobalIgnore();
+        if (globalIgnore != null) {
+            allPackageToIgnore = addGlobalIgnore(packageToIgnore, globalIgnore);
+        } else {
+            allPackageToIgnore = packageToIgnore;
+        }
+        
+        return allPackageToIgnore;
+    }
+    
+    private void extractPackageToIgnore(final AnnotatedElement element, final Set<String> ignoredPackages) {
+        addValueFromAnnotation(element, ignoredPackages);
+        addValuesFromSuperclass((Class<?>) element, ignoredPackages);
+    }
+    
+    private void addValuesFromSuperclass(final Class<?> element, final Set<String> ignoredPackages) {
+        final Collection<Class<?>> superclasses = new ArrayList<Class<?>>();
+        Collections.addAll(superclasses, element.getSuperclass());
+        Collections.addAll(superclasses, element.getInterfaces());
+        
+        for (Class<?> superclass : superclasses) {
+            if (superclass != null && !superclass.equals(Object.class)) {
+                extractPackageToIgnore(superclass, ignoredPackages);
+            }
+        }
+    }
+    
+    private void addValueFromAnnotation(final AnnotatedElement element, final Set<String> ignoredPackages) {
         PowerMockIgnore annotation = element.getAnnotation(PowerMockIgnore.class);
+        
         if (annotation != null) {
             String[] ignores = annotation.value();
             Collections.addAll(ignoredPackages, ignores);
         }
-        if (element instanceof Class<?>) {
-            Class<?> klazz = (Class<?>) element;
-            Collection<Class<?>> superclasses = new ArrayList<Class<?>>();
-            Collections.addAll(superclasses, klazz.getSuperclass());
-            Collections.addAll(superclasses, klazz.getInterfaces());
-            for(Class<?> superclass : superclasses) {
-                if (superclass != null && !superclass.equals(Object.class)) {
-                    String[] packagesToIgnore = getPackagesToIgnore(superclass);
-                    Collections.addAll(ignoredPackages, packagesToIgnore);
-                }
-            }
-        }
-        return ignoredPackages.toArray(new String[ignoredPackages.size()]);
     }
-
+    
+    private String[] addGlobalIgnore(final String[] packageToIgnore, final String[] globalIgnore) {
+        final String[] allPackageToIgnore;
+        
+        allPackageToIgnore = new String[globalIgnore.length + packageToIgnore.length];
+        
+        System.arraycopy(globalIgnore, 0, allPackageToIgnore, 0, globalIgnore.length);
+        System.arraycopy(packageToIgnore, 0, allPackageToIgnore, globalIgnore.length, packageToIgnore.length);
+        
+        return allPackageToIgnore;
+    }
+    
 }

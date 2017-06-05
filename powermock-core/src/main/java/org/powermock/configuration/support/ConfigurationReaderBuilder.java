@@ -78,8 +78,8 @@ public class ConfigurationReaderBuilder {
                 return null;
             }
         }
-    
-        private  <T extends Configuration> T createConfiguration(final Class<T> configurationClass, final Properties properties) {
+        
+        private <T extends Configuration> T createConfiguration(final Class<T> configurationClass, final Properties properties) {
             try {
                 T configuration = configurationClass.newInstance();
                 mapConfiguration(configurationClass, configuration, properties);
@@ -88,7 +88,7 @@ public class ConfigurationReaderBuilder {
                 throw new PowerMockInternalException(e);
             }
         }
-    
+        
         private <T extends Configuration> void mapConfiguration(final Class<T> configurationClass,
                                                                 final T configuration,
                                                                 final Properties properties) {
@@ -115,26 +115,20 @@ public class ConfigurationReaderBuilder {
                                                            final ConfigurationType configurationType,
                                                            final PropertyDescriptor propertyDescriptor) throws IllegalAccessException, InvocationTargetException {
             String key = new ConfigurationKey(configurationType, propertyDescriptor.getName()).toString();
-            writeProperty(configuration, propertyDescriptor, findValue(properties, key));
-        }
+            String value = findValue(properties, key);
     
+            PropertyWriter.forProperty(propertyDescriptor).writeProperty(propertyDescriptor, configuration, value);
+        }
+        
         private String findValue(final Properties properties, final String key) {
             String value = (String) properties.get(key);
-            if (alias.containsKey(value)){
+            if (alias.containsKey(value)) {
                 value = alias.get(value);
             }
             return value;
         }
-    
-        private <T extends Configuration> void writeProperty(final T configuration,
-                                                             final PropertyDescriptor propertyDescriptor,
-                                                             final String value) throws IllegalAccessException, InvocationTargetException {
-            if (value != null) {
-                propertyDescriptor.getWriteMethod().invoke(configuration, value);
-            }
-        }
-    
-    
+        
+        
         private static class ConfigurationKey {
             private final ConfigurationType configurationType;
             private final String name;
@@ -186,5 +180,44 @@ public class ConfigurationReaderBuilder {
                 }
             }
         }
+    
+        private enum PropertyWriter {
+            ArrayWriter {
+                @Override
+                public void writeProperty(final PropertyDescriptor propertyDescriptor, final Object target, final String value) {
+                    try {
+                        if (value != null) {
+                            String[] array = value.split(",");
+                            propertyDescriptor.getWriteMethod().invoke(target, (Object) array);
+                        }
+                    } catch (Exception e) {
+                        throw new PowerMockInternalException(e);
+                    }
+                }
+            },
+            StringWriter {
+                @Override
+                public void writeProperty(final PropertyDescriptor propertyDescriptor, final Object target, final String value) {
+                    try {
+                        if (value != null) {
+                            propertyDescriptor.getWriteMethod().invoke(target, value);
+                        }
+                    } catch (Exception e) {
+                        throw new PowerMockInternalException(e);
+                    }
+                }
+            };
+        
+            public static PropertyWriter forProperty(final PropertyDescriptor propertyDescriptor) {
+                if (String[].class.isAssignableFrom(propertyDescriptor.getPropertyType())) {
+                    return ArrayWriter;
+                } else {
+                    return StringWriter;
+                }
+            }
+        
+            public abstract void writeProperty(final PropertyDescriptor propertyDescriptor, final Object target, final String value);
+        }
+        
     }
 }

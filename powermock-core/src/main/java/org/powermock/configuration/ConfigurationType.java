@@ -19,12 +19,16 @@
 package org.powermock.configuration;
 
 public enum ConfigurationType {
-    Mockito("mockito");
+    Mockito("mockito", MockitoConfiguration.class),
+    PowerMock("powermock", PowerMockConfiguration.class);
     
     private final String prefix;
+    private final Class<? extends Configuration> configurationClass;
     
-    ConfigurationType(final String prefix) {
+    ConfigurationType(final String prefix,
+                      final Class<? extends Configuration> configurationClass) {
         this.prefix = prefix;
+        this.configurationClass = configurationClass;
     }
     
     public String getPrefix() {
@@ -32,6 +36,11 @@ public enum ConfigurationType {
     }
     
     public static <T extends Configuration> ConfigurationType forClass(final Class<T> configurationClass) {
-        return Mockito;
+        for (ConfigurationType configurationType : ConfigurationType.values()) {
+            if (configurationType.configurationClass.isAssignableFrom(configurationClass)){
+                return configurationType;
+            }
+        }
+        return null;
     }
 }

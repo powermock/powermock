@@ -22,17 +22,21 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.powermock.api.mockito.ConfigurationTestUtils;
+import org.powermock.configuration.support.ConfigurationFactoryImpl;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ConfigurationFactoryTest {
+public class ConfigurationFactoryImplTest {
     
     private ConfigurationFactory configurationFactory;
     private ConfigurationTestUtils util;
     
     @Before
     public void setUp() throws Exception {
-        configurationFactory = new ConfigurationFactory();
+        configurationFactory = new ConfigurationFactoryImpl();
         util = new ConfigurationTestUtils();
     }
     
@@ -46,15 +50,15 @@ public class ConfigurationFactoryTest {
     
         util.copyTemplateToPropertiesFile();
     
-        MockitoConfiguration configuration = configurationFactory.create(MockitoConfiguration.class);
+        PowerMockConfiguration configuration = configurationFactory.create(PowerMockConfiguration.class);
         
         assertThat(configuration)
             .as("Configuration is created")
             .isNotNull();
         
-        assertThat(configuration.getMockMakerClass())
+        assertThat(configuration.getGlobalIgnore())
             .as("Configuration is read correctly")
-            .isEqualTo("TestMockMaker");
+            .containsExactly("org.somepackage");
     }
     
     @Test
@@ -68,8 +72,21 @@ public class ConfigurationFactoryTest {
         assertThat(configuration.getMockMakerClass())
             .as("Configuration is read correctly")
             .isEqualTo("org.mockito.internal.creation.bytebuddy.SubclassByteBuddyMockMaker");
-        
     }
     
     
+    @Test
+    public void should_return_default_value_for_configuration_if_user_not_defined() throws Exception {
+        util.copyTemplateToPropertiesFile();
+        
+        MockitoConfiguration configuration = configurationFactory.create(MockitoConfiguration.class);
+    
+        assertThat(configuration)
+            .as("Configuration is created")
+            .isNotNull();
+    
+        assertThat(configuration.getMockMakerClass())
+            .as("Configuration is read correctly")
+            .isEqualTo("org.mockito.internal.creation.bytebuddy.SubclassByteBuddyMockMaker");
+    }
 }

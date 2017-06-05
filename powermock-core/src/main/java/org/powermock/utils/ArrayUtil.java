@@ -18,10 +18,11 @@
 package org.powermock.utils;
 
 import java.lang.reflect.Array;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- *
- */
+import static java.util.Arrays.asList;
+
 public class ArrayUtil {
 
     public static <T> T[] addAll(T[] array1, T[] array2) {
@@ -51,5 +52,27 @@ public class ArrayUtil {
     @SuppressWarnings("unchecked")
     private static <T> T[] createNewArrayWithSameType(T[] arrayPrototype, int newLength) {
         return (T[]) Array.newInstance(arrayPrototype[0].getClass(), newLength);
+    }
+    
+    public static String[] mergeArrays(final String[] firstArray, final String[] secondArray) {
+        
+        if (firstArray == null && secondArray == null){
+            return null;
+        }
+        
+        if (firstArray == null){
+            return secondArray;
+        }
+    
+        if (secondArray == null){
+            return firstArray;
+        }
+        
+        Set<String> globalIgnore = new HashSet<String>();
+        
+        globalIgnore.addAll(asList(firstArray));
+        globalIgnore.addAll(asList(secondArray));
+        
+        return globalIgnore.toArray(new String[globalIgnore.size()]);
     }
 }

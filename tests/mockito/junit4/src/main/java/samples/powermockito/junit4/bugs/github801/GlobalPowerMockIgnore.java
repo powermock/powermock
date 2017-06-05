@@ -16,8 +16,7 @@
  *
  */
 
-package org.powermock.configuration;
+package samples.powermockito.junit4.bugs.github801;
 
-public interface ConfigurationFactory {
-    <T extends Configuration<T>> T create(Class<T> configurationType);
+public class GlobalPowerMockIgnore {
 }
