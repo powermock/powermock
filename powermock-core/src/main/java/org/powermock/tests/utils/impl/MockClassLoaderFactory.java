@@ -31,9 +31,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- *
- */
 class MockClassLoaderFactory {
     private final String[] packagesToIgnore;
     private final Class<?> testClass;

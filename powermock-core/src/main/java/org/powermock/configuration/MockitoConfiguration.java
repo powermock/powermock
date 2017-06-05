@@ -18,9 +18,17 @@
 
 package org.powermock.configuration;
 
-public class MockitoConfiguration implements Configuration {
+public class MockitoConfiguration implements Configuration<MockitoConfiguration> {
     
     private String mockMakerClass;
+    
+    public MockitoConfiguration() {
+        // Used by configuration reader to create an instance
+    }
+    
+    private MockitoConfiguration(final String mockMakerClass) {
+        this.mockMakerClass = mockMakerClass;
+    }
     
     public String getMockMakerClass() {
         return mockMakerClass;
@@ -28,5 +36,14 @@ public class MockitoConfiguration implements Configuration {
     
     public void setMockMakerClass(final String mockMakerClass) {
         this.mockMakerClass = mockMakerClass;
+    }
+    
+    @Override
+    public MockitoConfiguration merge(final MockitoConfiguration configuration) {
+        if (configuration != null && configuration.getMockMakerClass() != null) {
+            return new MockitoConfiguration(configuration.getMockMakerClass());
+        } else {
+            return this;
+        }
     }
 }

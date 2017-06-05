@@ -15,53 +15,97 @@
  */
 package org.powermock.tests.utils.impl;
 
-import org.assertj.core.api.Assertions;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.powermock.configuration.Configuration;
+import org.powermock.configuration.ConfigurationFactory;
+import org.powermock.configuration.GlobalConfiguration;
+import org.powermock.configuration.PowerMockConfiguration;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.utils.StringJoiner;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PowerMockIgnorePackagesExtractorImplTest {
-
+    
+    private PowerMockIgnorePackagesExtractorImpl objectUnderTest;
+    
+    @Before
+    public void setUp() throws Exception {
+        GlobalConfiguration.clear();
+        objectUnderTest = new PowerMockIgnorePackagesExtractorImpl();
+    }
+    
+    @After
+    public void tearDown() throws Exception {
+        GlobalConfiguration.clear();
+    }
+    
     @Test
     public void should_find_ignore_packages_in_the_whole_class_hierarchy() throws Exception {
-        final PowerMockIgnorePackagesExtractorImpl tested = new PowerMockIgnorePackagesExtractorImpl();
-        final String[] packagesToIgnore = tested.getPackagesToIgnore(IgnoreAnnotatedDemoClass.class);
-    
-        Assertions.assertThat(packagesToIgnore)
-                  .as("Packages added to ignore")
-                  .hasSize(4)
-                  .containsExactlyInAnyOrder("ignore0", "ignore1","ignore2","ignore3");
+        final String[] packagesToIgnore = objectUnderTest.getPackagesToIgnore(IgnoreAnnotatedDemoClass.class);
+        
+        assertThat(packagesToIgnore)
+            .as("Packages added to ignore")
+            .hasSize(4)
+            .containsExactlyInAnyOrder("ignore0", "ignore1", "ignore2", "ignore3");
     }
     
     @Test
     public void should_scan_interfaces_when_search_package_to_ignore() {
-        final PowerMockIgnorePackagesExtractorImpl tested = new PowerMockIgnorePackagesExtractorImpl();
-        final String[] packagesToIgnore = tested.getPackagesToIgnore(IgnoreAnnotationFromInterfaces.class);
-    
-        Assertions.assertThat(packagesToIgnore)
-                  .as("Packages from interfaces added to ignore")
-                  .hasSize(3)
-                  .containsExactlyInAnyOrder("ignore4", "ignore5","ignore6");
+        final String[] packagesToIgnore = objectUnderTest.getPackagesToIgnore(IgnoreAnnotationFromInterfaces.class);
+        
+        assertThat(packagesToIgnore)
+            .as("Packages from interfaces added to ignore")
+            .hasSize(3)
+            .containsExactlyInAnyOrder("ignore4", "ignore5", "ignore6");
         
     }
-
-    @PowerMockIgnore( { "ignore0", "ignore1" })
-    private class IgnoreAnnotatedDemoClass extends IgnoreAnnotatedDemoClassParent {
-
-    }
-
-    @PowerMockIgnore("ignore2")
-    private class IgnoreAnnotatedDemoClassParent extends IgnoreAnnotatedDemoClassGrandParent {
-
-    }
-
-    @PowerMockIgnore("ignore3")
-    private class IgnoreAnnotatedDemoClassGrandParent {
-
+    
+    @Test
+    public void should_include_global_powermock_ignore_to_list_of_package_to_ignore() {
+        final String[] globalIgnore = {"org.somepacakge.*","org.otherpackage.Class"};
+        
+        GlobalConfiguration.setConfigurationFactory(new ConfigurationFactory() {
+            @Override
+            public <T extends Configuration<T>> T create(final Class<T> configurationType) {
+                PowerMockConfiguration powerMockConfiguration = new PowerMockConfiguration();
+    
+                powerMockConfiguration.setGlobalIgnore(globalIgnore);
+                
+                return (T) powerMockConfiguration;
+            }
+        });
+    
+        String[] packagesToIgnore = objectUnderTest.getPackagesToIgnore(ClassWithoutAnnotation.class);
+    
+        assertThat(packagesToIgnore)
+            .as("Packages from global ignore is  added to ignore")
+            .hasSize(2)
+            .containsOnly(globalIgnore);
     }
     
-    private static class IgnoreAnnotationFromInterfaces implements IgnoreAnnotatedDemoInterfaceParent1, IgnoreAnnotatedDemoInterfaceParent2{
+    private static class ClassWithoutAnnotation {
+    
+    }
+    
+    @PowerMockIgnore({"ignore0", "ignore1"})
+    private class IgnoreAnnotatedDemoClass extends IgnoreAnnotatedDemoClassParent {
+    
+    }
+    
+    @PowerMockIgnore("ignore2")
+    private class IgnoreAnnotatedDemoClassParent extends IgnoreAnnotatedDemoClassGrandParent {
+    
+    }
+    
+    @PowerMockIgnore("ignore3")
+    private class IgnoreAnnotatedDemoClassGrandParent {
+    
+    }
+    
+    private static class IgnoreAnnotationFromInterfaces implements IgnoreAnnotatedDemoInterfaceParent1, IgnoreAnnotatedDemoInterfaceParent2 {
     
     }
     

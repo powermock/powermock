@@ -1,1 +1,1 @@
-mockito.mock-maker-class=TestMockMaker
+powermock.global-ignore=org.somepackage

@@ -18,5 +18,6 @@
 
 package org.powermock.configuration;
 
-public interface Configuration {
+public interface Configuration <T extends Configuration>{
+     T merge(T configuration);
 }

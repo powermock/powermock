@@ -18,29 +18,51 @@
 
 package org.powermock.configuration;
 
+import org.powermock.configuration.support.ConfigurationFactoryImpl;
+
 public final class GlobalConfiguration {
     
+    private static ConfigurationFactory configurationFactory = new ConfigurationFactoryImpl();
+    
     private static final ThreadLocal<MockitoConfiguration> MOCKITO_CONFIGURATION = new ThreadLocal<MockitoConfiguration>();
+    private static final ThreadLocal<PowerMockConfiguration> POWER_MOCK_CONFIGURATION = new ThreadLocal<PowerMockConfiguration>();
     
     public static MockitoConfiguration mockitoConfiguration() {
         return new GlobalConfiguration().getMockitoConfiguration();
+    }
+    
+    public static PowerMockConfiguration powerMockConfiguration() {
+        return new GlobalConfiguration().getPowerMockConfiguration();
+    }
+    
+    public static void clear() {
+        configurationFactory = new ConfigurationFactoryImpl();
+        MOCKITO_CONFIGURATION.remove();
+        POWER_MOCK_CONFIGURATION.remove();
+    }
+    
+    public static void setConfigurationFactory(final ConfigurationFactory configurationFactory) {
+        GlobalConfiguration.configurationFactory = configurationFactory;
     }
     
     private GlobalConfiguration() {
         if (MOCKITO_CONFIGURATION.get() == null) {
             MOCKITO_CONFIGURATION.set(createConfig(MockitoConfiguration.class));
         }
+        if (POWER_MOCK_CONFIGURATION.get() == null) {
+            POWER_MOCK_CONFIGURATION.set(createConfig(PowerMockConfiguration.class));
+        }
     }
     
-    public static void clear() {
-        MOCKITO_CONFIGURATION.remove();
+    private PowerMockConfiguration getPowerMockConfiguration() {
+        return POWER_MOCK_CONFIGURATION.get();
     }
     
     private MockitoConfiguration getMockitoConfiguration() {
         return MOCKITO_CONFIGURATION.get();
     }
     
-    private <T extends Configuration> T createConfig(Class<T> configurationClass) {
-        return new ConfigurationFactory().create(configurationClass);
+    private <T extends Configuration<T>> T createConfig(Class<T> configurationClass) {
+        return configurationFactory.create(configurationClass);
     }
 }

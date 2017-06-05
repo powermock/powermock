@@ -95,4 +95,15 @@ public class ConfigurationReaderTest {
             .as("Configuration is read")
             .isEqualTo(value);
     }
+    
+    @Test
+    public void should_read_powermock_global_ignore_as_array() {
+    
+        PowerMockConfiguration configuration = reader.read(PowerMockConfiguration.class);
+    
+        assertThat(configuration.getGlobalIgnore())
+            .as("Configuration is read")
+            .containsExactly("org.somepacckage.*","org.other.Class");
+    }
+    
 }

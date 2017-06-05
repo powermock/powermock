@@ -83,7 +83,8 @@ public abstract class DeferSupportingClassLoader extends Loader {
         return clazz;
     }
 
-    private Class<?> findLoadedClass1(String name) {SoftReference<Class<?>> reference = classes.get(name);
+    private Class<?> findLoadedClass1(String name) {
+        SoftReference<Class<?>> reference = classes.get(name);
         Class<?> clazz = null;
         if (reference != null) {
            clazz = reference.get();

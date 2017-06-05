@@ -28,14 +28,19 @@ public class StringJoiner {
 
     public static String join(Object... linesToBreak) {
         StringBuilder out = new StringBuilder(LINE_SEPARATOR);
-        return join(out, linesToBreak);
+        return join(out, linesToBreak, LINE_SEPARATOR);
+    }
+    
+    public static String join(String separator, Object... linesToBreak) {
+        StringBuilder out = new StringBuilder();
+        return join(out, linesToBreak, separator);
     }
 
-    private static String join(StringBuilder out, Object[] linesToBreak) {
+    private static String join(StringBuilder out, Object[] linesToBreak, final String separator) {
         for (Object line : linesToBreak) {
-            out.append(line.toString()).append(LINE_SEPARATOR);
+            out.append(line.toString()).append(separator);
         }
-        int lastBreak = out.lastIndexOf(LINE_SEPARATOR);
+        int lastBreak = out.lastIndexOf(separator);
         return out.replace(lastBreak, lastBreak + 1, EMPTY_STRING).toString();
     }
 
