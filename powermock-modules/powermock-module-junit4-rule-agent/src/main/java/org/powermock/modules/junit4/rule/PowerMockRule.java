@@ -16,6 +16,8 @@
 package org.powermock.modules.junit4.rule;
 
 import org.junit.rules.MethodRule;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 import org.powermock.core.MockRepository;
@@ -32,7 +34,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Set;
 
-public class PowerMockRule implements MethodRule {
+public class PowerMockRule implements MethodRule, TestRule {
     static {
         if (PowerMockRule.class.getClassLoader() != ClassLoader.getSystemClassLoader()) {
             throw new IllegalStateException("PowerMockRule can only be used with the system classloader but was loaded by " + PowerMockRule.class.getClassLoader());
@@ -47,6 +49,35 @@ public class PowerMockRule implements MethodRule {
         PowerMockAgentTestInitializer.initialize(target.getClass(), agentClassRegister);
 
         return new PowerMockStatement(base, target, agentClassRegister);
+    }
+
+    @Override
+    public Statement apply(Statement base, Description description) {
+        return apply(base, createFrameworkMethod(description), getTestObject(description));
+    }
+
+    private FrameworkMethod createFrameworkMethod(Description description) {
+        try {
+            String methodName = description.getMethodName();
+            Class c = getTestClass(description);
+            Method m = c.getDeclaredMethod(methodName);
+            return new FrameworkMethod(m);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+    private Class<?> getTestClass(Description description) {
+        return description.getTestClass();
+    }
+
+    private Object getTestObject(Description description) {
+        try {
+            return getTestClass(description).newInstance();
+        } catch (InstantiationException e) {
+            throw new IllegalStateException(e);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }
 

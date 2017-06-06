@@ -33,7 +33,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * This test demonstrates that the PowerMockRule delegates to other rules.
  */
-public class AssertPowerMockRuleDelagatesToOtherRulesTest {
+public class AssertPowerMockRuleDelegatesToOtherRulesTest {
 	private static final MyObject BEFORE = new MyObject();
 
 	private final List<Object> objects = new LinkedList<Object>();

@@ -16,6 +16,8 @@
 package org.powermock.modules.junit4.rule;
 
 import org.junit.rules.MethodRule;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 import org.powermock.api.support.SafeExceptionRethrower;
@@ -28,7 +30,9 @@ import org.powermock.tests.utils.TestChunk;
 import org.powermock.tests.utils.TestSuiteChunker;
 import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
 
-public class PowerMockRule implements MethodRule {
+import java.lang.reflect.Method;
+
+public class PowerMockRule implements MethodRule, TestRule {
 	private static Class<?> previousTargetClass;
 	private static MockPolicyInitializer mockPolicyInitializer;
 
@@ -44,6 +48,11 @@ public class PowerMockRule implements MethodRule {
 		return new PowerMockStatement(base, testSuiteChunker.getTestChunk(method.getMethod()), mockPolicyInitializer);
 	}
 
+	@Override
+	public Statement apply(Statement base, Description description) {
+		return apply(base, createFrameworkMethod(description), getTestObject(description));
+	}
+
     protected boolean isNotRuleInitialized(Object target) {return testSuiteChunker  == null || previousTargetClass != target.getClass();}
 
     protected void init(Object target) {
@@ -57,6 +66,31 @@ public class PowerMockRule implements MethodRule {
             throw new RuntimeException(e);
         }
     }
+
+	private FrameworkMethod createFrameworkMethod(Description description) {
+		try {
+			String methodName = description.getMethodName();
+			Class c = getTestClass(description);
+			Method m = c.getDeclaredMethod(methodName);
+			return new FrameworkMethod(m);
+		} catch (Exception e) {
+			throw new IllegalStateException(e);
+		}
+	}
+	private Class<?> getTestClass(Description description) {
+		return description.getTestClass();
+	}
+
+	private Object getTestObject(Description description) {
+		try {
+			return getTestClass(description).newInstance();
+		} catch (InstantiationException e) {
+			throw new IllegalStateException(e);
+		} catch (IllegalAccessException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
 }
 
 class PowerMockStatement extends Statement {
