@@ -145,6 +145,19 @@ public class MockSelfDemoTest {
     }
 
     @Test
+    public void testMockAllExcept_constructor() throws Exception {
+        tested = createPartialMockForAllMethodsExcept(MockSelfDemo.class, new String[] { "getConstructorValue" }, "hello");
+
+        replay(tested);
+
+        int actual = tested.getConstructorValue();
+
+        verify(tested);
+
+        assertEquals("Passed value through construct ought to be \"4\"", 4, actual);
+    }
+
+    @Test
     public void testCreatePartialMockAndInvokeObjectConstructor() throws Exception {
         tested = createPartialMock(MockSelfDemo.class, new String[] { "aMethod2", "getString" }, new Object());
 
