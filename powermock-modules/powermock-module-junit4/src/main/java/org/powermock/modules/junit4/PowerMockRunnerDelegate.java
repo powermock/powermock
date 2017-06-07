@@ -15,13 +15,6 @@
  */
 package org.powermock.modules.junit4;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.lang.reflect.Method;
 import org.junit.internal.builders.AllDefaultPossibilitiesBuilder;
 import org.junit.internal.runners.JUnit38ClassRunner;
 import org.junit.internal.runners.JUnit4ClassRunner;
@@ -33,6 +26,14 @@ import org.junit.runners.JUnit4;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
 import org.powermock.modules.junit4.common.internal.impl.JUnitVersion;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.Method;
 
 @Target(ElementType.TYPE)
 @Documented

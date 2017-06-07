@@ -21,16 +21,11 @@ import org.mockito.Mockito;
 import org.mockito.internal.InternalMockHandler;
 import org.mockito.internal.configuration.plugins.Plugins;
 import org.mockito.internal.creation.MockSettingsImpl;
-import org.mockito.internal.creation.instance.DefaultInstantiatorProvider;
 import org.mockito.internal.handler.MockHandlerFactory;
 import org.mockito.internal.util.MockNameImpl;
-import org.mockito.internal.util.MockUtil;
 import org.mockito.internal.util.reflection.LenientCopyTool;
-import org.mockito.invocation.MockHandler;
-import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.MockMaker;
 import org.powermock.api.mockito.internal.invocation.MockitoMethodInvocationControl;
-import org.powermock.api.mockito.repackaged.ClassImposterizer;
 import org.powermock.api.mockito.repackaged.MethodInterceptorFilter;
 import org.powermock.core.ClassReplicaCreator;
 import org.powermock.core.DefaultFieldValueGenerator;
@@ -40,8 +35,6 @@ import org.powermock.reflect.Whitebox;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-
-import static org.mockito.internal.handler.MockHandlerFactory.createMockHandler;
 
 public class DefaultMockCreator extends AbstractMockCreator {
 

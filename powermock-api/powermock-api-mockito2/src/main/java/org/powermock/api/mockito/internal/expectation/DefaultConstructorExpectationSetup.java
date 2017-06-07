@@ -16,13 +16,12 @@
  */
 package org.powermock.api.mockito.internal.expectation;
 
+import org.mockito.ArgumentMatchers;
 import org.mockito.stubbing.OngoingStubbing;
 import org.powermock.api.mockito.internal.invocation.MockitoNewInvocationControl;
 import org.powermock.api.mockito.internal.mockcreation.DefaultMockCreator;
 import org.powermock.core.spi.NewInvocationControl;
 import org.powermock.core.spi.support.InvocationSubstitute;
-
-import org.mockito.ArgumentMatchers;
 
 public class DefaultConstructorExpectationSetup<T>  extends AbstractConstructorExpectationSetup<T> {
 

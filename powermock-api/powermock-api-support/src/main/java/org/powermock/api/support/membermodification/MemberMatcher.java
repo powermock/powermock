@@ -16,7 +16,11 @@
 package org.powermock.api.support.membermodification;
 
 import org.powermock.reflect.Whitebox;
-import org.powermock.reflect.exceptions.*;
+import org.powermock.reflect.exceptions.ConstructorNotFoundException;
+import org.powermock.reflect.exceptions.FieldNotFoundException;
+import org.powermock.reflect.exceptions.MethodNotFoundException;
+import org.powermock.reflect.exceptions.TooManyConstructorsFoundException;
+import org.powermock.reflect.exceptions.TooManyMethodsFoundException;
 import org.powermock.reflect.internal.WhiteboxImpl;
 import org.powermock.tests.utils.impl.ArrayMergerImpl;
 

@@ -1,9 +1,6 @@
 package org.powermock.api.extension.reporter;
 
 import org.powermock.core.reporter.MockingFrameworkReporter;
-import org.powermock.reflect.Whitebox;
-
-import static org.powermock.utils.StringJoiner.join;
 
 /**
  * The MockingFrameworkReporterFactory which create a new instance of MockingFrameworkReporter

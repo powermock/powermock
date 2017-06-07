@@ -15,20 +15,24 @@
  */
 package org.powermock.modules.junit4.internal.impl;
 
+import org.junit.Test;
+import org.junit.runner.Description;
+import org.junit.runner.Result;
+import org.junit.runner.RunWith;
+import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunListener;
+import org.junit.runner.notification.RunNotifier;
+import org.junit.runners.Parameterized;
+import org.powermock.tests.utils.PowerMockTestNotifier;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.Parameterized;
 
-import static org.easymock.EasyMock.*;
-import org.junit.runner.Description;
-import org.junit.runner.Result;
-import org.junit.runner.notification.Failure;
-import org.junit.runner.notification.RunListener;
-import org.powermock.tests.utils.PowerMockTestNotifier;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 @RunWith(Parameterized.class)
 public class PowerMockRunNotifierTest {

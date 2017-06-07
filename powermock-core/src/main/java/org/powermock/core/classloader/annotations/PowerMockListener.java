@@ -18,7 +18,12 @@ package org.powermock.core.classloader.annotations;
 
 import org.powermock.core.spi.PowerMockTestListener;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * The PowerMock listener annotation can be used to tell PowerMock which

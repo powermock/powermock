@@ -18,7 +18,6 @@
 package org.powermock.api.mockito.internal.mockcreation;
 
 import org.mockito.internal.configuration.GlobalConfiguration;
-import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.powermock.api.support.ClassLoaderUtil;
 import org.powermock.reflect.Whitebox;
 

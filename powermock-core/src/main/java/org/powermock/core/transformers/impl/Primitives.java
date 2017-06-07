@@ -15,12 +15,21 @@
  */
 package org.powermock.core.transformers.impl;
 
+import javassist.CtPrimitiveType;
+
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Map;
-import javassist.CtPrimitiveType;
 
-import static javassist.CtClass.*;
+import static javassist.CtClass.booleanType;
+import static javassist.CtClass.byteType;
+import static javassist.CtClass.charType;
+import static javassist.CtClass.doubleType;
+import static javassist.CtClass.floatType;
+import static javassist.CtClass.intType;
+import static javassist.CtClass.longType;
+import static javassist.CtClass.shortType;
+import static javassist.CtClass.voidType;
 
 /**
  * Simple utility that maps constant fields of {@link javassist.CtClass} to

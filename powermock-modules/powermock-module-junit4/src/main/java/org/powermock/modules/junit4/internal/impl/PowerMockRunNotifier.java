@@ -15,8 +15,6 @@
  */
 package org.powermock.modules.junit4.internal.impl;
 
-import java.lang.reflect.Method;
-import java.util.LinkedList;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -26,6 +24,9 @@ import org.junit.runner.notification.StoppedByUserException;
 import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.core.testlisteners.GlobalNotificationBuildSupport;
 import org.powermock.tests.utils.PowerMockTestNotifier;
+
+import java.lang.reflect.Method;
+import java.util.LinkedList;
 
 import static org.powermock.reflect.Whitebox.invokeMethod;
 

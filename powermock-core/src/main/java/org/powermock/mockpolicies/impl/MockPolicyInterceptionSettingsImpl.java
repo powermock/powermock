@@ -20,7 +20,11 @@ import org.powermock.mockpolicies.MockPolicyInterceptionSettings;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class MockPolicyInterceptionSettingsImpl implements MockPolicyInterceptionSettings {
 	private Set<Field> fieldsToSuppress;

@@ -4,10 +4,10 @@
  */
 package org.powermock.api.mockito.repackaged;
 
-import static java.lang.Thread.*;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.Thread.currentThread;
 
 /**
  * Inspired on jMock (thanks jMock guys!!!)

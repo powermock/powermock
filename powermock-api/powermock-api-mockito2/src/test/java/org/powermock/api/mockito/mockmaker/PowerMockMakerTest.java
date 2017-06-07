@@ -27,7 +27,6 @@ import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.MockMaker;
 import org.powermock.api.mockito.ConfigurationTestUtils;
-import org.powermock.api.mockito.mockmaker.PowerMockMaker;
 import org.powermock.configuration.GlobalConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;

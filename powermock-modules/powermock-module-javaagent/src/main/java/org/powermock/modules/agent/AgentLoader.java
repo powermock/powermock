@@ -23,7 +23,11 @@
  */
 package org.powermock.modules.agent;
 
-import com.sun.tools.attach.*;
+import com.sun.tools.attach.AgentInitializationException;
+import com.sun.tools.attach.AgentLoadException;
+import com.sun.tools.attach.AttachNotSupportedException;
+import com.sun.tools.attach.VirtualMachine;
+import com.sun.tools.attach.VirtualMachineDescriptor;
 import com.sun.tools.attach.spi.AttachProvider;
 import org.powermock.reflect.Whitebox;
 import sun.tools.attach.BsdVirtualMachine;

@@ -15,7 +15,11 @@
  */
 package org.powermock.classloading.spi;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Fields annotated with this annotation are not allowed to be cloned by a Deep Cloner implementation.

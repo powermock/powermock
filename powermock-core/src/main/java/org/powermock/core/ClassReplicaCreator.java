@@ -15,7 +15,16 @@
  */
 package org.powermock.core;
 
-import javassist.*;
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtConstructor;
+import javassist.CtField;
+import javassist.CtMethod;
+import javassist.CtNewConstructor;
+import javassist.CtNewMethod;
+import javassist.Modifier;
+import javassist.NotFoundException;
 
 import java.util.Collections;
 import java.util.HashSet;

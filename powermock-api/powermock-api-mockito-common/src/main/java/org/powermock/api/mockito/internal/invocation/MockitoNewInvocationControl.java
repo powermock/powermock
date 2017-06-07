@@ -17,8 +17,6 @@ package org.powermock.api.mockito.internal.invocation;
 
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
-import org.mockito.internal.progress.MockingProgress;
-import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.verification.VerificationMode;
 import org.powermock.core.MockRepository;

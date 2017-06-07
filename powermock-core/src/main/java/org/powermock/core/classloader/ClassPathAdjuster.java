@@ -17,7 +17,6 @@
 package org.powermock.core.classloader;
 
 import javassist.ClassPool;
-
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 
 /**

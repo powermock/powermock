@@ -15,6 +15,13 @@
  */
 package org.powermock.modules.junit4.internal.impl;
 
+import org.junit.runner.Description;
+import org.junit.runner.notification.Failure;
+import org.powermock.core.spi.testresult.Result;
+import org.powermock.core.spi.testresult.TestMethodResult;
+import org.powermock.tests.utils.PowerMockTestNotifier;
+import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.IdentityHashMap;
@@ -23,12 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.junit.runner.Description;
-import org.junit.runner.notification.Failure;
-import org.powermock.core.spi.testresult.Result;
-import org.powermock.core.spi.testresult.TestMethodResult;
-import org.powermock.tests.utils.PowerMockTestNotifier;
-import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
 
 /**
  * Stateful class that, from information from JUnit and test-classes,

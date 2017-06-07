@@ -17,7 +17,11 @@ package org.powermock.modules.junit4.common.internal.impl;
 
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
-import org.junit.runner.manipulation.*;
+import org.junit.runner.manipulation.Filter;
+import org.junit.runner.manipulation.Filterable;
+import org.junit.runner.manipulation.NoTestsRemainException;
+import org.junit.runner.manipulation.Sortable;
+import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
 import org.powermock.core.MockRepository;
 import org.powermock.modules.junit4.common.internal.JUnit4TestSuiteChunker;

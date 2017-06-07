@@ -1,14 +1,14 @@
 package org.powermock.api.mockito.internal.mockcreation;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.util.List;
-
 import org.junit.Test;
 import org.mockito.internal.creation.MockSettingsImpl;
 import org.mockito.internal.util.MockUtil;
 import org.mockito.mock.MockName;
+
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class DefaultMockCreatorTest {
 

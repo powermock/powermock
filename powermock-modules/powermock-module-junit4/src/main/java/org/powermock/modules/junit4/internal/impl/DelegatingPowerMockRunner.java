@@ -15,30 +15,29 @@
  */
 package org.powermock.modules.junit4.internal.impl;
 
+import org.junit.Test;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.Description;
-import org.junit.runner.notification.RunNotifier;
-import org.powermock.reflect.Whitebox;
-
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
-
-import org.junit.Test;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.Filterable;
 import org.junit.runner.manipulation.NoTestsRemainException;
+import org.junit.runner.notification.RunNotifier;
 import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.core.testlisteners.GlobalNotificationBuildSupport;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate.SinceJUnit_4_5;
 import org.powermock.modules.junit4.common.internal.PowerMockJUnitRunnerDelegate;
 import org.powermock.modules.junit4.common.internal.impl.JUnitVersion;
+import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.exceptions.ConstructorNotFoundException;
 import org.powermock.tests.utils.PowerMockTestNotifier;
 import org.powermock.tests.utils.impl.PowerMockTestNotifierImpl;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
 
 public class DelegatingPowerMockRunner extends Runner
 implements PowerMockJUnitRunnerDelegate, Filterable {

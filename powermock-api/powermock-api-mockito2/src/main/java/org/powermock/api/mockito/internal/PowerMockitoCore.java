@@ -16,7 +16,6 @@
  */
 package org.powermock.api.mockito.internal;
 
-import org.mockito.Mockito;
 import org.mockito.internal.progress.MockingProgress;
 import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.internal.verification.MockAwareVerificationMode;
@@ -25,9 +24,6 @@ import org.mockito.verification.VerificationMode;
 import org.powermock.api.mockito.expectation.PowerMockitoStubber;
 import org.powermock.api.mockito.internal.expectation.PowerMockitoStubberImpl;
 import org.powermock.api.mockito.internal.verification.StaticMockAwareVerificationMode;
-import org.powermock.reflect.Whitebox;
-
-import java.util.Set;
 
 public class PowerMockitoCore {
     @SuppressWarnings("rawtypes")
