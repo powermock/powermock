@@ -343,6 +343,28 @@ public class PowerMock extends MemberModifier {
 
     /**
      * A utility method that may be used to specify several methods that should
+     * <i>not</i> be mocked in an easy manner (by just passing in the method
+     * names of the method you wish <i>not</i> to mock). Note that you cannot
+     * uniquely specify a method to exclude using this method if there are
+     * several methods with the same name in {@code type}. This method will
+     * mock ALL methods that doesn't match the supplied name(s) regardless of
+     * parameter types and signature. The mock object created will support
+     * mocking of final methods and invokes the* default constructor (even
+     * if it's private).
+     *
+     * @param <T>                  the type of the mock object
+     * @param type                 the type of the mock object
+     * @param methodNames          The names of the methods that should not be mocked.
+     * @return A mock object of type <T>.
+     */
+    public static synchronized <T> T createPartialMockAndInvokeDefaultConstructorForAllMethodsExcept(Class<T> type,
+                                                                                                     String... methodNames) {
+        return createMock(type, new ConstructorArgs(Whitebox.getConstructor(type)),
+                WhiteboxImpl.getAllMethodExcept(type, methodNames));
+    }
+
+    /**
+     * A utility method that may be used to specify several methods that should
      * <i>not</i> be nicely mocked in an easy manner (by just passing in the
      * method names of the method you wish <i>not</i> to mock). Note that you
      * cannot uniquely specify a method to exclude using this method if there
