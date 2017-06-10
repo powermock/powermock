@@ -20,14 +20,8 @@ package org.powermock.configuration.support;
 
 import org.powermock.configuration.Configuration;
 import org.powermock.configuration.ConfigurationReader;
-import org.powermock.configuration.ConfigurationType;
 import org.powermock.core.PowerMockInternalException;
 
-import java.beans.BeanInfo;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -62,16 +56,17 @@ public class ConfigurationReaderBuilder {
     private static class ConfigurationReaderImpl implements ConfigurationReader {
         
         private final String configurationFile;
-        private final Map<String, String> alias;
+        private final ValueAliases alias;
+        
         
         private ConfigurationReaderImpl(final String configurationFile, final Map<String, String> alias) {
             this.configurationFile = configurationFile;
-            this.alias = alias;
+            this.alias = new ValueAliases(alias);
         }
         
         @Override
         public <T extends Configuration> T read(Class<T> configurationClass) {
-            final Properties properties = new PropertiesLoader(configurationFile).load();
+            final Properties properties = new PropertiesLoader().load(configurationFile);
             if (properties != null) {
                 return createConfiguration(configurationClass, properties);
             } else {
@@ -89,135 +84,9 @@ public class ConfigurationReaderBuilder {
             }
         }
         
-        private <T extends Configuration> void mapConfiguration(final Class<T> configurationClass,
-                                                                final T configuration,
+        private <T extends Configuration> void mapConfiguration(final Class<T> configurationClass, final T configuration,
                                                                 final Properties properties) {
-            try {
-                ConfigurationType configurationType = ConfigurationType.forClass(configurationClass);
-                
-                BeanInfo info = Introspector.getBeanInfo(configurationClass, Object.class);
-                PropertyDescriptor[] all = info.getPropertyDescriptors();
-                
-                for (PropertyDescriptor propertyDescriptor : all) {
-                    if (propertyDescriptor.getWriteMethod() != null) {
-                        mapProperty(configuration, properties, configurationType, propertyDescriptor);
-                    }
-                }
-                
-            } catch (Exception e) {
-                throw new PowerMockInternalException(e);
-            }
-            
+            new ConfigurationMapper<T>(configurationClass, configuration, alias).map(properties);
         }
-        
-        private <T extends Configuration> void mapProperty(final T configuration,
-                                                           final Properties properties,
-                                                           final ConfigurationType configurationType,
-                                                           final PropertyDescriptor propertyDescriptor) throws IllegalAccessException, InvocationTargetException {
-            String key = new ConfigurationKey(configurationType, propertyDescriptor.getName()).toString();
-            String value = findValue(properties, key);
-    
-            PropertyWriter.forProperty(propertyDescriptor).writeProperty(propertyDescriptor, configuration, value);
-        }
-        
-        private String findValue(final Properties properties, final String key) {
-            String value = (String) properties.get(key);
-            if (alias.containsKey(value)) {
-                value = alias.get(value);
-            }
-            return value;
-        }
-        
-        
-        private static class ConfigurationKey {
-            private final ConfigurationType configurationType;
-            private final String name;
-            
-            private ConfigurationKey(final ConfigurationType configurationType, final String name) {
-                this.configurationType = configurationType;
-                this.name = name;
-            }
-            
-            @Override
-            public String toString() {
-                StringBuilder key = new StringBuilder();
-                
-                if (configurationType.getPrefix() != null) {
-                    key.append(configurationType.getPrefix());
-                    key.append(".");
-                }
-                
-                for (int i = 0; i < name.length(); i++) {
-                    char c = name.charAt(i);
-                    if (Character.isUpperCase(c)) {
-                        key.append('-');
-                        key.append(Character.toLowerCase(c));
-                    } else {
-                        key.append(c);
-                    }
-                }
-                return key.toString();
-            }
-        }
-        
-        private static class PropertiesLoader {
-            private String configurationFile;
-            
-            private PropertiesLoader(final String configurationFile) {
-                this.configurationFile = configurationFile;
-            }
-            
-            private Properties load() {
-                final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-                final Properties properties = new Properties();
-                
-                try {
-                    InputStream configFile = classLoader.getResourceAsStream(configurationFile);
-                    properties.load(configFile);
-                    return properties;
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-        }
-    
-        private enum PropertyWriter {
-            ArrayWriter {
-                @Override
-                public void writeProperty(final PropertyDescriptor propertyDescriptor, final Object target, final String value) {
-                    try {
-                        if (value != null) {
-                            String[] array = value.split(",");
-                            propertyDescriptor.getWriteMethod().invoke(target, (Object) array);
-                        }
-                    } catch (Exception e) {
-                        throw new PowerMockInternalException(e);
-                    }
-                }
-            },
-            StringWriter {
-                @Override
-                public void writeProperty(final PropertyDescriptor propertyDescriptor, final Object target, final String value) {
-                    try {
-                        if (value != null) {
-                            propertyDescriptor.getWriteMethod().invoke(target, value);
-                        }
-                    } catch (Exception e) {
-                        throw new PowerMockInternalException(e);
-                    }
-                }
-            };
-        
-            public static PropertyWriter forProperty(final PropertyDescriptor propertyDescriptor) {
-                if (String[].class.isAssignableFrom(propertyDescriptor.getPropertyType())) {
-                    return ArrayWriter;
-                } else {
-                    return StringWriter;
-                }
-            }
-        
-            public abstract void writeProperty(final PropertyDescriptor propertyDescriptor, final Object target, final String value);
-        }
-        
     }
 }

@@ -20,6 +20,13 @@ package org.powermock.configuration;
 
 import org.powermock.utils.ArrayUtil;
 
+/**
+ * The class provides list of setting for PowerMock.
+ * The properties with `powermock` prefix are mapped to the class.
+ *
+ * @since 1.7.0
+ * @see Configuration
+ */
 public class PowerMockConfiguration implements Configuration<PowerMockConfiguration> {
     private String[] globalIgnore;
     

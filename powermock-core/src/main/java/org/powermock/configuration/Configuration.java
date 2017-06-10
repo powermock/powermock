@@ -18,6 +18,25 @@
 
 package org.powermock.configuration;
 
-public interface Configuration <T extends Configuration>{
-     T merge(T configuration);
+/**
+ * The general interface for all types configurations that could be obtained via {@link GlobalConfiguration}.
+ * <p>
+ * All user defined configurations are read from the properties file:
+ * </p><pre>org/powermock/extensions/configuration.properties</pre>
+ * <p>
+ * By default the file is not exist and default values are used.
+ * </p>
+ *
+ * @param <T> configuration implementer class.
+ * @since 1.7.0
+ */
+public interface Configuration<T extends Configuration> {
+    
+    /**
+     * Merge values of the configuration with values of <code>configuration</code>.
+     *
+     * @param configuration source configurations.
+     * @return a new instance of {@link Configuration} with merged values.
+     */
+    T merge(T configuration);
 }

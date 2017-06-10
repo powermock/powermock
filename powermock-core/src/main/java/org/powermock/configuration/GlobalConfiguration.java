@@ -20,6 +20,15 @@ package org.powermock.configuration;
 
 import org.powermock.configuration.support.ConfigurationFactoryImpl;
 
+/**
+ * <p>
+ * The class provides static access to {@link Configuration}.
+ * The class uses {@link ThreadLocal} for storing of each type of configuration.
+ * In result a one instance of each configuration type is created per thread.
+ * </p>
+ *
+ * @since 1.7.0
+ */
 public final class GlobalConfiguration {
     
     private static ConfigurationFactory configurationFactory = new ConfigurationFactoryImpl();

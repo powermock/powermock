@@ -32,16 +32,29 @@ public class PowerMockIgnorePackagesExtractorImpl implements IgnorePackagesExtra
     
     @Override
     public String[] getPackagesToIgnore(AnnotatedElement element) {
-        Set<String> ignoredPackages = new HashSet<String>();
+    
+        PowerMockIgnore annotation = element.getAnnotation(PowerMockIgnore.class);
+        boolean useGlobal = true;
         
-        extractPackageToIgnore(element, ignoredPackages);
+        if (annotation != null){
+            useGlobal = annotation.globalIgnore();
+        }
+        
+        Set<String> ignoredPackages = new HashSet<String>();
+        useGlobal &= extractPackageToIgnore(element, ignoredPackages);
         
         final String[] packageToIgnore = ignoredPackages.toArray(new String[ignoredPackages.size()]);
+        if (useGlobal) {
+            return getPackageToIgnoreWithGlobal(packageToIgnore);
+        } else {
+            return packageToIgnore;
+        }
+    }
+    
+    private String[] getPackageToIgnoreWithGlobal(final String[] packageToIgnore) {
+        String[] globalIgnore = getGlobalIgnore();
+        
         final String[] allPackageToIgnore;
-        
-        final PowerMockConfiguration powerMockConfiguration = GlobalConfiguration.powerMockConfiguration();
-        
-        String[] globalIgnore = powerMockConfiguration.getGlobalIgnore();
         if (globalIgnore != null) {
             allPackageToIgnore = addGlobalIgnore(packageToIgnore, globalIgnore);
         } else {
@@ -51,30 +64,44 @@ public class PowerMockIgnorePackagesExtractorImpl implements IgnorePackagesExtra
         return allPackageToIgnore;
     }
     
-    private void extractPackageToIgnore(final AnnotatedElement element, final Set<String> ignoredPackages) {
-        addValueFromAnnotation(element, ignoredPackages);
-        addValuesFromSuperclass((Class<?>) element, ignoredPackages);
+    private String[] getGlobalIgnore() {
+        final PowerMockConfiguration powerMockConfiguration = GlobalConfiguration.powerMockConfiguration();
+        return powerMockConfiguration.getGlobalIgnore();
     }
     
-    private void addValuesFromSuperclass(final Class<?> element, final Set<String> ignoredPackages) {
+    private boolean extractPackageToIgnore(final AnnotatedElement element, final Set<String> ignoredPackages) {
+        boolean useGlobalFromAnnotation = addValueFromAnnotation(element, ignoredPackages);
+        boolean useGlobalFromSuperclass = addValuesFromSuperclass((Class<?>) element, ignoredPackages);
+        
+        return useGlobalFromAnnotation & useGlobalFromSuperclass;
+    }
+    
+    private boolean  addValuesFromSuperclass(final Class<?> element, final Set<String> ignoredPackages) {
         final Collection<Class<?>> superclasses = new ArrayList<Class<?>>();
         Collections.addAll(superclasses, element.getSuperclass());
         Collections.addAll(superclasses, element.getInterfaces());
         
+        boolean useGlobalIgnore = true;
+        
         for (Class<?> superclass : superclasses) {
             if (superclass != null && !superclass.equals(Object.class)) {
-                extractPackageToIgnore(superclass, ignoredPackages);
+                useGlobalIgnore &= extractPackageToIgnore(superclass, ignoredPackages);
             }
         }
+        
+        return useGlobalIgnore;
     }
     
-    private void addValueFromAnnotation(final AnnotatedElement element, final Set<String> ignoredPackages) {
+    private boolean addValueFromAnnotation(final AnnotatedElement element, final Set<String> ignoredPackages) {
         PowerMockIgnore annotation = element.getAnnotation(PowerMockIgnore.class);
         
         if (annotation != null) {
             String[] ignores = annotation.value();
             Collections.addAll(ignoredPackages, ignores);
+            return annotation.globalIgnore();
         }
+        
+        return true;
     }
     
     private String[] addGlobalIgnore(final String[] packageToIgnore, final String[] globalIgnore) {

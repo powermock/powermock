@@ -34,7 +34,7 @@ public final class ConfigurationTestUtils {
     public void copyTemplateToPropertiesFile() throws URISyntaxException, IOException {
         
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        URL resource = classLoader.getResource("org/powermock/configuration.template");
+        URL resource = classLoader.getResource("org/powermock/extensions/configuration.template");
         
         File file = new File(resource.toURI());
         

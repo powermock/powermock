@@ -65,25 +65,73 @@ public class PowerMockIgnorePackagesExtractorImplTest {
     
     @Test
     public void should_include_global_powermock_ignore_to_list_of_package_to_ignore() {
-        final String[] globalIgnore = {"org.somepacakge.*","org.otherpackage.Class"};
+        final String[] globalIgnore = {"org.somepacakge.*", "org.otherpackage.Class"};
         
         GlobalConfiguration.setConfigurationFactory(new ConfigurationFactory() {
             @Override
             public <T extends Configuration<T>> T create(final Class<T> configurationType) {
                 PowerMockConfiguration powerMockConfiguration = new PowerMockConfiguration();
-    
+                
                 powerMockConfiguration.setGlobalIgnore(globalIgnore);
                 
                 return (T) powerMockConfiguration;
             }
         });
-    
+        
         String[] packagesToIgnore = objectUnderTest.getPackagesToIgnore(ClassWithoutAnnotation.class);
-    
+        
         assertThat(packagesToIgnore)
-            .as("Packages from global ignore is  added to ignore")
+            .as("Packages from configuration is added to ignore")
             .hasSize(2)
             .containsOnly(globalIgnore);
+    }
+    
+    @Test
+    public void should_not_include_global_powermock_ignore_when_annotation_use_global_ignore_false() {
+        
+        final String[] globalIgnore = {"org.somepacakge.*", "org.otherpackage.Class"};
+        
+        GlobalConfiguration.setConfigurationFactory(new ConfigurationFactory() {
+            @Override
+            public <T extends Configuration<T>> T create(final Class<T> configurationType) {
+                PowerMockConfiguration powerMockConfiguration = new PowerMockConfiguration();
+                
+                powerMockConfiguration.setGlobalIgnore(globalIgnore);
+                
+                return (T) powerMockConfiguration;
+            }
+        });
+        
+        String[] packagesToIgnore = objectUnderTest.getPackagesToIgnore(ClassWithAnnotationUseFalse.class);
+        
+        assertThat(packagesToIgnore)
+            .as("Packages from global ignore is not added")
+            .hasSize(2)
+            .containsOnly("ignore6", "ignore5");
+    }
+    
+    @Test
+    public void should_not_include_global_powermock_ignore_when_annotation_use_global_ignore_false_on_parent_class() {
+        
+        final String[] globalIgnore = {"org.somepacakge.*", "org.otherpackage.Class"};
+        
+        GlobalConfiguration.setConfigurationFactory(new ConfigurationFactory() {
+            @Override
+            public <T extends Configuration<T>> T create(final Class<T> configurationType) {
+                PowerMockConfiguration powerMockConfiguration = new PowerMockConfiguration();
+                
+                powerMockConfiguration.setGlobalIgnore(globalIgnore);
+                
+                return (T) powerMockConfiguration;
+            }
+        });
+        
+        String[] packagesToIgnore = objectUnderTest.getPackagesToIgnore(IgnoreAnnotatedWithGlobalIgnoreParent.class);
+        
+        assertThat(packagesToIgnore)
+            .as("Packages from global ignore is not added")
+            .hasSize(4)
+            .containsOnly("ignore0", "ignore1", "ignore6", "ignore5");
     }
     
     private static class ClassWithoutAnnotation {
@@ -121,5 +169,15 @@ public class PowerMockIgnorePackagesExtractorImplTest {
     
     @PowerMockIgnore("ignore6")
     private interface IgnoreAnnotatedDemoInterfaceParent2 extends IgnoreAnnotatedDemoInterfaceGrandParent {
+    }
+    
+    @PowerMockIgnore(value = "ignore6", globalIgnore = false)
+    private class ClassWithAnnotationUseFalse implements IgnoreAnnotatedDemoInterfaceGrandParent {
+    
+    }
+    
+    @PowerMockIgnore({"ignore0", "ignore1"})
+    private class IgnoreAnnotatedWithGlobalIgnoreParent extends ClassWithAnnotationUseFalse {
+        
     }
 }

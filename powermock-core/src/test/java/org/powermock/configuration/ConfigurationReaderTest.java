@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ConfigurationReaderTest {
     
-    private static final String CONF_PATH = "org/powermock/configuration";
+    private static final String CONF_PATH = "org/powermock/extensions";
     private static final String CONFIGURATION_FILE = CONF_PATH + "/test.properties";
     private ConfigurationReader reader;
     

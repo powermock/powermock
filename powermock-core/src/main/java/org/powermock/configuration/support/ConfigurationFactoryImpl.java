@@ -25,7 +25,7 @@ import static org.powermock.configuration.support.ConfigurationReaderBuilder.new
 
 public class ConfigurationFactoryImpl implements ConfigurationFactory {
     
-    private static final String USER_CONFIGURATION = "org/powermock/configuration.properties";
+    private static final String USER_CONFIGURATION = "org/powermock/extensions/configuration.properties";
     private static final String DEFAULT_CONFIGURATION = "org/powermock/default.properties";
     
     @Override public <T extends Configuration<T>> T create(final Class<T> configurationType) {
@@ -41,7 +41,7 @@ public class ConfigurationFactoryImpl implements ConfigurationFactory {
                                     .build()
                                     .read(configurationType);
         if (configuration == null){
-            throw new RuntimeException("It should never happen. If you see this exception, it means that something wrong with build." +
+            throw new RuntimeException("Default configuration is null. It should never happen. If you see this exception, it means that something wrong with build." +
                                            " Please report to PowerMock issues tracker.");
         }
         return configuration;
