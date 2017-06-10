@@ -2,7 +2,7 @@ Change log 1.7.0
 -----------------------------
 * Added supporting Mockito 2.8.9 for PowerMock 2.x (thanks to Gregor Stamac @gstamac for pull request)
 * Added supporting global ignore via configuration (issue # #801)
-* Added supporting org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker via PowerMock configuration (issue #793)
+* Added supporting org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker via PowerMock configuration (issues #793, #774)
 * Optimizations in powermock-reflect (thanks to Roman Leventov @leventov for pull request) (#724)
 * Migrated from Maven to Gradle (#728)
 * Implement #793 PowerMockMaker for Mockito 2: A new version of PowerMockMaker implemented. It does not conflict with Mockito MockMaker any more. Fix for #701 partially does not work any more, because ByteBuddy implementation of MockMaker always intercept calls to equals and return `true` only in case if passed object is the same instance of mocked object.
