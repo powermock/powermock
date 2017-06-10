@@ -135,6 +135,7 @@ public class PowerMockTestCase {
     }
 
     /**
+     * @param context the test context.
      * @return The PowerMock object factory.
      */
     @ObjectFactory

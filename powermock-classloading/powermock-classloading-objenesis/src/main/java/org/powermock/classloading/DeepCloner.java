@@ -37,9 +37,10 @@ import java.lang.reflect.Modifier;
 import java.util.Map;
 
 /**
+ * <p>
  * The purpose of the deep cloner is to create a deep clone of an object. An
  * object can also be cloned to a different class-loader.
- * <p>
+ * </p>
  */
 public class DeepCloner implements DeepClonerSPI {
 
@@ -49,6 +50,7 @@ public class DeepCloner implements DeepClonerSPI {
 
 	/**
 	 * Clone using the supplied ClassLoader.
+     * @param classLoader - the classloader to loaded cloned classes.
 	 */
 	public DeepCloner(ClassLoader classLoader) {
 		this.targetCL = classLoader;
@@ -68,7 +70,8 @@ public class DeepCloner implements DeepClonerSPI {
 
 	/**
 	 * Clones an object.
-	 * 
+	 *
+     * @param objectToClone the object to clone.
 	 * @return A deep clone of the object to clone.
 	 */
 	@Override
@@ -77,7 +80,8 @@ public class DeepCloner implements DeepClonerSPI {
 	}
 
 	/**
-	 * 
+	 *
+     * @param objectToClone the object to clone
 	 * @param includeStandardJavaType
 	 *            {@code true} also clones standard java types (using
 	 *            simple serialization), {@code false} simply reference to

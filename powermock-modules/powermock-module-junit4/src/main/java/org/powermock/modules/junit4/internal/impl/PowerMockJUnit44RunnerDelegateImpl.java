@@ -57,10 +57,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * <p>
  * A JUnit4 test runner that only runs a specified set of test methods in a test
  * class.
- * <p/>
- * <p/>
+ * </p>
+ * <p>
  * Many parts of this class are essentially a rip off from
  * {@link JUnit4ClassRunner} used in JUnit 4.4. It does however not extend this
  * class because we cannot let it perform the stuff it does in its constructor.
@@ -68,9 +69,10 @@ import java.util.List;
  * add a tip to error message asking the user if they've not forgot to add a
  * class to test. Yet another difference is that this runner notifies the
  * PowerMock listeners of certain events.
- *
+ * </p>
  * @see JUnit4ClassRunner
  */
+
 @SuppressWarnings("deprecation")
 public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filterable, Sortable, PowerMockJUnitRunnerDelegate {
     private final List<Method> testMethods;

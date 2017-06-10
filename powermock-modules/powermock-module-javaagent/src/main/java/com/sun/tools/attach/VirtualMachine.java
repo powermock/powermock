@@ -32,8 +32,9 @@ import java.util.List;
 import java.util.Properties;
 
 /**
+ * <p>
  * A Java virtual machine.
- * <p/>
+ * </p>
  * <p> A {@code VirtualMachine} represents a Java virtual machine to which this
  * Java virtual machine has attached. The Java virtual machine to which it is
  * attached is sometimes called the <i>target virtual machine</i>, or <i>target VM</i>.
@@ -41,7 +42,6 @@ import java.util.Properties;
  * VirtualMachine to load an agent into the target VM. For example, a profiler tool
  * written in the Java Language might attach to a running application and load its
  * profiler agent to profile the running application. </p>
- * <p/>
  * <p> A VirtualMachine is obtained by invoking the {@link #attach(String) attach} method
  * with an identifier that identifies the target virtual machine. The identifier is
  * implementation-dependent but is typically the process identifier (or pid) in
@@ -61,7 +61,6 @@ import java.util.Properties;
  * are deployed in a dynamic library and make use of the <a
  * href="../../../../../../../../technotes/guides/jvmti/index.html">JVM Tools
  * Interface</a>. </p>
- * <p/>
  * <p> In addition to loading agents a VirtualMachine provides read access to the
  * {@link java.lang.System#getProperties() system properties} in the target VM.
  * This can be useful in some environments where properties such as
@@ -69,33 +68,24 @@ import java.util.Properties;
  * used to construct the path to agent that will be loaded into the target VM.
  * <p/>
  * <p> The following example demonstrates how VirtualMachine may be used:</p>
- * <p/>
  * <pre>
- * <p/>
  *      // attach to target VM
  *      VirtualMachine vm = VirtualMachine.attach("2177");
- * <p/>
  *      // get system properties in target VM
  *      Properties props = vm.getSystemProperties();
- * <p/>
  *      // construct path to management agent
  *      String home = props.getProperty("java.home");
  *      String agent = home + File.separator + "lib" + File.separator
  *          + "management-agent.jar";
- * <p/>
  *      // load agent into target VM
  *      vm.loadAgent(agent, "com.sun.management.jmxremote.port=5000");
- * <p/>
  *      // detach
  *      vm.detach();
- * <p/>
  * </pre>
- * <p/>
  * <p> In this example we attach to a Java virtual machine that is identified by
  * the process identifier {@code 2177}. The system properties from the target
  * VM are then used to construct the path to a <i>management agent</i> which is then
  * loaded into the target VM. Once loaded the client detaches from the target VM. </p>
- * <p/>
  * <p> A VirtualMachine is safe for use by multiple concurrent threads. </p>
  *
  * @since 1.6
@@ -119,15 +109,17 @@ public abstract class VirtualMachine
    }
 
    /**
+    * <p>
     * Return a list of Java virtual machines.
-    * <p/>
+    * </p>
+    * <p>
     * This method returns a list of Java {@link com.sun.tools.attach.VirtualMachineDescriptor}
     * elements.  The list is an aggregation of the virtual machine descriptor lists obtained by
     * invoking the {@link com.sun.tools.attach.spi.AttachProvider#listVirtualMachines
     * listVirtualMachines} method of all installed {@link com.sun.tools.attach.spi.AttachProvider
     * attach providers}.  If there are no Java virtual machines known to any provider then an empty
     * list is returned.
-    *
+    * </p>
     * @return The list of virtual machine descriptors.
     */
    public static List<VirtualMachineDescriptor> list()
@@ -143,8 +135,10 @@ public abstract class VirtualMachine
    }
 
    /**
+    * <p>
     * Attaches to a Java virtual machine.
-    * <p/>
+    * </p>
+    * <p>
     * This method obtains the list of attach providers by invoking the
     * {@link com.sun.tools.attach.spi.AttachProvider#providers() AttachProvider.providers()} method.
     * It then iterates overs the list and invokes each provider's {@link
@@ -160,7 +154,8 @@ public abstract class VirtualMachine
     * corresponds to a Java virtual machine that does not exist, or none
     * of the providers can attach to it. This exception is also thrown if
     * {@link com.sun.tools.attach.spi.AttachProvider#providers()
-    * AttachProvider.providers()} returns an empty list. </p>
+    * AttachProvider.providers()} returns an empty list.
+    * </p>
     *
     * @param id The abstract identifier that identifies the Java virtual machine.
     * @return A VirtualMachine representing the target VM.

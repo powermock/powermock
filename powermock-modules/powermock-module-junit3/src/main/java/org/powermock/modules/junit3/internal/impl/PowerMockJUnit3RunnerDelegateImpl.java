@@ -28,28 +28,33 @@ import java.util.Vector;
 
 @SuppressWarnings("unchecked")
 public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements PowerMockJUnit3RunnerDelegate {
-
+    
     private final Method[] methodsToRun;
-
+    
     private Class<?> testClass;
-
+    
     public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass, Method[] methodsToRun, String name,
-            PowerMockTestListener[] powerListeners) {
+                                             PowerMockTestListener[] powerListeners) {
         this(theClass, methodsToRun, powerListeners);
         testClass = theClass;
         setName(name);
     }
-
+    
     /**
      * Constructs a TestSuite from the given class. Adds all the methods
      * starting with "test" as test cases to the suite. Parts of this method was
      * cut'n'pasted on the train between Malm� and Stockholm.
+     *
+     * @param theClass               the test suite class
+     * @param methodsToRun           array of methods to run
+     * @param powerMockTestListeners array of {@link PowerMockTestListener}
      */
-    public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass, Method[] methodsToRun, PowerMockTestListener[] powerMockTestListeners) {
+    public PowerMockJUnit3RunnerDelegateImpl(final Class<?> theClass, Method[] methodsToRun,
+                                             PowerMockTestListener[] powerMockTestListeners) {
         testClass = theClass;
         this.methodsToRun = methodsToRun;
         setName(theClass.getName());
-
+        
         try {
             getTestConstructor(theClass); // Avoid generating multiple error
             // messages
@@ -57,12 +62,12 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements Powe
             addTest(warning("Class " + theClass.getName() + " has no public constructor TestCase(String name) or TestCase()"));
             return;
         }
-
+        
         if (!Modifier.isPublic(theClass.getModifiers())) {
             addTest(warning("Class " + theClass.getName() + " is not public"));
             return;
         }
-
+        
         Class<?> superClass = theClass;
         Vector<?> names = new Vector<Object>();
         Method addTestMethod = null;
@@ -77,13 +82,13 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements Powe
                 addTestMethod = method;
             }
         }
-
+        
         if (addTestMethod == null) {
             throw new RuntimeException("Internal error: Failed to get addTestMethod for JUnit3.");
         }
-
+        
         addTestMethod.setAccessible(true);
-
+        
         while (Test.class.isAssignableFrom(superClass)) {
             for (int i = 0; i < methodsToRun.length; i++) {
                 try {
@@ -98,12 +103,12 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements Powe
             addTest(warning("No tests found in " + theClass.getName()));
         }
     }
-
+    
     @Override
     public Class<?> getTestClass() {
         return testClass;
     }
-
+    
     @Override
     public void run(TestResult result) {
         final ClassLoader classloader = this.getClass().getClassLoader();
@@ -116,9 +121,12 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements Powe
             currentThread.setContextClassLoader(originalClassLoader);
         }
     }
-
+    
     /**
-     * Returns a test which will fail and log a warning message.
+     * Returns a test which will fail and log a warning <code>message</code>.
+     *
+     * @param message warning message text.
+     * @return the test which will fail and log a warning <code>message</code>.
      */
     public static Test warning(final String message) {
         return new TestCase("warning") {
@@ -128,7 +136,7 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements Powe
             }
         };
     }
-
+    
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -138,5 +146,5 @@ public class PowerMockJUnit3RunnerDelegateImpl extends TestSuite implements Powe
         }
         return builder.toString();
     }
-
+    
 }

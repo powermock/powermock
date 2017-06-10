@@ -19,15 +19,17 @@ import com.thoughtworks.xstream.XStream;
 import org.powermock.classloading.spi.DeepClonerSPI;
 
 /**
+ * <p>
  * The purpose of the deep cloner is to create a deep clone of an object. An
  * object can also be cloned to a different class-loader.
- * <p>
+ * </p>
  */
 public class DeepCloner implements DeepClonerSPI {
     private final XStream xStream;
 
 	/**
 	 * Clone using the supplied ClassLoader.
+	 * @param classLoader - the classloader to loaded cloned classes.
 	 */
 	public DeepCloner(ClassLoader classLoader) {
         xStream = new XStream();
@@ -47,6 +49,7 @@ public class DeepCloner implements DeepClonerSPI {
 	/**
 	 * Clones an object.
 	 *
+     * @param objectToClone the object to clone.
 	 * @return A deep clone of the object to clone.
 	 */
 	@SuppressWarnings("unchecked")
