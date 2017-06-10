@@ -1,16 +1,19 @@
 Change log 1.7.0
 -----------------------------
-* Support Mockito 2.8.9 for PowerMock 2.x (thanks to Gregor Stamac @gstamac for pull request)
+* Added supporting Mockito 2.8.9 for PowerMock 2.x (thanks to Gregor Stamac @gstamac for pull request)
+* Added supporting global ignore via configuration (issue # #801)
+* Added supporting org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker via PowerMock configuration (issue #793)
 * Optimizations in powermock-reflect (thanks to Roman Leventov @leventov for pull request) (#724)
-* Migrate from Maven to Gradle (#728)
+* Migrated from Maven to Gradle (#728)
 * Implement #793 PowerMockMaker for Mockito 2: A new version of PowerMockMaker implemented. It does not conflict with Mockito MockMaker any more. Fix for #701 partially does not work any more, because ByteBuddy implementation of MockMaker always intercept calls to equals and return `true` only in case if passed object is the same instance of mocked object.
-* Fix issue #722 IllegalArgumentException is output to standard error (thanks to Kotaro Nanri @k-nanri for pull request)
-* Fix issue #717 Regression: MethodNotFoundException
-* Fix issue #731 No methods matching the name(s) get were found in the class hierarchy for interfaces
-* Fix issue #753 fix to upgrade code to be compatible with later versions of Mockito (thanks to emmaLP @emmaLP for pull request)
-* Fix issue #763 whenNew not matching constructor when null is passed as first or last argument. (thanks to @podarsmarty podarsmarty for pull request)
-* Fix issue #781 Call mocked equals static method instead of real (thanks to @Ilya-Gh Ilya Ghirici for pull request)
-* Fix issue #772: PowerMockIgnorePackagesExtractorImpl should visit interfaces. (thanks to François Jacques @hypnoce for pull request)
+* Fixed issue #722 IllegalArgumentException is output to standard error (thanks to Kotaro Nanri @k-nanri for pull request)
+* Fixed issue #717 Regression: MethodNotFoundException
+* Fixed issue #731 No methods matching the name(s) get were found in the class hierarchy for interfaces
+* Fixed issue #753 fix to upgrade code to be compatible with later versions of Mockito (thanks to emmaLP @emmaLP for pull request)
+* Fixed issue #763 whenNew not matching constructor when null is passed as first or last argument. (thanks to @podarsmarty podarsmarty for pull request)
+* Fixed issue #781 Call mocked equals static method instead of real (thanks to @Ilya-Gh Ilya Ghirici for pull request)
+* Fixed issue #772: PowerMockIgnorePackagesExtractorImpl should visit interfaces. (thanks to François Jacques @hypnoce for pull request)
+* Fixed issue with javax.xml and org.w3c. Previously when PowerMock was used with class which works with XML adding ``@PowerMockIgnore({"org.w3c.*", "javax.xml.*"})` was required. See examples: https://github.com/powermock/powermock-examples-maven/blob/master/spring-mockito-xml/src/test/java/org/powermock/examples/spring/mockito/SpringExampleTest.java
 
 Change log 1.6.6 (2016-11-04)
 -----------------------------
