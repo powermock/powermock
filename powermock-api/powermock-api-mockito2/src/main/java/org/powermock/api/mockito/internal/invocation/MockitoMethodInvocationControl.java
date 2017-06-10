@@ -38,7 +38,6 @@ import org.mockito.invocation.Invocation;
 import org.mockito.invocation.MockHandler;
 import org.mockito.verification.VerificationMode;
 import org.powermock.api.mockito.internal.verification.StaticMockAwareVerificationMode;
-import org.powermock.api.mockito.repackaged.MethodInterceptorFilter;
 import org.powermock.api.support.SafeExceptionRethrower;
 import org.powermock.core.MockGateway;
 import org.powermock.core.MockRepository;
@@ -57,9 +56,7 @@ import java.util.Set;
  * A Mockito implementation of the {@link MethodInvocationControl} interface.
  */
 public class MockitoMethodInvocationControl implements MethodInvocationControl {
-
-    private final MethodInterceptorFilter methodInterceptorFilter;
-
+    
     private final Set<Method> mockedMethods;
     private final Object delegator;
 
@@ -69,84 +66,73 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
      * Even if it is not used in class we still need keep reference to mock object to prevent calling `finalize`
      * method.
      */
-
+    
     private final Object mockInstance;
-
+    private final MockHandler mockHandler;
+    
     /**
      * Creates a new instance.
      *
-     * @param methodInterceptionFilter
-     *            The methodInterceptionFilter to be associated with this
-     *            instance.
-     * @param mockInstance
-     *          The actual mock instance. May be {@code null}. Even
-     *            though the mock instance may not be used it's needed to keep a
-     *            reference to this object otherwise it may be garbage collected
-     *            in some situations. For example when mocking static methods we
-     *            don't return the mock object and thus it will be garbage
-     *            collected (and thus the finalize method will be invoked which
-     *            will be caught by the proxy and the test will fail because we
-     *            haven't setup expectations for this method) because then that
-     *            object has no reference. In order to avoid this we keep a
-     *            reference to this instance here.
-     * @param methodsToMock
-     *            The methods that are mocked for this instance. If
-     *            {@code methodsToMock} is null or empty, all methods for
-     *            the {@code invocationHandler} are considered to be
-     *            mocked.
+     * @param mockInstance  The actual mock instance. May be {@code null}. Even
+     *                      though the mock instance may not be used it's needed to keep a
+     *                      reference to this object otherwise it may be garbage collected
+     *                      in some situations. For example when mocking static methods we
+     *                      don't return the mock object and thus it will be garbage
+     *                      collected (and thus the finalize method will be invoked which
+     *                      will be caught by the proxy and the test will fail because we
+     *                      haven't setup expectations for this method) because then that
+     *                      object has no reference. In order to avoid this we keep a
+     *                      reference to this instance here.
+     * @param mockHandler
+     * @param methodsToMock The methods that are mocked for this instance. If
+     *                      {@code methodsToMock} is null or empty, all methods for
+     *                      the {@code invocationHandler} are considered to be
      */
-    public MockitoMethodInvocationControl(MethodInterceptorFilter methodInterceptionFilter, Object mockInstance,  Method... methodsToMock) {
-        this(methodInterceptionFilter,  null, mockInstance,  methodsToMock);
+    public MockitoMethodInvocationControl(Object mockInstance, final MockHandler mockHandler,
+                                          Method... methodsToMock) {
+        this(mockHandler, null, mockInstance, methodsToMock);
     }
-
+    
     /**
      * Creates a new instance with a delegator. This delegator may be
      * {@code null} (if it is then no calls will be forwarded to this
      * instance). If a delegator exists (i.e. not null) all non-mocked calls
      * will be delegated to that instance.
-     *  @param methodInterceptionFilter
-     *            The methodInterceptionFilter to be associated with this
-     *            instance.
-     * @param delegator
-     *            If the user spies on an instance the original instance must be
-     *            injected here.
-     * @param mockInstance
-     *            The actual mock instance. May be {@code null}. Even
-     *            though the mock instance may not be used it's needed to keep a
-     *            reference to this object otherwise it may be garbage collected
-     *            in some situations. For example when mocking static methods we
-     *            don't return the mock object and thus it will be garbage
-     *            collected (and thus the finalize method will be invoked which
-     *            will be caught by the proxy and the test will fail because we
-     *            haven't setup expectations for this method) because then that
-     *            object has no reference. In order to avoid this we keep a
-     *            reference to this instance here.
-     * @param methodsToMock
-     *            The methods that are mocked for this instance. If
-     *            {@code methodsToMock} is null or empty, all methods for
-     *            the {@code invocationHandler} are considered to be
+     *
+     * @param mockHandler
+     * @param delegator     If the user spies on an instance the original instance must be
+     *                      injected here.
+     * @param mockInstance  The actual mock instance. May be {@code null}. Even
+     *                      though the mock instance may not be used it's needed to keep a
+     *                      reference to this object otherwise it may be garbage collected
+     *                      in some situations. For example when mocking static methods we
+     *                      don't return the mock object and thus it will be garbage
+     *                      collected (and thus the finalize method will be invoked which
+     *                      will be caught by the proxy and the test will fail because we
+     *                      haven't setup expectations for this method) because then that
+     *                      object has no reference. In order to avoid this we keep a
+     *                      reference to this instance here.
+     * @param methodsToMock The methods that are mocked for this instance. If
+     *                      {@code methodsToMock} is null or empty, all methods for
+     *                      the {@code invocationHandler} are considered to be
      */
-    public MockitoMethodInvocationControl(MethodInterceptorFilter methodInterceptionFilter, Object delegator,
+    public MockitoMethodInvocationControl(final MockHandler mockHandler, Object delegator,
                                           Object mockInstance, Method... methodsToMock) {
-        if (methodInterceptionFilter == null) {
-            throw new IllegalArgumentException("Invocation Handler cannot be null.");
-        }
-
+        this.mockHandler = mockHandler;
         this.mockedMethods = toSet(methodsToMock);
         this.mockInstance = mockInstance;
         this.delegator = delegator;
-        this.methodInterceptorFilter = methodInterceptionFilter;
     }
-
+    
     @Override
     public boolean isMocked(Method method) {
         return mockedMethods == null || (mockedMethods.contains(method));
     }
-
+    
     private boolean isInVerificationMode() {
         return getVerificationMode() != null;
     }
-
+    
     private VerificationMode getVerificationMode() {
         try {
             MockingProgress progress = ThreadSafeMockingProgress.mockingProgress();
@@ -155,7 +141,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
             throw new RuntimeException(e);
         }
     }
-
+    
     @SuppressWarnings("unchecked")
     private VerificationMode getVerificationModeFromMockProgress(MockingProgress mockingProgress) {
         if (mockingProgress == null) {
@@ -164,7 +150,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
         Localized<VerificationMode> verificationMode = Whitebox.getInternalState(mockingProgress, Localized.class);
         return verificationMode == null ? null : verificationMode.getObject();
     }
-
+    
     @Override
     public Object invoke(final Object obj, final Method method, final Object[] arguments) throws Throwable {
         /*
@@ -190,21 +176,21 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
             if (WhiteboxImpl.isClass(obj) && inVerificationMode) {
                 handleStaticVerification((Class<?>) obj);
             }
-            returnValue = performIntercept(methodInterceptorFilter, obj, method, arguments);
+            returnValue = performIntercept(obj, method, arguments);
             if (returnValue == null) {
                 return MockGateway.SUPPRESS;
             }
         }
         return returnValue;
     }
-
+    
     private void handleStaticVerification(Class<?> cls) {
         VerificationMode verificationMode = getVerificationMode();
         if (verificationMode instanceof StaticMockAwareVerificationMode) {
             ((StaticMockAwareVerificationMode) verificationMode).setClassMock(cls);
         }
     }
-
+    
     private boolean hasBeenCaughtByMockitoProxy() {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         StackTraceFilter filter = new StackTraceFilter();
@@ -216,14 +202,13 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
         final StackTraceElement[] filteredStackTrace = filter.filter(stackTrace, true);
         return filteredStackTrace.length != stackTrace.length;
     }
-
-    private Object performIntercept(MethodInterceptorFilter invocationHandler, final Object interceptionObject,
+    
+    private Object performIntercept(final Object interceptionObject,
                                     final Method method, Object[] arguments) throws Throwable {
-        MockHandler mockHandler = invocationHandler.getHandler();
-
+        
         final CleanTraceRealMethod cglibProxyRealMethod = new CleanTraceRealMethod(new RealMethod() {
             private static final long serialVersionUID = 4564320968038564170L;
-
+            
             @Override
             public Object invoke(Object target, Object[] arguments) throws Throwable {
                 /*
@@ -248,26 +233,29 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
                 return null;
             }
         });
-
+        
         Invocation invocation = new InvocationImpl(
-                interceptionObject,
-                new DelegatingMethod(method),
-                arguments,
-                SequenceNumber.next(),
-                cglibProxyRealMethod,
-                new LocationImpl()) {
+                                                      interceptionObject,
+                                                      new DelegatingMethod(method),
+                                                      arguments,
+                                                      SequenceNumber.next(),
+                                                      cglibProxyRealMethod,
+                                                      new LocationImpl()) {
             private static final long serialVersionUID = -3679957412502758558L;
-
+            
             @Override
             public String toString() {
                 return new ToStringGenerator().generate(getMock(), getMethod(), getArguments());
             }
         };
-
+        
         try {
             return replaceMatchersBinderIfNeeded(mockHandler).handle(invocation);
         } catch (NotAMockException e) {
-            if(invocation.getMock().getClass().getName().startsWith("java.") &&  MockRepository.getInstanceMethodInvocationControl(invocation.getMock()) != null) {
+            if (invocation.getMock()
+                          .getClass()
+                          .getName()
+                          .startsWith("java.") && MockRepository.getInstanceMethodInvocationControl(invocation.getMock()) != null) {
                 return invocation.callRealMethod();
             } else {
                 throw e;
@@ -277,27 +265,27 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
             throw e;
         }
     }
-
+    
     private MockHandler replaceMatchersBinderIfNeeded(MockHandler mockHandler) {
-        if(!Whitebox.getFieldsOfType(mockHandler, MatchersBinder.class).isEmpty()) {
+        if (!Whitebox.getFieldsOfType(mockHandler, MatchersBinder.class).isEmpty()) {
             Whitebox.setInternalState(mockHandler, new PowerMockMatchersBinder());
-        } else if(!Whitebox.getFieldsOfType(mockHandler, InternalMockHandler.class).isEmpty()) {
+        } else if (!Whitebox.getFieldsOfType(mockHandler, InternalMockHandler.class).isEmpty()) {
             final MockHandler internalMockHandler = Whitebox.getInternalState(mockHandler, MockHandler.class);
             return replaceMatchersBinderIfNeeded(internalMockHandler);
         }
         return mockHandler;
     }
-
+    
     @Override
     public Object replay(Object... mocks) {
         throw new IllegalStateException("Internal error: No such thing as replay exists in Mockito.");
     }
-
+    
     @Override
     public Object reset(Object... mocks) {
         throw new IllegalStateException("Internal error: No such thing as reset exists in Mockito.");
     }
-
+    
     @Override
     public Object verify(Object... mocks) {
         if (mocks == null || mocks.length != 1) {
@@ -305,36 +293,35 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
         }
         return Mockito.verify(mocks[0]);
     }
-
+    
     public void verifyNoMoreInteractions() {
         try {
-            final MockHandler mockHandler = methodInterceptorFilter.getHandler();
             if (mockHandler instanceof MockHandler) {
                 InvocationContainer invocationContainer = Whitebox.invokeMethod(mockHandler, "getInvocationContainer");
                 VerificationDataImpl data = new VerificationDataImpl(invocationContainer, null);
                 VerificationModeFactory.noMoreInteractions().verify(data);
             } else {
                 throw new RuntimeException(
-                        "Cannot perform verifyNoMoreInteractions because of unknown mockhandler type "
-                                + mockHandler.getClass());
+                                              "Cannot perform verifyNoMoreInteractions because of unknown mockhandler type "
+                                                  + mockHandler.getClass());
             }
         } catch (MockitoAssertionError e) {
             InvocationControlAssertionError.updateErrorMessageForVerifyNoMoreInteractions(e);
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException("PowerMock internal error",e);
+            throw new RuntimeException("PowerMock internal error", e);
         }
     }
-
+    
     private Set<Method> toSet(Method... methods) {
         return methods == null ? null : new HashSet<Method>(Arrays.asList(methods));
     }
-
+    
     private boolean hasDelegator() {
         return delegator != null;
     }
-
-    public MethodInterceptorFilter getInvocationHandler() {
-        return methodInterceptorFilter;
+    
+    public MockHandler getMockHandler() {
+        return mockHandler;
     }
 }

@@ -63,7 +63,7 @@ public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockito
 
     @SuppressWarnings("unchecked")
     private void addAnswersForStubbing(MockitoMethodInvocationControl invocationControl) {
-        final MockHandler mockHandler = invocationControl.getInvocationHandler().getHandler();
+        final MockHandler mockHandler = invocationControl.getMockHandler();
         final List list = Whitebox.getInternalState(this, List.class);
         try {
             Whitebox.invokeMethod(mockHandler, "setAnswersForStubbing", list);
