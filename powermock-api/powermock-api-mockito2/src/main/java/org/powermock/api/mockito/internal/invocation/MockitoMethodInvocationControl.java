@@ -206,7 +206,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
     private Object performIntercept(final Object interceptionObject,
                                     final Method method, Object[] arguments) throws Throwable {
         
-        final CleanTraceRealMethod cglibProxyRealMethod = new CleanTraceRealMethod(new RealMethod() {
+        final CleanTraceRealMethod cleanTraceRealMethod = new CleanTraceRealMethod(new RealMethod() {
             private static final long serialVersionUID = 4564320968038564170L;
             
             @Override
@@ -235,22 +235,16 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
         });
         
         Invocation invocation = new InvocationImpl(
-                                                      interceptionObject,
-                                                      new DelegatingMethod(method),
-                                                      arguments,
-                                                      SequenceNumber.next(),
-                                                      cglibProxyRealMethod,
-                                                      new LocationImpl()) {
-            private static final long serialVersionUID = -3679957412502758558L;
-            
-            @Override
-            public String toString() {
-                return new ToStringGenerator().generate(getMock(), getMethod(), getArguments());
-            }
-        };
+            interceptionObject,
+            new DelegatingMethod(method),
+            arguments,
+            SequenceNumber.next(),
+            cleanTraceRealMethod,
+            new LocationImpl()
+        );
         
         try {
-            return replaceMatchersBinderIfNeeded(mockHandler).handle(invocation);
+            return mockHandler.handle(invocation);
         } catch (NotAMockException e) {
             if (invocation.getMock()
                           .getClass()
@@ -264,16 +258,6 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
             InvocationControlAssertionError.updateErrorMessageForMethodInvocation(e);
             throw e;
         }
-    }
-    
-    private MockHandler replaceMatchersBinderIfNeeded(MockHandler mockHandler) {
-        if (!Whitebox.getFieldsOfType(mockHandler, MatchersBinder.class).isEmpty()) {
-            Whitebox.setInternalState(mockHandler, new PowerMockMatchersBinder());
-        } else if (!Whitebox.getFieldsOfType(mockHandler, InternalMockHandler.class).isEmpty()) {
-            final MockHandler internalMockHandler = Whitebox.getInternalState(mockHandler, MockHandler.class);
-            return replaceMatchersBinderIfNeeded(internalMockHandler);
-        }
-        return mockHandler;
     }
     
     @Override
@@ -296,15 +280,9 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
     
     public void verifyNoMoreInteractions() {
         try {
-            if (mockHandler instanceof MockHandler) {
-                InvocationContainer invocationContainer = Whitebox.invokeMethod(mockHandler, "getInvocationContainer");
-                VerificationDataImpl data = new VerificationDataImpl(invocationContainer, null);
-                VerificationModeFactory.noMoreInteractions().verify(data);
-            } else {
-                throw new RuntimeException(
-                                              "Cannot perform verifyNoMoreInteractions because of unknown mockhandler type "
-                                                  + mockHandler.getClass());
-            }
+            InvocationContainer invocationContainer = Whitebox.invokeMethod(mockHandler, "getInvocationContainer");
+            VerificationDataImpl data = new VerificationDataImpl(invocationContainer, null);
+            VerificationModeFactory.noMoreInteractions().verify(data);
         } catch (MockitoAssertionError e) {
             InvocationControlAssertionError.updateErrorMessageForVerifyNoMoreInteractions(e);
             throw e;
