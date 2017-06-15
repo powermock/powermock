@@ -25,6 +25,7 @@ import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 import org.powermock.core.spi.PowerMockPolicy;
 import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.core.transformers.MockTransformer;
+import org.powermock.tests.utils.IgnorePackagesExtractor;
 
 import java.security.ProtectionDomain;
 import java.util.Collections;
@@ -33,62 +34,71 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Mock all classes except system classes.
- * 
- * Notice that there are two different types of classes that are not mocked:
+ * <p>
+ * The classloader loads and modified all classes except:
+ * </p>
  * <ol>
- * <li>system classes are deferred to another classloader</li>
- * <li>testing framework classes are loaded, but not modified</li>
+ * <li>system classes. They are deferred to system classloader</li>
+ * <li>classes that locate in packages that specified as packages to ignore with using {@link #addIgnorePackage(String...)}</li>
  * </ol>
+ * <p>
+ * Testing frameworks classes are loaded, but not modified.
+ * </p>
+ * <p>
+ * The classloader uses list of {@link MockTransformer} to modify classes during loading.
+ * </p>
  *
  * @author Johan Haleby
  * @author Jan Kronquist
+ * @author Artur Zagretdinov
+ * @see ClassLoader#getSystemClassLoader()
+ * @see IgnorePackagesExtractor
  */
 public class MockClassLoader extends DeferSupportingClassLoader {
-
+    
     /**
      * Pass this string to the constructor to indicate that all classes should
      * be modified.
      */
     public static final String MODIFY_ALL_CLASSES = "*";
-
+    
     private static final String CGLIB_ENHANCER = "net.sf.cglib.proxy.Enhancer$EnhancerKey$$KeyFactoryByCGLIB$$";
     private static final String CGLIB_METHOD_WRAPPER = "net.sf.cglib.core.MethodWrapper$MethodWrapperKey$$KeyFactoryByCGLIB";
     private final JavaAssistClassMarker javaAssistClassMarker;
-
+    
     private List<MockTransformer> mockTransformerChain;
-
+    
     private final Set<String> modify = Collections.synchronizedSet(new HashSet<String>());
-
+    
     /*
      * Classes not deferred but loaded by the mock class loader but they're not
      * modified.
      */
     private final String[] packagesToLoadButNotModify = new String[]{"org.junit.", "junit.", "org.testng.",
-            "org.easymock.",
-            "net.sf.cglib.", "javassist.",
-            "org.powermock.modules.junit4.internal.", "org.powermock.modules.junit4.legacy.internal.",
-            "org.powermock.modules.junit3.internal.",
-            "org.powermock"};
-
+        "org.easymock.",
+        "net.sf.cglib.", "javassist.",
+        "org.powermock.modules.junit4.internal.", "org.powermock.modules.junit4.legacy.internal.",
+        "org.powermock.modules.junit3.internal.",
+        "org.powermock"};
+    
     private final String[] specificClassesToLoadButNotModify = new String[]{
-            InvocationSubstitute.class.getName(),
-            PowerMockPolicy.class.getName(),
-            ClassReplicaCreator.class.getName()
+        InvocationSubstitute.class.getName(),
+        PowerMockPolicy.class.getName(),
+        ClassReplicaCreator.class.getName()
     };
-
+    
     /*
      * Classes that should always be deferred regardless of what the user
      * specifies in annotations etc.
      */
     private static final String[] packagesToBeDeferred = new String[]{"org.hamcrest.*", "java.*",
-            "javax.accessibility.*", "sun.*", "org.junit.*", "org.testng.*",
-            "junit.*", "org.pitest.*", "org.powermock.modules.junit4.common.internal.*",
-            "org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate*",
-            "org.powermock.core*", "org.jacoco.agent.rt.*"};
-
+        "javax.accessibility.*", "sun.*", "org.junit.*", "org.testng.*",
+        "junit.*", "org.pitest.*", "org.powermock.modules.junit4.common.internal.*",
+        "org.powermock.modules.junit3.internal.PowerMockJUnit3RunnerDelegate*",
+        "org.powermock.core*", "org.jacoco.agent.rt.*"};
+    
     private final ClassPool classPool = new ClassPool();
-
+    
     /**
      * Creates a new instance of the  based on the
      * following parameters:
@@ -99,7 +109,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
      */
     public MockClassLoader(String[] classesToMock, String[] packagesToDefer, UseClassPathAdjuster useClassPathAdjuster) {
         super(MockClassLoader.class.getClassLoader(), getPackagesToDefer(packagesToDefer));
-
+        
         addClassesToModify(classesToMock);
         classPool.appendClassPath(new ClassClassPath(this.getClass()));
         if (useClassPathAdjuster != null) {
@@ -113,11 +123,11 @@ public class MockClassLoader extends DeferSupportingClassLoader {
         }
         javaAssistClassMarker = JavaAssistClassMarkerFactory.createClassMarker(classPool);
     }
-
+    
     MockClassLoader() {
         this(new String[0], new String[0]);
     }
-
+    
     private static String[] getPackagesToDefer(final String[] additionalDeferPackages) {
         final int additionalIgnorePackagesLength = additionalDeferPackages == null ? 0 : additionalDeferPackages.length;
         final int defaultDeferPackagesLength = packagesToBeDeferred.length;
@@ -126,12 +136,12 @@ public class MockClassLoader extends DeferSupportingClassLoader {
         if (allIgnoreLength > defaultDeferPackagesLength) {
             System.arraycopy(packagesToBeDeferred, 0, allPackagesToBeIgnored, 0, defaultDeferPackagesLength);
             System.arraycopy(additionalDeferPackages != null ? additionalDeferPackages : new String[0], 0, allPackagesToBeIgnored, defaultDeferPackagesLength,
-                    additionalIgnorePackagesLength);
+                             additionalIgnorePackagesLength);
             return allPackagesToBeIgnored;
         }
         return packagesToBeDeferred;
     }
-
+    
     /**
      * Creates a new instance of the  based on the
      * following parameters:
@@ -143,7 +153,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
     public MockClassLoader(String[] classesToMock, String[] packagesToDefer) {
         this(classesToMock, packagesToDefer, null);
     }
-
+    
     /**
      * Creates a new instance of the  based on the
      * following parameters:
@@ -153,7 +163,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
     public MockClassLoader(String[] classesToMock, UseClassPathAdjuster useClassPathAdjuster) {
         this(classesToMock, new String[0], useClassPathAdjuster);
     }
-
+    
     /**
      * Creates a new instance of the  based on the
      * following parameters:
@@ -163,7 +173,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
     public MockClassLoader(String[] classesToMock) {
         this(classesToMock, new String[0], null);
     }
-
+    
     /**
      * Add classes that will be loaded by the mock classloader, i.e. these
      * classes will be byte-code manipulated to allow for testing. Any classes
@@ -184,11 +194,11 @@ public class MockClassLoader extends DeferSupportingClassLoader {
             }
         }
     }
-
+    
     @Override
     protected Class<?> loadModifiedClass(String s) throws ClassFormatError, ClassNotFoundException {
         Class<?> loadedClass;
-
+        
         Class<?> deferClass = deferTo.loadClass(s);
         if (shouldModify(s) && !shouldLoadWithMockClassloaderWithoutModifications(s)) {
             loadedClass = loadMockClass(s, deferClass.getProtectionDomain());
@@ -197,7 +207,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
         }
         return loadedClass;
     }
-
+    
     private boolean shouldModify(String className) {
         final boolean shouldIgnoreClass = shouldIgnore(deferPackages, className);
         final boolean shouldModifyAll = shouldModifyAll();
@@ -212,13 +222,13 @@ public class MockClassLoader extends DeferSupportingClassLoader {
             return WildcardMatcher.matchesAny(modify, className);
         }
     }
-
+    
     private boolean shouldModifyAll() {
         return (modify.size() == 1 && modify.iterator().next().equals(MODIFY_ALL_CLASSES));
     }
-
+    
     private Class<?> loadUnmockedClass(String name, ProtectionDomain protectionDomain)
-            throws ClassFormatError, ClassNotFoundException {
+        throws ClassFormatError, ClassNotFoundException {
         byte bytes[] = null;
         try {
             /*
@@ -247,26 +257,26 @@ public class MockClassLoader extends DeferSupportingClassLoader {
             } else {
                 throw new RuntimeException(e);
             }
-
+            
         }
         return bytes == null ? null : defineClass(name, bytes, 0, bytes.length, protectionDomain);
     }
-
+    
     /**
      * Load a mocked version of the class.
      */
     private Class<?> loadMockClass(String name, ProtectionDomain protectionDomain) {
-
+        
         final byte[] clazz;
-
+        
         ClassPool.doPruning = false;
         try {
             CtClass type = classPool.get(name);
-
+            
             for (MockTransformer transformer : mockTransformerChain) {
                 type = transformer.transform(type);
             }
-
+            
             javaAssistClassMarker.mark(type);
 
             /*
@@ -278,26 +288,26 @@ public class MockClassLoader extends DeferSupportingClassLoader {
              * CtClass object is removed from the ClassPool.
              */
             type.detach();
-
-
+            
+            
             clazz = type.toBytecode();
         } catch (Exception e) {
             throw new IllegalStateException("Failed to transform class with name " + name + ". Reason: "
-                    + e.getMessage(), e);
+                                                + e.getMessage(), e);
         }
-
+        
         return defineClass(name, clazz, 0, clazz.length, protectionDomain);
     }
-
+    
     public void setMockTransformerChain(List<MockTransformer> mockTransformerChain) {
         this.mockTransformerChain = mockTransformerChain;
     }
-
+    
     @Override
     protected boolean shouldModifyClass(String s) {
         return modify.contains(s);
     }
-
+    
     @Override
     protected boolean shouldLoadUnmodifiedClass(String className) {
         for (String classNameToLoadButNotModify : specificClassesToLoadButNotModify) {
@@ -307,7 +317,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
         }
         return false;
     }
-
+    
     private boolean shouldLoadWithMockClassloaderWithoutModifications(String className) {
         if (className.startsWith("org.powermock.example")) {
             return false;
@@ -319,5 +329,5 @@ public class MockClassLoader extends DeferSupportingClassLoader {
         }
         return false;
     }
-
+    
 }
