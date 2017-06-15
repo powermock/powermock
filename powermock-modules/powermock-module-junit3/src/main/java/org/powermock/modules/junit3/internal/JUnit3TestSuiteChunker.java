@@ -23,6 +23,10 @@ import org.powermock.tests.utils.RunnerTestSuiteChunker;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 
+/**
+ * @deprecated Since PowerMock 2.0 Supporting jUnit 3 will be dropped.
+ */
+@Deprecated
 public interface JUnit3TestSuiteChunker extends RunnerTestSuiteChunker {
 	
 	/**

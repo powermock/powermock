@@ -26,8 +26,9 @@ import java.util.Enumeration;
 
 /**
  * A custom JUnit 3 Suite that must be used to run PowerMock tests under JUnit3.
- * 
+ * @deprecated Since PowerMock 2.0 Supporting jUnit 3 will be dropped.
  */
+@Deprecated
 public class PowerMockSuite extends TestSuite {
 
 	private JUnit3TestSuiteChunker testChunker;

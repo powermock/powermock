@@ -20,6 +20,10 @@ import junit.framework.TestResult;
 
 import java.util.Enumeration;
 
+/**
+ * @deprecated Since PowerMock 2.0 Supporting jUnit 3 will be dropped.
+ */
+@Deprecated
 public interface PowerMockJUnit3RunnerDelegate {
 
 	public Class<?> getTestClass();
