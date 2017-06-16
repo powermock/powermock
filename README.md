@@ -15,9 +15,9 @@ When writing unit tests it is often useful to bypass encapsulation and therefore
 Please note that PowerMock is mainly intended for people with expert knowledge in unit testing. Putting it in the hands of junior developers may cause more harm than good.
 
 ## News
+* 2017-06-16: PowerMock 1.7.0 has been released with support for Mockito 2 (not only beta versions) and new feature such as global `@PowerMockIgnore` As well as bug fixes and other improvements. See [release notes](https://github.com/powermock/powermock/releases/tag/powermock-1.7.0) and [change log](https://raw.githubusercontent.com/powermock/powermock/master/changelog.txt) for details. 
 * 2017-02-03: Johan blogs about how to mock slf4j with PowerMock at his [blog](http://code.haleby.se/2017/02/03/a-case-for-powermock/)
 * 2016-11-04: PowerMock 1.6.6 is released with bug fixes and other improvements. See [release notes](https://github.com/powermock/powermock/wiki/Release-Notes-PowerMock-1.6.6) and [change log](https://raw.githubusercontent.com/powermock/powermock/master/changelog.txt) for details.
-* 2016-05-01: PowerMock 1.6.5 has been released with new features such as `@TestSubject` support for [EasyMock](http://easymock.org/), experimental support for [Mockito 2](http://mockito.org/) as well as bug fixes and other improvements. See [release notes](https://github.com/powermock/powermock/wiki/Release-Notes-PowerMock-1.6.5) and [change log](https://raw.githubusercontent.com/powermock/powermock/master/changelog.txt) for details. We also want to give a warm welcome to our new core committer [Arthur Zagretdinov](https://github.com/thekingnothing).
 
 [Older News](https://github.com/powermock/powermock/wiki/OldNews)
 
