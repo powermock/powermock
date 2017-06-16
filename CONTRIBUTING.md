@@ -1,19 +1,25 @@
 # Contributing to PowerMock #
 
+First of all, thank you for considering contributing to PowerMock. Please, read the guideline before start. Following these guidelines helps to communicate that you respect the time of the developers managing and developing PowerMock.
+
+## Content ##
+
+* [If looking for support](#if-looking-for-support)
+* [Pull request criteria](#pull-request-criteria)
+* [General info](#general-info)
+* [More on pull requests](#more-on-pull-requests)
+
+
 ## If looking for support ##
 
 Search / Ask question on [stackoverflow](https://stackoverflow.com/questions/tagged/powermock)
 Go to the PowerMock  [mailing-list](https://groups.google.com/forum/#!forum/powermock/) (moderated)
 Issues should always have a [Short, Self Contained, Correct (Compilable)](http://sscce.org), Example (same as any question on stackoverflow.com)
 
-## Content ##
-
-* [Pull request criteria](#pull-request-criteria)
-
 ## Pull request criteria ##
 * At least one commit message in the PR starts with Fixes #id : where id is an [issue tracker](https://github.com/powermock/powermock/issues) id. This allows track release notes. Also GitHub will track the issue and [close it](https://github.com/blog/1386-closing-issues-via-commit-messages) when the PR is merged.
 
-* Use @since tags for new public APIs
+* Use `@since` tags for new public APIs
 
 * Include tests
 

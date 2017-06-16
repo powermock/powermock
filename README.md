@@ -50,6 +50,12 @@ Please note that PowerMock is mainly intended for people with expert knowledge i
 ## Support and discussion
 Join the mailing-list [here](http://groups.google.com/group/powermock) for questions, feedback and support.
 
+## For new contributors
+ 
+# Contributing to PowerMock #
+
+First of all, thank you for considering contributing to PowerMock. Please, read [the guideline](CONTRIBUTING.md) for a new contributor before start. 
+
 ## Links
 * [Change log](https://raw.githubusercontent.com/powermock/powermock/master/changelog.txt)
 * [Mailing list for questions and support](http://groups.google.com/group/powermock)
