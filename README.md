@@ -16,36 +16,36 @@ Please note that PowerMock is mainly intended for people with expert knowledge i
 
 ## News
 * 2017-02-03: Johan blogs about how to mock slf4j with PowerMock at his [blog](http://code.haleby.se/2017/02/03/a-case-for-powermock/)
-* 2016-11-04: PowerMock 1.6.6 is released with bug fixes and other improvements. See [release notes](https://github.com/jayway/powermock/wiki/Release-Notes-PowerMock-1.6.6) and [change log](https://raw.githubusercontent.com/jayway/powermock/master/changelog.txt) for details.
-* 2016-05-01: PowerMock 1.6.5 has been released with new features such as `@TestSubject` support for [EasyMock](http://easymock.org/), experimental support for [Mockito 2](http://mockito.org/) as well as bug fixes and other improvements. See [release notes](https://github.com/jayway/powermock/wiki/Release-Notes-PowerMock-1.6.5) and [change log](https://raw.githubusercontent.com/jayway/powermock/master/changelog.txt) for details. We also want to give a warm welcome to our new core committer [Arthur Zagretdinov](https://github.com/thekingnothing).
+* 2016-11-04: PowerMock 1.6.6 is released with bug fixes and other improvements. See [release notes](https://github.com/powermock/powermock/wiki/Release-Notes-PowerMock-1.6.6) and [change log](https://raw.githubusercontent.com/powermock/powermock/master/changelog.txt) for details.
+* 2016-05-01: PowerMock 1.6.5 has been released with new features such as `@TestSubject` support for [EasyMock](http://easymock.org/), experimental support for [Mockito 2](http://mockito.org/) as well as bug fixes and other improvements. See [release notes](https://github.com/powermock/powermock/wiki/Release-Notes-PowerMock-1.6.5) and [change log](https://raw.githubusercontent.com/powermock/powermock/master/changelog.txt) for details. We also want to give a warm welcome to our new core committer [Arthur Zagretdinov](https://github.com/thekingnothing).
 
-[Older News](https://github.com/jayway/powermock/wiki/OldNews)
+[Older News](https://github.com/powermock/powermock/wiki/OldNews)
 
 ## Documentation
-* [Getting Started](https://github.com/jayway/powermock/wiki/Getting-Started)
-* [Downloads](https://github.com/jayway/powermock/wiki/Downloads)
-* [Motivation](https://github.com/jayway/powermock/wiki/Motivation)
+* [Getting Started](https://github.com/powermock/powermock/wiki/Getting-Started)
+* [Downloads](https://github.com/powermock/powermock/wiki/Downloads)
+* [Motivation](https://github.com/powermock/powermock/wiki/Motivation)
 * Javadoc
   * [EasyMock API extension](http://www.javadoc.io/doc/org.powermock/powermock-api-easymock/1.7.0) ([PowerMock class](http://static.javadoc.io/org.powermock/powermock-api-easymock/1.7.0/org/powermock/api/easymock/PowerMock.html))
   * [Mockito API extension](http://www.javadoc.io/doc/org.powermock/powermock-api-mockito/1.7.0) ([PowerMockito class](http://static.javadoc.io/org.powermock/powermock-api-mockito/1.7.0/org/powermock/api/mockito/PowerMockito.html))
   * [Mockito2 API extension](http://www.javadoc.io/doc/org.powermock/powermock-api-mockito2/1.7.0) ([PowerMockito class](http://static.javadoc.io/org.powermock/powermock-api-mockito2/1.7.0/org/powermock/api/mockito/PowerMockito.html))
   * [PowerMock Reflect](http://www.javadoc.io/doc/org.powermock/powermock-reflect/1.7.0) ([Whitebox class](http://static.javadoc.io/org.powermock/powermock-reflect/1.7.0/org/powermock/reflect/Whitebox.html))
 * Common
-  * [Bypass Encapsulation](https://github.com/jayway/powermock/wiki/BypassEncapsulation)
-  * [Suppress Unwanted Behavior](https://github.com/jayway/powermock/wiki/SuppressUnwantedBehavior)
-  * [Test Listeners](https://github.com/jayway/powermock/wiki/TestListeners)
-  * [Mock Policies](https://github.com/jayway/powermock/wiki/MockPolicies)
-  * [Mock system classes](https://github.com/jayway/powermock/wiki/MockSystem)
-* [TestNG](https://github.com/jayway/powermock/wiki/TestNG_usage)  
-* [EasyMock](https://github.com/jayway/powermock/wiki/EasyMock)
-* [Mockito](Mockito)
-* [Delegate to another JUnit Runner](https://github.com/jayway/powermock/wiki/JUnit_Delegating_Runner)
-* [Tutorial](https://github.com/jayway/powermock/wiki/PowerMock_tutorial)
-* [Bootstrap using a JUnit Rule](https://github.com/jayway/powermock/wiki/PowerMockRule)
-* [Bootstrap using a Java Agent](https://github.com/jayway/powermock/wiki/PowerMockAgent)
-* [OSGi](https://github.com/jayway/powermock/wiki/osgi)
-* [Release Notes](https://github.com/jayway/powermock/wiki/ReleaseNotes)
-* [FAQ](https://github.com/jayway/powermock/wiki/FAQ) 
+  * [PowerMock Configuration](https://github.com/powermock/powermock/wiki/PowerMock-Configuration)
+  * [Bypass Encapsulation](https://github.com/powermock/powermock/wiki/Bypass-Encapsulation)
+  * [Suppress Unwanted Behavior](https://github.com/powermock/powermock/wiki/Suppress-Unwanted-Behavior)
+  * [Test Listeners](https://github.com/powermock/powermock/wiki/Test-Listeners)
+  * [Mock Policies](https://github.com/powermock/powermock/wiki/Mock-Policies)
+  * [Mock system classes](https://github.com/powermock/powermock/wiki/Mock-System)
+* [EasyMock](https://github.com/powermock/powermock/wiki/EasyMock)
+* [Mockito](https://github.com/powermock/powermock/wiki/Mockito)
+* [TestNG](https://github.com/powermock/powermock/wiki/TestNG)  
+* [Delegate to another JUnit Runner](https://github.com/powermock/powermock/wiki/JUnit_Delegating_Runner)
+* [Bootstrap using a JUnit Rule](https://github.com/powermock/powermock/wiki/PowerMockRule)
+* [Bootstrap using a Java Agent](https://github.com/powermock/powermock/wiki/PowerMockAgent)
+* [OSGi](https://github.com/powermock/powermock/wiki/osgi)
+* [Release Notes](https://github.com/powermock/powermock/wiki/ReleaseNotes)
+* [FAQ](https://github.com/powermock/powermock/wiki/FAQ) 
 
 ## Support and discussion
 Join the mailing-list [here](http://groups.google.com/group/powermock) for questions, feedback and support.
