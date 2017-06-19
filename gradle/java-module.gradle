@@ -1,6 +1,7 @@
 repositories {
     mavenCentral()
     jcenter()
+    mavenLocal()
 }
 
 group = "org.powermock"

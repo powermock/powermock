@@ -204,7 +204,8 @@ public class PowerMockito extends MemberModifier {
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> T spy(T object) {
-        return DefaultMockCreator.mock((Class<T>) Whitebox.getType(object), false, true, object, null, (Method[]) null);
+        MockSettings mockSettings = Mockito.withSettings().defaultAnswer(Mockito.CALLS_REAL_METHODS);
+        return DefaultMockCreator.mock((Class<T>) Whitebox.getType(object), false, true, object, mockSettings, (Method[]) null);
     }
 
     /**
@@ -216,7 +217,8 @@ public class PowerMockito extends MemberModifier {
      */
     public static synchronized <T> void spy(Class<T> type) {
         ThreadSafeMockingProgress.mockingProgress().reset();
-        DefaultMockCreator.mock(type, true, true, type, null, (Method[]) null);
+        MockSettings mockSettings = Mockito.withSettings().defaultAnswer(Mockito.CALLS_REAL_METHODS);
+        DefaultMockCreator.mock(type, true, true, type, mockSettings, (Method[]) null);
     }
 
     /**

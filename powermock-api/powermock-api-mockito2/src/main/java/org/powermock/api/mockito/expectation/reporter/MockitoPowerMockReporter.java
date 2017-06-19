@@ -22,9 +22,6 @@ import org.powermock.core.reporter.PowerMockReporter;
 
 import static org.powermock.utils.StringJoiner.join;
 
-/**
- *
- */
 public class MockitoPowerMockReporter implements PowerMockReporter {
 
     @Override
