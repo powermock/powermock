@@ -1,4 +1,4 @@
-def publishableModules = allprojects - rootProject - project(":powermock-api") - project(":powermock-classloading") - project(":powermock-modules") - project(":tests") - project(":tests").subprojects - project(":powermock-release") - project(":powermock-release").subprojects
+def publishableModules = allprojects - rootProject - project(":powermock-api")  - project(":powermock-classloading") - project(":powermock-modules") - project(":tests") - project(":tests").subprojects  //- project(":powermock-release") - project(":powermock-release").subprojects
 
 configure(publishableModules) { project ->
     apply from: "${gradleScriptDir}/java-module.gradle"
@@ -30,17 +30,6 @@ if (project.hasProperty('checkJava6Compatibility') && !System.getenv("SKIP_RELEA
     }
 }
 
-def mockitoDependsModules = [
-        project(":powermock-core"),
-        project(":powermock-api:powermock-api-mockito-common"),
-        project(":powermock-api:powermock-api-mockito"),
-        project(":powermock-api:powermock-api-mockito2")
-]
-
-configure(mockitoDependsModules) { project ->
-    apply from: "${gradleScriptDir}/mockito-module.gradle"
-}
-
 project(":powermock-reflect") {
     description = "Various utilities for accessing internals of a class."
 
@@ -69,11 +58,8 @@ project(":powermock-core") {
         testCompile("org.assertj:assertj-core:${assertjVersion}")
         testCompile(project(":tests:utils"))
 
-        testCompile("org.mockito:mockito-core:${mockito1Version}")
-        mockito2("org.mockito:mockito-core:${mockito2Version}")
+        testCompile("org.mockito:mockito-core:${mockitoVersion}")
     }
-
-    check.dependsOn mockito2Test
 }
 
 project(":powermock-api") {
@@ -112,69 +98,15 @@ project(":powermock-api:powermock-api-easymock") {
     }
 }
 
-project(":powermock-api:powermock-api-mockito-common") {
-    description = "PowerMock API for Mockito. Common classes."
 
-    dependencies {
-        compile(project(":powermock-api:powermock-api-support"))
 
-        testCompile("junit:junit:${junitVersion}") {
-            exclude group: 'org.hamcrest', module: 'hamcrest-core'
-        }
-        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
-
-        provided("org.mockito:mockito-core:${mockito1Version}")
-
-        mockito2(project(":powermock-api:powermock-api-support"))
-        mockito2("org.mockito:mockito-core:${mockito2Version}")
-    }
-}
-
-project(":powermock-api:powermock-api-mockito") {
-    description = "PowerMock API for Mockito 1.+.."
-
-    sourceSets {
-        main {
-            compileClasspath = compileClasspath + configurations.provided;
-            runtimeClasspath = output + compileClasspath + configurations.provided
-        }
-        test {
-            compileClasspath = compileClasspath + configurations.provided + configurations.provided
-            runtimeClasspath = output + compileClasspath + configurations.provided
-        }
-    }
-
-    dependencies {
-        compile(project(":powermock-api:powermock-api-mockito-common"))
-        compile("org.mockito:mockito-core:${mockito1Version}")
-
-        testCompile("junit:junit:${junitVersion}") {
-            exclude group: 'org.hamcrest', module: 'hamcrest-core'
-        }
-        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
-
-    }
-}
-
-project(":powermock-api:powermock-api-mockito2") {
+project(":powermock-api:powermock-api-mockito2"){
     description = "PowerMock API for Mockito 2.+.."
 
-    sourceSets {
-        main {
-            compileClasspath = compileClasspath + configurations.provided
-            runtimeClasspath = output + compileClasspath + configurations.provided
-        }
-        test {
-            compileClasspath = compileClasspath + configurations.provided + configurations.provided
-            runtimeClasspath = output + compileClasspath + configurations.provided
-        }
-    }
-
     dependencies {
-        compile(project(":powermock-api:powermock-api-mockito-common"))
-        compile("org.mockito:mockito-core:${mockito2Version}")
+
+        compile(project(":powermock-api:powermock-api-support"))
+        compile("org.mockito:mockito-core:${mockitoVersion}")
 
         testCompile("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'

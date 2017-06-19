@@ -1,12 +1,6 @@
-
-List mockito1Libs = [
+List mockitoLibs = [
         project(":powermock-api:powermock-api-mockito2"),
-        "org.mockito:mockito-core:${mockito2Version}"
-]
-
-List mockito2Lbs = [
-        project(":powermock-api:powermock-api-mockito2"),
-        "org.mockito:mockito-core:${mockito2Version}"
+        "org.mockito:mockito-core:${mockitoVersion}"
 ]
 
 configure(project.subprojects){ subproject ->
@@ -17,14 +11,8 @@ configure(project.subprojects){ subproject ->
         testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
         testCompile("org.assertj:assertj-core:${assertjVersion}")
 
-        testCompile mockito1Libs
-        testCompile project(path:":powermock-api:powermock-api-mockito-common")
-
-//        mockito2 mockito2Lbs
-//        mockito2 project(path:":powermock-api:powermock-api-mockito-common", configuration: "mockito2")
+        testCompile mockitoLibs
     }
-
-    check.dependsOn mockito2Test
 }
 
 project(":tests:mockito:junit4") {
@@ -92,10 +80,6 @@ project(":tests:mockito:junit4-agent"){
     def pathToAgent = project(":powermock-modules:powermock-module-javaagent").jar.outputs.files.getFiles().getAt(0)
 
     test {
-        jvmArgs "-javaagent:${pathToAgent}"
-    }
-
-    mockito2Test {
         jvmArgs "-javaagent:${pathToAgent}"
     }
 }
@@ -169,14 +153,7 @@ project(":tests:mockito:testng"){
     test{
         useTestNG(){
             suites 'suite.xml'
-            environment "mockitoVersion", "${mockito1Version}"
-        }
-    }
-
-    mockito2Test{
-        useTestNG(){
-            suites 'suite.xml'
-            environment "mockitoVersion", "${mockito2Version}"
+            environment "mockitoVersion", "${mockitoVersion}"
         }
     }
 }

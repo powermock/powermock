@@ -32,8 +32,7 @@ ext{
     junitRulesVersion = "4.8.2"
     testngVersion = "6.9.10"
     xstreamVersion = "1.4.9"
-    mockito1Version = "1.10.19"
-    mockito2Version = "2.8.9"
+    mockitoVersion = "2.8.48"
     servletVersion = "2.5"
     systemRulesVersion = "1.16.0"
     jacocoVersion = "0.7.7.201606060606"
@@ -58,6 +57,7 @@ allprojects{
 }
 
 apply from: "${gradleScriptDir}/modules.gradle"
+//apply from: "${gradleScriptDir}/release/release.gradle"
 
 jar{
     enabled = false
