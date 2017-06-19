@@ -36,38 +36,6 @@ project(":powermock-release:powermock-easymock") {
     }
 }
 
-project(":powermock-release:powermock-mockito") {
-
-    description = "Single jar containing binaries for PowerMock core, Mockito and all test framework modules."
-
-    def shadowDependencies = [
-            project(":powermock-reflect"),
-            project(":powermock-core"),
-            project(":powermock-classloading:powermock-classloading-base"),
-            project(":powermock-api:powermock-api-support"),
-            project(":powermock-api:powermock-api-mockito-common"),
-            project(":powermock-api:powermock-api-mockito"),
-            project(":powermock-modules:powermock-module-junit3"),
-            project(":powermock-modules:powermock-module-junit4-common"),
-            project(":powermock-modules:powermock-module-junit4"),
-            project(":powermock-modules:powermock-module-junit4-legacy"),
-            project(":powermock-modules:powermock-module-testng"),
-            project(":powermock-modules:powermock-module-testng-common")
-    ]
-
-    dependencies {
-        runtime shadowDependencies
-    }
-
-    shadowJar {
-        shadowDependencies.each {
-            from(it.sourceSets.main.allSource) {
-                include "**/*.java"
-            }
-        }
-    }
-}
-
 project(":powermock-release:powermock-mockito2") {
 
     description = "Single jar containing binaries for PowerMock core, Mockito 2.x and all test framework modules."
@@ -77,7 +45,6 @@ project(":powermock-release:powermock-mockito2") {
             project(":powermock-core"),
             project(":powermock-classloading:powermock-classloading-base"),
             project(":powermock-api:powermock-api-support"),
-            project(":powermock-api:powermock-api-mockito-common"),
             project(":powermock-api:powermock-api-mockito2"),
             project(":powermock-modules:powermock-module-junit3"),
             project(":powermock-modules:powermock-module-junit4-common"),
@@ -142,7 +109,7 @@ project(":powermock-release:powermock-mockito-junit") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
         compile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        compile("org.mockito:mockito-core:${mockito1Version}")
+        compile("org.mockito:mockito-core:${mockitoVersion}")
         compile("org.objenesis:objenesis:${objenesisVersion}")
         compile("org.javassist:javassist:${javassistVersion}")
         compile("cglib:cglib-nodep:${cglibVersion}")
@@ -157,7 +124,7 @@ project(":powermock-release:powermock-mockito-testng") {
         compile(project(path:":powermock-release:powermock-mockito", configuration: "shadow"))
         compile("org.testng:testng:${testngVersion}")
         compile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        compile("org.mockito:mockito-core:${mockito1Version}")
+        compile("org.mockito:mockito-core:${mockitoVersion}")
         compile("org.objenesis:objenesis:${objenesisVersion}")
         compile("org.javassist:javassist:${javassistVersion}")
         compile("cglib:cglib-nodep:${cglibVersion}")

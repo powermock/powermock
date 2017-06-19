@@ -18,12 +18,11 @@ package org.powermock.api.mockito.internal.mockcreation;
 
 import org.mockito.MockSettings;
 import org.mockito.Mockito;
-import org.mockito.internal.InternalMockHandler;
 import org.mockito.internal.configuration.plugins.Plugins;
-import org.mockito.internal.creation.MockSettingsImpl;
 import org.mockito.internal.handler.MockHandlerFactory;
-import org.mockito.internal.util.MockNameImpl;
 import org.mockito.internal.util.reflection.LenientCopyTool;
+import org.mockito.invocation.MockHandler;
+import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.MockMaker;
 import org.powermock.api.mockito.internal.invocation.MockitoMethodInvocationControl;
 import org.powermock.core.ClassReplicaCreator;
@@ -55,8 +54,6 @@ public class DefaultMockCreator extends AbstractMockCreator {
         
         validateType(type, isStatic, isSpy);
         
-        final String mockName = toInstanceName(type, mockSettings);
-        
         MockRepository.addAfterMethodRunner(new MockitoStateCleanerRunnable());
         
         final Class<T> typeToMock;
@@ -66,7 +63,7 @@ public class DefaultMockCreator extends AbstractMockCreator {
             typeToMock = type;
         }
         
-        final MockData<T> mockData = createMethodInvocationControl(mockName, typeToMock, methods, isSpy, delegator, mockSettings);
+        final MockData<T> mockData = createMethodInvocationControl(typeToMock, methods, isSpy, delegator, mockSettings);
         
         T mock = mockData.getMock();
         if (isFinalJavaSystemClass(type) && !isStatic) {
@@ -92,26 +89,13 @@ public class DefaultMockCreator extends AbstractMockCreator {
     }
     
     @SuppressWarnings("unchecked")
-    private static <T> MockData<T> createMethodInvocationControl(final String mockName, Class<T> type,
-                                                                 Method[] methods, boolean isSpy, Object delegator,
-                                                                 MockSettings mockSettings) {
-        final MockSettingsImpl<T> settings;
+    private <T> MockData<T> createMethodInvocationControl(Class<T> type, Method[] methods, boolean isSpy, Object delegator,
+                                                          MockSettings mockSettings) {
         final MockMaker mockMaker = getMockMaker();
         
-        if (mockSettings == null) {
-            settings = (MockSettingsImpl) Mockito.withSettings();
-        } else {
-            settings = (MockSettingsImpl) mockSettings;
-        }
+        final MockCreationSettings<T> settings = getMockSettings(type, mockSettings);
         
-        if (isSpy) {
-            settings.defaultAnswer(Mockito.CALLS_REAL_METHODS);
-        }
-        
-        settings.setMockName(new MockNameImpl(mockName));
-        settings.setTypeToMock(type);
-        
-        InternalMockHandler mockHandler = MockHandlerFactory.createMockHandler(settings);
+        MockHandler mockHandler = MockHandlerFactory.createMockHandler(settings);
         
         T mock = mockMaker.createMock(settings, mockHandler);
         
@@ -122,13 +106,21 @@ public class DefaultMockCreator extends AbstractMockCreator {
         }
         final MockitoMethodInvocationControl invocationControl =
             new MockitoMethodInvocationControl(
-                mockHandler,
-                isSpy && delegator == null ? new Object() : delegator,
-                mock,
-                methods
+                                                  mockHandler,
+                                                  isSpy && delegator == null ? new Object() : delegator,
+                                                  mock,
+                                                  methods
             );
         
         return new MockData<T>(invocationControl, mock);
+    }
+    
+    private static <T> MockCreationSettings<T> getMockSettings(final Class<T> type, final MockSettings mockSettings) {
+        MockSettings settings = mockSettings;
+        if (mockSettings == null) {
+            settings = Mockito.withSettings();
+        }
+        return settings.build(type);
     }
     
     private static MockMaker getMockMaker() {
@@ -141,24 +133,6 @@ public class DefaultMockCreator extends AbstractMockCreator {
         } finally {
             Thread.currentThread().setContextClassLoader(originalCL);
         }
-    }
-    
-    private String toInstanceName(Class<?> clazz, final MockSettings mockSettings) {
-        // if the settings define a mock name, use it
-        if (mockSettings instanceof MockSettingsImpl<?>) {
-            String settingName = ((MockSettingsImpl<?>) mockSettings).getName();
-            if (settingName != null) {
-                return settingName;
-            }
-        }
-        
-        // else, use the class name as mock name
-        String className = clazz.getSimpleName();
-        if (className.length() == 0) {
-            return clazz.getName();
-        }
-        // lower case first letter
-        return className.substring(0, 1).toLowerCase() + className.substring(1);
     }
     
     /**
