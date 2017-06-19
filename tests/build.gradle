@@ -18,12 +18,6 @@ configure(subprojects) { project ->
     apply from: "${gradleScriptDir}/java-module.gradle"
 }
 
-def mockitoDependsModules = project(":tests:mockito").subprojects + project(":tests:java8").subprojects
-
-configure(mockitoDependsModules) { project ->
-    apply from: "${gradleScriptDir}/mockito-module.gradle"
-}
-
 project(":tests:utils"){
     description = "Common set of classes to test PowerMock features in mocking framework modules."
 

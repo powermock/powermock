@@ -18,6 +18,8 @@ package org.powermock.api.mockito.internal.configuration;
 
 import org.mockito.Mock;
 import org.mockito.internal.configuration.InjectingAnnotationEngine;
+import org.mockito.internal.configuration.plugins.Plugins;
+import org.powermock.api.mockito.internal.mockcreation.DefaultMockCreator;
 
 /**
  * The same as {@link InjectingAnnotationEngine} with the exception that it
@@ -25,14 +27,28 @@ import org.mockito.internal.configuration.InjectingAnnotationEngine;
  * {@link Mock}.
  */
 public class PowerMockitoInjectingAnnotationEngine extends InjectingAnnotationEngine {
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public void process(Class<?> context, Object testClass) {
-		// this will create @Spies:
-		new PowerMockitoSpyAnnotationEngine().process(context, testClass);
-
-		// this injects mocks
+    
+    @SuppressWarnings("deprecation")
+    @Override
+    public void process(Class<?> context, Object testClass) {
+        // this will create @Spies:
+        new PowerMockitoSpyAnnotationEngine().process(context, testClass);
+        
+        preLoadPluginLoader();
+        
+        // this injects mocks
         injectMocks(testClass);
-	}
+    }
+    
+    private void preLoadPluginLoader() {
+        final ClassLoader originalCL = Thread.currentThread().getContextClassLoader();
+        
+        Thread.currentThread().setContextClassLoader(DefaultMockCreator.class.getClassLoader());
+        
+        try {
+            Plugins.getMockMaker();
+        } finally {
+            Thread.currentThread().setContextClassLoader(originalCL);
+        }
+    }
 }

@@ -73,14 +73,25 @@ public class DelegatingToConstructorsOngoingStubbing<T> implements OngoingStubbi
             }
         }.invoke();
     }
-
+    
     @Override
-    public OngoingStubbing<T> thenThrow(final Class<? extends Throwable>... throwableClasses) {
-        stubbing.thenThrow(throwableClasses);
+    public OngoingStubbing<T> thenThrow(final Class<? extends Throwable> throwableType) {
+        stubbing.thenThrow(throwableType);
         return new InvokeStubMethod() {
             @Override
             public void performStubbing(OngoingStubbing<T> when) {
-                when.thenThrow(throwableClasses);
+                when.thenThrow(throwableType);
+            }
+        }.invoke();
+    }
+ 
+    @Override
+    public OngoingStubbing<T> thenThrow(final Class<? extends Throwable> toBeThrown, final Class<? extends Throwable>[] nextToBeThrown) {
+        stubbing.thenThrow(toBeThrown, nextToBeThrown);
+        return new InvokeStubMethod() {
+            @Override
+            public void performStubbing(OngoingStubbing<T> when) {
+                when.thenThrow(toBeThrown, nextToBeThrown);
             }
         }.invoke();
     }

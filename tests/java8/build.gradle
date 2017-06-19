@@ -1,9 +1,5 @@
-List mockito1Libs = [
-        project(":powermock-api:powermock-api-mockito"), "org.mockito:mockito-core:${mockito1Version}"
-]
-
-List mockito2Lbs = [
-        project(":powermock-api:powermock-api-mockito2"), "org.mockito:mockito-core:${mockito2Version}"
+List mockitoLibs = [
+        project(":powermock-api:powermock-api-mockito2"), "org.mockito:mockito-core:${mockitoVersion}"
 ]
 
 configure(project.subprojects) { subproject ->
@@ -27,18 +23,6 @@ configure(project.subprojects) { subproject ->
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
-
-    compileMainMockito2Java {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
-    }
-
-    compileTestMockito2Java {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
-    }
-
-    check.dependsOn mockito2Test
 }
 
 project(":tests:java8:mockito-junit4") {
@@ -47,11 +31,7 @@ project(":tests:java8:mockito-junit4") {
     dependencies {
         testCompile project(":powermock-modules:powermock-module-junit4")
 
-        testCompile mockito1Libs
-        testCompile project(path: ":powermock-api:powermock-api-mockito-common")
-
-        mockito2 mockito2Lbs
-        mockito2 project(path: ":powermock-api:powermock-api-mockito-common", configuration: "mockito2")
+        testCompile mockitoLibs
     }
 }
 
@@ -71,11 +51,7 @@ project(":tests:java8:mockito-junit4-agent") {
     description = "Tests for Mockito module with JUnit 4.x. and Java8."
 
     dependencies {
-        testCompile mockito1Libs
-        testCompile project(path: ":powermock-api:powermock-api-mockito-common")
-
-        mockito2 mockito2Lbs
-        mockito2 project(path: ":powermock-api:powermock-api-mockito-common", configuration: "mockito2")
+        testCompile mockitoLibs
 
         testCompile project(":powermock-modules:powermock-module-junit4-rule-agent")
     }
@@ -83,10 +59,6 @@ project(":tests:java8:mockito-junit4-agent") {
     def pathToAgent = project(":powermock-modules:powermock-module-javaagent").jar.outputs.files.getFiles().getAt(0)
 
     test {
-        jvmArgs "-javaagent:${pathToAgent}"
-    }
-
-    mockito2Test {
         jvmArgs "-javaagent:${pathToAgent}"
     }
 }
@@ -98,11 +70,7 @@ project(":tests:java8:mockito-junit4-rule-xstream") {
         testCompile project(":powermock-modules:powermock-module-junit4-rule")
         testCompile project(":powermock-classloading:powermock-classloading-xstream")
 
-        testCompile mockito1Libs
-        testCompile project(path: ":powermock-api:powermock-api-mockito-common")
-
-        mockito2 mockito2Lbs
-        mockito2 project(path: ":powermock-api:powermock-api-mockito-common", configuration: "mockito2")
+        testCompile mockitoLibs
 
         testCompile files(project(":tests:mockito:junit4").sourceSets.test.output)
     }
