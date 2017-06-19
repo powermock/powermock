@@ -21,8 +21,9 @@ package org.powermock.api.mockito.mockmaker;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.internal.creation.MockSettingsImpl;
+import org.mockito.Mockito;
 import org.mockito.invocation.Invocation;
+import org.mockito.invocation.InvocationContainer;
 import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.MockMaker;
@@ -52,9 +53,19 @@ public class PowerMockMakerTest {
     public void should_delegate_calls_to_mock_maker_from_configuration() {
         
         PowerMockMaker powerMockMaker = new PowerMockMaker();
-        Object mock = powerMockMaker.createMock(new MockSettingsImpl<Object>(), new MockHandler() {
+        Object mock = powerMockMaker.createMock(Mockito.withSettings().build(Object.class), new MockHandler() {
             @Override
             public Object handle(final Invocation invocation) throws Throwable {
+                return null;
+            }
+    
+            @Override
+            public MockCreationSettings getMockSettings() {
+                return null;
+            }
+    
+            @Override
+            public InvocationContainer getInvocationContainer() {
                 return null;
             }
         });

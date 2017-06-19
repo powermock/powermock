@@ -46,8 +46,6 @@ task mockito2Test(type: Test) {
 
     reports.junitXml.destination = 'build/mockito2-test-results'
     reports.html.destination = 'build/reports/mockito2Test'
-
-    jvmArgs "-XX:MaxPermSize=256m"
 }
 
 mockito2Test.mustRunAfter test

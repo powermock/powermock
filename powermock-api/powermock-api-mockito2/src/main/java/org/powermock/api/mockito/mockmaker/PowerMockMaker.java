@@ -16,18 +16,13 @@
  */
 package org.powermock.api.mockito.mockmaker;
 
-import org.mockito.internal.InternalMockHandler;
-import org.mockito.internal.creation.MockSettingsImpl;
-import org.mockito.internal.stubbing.InvocationContainer;
-import org.mockito.internal.util.MockNameImpl;
+import org.mockito.Mockito;
 import org.mockito.invocation.Invocation;
+import org.mockito.invocation.InvocationContainer;
 import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.MockMaker;
-import org.mockito.stubbing.Answer;
 import org.powermock.configuration.GlobalConfiguration;
-
-import java.util.List;
 
 /**
  * A PowerMock implementation of the MockMaker. Right now it simply delegates to the default Mockito
@@ -49,22 +44,22 @@ public class PowerMockMaker implements MockMaker {
     public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
         return mockMaker.createMock(settings, handler);
     }
-
+    
     @Override
     public MockHandler getHandler(Object mock) {
         // Return a fake mock handler for static method mocks
         if (mock instanceof Class) {
-            return new PowerMockInternalMockHandler((Class<?>) mock);
+            return new StaticMockHandler(createStaticMockSettings((Class) mock));
         } else {
             return mockMaker.getHandler(mock);
         }
     }
-
+    
     @Override
     public void resetMock(Object mock, MockHandler newHandler, MockCreationSettings settings) {
         mockMaker.resetMock(mock, newHandler, settings);
     }
-
+    
     @Override
     public TypeMockability isTypeMockable(Class<?> type) {
         return mockMaker.isTypeMockable(type);
@@ -74,33 +69,29 @@ public class PowerMockMaker implements MockMaker {
         return mockMaker;
     }
     
-    /**
-     * It needs to extend InternalMockHandler because Mockito requires the type to be of InternalMockHandler and not MockHandler
-     */
-    private static class PowerMockInternalMockHandler implements InternalMockHandler<Class> {
-        private final Class<?> mock;
+    private MockCreationSettings<Class> createStaticMockSettings(final Class mock) {
+        return Mockito.withSettings()
+                      .name(mock.getName())
+                      .build((Class<Class>) mock);
+    }
     
-        private PowerMockInternalMockHandler(Class<?> mock) {
-            this.mock = mock;
+    private static class StaticMockHandler implements MockHandler<Class> {
+        private final MockCreationSettings<Class> mockSettings;
+        
+        private StaticMockHandler(final MockCreationSettings<Class> mockSettings) {
+            this.mockSettings = mockSettings;
         }
-
+        
         @Override
         public MockCreationSettings<Class> getMockSettings() {
-            final MockSettingsImpl<Class> mockSettings = new MockSettingsImpl<Class>();
-            mockSettings.setMockName(new MockNameImpl(mock.getName()));
-            mockSettings.setTypeToMock((Class<Class>) mock);
             return mockSettings;
         }
-
-        @Override
-        public void setAnswersForStubbing(List<Answer<?>> list) {
-        }
-
+        
         @Override
         public InvocationContainer getInvocationContainer() {
             return null;
         }
-
+        
         @Override
         public Object handle(Invocation invocation) throws Throwable {
             return null;

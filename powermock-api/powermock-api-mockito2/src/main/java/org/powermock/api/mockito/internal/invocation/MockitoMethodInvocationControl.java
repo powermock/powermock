@@ -19,19 +19,17 @@ package org.powermock.api.mockito.internal.invocation;
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.exceptions.misusing.NotAMockException;
-import org.mockito.internal.InternalMockHandler;
 import org.mockito.internal.creation.DelegatingMethod;
 import org.mockito.internal.debugging.Localized;
 import org.mockito.internal.debugging.LocationImpl;
 import org.mockito.internal.exceptions.stacktrace.StackTraceFilter;
 import org.mockito.internal.invocation.InvocationImpl;
-import org.mockito.internal.invocation.MatchersBinder;
 import org.mockito.internal.invocation.realmethod.CleanTraceRealMethod;
 import org.mockito.internal.invocation.realmethod.RealMethod;
 import org.mockito.internal.progress.MockingProgress;
 import org.mockito.internal.progress.SequenceNumber;
 import org.mockito.internal.progress.ThreadSafeMockingProgress;
-import org.mockito.internal.stubbing.InvocationContainer;
+import org.mockito.internal.stubbing.InvocationContainerImpl;
 import org.mockito.internal.verification.VerificationDataImpl;
 import org.mockito.internal.verification.VerificationModeFactory;
 import org.mockito.invocation.Invocation;
@@ -283,7 +281,7 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
     
     public void verifyNoMoreInteractions() {
         try {
-            InvocationContainer invocationContainer = Whitebox.invokeMethod(mockHandler, "getInvocationContainer");
+            InvocationContainerImpl invocationContainer = (InvocationContainerImpl) mockHandler.getInvocationContainer();
             VerificationDataImpl data = new VerificationDataImpl(invocationContainer, null);
             VerificationModeFactory.noMoreInteractions().verify(data);
         } catch (MockitoAssertionError e) {
