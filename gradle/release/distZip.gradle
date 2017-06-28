@@ -2,7 +2,9 @@ def fullJars = [
         project(":powermock-release:powermock-easymock-junit"),
         project(":powermock-release:powermock-easymock-testng"),
         project(":powermock-release:powermock-mockito-junit"),
-        project(":powermock-release:powermock-mockito-testng")
+        project(":powermock-release:powermock-mockito-testng"),
+        project(":powermock-release:powermock-mockito2-junit"),
+        project(":powermock-release:powermock-mockito2-testng")
 ]
 
 configure(fullJars) { project ->
