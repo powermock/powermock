@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN" "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+<module name="Checker">
+  <module name="UniqueProperties"/>
+  <module name="Translation"/>
+  <module name="TreeWalker">
+    <module name="MissingOverride"/>
+    <module name="StringLiteralEquality"/>
+    <module name="ParenPad">
+      <property name="tokens" value="LITERAL_WHILE, ENUM_CONSTANT_DEF, EXPR, LITERAL_DO, QUESTION, LITERAL_CATCH, ANNOTATION_FIELD_DEF, LITERAL_FOR, CTOR_CALL, LITERAL_SWITCH, RESOURCE_SPECIFICATION, LITERAL_SYNCHRONIZED, LAMBDA"/>
+    </module>
+    <module name="UnnecessaryParentheses">
+      <property name="tokens" value="STAR_ASSIGN, MINUS_ASSIGN, LITERAL_FALSE, BAND_ASSIGN, NUM_LONG, DIV_ASSIGN, NUM_DOUBLE, ASSIGN, MOD_ASSIGN, STRING_LITERAL, SR_ASSIGN, SL_ASSIGN, LITERAL_NULL, LITERAL_TRUE, NUM_INT, NUM_FLOAT, PLUS_ASSIGN, BXOR_ASSIGN, BSR_ASSIGN"/>
+    </module>
+    <module name="OuterTypeFilename"/>
+    <module name="NoLineWrap"/>
+    <module name="HiddenField">
+      <property name="ignoreConstructorParameter" value="true"/>
+      <property name="ignoreSetter" value="true"/>
+      <property name="tokens" value="LAMBDA"/>
+    </module>
+    <module name="MutableException"/>
+    <module name="RightCurly">
+      <property name="tokens" value="LITERAL_ELSE, LITERAL_FINALLY"/>
+    </module>
+    <module name="OuterTypeNumber">
+      <property name="max" value="4"/>
+    </module>
+    <module name="NoFinalizer"/>
+    <module name="EmptyLineSeparator">
+      <property name="allowNoEmptyLineBetweenFields" value="true"/>
+      <property name="tokens" value="INSTANCE_INIT, ENUM_DEF, STATIC_INIT"/>
+    </module>
+    <module name="InterfaceTypeParameterName"/>
+    <module name="CovariantEquals"/>
+    <module name="NestedForDepth"/>
+    <module name="RedundantModifier">
+      <property name="tokens" value="INTERFACE_DEF, ANNOTATION_FIELD_DEF, ENUM_DEF, RESOURCE"/>
+    </module>
+    <module name="AbstractClassName">
+      <property name="ignoreModifier" value="true"/>
+      <property name="ignoreName" value="true"/>
+    </module>
+    <module name="ConstantName">
+      <property name="applyToPackage" value="false"/>
+      <property name="applyToPrivate" value="false"/>
+    </module>
+    <module name="ThrowsCount"/>
+    <module name="AnnotationLocation">
+      <property name="allowSamelineMultipleAnnotations" value="true"/>
+      <property name="tokens" value="IMPLEMENTS_CLAUSE, INTERFACE_DEF, TYPECAST, PARAMETER_DEF, CTOR_DEF, VARIABLE_DEF, LITERAL_NEW, ANNOTATION_FIELD_DEF, LITERAL_THROWS, ENUM_DEF, ANNOTATION_DEF, CLASS_DEF, DOT, TYPE_ARGUMENT"/>
+    </module>
+    <module name="AnonInnerLength">
+      <property name="max" value="60"/>
+    </module>
+    <module name="NoWhitespaceAfter">
+      <property name="tokens" value="LNOT, INC, DOT, UNARY_MINUS, ARRAY_DECLARATOR, INDEX_OP, DEC, UNARY_PLUS, BNOT"/>
+    </module>
+    <module name="NoWhitespaceBefore">
+      <property name="tokens" value="POST_DEC, GENERIC_END, COMMA, POST_INC"/>
+    </module>
+    <module name="StaticVariableName">
+      <property name="applyToPublic" value="false"/>
+      <property name="applyToPrivate" value="false"/>
+    </module>
+    <module name="NeedBraces">
+      <property name="allowSingleLineStatement" value="true"/>
+      <property name="tokens" value="LITERAL_DO, LITERAL_WHILE, LAMBDA"/>
+    </module>
+    <module name="AvoidEscapedUnicodeCharacters">
+      <property name="allowIfAllCharactersEscaped" value="true"/>
+    </module>
+    <module name="IllegalInstantiation"/>
+    <module name="PackageName"/>
+    <module name="LocalFinalVariableName">
+      <property name="tokens" value="PARAMETER_DEF"/>
+    </module>
+    <module name="AvoidStarImport">
+      <property name="allowClassImports" value="true"/>
+      <property name="allowStaticMemberImports" value="true"/>
+    </module>
+    <module name="ReturnCount">
+      <property name="max" value="5"/>
+      <property name="maxForVoid" value="3"/>
+      <property name="tokens" value="CTOR_DEF, LAMBDA"/>
+    </module>
+    <module name="ClassTypeParameterName"/>
+    <module name="TypecastParenPad"/>
+    <module name="EmptyForInitializerPad"/>
+    <module name="SeparatorWrap">
+      <property name="tokens" value="SEMI, RBRACK, COMMA, ARRAY_DECLARATOR, ELLIPSIS"/>
+    </module>
+    <module name="RequireThis"/>
+    <module name="SuperFinalize"/>
+    <module name="IllegalType">
+      <property name="tokens" value="METHOD_DEF, PARAMETER_DEF"/>
+    </module>
+    <module name="IllegalToken">
+      <property name="tokens" value="EOF, STAR_ASSIGN, DIV_ASSIGN, RESOURCES, MOD_ASSIGN, BSR_ASSIGN, TYPE_EXTENSION_AND, RESOURCE_SPECIFICATION, UNARY_PLUS, METHOD_REF, SL_ASSIGN, STRICTFP, RESOURCE, DOUBLE_COLON"/>
+    </module>
+    <module name="ParameterNumber">
+      <property name="max" value="8"/>
+    </module>
+    <module name="AbbreviationAsWordInName">
+      <property name="allowedAbbreviationLength" value="5"/>
+    </module>
+    <module name="PackageDeclaration">
+      <property name="matchDirectoryStructure" value="false"/>
+    </module>
+    <module name="DescendantToken"/>
+    <module name="BooleanExpressionComplexity">
+      <property name="max" value="7"/>
+    </module>
+    <module name="SuppressWarnings"/>
+    <module name="MethodParamPad">
+      <property name="tokens" value="METHOD_CALL, ENUM_CONSTANT_DEF, CTOR_DEF, LITERAL_NEW, SUPER_CTOR_CALL"/>
+    </module>
+    <module name="SuppressWarningsHolder"/>
+    <module name="RedundantImport"/>
+    <module name="MethodLength">
+      <property name="countEmpty" value="false"/>
+      <property name="tokens" value="CTOR_DEF"/>
+    </module>
+    <module name="EmptyBlock">
+      <property name="option" value="text"/>
+      <property name="tokens" value="LITERAL_DEFAULT, LITERAL_ELSE, LITERAL_CASE, LITERAL_DO, INSTANCE_INIT, LITERAL_FOR, ARRAY_INIT, LITERAL_IF, LITERAL_TRY, LITERAL_SWITCH, STATIC_INIT, LITERAL_FINALLY, LITERAL_SYNCHRONIZED"/>
+    </module>
+    <module name="MethodTypeParameterName"/>
+    <module name="IllegalTokenText"/>
+    <module name="PackageAnnotation"/>
+    <module name="UpperEll"/>
+    <module name="MemberName">
+      <property name="applyToPrivate" value="false"/>
+    </module>
+    <module name="NestedTryDepth">
+      <property name="max" value="2"/>
+    </module>
+    <module name="DefaultComesLast"/>
+    <module name="TypeName">
+      <property name="applyToPublic" value="false"/>
+    </module>
+    <module name="ImportOrder">
+      <property name="ordered" value="false"/>
+    </module>
+    <module name="SuperClone"/>
+    <module name="MethodName">
+      <property name="applyToPublic" value="false"/>
+      <property name="applyToPackage" value="false"/>
+      <property name="applyToPrivate" value="false"/>
+    </module>
+    <module name="ParameterName">
+      <property name="accessModifiers" value="protected, public, private"/>
+    </module>
+    <module name="ExecutableStatementCount">
+      <property name="max" value="50"/>
+      <property name="tokens" value="STATIC_INIT, CTOR_DEF, INSTANCE_INIT"/>
+    </module>
+    <module name="NoClone"/>
+    <module name="OperatorWrap">
+      <property name="tokens" value="STAR, BOR_ASSIGN, STAR_ASSIGN, MINUS_ASSIGN, BOR, EQUAL, BAND_ASSIGN, DIV_ASSIGN, DIV, MINUS, LAND, BXOR, QUESTION, LE, BSR, LT, COLON, GT, SL, BAND, GE, NOT_EQUAL, LITERAL_INSTANCEOF, MOD_ASSIGN, SR_ASSIGN, SR, TYPE_EXTENSION_AND, METHOD_REF, SL_ASSIGN, PLUS_ASSIGN, BXOR_ASSIGN, BSR_ASSIGN, MOD"/>
+    </module>
+  </module>
+</module>

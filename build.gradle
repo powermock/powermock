@@ -36,6 +36,7 @@ ext{
     systemRulesVersion = "1.16.0"
     jacocoVersion = "0.7.7.201606060606"
     eclipseJdt = "3.3.0-v_771"
+    checkstyleVersion= "7.6.1"
 }
 
 
@@ -51,6 +52,12 @@ apply from: "${gradleScriptDir}/version.gradle"
 
 allprojects{
     apply plugin: 'propdeps-idea'
+
+    apply plugin: 'checkstyle'
+    checkstyle {
+        toolVersion = checkstyleVersion
+        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+    }
 }
 
 apply from: "${gradleScriptDir}/modules.gradle"
