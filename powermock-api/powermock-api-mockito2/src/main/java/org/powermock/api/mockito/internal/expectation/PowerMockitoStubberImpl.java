@@ -17,6 +17,7 @@
 package org.powermock.api.mockito.internal.expectation;
 
 import org.mockito.internal.stubbing.StubberImpl;
+import org.mockito.invocation.InvocationContainer;
 import org.mockito.invocation.MockHandler;
 import org.mockito.stubbing.Stubber;
 import org.powermock.api.mockito.expectation.PowerMockitoStubber;
@@ -64,9 +65,10 @@ public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockito
     @SuppressWarnings("unchecked")
     private void addAnswersForStubbing(MockitoMethodInvocationControl invocationControl) {
         final MockHandler mockHandler = invocationControl.getMockHandler();
+        InvocationContainer invocationContainer = mockHandler.getInvocationContainer();
         final List list = Whitebox.getInternalState(this, List.class);
         try {
-            Whitebox.invokeMethod(mockHandler, "setAnswersForStubbing", list);
+            Whitebox.invokeMethod(invocationContainer, "setAnswersForStubbing", list);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

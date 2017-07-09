@@ -1,4 +1,5 @@
-def publishableModules = allprojects - rootProject - project(":powermock-api")  - project(":powermock-classloading") - project(":powermock-modules") - project(":tests") - project(":tests").subprojects  - project(":powermock-release") - project(":powermock-release").subprojects
+def publishableModules = allprojects - rootProject - project(":powermock-api")  - project(":powermock-classloading") - project(":powermock-modules") - project(":tests") - project(":tests").subprojects
+//- project(":powermock-release") - project(":powermock-release").subprojects
 
 configure(publishableModules) { project ->
     apply from: "${gradleScriptDir}/java-module.gradle"
