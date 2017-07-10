@@ -34,6 +34,8 @@ import org.powermock.reflect.Whitebox;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import static org.mockito.Mockito.withSettings;
+
 public class DefaultMockCreator extends AbstractMockCreator {
     
     
@@ -91,13 +93,11 @@ public class DefaultMockCreator extends AbstractMockCreator {
     @SuppressWarnings("unchecked")
     private <T> MockData<T> createMethodInvocationControl(Class<T> type, Method[] methods, boolean isSpy, Object delegator,
                                                           MockSettings mockSettings) {
-        final MockMaker mockMaker = getMockMaker();
-        
         final MockCreationSettings<T> settings = getMockSettings(type, mockSettings);
         
         MockHandler mockHandler = MockHandlerFactory.createMockHandler(settings);
         
-        T mock = mockMaker.createMock(settings, mockHandler);
+        T mock = Mockito.mock(type, mockSettings != null? mockSettings : withSettings());
         
         ClassLoader classLoader = mock.getClass().getClassLoader();
         if (classLoader instanceof MockClassLoader) {
@@ -118,21 +118,9 @@ public class DefaultMockCreator extends AbstractMockCreator {
     private static <T> MockCreationSettings<T> getMockSettings(final Class<T> type, final MockSettings mockSettings) {
         MockSettings settings = mockSettings;
         if (mockSettings == null) {
-            settings = Mockito.withSettings();
+            settings = withSettings();
         }
         return settings.build(type);
-    }
-    
-    private static MockMaker getMockMaker() {
-        final ClassLoader originalCL = Thread.currentThread().getContextClassLoader();
-        
-        Thread.currentThread().setContextClassLoader(DefaultMockCreator.class.getClassLoader());
-        
-        try {
-            return Plugins.getMockMaker();
-        } finally {
-            Thread.currentThread().setContextClassLoader(originalCL);
-        }
     }
     
     /**
