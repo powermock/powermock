@@ -43,7 +43,7 @@ public class ClassReplicaCreator {
     // Used to make each new replica class of a specific type unique.
     private static AtomicInteger counter = new AtomicInteger(0);
 
-    public Class<?> createClassReplica(Class<?> clazz) {
+    public <T> Class<T> createClassReplica(Class<T> clazz) {
         if (clazz == null) {
             throw new IllegalArgumentException("clazz cannot be null");
         }
