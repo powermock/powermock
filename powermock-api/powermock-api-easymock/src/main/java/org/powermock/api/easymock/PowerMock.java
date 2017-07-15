@@ -1990,8 +1990,8 @@ public class PowerMock extends MemberModifier {
     }
 
     private static <T> Class<?> createReplicaType(Class<T> type, boolean isStatic, ConstructorArgs constructorArgs) {
-        ClassReplicaCreator classReplicaCreator = new ClassReplicaCreator();
-        Class<?> replicaType = null;
+        final ClassReplicaCreator classReplicaCreator = new ClassReplicaCreator();
+        final Class<?> replicaType;
         if (isStatic || constructorArgs == null) {
             replicaType = classReplicaCreator.createClassReplica(type);
         } else {
