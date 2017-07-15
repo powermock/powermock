@@ -2578,5 +2578,45 @@ public class WhiteboxImpl {
         }
         return converted;
     }
+    
+    public static <T> void copyToMock(T from, T mock) {
+        copy(from, mock, from.getClass());
+    }
+    
+    public static<T> void copyToRealObject(T from, T to) {
+        copy(from, to, from.getClass());
+    }
+    
+    private static<T> void copy(T from, T to, Class<?> fromClazz) {
+        while (fromClazz != Object.class) {
+            copyValues(from, to, fromClazz);
+            fromClazz = fromClazz.getSuperclass();
+        }
+    }
+    
+    private static<T> void copyValues(T from, T mock, Class<?> classFrom) {
+        Field[] fields = classFrom.getDeclaredFields();
+        
+        for (Field field : fields) {
+            // ignore static fields
+            if (Modifier.isStatic(field.getModifiers())) {
+                continue;
+            }
+            boolean accessible = field.isAccessible();
+            try {
+                field.setAccessible(true);
+                copyValue(from, mock, field);
+            } catch (Exception ignored) {
+                //Ignore - be lenient - if some field cannot be copied then let's be it
+            } finally {
+                field.setAccessible(accessible);
+            }
+        }
+    }
+    
+    private static <T> void copyValue(T from, T to, Field field) throws IllegalAccessException {
+        Object value = field.get(from);
+        field.set(to, value);
+    }
 
 }

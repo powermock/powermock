@@ -17,12 +17,12 @@
 package org.powermock.api.mockito.internal.expectation;
 
 import org.mockito.internal.stubbing.StubberImpl;
-import org.mockito.invocation.InvocationContainer;
-import org.mockito.invocation.MockHandler;
+import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.Stubber;
 import org.powermock.api.mockito.expectation.PowerMockitoStubber;
 import org.powermock.api.mockito.expectation.PrivatelyExpectedArguments;
-import org.powermock.api.mockito.internal.invocation.MockitoMethodInvocationControl;
+import org.powermock.api.mockito.invocation.MockitoMethodInvocationControl;
+import org.powermock.api.mockito.invocation.MockHandlerAdaptor;
 import org.powermock.core.MockRepository;
 import org.powermock.reflect.Whitebox;
 
@@ -64,14 +64,9 @@ public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockito
 
     @SuppressWarnings("unchecked")
     private void addAnswersForStubbing(MockitoMethodInvocationControl invocationControl) {
-        final MockHandler mockHandler = invocationControl.getMockHandler();
-        InvocationContainer invocationContainer = mockHandler.getInvocationContainer();
-        final List list = Whitebox.getInternalState(this, List.class);
-        try {
-            Whitebox.invokeMethod(invocationContainer, "setAnswersForStubbing", list);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        final MockHandlerAdaptor mockHandler = invocationControl.getMockHandlerAdaptor();
+        final List<Answer<?>> answers = Whitebox.getInternalState(this, List.class);
+        mockHandler.setAnswersForStubbing(answers);
     }
 
     @Override
