@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.powermock.reflect.testclasses.Child;
 import org.powermock.reflect.testclasses.ClassWithOverloadedMethods;
 import org.powermock.reflect.testclasses.ClassWithStandardMethod;
+import org.powermock.reflect.testclasses.ClassWithOverloadedArrayMethods;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -69,6 +70,69 @@ public class WhiteboxImplTest {
 				Child.class);
 		final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithOverloadedMethods.class, "overloaded",
 				new Class<?>[] { double.class, Child.class }, false);
+		assertThat(actualMethod).isEqualTo(expectedMethod);
+	}
+
+	@Test
+	public void getBestCandidateMethodReturnsMatchingMethodWhenOverloadingWithByteArray() throws Exception {
+		final Method expectedMethod = ClassWithOverloadedArrayMethods.class.getDeclaredMethod("overloaded", byte[].class);
+		final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithOverloadedArrayMethods.class, "overloaded",
+				new Class<?>[] { byte[].class }, false);
+		assertThat(actualMethod).isEqualTo(expectedMethod);
+	}
+	@Test
+	public void getBestCandidateMethodReturnsMatchingMethodWhenOverloadingWithByte() throws Exception {
+		final Method expectedMethod = ClassWithOverloadedArrayMethods.class.getDeclaredMethod("overloaded", byte.class);
+		final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithOverloadedArrayMethods.class, "overloaded",
+				new Class<?>[] { byte.class }, false);
+		assertThat(actualMethod).isEqualTo(expectedMethod);
+	}
+
+	@Test
+	public void getBestCandidateMethodReturnsMatchingMethodWhenOverloadingWithObjectArray() throws Exception {
+		final Method expectedMethod = ClassWithOverloadedArrayMethods.class.getDeclaredMethod("overloaded", Object[].class);
+		final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithOverloadedArrayMethods.class, "overloaded",
+				new Class<?>[] { Object[].class }, false);
+		assertThat(actualMethod).isEqualTo(expectedMethod);
+	}
+
+	@Test
+	public void getBestCandidateMethodReturnsMatchingMethodWhenOverloadingWithObject() throws Exception {
+		final Method expectedMethod = ClassWithOverloadedArrayMethods.class.getDeclaredMethod("overloaded", Object.class);
+		final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithOverloadedArrayMethods.class, "overloaded",
+				new Class<?>[] { Object.class }, false);
+		assertThat(actualMethod).isEqualTo(expectedMethod);
+	}
+
+	@Test
+	public void getBestCandidateMethodReturnsMatchingMethodWhenOverloadingWithStringArray() throws Exception {
+		final Method expectedMethod = ClassWithOverloadedArrayMethods.class.getDeclaredMethod("overloaded", String[].class);
+		final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithOverloadedArrayMethods.class, "overloaded",
+				new Class<?>[] { String[].class }, false);
+		assertThat(actualMethod).isEqualTo(expectedMethod);
+	}
+
+	@Test
+	public void getBestCandidateMethodReturnsMatchingMethodWhenOverloadingWithString() throws Exception {
+		final Method expectedMethod = ClassWithOverloadedArrayMethods.class.getDeclaredMethod("overloaded", String.class);
+		final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithOverloadedArrayMethods.class, "overloaded",
+				new Class<?>[] { String.class }, false);
+		assertThat(actualMethod).isEqualTo(expectedMethod);
+	}
+
+	@Test
+	public void getBestCandidateMethodReturnsMatchingMethodWhenOverloadingWithIntVarArgs() throws Exception {
+		final Method expectedMethod = ClassWithOverloadedArrayMethods.class.getDeclaredMethod("overloaded", int[].class);
+		final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithOverloadedArrayMethods.class, "overloaded",
+				new Class<?>[] { int[].class }, false);
+		assertThat(actualMethod).isEqualTo(expectedMethod);
+	}
+
+	@Test
+	public void getBestCandidateMethodReturnsMatchingMethodWhenOverloadingWithInt() throws Exception {
+		final Method expectedMethod = ClassWithOverloadedArrayMethods.class.getDeclaredMethod("overloaded", int.class);
+		final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithOverloadedArrayMethods.class, "overloaded",
+				new Class<?>[] { int.class }, false);
 		assertThat(actualMethod).isEqualTo(expectedMethod);
 	}
 
