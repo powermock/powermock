@@ -19,7 +19,7 @@ import org.junit.Test;
 import org.powermock.reflect.testclasses.Child;
 import org.powermock.reflect.testclasses.ClassWithOverloadedMethods;
 import org.powermock.reflect.testclasses.ClassWithStandardMethod;
-import org.powermock.reflect.testclasses. ClassWithOverloadedArrayMethods;
+import org.powermock.reflect.testclasses.ClassWithOverloadedArrayMethods;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
