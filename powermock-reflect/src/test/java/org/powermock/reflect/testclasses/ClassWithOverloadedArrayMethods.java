@@ -22,5 +22,9 @@ public class ClassWithOverloadedArrayMethods {
         return 0;
     }
 
+    public int overloaded(int... ints) {   return 0; }
+
+    public int overloaded(int value) { return 0; }
+
 
 }

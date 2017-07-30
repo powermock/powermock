@@ -120,6 +120,22 @@ public class WhiteboxImplTest {
 		assertThat(actualMethod).isEqualTo(expectedMethod);
 	}
 
+	@Test
+	public void getBestCandidateMethodReturnsMatchingMethodWhenOverloadingWithIntVarArgs() throws Exception {
+		final Method expectedMethod = ClassWithOverloadedArrayMethods.class.getDeclaredMethod("overloaded", int[].class);
+		final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithOverloadedArrayMethods.class, "overloaded",
+				new Class<?>[] { int[].class }, false);
+		assertThat(actualMethod).isEqualTo(expectedMethod);
+	}
+
+	@Test
+	public void getBestCandidateMethodReturnsMatchingMethodWhenOverloadingWithInt() throws Exception {
+		final Method expectedMethod = ClassWithOverloadedArrayMethods.class.getDeclaredMethod("overloaded", int.class);
+		final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithOverloadedArrayMethods.class, "overloaded",
+				new Class<?>[] { int.class }, false);
+		assertThat(actualMethod).isEqualTo(expectedMethod);
+	}
+
     @Test
     public void defaultMethodsAreFound() throws Exception {
         assumeTrue(Float.valueOf(System.getProperty("java.specification.version")) >= 1.8f);
