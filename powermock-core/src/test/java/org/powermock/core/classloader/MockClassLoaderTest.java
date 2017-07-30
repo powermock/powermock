@@ -41,7 +41,7 @@ public class MockClassLoaderTest {
     @Test
     public void autoboxingWorks() throws Exception {
         String name = this.getClass().getPackage().getName() + ".HardToTransform";
-        final MockClassLoader mockClassLoader = new MockClassLoader(new String[]{name});
+        final MockClassLoader mockClassLoader = new MockClassLoader(MockClassLoader.class.getClassLoader(), new String[]{name});
         List<MockTransformer> list = new LinkedList<MockTransformer>();
         list.add(new ClassMockTransformer());
         mockClassLoader.setMockTransformerChain(list);
@@ -69,34 +69,34 @@ public class MockClassLoaderTest {
 
     @Test
     public void prepareForTestHasPrecedenceOverPowerMockIgnoreAnnotatedPackages() throws Exception {
-        MockClassLoader mockClassLoader = new MockClassLoader(new String[]{"org.mytest.myclass"});
+        MockClassLoader mockClassLoader = new MockClassLoader(MockClassLoader.class.getClassLoader(), new String[]{"org.mytest.myclass"});
         Whitebox.setInternalState(mockClassLoader, new String[]{"*mytest*"}, DeferSupportingClassLoader.class);
         assertTrue(Whitebox.<Boolean>invokeMethod(mockClassLoader, "shouldModify", "org.mytest.myclass"));
     }
 
     @Test
     public void powerMockIgnoreAnnotatedPackagesAreIgnored() throws Exception {
-        MockClassLoader mockClassLoader = new MockClassLoader(new String[]{"org.ikk.Jux"});
+        MockClassLoader mockClassLoader = new MockClassLoader(MockClassLoader.class.getClassLoader(), new String[]{"org.ikk.Jux"});
         Whitebox.setInternalState(mockClassLoader, new String[]{"*mytest*"}, DeferSupportingClassLoader.class);
         assertFalse(Whitebox.<Boolean>invokeMethod(mockClassLoader, "shouldModify", "org.mytest.myclass"));
     }
 
     @Test
     public void powerMockIgnoreAnnotatedPackagesHavePrecedenceOverPrepareEverythingForTest() throws Exception {
-        MockClassLoader mockClassLoader = new MockClassLoader(new String[]{MODIFY_ALL_CLASSES});
+        MockClassLoader mockClassLoader = new MockClassLoader(MockClassLoader.class.getClassLoader(), new String[]{MODIFY_ALL_CLASSES});
         Whitebox.setInternalState(mockClassLoader, new String[]{"*mytest*"}, DeferSupportingClassLoader.class);
         assertFalse(Whitebox.<Boolean>invokeMethod(mockClassLoader, "shouldModify", "org.mytest.myclass"));
     }
 
     @Test
     public void prepareForTestPackagesArePrepared() throws Exception {
-        MockClassLoader mockClassLoader = new MockClassLoader(new String[]{"*mytest*"});
+        MockClassLoader mockClassLoader = new MockClassLoader(MockClassLoader.class.getClassLoader(), new String[]{"*mytest*"});
         assertTrue(Whitebox.<Boolean>invokeMethod(mockClassLoader, "shouldModify", "org.mytest.myclass"));
     }
 
     @Test
     public void shouldAddIgnorePackagesToDefer() throws Exception {
-        MockClassLoader mockClassLoader = new MockClassLoader(new String[0]);
+        MockClassLoader mockClassLoader = new MockClassLoader(MockClassLoader.class.getClassLoader(), new String[0]);
         mockClassLoader.addIgnorePackage("test*");
         String[] deferPackages = Whitebox.getInternalState(mockClassLoader, "deferPackages");
         assertTrue(deferPackages.length > 1);
@@ -105,7 +105,7 @@ public class MockClassLoaderTest {
 
     @Test
     public void canFindResource() throws Exception {
-        final MockClassLoader mockClassLoader = new MockClassLoader(new String[0]);
+        final MockClassLoader mockClassLoader = new MockClassLoader(MockClassLoader.class.getClassLoader(), new String[0]);
         List<MockTransformer> list = new LinkedList<MockTransformer>();
         list.add(new ClassMockTransformer());
         mockClassLoader.setMockTransformerChain(list);
@@ -123,7 +123,7 @@ public class MockClassLoaderTest {
 
     @Test
     public void canFindResources() throws Exception {
-        final MockClassLoader mockClassLoader = new MockClassLoader(new String[0]);
+        final MockClassLoader mockClassLoader = new MockClassLoader(MockClassLoader.class.getClassLoader(), new String[0]);
         List<MockTransformer> list = new LinkedList<MockTransformer>();
         list.add(new ClassMockTransformer());
         mockClassLoader.setMockTransformerChain(list);
@@ -141,7 +141,7 @@ public class MockClassLoaderTest {
 
     @Test
     public void resourcesNotDoubled() throws Exception {
-        final MockClassLoader mockClassLoader = new MockClassLoader(new String[0]);
+        final MockClassLoader mockClassLoader = new MockClassLoader(MockClassLoader.class.getClassLoader(), new String[0]);
         List<MockTransformer> list = new LinkedList<MockTransformer>();
         list.add(new ClassMockTransformer());
         mockClassLoader.setMockTransformerChain(list);
@@ -168,7 +168,7 @@ public class MockClassLoaderTest {
                 return MyClassPathAdjuster.class;
             }
         };
-        final MockClassLoader mockClassLoader = new MockClassLoader(new String[0], useClassPathAdjuster);
+        final MockClassLoader mockClassLoader = new MockClassLoader(MockClassLoader.class.getClassLoader(), new String[0], useClassPathAdjuster);
         List<MockTransformer> list = new LinkedList<MockTransformer>();
         list.add(new ClassMockTransformer());
         mockClassLoader.setMockTransformerChain(list);
@@ -195,7 +195,7 @@ public class MockClassLoaderTest {
     @Ignore
     public void cannotFindDynamicClassInDeferredClassLoader() throws Exception {
 
-        MockClassLoader mockClassLoader = new MockClassLoader(new String[0]);
+        MockClassLoader mockClassLoader = new MockClassLoader(MockClassLoader.class.getClassLoader(), new String[0]);
         List<MockTransformer> list = new LinkedList<MockTransformer>();
         list.add(new ClassMockTransformer());
         mockClassLoader.setMockTransformerChain(list);
@@ -217,7 +217,7 @@ public class MockClassLoaderTest {
     @Test
     public void canLoadDefinedClass() throws Exception {
         final String className = "my.ABCTestClass";
-        final MockClassLoader mockClassLoader = new MockClassLoader(new String[]{className});
+        final MockClassLoader mockClassLoader = new MockClassLoader(MockClassLoader.class.getClassLoader(), new String[]{className});
 
 
         Whitebox.invokeMethod(mockClassLoader, "defineClass", className, DynamicClassHolder.classBytes,
@@ -256,7 +256,7 @@ public class MockClassLoaderTest {
     static class MyClassloader extends MockClassLoader {
 
         public MyClassloader(String[] classesToMock) {
-            super(classesToMock);
+            super(MockClassLoader.class.getClassLoader(), classesToMock);
         }
 
         @Override
