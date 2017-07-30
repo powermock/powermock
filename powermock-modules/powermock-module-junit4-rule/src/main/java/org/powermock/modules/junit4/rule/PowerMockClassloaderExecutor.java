@@ -36,7 +36,7 @@ public class PowerMockClassloaderExecutor {
         mockTransformerChain.add(new ClassMockTransformer());
         mockTransformerChain.add(new InterfaceMockTransformer());
     
-        MockClassLoader mockLoader = new MockClassLoader(new String[0], new String[0]);
+        MockClassLoader mockLoader = new MockClassLoader(MockClassLoader.class.getClassLoader(), new String[0], new String[0]);
         mockLoader.setMockTransformerChain(mockTransformerChain);
 
         mockLoader.addIgnorePackage(new PowerMockIgnorePackagesExtractorImpl().getPackagesToIgnore(testClass));
