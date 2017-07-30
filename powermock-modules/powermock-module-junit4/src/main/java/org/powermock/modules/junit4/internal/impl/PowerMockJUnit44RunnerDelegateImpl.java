@@ -34,6 +34,7 @@ import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
+import org.powermock.core.classloader.annotations.ClassLoaderProvider;
 import org.powermock.core.classloader.annotations.MockPolicy;
 import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
 import org.powermock.core.spi.PowerMockTestListener;
@@ -146,6 +147,22 @@ public class PowerMockJUnit44RunnerDelegateImpl extends Runner implements Filter
              * cannot get the correct annotations if we don't load the class
              * from the correct class loader
              */
+            //powermock osgi fix start
+            ClassLoaderProvider b = testType.getAnnotation(ClassLoaderProvider.class);
+            ClassLoader mockLoader;
+            if(b != null) {
+                try {
+                    mockLoader = b.value().newInstance().getClassLoader();
+                } catch (InstantiationException  e) {
+                    mockLoader = thisClassLoader;
+                } catch (IllegalAccessException e) {
+                    mockLoader = thisClassLoader;
+                }
+            } else {
+                mockLoader = thisClassLoader;
+            }
+            //powermock osgi fix end
+
             try {
                 testType = thisClassLoader.loadClass(testType.getName());
             } catch (ClassNotFoundException e) {

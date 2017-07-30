@@ -33,11 +33,13 @@ import java.util.List;
 
 class MockClassLoaderFactory {
     private final String[] packagesToIgnore;
+    private final ClassLoader classLoader;
     private final Class<?> testClass;
     private final String[] classesToLoadByMockClassloader;
     private final MockTransformer[] extraMockTransformers;
 
-    public MockClassLoaderFactory(Class<?> testClass, String[] classesToLoadByMockClassloader, String[] packagesToIgnore, MockTransformer... extraMockTransformers) {
+    public MockClassLoaderFactory(ClassLoader classLoader, Class<?> testClass, String[] classesToLoadByMockClassloader, String[] packagesToIgnore, MockTransformer... extraMockTransformers) {
+        this.classLoader = classLoader;
         this.testClass = testClass;
         this.classesToLoadByMockClassloader = classesToLoadByMockClassloader;
         this.packagesToIgnore = packagesToIgnore;
@@ -64,7 +66,7 @@ class MockClassLoaderFactory {
         ClassLoader mockLoader = AccessController.doPrivileged(new PrivilegedAction<MockClassLoader>() {
             @Override
             public MockClassLoader run() {
-                return new MockClassLoader(classesToLoadByMockClassloader, packagesToIgnore, useClassPathAdjuster);
+                return new MockClassLoader(classLoader, classesToLoadByMockClassloader, packagesToIgnore, useClassPathAdjuster);
             }
         });
 

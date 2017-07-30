@@ -5,6 +5,8 @@ import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
+import org.powermock.core.classloader.annotations.ClassLoaderProvider;
+import org.powermock.core.classloader.ClassLoaderOverride;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.impl.TestClassTransformer;
 import org.powermock.tests.utils.ArrayMerger;
@@ -12,6 +14,7 @@ import org.powermock.tests.utils.IgnorePackagesExtractor;
 import org.powermock.tests.utils.TestChunk;
 import org.powermock.tests.utils.TestClassesExtractor;
 import org.powermock.tests.utils.TestSuiteChunker;
+
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -101,7 +104,21 @@ public abstract class AbstractCommonTestSuiteChunkerImpl implements TestSuiteChu
 
         final String[] ignorePackages = ignorePackagesExtractor.getPackagesToIgnore(testClass);
 
-        final ClassLoader defaultMockLoader = createDefaultMockLoader(testClass, extraMockTransformers, ignorePackages);
+        ClassLoaderProvider b = testClass.getAnnotation(ClassLoaderProvider.class);
+        ClassLoader mockLoader;
+        if (b != null) {
+            try {
+                ClassLoaderOverride theOverride = b.value().newInstance();
+                mockLoader = createDefaultMockLoader(theOverride.getClassLoader(), testClass, extraMockTransformers, ignorePackages);
+            } catch (IllegalAccessException e) {
+                mockLoader = createDefaultMockLoader(MockClassLoader.class.getClassLoader(), testClass, extraMockTransformers, ignorePackages);
+            } catch (InstantiationException e) {
+                mockLoader = createDefaultMockLoader(MockClassLoader.class.getClassLoader(), testClass, extraMockTransformers, ignorePackages);
+            }
+        } else {
+            mockLoader = createDefaultMockLoader(MockClassLoader.class.getClassLoader(), testClass, extraMockTransformers, ignorePackages);
+        }
+        final ClassLoader defaultMockLoader = mockLoader;
 
         List<Method> currentClassloaderMethods = new LinkedList<Method>();
         // Put the first suite in the map of internal suites.
@@ -109,7 +126,7 @@ public abstract class AbstractCommonTestSuiteChunkerImpl implements TestSuiteChu
         List<TestChunk> testChunks = new LinkedList<TestChunk>();
         testChunks.add(defaultTestChunk);
         internalSuites.add(new TestCaseEntry(testClass, testChunks));
-        initEntries(internalSuites);
+        initEntries(defaultMockLoader, internalSuites);
 
         if (!currentClassloaderMethods.isEmpty()) {
             List<TestChunk> allTestChunks = internalSuites.get(0).getTestChunks();
@@ -130,28 +147,28 @@ public abstract class AbstractCommonTestSuiteChunkerImpl implements TestSuiteChu
         //else{ /*Delegation-runner maybe doesn't use test-method annotations!*/ }
     }
 
-    private ClassLoader createDefaultMockLoader(Class<?> testClass, MockTransformer[] extraMockTransformers, String[] ignorePackages) {
+    private ClassLoader createDefaultMockLoader(ClassLoader classLoader, Class<?> testClass, MockTransformer[] extraMockTransformers, String[] ignorePackages) {
         final ClassLoader defaultMockLoader;
         if (testClass.isAnnotationPresent(PrepareEverythingForTest.class)) {
-            defaultMockLoader = createNewClassloader(testClass, new String[]{MockClassLoader.MODIFY_ALL_CLASSES},
+            defaultMockLoader = createNewClassloader(classLoader, testClass, new String[]{MockClassLoader.MODIFY_ALL_CLASSES},
                     ignorePackages, extraMockTransformers);
         } else {
             final String[] prepareForTestClasses = prepareForTestExtractor.getTestClasses(testClass);
             final String[] suppressStaticClasses = suppressionExtractor.getTestClasses(testClass);
-            defaultMockLoader = createNewClassloader(testClass, arrayMerger.mergeArrays(String.class, prepareForTestClasses, suppressStaticClasses),
+            defaultMockLoader = createNewClassloader(classLoader, testClass, arrayMerger.mergeArrays(String.class, prepareForTestClasses, suppressStaticClasses),
                     ignorePackages, extraMockTransformers);
         }
         return defaultMockLoader;
     }
 
-    private ClassLoader createNewClassloader(Class<?> testClass, String[] classesToLoadByMockClassloader,
+    private ClassLoader createNewClassloader(ClassLoader classLoader, Class<?> testClass, String[] classesToLoadByMockClassloader,
                                              final String[] packagesToIgnore, MockTransformer... extraMockTransformers) {
-        final MockClassLoaderFactory classLoaderFactory = getMockClassLoaderFactory(testClass, classesToLoadByMockClassloader, packagesToIgnore, extraMockTransformers);
+        final MockClassLoaderFactory classLoaderFactory = getMockClassLoaderFactory(classLoader, testClass, classesToLoadByMockClassloader, packagesToIgnore, extraMockTransformers);
         return classLoaderFactory.create();
     }
 
-    protected MockClassLoaderFactory getMockClassLoaderFactory(Class<?> testClass, String[] preliminaryClassesToLoadByMockClassloader, String[] packagesToIgnore, MockTransformer[] extraMockTransformers) {
-        return new MockClassLoaderFactory(testClass, preliminaryClassesToLoadByMockClassloader, packagesToIgnore, extraMockTransformers);
+    protected MockClassLoaderFactory getMockClassLoaderFactory(ClassLoader classLoader, Class<?> testClass, String[] preliminaryClassesToLoadByMockClassloader, String[] packagesToIgnore, MockTransformer[] extraMockTransformers) {
+        return new MockClassLoaderFactory(classLoader, testClass, preliminaryClassesToLoadByMockClassloader, packagesToIgnore, extraMockTransformers);
     }
 
     private MockTransformer[] createDefaultExtraMockTransformers(Class<?> testClass, List<Method> testMethodsThatRunOnOtherClassLoaders) {
@@ -171,25 +188,25 @@ public abstract class AbstractCommonTestSuiteChunkerImpl implements TestSuiteChu
         return null;
     }
 
-    private void initEntries(List<TestCaseEntry> entries) {
+    private void initEntries(ClassLoader classLoader, List<TestCaseEntry> entries) {
         for (TestCaseEntry testCaseEntry : entries) {
             final Class<?> testClass = testCaseEntry.getTestClass();
-            findMethods(testCaseEntry, testClass);
+            findMethods(classLoader, testCaseEntry, testClass);
         }
     }
 
-    private void findMethods(TestCaseEntry testCaseEntry, Class<?> testClass) {
+    private void findMethods(ClassLoader classLoader, TestCaseEntry testCaseEntry, Class<?> testClass) {
         Method[] allMethods = testClass.getMethods();
         for (Method method : allMethods) {
-            putMethodToChunk(testCaseEntry, testClass, method);
+            putMethodToChunk(classLoader, testCaseEntry, testClass, method);
         }
         testClass = testClass.getSuperclass();
         if (!Object.class.equals(testClass)) {
-            findMethods(testCaseEntry, testClass);
+            findMethods(classLoader, testCaseEntry, testClass);
         }
     }
 
-    private void putMethodToChunk(TestCaseEntry testCaseEntry, Class<?> testClass, Method method) {
+    private void putMethodToChunk(ClassLoader classLoader, TestCaseEntry testCaseEntry, Class<?> testClass, Method method) {
         if (shouldExecuteTestForMethod(testClass, method)) {
             currentTestIndex++;
             if (hasChunkAnnotation(method)) {
@@ -206,10 +223,10 @@ public abstract class AbstractCommonTestSuiteChunkerImpl implements TestSuiteChu
 
                 final ClassLoader mockClassloader;
                 if (method.isAnnotationPresent(PrepareEverythingForTest.class)) {
-                    mockClassloader = createNewClassloader(testClass, new String[]{MockClassLoader.MODIFY_ALL_CLASSES},
+                    mockClassloader = createNewClassloader(classLoader, testClass, new String[]{MockClassLoader.MODIFY_ALL_CLASSES},
                             ignorePackagesExtractor.getPackagesToIgnore(testClass), extraTransformers);
                 } else {
-                    mockClassloader = createNewClassloader(testClass, arrayMerger.mergeArrays(String.class, prepareForTestExtractor.getTestClasses(method),
+                    mockClassloader = createNewClassloader(classLoader, testClass, arrayMerger.mergeArrays(String.class, prepareForTestExtractor.getTestClasses(method),
                             staticSuppressionClasses), ignorePackagesExtractor.getPackagesToIgnore(testClass), extraTransformers);
                 }
                 TestChunkImpl chunk = new TestChunkImpl(mockClassloader, methodsInThisChunk);

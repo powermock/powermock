@@ -107,8 +107,8 @@ public class MockClassLoader extends DeferSupportingClassLoader {
      * @param packagesToDefer Classes in these packages will be defered to the system
      *                        class-loader.
      */
-    public MockClassLoader(String[] classesToMock, String[] packagesToDefer, UseClassPathAdjuster useClassPathAdjuster) {
-        super(MockClassLoader.class.getClassLoader(), getPackagesToDefer(packagesToDefer));
+    public MockClassLoader(ClassLoader classLoader, String[] classesToMock, String[] packagesToDefer, UseClassPathAdjuster useClassPathAdjuster) {
+        super(classLoader, getPackagesToDefer(packagesToDefer));
         
         addClassesToModify(classesToMock);
         classPool.appendClassPath(new ClassClassPath(this.getClass()));
@@ -125,7 +125,7 @@ public class MockClassLoader extends DeferSupportingClassLoader {
     }
     
     MockClassLoader() {
-        this(new String[0], new String[0]);
+        this(MockClassLoader.class.getClassLoader(), new String[0], new String[0]);
     }
     
     private static String[] getPackagesToDefer(final String[] additionalDeferPackages) {
@@ -150,8 +150,8 @@ public class MockClassLoader extends DeferSupportingClassLoader {
      * @param packagesToDefer Classes in these packages will be defered to the system
      *                        class-loader.
      */
-    public MockClassLoader(String[] classesToMock, String[] packagesToDefer) {
-        this(classesToMock, packagesToDefer, null);
+    public MockClassLoader(ClassLoader classLoader, String[] classesToMock, String[] packagesToDefer) {
+        this(classLoader, classesToMock, packagesToDefer, null);
     }
     
     /**
@@ -160,8 +160,8 @@ public class MockClassLoader extends DeferSupportingClassLoader {
      *
      * @param classesToMock The classes that must be modified to prepare for testability.
      */
-    public MockClassLoader(String[] classesToMock, UseClassPathAdjuster useClassPathAdjuster) {
-        this(classesToMock, new String[0], useClassPathAdjuster);
+    public MockClassLoader(ClassLoader classLoader, String[] classesToMock, UseClassPathAdjuster useClassPathAdjuster) {
+        this(classLoader, classesToMock, new String[0], useClassPathAdjuster);
     }
     
     /**
@@ -170,8 +170,8 @@ public class MockClassLoader extends DeferSupportingClassLoader {
      *
      * @param classesToMock The classes that must be modified to prepare for testability.
      */
-    public MockClassLoader(String[] classesToMock) {
-        this(classesToMock, new String[0], null);
+    public MockClassLoader(ClassLoader classLoader, String[] classesToMock) {
+        this(classLoader, classesToMock, new String[0], null);
     }
     
     /**
