@@ -120,7 +120,7 @@ public class TestClassTransformerTest {
                     .removesTestMethodAnnotation(Test.class)
                     .fromMethods(Collections.<Method>emptyList());
             MockClassLoader mockClassLoader =
-                    new MockClassLoader(preparations(prepare4test));
+                    new MockClassLoader(MockClassLoader.class.getClassLoader(), preparations(prepare4test));
             mockClassLoader.setMockTransformerChain(Arrays.asList(
                     new ClassMockTransformer(),
                     testClassTransformer));

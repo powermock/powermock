@@ -200,7 +200,7 @@ public class ClassMockTransformerTest {
 
 
     private Class<?> loadWithMockClassLoader(String className) throws ClassNotFoundException {
-        MockClassLoader loader = new MockClassLoader(new String[]{MockClassLoader.MODIFY_ALL_CLASSES});
+        MockClassLoader loader = new MockClassLoader(MockClassLoader.class.getClassLoader(), new String[]{MockClassLoader.MODIFY_ALL_CLASSES});
         loader.setMockTransformerChain(Collections.<MockTransformer>singletonList(new ClassMockTransformer()));
         return Class.forName(className, true, loader);
     }
