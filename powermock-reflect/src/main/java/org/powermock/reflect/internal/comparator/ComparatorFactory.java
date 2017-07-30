@@ -88,14 +88,8 @@ public class ComparatorFactory {
                 Class<?> type2 = params2[i];
                 if (!type1.equals(type2)) {
                     if (type1.isAssignableFrom(type2)) {
-                        if (!type1.isArray() && type2.isArray()) {
-                            return -1;
-                        }
                         return 1;
                     } else {
-                        if (type1.isArray() && !type2.isArray()) {
-                            return 1;
-                        }
                         return -1;
                     }
                 }
