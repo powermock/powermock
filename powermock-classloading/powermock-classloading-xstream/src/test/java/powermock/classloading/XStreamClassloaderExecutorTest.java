@@ -285,7 +285,7 @@ public class XStreamClassloaderExecutorTest {
 	}
 
 	private MockClassLoader createClassloader() {
-		MockClassLoader classloader = new MockClassLoader(new String[] { MyClass.class.getName(),
+		MockClassLoader classloader = new MockClassLoader(MockClassLoader.class.getClassLoader(), new String[] { MyClass.class.getName(),
 				MyArgument.class.getName(), MyReturnValue.class.getName() });
 		MockTransformer mainMockTransformer = new MockTransformer() {
 			public CtClass transform(CtClass clazz) throws Exception {
