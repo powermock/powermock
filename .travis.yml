@@ -4,4 +4,5 @@ jdk:
 script:
   - ./gradlew assemble
   - ./gradlew check
+  - ./gradlew ciPerformRelease
 
