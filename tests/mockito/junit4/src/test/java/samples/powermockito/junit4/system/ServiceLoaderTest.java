@@ -34,7 +34,9 @@ public class ServiceLoaderTest {
     public void supportsMockingServiceLoader() throws Exception {
         final ServiceLoader mock = mock(ServiceLoader.class);
 
-        doThrow(new IllegalArgumentException("something")).when(mock).reload();
+        doThrow(new IllegalArgumentException("something"))
+            .when(mock)
+            .reload();
 
         mock.reload();
     }

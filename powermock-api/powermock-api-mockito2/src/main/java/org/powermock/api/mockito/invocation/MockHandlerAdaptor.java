@@ -18,9 +18,10 @@
 
 package org.powermock.api.mockito.invocation;
 
+import org.mockito.MockingDetails;
+import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.exceptions.misusing.NotAMockException;
-import org.mockito.internal.util.MockUtil;
 import org.mockito.invocation.Invocation;
 import org.mockito.invocation.InvocationContainer;
 import org.mockito.invocation.MockHandler;
@@ -36,12 +37,14 @@ import java.util.List;
  * The class provides a access to method and data of  {@link org.mockito.invocation.MockHandler} from the given mock instance.
  */
 public class MockHandlerAdaptor<T> {
-    private final T mockInstance;
+    private final T mock;
     private final InvocationFactory invocationFactory;
+    private final MockingDetails mockingDetails;
     
-    MockHandlerAdaptor(final T mockInstance) {
-        this.mockInstance = mockInstance;
+    MockHandlerAdaptor(final T mock) {
+        this.mock = mock;
         this.invocationFactory = new InvocationFactory();
+        this.mockingDetails = Mockito.mockingDetails(mock);
     }
     
     public void setAnswersForStubbing(final List<Answer<?>> answers) {
@@ -53,17 +56,21 @@ public class MockHandlerAdaptor<T> {
         }
     }
     
-    private MockHandler<T> getMockHandler(){
-        return MockUtil.getMockHandler(mockInstance);
+    public Object getMock() {
+        return mock;
+    }
+    
+    private MockHandler<T> getMockHandler() {
+        return mockingDetails.getMockHandler();
     }
     
     InvocationContainer getInvocationContainer() {
         return getMockHandler().getInvocationContainer();
     }
     
-    Object performIntercept(final Object interceptionObject, final Method method, Object[] arguments) throws Throwable {
+    Object performIntercept(final Object mock, final Method method, Object[] arguments) throws Throwable {
         
-        Invocation invocation = createInvocation(interceptionObject, method, arguments);
+        Invocation invocation = createInvocation(mock, method, arguments);
         
         try {
             return getMockHandler().handle(invocation);
@@ -82,7 +89,7 @@ public class MockHandlerAdaptor<T> {
         }
     }
     
-    private Invocation createInvocation(final Object interceptionObject, final Method method, final Object[] arguments) {
-        return invocationFactory.createInvocation(interceptionObject, method, arguments);
+    private Invocation createInvocation(final Object mock, final Method method, final Object[] arguments) {
+        return invocationFactory.createInvocation(mock, method, getMockHandler().getMockSettings(), arguments);
     }
 }
