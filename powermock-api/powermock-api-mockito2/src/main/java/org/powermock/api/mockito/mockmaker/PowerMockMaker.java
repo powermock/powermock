@@ -22,7 +22,9 @@ import org.mockito.invocation.InvocationContainer;
 import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.MockMaker;
+import org.powermock.api.mockito.invocation.MockitoMethodInvocationControl;
 import org.powermock.configuration.GlobalConfiguration;
+import org.powermock.core.MockRepository;
 
 /**
  * A PowerMock implementation of the MockMaker. Right now it simply delegates to the default Mockito
@@ -51,7 +53,15 @@ public class PowerMockMaker implements MockMaker {
         if (mock instanceof Class) {
             return new StaticMockHandler(createStaticMockSettings((Class) mock));
         } else {
-            return mockMaker.getHandler(mock);
+            final MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository.getInstanceMethodInvocationControl(mock);
+            final Object realMock;
+            if (invocationControl == null){
+                realMock = mock;
+            }else{
+                realMock = invocationControl.getMockHandlerAdaptor().getMock();
+    
+            }
+            return mockMaker.getHandler(realMock);
         }
     }
     

@@ -16,10 +16,12 @@
  */
 package org.powermock.api.mockito.internal;
 
+import org.mockito.Mockito;
 import org.mockito.internal.progress.MockingProgress;
 import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.internal.verification.MockAwareVerificationMode;
 import org.mockito.stubbing.Answer;
+import org.mockito.stubbing.Stubber;
 import org.mockito.verification.VerificationMode;
 import org.powermock.api.mockito.expectation.PowerMockitoStubber;
 import org.powermock.api.mockito.internal.expectation.PowerMockitoStubberImpl;
@@ -28,17 +30,21 @@ import org.powermock.api.mockito.internal.verification.StaticMockAwareVerificati
 public class PowerMockitoCore {
     @SuppressWarnings("rawtypes")
     public PowerMockitoStubber doAnswer(Answer answer) {
+        
         // We change the context classloader to the current CL in order for the Mockito
         // framework to load it's plugins (such as MockMaker) correctly.
+        
+        final Stubber stubber;
         final ClassLoader originalCL = Thread.currentThread().getContextClassLoader();
+        
         Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
         try {
-            getMockingProgress().stubbingStarted();
+            stubber = Mockito.doAnswer(answer);
         } finally {
             Thread.currentThread().setContextClassLoader(originalCL);
         }
-        getMockingProgress().resetOngoingStubbing();
-        return (PowerMockitoStubber) new PowerMockitoStubberImpl().doAnswer(answer);
+        
+        return new PowerMockitoStubberImpl(stubber);
     }
     
     private MockingProgress getMockingProgress() {

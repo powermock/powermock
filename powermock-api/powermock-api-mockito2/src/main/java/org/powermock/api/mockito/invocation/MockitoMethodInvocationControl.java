@@ -18,32 +18,21 @@ package org.powermock.api.mockito.invocation;
 
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
-import org.mockito.exceptions.misusing.NotAMockException;
-import org.mockito.internal.creation.DelegatingMethod;
 import org.mockito.internal.debugging.Localized;
-import org.mockito.internal.debugging.LocationImpl;
 import org.mockito.internal.exceptions.stacktrace.StackTraceFilter;
-import org.mockito.internal.invocation.InvocationImpl;
-import org.mockito.internal.invocation.realmethod.CleanTraceRealMethod;
-import org.mockito.internal.invocation.realmethod.RealMethod;
 import org.mockito.internal.progress.MockingProgress;
-import org.mockito.internal.progress.SequenceNumber;
 import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.internal.stubbing.InvocationContainerImpl;
 import org.mockito.internal.verification.VerificationDataImpl;
 import org.mockito.internal.verification.VerificationModeFactory;
-import org.mockito.invocation.Invocation;
 import org.mockito.verification.VerificationMode;
 import org.powermock.api.mockito.internal.invocation.InvocationControlAssertionError;
 import org.powermock.api.mockito.internal.verification.StaticMockAwareVerificationMode;
-import org.powermock.api.support.SafeExceptionRethrower;
 import org.powermock.core.MockGateway;
-import org.powermock.core.MockRepository;
 import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.reflect.Whitebox;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -115,7 +104,7 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
     }
     
     @Override
-    public Object invoke(final Object obj, final Method method, final Object[] arguments) throws Throwable {
+    public Object invoke(final Object mock, final Method method, final Object[] arguments) throws Throwable {
         /*
            * If we come here and it means that the class has been modified by
            * PowerMock. If this handler has a delegator (i.e. is in spy mode in
@@ -133,10 +122,10 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
         if (isCanBeHandledByMockito(method) && hasBeenCaughtByMockitoProxy()) {
             returnValue = MockGateway.PROCEED;
         } else {
-            if (isInStaticVerificationMode(obj)) {
-                handleStaticVerification((Class<?>) obj);
+            if (isInStaticVerificationMode(mock)) {
+                handleStaticVerification((Class<?>) mock);
             }
-            returnValue = mockHandlerAdaptor.performIntercept(obj, method, arguments);
+            returnValue = mockHandlerAdaptor.performIntercept(mock, method, arguments);
             if (returnValue == null) {
                 return MockGateway.SUPPRESS;
             }
