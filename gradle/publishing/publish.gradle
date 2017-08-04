@@ -6,23 +6,23 @@ if (project.version.toString().contains("beta")){
 }
 
 bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_API_KEY')
+    //user = System.getenv('BINTRAY_USER')
+    //key = System.getenv('BINTRAY_API_KEY')
 
     publish = project.ext.bintrayAutoPublish
 
     pkg {
-        repo = project.ext.bintrayRepo
+        //repo = project.ext.bintrayRepo
 
-        name = 'powermock'
-        userOrg ='powermock'
+        //name = 'powermock'
+        //userOrg ='powermock'
 
-        desc = project.description
-        websiteUrl = 'http://powermock.org'
-        issueTrackerUrl = 'https://powermock.com/powermock/powermock/issues'
-        vcsUrl = 'https://github.com/powermock/powermock.git'
-        licenses = ['Apache-2.0']
-        labels = ['java', 'mock', 'mocking', 'tests']
+        //desc = project.description
+        //websiteUrl = 'http://powermock.org'
+        //issueTrackerUrl = 'https://powermock.com/powermock/powermock/issues'
+        //vcsUrl = 'https://github.com/powermock/powermock.git'
+        //licenses = ['Apache-2.0']
+        //labels = ['java', 'mock', 'mocking', 'tests']
         publicDownloadNumbers = true
 
         // optional version attributes
