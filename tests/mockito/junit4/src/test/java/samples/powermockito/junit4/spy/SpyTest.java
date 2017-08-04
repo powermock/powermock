@@ -15,6 +15,7 @@
  */
 package samples.powermockito.junit4.spy;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,12 +46,20 @@ public class SpyTest {
     }
 
     @Test
-    public void testSpyingOnPrivateMethodWorks() throws Exception {
+    public void should_stub_spying_on_private_method_works() throws Exception {
         when(partialMock, "getMyString").thenReturn("ikk2");
 
         assertThat(partialMock.getMyString(), equalTo("ikk2"));
         assertThat(partialMock.getStringTwo(), equalTo("two"));
     }
+    
+    @Test
+    public void should_call_real_method_when_spy_method_is_not_stubbed() {
+        Assertions.assertThat(partialMock.getMyString())
+                  .as("Real method is called")
+                  .isEqualTo(new SpyObject().getMyString());
+    }
+    
 
     @Test
     public void testSuppressMethodWhenObjectIsSpy() throws Exception {

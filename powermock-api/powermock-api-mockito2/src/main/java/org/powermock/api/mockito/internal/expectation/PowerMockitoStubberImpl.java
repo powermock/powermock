@@ -16,89 +16,102 @@
  */
 package org.powermock.api.mockito.internal.expectation;
 
-import org.mockito.internal.stubbing.StubberImpl;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.Stubber;
 import org.powermock.api.mockito.expectation.PowerMockitoStubber;
 import org.powermock.api.mockito.expectation.PrivatelyExpectedArguments;
 import org.powermock.api.mockito.invocation.MockitoMethodInvocationControl;
-import org.powermock.api.mockito.invocation.MockHandlerAdaptor;
 import org.powermock.core.MockRepository;
 import org.powermock.reflect.Whitebox;
 
 import java.lang.reflect.Method;
-import java.util.List;
 
 /**
  * Extension of the standard Mocktio stubber implementation that also support
  * PowerMockito created mocks.
  */
-public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockitoStubber {
-
+public class PowerMockitoStubberImpl implements PowerMockitoStubber, Stubber {
+    
+    private final Stubber stubber;
+    
+    public PowerMockitoStubberImpl(final Stubber stubber) {this.stubber = stubber;}
+    
     @Override
-    public void when(Class<?> classMock) {
-        MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository
-                .getStaticMethodInvocationControl(classMock);
-        addAnswersForStubbing(invocationControl);
-    }
-
-    /**
-     * Supports PowerMockito mocks. If {@code mock} is not a PowerMockito
-     * mock it will delegate to Mockito.
-     *
-     * @see Stubber#when(Object)
-     */
-    @Override
-    public <T> T when(T instanceMock) {
-        MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository
-                .getInstanceMethodInvocationControl(instanceMock);
+    public <T> T when(final T instanceMock) {
+        final MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository.getInstanceMethodInvocationControl(instanceMock);
         final T returnValue;
         if (invocationControl == null) {
-            returnValue = super.when(instanceMock);
+            returnValue = stubber.when(instanceMock);
         } else {
-            addAnswersForStubbing(invocationControl);
+            final Object mock = invocationControl.getMockHandlerAdaptor().getMock();
+            stubber.when(mock);
             returnValue = instanceMock;
         }
         return returnValue;
     }
-
-    @SuppressWarnings("unchecked")
-    private void addAnswersForStubbing(MockitoMethodInvocationControl invocationControl) {
-        final MockHandlerAdaptor mockHandler = invocationControl.getMockHandlerAdaptor();
-        final List<Answer<?>> answers = Whitebox.getInternalState(this, List.class);
-        mockHandler.setAnswersForStubbing(answers);
+    
+    @Override
+    public Stubber doThrow(final Throwable... toBeThrown) {return stubber.doThrow(toBeThrown);}
+    
+    @Override
+    public Stubber doThrow(final Class<? extends Throwable> toBeThrown) {return stubber.doThrow(toBeThrown);}
+    
+    @Override
+    public Stubber doThrow(final Class<? extends Throwable> toBeThrown, final Class<? extends Throwable>[] nextToBeThrown) {return stubber.doThrow(toBeThrown, nextToBeThrown);}
+    
+    @Override
+    public Stubber doAnswer(final Answer answer) {return stubber.doAnswer(answer);}
+    
+    @Override
+    public Stubber doNothing() {return stubber.doNothing();}
+    
+    @Override
+    public Stubber doReturn(final Object toBeReturned) {return stubber.doReturn(toBeReturned);}
+    
+    @Override
+    public Stubber doReturn(final Object toBeReturned,
+                            final Object... nextToBeReturned) {return stubber.doReturn(toBeReturned, nextToBeReturned);}
+    
+    @Override
+    public Stubber doCallRealMethod() {return stubber.doCallRealMethod();}
+    
+    @Override
+    public void when(Class<?> classMock) {
+        MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository.getStaticMethodInvocationControl(classMock);
+        final Object mock = invocationControl.getMockHandlerAdaptor().getMock();
+        stubber.when(mock);
     }
-
+    
     @Override
     public <T> PrivatelyExpectedArguments when(T mock, Method method) throws Exception {
         assertNotNull(mock, "mock");
         assertNotNull(method, "Method");
-        prepareForStubbing(mock);
+        this.when(mock);
         return new DefaultPrivatelyExpectedArguments(mock, method);
     }
-
+    
     @Override
     public <T> void when(T mock, Object... arguments) throws Exception {
         assertNotNull(mock, "mock");
-        prepareForStubbing(mock);
+        this.when(mock);
         Whitebox.invokeMethod(mock, arguments);
     }
-
+    
     @Override
     public <T> void when(T mock, String methodToExpect, Object... arguments) throws Exception {
         assertNotNull(mock, "mock");
         assertNotNull(methodToExpect, "methodToExpect");
-        prepareForStubbing(mock);
+        this.when(mock);
         Whitebox.invokeMethod(mock, methodToExpect, arguments);
     }
-
+    
     @Override
     public <T> void when(Class<T> classMock, Object... arguments) throws Exception {
         assertNotNull(classMock, "classMock");
         when(classMock);
         Whitebox.invokeMethod(classMock, arguments);
     }
-
+    
     @Override
     public <T> void when(Class<T> classMock, String methodToExpect, Object... parameters) throws Exception {
         assertNotNull(classMock, "classMock");
@@ -106,7 +119,7 @@ public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockito
         when(classMock);
         Whitebox.invokeMethod(classMock, methodToExpect, parameters);
     }
-
+    
     @Override
     public <T> PrivatelyExpectedArguments when(Class<T> classMock, Method method) throws Exception {
         assertNotNull(classMock, "classMock");
@@ -114,16 +127,10 @@ public class PowerMockitoStubberImpl extends StubberImpl implements PowerMockito
         when(classMock);
         return new DefaultPrivatelyExpectedArguments(classMock, method);
     }
-
+    
     private void assertNotNull(Object object, String name) {
         if (object == null) {
             throw new IllegalArgumentException(name + " cannot be null");
         }
     }
-
-    private <T> void prepareForStubbing(T mock) {
-        MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository.getInstanceMethodInvocationControl(mock);
-        addAnswersForStubbing(invocationControl);
-    }
-
 }
