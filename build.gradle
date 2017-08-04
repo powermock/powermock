@@ -32,7 +32,7 @@ ext{
     junitRulesVersion = "4.8.2"
     testngVersion = "6.9.10"
     xstreamVersion = "1.4.9"
-    mockitoVersion = "2.8.48"
+    mockitoVersion = "2.8.54"
     servletVersion = "2.5"
     systemRulesVersion = "1.16.0"
     jacocoVersion = "0.7.7.201606060606"

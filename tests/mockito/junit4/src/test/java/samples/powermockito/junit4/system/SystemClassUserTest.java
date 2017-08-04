@@ -163,6 +163,7 @@ public class SystemClassUserTest {
         final UUID mock = mock(UUID.class);
         mockStatic(UUID.class);
         given(UUID.randomUUID()).willReturn(mock);
+        given(mock.toString()).willCallRealMethod();
 
 		// when
 		String actual = new SystemClassUser().generatePerishableToken();

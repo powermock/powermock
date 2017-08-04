@@ -27,21 +27,24 @@ import static org.powermock.api.mockito.PowerMockito.*;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(StaticAndInstanceDemo.class)
 public class StaticAndInstanceDemoTest {
-
-	@Test
-	public void partialMockingOfStaticAndInstanceMethod() throws Exception {
-		spy(StaticAndInstanceDemo.class);
-		StaticAndInstanceDemo tested = spy(new StaticAndInstanceDemo());
-
-		final String staticExpected = "a static message";
-		when(StaticAndInstanceDemo.getStaticMessage()).thenReturn(staticExpected);
-		final String privateExpected = "A private message ";
-		when(tested, "getPrivateMessage").thenReturn(privateExpected);
-
-		String actual = tested.getMessage();
-
-		verifyStatic();	StaticAndInstanceDemo.getStaticMessage();
-		verifyPrivate(tested).invoke("getPrivateMessage");
-		assertEquals(privateExpected + staticExpected, actual);
-	}
+    
+    @Test
+    public void partialMockingOfStaticAndInstanceMethod() throws Exception {
+        spy(StaticAndInstanceDemo.class);
+        StaticAndInstanceDemo tested = spy(new StaticAndInstanceDemo());
+        
+        final String staticExpected = "a static message";
+        when(StaticAndInstanceDemo.getStaticMessage()).thenReturn(staticExpected);
+        final String privateExpected = "A private message ";
+        when(tested, "getPrivateMessage").thenReturn(privateExpected);
+        
+        String actual = tested.getMessage();
+    
+        assertEquals(privateExpected + staticExpected, actual);
+        
+        verifyStatic();
+        StaticAndInstanceDemo.getStaticMessage();
+    
+        verifyPrivate(tested).invoke("getPrivateMessage");
+    }
 }
