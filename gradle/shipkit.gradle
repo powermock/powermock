@@ -1,24 +1,27 @@
 //This file was created automatically and is intended to be checked-in.
 shipkit {
-   gitHub.repository = "wwilk/powermock"
+    gitHub.repository = "powermock/powermock"
 
-   //TODO when you finish trying out Shipkit, use your own token below (http://link/needed)
-   gitHub.readOnlyAuthToken = "76826c9ec886612f504d12fd4268b16721c4f85d"
+    //TODO when you finish trying out Shipkit, use your own token below (http://link/needed)
+    gitHub.readOnlyAuthToken = "76826c9ec886612f504d12fd4268b16721c4f85d"
+
+    releaseNotes.file = "release-notes.md"
+    releaseNotes.ignoreCommitsContaining = ["[ci skip]"]
 }
 
 allprojects {
-   plugins.withId("org.shipkit.bintray") {
-       //TODO when you finish trying out Shipkit, use your own Bintray repository below (http://link/needed)
-       bintray {
-           key = '7ea297848ca948adb7d3ee92a83292112d7ae989'
-           pkg {
-               repo = 'bootstrap'
-               user = 'shipkit-bootstrap-bot'
-               userOrg = 'shipkit-bootstrap'
-               name = 'maven'
-               licenses = ['MIT']
-               labels = ['continuous delivery', 'release automation', 'shipkit']
-           }
-       }
-   }
+    plugins.withId("org.shipkit.bintray") {
+        //TODO when you finish trying out Shipkit, use your own Bintray repository below (http://link/needed)
+        bintray {
+            key = '7ea297848ca948adb7d3ee92a83292112d7ae989'
+            pkg {
+                repo = 'bootstrap'
+                user = 'shipkit-bootstrap-bot'
+                userOrg = 'shipkit-bootstrap'
+                name = 'maven'
+                licenses = ['MIT']
+                labels = ['continuous delivery', 'release automation', 'shipkit']
+            }
+        }
+    }
 }
