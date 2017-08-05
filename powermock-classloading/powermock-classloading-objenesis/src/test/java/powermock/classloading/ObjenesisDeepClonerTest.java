@@ -30,15 +30,17 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assume.assumeTrue;
 
 public class ObjenesisDeepClonerTest {
-
+    
     /**
      * These tests crashes the JVM on version 1.8
      */
     @Before
     public void onlyRunTestsOnNonJava8Environment() throws Exception {
-        assumeTrue(Float.valueOf(System.getProperty("java.specification.version")) < 1.8f);
+        final String property = System.getProperty("java.specification.version");
+        final float maximumVersion = 1.6f;
+        assumeTrue("Current JDK version  " + property + " expected is more than than " + maximumVersion, Float.valueOf(property) <= maximumVersion);
     }
-
+    
     @Test
     public void clonesJavaInstances() throws Exception {
         final URL original = new URL("http://www.powermock.org");
@@ -46,7 +48,7 @@ public class ObjenesisDeepClonerTest {
         assertEquals(clone, original);
         assertNotSame(clone, original);
     }
-
+    
     @Test
     public void clonesUnmodifiableLists() throws Exception {
         final UnmodifiableListExample original = new UnmodifiableListExample();
@@ -54,20 +56,20 @@ public class ObjenesisDeepClonerTest {
         assertEquals(clone, original);
         assertNotSame(clone, original);
     }
-
+    
     @Test
     public void clonesArraysWithNullValues() throws Exception {
-        Object[] original = new Object[] { "Test", null };
+        Object[] original = new Object[]{"Test", null};
         Object[] clone = new DeepCloner().clone(original);
         assertArrayEquals(clone, original);
         assertNotSame(clone, original);
     }
-
+    
 }
 
 class UnmodifiableListExample {
     private List<NotSerializable> cl = Collections.singletonList(new NotSerializable());
-
+    
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -75,28 +77,23 @@ class UnmodifiableListExample {
         result = prime * result + ((cl == null) ? 0 : cl.hashCode());
         return result;
     }
-
+    
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
+        if (this == obj) { return true; }
+        if (obj == null) { return false; }
+        if (getClass() != obj.getClass()) { return false; }
         powermock.classloading.UnmodifiableListExample other = (powermock.classloading.UnmodifiableListExample) obj;
         if (cl == null) {
-            if (other.cl != null)
-                return false;
-        } else if (!cl.equals(other.cl))
-            return false;
+            if (other.cl != null) { return false; }
+        } else if (!cl.equals(other.cl)) { return false; }
         return true;
     }
 }
 
 class NotSerializable {
     private final String state = "Nothing";
-
+    
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -104,21 +101,16 @@ class NotSerializable {
         result = prime * result + ((state == null) ? 0 : state.hashCode());
         return result;
     }
-
+    
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
+        if (this == obj) { return true; }
+        if (obj == null) { return false; }
+        if (getClass() != obj.getClass()) { return false; }
         powermock.classloading.NotSerializable other = (powermock.classloading.NotSerializable) obj;
         if (state == null) {
-            if (other.state != null)
-                return false;
-        } else if (!state.equals(other.state))
-            return false;
+            if (other.state != null) { return false; }
+        } else if (!state.equals(other.state)) { return false; }
         return true;
     }
 }

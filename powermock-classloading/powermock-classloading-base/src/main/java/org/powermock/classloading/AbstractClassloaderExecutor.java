@@ -33,26 +33,26 @@ public abstract class AbstractClassloaderExecutor implements ClassloaderExecutor
         assertArgumentNotNull(callable, "callable");
         return (T) execute(callable, Whitebox.getMethod(callable.getClass(), "call"));
     }
-
+    
     @Override
     public void execute(Runnable runnable) {
         assertArgumentNotNull(runnable, "runnable");
         execute(runnable, Whitebox.getMethod(runnable.getClass(), "run"));
     }
-
+    
     private void assertArgumentNotNull(Object object, String argumentName) {
         if (object == null) {
             throw new IllegalArgumentException(argumentName + " cannot be null.");
         }
     }
-
+    
     protected abstract Object execute(Object instance, Method method, Object... arguments);
-
+    
     Object executeWithClassLoader(Object instance, Method method, ClassLoader classloader, Object[] arguments) {
         final DeepClonerSPI deepCloner = createDeepCloner(classloader);
         final Object objectLoadedWithClassloader = deepCloner.clone(instance);
         final Object[] argumentsLoadedByClassLoader = cloneArguments(arguments, deepCloner);
-    
+        
         return invokeWithClassLoader(classloader, method, objectLoadedWithClassloader, argumentsLoadedByClassLoader);
     }
     
@@ -69,7 +69,7 @@ public abstract class AbstractClassloaderExecutor implements ClassloaderExecutor
     }
     
     private Object cloneResult(Object result) {return result == null ? null : createDeepCloner(getClass().getClassLoader()).clone(result);}
-
+    
     private Object getResult(Method method, Object objectLoadedWithClassloader, Object[] argumentsLoadedByClassLoader) {
         Object result = null;
         try {
@@ -79,7 +79,7 @@ public abstract class AbstractClassloaderExecutor implements ClassloaderExecutor
         }
         return result;
     }
-
+    
     private Object[] cloneArguments(Object[] arguments, DeepClonerSPI deepCloner) {
         final Object[] argumentsLoadedByClassLoader = new Object[arguments.length];
         for (int i = 0; i < arguments.length; i++) {
@@ -88,9 +88,19 @@ public abstract class AbstractClassloaderExecutor implements ClassloaderExecutor
         }
         return argumentsLoadedByClassLoader;
     }
-
+    
     private DeepClonerSPI createDeepCloner(ClassLoader classLoader) {
         final Class<DeepClonerSPI> deepClonerClass = ClassLoaderUtil.loadClass("org.powermock.classloading.DeepCloner");
+        ClassLoader currentCL = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(deepClonerClass.getClass().getClassLoader());
+            return doCreateDeepCloner(classLoader, deepClonerClass);
+        } finally {
+            Thread.currentThread().setContextClassLoader(currentCL);
+        }
+    }
+    
+    private DeepClonerSPI doCreateDeepCloner(final ClassLoader classLoader, final Class<DeepClonerSPI> deepClonerClass) {
         final Constructor<DeepClonerSPI> constructor = Whitebox.getConstructor(deepClonerClass, ClassLoader.class);
         try {
             return constructor.newInstance(classLoader);
