@@ -16,3 +16,11 @@ tasks.withType(JavaCompile) {
     options.warnings = false
 }
 
+if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
+    apply plugin: 'checkstyle'
+    checkstyle {
+        toolVersion = checkstyleVersion
+        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+    }
+}
+

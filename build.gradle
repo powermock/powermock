@@ -55,12 +55,6 @@ apply from: "${gradleScriptDir}/version.gradle"
 
 allprojects{
     apply plugin: 'propdeps-idea'
-
-    apply plugin: 'checkstyle'
-    checkstyle {
-        toolVersion = checkstyleVersion
-        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
-    }
 }
 
 apply from: "${gradleScriptDir}/modules.gradle"
