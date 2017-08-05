@@ -36,7 +36,7 @@ public class ObjenesisDeepClonerTest {
      */
     @Before
     public void onlyRunTestsOnNonJava8Environment() throws Exception {
-        assumeTrue(Float.valueOf(System.getProperty("java.specification.version")) < 1.8f);
+        assumeTrue(Float.valueOf(System.getProperty("java.specification.version")) < 1.7f);
     }
 
     @Test
