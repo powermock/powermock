@@ -8,6 +8,10 @@ List mockito2Lbs = [
 
 configure(project.subprojects) { subproject ->
 
+    if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
+        project.tasks.all { task -> task.enabled = false }
+    }
+
     dependencies {
         testCompile("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
