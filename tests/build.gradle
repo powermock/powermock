@@ -16,6 +16,10 @@ configure(subprojects) { project ->
     }
 
     apply from: "${gradleScriptDir}/java-module.gradle"
+
+    test {
+        jvmArgs "-XX:MaxPermSize=256m"
+    }
 }
 
 def mockitoDependsModules = project(":tests:mockito").subprojects + project(":tests:java8").subprojects
