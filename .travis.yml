@@ -10,6 +10,9 @@ cache:
 # see https://docs.travis-ci.com/user/migrating-from-legacy/ and https://docs.travis-ci.com/user/ci-environment
 sudo: true
 
+# Precise environment on Travis should be used, because Trusty does not provide supporting jdk 7.
+# https://github.com/travis-ci/travis-ci/issues/7884
+
 dist: precise
 
 language: java
