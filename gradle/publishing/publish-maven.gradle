@@ -12,8 +12,6 @@ apply plugin: 'maven-publish'
 //}
 
 publishing.publications.all {
-    //def devs = ['johanhaleby:Johan Haleby:johan.haleby at jayway.com', 'jakr:Jan Kronquist:jan.kronquist at jayway.com', 'thekingnothing:Arthur Zagretdinov:arthur.zagretdinov at outlook.com']
-
     pom.withXml {
         def root = asNode()
 //        root.appendNode('name', 'PowerMock')
@@ -34,16 +32,6 @@ publishing.publications.all {
 //        def issues = root.appendNode('issueManagement')
 //        issues.appendNode('url', 'https://github.com/powermock/powermock/issues')
 //        issues.appendNode('system', 'GitHub')
-
-//        def developers = root.appendNode('developers')
-//        devs.each {
-//            def split = it.split(':')
-//            assert split.length == 3
-//            def d = developers.appendNode('developer')
-//            d.appendNode('id', split[0])
-//            d.appendNode('name', split[1])
-//            d.appendNode('email', split[2])
-//        }
 
         root.dependencies.'*'.findAll() {
             it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
