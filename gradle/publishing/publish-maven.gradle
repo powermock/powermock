@@ -15,8 +15,6 @@ publishing.publications.all {
     pom.withXml {
         def root = asNode()
 //        root.appendNode('name', 'PowerMock')
-//        root.appendNode('packaging', 'jar')
-//        root.appendNode('description', project.description)
 //        root.appendNode('url', 'http://www.powermock.org')
 
 //        def license = root.appendNode('licenses').appendNode('license')
