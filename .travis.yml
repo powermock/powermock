@@ -10,6 +10,8 @@ cache:
 # see https://docs.travis-ci.com/user/migrating-from-legacy/ and https://docs.travis-ci.com/user/ci-environment
 sudo: true
 
+dist: precise
+
 language: java
 
 matrix:
