@@ -29,10 +29,6 @@ publishing.publications.all {
 //        scm.appendNode('connection', 'scm:git:git://github.com/powermock/powermock')
 //        scm.appendNode('developerConnection', 'scm:git:git://github.com/powermock/powermock')
 
-//        def issues = root.appendNode('issueManagement')
-//        issues.appendNode('url', 'https://github.com/powermock/powermock/issues')
-//        issues.appendNode('system', 'GitHub')
-
         root.dependencies.'*'.findAll() {
             it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
                 dep.name == it.artifactId.text()
