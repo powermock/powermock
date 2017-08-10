@@ -5,18 +5,20 @@ configure(publishableModules) { project ->
     apply from: "${gradleScriptDir}/publishing/publishable-module.gradle"
 }
 
+def skippedTasksForUnpublishableModules = [
+    'generatePomFileForJavaLibraryPublication',
+    'publishJavaLibraryPublicationToMavenLocal',
+    'jar',
+    'javadoc',
+    'javadocJar',
+    'sourcesJar',
+    'bintrayUpload'
+]
+
 def unpublishableModules = allprojects - publishableModules
 configure(unpublishableModules) { project ->
     project.tasks.all {
-        if (it.name == 'publishJavaLibraryPublicationToMavenLocal') {
-            it.enabled = false
-        }
-        if (it.name == 'javadoc') {
-            it.enabled = false
-        }
-        if (it.name == 'bintrayUpload') {
-            it.enabled = false
-        }
+        it.enabled = !skippedTasksForUnpublishableModules.contains(it.name)
     }
 }
 
