@@ -17,11 +17,13 @@ publishing.publications.all {
 //        root.appendNode('name', 'PowerMock')
 //        root.appendNode('url', 'http://www.powermock.org')
 
-//        def license = root.appendNode('licenses').appendNode('license')
-//        license.appendNode('name', 'The Apache Software License, Version 2.0')
-//        license.appendNode('url', 'http://www.apache.org/licenses/LICENSE-2.0.txt')
-//        license.appendNode('distribution', 'repo')
-//
+        root.remove(root.get('licenses'))
+
+        def license = root.appendNode('licenses').appendNode('license')
+        license.appendNode('name', 'The Apache Software License, Version 2.0')
+        license.appendNode('url', 'http://www.apache.org/licenses/LICENSE-2.0.txt')
+        license.appendNode('distribution', 'repo')
+
 //        def scm = root.appendNode('scm')
 //        scm.appendNode('url', 'http://github.com/mockito/mockito')
 //        scm.appendNode('connection', 'scm:git:git://github.com/powermock/powermock')
