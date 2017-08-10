@@ -5,6 +5,8 @@ shipkit {
     //TODO when you finish trying out Shipkit, use your own token below (http://link/needed)
     gitHub.readOnlyAuthToken = "76826c9ec886612f504d12fd4268b16721c4f85d"
 
+    git.tagPrefix = "powermock-"
+
     releaseNotes.file = "release-notes.md"
     releaseNotes.ignoreCommitsContaining = ["[ci skip]"]
 
