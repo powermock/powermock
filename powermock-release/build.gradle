@@ -78,7 +78,7 @@ project(":powermock-release:powermock-mockito2") {
             project(":powermock-classloading:powermock-classloading-base"),
             project(":powermock-api:powermock-api-support"),
             project(":powermock-api:powermock-api-mockito-common"),
-            project(":powermock-api:powermock-api-mockito"),
+            project(":powermock-api:powermock-api-mockito2"),
             project(":powermock-modules:powermock-module-junit3"),
             project(":powermock-modules:powermock-module-junit4-common"),
             project(":powermock-modules:powermock-module-junit4"),
