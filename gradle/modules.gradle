@@ -20,21 +20,6 @@ configure(unpublishableModules) { project ->
     }
 }
 
-def unpublishableModules = allprojects - publishableModules
-configure(unpublishableModules) { project ->
-    project.tasks.all {
-        if (it.name == 'publishJavaLibraryPublicationToMavenLocal') {
-            it.enabled = false
-        }
-        if (it.name == 'javadoc') {
-            it.enabled = false
-        }
-        if (it.name == 'bintrayUpload') {
-            it.enabled = false
-        }
-    }
-}
-
 if (project.hasProperty('checkJava6Compatibility') && !System.getenv("SKIP_RELEASE")) {
     //if we're skipping release, let's also skip checking compatibility (faster builds)
     configure(publishableModules) { project ->
@@ -44,7 +29,6 @@ if (project.hasProperty('checkJava6Compatibility') && !System.getenv("SKIP_RELEA
         }
     }
 }
-
 
 def mockitoDependsModules = [
         project(":powermock-core"),
