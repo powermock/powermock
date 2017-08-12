@@ -48,6 +48,10 @@ public class PowerMockitoCore {
     public MockAwareVerificationMode wrapInMockitoSpecificVerificationMode(Object mock, VerificationMode mode) {
         return new MockAwareVerificationMode(mock, mode);
     }
+    
+    public <T> VerificationMode wrapInStaticVerificationMode(final Class<T> mockedClass, final VerificationMode verificationMode) {
+        return new StaticMockAwareVerificationMode(mockedClass, verificationMode);
+    }
 
     public MockAwareVerificationMode wrapInStaticVerificationMode(VerificationMode mode) {
         return new StaticMockAwareVerificationMode(mode);

@@ -1,3 +1,6 @@
+Change log 1.7.1
+* Fixed #832 Provide a new API for verifying static mock and deprecate old for Mockito
+
 Change log 1.7.0
 -----------------------------
 * Added supporting Mockito 2.8.9 for PowerMock 2.x (thanks to Gregor Stamac @gstamac for pull request)

@@ -41,16 +41,25 @@ import org.mockito.verification.VerificationMode;
  */
 public class StaticMockAwareVerificationMode extends MockAwareVerificationMode {
 
-    private Class<?> clsMock;
+    private Class<?> classMock;
 
     public StaticMockAwareVerificationMode(VerificationMode mode) {
-        super(null, mode);
+        this(null, mode);
     }
-
+    
+    public <T> StaticMockAwareVerificationMode(final Class<T> classMock, final VerificationMode verificationMode) {
+        super(null, verificationMode);
+        this.classMock = classMock;
+    }
+    
     public void setClassMock(Class<?> clsMock) {
-        this.clsMock = clsMock;
+        this.classMock = clsMock;
     }
-
+    
+    public Class<?> getClassMock() {
+        return classMock;
+    }
+    
     @Override
     public void verify(VerificationData data) {
         super.verify(data);
@@ -58,6 +67,6 @@ public class StaticMockAwareVerificationMode extends MockAwareVerificationMode {
 
     @Override
     public Object getMock() {
-        return clsMock;
+        return classMock;
     }
 }
