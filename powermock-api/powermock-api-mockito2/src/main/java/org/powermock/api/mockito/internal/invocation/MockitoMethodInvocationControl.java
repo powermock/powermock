@@ -187,7 +187,10 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
     private void handleStaticVerification(Class<?> cls) {
         VerificationMode verificationMode = getVerificationMode();
         if (verificationMode instanceof StaticMockAwareVerificationMode) {
-            ((StaticMockAwareVerificationMode) verificationMode).setClassMock(cls);
+            final StaticMockAwareVerificationMode mode = (StaticMockAwareVerificationMode) verificationMode;
+            if (mode.getClassMock() == null) {
+                mode.setClassMock(cls);
+            }
         }
     }
     
@@ -235,12 +238,12 @@ public class MockitoMethodInvocationControl implements MethodInvocationControl {
         });
         
         Invocation invocation = new InvocationImpl(
-            interceptionObject,
-            new DelegatingMethod(method),
-            arguments,
-            SequenceNumber.next(),
-            cleanTraceRealMethod,
-            new LocationImpl()
+                                                      interceptionObject,
+                                                      new DelegatingMethod(method),
+                                                      arguments,
+                                                      SequenceNumber.next(),
+                                                      cleanTraceRealMethod,
+                                                      new LocationImpl()
         );
         
         try {

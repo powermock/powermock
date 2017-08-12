@@ -45,16 +45,26 @@ import java.util.Set;
  */
 public class StaticMockAwareVerificationMode extends MockAwareVerificationMode {
 
-    private Class<?> clsMock;
+    private Class<?> classMock;
 
     public StaticMockAwareVerificationMode(VerificationMode mode, Set<VerificationListener> listeners) {
+        this(null, mode, listeners);
+    }
+    
+    public <T> StaticMockAwareVerificationMode(final Class<T> classMock, final VerificationMode mode,
+                                               final Set<VerificationListener> listeners) {
         super(null, mode, listeners);
+        this.classMock = classMock;
     }
-
+    
     public void setClassMock(Class<?> clsMock) {
-        this.clsMock = clsMock;
+        this.classMock = clsMock;
     }
-
+    
+    public Class<?> getClassMock() {
+        return classMock;
+    }
+    
     @Override
     public void verify(VerificationData data) {
         super.verify(data);
@@ -62,6 +72,6 @@ public class StaticMockAwareVerificationMode extends MockAwareVerificationMode {
 
     @Override
     public Object getMock() {
-        return clsMock;
+        return classMock;
     }
 }
