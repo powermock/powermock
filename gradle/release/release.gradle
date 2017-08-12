@@ -31,7 +31,7 @@ release {
     ]
 
     git {
-        requireBranch = 'master'
+        requireBranch = 'release/1.x'
         pushToRemote = 'origin'
         pushToBranchPrefix = ''
         commitVersionFileOnly = true
