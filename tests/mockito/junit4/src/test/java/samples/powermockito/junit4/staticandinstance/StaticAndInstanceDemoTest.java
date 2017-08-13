@@ -42,7 +42,7 @@ public class StaticAndInstanceDemoTest {
     
         assertEquals(privateExpected + staticExpected, actual);
         
-        verifyStatic();
+        verifyStatic(StaticAndInstanceDemo.class);
         StaticAndInstanceDemo.getStaticMessage();
     
         verifyPrivate(tested).invoke("getPrivateMessage");

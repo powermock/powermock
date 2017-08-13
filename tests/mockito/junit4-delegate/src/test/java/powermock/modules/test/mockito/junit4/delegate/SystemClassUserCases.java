@@ -98,7 +98,7 @@ public class SystemClassUserCases {
 
         new SystemClassUser().shuffleCollection(list);
 
-        verifyStatic(times(2));
+        verifyStatic(Collections.class, times(2));
         Collections.shuffle(list);
     }
 

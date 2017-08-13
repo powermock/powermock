@@ -25,7 +25,6 @@ import org.mockito.stubbing.Stubber;
 import org.mockito.verification.VerificationMode;
 import org.powermock.api.mockito.expectation.PowerMockitoStubber;
 import org.powermock.api.mockito.internal.expectation.PowerMockitoStubberImpl;
-import org.powermock.api.mockito.internal.verification.StaticMockAwareVerificationMode;
 import org.powermock.core.classloader.ClassloaderWrapper;
 
 import java.util.concurrent.Callable;
@@ -97,11 +96,5 @@ public class PowerMockitoCore {
     
     public MockAwareVerificationMode wrapInMockitoSpecificVerificationMode(Object mock, VerificationMode mode) {
         return new MockAwareVerificationMode(mock, mode, getMockingProgress().verificationListeners());
-    }
-public <T> VerificationMode wrapInStaticVerificationMode(final Class<T> mockedClass, final VerificationMode verificationMode) {
-        return new StaticMockAwareVerificationMode(mockedClass, verificationMode, getMockingProgress().verificationListeners());
-    }
-    public MockAwareVerificationMode wrapInStaticVerificationMode(VerificationMode verificationMode) {
-        return new StaticMockAwareVerificationMode(verificationMode, getMockingProgress().verificationListeners());
     }
 }

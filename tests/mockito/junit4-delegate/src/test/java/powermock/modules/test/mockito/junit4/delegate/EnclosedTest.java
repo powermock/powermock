@@ -60,7 +60,7 @@ public class EnclosedTest {
             assertThat("Stubbed return-value of #getStaticMessag()",
                     StaticAndInstanceDemo.getStaticMessage(),
                     equalTo(stubbedReturnValue));
-            verifyStatic();
+            verifyStatic(StaticAndInstanceDemo.class);
             StaticAndInstanceDemo.getStaticMessage();
             verifyNoMoreInteractions(StaticAndInstanceDemo.class);
         }

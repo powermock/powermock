@@ -21,17 +21,14 @@ import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.internal.debugging.Localized;
 import org.mockito.internal.exceptions.stacktrace.StackTraceFilter;
 import org.mockito.internal.progress.MockingProgress;
-import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.internal.stubbing.InvocationContainerImpl;
 import org.mockito.internal.verification.VerificationDataImpl;
 import org.mockito.internal.verification.VerificationModeFactory;
 import org.mockito.verification.VerificationMode;
 import org.powermock.api.mockito.internal.invocation.InvocationControlAssertionError;
-import org.powermock.api.mockito.internal.verification.StaticMockAwareVerificationMode;
 import org.powermock.core.MockGateway;
 import org.powermock.core.spi.MethodInvocationControl;
 import org.powermock.reflect.Whitebox;
-import org.powermock.reflect.internal.WhiteboxImpl;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -81,28 +78,6 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
         return mockedMethods == null || (mockedMethods.contains(method));
     }
     
-    private boolean isInVerificationMode() {
-        return getVerificationMode() != null;
-    }
-    
-    private VerificationMode getVerificationMode() {
-        try {
-            MockingProgress progress = ThreadSafeMockingProgress.mockingProgress();
-            return getVerificationModeFromMockProgress(progress);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-    
-    @SuppressWarnings("unchecked")
-    private VerificationMode getVerificationModeFromMockProgress(MockingProgress mockingProgress) {
-        if (mockingProgress == null) {
-            return null;
-        }
-        Localized<VerificationMode> verificationMode = Whitebox.getInternalState(mockingProgress, Localized.class);
-        return verificationMode == null ? null : verificationMode.getObject();
-    }
-    
     @Override
     public Object invoke(final Object mock, final Method method, final Object[] arguments) throws Throwable {
         /*
@@ -122,9 +97,6 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
         if (isCanBeHandledByMockito(method) && hasBeenCaughtByMockitoProxy()) {
             returnValue = MockGateway.PROCEED;
         } else {
-            if (isInStaticVerificationMode(mock)) {
-                handleStaticVerification((Class<?>) mock);
-            }
             returnValue = mockHandlerAdaptor.performIntercept(mock, method, arguments);
             if (returnValue == null) {
                 return MockGateway.SUPPRESS;
@@ -133,23 +105,9 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
         return returnValue;
     }
     
-    private boolean isInStaticVerificationMode(final Object obj) {
-        return WhiteboxImpl.isClass(obj) && isInVerificationMode();
-    }
-    
     private boolean isCanBeHandledByMockito(final Method method) {
         final int modifiers = method.getModifiers();
         return hasDelegator() && !Modifier.isPrivate(modifiers) && !Modifier.isFinal(modifiers) && !Modifier.isStatic(modifiers);
-    }
-    
-    private void handleStaticVerification(Class<?> cls) {
-        VerificationMode verificationMode = getVerificationMode();
-        if (verificationMode instanceof StaticMockAwareVerificationMode) {
-            final StaticMockAwareVerificationMode mode = (StaticMockAwareVerificationMode) verificationMode;
-            if (mode.getClassMock() == null) {
-                mode.setClassMock(cls);
-            }
-        }
     }
     
     private boolean hasBeenCaughtByMockitoProxy() {
@@ -157,7 +115,7 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
         StackTraceFilter filter = new StackTraceFilter();
         /*
         * We filter the stack-trace to check if "Mockito" exists as a stack trace element. (The filter method
-        * remove all Mocktio stack trace elements). If the filtered stack trace length is not equal to the original stack trace length
+        * remove all Mockito stack trace elements). If the filtered stack trace length is not equal to the original stack trace length
         * this means that the call has been caught by Mockito.
         */
         final StackTraceElement[] filteredStackTrace = filter.filter(stackTrace, true);
