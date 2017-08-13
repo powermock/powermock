@@ -105,7 +105,7 @@ public class SystemClassUserTest {
 
         new SystemClassUser().shuffleCollection(list);
 
-        verifyStatic(times(2));
+        verifyStatic(Collections.class, times(2));
         Collections.shuffle(list);
     }
 

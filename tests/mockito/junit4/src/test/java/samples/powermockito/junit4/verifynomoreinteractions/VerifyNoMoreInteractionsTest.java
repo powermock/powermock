@@ -43,7 +43,7 @@ public class VerifyNoMoreInteractionsTest {
 		mockStatic(StaticService.class);
 		assertNull(StaticService.say("hello"));
 
-		verifyStatic();
+		verifyStatic(StaticService.class);
 		StaticService.say("hello");
 		verifyNoMoreInteractions(StaticService.class);
 	}
