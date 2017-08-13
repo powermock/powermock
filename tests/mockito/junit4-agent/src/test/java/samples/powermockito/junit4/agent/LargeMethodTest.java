@@ -45,7 +45,7 @@ public class LargeMethodTest {
         mockStatic(MethodExceedingJvmLimit.class);
         when(MethodExceedingJvmLimit.init()).thenReturn("ok");
         assertEquals("Mocked method should return: ok", "ok", MethodExceedingJvmLimit.init());
-        verifyStatic();
+        verifyStatic(MethodExceedingJvmLimit.class);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -53,6 +53,6 @@ public class LargeMethodTest {
         mockStatic(MethodExceedingJvmLimit.class);
         when(MethodExceedingJvmLimit.init()).thenThrow(new IllegalStateException());
         MethodExceedingJvmLimit.init();
-        verifyStatic();
+        verifyStatic(MethodExceedingJvmLimit.class);
     }
 }

@@ -51,9 +51,9 @@ public class MockStaticCases {
         StaticService.sayHello();
         final String said = SimpleStaticService.say("Something");
         
-        verifyStatic();
+        verifyStatic(StaticService.class);
         StaticService.sayHello();
-        verifyStatic();
+        verifyStatic(SimpleStaticService.class);
         SimpleStaticService.say("Something");
         
         assertEquals(said, "other");
@@ -87,7 +87,7 @@ public class MockStaticCases {
         assertNull(StaticService.say("hello"));
         
         // Verification is done in two steps using static methods.
-        verifyStatic();
+        verifyStatic(StaticService.class);
         StaticService.say("hello");
     }
     
@@ -103,7 +103,7 @@ public class MockStaticCases {
         assertEquals(expected, StaticService.say(argument));
         
         // Verification is done in two steps using static methods.
-        verifyStatic();
+        verifyStatic(StaticService.class);
         StaticService.say(argument);
     }
     
@@ -119,7 +119,7 @@ public class MockStaticCases {
         assertEquals(expected, StaticService.say(argument));
         
         // Verification is done in two steps using static methods.
-        verifyStatic(times(2));
+        verifyStatic(StaticService.class, times(2));
         try {
             StaticService.say(argument);
             fail("Should throw assertion error");
@@ -145,7 +145,7 @@ public class MockStaticCases {
         assertNull(StaticService.say("hello"));
         
         // Verification is done in two steps using static methods.
-        verifyStatic();
+        verifyStatic(StaticService.class);
         StaticService.say("Hello");
     }
     
@@ -156,7 +156,7 @@ public class MockStaticCases {
         assertNull(StaticService.say("hello"));
         
         // Verification is done in two steps using static methods.
-        verifyStatic(atLeastOnce());
+        verifyStatic(StaticService.class, atLeastOnce());
         StaticService.say("hello");
     }
     
@@ -167,7 +167,7 @@ public class MockStaticCases {
         assertNull(StaticService.say("hello"));
         
         // Verification is done in two steps using static methods.
-        verifyStatic(times(2));
+        verifyStatic(StaticService.class, times(2));
         StaticService.say("hello");
     }
     
@@ -178,7 +178,7 @@ public class MockStaticCases {
         assertNull(StaticService.say("hello"));
         
         // Verification is done in two steps using static methods.
-        verifyStatic(times(3));
+        verifyStatic(StaticService.class, times(3));
         StaticService.say("hello");
     }
     
@@ -188,7 +188,7 @@ public class MockStaticCases {
         
         StaticService.sayHello();
         
-        verifyStatic();
+        verifyStatic(StaticService.class);
         StaticService.sayHello();
     }
     
@@ -223,7 +223,7 @@ public class MockStaticCases {
         
         StaticService.say("something");
         
-        verifyStatic();
+        verifyStatic(StaticService.class);
         StaticService.say(captor.capture());
         
         assertEquals("something", captor.getValue());
