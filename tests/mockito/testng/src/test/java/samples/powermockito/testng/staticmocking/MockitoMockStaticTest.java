@@ -34,41 +34,46 @@ import static org.powermock.api.mockito.PowerMockito.when;
  * static+final+native methods mocking.
  */
 @PrepareForTest({StaticService.class, StaticHelper.class})
-public class Mockito1MockStaticTest {
-
+public class MockitoMockStaticTest {
+    
     @ObjectFactory
     public IObjectFactory getObjectFactory() {
         return new PowerMockObjectFactory();
     }
-
+    
+    
     @Test
     public void testMockStatic() throws Exception {
-
+        
+        System.out.println("Skip test while Mockito doesn't deliver fix");
+        
         mockStatic(StaticService.class);
         String expected = "Hello altered World";
         when(StaticService.say("hello")).thenReturn("Hello altered World");
-
+        
         String actual = StaticService.say("hello");
-
-        verifyStatic();
+        
+        verifyStatic(StaticService.class);
         StaticService.say("hello");
-
+        
         Assert.assertEquals(expected, actual);
     }
-
-
+    
+    
     @Test
     public void testMockStaticFinal() throws Exception {
-
+        
+        System.out.println("Skip test while Mockito doesn't deliver fix");
+        
         mockStatic(StaticService.class);
         String expected = "Hello altered World";
         when(StaticService.sayFinal("hello")).thenReturn("Hello altered World");
-
+        
         String actual = StaticService.sayFinal("hello");
-
-        verifyStatic();
+        
+        verifyStatic(StaticService.class);
         StaticService.sayFinal("hello");
-
+        
         Assert.assertEquals(expected, actual);
     }
 }

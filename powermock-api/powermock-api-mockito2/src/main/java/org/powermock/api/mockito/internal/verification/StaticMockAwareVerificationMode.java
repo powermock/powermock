@@ -36,20 +36,16 @@ import java.util.Set;
  * able to specify the class a later state then verification start. I.e. in
  * standard Mockito they always know the mock object when doing verify before
  * calling the method to verify:
- *
+ * <p>
  * <pre>
  * verify(mock).methodToVerify();
  * </pre>
- *
+ * <p>
  * In PowerMock we don't know the class when calling verifyStatic().
  */
 public class StaticMockAwareVerificationMode extends MockAwareVerificationMode {
-
-    private Class<?> classMock;
-
-    public StaticMockAwareVerificationMode(VerificationMode mode, Set<VerificationListener> listeners) {
-        this(null, mode, listeners);
-    }
+    
+    private final Class<?> classMock;
     
     public <T> StaticMockAwareVerificationMode(final Class<T> classMock, final VerificationMode mode,
                                                final Set<VerificationListener> listeners) {
@@ -57,19 +53,11 @@ public class StaticMockAwareVerificationMode extends MockAwareVerificationMode {
         this.classMock = classMock;
     }
     
-    public void setClassMock(Class<?> clsMock) {
-        this.classMock = clsMock;
-    }
-    
-    public Class<?> getClassMock() {
-        return classMock;
-    }
-    
     @Override
     public void verify(VerificationData data) {
         super.verify(data);
     }
-
+    
     @Override
     public Object getMock() {
         return classMock;
