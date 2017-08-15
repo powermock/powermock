@@ -18,17 +18,10 @@ package org.powermock.api.mockito.invocation;
 
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
-import org.mockito.internal.debugging.Localized;
 import org.mockito.internal.exceptions.stacktrace.StackTraceFilter;
-import org.mockito.internal.progress.MockingProgress;
-import org.mockito.internal.stubbing.InvocationContainerImpl;
-import org.mockito.internal.verification.VerificationDataImpl;
-import org.mockito.internal.verification.VerificationModeFactory;
-import org.mockito.verification.VerificationMode;
 import org.powermock.api.mockito.internal.invocation.InvocationControlAssertionError;
 import org.powermock.core.MockGateway;
 import org.powermock.core.spi.MethodInvocationControl;
-import org.powermock.reflect.Whitebox;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -141,9 +134,7 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
     
     public void verifyNoMoreInteractions() {
         try {
-            InvocationContainerImpl invocationContainer = (InvocationContainerImpl) mockHandlerAdaptor.getInvocationContainer();
-            VerificationDataImpl data = new VerificationDataImpl(invocationContainer, null);
-            VerificationModeFactory.noMoreInteractions().verify(data);
+            Mockito.verifyNoMoreInteractions(getMockHandlerAdaptor().getMock());
         } catch (MockitoAssertionError e) {
             InvocationControlAssertionError.updateErrorMessageForVerifyNoMoreInteractions(e);
             throw e;

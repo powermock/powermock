@@ -63,7 +63,10 @@ public class SimpleMixTest {
         verifyStatic(SimpleMixUtilities.class);
         SimpleMixUtilities.getRandomInteger();
         verifyNew(SimpleMixConstruction.class).withNoArguments();
-        verifyPrivate(tested).invoke(method(SimpleMix.class, "getValue"));
+        
+        verifyPrivate(tested)
+            .invoke(method(SimpleMix.class, "getValue"))
+        .withNoArguments();
     }
 
     @PrepareForTest( { SimpleMix.class })
