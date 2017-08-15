@@ -1,7 +1,8 @@
 package org.powermock.api.mockito.internal.mockcreation;
 
 import org.junit.Test;
-import org.mockito.internal.creation.MockSettingsImpl;
+import org.mockito.MockSettings;
+import org.mockito.Mockito;
 import org.mockito.internal.util.MockUtil;
 import org.mockito.mock.MockName;
 
@@ -13,13 +14,11 @@ import static org.junit.Assert.assertNotNull;
 public class MockCreatorTest {
 
 	@Test
-	public void should_return_mock_name_when_settings_have_name()
-			throws NoSuchMethodException, SecurityException {
-		final MockSettingsImpl<List<?>> settings = new MockSettingsImpl<List<?>>();
-		settings.name("mylist");
-
-		final List<?> result = DefaultMockCreator.mock(List.class, false, false, null,
-		                                               settings, List.class.getMethod("add", Object.class));
+	public void should_return_mock_name_when_settings_have_name() throws NoSuchMethodException, SecurityException {
+        final MockSettings settings = Mockito.withSettings().name("mylist");
+        
+        final List<?> result = DefaultMockCreator.mock(List.class, false, false, null,
+                                                       settings, List.class.getMethod("add", Object.class));
 
 		final MockName mockName = MockUtil.getMockName(result);
 		assertNotNull(mockName);
@@ -27,9 +26,8 @@ public class MockCreatorTest {
 	}
 
 	@Test
-	public void should_return_class_name_when_settings_have_no_name()
-			throws NoSuchMethodException, SecurityException {
-		final MockSettingsImpl<List<?>> settings = new MockSettingsImpl<List<?>>();
+	public void should_return_class_name_when_settings_have_no_name() throws NoSuchMethodException, SecurityException {
+        final MockSettings settings = Mockito.withSettings();
 
 		final List<?> result = DefaultMockCreator.mock(List.class, false, false, null,
 		                                               settings, List.class.getMethod("add", Object.class));

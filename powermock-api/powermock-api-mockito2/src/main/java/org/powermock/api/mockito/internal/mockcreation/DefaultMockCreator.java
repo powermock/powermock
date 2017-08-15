@@ -48,9 +48,14 @@ public class DefaultMockCreator extends AbstractMockCreator {
         assertNotNull(type, "The class to mock cannot be null");
         
         validateType(type, isStatic, isSpy);
-        
-        MockRepository.addAfterMethodRunner(new MockitoStateCleanerRunnable());
-        
+    
+        registerAfterMethodRunner();
+    
+        return doCreateMock(type, isStatic, isSpy, delegatorCandidate, mockSettings, methods);
+    }
+    
+    private <T> T doCreateMock(final Class<T> type, final boolean isStatic, final boolean isSpy, final Object delegatorCandidate,
+                               final MockSettings mockSettings, final Method[] methods) {
         final Class<T> typeToMock = getMockType(type);
         
         final Object delegator = isSpy && delegatorCandidate == null ? new Object() : delegatorCandidate;
@@ -67,6 +72,15 @@ public class DefaultMockCreator extends AbstractMockCreator {
         copyFieldsValuesForSpy(isSpy, delegator, mock);
         
         return mock;
+    }
+    
+    private void registerAfterMethodRunner() {
+        MockRepository.addAfterMethodRunner(new Runnable() {
+            @Override
+            public void run() {
+                Mockito.reset();
+            }
+        });
     }
     
     private <T> void copyFieldsValuesForSpy(final boolean isSpy, final Object delegator, final T mock) {
@@ -134,17 +148,6 @@ public class DefaultMockCreator extends AbstractMockCreator {
         
         private T getMock() {
             return mock;
-        }
-    }
-    
-    /**
-     * Clear state in Mockito that retains memory between tests
-     */
-    private static class MockitoStateCleanerRunnable implements Runnable {
-        public void run() {
-            MockitoStateCleaner cleaner = new MockitoStateCleaner();
-            cleaner.clearConfiguration();
-            cleaner.clearMockProgress();
         }
     }
 }
