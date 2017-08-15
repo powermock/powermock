@@ -22,13 +22,13 @@ import org.powermock.api.mockito.internal.invocation.MockitoNewInvocationControl
 import org.powermock.api.mockito.verification.ConstructorArgumentsVerification;
 import org.powermock.core.spi.NewInvocationControl;
 
-public class DefaultConstructorArgumentsVerfication<T> implements ConstructorArgumentsVerification {
+public class DefaultConstructorArgumentsVerification<T> implements ConstructorArgumentsVerification {
 
     private final MockitoNewInvocationControl<T> invocationControl;
     private final Class<?> type;
 
     @SuppressWarnings("unchecked")
-    public DefaultConstructorArgumentsVerfication(NewInvocationControl<T> invocationControl, Class<?> type) {
+    public DefaultConstructorArgumentsVerification(NewInvocationControl<T> invocationControl, Class<?> type) {
         this.type = type;
         this.invocationControl = (MockitoNewInvocationControl<T>) invocationControl;
     }

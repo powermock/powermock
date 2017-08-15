@@ -34,17 +34,6 @@ public interface DefaultBehavior {
 	Object replay(Object... mocks);
 
 	/**
-	 * Verify the given objects or classes. May throw exception if verify is not
-	 * needed or not supported.
-	 * 
-	 * @param mocks
-	 *            The object(s) to verify. May be {@code null}.
-	 * 
-	 * @return the result of the verification (may be {@code null}).
-	 */
-	Object verify(Object... mocks);
-
-	/**
 	 * Reset the given objects or classes. May throw exception if reset is not
 	 * needed or not supported.
 	 * 

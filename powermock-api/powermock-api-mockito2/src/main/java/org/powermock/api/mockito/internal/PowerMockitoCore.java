@@ -17,19 +17,25 @@
 package org.powermock.api.mockito.internal;
 
 import org.mockito.Mockito;
-import org.mockito.internal.progress.MockingProgress;
-import org.mockito.internal.progress.ThreadSafeMockingProgress;
-import org.mockito.internal.verification.MockAwareVerificationMode;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.Stubber;
 import org.mockito.verification.VerificationMode;
 import org.powermock.api.mockito.expectation.PowerMockitoStubber;
 import org.powermock.api.mockito.internal.expectation.PowerMockitoStubberImpl;
+import org.powermock.api.mockito.internal.invocation.MockitoNewInvocationControl;
+import org.powermock.api.mockito.internal.verification.DefaultConstructorArgumentsVerification;
+import org.powermock.core.MockRepository;
 import org.powermock.core.classloader.ClassloaderWrapper;
+import org.powermock.core.spi.NewInvocationControl;
+import org.powermock.reflect.Whitebox;
 
 import java.util.concurrent.Callable;
 
+import static org.powermock.utils.Asserts.assertNotNull;
+
 public class PowerMockitoCore {
+    
+    private static final String NO_OBJECT_CREATION_ERROR_MESSAGE_TEMPLATE = "No instantiation of class %s was recorded during the test. Note that only expected object creations (e.g. those using whenNew(..)) can be verified.";
     
     public PowerMockitoStubber doAnswer(final Answer answer) {
         return doAnswer(new Callable<Stubber>() {
@@ -85,16 +91,20 @@ public class PowerMockitoCore {
         });
     }
     
+    public <T> DefaultConstructorArgumentsVerification<T> verifyNew(final Class<T> mock, final VerificationMode mode) {
+        assertNotNull(mock, "Class to verify cannot be null");
+        assertNotNull(mode, "Verify mode cannot be null");
+
+        MockitoNewInvocationControl<T> invocationControl = (MockitoNewInvocationControl<T>) MockRepository.getNewInstanceControl(mock);
+    
+        assertNotNull(invocationControl, String.format(NO_OBJECT_CREATION_ERROR_MESSAGE_TEMPLATE, Whitebox.getType(mock).getName()));
+    
+        invocationControl.verify(mode);
+        return new DefaultConstructorArgumentsVerification<T>((NewInvocationControl<T>) invocationControl, mock);
+    }
+    
     private PowerMockitoStubber doAnswer(final Callable<Stubber> callable) {
         final Stubber stubber = ClassloaderWrapper.runWithClass(callable);
         return new PowerMockitoStubberImpl(stubber);
-    }
-    
-    private MockingProgress getMockingProgress() {
-        return ThreadSafeMockingProgress.mockingProgress();
-    }
-    
-    public MockAwareVerificationMode wrapInMockitoSpecificVerificationMode(Object mock, VerificationMode mode) {
-        return new MockAwareVerificationMode(mock, mode, getMockingProgress().verificationListeners());
     }
 }

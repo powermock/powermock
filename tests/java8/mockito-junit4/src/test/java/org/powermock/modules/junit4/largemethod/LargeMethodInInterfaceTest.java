@@ -44,6 +44,7 @@ public class LargeMethodInInterfaceTest {
         when(InterfaceMethodExceedingJvmLimit.init()).thenReturn("ok");
         assertEquals("Mocked method should return: ok", "ok", InterfaceMethodExceedingJvmLimit.init());
         verifyStatic(InterfaceMethodExceedingJvmLimit.class);
+        InterfaceMethodExceedingJvmLimit.init();
     }
 
     @Test(expected = IllegalStateException.class)
@@ -52,5 +53,6 @@ public class LargeMethodInInterfaceTest {
         when(InterfaceMethodExceedingJvmLimit.init()).thenThrow(new IllegalStateException());
         InterfaceMethodExceedingJvmLimit.init();
         verifyStatic(InterfaceMethodExceedingJvmLimit.class);
+        InterfaceMethodExceedingJvmLimit.init();
     }
 }
