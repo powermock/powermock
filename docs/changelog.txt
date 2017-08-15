@@ -1,5 +1,7 @@
 Change log 2.0.0
-* Public Mockito support:
+* PowerMockito changes:
+** `verifyStatic` is replaced by `verifyStatic(Class)`
+** `mockStatic` does not reset mocking process anymore. As result you may get the `UnfinishedVerificationException` or `UnfinishedStubbingException`
 ** Possible incapability due toString methods returns by default name of mocked.
 
 Change log 1.7.1

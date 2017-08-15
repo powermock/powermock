@@ -18,8 +18,6 @@ package org.powermock.api.mockito;
 
 import org.mockito.MockSettings;
 import org.mockito.Mockito;
-import org.mockito.internal.progress.MockingProgress;
-import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.verification.VerificationMode;
@@ -31,14 +29,11 @@ import org.powermock.api.mockito.expectation.WithOrWithoutExpectedArguments;
 import org.powermock.api.mockito.internal.PowerMockitoCore;
 import org.powermock.api.mockito.internal.expectation.DefaultMethodExpectationSetup;
 import org.powermock.api.mockito.internal.mockcreation.DefaultMockCreator;
-import org.powermock.api.mockito.internal.verification.DefaultConstructorArgumentsVerfication;
 import org.powermock.api.mockito.internal.verification.DefaultPrivateMethodVerification;
 import org.powermock.api.mockito.internal.verification.VerifyNoMoreInteractions;
 import org.powermock.api.mockito.verification.ConstructorArgumentsVerification;
 import org.powermock.api.mockito.verification.PrivateMethodVerification;
 import org.powermock.api.support.membermodification.MemberModifier;
-import org.powermock.core.MockRepository;
-import org.powermock.core.spi.NewInvocationControl;
 import org.powermock.reflect.Whitebox;
 
 import java.lang.reflect.Constructor;
@@ -55,7 +50,7 @@ import static org.mockito.Mockito.withSettings;
  * @see Mockito
  */
 public class PowerMockito extends MemberModifier {
-    private static final String NO_OBJECT_CREATION_ERROR_MESSAGE_TEMPLATE = "No instantiation of class %s was recorded during the test. Note that only expected object creations (e.g. those using whenNew(..)) can be verified.";
+
     private static final PowerMockitoCore POWERMOCKITO_CORE = new PowerMockitoCore();
     
     /**
@@ -64,7 +59,6 @@ public class PowerMockito extends MemberModifier {
      * @param type the class to enable static mocking
      */
     public static synchronized void mockStatic(Class<?> type, Class<?>... types) {
-        ThreadSafeMockingProgress.mockingProgress().reset();
         DefaultMockCreator.mock(type, true, false, null, null, (Method[]) null);
         if (types != null && types.length > 0) {
             for (Class<?> aClass : types) {
@@ -118,7 +112,6 @@ public class PowerMockito extends MemberModifier {
      * @param mockSettings additional mock settings
      */
     public static void mockStatic(Class<?> classToMock, MockSettings mockSettings) {
-        ThreadSafeMockingProgress.mockingProgress().reset();
         DefaultMockCreator.mock(classToMock, true, false, null, mockSettings, (Method[]) null);
     }
     
@@ -211,7 +204,6 @@ public class PowerMockito extends MemberModifier {
      * @see PowerMockito#spy(Object)
      */
     public static synchronized <T> void spy(Class<T> type) {
-        ThreadSafeMockingProgress.mockingProgress().reset();
         MockSettings mockSettings = Mockito.withSettings().defaultAnswer(Mockito.CALLS_REAL_METHODS);
         DefaultMockCreator.mock(type, true, true, type, mockSettings, (Method[]) null);
     }
@@ -288,8 +280,7 @@ public class PowerMockito extends MemberModifier {
      * @throws Exception If something unexpected goes wrong.
      * @see Mockito#verify(Object)
      */
-    public static PrivateMethodVerification verifyPrivate(Object object, VerificationMode verificationMode)
-        throws Exception {
+    public static PrivateMethodVerification verifyPrivate(Object object, VerificationMode verificationMode) throws Exception {
         Mockito.verify(object, verificationMode);
         return new DefaultPrivateMethodVerification(object);
     }
@@ -311,8 +302,7 @@ public class PowerMockito extends MemberModifier {
      * @throws Exception If something unexpected goes wrong.
      * @see Mockito#verify(Object)
      */
-    public static PrivateMethodVerification verifyPrivate(Class<?> clazz, VerificationMode verificationMode)
-        throws Exception {
+    public static PrivateMethodVerification verifyPrivate(Class<?> clazz, VerificationMode verificationMode) throws Exception {
         return verifyPrivate((Object) clazz, verificationMode);
     }
     
@@ -337,16 +327,7 @@ public class PowerMockito extends MemberModifier {
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> ConstructorArgumentsVerification verifyNew(Class<T> mock) {
-        if (mock == null) {
-            throw new IllegalArgumentException("Class to verify cannot be null");
-        }
-        NewInvocationControl<?> invocationControl = MockRepository.getNewInstanceControl(mock);
-        if (invocationControl == null) {
-            throw new IllegalStateException(String.format(NO_OBJECT_CREATION_ERROR_MESSAGE_TEMPLATE, Whitebox.getType(
-                mock).getName()));
-        }
-        invocationControl.verify();
-        return new DefaultConstructorArgumentsVerfication<T>((NewInvocationControl<T>) invocationControl, mock);
+        return verifyNew(mock, times(1));
     }
     
     /**
@@ -369,23 +350,8 @@ public class PowerMockito extends MemberModifier {
      * @param mode times(x), atLeastOnce() or never()
      */
     @SuppressWarnings("unchecked")
-    public static <T> ConstructorArgumentsVerification verifyNew(Class<?> mock, VerificationMode mode) {
-        if (mock == null) {
-            throw new IllegalArgumentException("Class to verify cannot be null");
-        } else if (mode == null) {
-            throw new IllegalArgumentException("Verify mode cannot be null");
-        }
-        NewInvocationControl<?> invocationControl = MockRepository.getNewInstanceControl(mock);
-        MockRepository.putAdditionalState("VerificationMode", POWERMOCKITO_CORE.wrapInMockitoSpecificVerificationMode(mock, mode));
-        if (invocationControl == null) {
-            throw new IllegalStateException(String.format(NO_OBJECT_CREATION_ERROR_MESSAGE_TEMPLATE, Whitebox.getType(mock).getName()));
-        }
-        try {
-            invocationControl.verify();
-        } finally {
-            MockRepository.removeAdditionalState("VerificationMode");
-        }
-        return new DefaultConstructorArgumentsVerfication<T>((NewInvocationControl<T>) invocationControl, mock);
+    public static <T> ConstructorArgumentsVerification verifyNew(Class<T> mock, VerificationMode mode) {
+       return  POWERMOCKITO_CORE.verifyNew(mock, mode);
     }
     
     /**
