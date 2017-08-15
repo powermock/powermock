@@ -1471,7 +1471,7 @@ public class PowerMock extends MemberModifier {
             if (mock instanceof Class<?>) {
                 verifyClass((Class<?>) mock);
             } else {
-                MethodInvocationControl invocationControl = MockRepository.getInstanceMethodInvocationControl(mock);
+                EasyMockMethodInvocationControl invocationControl = (EasyMockMethodInvocationControl) MockRepository.getInstanceMethodInvocationControl(mock);
                 if (invocationControl != null) {
                     invocationControl.verify();
                 } else {
@@ -2078,11 +2078,11 @@ public class PowerMock extends MemberModifier {
      */
     private static synchronized void verifyClass(Class<?>... types) {
         for (Class<?> type : types) {
-            final MethodInvocationControl invocationHandler = MockRepository.getStaticMethodInvocationControl(type);
+            final EasyMockMethodInvocationControl invocationHandler = (EasyMockMethodInvocationControl) MockRepository.getStaticMethodInvocationControl(type);
             if (invocationHandler != null) {
                 invocationHandler.verify();
             }
-            NewInvocationControl<?> newInvocationControl = MockRepository.getNewInstanceControl(type);
+            NewInvocationControlImpl<?> newInvocationControl = (NewInvocationControlImpl<?>) MockRepository.getNewInstanceControl(type);
             if (newInvocationControl != null) {
                 try {
                     newInvocationControl.verify();
