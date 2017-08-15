@@ -79,6 +79,7 @@ public class MockStaticCases {
         verifyStatic(StaticService.class);
         
         SimpleStaticService.say("Something");
+        StaticService.sayHello();
     }
     
     @Test

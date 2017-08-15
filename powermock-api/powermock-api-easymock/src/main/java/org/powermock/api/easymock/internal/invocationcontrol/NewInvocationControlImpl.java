@@ -25,6 +25,7 @@ import org.powermock.reflect.internal.WhiteboxImpl;
 
 import java.lang.reflect.Constructor;
 
+//TODO rename to EasyMock
 public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpectationSetters<T>> {
     private final InvocationSubstitute<T> substitute;
     private final Class<T> subsitutionType;
@@ -85,7 +86,6 @@ public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpect
         return null;
     }
 
-    @Override
     public synchronized Object verify(Object... mocks) {
         if (!hasVerified) {
             EasyMock.verify(substitute);

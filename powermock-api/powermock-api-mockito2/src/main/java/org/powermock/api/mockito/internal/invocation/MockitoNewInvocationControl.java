@@ -19,15 +19,12 @@ import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.verification.VerificationMode;
-import org.powermock.core.MockRepository;
 import org.powermock.core.spi.NewInvocationControl;
 import org.powermock.core.spi.support.InvocationSubstitute;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
-
-import static org.mockito.Mockito.times;
 
 public class MockitoNewInvocationControl<T> implements NewInvocationControl<OngoingStubbing<T>> {
 	private final InvocationSubstitute<T> substitute;
@@ -49,7 +46,7 @@ public class MockitoNewInvocationControl<T> implements NewInvocationControl<Ongo
             args = new Object[args.length + varArgsLength - 1];
             System.arraycopy(oldArgs, 0, args, 0, oldArgs.length - 1);
             for (int i = oldArgs.length - 1, j=0; i < args.length; i++, j++) {
-                args[i] = Array.get(varArgs, j);                                     
+                args[i] = Array.get(varArgs, j);
             }
 		}
 		try {
@@ -75,24 +72,10 @@ public class MockitoNewInvocationControl<T> implements NewInvocationControl<Ongo
 	public synchronized Object replay(Object... mocks) {
 		return null;
 	}
-
-	@Override
-	public synchronized Object verify(Object... mocks) {
-		final VerificationMode verificationMode;
-		Object mode = MockRepository.getAdditionalState("VerificationMode");
-		if (mode != null) {
-			if (mode instanceof VerificationMode) {
-				verificationMode = (VerificationMode) mode;
-			} else {
-				throw new IllegalStateException("Internal error. VerificationMode in MockRepository was not of type "
-						+ VerificationMode.class.getName() + ".");
-			}
-		} else {
-			verificationMode = times(1);
-		}
-		Mockito.verify(substitute, verificationMode);
-		return null;
-	}
+    
+    public synchronized void verify(final VerificationMode verificationMode) {
+        Mockito.verify(substitute, verificationMode);
+    }
 
 	@SuppressWarnings("unchecked")
 	@Override

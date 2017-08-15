@@ -120,7 +120,6 @@ public class EasyMockMethodInvocationControl<T> implements MethodInvocationContr
         return null;
     }
 
-    @Override
     public synchronized Object verify(Object... mocks) {
         // Silently ignore verify if someone has verified the mock before.
         if (!hasVerified) {

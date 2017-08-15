@@ -17,7 +17,6 @@ import static org.powermock.api.mockito.PowerMockito.verifyNew;
 public class VerifyNewWithoutWhenNewTest {
 
     @Test
-    // TODO This should actually work in the future when issue 148 is resolved.
     public void verifyingNewWithoutExpectationWhenNoArgumentsThrowsISE() throws Exception {
         ExpectNewDemo tested = new ExpectNewDemo();
 
@@ -26,7 +25,7 @@ public class VerifyNewWithoutWhenNewTest {
         try {
             verifyNew(MyClass.class).withNoArguments();
             fail("IllegalStateException expected");
-        } catch (IllegalStateException e) {
+        } catch (IllegalArgumentException e) {
             assertEquals("No instantiation of class samples.newmocking.MyClass was recorded "
                     + "during the test. Note that only expected object creations "
                     + "(e.g. those using whenNew(..)) can be verified.", e.getMessage());
@@ -35,7 +34,6 @@ public class VerifyNewWithoutWhenNewTest {
     }
 
     @Test
-    // TODO This should actually work in the future when issue 148 is resolved.
     public void verifyingNewWithoutExpectationButWithArgumentsThrowsISE() throws Exception {
         ExpectNewDemo tested = new ExpectNewDemo();
         assertEquals("Hello world", tested.getMessage());
@@ -43,7 +41,7 @@ public class VerifyNewWithoutWhenNewTest {
         try {
             verifyNew(MyClass.class, Mockito.atLeastOnce()).withNoArguments();
             fail("IllegalStateException expected");
-        } catch (IllegalStateException e) {
+        } catch (IllegalArgumentException e) {
             assertEquals("No instantiation of class samples.newmocking.MyClass was recorded "
                     + "during the test. Note that only expected object creations "
                     + "(e.g. those using whenNew(..)) can be verified.", e.getMessage());
