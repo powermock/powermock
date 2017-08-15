@@ -33,7 +33,6 @@ import org.powermock.core.MockRepository;
  * The reason for its existence is that the current Mockito MockMaker throws exception when getting the name
  * from of a mock that is created by PowerMock but not know for Mockito. This is triggered when by the
  * {@link org.mockito.internal.util.MockUtil} class.
- * For more details see the {@link org.powermock.api.mockito.internal.invocation.ToStringGenerator}.
  */
 public class PowerMockMaker implements MockMaker {
     private final MockMaker mockMaker;
