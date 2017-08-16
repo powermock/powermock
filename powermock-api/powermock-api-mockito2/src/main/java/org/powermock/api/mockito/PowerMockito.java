@@ -18,6 +18,7 @@ package org.powermock.api.mockito;
 
 import org.mockito.MockSettings;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
 import org.mockito.verification.VerificationMode;
@@ -192,8 +193,23 @@ public class PowerMockito extends MemberModifier {
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> T spy(T object) {
-        MockSettings mockSettings = Mockito.withSettings().defaultAnswer(Mockito.CALLS_REAL_METHODS);
+        MockSettings mockSettings = Mockito.withSettings().defaultAnswer(new PowermockitoCallRealMethod());
         return DefaultMockCreator.mock((Class<T>) Whitebox.getType(object), false, true, object, mockSettings, (Method[]) null);
+    }
+
+    public static class PowermockitoCallRealMethod implements Answer {
+        //FIXME this static state is a hack that only demonstrates how the use case can be solved!!!
+        public static boolean handledByMockito = false;
+
+        @Override
+        public Object answer(InvocationOnMock invocation) throws Throwable {
+            handledByMockito = true;
+            try {
+                return Mockito.CALLS_REAL_METHODS.answer(invocation);
+            } finally {
+                handledByMockito = false;
+            }
+        }
     }
     
     /**

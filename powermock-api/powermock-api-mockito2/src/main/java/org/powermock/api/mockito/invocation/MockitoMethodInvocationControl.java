@@ -18,7 +18,7 @@ package org.powermock.api.mockito.invocation;
 
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
-import org.mockito.internal.exceptions.stacktrace.StackTraceFilter;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.mockito.internal.invocation.InvocationControlAssertionError;
 import org.powermock.core.MockGateway;
 import org.powermock.core.spi.MethodInvocationControl;
@@ -102,17 +102,9 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
         final int modifiers = method.getModifiers();
         return hasDelegator() && !Modifier.isPrivate(modifiers) && !Modifier.isFinal(modifiers) && !Modifier.isStatic(modifiers);
     }
-    
+
     private boolean hasBeenCaughtByMockitoProxy() {
-        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        StackTraceFilter filter = new StackTraceFilter();
-        /*
-        * We filter the stack-trace to check if "Mockito" exists as a stack trace element. (The filter method
-        * remove all Mockito stack trace elements). If the filtered stack trace length is not equal to the original stack trace length
-        * this means that the call has been caught by Mockito.
-        */
-        final StackTraceElement[] filteredStackTrace = filter.filter(stackTrace, true);
-        return filteredStackTrace.length != stackTrace.length;
+        return PowerMockito.PowermockitoCallRealMethod.handledByMockito;
     }
     
     @Override
