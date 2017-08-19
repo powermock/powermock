@@ -18,8 +18,8 @@ package org.powermock.api.mockito.invocation;
 
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
-import org.mockito.internal.exceptions.stacktrace.StackTraceFilter;
 import org.powermock.api.mockito.internal.invocation.InvocationControlAssertionError;
+import org.powermock.api.mockito.internal.stubbing.MockitoRealMethodInvocation;
 import org.powermock.core.MockGateway;
 import org.powermock.core.spi.MethodInvocationControl;
 
@@ -104,15 +104,7 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
     }
     
     private boolean hasBeenCaughtByMockitoProxy() {
-        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        StackTraceFilter filter = new StackTraceFilter();
-        /*
-        * We filter the stack-trace to check if "Mockito" exists as a stack trace element. (The filter method
-        * remove all Mockito stack trace elements). If the filtered stack trace length is not equal to the original stack trace length
-        * this means that the call has been caught by Mockito.
-        */
-        final StackTraceElement[] filteredStackTrace = filter.filter(stackTrace, true);
-        return filteredStackTrace.length != stackTrace.length;
+        return MockitoRealMethodInvocation.isHandledByMockito();
     }
     
     @Override
@@ -123,13 +115,6 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
     @Override
     public Object reset(Object... mocks) {
         throw new IllegalStateException("Internal error: No such thing as reset exists in Mockito.");
-    }
-    
-    public Object verify(Object... mocks) {
-        if (mocks == null || mocks.length != 1) {
-            throw new IllegalArgumentException("Must supply one mock to the verify method.");
-        }
-        return Mockito.verify(mocks[0]);
     }
     
     public void verifyNoMoreInteractions() {

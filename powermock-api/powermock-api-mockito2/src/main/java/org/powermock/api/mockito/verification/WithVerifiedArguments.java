@@ -18,7 +18,5 @@ package org.powermock.api.mockito.verification;
 
 
 public interface WithVerifiedArguments {
-
-    public abstract void withArguments(Object firstArgument, Object... additionalArguments) throws Exception;
-
+    void withArguments(Object firstArgument, Object... additionalArguments) throws Exception;
 }
