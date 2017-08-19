@@ -36,7 +36,9 @@ class InvocationFactory {
     Invocation createInvocation(final Object mock, final Method method, final MockCreationSettings settings,
                                 final Object... arguments) {
         final Callable realMethod = createRealMethod(mock, method, arguments);
-        return Mockito.framework().createInvocation(mock, settings, method, realMethod, arguments);
+        return Mockito.framework()
+                      .getInvocationFactory()
+                      .createInvocation(mock, settings, method, realMethod, arguments);
     }
     
     private Callable createRealMethod(final Object delegator, final Method method,

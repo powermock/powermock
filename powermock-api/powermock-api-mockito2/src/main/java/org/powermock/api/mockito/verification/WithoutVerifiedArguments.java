@@ -17,7 +17,5 @@
 package org.powermock.api.mockito.verification;
 
 public interface WithoutVerifiedArguments {
-
-	public void withNoArguments() throws Exception;
-
+    void withNoArguments() throws Exception;
 }

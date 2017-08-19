@@ -16,6 +16,7 @@
  */
 package org.powermock.api.mockito.internal;
 
+import org.mockito.MockSettings;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.Stubber;
@@ -23,17 +24,22 @@ import org.mockito.verification.VerificationMode;
 import org.powermock.api.mockito.expectation.PowerMockitoStubber;
 import org.powermock.api.mockito.internal.expectation.PowerMockitoStubberImpl;
 import org.powermock.api.mockito.internal.invocation.MockitoNewInvocationControl;
+import org.powermock.api.mockito.internal.mockcreation.DefaultMockCreator;
+import org.powermock.api.mockito.internal.stubbing.PowerMockCallRealMethod;
 import org.powermock.api.mockito.internal.verification.DefaultConstructorArgumentsVerification;
 import org.powermock.core.MockRepository;
 import org.powermock.core.classloader.ClassloaderWrapper;
 import org.powermock.core.spi.NewInvocationControl;
 import org.powermock.reflect.Whitebox;
 
+import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 
 import static org.powermock.utils.Asserts.assertNotNull;
 
 public class PowerMockitoCore {
+    
+    private static final PowerMockCallRealMethod POWER_MOCK_CALL_REAL_METHOD = new PowerMockCallRealMethod();
     
     private static final String NO_OBJECT_CREATION_ERROR_MESSAGE_TEMPLATE = "No instantiation of class %s was recorded during the test. Note that only expected object creations (e.g. those using whenNew(..)) can be verified.";
     
@@ -95,12 +101,19 @@ public class PowerMockitoCore {
         assertNotNull(mock, "Class to verify cannot be null");
         assertNotNull(mode, "Verify mode cannot be null");
 
-        MockitoNewInvocationControl<T> invocationControl = (MockitoNewInvocationControl<T>) MockRepository.getNewInstanceControl(mock);
+        @SuppressWarnings("unchecked") MockitoNewInvocationControl<T> invocationControl = (MockitoNewInvocationControl<T>) MockRepository.getNewInstanceControl(mock);
     
         assertNotNull(invocationControl, String.format(NO_OBJECT_CREATION_ERROR_MESSAGE_TEMPLATE, Whitebox.getType(mock).getName()));
     
         invocationControl.verify(mode);
+        //noinspection unchecked
         return new DefaultConstructorArgumentsVerification<T>((NewInvocationControl<T>) invocationControl, mock);
+    }
+    
+    public <T> T spy(final T object) {
+        MockSettings mockSettings = Mockito.withSettings().defaultAnswer(POWER_MOCK_CALL_REAL_METHOD);
+        //noinspection unchecked
+        return DefaultMockCreator.mock((Class<T>) Whitebox.getType(object), false, true, object, mockSettings, (Method[]) null);
     }
     
     private PowerMockitoStubber doAnswer(final Callable<Stubber> callable) {
