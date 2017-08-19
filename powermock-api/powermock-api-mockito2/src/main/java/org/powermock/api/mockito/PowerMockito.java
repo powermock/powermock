@@ -50,7 +50,7 @@ import static org.mockito.Mockito.withSettings;
  * @see Mockito
  */
 public class PowerMockito extends MemberModifier {
-
+    
     private static final PowerMockitoCore POWERMOCKITO_CORE = new PowerMockitoCore();
     
     /**
@@ -192,8 +192,7 @@ public class PowerMockito extends MemberModifier {
      */
     @SuppressWarnings("unchecked")
     public static synchronized <T> T spy(T object) {
-        MockSettings mockSettings = Mockito.withSettings().defaultAnswer(Mockito.CALLS_REAL_METHODS);
-        return DefaultMockCreator.mock((Class<T>) Whitebox.getType(object), false, true, object, mockSettings, (Method[]) null);
+        return POWERMOCKITO_CORE.spy(object);
     }
     
     /**
@@ -267,20 +266,18 @@ public class PowerMockito extends MemberModifier {
     /**
      * Verify a private method invocation for an instance.
      *
-     * @throws Exception If something unexpected goes wrong.
      * @see Mockito#verify(Object)
      */
-    public static PrivateMethodVerification verifyPrivate(Object object) throws Exception {
+    public static PrivateMethodVerification verifyPrivate(Object object) {
         return verifyPrivate(object, times(1));
     }
     
     /**
      * Verify a private method invocation with a given verification mode.
      *
-     * @throws Exception If something unexpected goes wrong.
      * @see Mockito#verify(Object)
      */
-    public static PrivateMethodVerification verifyPrivate(Object object, VerificationMode verificationMode) throws Exception {
+    public static PrivateMethodVerification verifyPrivate(Object object, VerificationMode verificationMode) {
         Mockito.verify(object, verificationMode);
         return new DefaultPrivateMethodVerification(object);
     }
@@ -299,10 +296,9 @@ public class PowerMockito extends MemberModifier {
      * Verify a private method invocation for a class with a given verification
      * mode.
      *
-     * @throws Exception If something unexpected goes wrong.
      * @see Mockito#verify(Object)
      */
-    public static PrivateMethodVerification verifyPrivate(Class<?> clazz, VerificationMode verificationMode) throws Exception {
+    public static PrivateMethodVerification verifyPrivate(Class<?> clazz, VerificationMode verificationMode) {
         return verifyPrivate((Object) clazz, verificationMode);
     }
     
@@ -367,20 +363,18 @@ public class PowerMockito extends MemberModifier {
     /**
      * Expect calls to private methods.
      *
-     * @throws Exception If something unexpected goes wrong.
      * @see PowerMockito#when(Object)
      */
-    public static <T> WithOrWithoutExpectedArguments<T> when(Object instance, Method method) throws Exception {
+    public static <T> WithOrWithoutExpectedArguments<T> when(Object instance, Method method) {
         return new DefaultMethodExpectationSetup<T>(instance, method);
     }
     
     /**
      * Expect calls to private static methods.
      *
-     * @throws Exception If something unexpected goes wrong.
      * @see PowerMockito#when(Object)
      */
-    public static <T> WithOrWithoutExpectedArguments<T> when(Class<?> cls, Method method) throws Exception {
+    public static <T> WithOrWithoutExpectedArguments<T> when(Class<?> cls, Method method) {
         return new DefaultMethodExpectationSetup<T>(cls, method);
     }
     
@@ -420,7 +414,7 @@ public class PowerMockito extends MemberModifier {
     }
     
     /**
-     * Just delegates to the original {@link PowerMockito#when(Object)} method.
+     * Just delegates to the original {@link Mockito#when(Object)} method.
      *
      * @see PowerMockito#when(Object)
      */
@@ -460,8 +454,8 @@ public class PowerMockito extends MemberModifier {
     
     /**
      * Checks if any of given mocks (can be both instance and class mocks) has
-     * any unverified interaction. Delegates to the orignal
-     * {@link PowerMockito#verifyNoMoreInteractions(Object...)} if the mock is not a
+     * any unverified interaction. Delegates to the original
+     * {@link Mockito#verifyNoMoreInteractions(Object...)} if the mock is not a
      * PowerMockito mock.
      * <p>
      * You can use this method after you verified your mocks - to make sure that
@@ -477,7 +471,7 @@ public class PowerMockito extends MemberModifier {
      * often, even in every test method. verifyNoMoreInteractions() is not
      * recommended to use in every test method. verifyNoMoreInteractions() is a
      * handy assertion from the interaction testing toolkit. Use it only when
-     * it's relevant. Abusing it leads to overspecified, less maintainable
+     * it's relevant. Abusing it leads to over-specified, less maintainable
      * tests. You can find further reading <a href=
      * "http://monkeyisland.pl/2008/07/12/should-i-worry-about-the-unexpected/"
      * >here</a>.
@@ -513,7 +507,7 @@ public class PowerMockito extends MemberModifier {
     
     /**
      * Verifies that no interactions happened on given mocks (can be both
-     * instance and class mocks). Delegates to the orignal
+     * instance and class mocks). Delegates to the original
      * {@link PowerMockito#verifyNoMoreInteractions(Object...)} if the mock is not a
      * PowerMockito mock.
      * <p>
@@ -705,7 +699,7 @@ public class PowerMockito extends MemberModifier {
      * doReturn(&quot;bar&quot;).when(mock).foo();
      * </pre>
      * <p>
-     * Above scenarios shows a tradeoff of Mockito's ellegant syntax. Note that
+     * Above scenarios shows a trade off of Mockito's elegant syntax. Note that
      * the scenarios are very rare, though. Spying should be sporadic and
      * overriding exception-stubbing is very rare.
      * <p>
@@ -759,7 +753,7 @@ public class PowerMockito extends MemberModifier {
      * <p>
      * Above scenarios shows a trade-off of Mockito's elegant syntax. Note that the scenarios are very rare, though.
      * Spying should be sporadic and overriding exception-stubbing is very rare. Not to mention that in general
-     * overridding stubbing is a potential code smell that points out too much stubbing.
+     * overriding stubbing is a potential code smell that points out too much stubbing.
      * <p>
      * See examples in javadoc for {@link PowerMockito} class
      *

@@ -27,21 +27,22 @@ public interface PrivateMethodVerification {
      *
      * @throws Exception If something unexpected goes wrong.
      */
-    public void invoke(Object... arguments) throws Exception;
+    //TODO add test
+    void invoke(Object... arguments) throws Exception;
 
     /**
      * Verify calls to the specific method.
      *
      * @throws Exception If something unexpected goes wrong.
      */
-    public WithOrWithoutVerifiedArguments invoke(Method method) throws Exception;
+    WithOrWithoutVerifiedArguments invoke(Method method) throws Exception;
 
     /**
      * Verify a private method call by specifying the method name of the method
      * to verify.
      *
      * @throws Exception If something unexpected goes wrong.
-     * @see {@link #invoke(Object...)}
+     * @see #invoke(Object...)
      */
-    public void invoke(String methodToVerify, Object... arguments) throws Exception;
+    void invoke(String methodToVerify, Object... arguments) throws Exception;
 }
