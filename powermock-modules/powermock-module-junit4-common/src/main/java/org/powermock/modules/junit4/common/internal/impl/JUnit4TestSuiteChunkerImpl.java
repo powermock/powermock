@@ -23,7 +23,6 @@ import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.manipulation.Sortable;
 import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
-import org.powermock.core.reporter.MockingFrameworkReporter;
 import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.core.spi.testresult.TestSuiteResult;
 import org.powermock.core.spi.testresult.impl.TestSuiteResultImpl;
@@ -54,8 +53,7 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 	private final Class<? extends PowerMockJUnitRunnerDelegate> runnerDelegateImplementationType;
 
 
-	public JUnit4TestSuiteChunkerImpl(Class<?> testClass,
-			Class<? extends PowerMockJUnitRunnerDelegate> runnerDelegateImplementationType) throws Exception {
+	JUnit4TestSuiteChunkerImpl(Class<?> testClass, Class<? extends PowerMockJUnitRunnerDelegate> runnerDelegateImplementationType) throws Exception {
 		super(testClass);
 		if (testClass == null) {
 			throw new IllegalArgumentException("You must supply a test class");
@@ -116,10 +114,7 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 			final ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
 			Thread.currentThread().setContextClassLoader(key);
 			try {
-                MockingFrameworkReporter mockingFrameworkReporter = getMockingFrameworkReporter();
-                mockingFrameworkReporter.enable();
 				delegate.run(notifier);
-                mockingFrameworkReporter.disable();
 			} finally {
 				Thread.currentThread().setContextClassLoader(originalClassLoader);
 			}
@@ -136,8 +131,6 @@ public class JUnit4TestSuiteChunkerImpl extends AbstractTestSuiteChunkerImpl<Pow
 				ignoreCount);
 		powerMockTestNotifier.notifyAfterTestSuiteEnded(testClass, allMethodsAsArray, testSuiteResult);
 	}
-
-    private MockingFrameworkReporter getMockingFrameworkReporter() {return getFrameworkReporterFactory().create();}
 
     @Override
 	public boolean shouldExecuteTestForMethod(Class<?> testClass, Method potentialTestMethod) {
