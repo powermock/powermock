@@ -111,7 +111,9 @@ public class PowerMockitoCore {
     }
     
     public <T> T spy(final T object) {
-        MockSettings mockSettings = Mockito.withSettings().defaultAnswer(POWER_MOCK_CALL_REAL_METHOD);
+        MockSettings mockSettings = Mockito.withSettings()
+                                           .spiedInstance(object)
+                                           .defaultAnswer(POWER_MOCK_CALL_REAL_METHOD);
         //noinspection unchecked
         return DefaultMockCreator.mock((Class<T>) Whitebox.getType(object), false, true, object, mockSettings, (Method[]) null);
     }

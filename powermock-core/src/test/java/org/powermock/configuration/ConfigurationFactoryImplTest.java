@@ -24,9 +24,6 @@ import org.junit.Test;
 import org.powermock.api.mockito.ConfigurationTestUtils;
 import org.powermock.configuration.support.ConfigurationFactoryImpl;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ConfigurationFactoryImplTest {
@@ -58,20 +55,20 @@ public class ConfigurationFactoryImplTest {
         
         assertThat(configuration.getGlobalIgnore())
             .as("Configuration is read correctly")
-            .containsExactly("org.somepackage");
+            .contains("org.somepackage");
     }
     
     @Test
     public void should_return_default_configuration_if_configuration_file_not_exist() {
-        MockitoConfiguration configuration = configurationFactory.create(MockitoConfiguration.class);
+        PowerMockConfiguration configuration = configurationFactory.create(PowerMockConfiguration.class);
     
         assertThat(configuration)
             .as("Configuration is created")
             .isNotNull();
     
-        assertThat(configuration.getMockMakerClass())
+        assertThat(configuration.getGlobalIgnore())
             .as("Configuration is read correctly")
-            .isEqualTo("org.mockito.internal.creation.bytebuddy.SubclassByteBuddyMockMaker");
+            .contains("org.powermock.core*");
     }
     
     
@@ -79,14 +76,14 @@ public class ConfigurationFactoryImplTest {
     public void should_return_default_value_for_configuration_if_user_not_defined() throws Exception {
         util.copyTemplateToPropertiesFile();
         
-        MockitoConfiguration configuration = configurationFactory.create(MockitoConfiguration.class);
+        PowerMockConfiguration configuration = configurationFactory.create(PowerMockConfiguration.class);
     
         assertThat(configuration)
             .as("Configuration is created")
             .isNotNull();
     
-        assertThat(configuration.getMockMakerClass())
+        assertThat(configuration.getGlobalIgnore())
             .as("Configuration is read correctly")
-            .isEqualTo("org.mockito.internal.creation.bytebuddy.SubclassByteBuddyMockMaker");
+            .contains("org.powermock.core*");
     }
 }

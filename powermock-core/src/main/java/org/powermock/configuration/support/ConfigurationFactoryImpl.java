@@ -50,7 +50,6 @@ public class ConfigurationFactoryImpl implements ConfigurationFactory {
     private <T extends Configuration> T  readUserConfiguration(final Class<T> configurationType) {
         return newBuilder()
                    .forConfigurationFile(USER_CONFIGURATION)
-                   .withValueAlias("mock-maker-inline", "org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker")
                    .build()
                    .read(configurationType);
     }
