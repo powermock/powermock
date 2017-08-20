@@ -22,7 +22,6 @@ public class MockTypeValidatorFactory {
     }
 
     private static boolean isLoadedByBootstrap(Class type) {
-
         return type.getClassLoader() == null;
     }
 
@@ -42,17 +41,13 @@ public class MockTypeValidatorFactory {
         private boolean isModifiedByPowerMock() {
             return PowerMockModified.class.isAssignableFrom(type);
         }
-
-
-
     }
 
     private static class JavaAgentMockTypeValidator<T> extends AbstractMockTypeValidator<T> {
 
         private final JavaAgentClassRegister agentClassRegister;
 
-        private JavaAgentMockTypeValidator(Class<T> type,
-                                           JavaAgentClassRegister agentClassRegister) {
+        private JavaAgentMockTypeValidator(Class<T> type, JavaAgentClassRegister agentClassRegister) {
             super(type);
             this.agentClassRegister = agentClassRegister;
         }

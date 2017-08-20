@@ -27,12 +27,7 @@ import org.powermock.configuration.GlobalConfiguration;
 import org.powermock.core.MockRepository;
 
 /**
- * A PowerMock implementation of the MockMaker. Right now it simply delegates to the default Mockito
- * {@link org.mockito.plugins.MockMaker} via {@link org.mockito.internal.configuration.plugins.Plugins#getMockMaker()}
- * but in the future we may use it more properly.
- * The reason for its existence is that the current Mockito MockMaker throws exception when getting the name
- * from of a mock that is created by PowerMock but not know for Mockito. This is triggered when by the
- * {@link org.mockito.internal.util.MockUtil} class.
+ * A PowerMock implementation of the MockMaker.
  */
 public class PowerMockMaker implements MockMaker {
     private final MockMaker mockMaker;
@@ -78,6 +73,7 @@ public class PowerMockMaker implements MockMaker {
         return mockMaker;
     }
     
+    @SuppressWarnings("unchecked")
     private MockCreationSettings<Class> createStaticMockSettings(final Class mock) {
         return Mockito.withSettings()
                       .name(mock.getName())

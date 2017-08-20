@@ -26,8 +26,7 @@ public class MockitoPowerMockReporter implements PowerMockReporter {
 
     @Override
     public <T> void classNotPrepared(Class<T> type) {
-        throw new ClassNotPreparedException(join(String.format("The class %s not prepared for test.", type
-                                                                                                              .getName()),
+        throw new ClassNotPreparedException(join(String.format("The class %s not prepared for test.", type.getName()),
                 "To prepare this class, add class to the '@PrepareForTest' annotation.",
                 "In case if you don't use this annotation, add the annotation on class or  method level. "));
     }
