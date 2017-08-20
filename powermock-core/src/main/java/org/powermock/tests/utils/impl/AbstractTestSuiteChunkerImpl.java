@@ -18,7 +18,6 @@ package org.powermock.tests.utils.impl;
 
 import org.powermock.core.classloader.annotations.PowerMockListener;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.core.reporter.MockingFrameworkReporterFactory;
 import org.powermock.core.spi.PowerMockTestListener;
 import org.powermock.reflect.Whitebox;
 import org.powermock.tests.utils.RunnerTestSuiteChunker;
@@ -165,28 +164,13 @@ public abstract class AbstractTestSuiteChunkerImpl<T> extends AbstractCommonTest
         }
 
         if (delegatorIndex == -1) {
-            throw new RuntimeException("Internal error: Failed to find the delgator index.");
+            throw new RuntimeException("Internal error: Failed to find the delegator index.");
         }
         return delegatorIndex;
     }
 
-    public Class<?>[] getTestClasses() {
+    protected Class<?>[] getTestClasses() {
         return testClasses;
-    }
-
-
-    @SuppressWarnings("unchecked")
-    protected MockingFrameworkReporterFactory getFrameworkReporterFactory() {
-        Class<MockingFrameworkReporterFactory> mockingFrameworkReporterFactoryClass;
-        try {
-            ClassLoader classLoader = this.getClass().getClassLoader();
-            mockingFrameworkReporterFactoryClass = (Class<MockingFrameworkReporterFactory>) classLoader.loadClass("org.powermock.api.extension.reporter.MockingFrameworkReporterFactoryImpl");
-        } catch (ClassNotFoundException e) {
-            throw new IllegalStateException(
-                                                   "Extension API internal error: org.powermock.api.extension.reporter.MockingFrameworkReporterFactoryImpl could not be located in classpath.");
-        }
-
-        return Whitebox.newInstance(mockingFrameworkReporterFactoryClass);
     }
 
 }

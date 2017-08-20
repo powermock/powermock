@@ -17,8 +17,6 @@ package org.powermock.modules.testng;
 
 import org.powermock.core.MockRepository;
 import org.powermock.core.classloader.MockClassLoader;
-import org.powermock.core.reporter.MockingFrameworkReporter;
-import org.powermock.core.reporter.MockingFrameworkReporterFactory;
 import org.powermock.reflect.Whitebox;
 import org.testng.IObjectFactory;
 import org.testng.ITestContext;
@@ -42,8 +40,6 @@ public class PowerMockTestCase {
     private Object annotationEnabler;
 
     private ClassLoader previousCl = null;
-
-    private MockingFrameworkReporter frameworkReporter;
 
     public PowerMockTestCase() {
         try {
@@ -87,25 +83,6 @@ public class PowerMockTestCase {
     @BeforeMethod
     protected void beforePowerMockTestMethod() throws Exception {
         injectMocks();
-        enableReporter();
-    }
-
-    private void enableReporter() {
-        frameworkReporter = getFrameworkReporterFactory().create();
-        frameworkReporter.enable();
-    }
-
-    private MockingFrameworkReporterFactory getFrameworkReporterFactory() {
-        Class<MockingFrameworkReporterFactory> mockingFrameworkReporterFactoryClass;
-        try {
-            ClassLoader classLoader = this.getClass().getClassLoader();
-            mockingFrameworkReporterFactoryClass = (Class<MockingFrameworkReporterFactory>) classLoader.loadClass("org.powermock.api.extension.reporter.MockingFrameworkReporterFactoryImpl");
-        } catch (ClassNotFoundException e) {
-            throw new IllegalStateException(
-                                                   "Extension API internal error: org.powermock.api.org.powermock.api.extension.reporter.MockingFrameworkReporterFactoryImpl could not be located in classpath.");
-        }
-
-        return Whitebox.newInstance(mockingFrameworkReporterFactoryClass);
     }
 
     /**
@@ -127,11 +104,6 @@ public class PowerMockTestCase {
         } finally {
             MockRepository.clear();
         }
-        disableReporter();
-    }
-
-    private void disableReporter() {
-        frameworkReporter.disable();
     }
 
     /**
@@ -150,7 +122,7 @@ public class PowerMockTestCase {
         }
     }
 
-    private void clearMockFields() throws Exception, IllegalAccessException {
+    private void clearMockFields() throws Exception {
         if (annotationEnabler != null) {
             final Class<? extends Annotation>[] mockAnnotations = Whitebox.invokeMethod(annotationEnabler,
                     "getMockAnnotations");
