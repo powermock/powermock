@@ -23,10 +23,10 @@ import org.powermock.configuration.ConfigurationFactory;
 import org.powermock.configuration.GlobalConfiguration;
 import org.powermock.configuration.PowerMockConfiguration;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.utils.StringJoiner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SuppressWarnings("unchecked")
 public class PowerMockIgnorePackagesExtractorImplTest {
     
     private PowerMockIgnorePackagesExtractorImpl objectUnderTest;
@@ -44,22 +44,29 @@ public class PowerMockIgnorePackagesExtractorImplTest {
     
     @Test
     public void should_find_ignore_packages_in_the_whole_class_hierarchy() throws Exception {
+        final String[] values = {"ignore0", "ignore1", "ignore2", "ignore3"};
+        final String[] expectedValues = calculateExpectedValues(values);
+    
         final String[] packagesToIgnore = objectUnderTest.getPackagesToIgnore(IgnoreAnnotatedDemoClass.class);
-        
+    
         assertThat(packagesToIgnore)
             .as("Packages added to ignore")
-            .hasSize(4)
-            .containsExactlyInAnyOrder("ignore0", "ignore1", "ignore2", "ignore3");
+            .hasSize(expectedValues.length)
+            .containsExactlyInAnyOrder(expectedValues);
     }
     
     @Test
     public void should_scan_interfaces_when_search_package_to_ignore() {
+        final String[] values = {"ignore4", "ignore5", "ignore6"};
+    
+        String[] expected = calculateExpectedValues(values);
+    
         final String[] packagesToIgnore = objectUnderTest.getPackagesToIgnore(IgnoreAnnotationFromInterfaces.class);
-        
+    
         assertThat(packagesToIgnore)
             .as("Packages from interfaces added to ignore")
-            .hasSize(3)
-            .containsExactlyInAnyOrder("ignore4", "ignore5", "ignore6");
+            .hasSize(expected.length)
+            .contains(expected);
         
     }
     
@@ -132,6 +139,18 @@ public class PowerMockIgnorePackagesExtractorImplTest {
             .as("Packages from global ignore is not added")
             .hasSize(4)
             .containsOnly("ignore0", "ignore1", "ignore6", "ignore5");
+    }
+    
+    private String[] calculateExpectedValues(final String[] values) {
+        final PowerMockConfiguration configuration = GlobalConfiguration.powerMockConfiguration();
+        final int length = configuration.getGlobalIgnore().length;
+        
+        final int expectedLength = length + values.length;
+        String[] expected = new String[expectedLength];
+        
+        System.arraycopy(configuration.getGlobalIgnore(), 0, expected, 0, length);
+        System.arraycopy(values, 0, expected, length, values.length);
+        return expected;
     }
     
     private static class ClassWithoutAnnotation {

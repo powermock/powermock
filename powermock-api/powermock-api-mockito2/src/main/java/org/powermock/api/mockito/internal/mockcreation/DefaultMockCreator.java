@@ -24,7 +24,6 @@ import org.powermock.core.DefaultFieldValueGenerator;
 import org.powermock.core.MockRepository;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.reflect.Whitebox;
-import org.powermock.reflect.internal.WhiteboxImpl;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -69,7 +68,6 @@ public class DefaultMockCreator extends AbstractMockCreator {
         }
         
         putMethodInvocationControlToRepository(type, isStatic, mockData, mock);
-        copyFieldsValuesForSpy(isSpy, delegator, mock);
         
         return mock;
     }
@@ -83,14 +81,7 @@ public class DefaultMockCreator extends AbstractMockCreator {
         });
     }
     
-    private <T> void copyFieldsValuesForSpy(final boolean isSpy, final Object delegator, final T mock) {
-        if (isSpy) {
-            WhiteboxImpl.copyToMock(delegator, mock);
-        }
-    }
-    
-    private <T> void putMethodInvocationControlToRepository(final Class<T> type, final boolean isStatic, final MockData<T> mockData,
-                                                            final T mock) {
+    private <T> void putMethodInvocationControlToRepository(final Class<T> type, final boolean isStatic, final MockData<T> mockData, final T mock) {
         if (isStatic) {
             MockRepository.putStaticMethodInvocationControl(type, mockData.getMethodInvocationControl());
         } else {

@@ -23,15 +23,12 @@ import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.exceptions.misusing.NotAMockException;
 import org.mockito.invocation.Invocation;
-import org.mockito.invocation.InvocationContainer;
 import org.mockito.invocation.MockHandler;
-import org.mockito.stubbing.Answer;
+import org.mockito.mock.MockCreationSettings;
 import org.powermock.api.mockito.internal.invocation.InvocationControlAssertionError;
 import org.powermock.core.MockRepository;
-import org.powermock.reflect.Whitebox;
 
 import java.lang.reflect.Method;
-import java.util.List;
 
 /**
  * The class provides a access to method and data of  {@link org.mockito.invocation.MockHandler} from the given mock instance.
@@ -47,25 +44,16 @@ public class MockHandlerAdaptor<T> {
         this.mockingDetails = Mockito.mockingDetails(mock);
     }
     
-    public void setAnswersForStubbing(final List<Answer<?>> answers) {
-        InvocationContainer invocationContainer = getMockHandler().getInvocationContainer();
-        try {
-            Whitebox.invokeMethod(invocationContainer, "setAnswersForStubbing", answers);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-    
     public Object getMock() {
         return mock;
     }
     
-    private MockHandler<T> getMockHandler() {
-        return mockingDetails.getMockHandler();
+    public MockCreationSettings<?> getMockSettings() {
+        return mockingDetails.getMockCreationSettings();
     }
     
-    InvocationContainer getInvocationContainer() {
-        return getMockHandler().getInvocationContainer();
+    private MockHandler getMockHandler() {
+        return mockingDetails.getMockHandler();
     }
     
     Object performIntercept(final Object mock, final Method method, Object[] arguments) throws Throwable {
