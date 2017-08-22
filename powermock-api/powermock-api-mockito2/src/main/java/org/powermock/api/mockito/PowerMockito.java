@@ -18,6 +18,7 @@ package org.powermock.api.mockito;
 
 import org.mockito.MockSettings;
 import org.mockito.Mockito;
+import org.mockito.internal.progress.MockingProgress;
 import org.mockito.internal.progress.ThreadSafeMockingProgress;
 import org.mockito.internal.stubbing.answers.CallsRealMethods;
 import org.mockito.internal.stubbing.answers.DoesNothing;
@@ -241,9 +242,42 @@ public class PowerMockito extends MemberModifier {
      * cares what foo.bar() returns then something else breaks(often before even
      * verify() gets executed). If your code doesn't care what get(0) returns
      * then it should not be stubbed.
+     *
+     * @deprecated Will be removed in PowerMock 2. Please use {@link #verifyStatic(Class)}
      */
+    @Deprecated
     public static synchronized void verifyStatic() {
         verifyStatic(times(1));
+    }
+    
+    /**
+     * Verifies certain behavior of the <code>mockedClass</code> <b>happened once</b>
+     * <p>
+     * Alias to {@code verifyStatic(classMock, times(1))} E.g:
+     *
+     * <pre>
+     * verifyStatic(ClassWithStaticMethod.class);
+     * ClassWithStaticMethod.someStaticMethod(&quot;some arg&quot;);
+     * </pre>
+     *
+     * Above is equivalent to:
+     *
+     * <pre>
+     * verifyStatic(ClassWithStaticMethod.class, times(1));
+     * ClassWithStaticMethod.someStaticMethod(&quot;some arg&quot;);
+     * </pre>
+     *
+     * <p>
+     * Although it is possible to verify a stubbed invocation, usually <b>it's
+     * just redundant</b>. Let's say you've stubbed foo.bar(). If your code
+     * cares what foo.bar() returns then something else breaks(often before even
+     * verify() gets executed). If your code doesn't care what get(0) returns
+     * then it should not be stubbed.
+     *
+     * @param mockedClass the mocked class behavior of that have to be verified.
+     */
+    public static synchronized <T> void verifyStatic(Class<T> mockedClass) {
+        verifyStatic(mockedClass, times(1));
     }
 
     /**
@@ -266,10 +300,42 @@ public class PowerMockito extends MemberModifier {
      * <p>
      *
      * @param verificationMode times(x), atLeastOnce() or never()
+     *
+     * @deprecated Will be removed in PowerMock 2. Please use {@link #verifyStatic(Class, VerificationMode)}
      */
+    @Deprecated
     public static synchronized void verifyStatic(VerificationMode verificationMode) {
         ThreadSafeMockingProgress.mockingProgress().verificationStarted(
                 POWERMOCKITO_CORE.wrapInStaticVerificationMode(verificationMode));
+    }
+    
+    /**
+     * Verifies certain behavior of the <code>mockedClass</code> happened at least once / exact number of times
+     * / never. E.g:
+     *
+     * <pre>
+     *   verifyStatic(ClassWithStaticMethod.class, times(5));
+     *   ClassWithStaticMethod.someStaticMethod(&quot;was called five times&quot;);
+     *
+     *   verifyStatic(ClassWithStaticMethod.class, atLeast(2));
+     *   ClassWithStaticMethod.someStaticMethod(&quot;was called at least two times&quot;);
+     *
+     *   //you can use flexible argument matchers, e.g:
+     *   verifyStatic(ClassWithStaticMethod.class, atLeastOnce());
+     *   ClassWithStaticMethod.someMethod(&lt;b&gt;anyString()&lt;/b&gt;);
+     * </pre>
+     *
+     * <b>times(1) is the default</b> and can be omitted
+     * <p>
+     *
+     * @param mockedClass the mocked class behavior of that have to be verified.
+     * @param verificationMode
+     *            times(x), atLeastOnce() or never()
+     *
+     */
+    public static synchronized <T> void verifyStatic(Class<T> mockedClass, VerificationMode verificationMode) {
+        ThreadSafeMockingProgress.mockingProgress().verificationStarted(
+            POWERMOCKITO_CORE.wrapInStaticVerificationMode(mockedClass, verificationMode));
     }
 
     /**

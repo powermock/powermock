@@ -39,8 +39,6 @@ allprojects {
                 publicDownloadNumbers = true
 
             }
-
-
         }
     }
 }

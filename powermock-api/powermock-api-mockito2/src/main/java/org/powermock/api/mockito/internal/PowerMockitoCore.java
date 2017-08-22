@@ -40,16 +40,20 @@ public class PowerMockitoCore {
         getMockingProgress().resetOngoingStubbing();
         return (PowerMockitoStubber) new PowerMockitoStubberImpl().doAnswer(answer);
     }
-
+    
     private MockingProgress getMockingProgress() {
         return ThreadSafeMockingProgress.mockingProgress();
     }
-
+    
     public MockAwareVerificationMode wrapInMockitoSpecificVerificationMode(Object mock, VerificationMode mode) {
         return new MockAwareVerificationMode(mock, mode, getMockingProgress().verificationListeners());
     }
+    
+    public <T> VerificationMode wrapInStaticVerificationMode(final Class<T> mockedClass, final VerificationMode verificationMode) {
+        return new StaticMockAwareVerificationMode(mockedClass, verificationMode, getMockingProgress().verificationListeners());
+    }
 
-    public MockAwareVerificationMode wrapInStaticVerificationMode(VerificationMode mode) {
-        return new StaticMockAwareVerificationMode(mode, getMockingProgress().verificationListeners());
+    public MockAwareVerificationMode wrapInStaticVerificationMode(VerificationMode verificationMode) {
+        return new StaticMockAwareVerificationMode(verificationMode, getMockingProgress().verificationListeners());
     }
 }
