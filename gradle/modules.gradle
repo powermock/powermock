@@ -15,10 +15,26 @@ def skippedTasksForUnpublishableModules = [
     'bintrayUpload'
 ]
 
-def unpublishableModules = allprojects - publishableModules
+def unpublishableModules = allprojects - publishableModules - project(":powermock-release").subprojects
 configure(unpublishableModules) { project ->
     project.tasks.all {
         it.enabled = !skippedTasksForUnpublishableModules.contains(it.name)
+    }
+}
+
+def skippedTasksForGenericModules = [
+    'generatePomFileForJavaLibraryPublication',
+    'publishJavaLibraryPublicationToMavenLocal',
+    'jar',
+    'javadoc',
+    'javadocJar',
+    'sourcesJar'
+]
+
+def genericModules = project(":powermock-release").subprojects
+configure(genericModules) { project ->
+    project.tasks.all {
+        it.enabled = !skippedTasksForGenericModules.contains(it.name)
     }
 }
 

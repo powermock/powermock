@@ -1,5 +1,5 @@
 ext {
-    //bintrayRepo = 'maven'
+    bintrayRepo = 'maven'
     bintrayAutoPublish = true
     mavenCentralSync = true
     bintrayPublications = ['javaLibrary']

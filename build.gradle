@@ -14,7 +14,7 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
         classpath 'net.researchgate:gradle-release:2.4.0'
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
-        classpath 'org.shipkit:shipkit:0.9.34'
+        classpath 'org.shipkit:shipkit:0.9.45'
         classpath 'ru.vyarus:gradle-animalsniffer-plugin:1.4.1'
     }
 }

@@ -1,15 +1,5 @@
 apply plugin: 'maven-publish'
 
-//publishing {
-//    publications {
-//        modulesJar(MavenPublication) {
-//            from components.java
-//            artifactId project.name
-//            artifact sourcesJar
-//            artifact javadocJar
-//        }
-//    }
-//}
 
 publishing.publications.all {
     pom.withXml {
