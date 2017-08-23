@@ -7,7 +7,7 @@ bintray {
     publish = project.ext.bintrayAutoPublish
 
     pkg {
-        //repo = project.ext.bintrayRepo
+        repo = project.ext.bintrayRepo
 
         // optional version attributes
         version {

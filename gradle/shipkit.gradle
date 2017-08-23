@@ -9,8 +9,6 @@ shipkit {
 
     releaseNotes.file = "release-notes.md"
     releaseNotes.ignoreCommitsContaining = ["[ci skip]"]
-
-    team.developers = ['johanhaleby:Johan Haleby', 'jakr:Jan Kronquist', 'thekingnothing:Arthur Zagretdinov']
 }
 
 allprojects {
@@ -24,8 +22,6 @@ allprojects {
 //                repo = 'bootstrap'
 //                user = 'shipkit-bootstrap-bot'
 //                userOrg = 'shipkit-bootstrap'
-//                licenses = ['MIT']
-//                labels = ['continuous delivery', 'release automation', 'shipkit']
 
                 userOrg ='powermock'
                 name = 'powermock'
