@@ -8,7 +8,6 @@ configure(publishableModules) { project ->
 def skippedTasksForUnpublishableModules = [
     'generatePomFileForJavaLibraryPublication',
     'publishJavaLibraryPublicationToMavenLocal',
-    'jar',
     'javadoc',
     'javadocJar',
     'sourcesJar',
@@ -18,7 +17,9 @@ def skippedTasksForUnpublishableModules = [
 def unpublishableModules = allprojects - publishableModules - project(":powermock-release").subprojects
 configure(unpublishableModules) { project ->
     project.tasks.all {
-        it.enabled = !skippedTasksForUnpublishableModules.contains(it.name)
+        if(skippedTasksForUnpublishableModules.contains(it.name)) {
+            it.enabled = false
+        }
     }
 }
 
@@ -34,7 +35,9 @@ def skippedTasksForGenericModules = [
 def genericModules = project(":powermock-release").subprojects
 configure(genericModules) { project ->
     project.tasks.all {
-        it.enabled = !skippedTasksForGenericModules.contains(it.name)
+        if(skippedTasksForGenericModules.contains(it.name)) {
+            it.enabled = false
+        }
     }
 }
 
