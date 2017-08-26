@@ -5,6 +5,8 @@ shipkit {
     //TODO when you finish trying out Shipkit, use your own token below (http://link/needed)
     gitHub.readOnlyAuthToken = "76826c9ec886612f504d12fd4268b16721c4f85d"
 
+    git.tagPrefix = "powermock-"
+
     releaseNotes.file = "release-notes.md"
     releaseNotes.ignoreCommitsContaining = ["[ci skip]"]
 }
@@ -13,14 +15,25 @@ allprojects {
     plugins.withId("org.shipkit.bintray") {
         //TODO when you finish trying out Shipkit, use your own Bintray repository below (http://link/needed)
         bintray {
-            key = '7ea297848ca948adb7d3ee92a83292112d7ae989'
+            user = System.getenv('BINTRAY_USER')
+
+//            key = '7ea297848ca948adb7d3ee92a83292112d7ae989'
             pkg {
-                repo = 'bootstrap'
-                user = 'shipkit-bootstrap-bot'
-                userOrg = 'shipkit-bootstrap'
-                name = 'maven'
-                licenses = ['MIT']
-                labels = ['continuous delivery', 'release automation', 'shipkit']
+//                repo = 'bootstrap'
+//                user = 'shipkit-bootstrap-bot'
+//                userOrg = 'shipkit-bootstrap'
+
+                userOrg ='powermock'
+                name = 'powermock'
+                desc = project.description
+                websiteUrl = 'http://powermock.org'
+                issueTrackerUrl = 'https://powermock.com/powermock/powermock/issues'
+                vcsUrl = 'https://github.com/powermock/powermock.git'
+                licenses = ['Apache-2.0']
+                labels = ['java', 'mock', 'mocking', 'tests']
+
+                publicDownloadNumbers = true
+
             }
         }
     }
