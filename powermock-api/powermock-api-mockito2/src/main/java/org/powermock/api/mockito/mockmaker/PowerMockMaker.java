@@ -43,20 +43,31 @@ public class PowerMockMaker implements MockMaker {
     
     @Override
     public MockHandler getHandler(Object mock) {
-        // Return a fake mock handler for static method mocks
         if (mock instanceof Class) {
-            return new StaticMockHandler(createStaticMockSettings((Class) mock));
+            return staticMockHandler((Class) mock);
         } else {
-            final MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository.getInstanceMethodInvocationControl(mock);
-            final Object realMock;
-            if (invocationControl == null){
-                realMock = mock;
-            }else{
-                realMock = invocationControl.getMockHandlerAdaptor().getMock();
-    
-            }
-            return mockMaker.getHandler(realMock);
+            return instanceMockHandler(mock);
         }
+    }
+    
+    private MockHandler instanceMockHandler(final Object mock) {
+        return mockMaker.getHandler(getRealMock(mock));
+    }
+    
+    private Object getRealMock(final Object mock) {
+        final MockitoMethodInvocationControl invocationControl = (MockitoMethodInvocationControl) MockRepository.getInstanceMethodInvocationControl(mock);
+        final Object realMock;
+        if (invocationControl == null){
+            realMock = mock;
+        }else{
+            realMock = invocationControl.getMockHandlerAdaptor().getMock();
+
+        }
+        return realMock;
+    }
+    
+    private MockHandler staticMockHandler(final Class mock) {
+        return new StaticMockHandler(createStaticMockSettings(mock));
     }
     
     @Override

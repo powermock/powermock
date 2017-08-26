@@ -25,17 +25,4 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class PrivateInstanceMockingTest extends PrivateInstanceMockingCases {
     @Rule
     public PowerMockRule powerMockRule = new PowerMockRule();
-    
-
-    @Test(expected = ArrayStoreException.class)
-    public void expectationsWorkWhenSpyingOnPrivateVoidMethods() throws Exception {
-        PrivateMethodDemo tested = spy(new PrivateMethodDemo());
-
-        tested.doObjectStuff(new Object());
-
-        when(tested, "doObjectInternal", isA(Object.class)).thenThrow(new ArrayStoreException());
-
-        tested.doObjectStuff(new Object());
-    }
-
 }

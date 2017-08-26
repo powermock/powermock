@@ -26,8 +26,9 @@ public interface PrivateMethodVerification {
      * possible).
      *
      * @throws Exception If something unexpected goes wrong.
+     * @deprecated Use {@link #invoke(String, Object...)} instead. Will be remove in PowerMock 3.0
      */
-    //TODO add test
+    @Deprecated
     void invoke(Object... arguments) throws Exception;
 
     /**
@@ -42,7 +43,6 @@ public interface PrivateMethodVerification {
      * to verify.
      *
      * @throws Exception If something unexpected goes wrong.
-     * @see #invoke(Object...)
      */
     void invoke(String methodToVerify, Object... arguments) throws Exception;
 }
