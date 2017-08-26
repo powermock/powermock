@@ -16,7 +16,7 @@ shipkit {
     def buildNo = System.getenv("TRAVIS_BUILD_NUMBER")
     git.commitMessagePostfix = buildNo? "by CI build $buildNo\n\n[ci skip-release]" : "by local build\n\n[ci skip-release]"
 
-    releaseNotes.file = "doc/release-notes/official.md"
+    releaseNotes.file = "docs/release-notes/official.md"
     releaseNotes.labelMapping = [
             'epic': "Major changes",
             'bug': "Bugfixes",
@@ -37,9 +37,9 @@ allprojects {
             user = System.getenv('BINTRAY_USER')
             key = System.getenv("BINTRAY_API_KEY")
 
-            repo = project.ext.bintrayRepo
-
             pkg {
+                repo = repoName(project)
+
                 userOrg ='powermock'
                 name = 'powermock'
                 desc = project.description
@@ -52,5 +52,14 @@ allprojects {
                 publicDownloadNumbers = true
             }
         }
+    }
+}
+
+
+static String repoName(project) {
+    if (project.hasProperty("bintrayRepo")) {
+        return project.ext.bintrayRepo
+    } else {
+        return 'maven'
     }
 }
