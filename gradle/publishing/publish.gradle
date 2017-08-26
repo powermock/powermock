@@ -1,5 +1,7 @@
+boolean centralRelease = shouldReleaseToCentral(project)
+
 def versionDescription = "PowerMock ${project.version} Final"
-if (project.version.toString().contains("beta")){
+if (project.version.toString().contains("RC")){
     versionDescription = "PowerMock ${project.version} Develop"
 }
 
@@ -22,11 +24,31 @@ bintray {
 
             //Automatically syncs to central repository (https://oss.sonatype.org/)
             mavenCentralSync {
-                sync = project.ext.mavenCentralSync
+                sync = centralRelease
                 user = System.env.NEXUS_TOKEN_USER
                 password = System.env.NEXUS_TOKEN_PWD
             }
         }
     }
+}
+
+/**
+ * Finds out if we should release to Maven Central.
+ * To test this logic, run build with '-i' (info logging) and inspect the build output.
+ */
+static boolean shouldReleaseToCentral(project) {
+    boolean centralReleaseByCommit = System.getenv("TRAVIS_COMMIT_MESSAGE")?.contains("[ci maven-central-release]")
+    boolean centralReleaseByProjectProperty = project.ext.mavenCentralSync
+    boolean centralReleaseByReleaseCandidate = project.version.toString().contains("RC")
+
+    boolean centralRelease = (centralReleaseByCommit || centralReleaseByProjectProperty) && !centralReleaseByReleaseCandidate
+    def message = """Release was using following settings:
+ - commit message contains '[ci maven-central-release]': $centralReleaseByCommit
+ - project property 'mavenCentralSync' has value: $centralReleaseByProjectProperty
+ - Release Candidate version: $centralReleaseByReleaseCandidate
+ - Maven Central release is enabled: $centralRelease"""
+    project.logger.info(message)
+
+    return centralRelease
 }
 

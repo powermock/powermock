@@ -2,27 +2,44 @@
 shipkit {
     gitHub.repository = "powermock/powermock"
 
-    //TODO when you finish trying out Shipkit, use your own token below (http://link/needed)
-    gitHub.readOnlyAuthToken = "76826c9ec886612f504d12fd4268b16721c4f85d"
+    gitHub.readOnlyAuthToken = "0f1df49ac11364f542c9d3e6735ae64d010ab8e3"
+
+    git.user = "PowerMock Release Tools"
+    git.email = "<powermock.release.tools@outlook.com>"
+    git.releasableBranchRegex = "release/.+"  // 'release/2.x', 'release/3.x', etc.
 
     git.tagPrefix = "powermock-"
 
-    releaseNotes.file = "release-notes.md"
+    gitHub.writeAuthUser = System.getenv("GH_USER")
+    gitHub.writeAuthToken = System.getenv("GH_WRITE_TOKEN")
+
+    def buildNo = System.getenv("TRAVIS_BUILD_NUMBER")
+    git.commitMessagePostfix = buildNo? "by CI build $buildNo\n\n[ci skip-release]" : "by local build\n\n[ci skip-release]"
+
+    releaseNotes.file = "doc/release-notes/official.md"
+    releaseNotes.labelMapping = [
+            'epic': "Major changes",
+            'bug': "Bugfixes",
+            'enhancement': "Enhancements",
+            'android': "Android support",
+            'kotlin': "Kotlin support",
+            'component:mockito': "Mockito support",
+            'component:easymock': "EasyMock support",
+            'wiki': 'Documentation',
+            'regression': 'Fix regression bug'
+    ]
     releaseNotes.ignoreCommitsContaining = ["[ci skip]"]
 }
 
 allprojects {
     plugins.withId("org.shipkit.bintray") {
-        //TODO when you finish trying out Shipkit, use your own Bintray repository below (http://link/needed)
         bintray {
             user = System.getenv('BINTRAY_USER')
+            key = System.getenv("BINTRAY_API_KEY")
 
-//            key = '7ea297848ca948adb7d3ee92a83292112d7ae989'
+            repo = project.ext.bintrayRepo
+
             pkg {
-//                repo = 'bootstrap'
-//                user = 'shipkit-bootstrap-bot'
-//                userOrg = 'shipkit-bootstrap'
-
                 userOrg ='powermock'
                 name = 'powermock'
                 desc = project.description
@@ -33,7 +50,6 @@ allprojects {
                 labels = ['java', 'mock', 'mocking', 'tests']
 
                 publicDownloadNumbers = true
-
             }
         }
     }
