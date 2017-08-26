@@ -5,16 +5,37 @@ configure(publishableModules) { project ->
     apply from: "${gradleScriptDir}/publishing/publishable-module.gradle"
 }
 
-def unpublishableModules = allprojects - publishableModules
+def skippedTasksForUnpublishableModules = [
+    'generatePomFileForJavaLibraryPublication',
+    'publishJavaLibraryPublicationToMavenLocal',
+    'javadoc',
+    'javadocJar',
+    'sourcesJar',
+    'bintrayUpload'
+]
+
+def unpublishableModules = allprojects - publishableModules - project(":powermock-release").subprojects
 configure(unpublishableModules) { project ->
     project.tasks.all {
-        if (it.name == 'publishJavaLibraryPublicationToMavenLocal') {
+        if(skippedTasksForUnpublishableModules.contains(it.name)) {
             it.enabled = false
         }
-        if (it.name == 'javadoc') {
-            it.enabled = false
-        }
-        if (it.name == 'bintrayUpload') {
+    }
+}
+
+def skippedTasksForGenericModules = [
+    'generatePomFileForJavaLibraryPublication',
+    'publishJavaLibraryPublicationToMavenLocal',
+    'jar',
+    'javadoc',
+    'javadocJar',
+    'sourcesJar'
+]
+
+def genericModules = project(":powermock-release").subprojects
+configure(genericModules) { project ->
+    project.tasks.all {
+        if(skippedTasksForGenericModules.contains(it.name)) {
             it.enabled = false
         }
     }
