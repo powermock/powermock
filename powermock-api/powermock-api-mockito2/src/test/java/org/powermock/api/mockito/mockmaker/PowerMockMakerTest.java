@@ -107,7 +107,17 @@ public class PowerMockMakerTest {
         
         @Override
         public TypeMockability isTypeMockable(final Class<?> type) {
-            return null;
+            return new TypeMockability() {
+                @Override
+                public boolean mockable() {
+                    return true;
+                }
+    
+                @Override
+                public String nonMockableReason() {
+                    return null;
+                }
+            };
         }
         
         private Object getMock() {

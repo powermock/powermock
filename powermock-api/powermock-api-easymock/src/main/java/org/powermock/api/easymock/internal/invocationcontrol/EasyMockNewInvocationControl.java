@@ -25,14 +25,13 @@ import org.powermock.reflect.internal.WhiteboxImpl;
 
 import java.lang.reflect.Constructor;
 
-//TODO rename to EasyMock
-public class NewInvocationControlImpl<T> implements NewInvocationControl<IExpectationSetters<T>> {
+public class EasyMockNewInvocationControl<T> implements NewInvocationControl<IExpectationSetters<T>> {
     private final InvocationSubstitute<T> substitute;
     private final Class<T> subsitutionType;
     private boolean hasReplayed;
     private boolean hasVerified;
 
-    public NewInvocationControlImpl(InvocationSubstitute<T> substitute, Class<T> type) {
+    public EasyMockNewInvocationControl(InvocationSubstitute<T> substitute, Class<T> type) {
         if (substitute == null) {
             throw new IllegalArgumentException("Internal error: substitute cannot be null.");
         }
