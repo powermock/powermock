@@ -80,6 +80,10 @@ public class StaticService {
 		StaticHelper.sayHelloAgain();
 		StaticHelper.sayHelloAgain();
 	}
+	
+	public static void throwException(){
+        throw new RuntimeException("How are you?");
+    }
 
 	public static String say(String string) {
 		return "Hello " + string;

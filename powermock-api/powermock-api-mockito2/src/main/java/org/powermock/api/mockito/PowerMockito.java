@@ -526,7 +526,6 @@ public class PowerMockito extends MemberModifier {
      *
      * @param mocks to be verified
      */
-    //TODO cover by test
     public static void verifyZeroInteractions(Object... mocks) {
         VerifyNoMoreInteractions.verifyNoMoreInteractions(mocks);
     }
@@ -617,7 +616,6 @@ public class PowerMockito extends MemberModifier {
      *
      * @return stubber - to select a method for stubbing
      */
-    //TODO cover by test
     public static PowerMockitoStubber doCallRealMethod() {
         return POWERMOCKITO_CORE.doCallRealMethod();
     }

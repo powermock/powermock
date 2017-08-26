@@ -18,6 +18,7 @@
 
 package samples.powermockito.junit4.staticmocking;
 
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.exceptions.base.MockitoAssertionError;
@@ -27,6 +28,7 @@ import samples.singleton.SimpleStaticService;
 import samples.singleton.StaticService;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
@@ -34,6 +36,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.doCallRealMethod;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -41,6 +44,25 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 public class MockStaticCases {
+    
+    @Test
+    public void should_call_reall_static_void_method() {
+        mockStatic(StaticService.class);
+        
+        StaticService.throwException();
+        
+        doCallRealMethod().when(StaticService.class);
+        StaticService.throwException();
+        
+        assertThatThrownBy(new ThrowingCallable() {
+            @Override
+            public void call() throws Throwable {
+                StaticService.throwException();
+            }
+        }).as("Real method is called")
+          .isInstanceOf(RuntimeException.class);
+        
+    }
     
     @Test
     public void mockStatic_uses_var_args_to_create_multiple_static_mocks() throws Exception {

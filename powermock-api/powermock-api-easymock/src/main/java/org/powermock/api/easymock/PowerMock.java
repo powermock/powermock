@@ -24,7 +24,7 @@ import org.easymock.internal.MockInvocationHandler;
 import org.easymock.internal.MocksControl;
 import org.powermock.api.easymock.internal.invocationcontrol.EasyMockMethodInvocationControl;
 import org.powermock.api.easymock.internal.invocationcontrol.NewInvocationControlAssertionError;
-import org.powermock.api.easymock.internal.invocationcontrol.NewInvocationControlImpl;
+import org.powermock.api.easymock.internal.invocationcontrol.EasyMockNewInvocationControl;
 import org.powermock.api.easymock.internal.mockstrategy.MockStrategy;
 import org.powermock.api.easymock.internal.mockstrategy.impl.DefaultMockStrategy;
 import org.powermock.api.easymock.internal.mockstrategy.impl.NiceMockStrategy;
@@ -1645,7 +1645,7 @@ public class PowerMock extends MemberModifier {
         if (newInvocationControl == null) {
             InvocationSubstitute<T> mock = doMock(InvocationSubstitute.class, false, mockStrategy, null,
                     (Method[]) null);
-            newInvocationControl = new NewInvocationControlImpl<T>(mock, type);
+            newInvocationControl = new EasyMockNewInvocationControl<T>(mock, type);
             MockRepository.putNewInstanceControl(type, newInvocationControl);
             MockRepository.addObjectsToAutomaticallyReplayAndVerify(WhiteboxImpl.getOriginalUnmockedType(type));
         }
@@ -2082,7 +2082,7 @@ public class PowerMock extends MemberModifier {
             if (invocationHandler != null) {
                 invocationHandler.verify();
             }
-            NewInvocationControlImpl<?> newInvocationControl = (NewInvocationControlImpl<?>) MockRepository.getNewInstanceControl(type);
+            EasyMockNewInvocationControl<?> newInvocationControl = (EasyMockNewInvocationControl<?>) MockRepository.getNewInstanceControl(type);
             if (newInvocationControl != null) {
                 try {
                     newInvocationControl.verify();
