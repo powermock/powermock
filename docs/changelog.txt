@@ -575,7 +575,7 @@ Change log 0.9 (released 2008-11-10)
 * Fixed a serious issue when the suppress static constructor state disappeared between chunking sessions. Fixed this for all versions of JUnit 4. This means that chunking and suppression of static initializers now work as expected.
 * The PowerMock API methods with a syntax like createPartialMockX are renamed to createXPartialMock, e.g. createPartialMockNice is renamed to createNicePartialMock to be more consistent with the normal createMock methods.
 * Added createNicePartialMockAndInvokeDefaultConstructor and createStrictPartialMockAndInvokeDefaultConstructor to the PowerMock API.
-* Updated the tutorial projects with TODO's. It should now be much easier to understand what shall be done.
+* Updated the tutorial projects with
 * Changed the clean-up mechanisms of PowerMock.replay(..) and PowerMock.verify(..). Should no longer clear unnecessary state.
 * Implemented two new PowerMock API methods: replayAll and verifyAll(). These can be used to replay and verify all classes and mocks created by the PowerMock API without having to explicitly specify each and everyone.
 
