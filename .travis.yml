@@ -32,4 +32,4 @@ script:
   # We are using && below on purpose
   # ciPerformRelease must run only when the entire build has completed
   # This guarantees that no release steps are executed when the build or tests fail
-  - ./gradlew assemble -s -PcheckJava6Compatibility && ./gradlew check && ./gradlew ciPerformRelease
+  - ./gradlew assemble -s -PcheckJava6Compatibility && ./gradlew check && ./gradlew -i ciPerformRelease
