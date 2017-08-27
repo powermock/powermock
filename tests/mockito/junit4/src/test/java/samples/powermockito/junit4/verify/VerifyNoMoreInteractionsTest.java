@@ -15,6 +15,7 @@
  */
 package samples.powermockito.junit4.verify;
 
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -26,9 +27,15 @@ import samples.newmocking.MyClass;
 import samples.singleton.StaticHelper;
 import samples.singleton.StaticService;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.times;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.verifyNew;
+import static org.powermock.api.mockito.PowerMockito.verifyNoMoreInteractions;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
 
 /**
@@ -53,15 +60,13 @@ public class VerifyNoMoreInteractionsTest {
 		mockStatic(StaticService.class);
 		assertNull(StaticService.say("hello"));
 
-		try {
-			verifyNoMoreInteractions(StaticService.class);
-			fail("Should throw exception!");
-		} catch (MockitoAssertionError e) {
-			assertTrue(e
-					.getMessage()
-					.startsWith(
-							"\nNo interactions wanted here:\n-> at samples.powermockito.junit4.verifynomoreinteractions.VerifyNoMoreInteractionsTest.verifyNoMoreInteractionsOnMethodThrowsAssertionErrorWhenMoreInteractionsTookPlace(VerifyNoMoreInteractionsTest.java"));
-		}
+        assertThatThrownBy(new ThrowingCallable() {
+            @Override
+            public void call() throws Throwable {
+                verifyNoMoreInteractions(StaticService.class);
+            }
+        }).hasMessageStartingWith(
+            "\nNo interactions wanted here:\n-> at samples.powermockito.junit4.verify.VerifyNoMoreInteractionsTest$1.call");
 	}
 
 	@Test
@@ -73,16 +78,14 @@ public class VerifyNoMoreInteractionsTest {
 		whenNew(MyClass.class).withNoArguments().thenReturn(myClassMock);
 
 		tested.simpleMultipleNew();
-
-		try {
-			verifyNoMoreInteractions(MyClass.class);
-			fail("Should throw exception!");
-		} catch (MockitoAssertionError e) {
-			assertTrue(e
-					.getMessage()
-					.startsWith(
-							"\nNo interactions wanted here:\n-> at samples.powermockito.junit4.verifynomoreinteractions.VerifyNoMoreInteractionsTest.verifyNoMoreInteractionsOnNewInstancesThrowsAssertionErrorWhenMoreInteractionsTookPlace(VerifyNoMoreInteractionsTest.java:"));
-		}
+        
+        assertThatThrownBy(new ThrowingCallable() {
+            @Override
+            public void call() throws Throwable {
+                verifyNoMoreInteractions(MyClass.class);
+            }
+        }).hasMessageStartingWith(
+            "\nNo interactions wanted here:\n-> at samples.powermockito.junit4.verify.VerifyNoMoreInteractionsTest$2.call");
 	}
 
 	@Test
@@ -115,19 +118,15 @@ public class VerifyNoMoreInteractionsTest {
 
 	@Test
 	public void verifyNoMoreInteractionsDelegatesToPlainMockitoWhenMockIsNotAPowerMockitoMock() throws Exception {
-		MyClass myClassMock = Mockito.mock(MyClass.class);
-		myClassMock.getMessage();
-
-		try {
-			verifyNoMoreInteractions(myClassMock);
-			fail("Should throw exception!");
-		} catch (AssertionError e) {
-			/*
-			 * This string would have been deleted by PowerMockito but should
-			 * exists if delegation took place.
-			 */
-			final String expectedTextThatProvesDelegation = "But found this interaction";
-			assertTrue(e.getMessage().contains(expectedTextThatProvesDelegation));
-		}
+		final MyClass myClassMock = Mockito.mock(MyClass.class);
+        myClassMock.getMessage();
+        
+        final String expectedTextThatProvesDelegation = "But found this interaction";
+        assertThatThrownBy(new ThrowingCallable() {
+            @Override
+            public void call() throws Throwable {
+                verifyNoMoreInteractions(myClassMock);
+            }
+        }).hasMessageContaining(expectedTextThatProvesDelegation);
 	}
 }
