@@ -16,9 +16,9 @@
 package org.powermock.api.extension.listener;
 
 import org.powermock.api.easymock.EasyMockConfiguration;
+import org.powermock.api.easymock.annotation.Mock;
 import org.powermock.api.easymock.annotation.MockNice;
 import org.powermock.api.easymock.annotation.MockStrict;
-import org.powermock.core.classloader.annotations.Mock;
 import org.powermock.core.spi.listener.AnnotationEnablerListener;
 import org.powermock.core.spi.support.AbstractPowerMockTestListenerBase;
 import org.powermock.reflect.Whitebox;
@@ -53,7 +53,7 @@ public class AnnotationEnabler extends AbstractPowerMockTestListenerBase impleme
 
     @SuppressWarnings("unchecked")
     public Class<? extends Annotation>[] getMockAnnotations() {
-        return new Class[]{org.powermock.api.easymock.annotation.Mock.class, Mock.class, MockNice.class, MockStrict.class};
+        return new Class[]{Mock.class, MockNice.class, MockStrict.class};
     }
 
     @Override

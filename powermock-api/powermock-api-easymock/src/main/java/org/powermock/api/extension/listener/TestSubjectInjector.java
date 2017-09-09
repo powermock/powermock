@@ -27,7 +27,7 @@ import java.util.Set;
 
 /**
  * The class injects mocks created with {@link Mock}, {@link org.powermock.api.easymock.annotation.Mock}
- * and {@link org.powermock.core.classloader.annotations.Mock} to fields of objects which is annotated with {@link TestSubject}
+ * to fields of objects which is annotated with {@link TestSubject}
  * @see TestSubject
  * @since 1.6.5
  */

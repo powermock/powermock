@@ -40,10 +40,6 @@ public class MockFinalUsingAnnotationsTest {
 	@org.mockito.Mock
 	private FinalDemo usingDeprecatedMockitoMockAnnotation;
 
-	@SuppressWarnings("deprecation")
-	@org.powermock.core.classloader.annotations.Mock
-	private FinalDemo usingPowerMockMockAnnotation;
-
 	@Test
 	public void assertMockFinalWithMockitoMockAnnotationWorks() throws Exception {
 		final String argument = "hello";
@@ -60,14 +56,5 @@ public class MockFinalUsingAnnotationsTest {
 		assertNull(usingDeprecatedMockitoMockAnnotation.say(argument));
 
 		verify(usingDeprecatedMockitoMockAnnotation).say(argument);
-	}
-
-	@Test
-	public void assertMockFinalWhenUsingPowerMockMockAnnotationWorks() throws Exception {
-		final String argument = "hello";
-
-		assertNull(usingPowerMockMockAnnotation.say(argument));
-
-		verify(usingPowerMockMockAnnotation).say(argument);
 	}
 }
