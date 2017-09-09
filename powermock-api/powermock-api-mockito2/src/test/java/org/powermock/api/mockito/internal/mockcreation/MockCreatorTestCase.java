@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MockCreatorTest {
+public class MockCreatorTestCase {
 
 	@Test
 	public void should_return_mock_name_when_settings_have_name() throws NoSuchMethodException, SecurityException {

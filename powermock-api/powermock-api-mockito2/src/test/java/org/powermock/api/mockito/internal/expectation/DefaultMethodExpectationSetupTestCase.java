@@ -23,7 +23,7 @@ import org.powermock.reflect.Whitebox;
 /**
  * @author Stanislav Chizhov
  */
-public class DefaultMethodExpectationSetupTest {
+public class DefaultMethodExpectationSetupTestCase {
 
     private final CUT object = new CUT();
 

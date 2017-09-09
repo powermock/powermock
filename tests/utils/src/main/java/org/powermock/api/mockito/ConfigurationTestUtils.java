@@ -32,7 +32,6 @@ public final class ConfigurationTestUtils {
     private File config;
     
     public void copyTemplateToPropertiesFile() throws URISyntaxException, IOException {
-        
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         URL resource = classLoader.getResource("org/powermock/extensions/configuration.template");
         
@@ -45,8 +44,6 @@ public final class ConfigurationTestUtils {
         if (!config.createNewFile()) {
             throw new AssertionError("Test data not created: cannot create " + CONFIG_FILE);
         }
-        
-        System.out.printf("Copying template %s to %s", file, config);
         
         copyFileUsingStream(file, config);
     }

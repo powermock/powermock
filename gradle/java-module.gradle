@@ -24,3 +24,7 @@ if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
     }
 }
 
+test{
+    exclude "**/*Defect*", "**/*TestCase*"
+}
+
