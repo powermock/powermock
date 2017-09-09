@@ -53,22 +53,22 @@ public class DefaultMockCreator extends AbstractMockCreator {
         return doCreateMock(type, isStatic, isSpy, delegatorCandidate, mockSettings, methods);
     }
     
-    private <T> T doCreateMock(final Class<T> type, final boolean isStatic, final boolean isSpy, final Object delegatorCandidate,
-                               final MockSettings mockSettings, final Method[] methods) {
+    private <T> T doCreateMock(final Class<T> type, final boolean isStatic, final boolean isSpy, final Object delegatorCandidate, final MockSettings mockSettings, final Method[] methods) {
         final Class<T> typeToMock = getMockType(type);
         
         final Object delegator = isSpy && delegatorCandidate == null ? new Object() : delegatorCandidate;
-        
+    
         final MockData<T> mockData = createMethodInvocationControl(typeToMock, methods, delegator, mockSettings);
         
         T mock = mockData.getMock();
+        
         if (isFinalJavaSystemClass(type) && !isStatic) {
             mock = Whitebox.newInstance(type);
             DefaultFieldValueGenerator.fillWithDefaultValues(mock);
         }
         
         putMethodInvocationControlToRepository(type, isStatic, mockData, mock);
-        
+    
         return mock;
     }
     
@@ -106,7 +106,7 @@ public class DefaultMockCreator extends AbstractMockCreator {
     @SuppressWarnings("unchecked")
     private <T> MockData<T> createMethodInvocationControl(Class<T> type, Method[] methods, Object delegator, MockSettings mockSettings) {
         final T mock = Mockito.mock(type, mockSettings != null ? mockSettings : Mockito.withSettings());
-        
+    
         cacheMockClass(mock.getClass());
         
         return new MockData<T>(new MockitoMethodInvocationControl(delegator, mock, methods), mock);

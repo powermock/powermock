@@ -10,8 +10,10 @@ shipkit {
 
     git.tagPrefix = "powermock-"
 
-    gitHub.writeAuthUser = System.getenv("GH_USER")
-    gitHub.writeAuthToken = System.getenv("GH_WRITE_TOKEN")
+    // fix for Intellj Idea, because IDE does not read env properties from ${user.home}/.profile file on MacOS
+
+    gitHub.writeAuthUser = safeGetSystemProperty("GH_USER")
+    gitHub.writeAuthToken = safeGetSystemProperty("GH_WRITE_TOKEN")
 
     def buildNo = System.getenv("TRAVIS_BUILD_NUMBER")
     git.commitMessagePostfix = buildNo? "by CI build $buildNo\n\n[ci skip-release]" : "by local build\n\n[ci skip-release]"
@@ -53,6 +55,11 @@ allprojects {
             }
         }
     }
+}
+
+static String safeGetSystemProperty(name){
+    def property = System.getenv(name)
+    return property == null ? "" : property
 }
 
 
