@@ -1,1 +1,1 @@
-mockito.mock-maker-class=org.powermock.api.mockito.mockmaker.PowerMockMakerTest$DelegateMockMakerStub
+mockito.mock-maker-class=org.powermock.api.mockito.mockmaker.PowerMockMakerTestCase$DelegateMockMakerStub

@@ -37,7 +37,7 @@ public class PowerMockMaker implements MockMaker {
     }
     
     @Override
-    public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler) {
+    public <T> T createMock(MockCreationSettings<T> settings, MockHandler handler){
         return mockMaker.createMock(settings, handler);
     }
     

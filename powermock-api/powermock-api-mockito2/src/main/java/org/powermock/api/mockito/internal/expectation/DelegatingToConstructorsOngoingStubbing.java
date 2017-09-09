@@ -15,7 +15,7 @@
  */
 package org.powermock.api.mockito.internal.expectation;
 
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
 import org.powermock.core.spi.support.InvocationSubstitute;
@@ -143,7 +143,7 @@ public class DelegatingToConstructorsOngoingStubbing<T> implements OngoingStubbi
                 Object[] paramArgs = new Object[parameterTypesForCtor.length];
                 for (int i = 0; i < parameterTypesForCtor.length; i++) {
                     Class<?> paramType = parameterTypesForCtor[i];
-                    paramArgs[i] = Matchers.any(paramType);
+                    paramArgs[i] = ArgumentMatchers.any(paramType);
                 }
                 try {
                     final OngoingStubbing<T> when = when(mock.performSubstitutionLogic(paramArgs));
