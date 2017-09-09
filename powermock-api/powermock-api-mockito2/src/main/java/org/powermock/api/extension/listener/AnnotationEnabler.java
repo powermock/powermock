@@ -76,15 +76,6 @@ public class AnnotationEnabler extends AbstractPowerMockTestListenerBase impleme
                 continue;
             }
             final Class<?> type = field.getType();
-            if (field.isAnnotationPresent(org.powermock.core.classloader.annotations.Mock.class)) {
-                org.powermock.core.classloader.annotations.Mock annotation = field
-                        .getAnnotation(org.powermock.core.classloader.annotations.Mock.class);
-                final String[] value = annotation.value();
-                if (value.length != 1 || !"".equals(value[0])) {
-                    System.err
-                            .println("PowerMockito deprecation: Use PowerMockito.spy(..) for partial mocking instead. A standard mock will be created instead.");
-                }
-            }
 
             if (field.isAnnotationPresent(org.mockito.Mock.class)) {
                 org.mockito.Mock mockAnnotation = field.getAnnotation(org.mockito.Mock.class);
@@ -114,7 +105,7 @@ public class AnnotationEnabler extends AbstractPowerMockTestListenerBase impleme
     @SuppressWarnings("unchecked")
     @Override
     public Class<? extends Annotation>[] getMockAnnotations() {
-        return new Class[]{org.mockito.Mock.class, Mock.class, org.powermock.core.classloader.annotations.Mock.class};
+        return new Class[]{org.mockito.Mock.class, Mock.class};
     }
 
     private Object processAnnotationOn(Captor annotation, Field field) {
