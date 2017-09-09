@@ -92,10 +92,7 @@ public class PowerMockTestCase {
      * <li>Clears the PowerMock MockRepository</li>
      * </ol>
      *
-     *
-     *
-     * @throws Exception
-     *             If something unexpected goes wrong.
+     * @throws Exception if something unexpected goes wrong.
      */
     @AfterMethod
     protected void afterPowerMockTestMethod() throws Exception {
