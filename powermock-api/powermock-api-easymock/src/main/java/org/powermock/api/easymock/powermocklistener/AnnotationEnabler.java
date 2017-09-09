@@ -17,10 +17,9 @@ package org.powermock.api.easymock.powermocklistener;
 
 import org.powermock.api.easymock.annotation.MockNice;
 import org.powermock.api.easymock.annotation.MockStrict;
-import org.powermock.core.classloader.annotations.Mock;
 
 /**
- * Before each test method all fields annotated with {@link Mock},
+ * Before each test method all fields annotated with {@link org.powermock.api.easymock.annotation.Mock},
  * {@link MockNice} or {@link MockStrict} will have mock objects created for
  * them and injected to the fields.
  * 
