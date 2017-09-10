@@ -10,3 +10,4 @@ repo
 .idea
 **/build/**
 .gradle
+**/out/**
