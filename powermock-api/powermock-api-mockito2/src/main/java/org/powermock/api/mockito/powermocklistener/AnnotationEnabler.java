@@ -17,7 +17,8 @@
 package org.powermock.api.mockito.powermocklistener;
 
 /**
- * Before each test method all fields annotated with {@link org.mockito.Mock} have mock objects created for them
+ * Before each test method all fields annotated with {@link org.mockito.MockitoAnnotations.Mock},
+ * {@link org.mockito.Mock} or {@link org.powermock.core.classloader.annotations.Mock} have mock objects created for them
  * and injected to the fields.
  * 
  * @deprecated Test Runners uses an annotation enabling listener per default

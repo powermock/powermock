@@ -42,8 +42,13 @@ public class MockFinalUsingAnnotationsTest {
     @Mock
     private FinalDemo usingMockitoMockAnnotation;
 
+    @SuppressWarnings("deprecation")
     @org.mockito.Mock
     private FinalDemo usingDeprecatedMockitoMockAnnotation;
+
+    @SuppressWarnings("deprecation")
+    @org.powermock.core.classloader.annotations.Mock
+    private FinalDemo usingPowerMockMockAnnotation;
 
     @Parameterized.Parameter(0)
     public MockField field2test;
@@ -70,7 +75,8 @@ public class MockFinalUsingAnnotationsTest {
     enum MockField {
 
         usingMockitoMockAnnotation,
-        usingDeprecatedMockitoMockAnnotation;
+        usingDeprecatedMockitoMockAnnotation,
+        usingPowerMockMockAnnotation;
 
         <T> T inTest(Object test) {
             try {

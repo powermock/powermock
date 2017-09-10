@@ -6,6 +6,21 @@ List easymock = [
         project(":tests:utils")
 ]
 
+project(":tests:easymock:junit3"){
+    description = "Tests for EasyMock module with JUnit 3.x."
+
+    dependencies {
+        compile(project(":powermock-core"))
+        testCompile("junit:junit:3.8.2")
+        testCompile easymock
+        testCompile(project(":powermock-modules:powermock-module-junit3"))
+    }
+
+    test{
+        exclude "**/StupidPrivateFinalTest*"
+    }
+}
+
 project(":tests:easymock:junit4-agent") {
     description = "Tests for PowerMock Java agent with JUnit4 and Easymock"
 

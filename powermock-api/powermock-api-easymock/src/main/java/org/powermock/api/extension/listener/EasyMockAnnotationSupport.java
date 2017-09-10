@@ -68,6 +68,7 @@ public class EasyMockAnnotationSupport {
     @SuppressWarnings("deprecation")
     protected void injectDefaultMocks() throws Exception {
         inject(testInstance, Mock.class, annotationMockCreatorFactory.createDefaultMockCreator());
+        inject(testInstance, org.powermock.core.classloader.annotations.Mock.class, annotationMockCreatorFactory.createDefaultMockCreator());
     }
 
     @SuppressWarnings("unchecked")
