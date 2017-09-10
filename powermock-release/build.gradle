@@ -97,38 +97,6 @@ project(":powermock-release:powermock-easymock-testng") {
     }
 }
 
-project(":powermock-release:powermock-mockito-junit") {
-
-    description = "Single jar containing binaries for PowerMock core, JUnit and Mockito modules."
-
-    dependencies {
-        compile(project(path:":powermock-release:powermock-mockito", configuration: "shadow"))
-        compile("junit:junit:${junitVersion}") {
-            exclude group: 'org.hamcrest', module: 'hamcrest-core'
-        }
-        compile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        compile("org.mockito:mockito-core:${mockitoVersion}")
-        compile("org.objenesis:objenesis:${objenesisVersion}")
-        compile("org.javassist:javassist:${javassistVersion}")
-        compile("cglib:cglib-nodep:${cglibVersion}")
-    }
-}
-
-project(":powermock-release:powermock-mockito-testng") {
-
-    description = "Single jar containing binaries for PowerMock core, TestNG and Mockito modules."
-
-    dependencies {
-        compile(project(path:":powermock-release:powermock-mockito", configuration: "shadow"))
-        compile("org.testng:testng:${testngVersion}")
-        compile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        compile("org.mockito:mockito-core:${mockitoVersion}")
-        compile("org.objenesis:objenesis:${objenesisVersion}")
-        compile("org.javassist:javassist:${javassistVersion}")
-        compile("cglib:cglib-nodep:${cglibVersion}")
-    }
-}
-
 project(":powermock-release:powermock-mockito2-junit") {
 
     description = "Single jar containing binaries for PowerMock core, JUnit and Mockito modules."

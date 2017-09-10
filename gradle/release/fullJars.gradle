@@ -1,6 +1,5 @@
 def fullJars = [
         project(":powermock-release:powermock-easymock"),
-        project(":powermock-release:powermock-mockito"),
         project(":powermock-release:powermock-mockito2")
 ]
 
