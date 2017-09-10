@@ -27,6 +27,7 @@ shipkit {
             'kotlin': "Kotlin support",
             'component:mockito': "Mockito support",
             'component:easymock': "EasyMock support",
+            'component:junit': "jUnit support",
             'wiki': 'Documentation',
             'regression': 'Fix regression bug'
     ]
