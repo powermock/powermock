@@ -1,8 +1,8 @@
 package org.powermock.reflect.internal.proxy;
 
-import net.sf.cglib.asm.ClassWriter;
-import net.sf.cglib.asm.MethodVisitor;
-import net.sf.cglib.asm.Opcodes;
+import net.bytebuddy.jar.asm.ClassWriter;
+import net.bytebuddy.jar.asm.MethodVisitor;
+import net.bytebuddy.jar.asm.Opcodes;
 
 class ClassFactory implements Opcodes {
     
@@ -26,7 +26,7 @@ class ClassFactory implements Opcodes {
             mv.visitMethodInsn(INVOKESPECIAL,
                                "java/lang/Object",
                                "<init>",
-                               "()V");
+                               "()V", false);
             mv.visitInsn(RETURN);
             mv.visitMaxs(1, 1);
             mv.visitEnd();
@@ -45,7 +45,7 @@ class ClassFactory implements Opcodes {
             mv.visitMethodInsn(INVOKEVIRTUAL,
                                "java/io/PrintStream",
                                "println",
-                               "(Ljava/lang/String;)V");
+                               "(Ljava/lang/String;)V", false);
             mv.visitInsn(RETURN);
             mv.visitMaxs(2, 1);
             mv.visitEnd();
