@@ -23,7 +23,7 @@ import org.powermock.reflect.Whitebox;
 import samples.singleton.StaticHelper;
 import samples.singleton.StaticService;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;

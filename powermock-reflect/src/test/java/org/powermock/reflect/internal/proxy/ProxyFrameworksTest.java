@@ -8,9 +8,13 @@ import org.junit.Test;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 
 public class ProxyFrameworksTest {
     
@@ -60,10 +64,18 @@ public class ProxyFrameworksTest {
     
     @Test
     public void should_not_detect_synthetic_classes_as_cglib_proxy() throws Exception {
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        final Enumeration<URL> resources = classLoader.getResources("org/powermock/reflect/internal/proxy");
+    
+        final List<URL> urls = new ArrayList<URL>();
+    
+        while (resources.hasMoreElements()) {
+            urls.add(resources.nextElement());
+        }
+        
         String className = "Some$$SyntheticClass$$Lambda";
         byte[] bytes = ClassFactory.create(className);
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        CustomClassLoader customClassLoader = new CustomClassLoader(classLoader);
+        CustomClassLoader customClassLoader = new CustomClassLoader(urls.toArray(new URL[urls.size()]), classLoader);
         
         Class<?> defineClass = customClassLoader.defineClass(className, bytes);
         
@@ -170,9 +182,9 @@ public class ProxyFrameworksTest {
     }
     
     private static class CustomClassLoader extends URLClassLoader {
-        
-        private CustomClassLoader(ClassLoader parent) {
-            super(((URLClassLoader) parent).getURLs(), parent);
+    
+        private CustomClassLoader(URL[] urls, ClassLoader parent) {
+            super(urls, parent);
         }
         
         Class<?> defineClass(String name, byte[] b) {

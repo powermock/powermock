@@ -27,7 +27,7 @@ import org.mockito.exceptions.verification.junit.ArgumentsAreDifferent;
 import samples.singleton.SimpleStaticService;
 import samples.singleton.StaticService;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

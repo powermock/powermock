@@ -97,7 +97,7 @@ public class PrivateMethodDemo {
         return sum;
     }
 
-    private Reader createReader(File folder, FileDataSource fileDataSource) throws FileNotFoundException {
+    private Reader createReader(File folder) throws FileNotFoundException {
         return null;
     }
 }

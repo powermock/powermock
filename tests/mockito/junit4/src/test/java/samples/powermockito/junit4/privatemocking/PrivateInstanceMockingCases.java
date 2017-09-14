@@ -18,8 +18,6 @@
 
 package samples.powermockito.junit4.privatemocking;
 
-import net.bytebuddy.utility.RandomString;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
@@ -33,7 +31,7 @@ import javax.activation.FileDataSource;
 import java.io.File;
 import java.io.StringReader;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
@@ -193,13 +191,12 @@ public class PrivateInstanceMockingCases {
     @Test
     public void usingMultipleArgumentsOnPrivateMethodWorks() throws Exception {
         File file = mock(File.class);
-        FileDataSource fileDataSource = mock(FileDataSource.class);
         StringReader expected = new StringReader("Some string");
         
         PrivateMethodDemo tested = mock(PrivateMethodDemo.class);
-        doReturn(expected).when(tested, method(PrivateMethodDemo.class, "createReader", File.class, FileDataSource.class)).withArguments(file, fileDataSource);
+        doReturn(expected).when(tested, method(PrivateMethodDemo.class, "createReader", File.class)).withArguments(file);
         
-        StringReader actual = Whitebox.invokeMethod(tested, "createReader", file, fileDataSource);
+        StringReader actual = Whitebox.invokeMethod(tested, "createReader", file);
         
         assertSame(expected, actual);
     }

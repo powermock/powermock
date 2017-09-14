@@ -23,7 +23,7 @@ import samples.suppressconstructor.SuppressConstructorHeirarchyEvilGrandParent;
 import samples.suppressconstructor.SuppressConstructorHierarchy;
 import samples.suppressconstructor.SuppressConstructorHierarchyParent;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.Assert.*;
 import static org.powermock.api.support.membermodification.MemberMatcher.constructor;
 import static org.powermock.api.support.membermodification.MemberModifier.suppress;

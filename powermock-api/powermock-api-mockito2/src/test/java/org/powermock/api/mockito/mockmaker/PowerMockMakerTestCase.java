@@ -29,7 +29,6 @@ import org.mockito.invocation.MockHandler;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.plugins.MockMaker;
 import org.powermock.api.mockito.ConfigurationTestUtils;
-import org.powermock.api.support.ClassLoaderUtil;
 import org.powermock.configuration.GlobalConfiguration;
 import org.powermock.reflect.Whitebox;
 
@@ -37,13 +36,18 @@ import java.lang.reflect.Method;
 import java.net.URLClassLoader;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.fail;
+import static org.junit.Assume.assumeTrue;
 
 public class PowerMockMakerTestCase {
     
     @Test
     public void should_delegate_calls_to_mock_maker_from_configuration() {
+    
+        final String javaVersion = System.getProperty("java.version");
+        
+        assumeTrue("Test failed on JDK9. System class loader does not extends URLClassloader any more.", Double.parseDouble(javaVersion) < 9);
     
         ClassLoader currentCL = Thread.currentThread().getContextClassLoader();
     

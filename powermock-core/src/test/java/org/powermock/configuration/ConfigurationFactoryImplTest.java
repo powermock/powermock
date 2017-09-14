@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.powermock.api.mockito.ConfigurationTestUtils;
 import org.powermock.configuration.support.ConfigurationFactoryImpl;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 
 public class ConfigurationFactoryImplTest {
     

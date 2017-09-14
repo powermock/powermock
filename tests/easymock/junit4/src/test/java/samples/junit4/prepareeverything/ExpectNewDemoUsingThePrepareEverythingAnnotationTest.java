@@ -631,8 +631,8 @@ public class ExpectNewDemoUsingThePrepareEverythingAnnotationTest {
             fail("Should throw AssertionError!");
         } catch (AssertionError e) {
             assertEquals(
-                    "\n  Unexpected constructor call samples.expectnew.ExpectNewServiceUser(EasyMock for interface samples.Service, 4):"
-                            + "\n    samples.expectnew.ExpectNewServiceUser(EasyMock for interface samples.Service, 2): expected: 1, actual: 0",
+                    "\n  Unexpected constructor call samples.expectnew.ExpectNewServiceUser(EasyMock for interface samples.Service, 4 (int)):"
+                            + "\n    samples.expectnew.ExpectNewServiceUser(EasyMock for interface samples.Service, 2 (int)): expected: 1, actual: 0",
                     e.getMessage());
         }
     }

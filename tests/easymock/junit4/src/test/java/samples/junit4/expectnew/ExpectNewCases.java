@@ -17,7 +17,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.easymock.EasyMock.aryEq;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
@@ -621,8 +621,8 @@ public abstract class ExpectNewCases {
             fail("Should throw AssertionError!");
         } catch (AssertionError e) {
             assertEquals(
-                    "\n  Unexpected constructor call samples.expectnew.ExpectNewServiceUser(EasyMock for interface samples.Service, 4):"
-                            + "\n    samples.expectnew.ExpectNewServiceUser(EasyMock for interface samples.Service, 2): expected: 1, actual: 0",
+                    "\n  Unexpected constructor call samples.expectnew.ExpectNewServiceUser(EasyMock for interface samples.Service, 4 (int)):"
+                            + "\n    samples.expectnew.ExpectNewServiceUser(EasyMock for interface samples.Service, 2 (int)): expected: 1, actual: 0",
                     e.getMessage());
         }
     }
