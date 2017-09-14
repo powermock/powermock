@@ -38,7 +38,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.fail;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.Assume.assumeFalse;
 
 public class PowerMockMakerTestCase {
     
@@ -47,7 +47,7 @@ public class PowerMockMakerTestCase {
     
         final String javaVersion = System.getProperty("java.version");
         
-        assumeTrue("Test failed on JDK9. System class loader does not extends URLClassloader any more.", Double.parseDouble(javaVersion) < 9);
+        assumeFalse("Test failed on JDK9. System class loader does not extends URLClassloader any more.", javaVersion.startsWith("9"));
     
         ClassLoader currentCL = Thread.currentThread().getContextClassLoader();
     
