@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.MockitoVersion;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assume.assumeTrue;
 import static org.mockito.Mockito.doNothing;

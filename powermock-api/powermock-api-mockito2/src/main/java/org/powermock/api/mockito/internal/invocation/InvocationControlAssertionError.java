@@ -62,7 +62,7 @@ public class InvocationControlAssertionError {
         builder.replace(startOfVerifyNoMoreInteractionsInvocation, endOfVerifyNoMoreInteractionsInvocation,
                         verifyNoMoreInteractionsInvocation);
         builder.delete(builder.indexOf("\n", endOfVerifyNoMoreInteractionsInvocation + 1), builder.lastIndexOf("\n"));
-        Whitebox.setInternalState(errorToUpdate, builder.toString());
+        Whitebox.setInternalState(errorToUpdate, "detailMessage", builder.toString());
     }
 
     public static void updateErrorMessageForMethodInvocation(AssertionError errorToUpdate) {
@@ -72,7 +72,7 @@ public class InvocationControlAssertionError {
          * whenNew(MyClass.class).thenReturn(myMock).times(3) when in fact an
          * instance of MyClass has been created less or more times than 3.
          */
-        Whitebox.setInternalState(errorToUpdate, "\n" + changeMessageContent(errorToUpdate.getMessage()));
+        Whitebox.setInternalState(errorToUpdate, "detailMessage", "\n" + changeMessageContent(errorToUpdate.getMessage()));
     }
 
     public static void throwAssertionErrorForNewSubstitutionFailure(AssertionError oldError, Class<?> type) {

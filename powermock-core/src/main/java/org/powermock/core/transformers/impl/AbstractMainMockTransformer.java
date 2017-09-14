@@ -414,7 +414,7 @@ public abstract class AbstractMainMockTransformer implements MockTransformer {
                  */
                 addNewDeferConstructor(clazz);
                 final StringBuilder code = new StringBuilder();
-                code.append("{Object value =")
+                code.append("{java.lang.Object value =")
                     .append(MockGateway.class.getName())
                     .append(".constructorCall($class, $args, $sig);");
                 code.append("if (value != ").append(MockGateway.class.getName()).append(".PROCEED){");

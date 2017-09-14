@@ -521,8 +521,14 @@ public class WhiteboxImpl {
             final Field[] declaredFields = startClass.getDeclaredFields();
             for (Field field : declaredFields) {
                 if (strategy.matches(field) && hasFieldProperModifier(object, field)) {
-                    field.setAccessible(true);
-                    foundFields.add(field);
+                    // TODO replace by the class 
+                    try {
+                        field.setAccessible(true);
+                        foundFields.add(field);
+                    } catch (Exception ignored) {
+                        // the InaccessibleObjectException is thrown in Java 9 in case
+                        // if a field is private and a module is not open
+                    }
                 }
             }
             if (!checkHierarchy) {

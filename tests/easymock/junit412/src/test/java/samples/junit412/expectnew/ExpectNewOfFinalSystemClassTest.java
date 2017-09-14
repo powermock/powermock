@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package samples.junit410.expectnew;
+package samples.junit412.expectnew;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
