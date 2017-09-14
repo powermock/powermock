@@ -58,6 +58,8 @@ project(":powermock-reflect") {
 
     dependencies {
         compile("org.objenesis:objenesis:${objenesisVersion}")
+        compile("net.bytebuddy:byte-buddy:${byteBuddy}")
+        compile("net.bytebuddy:byte-buddy-agent:${byteBuddy}")
         testCompile("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
@@ -73,6 +75,8 @@ project(":powermock-core") {
     dependencies {
         compile(project(":powermock-reflect"))
         compile("org.javassist:javassist:${javassistVersion}")
+        compile("net.bytebuddy:byte-buddy:${byteBuddy}")
+        compile("net.bytebuddy:byte-buddy-agent:${byteBuddy}")
 
         testCompile("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'

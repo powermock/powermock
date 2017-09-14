@@ -1,8 +1,8 @@
 package org.powermock.modules.agent;
 
-import org.powermock.objectweb.asm.ClassVisitor;
-import org.powermock.objectweb.asm.MethodVisitor;
-import org.powermock.objectweb.asm.Opcodes;
+import net.bytebuddy.jar.asm.ClassVisitor;
+import net.bytebuddy.jar.asm.MethodVisitor;
+import net.bytebuddy.jar.asm.Opcodes;
 
 class PowerMockClassVisitor extends ClassVisitor {
 
@@ -19,7 +19,7 @@ class PowerMockClassVisitor extends ClassVisitor {
 
     @Override
     public MethodVisitor visitMethod(int access, final String name, final String desc, final String signature,
-            final String[] exceptions) {
+                                     final String[] exceptions) {
         return super.visitMethod(removeFinal(access), name, desc, signature, exceptions);
     }
 

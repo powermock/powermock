@@ -16,8 +16,8 @@
 
 package org.powermock.modules.agent;
 
-import org.powermock.objectweb.asm.ClassReader;
-import org.powermock.objectweb.asm.ClassWriter;
+import net.bytebuddy.jar.asm.ClassReader;
+import net.bytebuddy.jar.asm.ClassWriter;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
