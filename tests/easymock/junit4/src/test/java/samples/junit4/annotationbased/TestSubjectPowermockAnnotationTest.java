@@ -39,14 +39,10 @@ public class TestSubjectPowermockAnnotationTest {
 
 
     @Test
-    public void injectMocksWorksWithPowermockMock() {
-        assertNotNull("dependencyHolder is null", dependencyHolder.getInjectDemo());
-    }
+    public void should_inject_mock_without_quantifier() throws Exception {
 
-    @Test
-    public void testInjectDemoSay() throws Exception {
-
-        InjectDemo tested = dependencyHolder.getInjectDemo();
+        final InjectDemo tested = dependencyHolder.getInjectDemo();
+        assertNotNull("dependencyHolder is null", tested);
 
         String expected = "Hello altered World";
         expectPrivate(tested,"say","hello").andReturn("Hello altered World");
@@ -58,14 +54,10 @@ public class TestSubjectPowermockAnnotationTest {
     }
 
     @Test
-    public void injectMocksWorksWithPowermockMockWithQualifier() {
-        assertNotNull("dependencyHolder is null", dependencyHolderQualifier.getInjectDemoQualifier());
-    }
-
-    @Test
-    public void testInjectDemoQualifier() throws Exception {
+    public void should_inject_mock_with_quantifier() throws Exception {
 
         InjectDemo tested = dependencyHolderQualifier.getInjectDemoQualifier();
+        assertNotNull("dependencyHolderQualifier is null", tested);
 
         String expected = "Hello altered World";
         expectPrivate(tested,"say","hello").andReturn("Hello altered World");

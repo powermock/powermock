@@ -24,6 +24,8 @@ import java.lang.reflect.Method;
  *
  */
 public interface MockMetadata {
+    String getFieldName();
+    
     String getQualifier();
 
     Class<? extends Annotation> getAnnotation();

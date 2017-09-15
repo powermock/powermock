@@ -31,6 +31,7 @@ public class AnnotationMockMetadata implements MockMetadata {
     private final String qualifier;
     private final Class<? extends Annotation> annotation;
     private final Annotation annotationInstance;
+    private final String fieldName;
     private Object mock;
     
     public AnnotationMockMetadata(Class<? extends Annotation> annotation, Field field) throws
@@ -38,6 +39,7 @@ public class AnnotationMockMetadata implements MockMetadata {
         this.annotation = annotation;
         this.annotationInstance = field.getAnnotation(annotation);
         this.type = field.getType();
+        this.fieldName = field.getName();
         this.methods = getMethod();
         this.qualifier = findQualifier();
     }
@@ -57,7 +59,12 @@ public class AnnotationMockMetadata implements MockMetadata {
             return fieldName;
         }
     }
-
+    
+    @Override
+    public String getFieldName() {
+        return fieldName;
+    }
+    
     @Override
     public String getQualifier() {
         return qualifier;
