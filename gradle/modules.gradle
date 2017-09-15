@@ -11,7 +11,8 @@ def skippedTasksForUnpublishableModules = [
     'javadoc',
     'javadocJar',
     'sourcesJar',
-    'bintrayUpload'
+    'bintrayUpload',
+    'install'
 ]
 
 def unpublishableModules = allprojects - publishableModules - project(":powermock-release").subprojects
