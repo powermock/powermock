@@ -2,7 +2,6 @@
 
 **1.7.2 (2017-09-15)** - [23 commits](https://github.com/powermock/powermock/compare/powermock-1.7.1...powermock-1.7.2) by [Arthur Zagretdinov](https://github.com/thekingnothing) (20), [Wojtek Wilk](https://github.com/wwilk) (2), PowerMock Release Tools (1) - published to [![Bintray](https://img.shields.io/badge/Bintray-1.7.2-green.svg)](https://bintray.com/powermock/maven/powermock/1.7.2)
  - [Bugfixes] @Mock annotation from easymock api does not work for two fields of the same type. [(#755)](https://github.com/powermock/powermock/issues/755)
- - [Enhancements] Removed deprecated code in PowerMock 2.0.  [(#839)](https://github.com/powermock/powermock/issues/839)
  - [Enhancements] Use Mockito Shipkit for CD [(#826)](https://github.com/powermock/powermock/issues/826)
  - Shipkit pom customizations [(#831)](https://github.com/powermock/powermock/pull/831)
 
