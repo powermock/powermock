@@ -44,9 +44,20 @@ class DefaultInjectFieldSearcher implements InjectFieldSearcher {
         if (candidates.size() == 1) {
             return candidates.iterator().next();
         }
+        candidates = filterByFieldName(candidates, mockMetadata.getFieldName());
+        if (candidates.size() == 1) {
+            return candidates.iterator().next();
+        }
         return null;
     }
-
+    
+    private Set<Field> filterByFieldName(final Set<Field> candidates, final String fieldName) {
+        if (fieldName == null || fieldName.length() == 0) {
+            return candidates;
+        }
+        return doFilterByQualifier(candidates, fieldName);
+    }
+    
     private Set<Field> filterByType(Set<Field> candidates, Class<?> type) {
         if (type == null) {
             return candidates;
