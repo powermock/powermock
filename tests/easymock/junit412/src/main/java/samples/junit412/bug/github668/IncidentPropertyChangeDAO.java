@@ -1,4 +1,4 @@
-package samples.junit412.github668;
+package samples.junit412.bug.github668;
 
 /**
  *

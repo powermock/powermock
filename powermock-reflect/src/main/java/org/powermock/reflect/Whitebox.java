@@ -864,5 +864,8 @@ public class Whitebox {
 	public static void setInternalStateFromContext(Object instance, Class<?> context, FieldMatchingStrategy strategy) {
 		WhiteboxImpl.setInternalStateFromContext(instance, context, strategy);
 	}
-
+	
+	public static Object getFieldValue(final Field field, final Object object) {
+		return WhiteboxImpl.getFieldValue(field, object);
+	}
 }
