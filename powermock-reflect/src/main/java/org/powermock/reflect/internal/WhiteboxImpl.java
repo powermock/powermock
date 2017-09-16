@@ -2578,5 +2578,20 @@ public class WhiteboxImpl {
         }
         return converted;
     }
-
+    
+    public static Object getFieldValue(final Field field, final Object object) {
+        boolean access = field.isAccessible();
+        try {
+            field.setAccessible(true);
+            return field.get(object);
+        }catch (Exception e){
+            return null;
+        }finally {
+           try{
+              field.setAccessible(access);
+           }catch (Exception ignored){
+               
+           }
+        }
+    }
 }

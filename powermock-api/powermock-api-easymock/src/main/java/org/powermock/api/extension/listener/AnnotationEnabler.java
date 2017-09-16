@@ -18,12 +18,14 @@ package org.powermock.api.extension.listener;
 import org.powermock.api.easymock.EasyMockConfiguration;
 import org.powermock.api.easymock.annotation.MockNice;
 import org.powermock.api.easymock.annotation.MockStrict;
+import org.powermock.core.MockRepository;
 import org.powermock.core.classloader.annotations.Mock;
 import org.powermock.core.spi.listener.AnnotationEnablerListener;
 import org.powermock.core.spi.support.AbstractPowerMockTestListenerBase;
 import org.powermock.reflect.Whitebox;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
@@ -69,6 +71,7 @@ public class AnnotationEnabler extends AbstractPowerMockTestListenerBase impleme
         // first emulate default EasyMockRunner behavior
         if (easyMockConfiguration.isInjectMocksSupported()) {
             Whitebox.invokeMethod(Class.forName("org.easymock.EasyMockSupport"), "injectMocks", testInstance);
+            registerAllCreatedMocks(testInstance);
         }
 
         // then inject in empty fields mock created via PowerMock
@@ -79,5 +82,15 @@ public class AnnotationEnabler extends AbstractPowerMockTestListenerBase impleme
     @SuppressWarnings("WeakerAccess")
     protected EasyMockAnnotationSupport getEasyMockAnnotationSupport(Object testInstance) {
         return new EasyMockAnnotationSupport(testInstance);
+    }
+    
+    private void registerAllCreatedMocks(final Object testInstance) {
+        final Field[] fields = testInstance.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(org.easymock.Mock.class)) {
+                Object value = Whitebox.getFieldValue(field, testInstance);
+                MockRepository.addObjectsToAutomaticallyReplayAndVerify(value);
+            }
+        }
     }
 }
