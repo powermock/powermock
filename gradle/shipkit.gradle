@@ -1,4 +1,3 @@
-//This file was created automatically and is intended to be checked-in.
 shipkit {
     gitHub.repository = "powermock/powermock"
 
@@ -12,8 +11,8 @@ shipkit {
 
     // fix for Intellj Idea, because IDE does not read env properties from ${user.home}/.profile file on MacOS
 
-    gitHub.writeAuthUser = safeGetSystemProperty("GH_USER")
-    gitHub.writeAuthToken = safeGetSystemProperty("GH_WRITE_TOKEN")
+    gitHub.writeAuthUser = System.getenv("GH_USER")
+    gitHub.writeAuthToken = System.getenv("GH_WRITE_TOKEN")
 
     def buildNo = System.getenv("TRAVIS_BUILD_NUMBER")
     git.commitMessagePostfix = buildNo? "by CI build $buildNo\n\n[ci skip-release]" : "by local build\n\n[ci skip-release]"
@@ -34,40 +33,87 @@ shipkit {
     releaseNotes.ignoreCommitsContaining = ["[ci skip]"]
 }
 
+boolean centralRelease = shouldReleaseToCentral(project)
+
+String versionDescription = "PowerMock ${project.version} Final"
+if (project.version.toString().contains("beta")){
+    versionDescription = "PowerMock ${project.version} Beta"
+}else if (project.version.toString().contains("RC")){
+    versionDescription = "PowerMock ${project.version} Release Candidate"
+}
+
 allprojects {
     plugins.withId("org.shipkit.bintray") {
-        bintray {
-            user = System.getenv('BINTRAY_USER')
-            key = System.getenv("BINTRAY_API_KEY")
 
-            pkg {
-                repo = repoName(project)
+        if (project.hasProperty("bintrayRepo")) {
+            bintray {
+                
+                user = System.getenv('BINTRAY_USER')
+                key = System.getenv("BINTRAY_API_KEY")
 
-                userOrg ='powermock'
-                name = 'powermock'
-                desc = project.description
-                websiteUrl = 'http://powermock.org'
-                issueTrackerUrl = 'https://powermock.com/powermock/powermock/issues'
-                vcsUrl = 'https://github.com/powermock/powermock.git'
-                licenses = ['Apache-2.0']
-                labels = ['java', 'mock', 'mocking', 'tests']
+                pkg {
+                    repo = project.ext.bintrayRepo
 
-                publicDownloadNumbers = true
+                    publish = project.ext.bintrayAutoPublish
+
+                    userOrg = 'powermock'
+                    name = centralRelease? "powermock" : "powermock-development"
+                    desc = project.description
+
+                    websiteUrl = 'http://powermock.org'
+                    issueTrackerUrl = 'https://powermock.com/powermock/powermock/issues'
+                    vcsUrl = 'https://github.com/powermock/powermock.git'
+                    
+                    licenses = ['Apache-2.0']
+                    labels = ['java', 'mock', 'mocking', 'tests']
+
+                    publicDownloadNumbers = true
+
+                    // optional version attributes
+                    version {
+
+                        name = "powermock-${project.version}"
+                        desc = versionDescription
+                        vcsTag = "powermock-${project.version}"
+
+                        gpg {
+                            sign = true
+                        }
+
+                        //Automatically syncs to central repository (https://oss.sonatype.org/)
+                        mavenCentralSync {
+                            sync = centralRelease
+                            user = System.env.NEXUS_TOKEN_USER
+                            password = System.env.NEXUS_TOKEN_PWD
+                        }
+                    }
+                }
             }
         }
     }
 }
 
-static String safeGetSystemProperty(name){
-    def property = System.getenv(name)
-    return property == null ? "" : property
-}
 
+/**
+ * Finds out if we should release to Maven Central.
+ * To test this logic, run build with '-i' (info logging) and inspect the build output.
+ */
+static boolean shouldReleaseToCentral(project) {
+    boolean centralReleaseByCommit = System.getenv("TRAVIS_COMMIT_MESSAGE")?.contains("[ci maven-central-release]")
+    boolean centralReleaseByProjectProperty = project.hasProperty("mavenCentralSync") ? project.ext.mavenCentralSync : false
+    boolean centralReleaseByReleaseCandidate = project.version.toString().contains("RC")
 
-static String repoName(project) {
-    if (project.hasProperty("bintrayRepo")) {
-        return project.ext.bintrayRepo
-    } else {
-        return 'maven'
+    boolean centralRelease = (centralReleaseByCommit || centralReleaseByProjectProperty) && !centralReleaseByReleaseCandidate
+    String message = """Release was using following settings:
+ - commit message contains '[ci maven-central-release]': $centralReleaseByCommit
+ - project property 'mavenCentralSync' has value: $centralReleaseByProjectProperty
+ - Release Candidate version: $centralReleaseByReleaseCandidate
+ - Maven Central release is enabled: $centralRelease"""
+    project.logger.info(message)
+
+    project.afterEvaluate {
+        project.tasks.performRelease.doLast { logger.lifecycle(message) }
     }
+
+    return centralRelease
 }

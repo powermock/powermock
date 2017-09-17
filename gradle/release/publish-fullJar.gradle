@@ -1,5 +1,3 @@
-apply from: "${gradleScriptDir}/publishing/publish.gradle"
-
 tasks.bintrayUpload.mustRunAfter "shadowJar"
 
 bintray {
