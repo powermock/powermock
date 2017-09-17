@@ -48,12 +48,13 @@ allprojects {
                 user = System.getenv('BINTRAY_USER')
                 key = System.getenv("BINTRAY_API_KEY")
 
+                publish = true
+                override = false
+
                 pkg {
                     userOrg = 'powermock'
                     name = centralRelease ? "powermock" : "powermock-development"
                     desc = project.description
-
-                    publish = true
 
                     websiteUrl = 'http://powermock.org'
                     issueTrackerUrl = 'https://powermock.com/powermock/powermock/issues'
