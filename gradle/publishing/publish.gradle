@@ -1,0 +1,8 @@
+bintray {
+    pkg {
+        repo = project.ext.bintrayRepo
+        publish = project.ext.bintrayAutoPublish
+    }
+}
+
+
