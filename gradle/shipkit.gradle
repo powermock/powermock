@@ -53,6 +53,8 @@ allprojects {
                     name = centralRelease ? "powermock" : "powermock-development"
                     desc = project.description
 
+                    publish = true
+
                     websiteUrl = 'http://powermock.org'
                     issueTrackerUrl = 'https://powermock.com/powermock/powermock/issues'
                     vcsUrl = 'https://github.com/powermock/powermock.git'
@@ -66,6 +68,7 @@ allprojects {
                     version {
 
                         name = "powermock-${project.version}"
+                        released  = new Date()
                         desc = versionDescription
                         vcsTag = "powermock-${project.version}"
 
@@ -93,13 +96,11 @@ allprojects {
 static boolean shouldReleaseToCentral(project) {
     boolean centralReleaseByCommit = System.getenv("TRAVIS_COMMIT_MESSAGE")?.contains("[ci maven-central-release]")
     boolean centralReleaseByProjectProperty = project.hasProperty("mavenCentralSync") ? project.ext.mavenCentralSync : false
-    boolean centralReleaseByReleaseCandidate = project.version.toString().contains("RC")
 
-    boolean centralRelease = (centralReleaseByCommit || centralReleaseByProjectProperty) && !centralReleaseByReleaseCandidate
+    boolean centralRelease = (centralReleaseByCommit || centralReleaseByProjectProperty)
     String message = """Release was using following settings:
  - commit message contains '[ci maven-central-release]': $centralReleaseByCommit
  - project property 'mavenCentralSync' has value: $centralReleaseByProjectProperty
- - Release Candidate version: $centralReleaseByReleaseCandidate
  - Maven Central release is enabled: $centralRelease"""
     project.logger.info(message)
 

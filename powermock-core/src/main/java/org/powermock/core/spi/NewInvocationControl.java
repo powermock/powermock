@@ -27,12 +27,18 @@ import org.powermock.core.spi.support.InvocationSubstitute;
 public interface NewInvocationControl<T> extends DefaultBehavior {
 
     /**
-     * Invoke the invocation control
+     * Invoke the constructor invocation control
+     * @param type invocation target type
+     * @param args arguments of constructor invocation
+     * @param sig parameters of a constructor
+     * @return result of invocation
      */
     Object invoke(Class<?> type, Object[] args, Class<?>[] sig) throws Exception;
 
     /**
      * Expect a call to the new instance substitution logic.
+     * @param arguments constructor arguments
+     * @return result of stubbing a constructor. Result depends on mocking framework.
      */
     T expectSubstitutionLogic(Object... arguments) throws Exception;
 }
