@@ -19,28 +19,12 @@ group: edge
 language: java
 
 matrix:
-  allow_failures:
-    - jdk: openjdk6
-      env: SKIP_RELEASE=true
-    - jdk: openjdk7
-      env: SKIP_RELEASE=true
   include:
-  - jdk: openjdk6
-    env: SKIP_RELEASE=true
-  - jdk: openjdk7
-    env: SKIP_RELEASE=true
   - jdk: oraclejdk8
     env: SKIP_RELEASE=true
   - jdk: oraclejdk9
     env: SKIP_RELEASE=true
   - jdk: oraclejdk8
-
-# see https://github.com/travis-ci/travis-ci/issues/7253#issuecomment-283670680
-
-addons:
-  apt:
-    packages:
-      - oracle-java9-installer
 
 #Below skips the installation step completely (https://docs.travis-ci.com/user/customizing-the-build/#Skipping-the-Installation-Step)
 #We need it because otherwise Travis CI injects an awkward './gradlew assemble' step into the CI workflow

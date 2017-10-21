@@ -1495,8 +1495,10 @@ public class WhiteboxImpl {
 
             });
             for (Method method : declaredMethods) {
-                method.setAccessible(true);
-                methods.add(method);
+                if(!"finalize".equals(method.getName())) {
+                    method.setAccessible(true);
+                    methods.add(method);
+                }
             }
             Collections.addAll(methods, type.getMethods());
             thisType = thisType.getSuperclass();

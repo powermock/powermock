@@ -21,7 +21,7 @@ package org.powermock.core.transformers;
 import org.junit.Test;
 import org.powermock.core.transformers.support.DefaultMockTransformerChain;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 
 public class MockTransformerChainTest {
     

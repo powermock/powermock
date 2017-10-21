@@ -20,6 +20,8 @@ package org.powermock.core.test;
 
 import javassist.ClassPool;
 import javassist.Loader;
+import org.powermock.configuration.GlobalConfiguration;
+import org.powermock.configuration.PowerMockConfiguration;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.transformers.MockTransformerChain;
 
@@ -75,6 +77,7 @@ public class ClassLoaderTestHelper {
         if (loader == null) {
             loader = mockClassloaderFactory.getInstance(new String[]{MockClassLoader.MODIFY_ALL_CLASSES});
             loader.setMockTransformerChain(mockTransformerChain);
+            loader.getConfiguration().addIgnorePackage(GlobalConfiguration.powerMockConfiguration().getGlobalIgnore());
             classloaders.put(mockTransformerChain, loader);
         }
         return loader;

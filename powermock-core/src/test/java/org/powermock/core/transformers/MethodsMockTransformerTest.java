@@ -47,8 +47,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.assertj.core.api.Java6Assertions.catchThrowable;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.powermock.core.transformers.mock.MockGatewaySpy.ConditionBuilder.registered;
 import static org.powermock.core.transformers.mock.MockGatewaySpy.methodCalls;
 
@@ -78,8 +78,8 @@ public class MethodsMockTransformerTest extends AbstractBaseMockTransformerTest 
         MockGatewaySpy.returnOnMethodCall("voidMethod", "");
         
         final Class<?> clazz = loadWithMockClassLoader(VoidMethodsTestClass.class.getName());
-        
-        final Object instance = clazz.newInstance();
+    
+        final Object instance = WhiteboxImpl.newInstance(clazz);
         
         WhiteboxImpl.invokeMethod(instance, "voidMethod", "name", "field", 100d);
         
@@ -97,8 +97,8 @@ public class MethodsMockTransformerTest extends AbstractBaseMockTransformerTest 
         MockGatewaySpy.returnOnMethodCall("finalVoidMethod", "");
         
         final Class<?> clazz = loadWithMockClassLoader(VoidMethodsTestClass.class.getName());
-        
-        final Object instance = clazz.newInstance();
+    
+        final Object instance = WhiteboxImpl.newInstance(clazz);
         
         WhiteboxImpl.invokeMethod(instance, "finalVoidMethod", "name", "field", 100d);
         
@@ -117,8 +117,8 @@ public class MethodsMockTransformerTest extends AbstractBaseMockTransformerTest 
         MockGatewaySpy.returnOnMethodCall("returnMethod", expected);
         
         final Class<?> clazz = loadWithMockClassLoader(ReturnMethodsTestClass.class.getName());
-        
-        final Object instance = clazz.newInstance();
+    
+        final Object instance = WhiteboxImpl.newInstance(clazz);
         
         final Object result = WhiteboxImpl.invokeMethod(instance, "returnMethod", "name", "field", 100d);
         
@@ -136,8 +136,8 @@ public class MethodsMockTransformerTest extends AbstractBaseMockTransformerTest 
         MockGatewaySpy.returnOnMethodCall("finalReturnMethod", expected);
         
         final Class<?> clazz = loadWithMockClassLoader(ReturnMethodsTestClass.class.getName());
-        
-        final Object instance = clazz.newInstance();
+    
+        final Object instance = WhiteboxImpl.newInstance(clazz);
         
         final Object result = WhiteboxImpl.invokeMethod(instance, "finalReturnMethod", "name", "field", 100d);
         
@@ -154,8 +154,8 @@ public class MethodsMockTransformerTest extends AbstractBaseMockTransformerTest 
         MockGatewaySpy.returnOnMethodCall("returnMethod", MockGateway.PROCEED);
         
         final Class<?> clazz = loadWithMockClassLoader(ReturnMethodsTestClass.class.getName());
-        
-        final Object instance = clazz.newInstance();
+    
+        final Object instance = WhiteboxImpl.newInstance(clazz);
         
         final String name = "name";
         final Object result = WhiteboxImpl.invokeMethod(instance, "returnMethod", name, "field", 100d);
@@ -174,8 +174,8 @@ public class MethodsMockTransformerTest extends AbstractBaseMockTransformerTest 
         MockGatewaySpy.returnOnMethodCall("finalReturnMethod", MockGateway.PROCEED);
         
         final Class<?> clazz = loadWithMockClassLoader(ReturnMethodsTestClass.class.getName());
-        
-        final Object instance = clazz.newInstance();
+    
+        final Object instance = WhiteboxImpl.newInstance(clazz);
         
         final String name = "name";
         final Object result = WhiteboxImpl.invokeMethod(instance, "finalReturnMethod", name, "field", 100d);
@@ -207,8 +207,8 @@ public class MethodsMockTransformerTest extends AbstractBaseMockTransformerTest 
     public void should_modify_bridge_methods() throws Throwable {
         
         final Class<?> clazz = loadWithMockClassLoader(SubclassWithBridgeMethod.class.getName());
-        
-        Object instance = clazz.newInstance();
+    
+        final Object instance = WhiteboxImpl.newInstance(clazz);
         
         clazz.getMethod("doSomething", String.class).invoke(instance, "value");
         
@@ -231,12 +231,13 @@ public class MethodsMockTransformerTest extends AbstractBaseMockTransformerTest 
                 break;
             }
         }
-        
-        Object instance = clazz.newInstance();
-        
-        if (method != null) {
-            method.setAccessible(true);
-        }
+    
+        final Object instance = WhiteboxImpl.newInstance(clazz);
+    
+        assertThat(method)
+            .isNotNull();
+    
+        method.setAccessible(true);
         method.invoke(instance, "");
         
         assertThat(methodCalls())
@@ -251,8 +252,8 @@ public class MethodsMockTransformerTest extends AbstractBaseMockTransformerTest 
         CtClass ctClass = prepareClassesForTest(classPool, "syntheticMethodIsCalled = true;");
         
         final Class<?> clazz = loadWithMockClassLoader(ctClass);
-        
-        Object instance = clazz.newInstance();
+    
+        final Object instance = WhiteboxImpl.newInstance(clazz);
         
         clazz.getMethod("doSomething", Object.class).invoke(instance, new Object());
         
