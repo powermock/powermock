@@ -117,7 +117,7 @@ public abstract class MockClassLoader extends DeferSupportingClassLoader {
         return defineClass(name, protectionDomain, clazz);
     }
     
-    protected Class<?> defineClass(final String name, final ProtectionDomain protectionDomain, final byte[] clazz) {
+    public Class<?> defineClass(final String name, final ProtectionDomain protectionDomain, final byte[] clazz) {
         return defineClass(name, clazz, 0, clazz.length, protectionDomain);
     }
     

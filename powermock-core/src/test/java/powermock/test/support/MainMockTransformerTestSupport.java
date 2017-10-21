@@ -19,9 +19,6 @@ package powermock.test.support;
 import org.powermock.core.classloader.MockClassLoaderConfiguration;
 import powermock.test.support.MainMockTransformerTestSupport.ConstructorCall.SupperClassThrowsException;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * This class is used when running tests for different {@link org.powermock.core.transformers.MockTransformer}. It is
  * placed in this package because classes in org.powermock.core.* are deferred by:
@@ -76,6 +73,9 @@ public class MainMockTransformerTestSupport {
     }
     
     public static class SuperClassWithObjectMethod {
+    
+        public static boolean syntheticMethodIsCalled = false;
+        
         public void doSomething(Object o) {
             
         }
@@ -136,27 +136,6 @@ public class MainMockTransformerTestSupport {
         }
     }
     
-    public static class CallSpy {
-        public static void registerMethodCall(String methodName) {
-            methodCalls.add(methodName);
-        }
-    
-        public static void registerFieldCall(String fieldName) {
-            fieldCalls.add(fieldName);
-        }
-        
-        public static List<String> getMethodCalls() {
-            return methodCalls;
-        }
-        
-        public static List<String> getFieldCalls() {
-            return fieldCalls;
-        }
-    
-        private final static List<String> methodCalls = new LinkedList<String>();
-        private final static List<String> fieldCalls = new LinkedList<String>();
-    }
-    
     public static class SuperClassCallSuperConstructor extends SupperClassThrowsException {
         private final String field;
     
@@ -172,6 +151,11 @@ public class MainMockTransformerTestSupport {
             } else {
                 bVoid(lname, lvalue);
             }
+            cVoid(lname, lvalue);
+        }
+    
+        private void cVoid(final String lname, final long lvalue) {
+        
         }
     }
     
@@ -192,5 +176,122 @@ public class MainMockTransformerTestSupport {
     public static class ParameterImpl implements ParameterInterface {
     
     
+    }
+    
+    public static class StaticVoidMethodsTestClass {
+        
+        private static Object field;
+        
+        private static String lname;
+        private static long value;
+        
+        public static void voidMethod(final String name, String field, final double value)
+        
+        {
+            String lname = name + "(a)";
+            long lvalue = (long) value * 2;
+            
+            if (name == null) {
+                aVoid(lvalue);
+            } else {
+                bVoid(lname);
+            }
+            
+            StaticVoidMethodsTestClass.field = field;
+        }
+        
+        private static void bVoid(final String lname) {
+            StaticVoidMethodsTestClass.lname = lname;
+        }
+        
+        private static void aVoid(final long value) {
+            StaticVoidMethodsTestClass.value = value;
+        }
+    }
+    
+    public static class VoidMethodsTestClass {
+        
+        private Object field;
+        
+        private String lname;
+        private long value;
+        
+        public void voidMethod(final String name, String field, final double value) {
+            String lname = name + "(a)";
+            long lvalue = (long) value * 2;
+            
+            if (name == null) {
+                aVoid(lvalue);
+            } else {
+                bVoid(lname);
+            }
+            
+            this.field = field;
+        }
+        
+        public void finalVoidMethod(final String name, String field, final double value) {
+            String lname = name + "(a)";
+            long lvalue = (long) value * 2;
+            
+            if (name == null) {
+                aVoid(lvalue);
+            } else {
+                bVoid(lname);
+            }
+            
+            this.field = field;
+        }
+        
+        private void bVoid(final String lname) {
+            this.lname = lname;
+        }
+        
+        private void aVoid(final long value) {
+            this.value = value;
+        }
+    }
+    
+    public static class ReturnMethodsTestClass {
+        
+        private String lname;
+        private long value;
+        
+        public String returnMethod(final String name, String field, final double value) {
+            String lname = name + "(a)";
+            long lvalue = (long) value * 2;
+            
+            if (name == null) {
+                aVoid(lvalue);
+            } else {
+                bVoid(lname);
+            }
+            
+            return lname;
+        }
+        
+        public final String finalReturnMethod(final String name, String field, final double value) {
+            String lname = name + "(a)";
+            long lvalue = (long) value * 2;
+            
+            if (name == null) {
+                aVoid(lvalue);
+            } else {
+                bVoid(lname);
+            }
+            
+            return lname;
+        }
+        
+        private void bVoid(final String lname) {
+            this.lname = lname;
+        }
+        
+        private void aVoid(final long value) {
+            this.value = value;
+        }
+    }
+    
+    public static abstract class AbstractMethodTestClass {
+        public abstract String returnMethod(final String name, String field, final double value);
     }
 }

@@ -27,18 +27,15 @@ import javassist.NotFoundException;
 import javassist.bytecode.AccessFlag;
 import org.junit.Test;
 import org.junit.runners.Parameterized;
-import org.powermock.core.IndicateReloadClass;
 import org.powermock.core.test.MockClassLoaderFactory;
 import org.powermock.core.transformers.javassist.InstrumentMockTransformer;
-import powermock.test.support.MainMockTransformerTestSupport.CallSpy;
+import org.powermock.core.transformers.mock.MockGatewaySpy;
 import powermock.test.support.MainMockTransformerTestSupport.SuperClassWithObjectMethod;
-import powermock.test.support.MainMockTransformerTestSupport.SupportClasses;
 
 import java.lang.reflect.Field;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assume.assumeThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.powermock.core.test.ClassLoaderTestHelper.runTestWithNewClassLoader;
 
 public class InstrumentMockTransformerTest extends AbstractBaseMockTransformerTest {
@@ -69,8 +66,6 @@ public class InstrumentMockTransformerTest extends AbstractBaseMockTransformerTe
     
     
     private CtClass prepareClassesForFieldTests(ClassPool classPool) throws NotFoundException, CannotCompileException {
-        addCallInterceptorToMockGateway(classPool);
-        
         CtClass ctClass = classPool.getCtClass(SuperClassWithObjectMethod.class.getName());
         
         addSyntheticField(classPool, ctClass);
@@ -110,7 +105,8 @@ public class InstrumentMockTransformerTest extends AbstractBaseMockTransformerTe
             
             clazz.getMethod("doSomething", Object.class).invoke(instance, new Object());
             
-            assertThat(CallSpy.getFieldCalls()).doesNotContain(SYNTH_FIELD);
+            assertThat(MockGatewaySpy.getFieldCalls())
+                .doesNotContain(SYNTH_FIELD);
             
             Field field = clazz.getDeclaredField(SYNTH_FIELD);
             field.setAccessible(true);

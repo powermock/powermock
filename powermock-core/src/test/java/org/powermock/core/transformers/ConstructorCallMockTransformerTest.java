@@ -26,6 +26,8 @@ import org.powermock.core.IndicateReloadClass;
 import org.powermock.core.test.MockClassLoaderFactory;
 import org.powermock.core.transformers.bytebuddy.ConstructorCallMockTransformer;
 import org.powermock.core.transformers.javassist.InstrumentMockTransformer;
+import org.powermock.core.transformers.mock.MockGatewaySpy;
+import org.powermock.core.transformers.mock.MockGatewaySpy.MethodCall;
 import powermock.test.support.MainMockTransformerTestSupport.ConstructorCall.SupperClassThrowsException;
 import powermock.test.support.MainMockTransformerTestSupport.ParameterImpl;
 import powermock.test.support.MainMockTransformerTestSupport.ParameterInterface;
@@ -47,8 +49,8 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assume.assumeThat;
 import static org.junit.Assume.assumeTrue;
-import static org.powermock.core.transformers.ConstructorCallMockTransformerTest.MockGateway.PROCEED;
-import static org.powermock.core.transformers.ConstructorCallMockTransformerTest.MockGateway.SUPPRESS;
+import static org.powermock.core.MockGateway.PROCEED;
+import static org.powermock.core.MockGateway.SUPPRESS;
 import static org.powermock.core.transformers.MockTransformerTestHelper.createTransformerTestDataWithMockGateway;
 
 public class ConstructorCallMockTransformerTest extends AbstractBaseMockTransformerTest {
@@ -57,8 +59,8 @@ public class ConstructorCallMockTransformerTest extends AbstractBaseMockTransfor
     public static Iterable<Object[]> data() {
         Collection<Object[]> data = new ArrayList<Object[]>();
     
-        data.addAll(createTransformerTestDataWithMockGateway(MockGateway.class, InstrumentMockTransformer.class));
-        data.addAll(createTransformerTestDataWithMockGateway(MockGateway.class, ConstructorCallMockTransformer.class));
+        data.addAll(createTransformerTestDataWithMockGateway(MockGatewaySpy.class, InstrumentMockTransformer.class));
+        data.addAll(createTransformerTestDataWithMockGateway(MockGatewaySpy.class, ConstructorCallMockTransformer.class));
         
         return data;
     }
@@ -82,7 +84,7 @@ public class ConstructorCallMockTransformerTest extends AbstractBaseMockTransfor
             .hasSize(2);
         
         assertThat(clazz.getConstructor(IndicateReloadClass.class))
-            .as("Defer-constructor expected")
+            .as("Defer-constructor returnOnMethodCall")
             .isNotNull();
     }
     
@@ -98,7 +100,7 @@ public class ConstructorCallMockTransformerTest extends AbstractBaseMockTransfor
             .hasSize(2);
         
         assertThat(clazz.getConstructor(IndicateReloadClass.class))
-            .as("Defer-constructor expected")
+            .as("Defer-constructor returnOnMethodCall")
             .isNotNull();
     }
     
@@ -135,7 +137,7 @@ public class ConstructorCallMockTransformerTest extends AbstractBaseMockTransfor
     public void should_suppress_call_to_super_constructor_if_getaway_return_SUPPRESS() throws Exception {
         assumeClassLoaderMode();
         
-        MockGateway.setExpected(SUPPRESS);
+        MockGatewaySpy.returnOnMethodCall(SUPPRESS);
         
         Class<?> clazz = loadWithMockClassLoader(SuperClassCallSuperConstructor.class.getName());
     
@@ -161,7 +163,7 @@ public class ConstructorCallMockTransformerTest extends AbstractBaseMockTransfor
     public void should_not_suppress_call_to_super_constructor_if_getaway_return_PROCEED() throws Exception {
         assumeClassLoaderMode();
         
-        MockGateway.setExpected(PROCEED);
+        MockGatewaySpy.returnOnMethodCall(PROCEED);
         
         Class<?> clazz = loadWithMockClassLoader(SuperClassCallSuperConstructor.class.getName());
     
@@ -188,7 +190,7 @@ public class ConstructorCallMockTransformerTest extends AbstractBaseMockTransfor
     public void should_provide_correct_constructor_param_and_arguments() throws Exception {
         assumeClassLoaderMode();
         
-        MockGateway.setExpected(SUPPRESS);
+        MockGatewaySpy.returnOnMethodCall(SUPPRESS);
         
         Class<?> clazz = loadWithMockClassLoader(SuperClassCallSuperConstructor.class.getName());
     
@@ -198,11 +200,13 @@ public class ConstructorCallMockTransformerTest extends AbstractBaseMockTransfor
     
         assertThatCorrectConstructorTypeProvided();
     
-        assertThat(MockGateway.args)
+        final MethodCall methodCall = MockGatewaySpy.constructorCalls().get(0);
+        
+        assertThat(methodCall.args)
             .as("Correct constructor arguments are provided")
             .containsExactly("name", 100.0);
         
-        assertThat(MockGateway.sig)
+        assertThat(methodCall.sig)
             .as("Correct constructor signature is provided")
             .containsExactly(String.class, double.class);
     }
@@ -211,7 +215,7 @@ public class ConstructorCallMockTransformerTest extends AbstractBaseMockTransfor
     public void should_provide_correct_constructor_param_and_arguments_when_cast_required() throws Exception {
         assumeClassLoaderMode();
         
-        MockGateway.setExpected(SUPPRESS);
+        MockGatewaySpy.returnOnMethodCall(SUPPRESS);
         
         final Class<?> clazz = loadWithMockClassLoader(SuperClassCallSuperConstructorWithCast.class.getName());
         
@@ -224,11 +228,13 @@ public class ConstructorCallMockTransformerTest extends AbstractBaseMockTransfor
     
         assertThatCorrectConstructorTypeProvided();
     
-        assertThat(MockGateway.args)
+        final MethodCall methodCall = MockGatewaySpy.constructorCalls().get(0);
+    
+        assertThat(methodCall.args)
             .as("Correct constructor arguments are provided")
             .containsExactly(param);
         
-        assertThat(MockGateway.sig)
+        assertThat(methodCall.sig)
             .as("Correct constructor signature is provided")
             .hasSize(1)
             .extracting(new Extractor<Class<?>, Object>() {
@@ -244,7 +250,7 @@ public class ConstructorCallMockTransformerTest extends AbstractBaseMockTransfor
     public void should_provide_correct_constructor_param_and_arguments_when_parameters_vararg() throws Exception {
         assumeClassLoaderMode();
         
-        MockGateway.setExpected(SUPPRESS);
+        MockGatewaySpy.returnOnMethodCall(SUPPRESS);
         
         final Class<?> clazz = loadWithMockClassLoader(SuperClassCallSuperConstructorWithVararg.class.getName());
         
@@ -259,22 +265,25 @@ public class ConstructorCallMockTransformerTest extends AbstractBaseMockTransfor
     
         assertThatCorrectConstructorTypeProvided();
     
-        assertThat(MockGateway.args)
+        final MethodCall methodCall = MockGatewaySpy.constructorCalls().get(0);
+        
+        assertThat(methodCall.args)
             .as("Constructor arguments have correct size")
             .hasSize(1);
         
-        assertThat((long[])MockGateway.args[0])
+        assertThat((long[]) methodCall.args[0])
             .as("Correct constructor arguments are provided")
             .containsExactly(params);
         
-        assertThat(MockGateway.sig)
+        assertThat(methodCall.sig)
             .as("Correct constructor signature is provided")
             .hasSize(1)
             .containsExactly(long[].class);
     }
     
     private void assertThatCorrectConstructorTypeProvided() {
-        assertThat(MockGateway.type.getName())
+        final MethodCall methodCall = MockGatewaySpy.constructorCalls().get(0);
+        assertThat(methodCall.type.getName())
             .as("Correct constructor type is provided")
             .isEqualTo(SupperClassThrowsException.class.getName());
     }
@@ -301,27 +310,4 @@ public class ConstructorCallMockTransformerTest extends AbstractBaseMockTransfor
         assumeTrue("Supported only by class loader mode.", strategy.isAgentMode());
     }
     
-    public static class MockGateway {
-        public static void setExpected(final Object expected) {
-            MockGateway.expected = expected;
-        }
-        
-        public static Object constructorCall(Class<?> type, Object[] args, Class<?>[] sig) {
-            MockGateway.type = type;
-            MockGateway.args = args;
-            MockGateway.sig = sig;
-            return expected;
-        }
-
-        public static boolean suppressConstructorCall(Class<?> type, Object[] args, Class<?>[] sig) {
-            return constructorCall(type, args, sig) == SUPPRESS;
-        }
-    
-        public static final Object PROCEED = new Object();
-        public static final Object SUPPRESS = new Object();
-        private static Object expected;
-        private static Object[] args;
-        private static Class<?>[] sig;
-        private static Class<?> type;
-    }
 }

@@ -1,7 +1,3 @@
-List mockitoLibs = [
-        project(":powermock-api:powermock-api-mockito2"), "org.mockito:mockito-core:${mockitoVersion}"
-]
-
 configure(project.subprojects) { subproject ->
 
     if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
@@ -35,7 +31,11 @@ project(":tests:java8:mockito-junit4") {
     dependencies {
         testCompile project(":powermock-modules:powermock-module-junit4")
 
-        testCompile mockitoLibs
+        testCompile project(":powermock-api:powermock-api-mockito2")
+        testCompile ("org.mockito:mockito-core:${mockitoVersion}"){
+            exclude group: 'net.bytebuddy', module: 'byte-buddy'
+            exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
+        }
     }
 }
 
@@ -55,7 +55,11 @@ project(":tests:java8:mockito-junit4-agent") {
     description = "Tests for Mockito module with JUnit 4.x. and Java8."
 
     dependencies {
-        testCompile mockitoLibs
+        testCompile project(":powermock-api:powermock-api-mockito2")
+        testCompile ("org.mockito:mockito-core:${mockitoVersion}"){
+            exclude group: 'net.bytebuddy', module: 'byte-buddy'
+            exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
+        }
 
         testCompile project(":powermock-modules:powermock-module-junit4-rule-agent")
     }
@@ -74,7 +78,11 @@ project(":tests:java8:mockito-junit4-rule-xstream") {
         testCompile project(":powermock-modules:powermock-module-junit4-rule")
         testCompile project(":powermock-classloading:powermock-classloading-xstream")
 
-        testCompile mockitoLibs
+        testCompile project(":powermock-api:powermock-api-mockito2")
+        testCompile ("org.mockito:mockito-core:${mockitoVersion}"){
+            exclude group: 'net.bytebuddy', module: 'byte-buddy'
+            exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
+        }
 
         testCompile files(project(":tests:mockito:junit4").sourceSets.test.output)
     }

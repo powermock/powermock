@@ -85,7 +85,10 @@ project(":powermock-core") {
         testCompile("org.assertj:assertj-core:${assertjVersion}")
         testCompile(project(":tests:utils"))
 
-        testCompile("org.mockito:mockito-core:${mockitoVersion}")
+        testCompile("org.mockito:mockito-core:${mockitoVersion}"){
+            exclude group: 'net.bytebuddy', module: 'byte-buddy'
+            exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
+        }
     }
 }
 
@@ -115,7 +118,7 @@ project(":powermock-api:powermock-api-easymock") {
     dependencies {
         compile(project(":powermock-api:powermock-api-support"))
         compile("cglib:cglib-nodep:${cglibVersion}")
-        provided("org.easymock:easymock:${easymockVersion}")
+        compile("org.easymock:easymock:${easymockVersion}")
 
         testCompile("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
@@ -133,7 +136,10 @@ project(":powermock-api:powermock-api-mockito2"){
     dependencies {
 
         compile(project(":powermock-api:powermock-api-support"))
-        compile("org.mockito:mockito-core:${mockitoVersion}")
+        compile("org.mockito:mockito-core:${mockitoVersion}"){
+            exclude group: 'net.bytebuddy', module: 'byte-buddy'
+            exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
+        }
 
         testCompile("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'

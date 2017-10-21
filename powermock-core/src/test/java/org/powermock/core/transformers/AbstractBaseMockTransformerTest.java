@@ -19,10 +19,7 @@
 package org.powermock.core.transformers;
 
 import javassist.CannotCompileException;
-import javassist.ClassPool;
 import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.NotFoundException;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -30,8 +27,9 @@ import org.powermock.core.MockGateway;
 import org.powermock.core.test.ClassLoaderTestHelper;
 import org.powermock.core.test.MockClassLoaderFactory;
 import org.powermock.core.transformers.javassist.support.JavaAssistClassWrapperFactory;
+import org.powermock.core.transformers.mock.MockGatewaySpy;
 
-import static org.junit.Assert.assertNotNull;
+import java.io.IOException;
 
 @RunWith(Parameterized.class)
 abstract class AbstractBaseMockTransformerTest {
@@ -54,30 +52,16 @@ abstract class AbstractBaseMockTransformerTest {
     @Before
     public void setUp() throws Exception {
         ClassLoaderTestHelper.clearCache();
+        MockGatewaySpy.clear();
+        MockGatewaySpy.returnOnMethodCall(MockGateway.PROCEED);
     }
     
     protected Class<?> loadWithMockClassLoader(final String name) throws Exception {
         return ClassLoaderTestHelper.loadWithMockClassLoader(name, mockTransformerChain, mockClassloaderFactory);
     }
     
-    void addCallInterceptorToMockGateway(ClassPool classPool) throws NotFoundException, CannotCompileException {
-        CtClass mockGetawayClass = classPool.get(MockGateway.class.getName());
-        for (CtMethod method : mockGetawayClass.getMethods()) {
-            String methodName = method.getName();
-            if (methodName.equals("methodCall")) {
-                method.insertBefore(
-                    "powermock.test.support.MainMockTransformerTestSupport.CallSpy.registerMethodCall("
-                        + "methodName"
-                        + ");"
-                );
-            } else if (methodName.equals("fieldCall")) {
-                method.insertBefore(
-                    "powermock.test.support.MainMockTransformerTestSupport.CallSpy.registerFieldCall("
-                        + "fieldName"
-                        + ");"
-                );
-            }
-        }
+    protected Class<?> loadWithMockClassLoader(final CtClass ctClass) throws Exception {
+        return ClassLoaderTestHelper.loadWithMockClassLoader(ctClass.getName(), ctClass.toBytecode(), mockTransformerChain, mockClassloaderFactory);
     }
     
     ClassWrapper<CtClass> wrap(final CtClass ctClass) {

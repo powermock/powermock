@@ -56,6 +56,26 @@ class MockTransformerTestHelper {
         return data;
     }
     
+    static Collection<Object[]> createOneTransformerTestData(final Class<?> transformerClass) {
+        return createOneTransformerTestData(MockGateway.class, transformerClass);
+    }
+    
+    static Collection<Object[]> createOneTransformerTestData(final Class<?> mockGateway, final Class<?> transformerClass) {
+        List<Object[]> data = new ArrayList<Object[]>();
+        
+        for (TransformStrategy strategy : TransformStrategy.values()) {
+            MockTransformer transformer = getInstance(mockGateway, strategy, transformerClass);
+            
+            data.add(new Object[]{
+                strategy,
+                transformer,
+                createClassLoaderFactory(transformerClass)
+            });
+        }
+        
+        return data;
+    }
+    
     private static MockClassLoaderFactory createClassLoaderFactory(final Class<?> transformerClass) {
         if (AbstractJavaAssistMockTransformer.class.isAssignableFrom(transformerClass)){
             return new MockClassLoaderFactory(JavassistMockClassLoader.class);

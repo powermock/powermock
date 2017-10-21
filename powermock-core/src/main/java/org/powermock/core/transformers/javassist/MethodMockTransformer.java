@@ -33,7 +33,12 @@ import static org.powermock.core.transformers.javassist.support.TransformerHelpe
 
 abstract class MethodMockTransformer extends AbstractJavaAssistMockTransformer {
     
-    MethodMockTransformer(final TransformStrategy strategy) {super(strategy);}
+    private Class<?> mockGetawayClass;
+    
+    MethodMockTransformer(final TransformStrategy strategy) {
+        super(strategy);
+        this.mockGetawayClass = MockGateway.class;
+    }
     
     void modifyMethod(final CtMethod method) throws NotFoundException, CannotCompileException {
         
@@ -96,7 +101,7 @@ abstract class MethodMockTransformer extends AbstractJavaAssistMockTransformer {
         String classOrInstance = classOrInstance(method);
         
         String code = "Object value = "
-                          + MockGateway.class.getName()
+                          + mockGetawayClass.getName()
                           + ".methodCall("
                           + classOrInstance + ", \""
                           + method.getName()

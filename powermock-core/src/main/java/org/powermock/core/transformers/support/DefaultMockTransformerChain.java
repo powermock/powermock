@@ -43,6 +43,11 @@ public class DefaultMockTransformerChain implements MockTransformerChain {
         return classWrapper;
     }
     
+    @Override
+    public String toString() {
+        return "MockTransformerChain{" + "transformers=" + transformers + '}';
+    }
+    
     public static MockTransformerChainBuilder newBuilder() {
         return new MockTransformerChainBuilder();
     }

@@ -23,6 +23,7 @@ import javassist.Loader;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.transformers.MockTransformerChain;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +39,28 @@ public class ClassLoaderTestHelper {
     
     public static Class<?> loadWithMockClassLoader(final String className, final MockTransformerChain mockTransformerChain,
                                                    final MockClassLoaderFactory mockClassloaderFactory) throws Exception {
+        MockClassLoader loader = getMockClassLoader(mockTransformerChain, mockClassloaderFactory);
+        
+        Class<?> clazz = Class.forName(className, true, loader);
+        
+        assertNotNull("Class has been loaded", clazz);
+        
+        return clazz;
+    }
+    
+    
+    public static Class<?> loadWithMockClassLoader(final String className, final byte[] klass, final MockTransformerChain mockTransformerChain,
+                                                   final MockClassLoaderFactory mockClassloaderFactory) throws Exception {
+        MockClassLoader loader = getMockClassLoader(mockTransformerChain, mockClassloaderFactory);
+        final Class<?> definedClass = loader.defineClass(className, ClassLoaderTestHelper.class.getProtectionDomain(), klass);
+    
+        assertNotNull("Class has been loaded", definedClass);
+        
+        return definedClass;
+    }
+    
+    private static MockClassLoader getMockClassLoader(final MockTransformerChain mockTransformerChain,
+                                                      final MockClassLoaderFactory mockClassloaderFactory) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         MockClassLoader loader = null;
         
         Map<MockTransformerChain, MockClassLoader> classloaders = cache.get(mockClassloaderFactory);
@@ -48,18 +71,13 @@ public class ClassLoaderTestHelper {
             classloaders = new HashMap<MockTransformerChain, MockClassLoader>();
             cache.put(mockClassloaderFactory, classloaders);
         }
-    
+        
         if (loader == null) {
             loader = mockClassloaderFactory.getInstance(new String[]{MockClassLoader.MODIFY_ALL_CLASSES});
             loader.setMockTransformerChain(mockTransformerChain);
             classloaders.put(mockTransformerChain, loader);
         }
-        
-        Class<?> clazz = Class.forName(className, true, loader);
-        
-        assertNotNull("Class has been loaded", clazz);
-        
-        return clazz;
+        return loader;
     }
     
     public static void runTestWithNewClassLoader(ClassPool classPool, String name) throws Throwable {

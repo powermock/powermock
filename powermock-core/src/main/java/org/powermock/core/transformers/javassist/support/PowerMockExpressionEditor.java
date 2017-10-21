@@ -144,7 +144,7 @@ public final class PowerMockExpressionEditor extends ExprEditor {
             code.append("{Object value =")
                 .append(mockGetawayClass.getName())
                 .append(".constructorCall($class, $args, $sig);");
-            code.append("if (value != ").append(mockGetawayClass.getName()).append(".PROCEED){");
+            code.append("if (value != ").append(MockGateway.class.getName()).append(".PROCEED){");
 
             /*
              * TODO Suppress and lazy inject field (when this feature is ready).

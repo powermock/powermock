@@ -76,7 +76,7 @@ public class TestClassTransformerJavaAssistTest {
         assertEquals("Original number of constructoprs",
                      1, SupportClasses.SubClass.class.getConstructors().length);
         try {
-            fail("A public defer-constructor is not expected: " + clazz.getConstructor(IndicateReloadClass.class));
+            fail("A public defer-constructor is not returnOnMethodCall: " + clazz.getConstructor(IndicateReloadClass.class));
         } catch (NoSuchMethodException is_expected) {
             
         }

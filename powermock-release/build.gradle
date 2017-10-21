@@ -107,7 +107,10 @@ project(":powermock-release:powermock-mockito2-junit") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
         compile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        compile("org.mockito:mockito-core:${mockitoVersion}")
+        compile("org.mockito:mockito-core:${mockitoVersion}"){
+            exclude group: 'net.bytebuddy', module: 'byte-buddy'
+            exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
+        }
         compile("org.objenesis:objenesis:${objenesisVersion}")
         compile("org.javassist:javassist:${javassistVersion}")
         compile("cglib:cglib-nodep:${cglibVersion}")
@@ -122,7 +125,10 @@ project(":powermock-release:powermock-mockito2-testng") {
         compile(project(path:":powermock-release:powermock-mockito2", configuration: "shadow"))
         compile("org.testng:testng:${testngVersion}")
         compile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        compile("org.mockito:mockito-core:${mockitoVersion}")
+        compile("org.mockito:mockito-core:${mockitoVersion}"){
+            exclude group: 'net.bytebuddy', module: 'byte-buddy'
+            exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
+        }
         compile("org.objenesis:objenesis:${objenesisVersion}")
         compile("org.javassist:javassist:${javassistVersion}")
         compile("cglib:cglib-nodep:${cglibVersion}")
