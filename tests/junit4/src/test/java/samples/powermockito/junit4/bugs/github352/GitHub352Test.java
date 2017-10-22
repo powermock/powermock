@@ -9,9 +9,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
-/**
- *
- */
 public class GitHub352Test {
 
 

@@ -42,6 +42,7 @@ public class MockClassLoaderConfiguration {
      */
     static final String[] PACKAGES_TO_BE_DEFERRED = new String[]{
         "org.hamcrest.*",
+        "jdk.*",
         "java.*",
         "javax.accessibility.*",
         "sun.*",
