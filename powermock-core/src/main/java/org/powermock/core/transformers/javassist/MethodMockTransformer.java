@@ -70,7 +70,7 @@ abstract class MethodMockTransformer extends AbstractJavaAssistMockTransformer {
         String classOrInstance = classOrInstance(method);
         method.setModifiers(method.getModifiers() - Modifier.NATIVE);
         String code = "Object value = "
-                          + MockGateway.class.getName()
+                          + mockGetawayClass.getName()
                           + ".methodCall("
                           + classOrInstance
                           + ", \""

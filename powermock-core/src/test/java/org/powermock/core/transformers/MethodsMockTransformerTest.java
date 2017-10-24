@@ -25,6 +25,7 @@ import javassist.CtMethod;
 import javassist.CtNewMethod;
 import javassist.NotFoundException;
 import javassist.bytecode.AccessFlag;
+import net.bytebuddy.utility.RandomString;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
 import org.junit.runners.Parameterized;
@@ -38,6 +39,7 @@ import org.powermock.core.transformers.mock.MockGatewaySpyMethodDispatcher;
 import org.powermock.core.transformers.support.DefaultMockTransformerChain;
 import org.powermock.reflect.internal.WhiteboxImpl;
 import powermock.test.support.MainMockTransformerTestSupport.AbstractMethodTestClass;
+import powermock.test.support.MainMockTransformerTestSupport.NativeMethodsTestClass;
 import powermock.test.support.MainMockTransformerTestSupport.ReturnMethodsTestClass;
 import powermock.test.support.MainMockTransformerTestSupport.SubclassWithBridgeMethod;
 import powermock.test.support.MainMockTransformerTestSupport.SuperClassWithObjectMethod;
@@ -73,6 +75,25 @@ public class MethodsMockTransformerTest extends AbstractBaseMockTransformerTest 
     }
     
     @Test
+    public void should_skip_call_to_void_private_method_if_getaway_return_not_PROCEED() throws Exception {
+        
+        MockGatewaySpy.returnOnMethodCall("voidPrivateMethod", "");
+        
+        final Class<?> clazz = loadWithMockClassLoader(VoidMethodsTestClass.class.getName());
+    
+        final Object instance = WhiteboxImpl.newInstance(clazz);
+        
+        WhiteboxImpl.invokeMethod(instance, "voidPrivateMethod", "name");
+        
+        assertThat(WhiteboxImpl.getInternalState(instance, "lname"))
+            .as("Field name is not set")
+            .isNull();
+        
+        assertThat(methodCalls())
+            .is(registered().forMethod("voidPrivateMethod"));
+    }
+    
+    @Test
     public void should_skip_call_to_void_public_method_if_getaway_return_not_PROCEED() throws Exception {
         
         MockGatewaySpy.returnOnMethodCall("voidMethod", "");
@@ -89,6 +110,8 @@ public class MethodsMockTransformerTest extends AbstractBaseMockTransformerTest 
         
         assertThat(methodCalls())
             .is(registered().forMethod("voidMethod"));
+        assertThat(methodCalls())
+            .isNot(registered().forMethod("voidPrivateMethod"));
     }
     
     @Test
@@ -105,6 +128,27 @@ public class MethodsMockTransformerTest extends AbstractBaseMockTransformerTest 
         assertThat(WhiteboxImpl.getInternalState(instance, "field"))
             .as("Field name is not set")
             .isNull();
+        
+        assertThat(methodCalls())
+            .is(registered().forMethod("finalVoidMethod"));
+    }
+    
+    
+    @Test
+    public void should_invoke_real_final_void_public_method_if_getaway_return_PROCEED() throws Exception {
+        
+        MockGatewaySpy.returnOnMethodCall("finalVoidMethod", MockGateway.PROCEED);
+        
+        final Class<?> clazz = loadWithMockClassLoader(VoidMethodsTestClass.class.getName());
+        
+        final Object instance = WhiteboxImpl.newInstance(clazz);
+    
+        final String fieldValue = RandomString.make(10);
+        WhiteboxImpl.invokeMethod(instance, "finalVoidMethod", "name", fieldValue, 100d);
+        
+        assertThat(WhiteboxImpl.getInternalState(instance, "field"))
+            .as("Field name is not set")
+            .isEqualTo(fieldValue);
         
         assertThat(methodCalls())
             .is(registered().forMethod("finalVoidMethod"));
@@ -146,6 +190,25 @@ public class MethodsMockTransformerTest extends AbstractBaseMockTransformerTest 
         
         assertThat(methodCalls())
             .is(registered().forMethod("finalReturnMethod"));
+    }
+    
+    @Test
+    public void should_return_value_from_getaway_for_final_private_non_void_methods_is_it_is_not_PROCEED() throws Exception {
+        
+        final String expected = "mocked";
+        MockGatewaySpy.returnOnMethodCall("privateReturnMethod", expected);
+        
+        final Class<?> clazz = loadWithMockClassLoader(ReturnMethodsTestClass.class.getName());
+    
+        final Object instance = WhiteboxImpl.newInstance(clazz);
+        
+        final Object result = WhiteboxImpl.invokeMethod(instance, "privateReturnMethod", "name");
+        
+        assertThat(result)
+            .isEqualTo(expected);
+        
+        assertThat(methodCalls())
+            .is(registered().forMethod("privateReturnMethod"));
     }
     
     @Test

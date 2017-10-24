@@ -18,7 +18,6 @@
 
 package org.powermock.core.transformers;
 
-import javassist.CannotCompileException;
 import javassist.CtClass;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -29,7 +28,7 @@ import org.powermock.core.test.MockClassLoaderFactory;
 import org.powermock.core.transformers.javassist.support.JavaAssistClassWrapperFactory;
 import org.powermock.core.transformers.mock.MockGatewaySpy;
 
-import java.io.IOException;
+import static org.junit.Assume.assumeTrue;
 
 @RunWith(Parameterized.class)
 abstract class AbstractBaseMockTransformerTest {
@@ -66,5 +65,13 @@ abstract class AbstractBaseMockTransformerTest {
     
     ClassWrapper<CtClass> wrap(final CtClass ctClass) {
         return new JavaAssistClassWrapperFactory().wrap(ctClass);
+    }
+    
+    protected void assumeClassLoaderMode() {
+        assumeTrue("Supported only by class loader mode.", strategy.isClassloaderMode());
+    }
+    
+    protected void assumeAgentMode() {
+        assumeTrue("Supported only by class loader mode.", strategy.isAgentMode());
     }
 }

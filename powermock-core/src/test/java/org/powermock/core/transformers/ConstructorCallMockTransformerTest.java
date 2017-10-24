@@ -300,14 +300,4 @@ public class ConstructorCallMockTransformerTest extends AbstractBaseMockTransfor
         assumeThat("Original number of constructors equals to 1", originalClazz.getConstructors().length, equalTo(1));
         return loadWithMockClassLoader(originalClazz.getName());
     }
-    
-    
-    private void assumeClassLoaderMode() {
-        assumeTrue("Supported only by class loader mode.", strategy.isClassloaderMode());
-    }
-    
-    private void assumeAgentMode() {
-        assumeTrue("Supported only by class loader mode.", strategy.isAgentMode());
-    }
-    
 }

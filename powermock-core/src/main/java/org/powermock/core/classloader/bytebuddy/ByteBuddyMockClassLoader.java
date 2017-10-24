@@ -24,6 +24,7 @@ import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.description.type.TypeDescription.Generic;
 import net.bytebuddy.dynamic.ClassFileLocator.ForClassLoader;
 import net.bytebuddy.dynamic.DynamicType.Builder;
+import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
 import net.bytebuddy.pool.TypePool;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.classloader.MockClassLoaderConfiguration;
@@ -32,19 +33,25 @@ import org.powermock.core.transformers.bytebuddy.support.ByteBuddyClass;
 import org.powermock.core.transformers.bytebuddy.support.ByteBuddyClassWrapperFactory;
 
 import java.security.ProtectionDomain;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class ByteBuddyMockClassLoader extends MockClassLoader {
     
     private final TypePool typePool;
+    private final ConcurrentMap<String, Class<?>> definedByClassLoadingStrtegy;
     
     public ByteBuddyMockClassLoader(final String[] classesToMock, final String[] packagesToDefer) {
-        super(classesToMock, packagesToDefer);
-        typePool = TypePool.Default.ofClassPath();
+        this(new MockClassLoaderConfiguration(classesToMock, packagesToDefer));
     }
     
     public ByteBuddyMockClassLoader(final MockClassLoaderConfiguration configuration) {
         super(configuration, new ByteBuddyClassWrapperFactory());
         typePool = TypePool.Default.ofClassPath();
+        definedByClassLoadingStrtegy = new ConcurrentHashMap<String, Class<?>>();
     }
     
     @Override
@@ -55,9 +62,20 @@ public class ByteBuddyMockClassLoader extends MockClassLoader {
     
         byte[] clazz = createByteBuddyBuilder(typeDefinitions)
                            .make()
+                           .load(this, new MockClassLoadingStrategy(protectionDomain))
                            .getBytes();
         
         return defineClass(name, protectionDomain, clazz);
+    }
+    
+    @Override
+    public Class<?> defineClass(final String className, final ProtectionDomain protectionDomain, final byte[] clazz) {
+        Class<?> defined = definedByClassLoadingStrtegy.get(className);
+        if (defined == null){
+            defined = super.defineClass(className, protectionDomain, clazz);
+            definedByClassLoadingStrtegy.put(className, defined);
+        }
+        return defined;
     }
     
     protected byte[] defineAndTransformClass(final String name, ProtectionDomain protectionDomain) throws ClassNotFoundException {
@@ -77,6 +95,7 @@ public class ByteBuddyMockClassLoader extends MockClassLoader {
         
         return wrap.unwrap().getBuilder()
                    .make()
+                   .load(this, new MockClassLoadingStrategy(protectionDomain))
                    .getBytes();
     }
     
@@ -94,7 +113,7 @@ public class ByteBuddyMockClassLoader extends MockClassLoader {
     
     private Builder<Object> createByteBuddyBuilder(final TypeDescription typeDefinitions) {
         return new ByteBuddy()
-                   .redefine(
+                   .rebase(
                        typeDefinitions,
                        ForClassLoader.ofClassPath()
                    );
@@ -108,5 +127,27 @@ public class ByteBuddyMockClassLoader extends MockClassLoader {
             throw new ClassNotFoundException(e.getMessage(), e);
         }
         return typeDefinitions;
+    }
+    
+    private class MockClassLoadingStrategy implements ClassLoadingStrategy<ByteBuddyMockClassLoader> {
+        private final ProtectionDomain protectionDomain;
+    
+        private MockClassLoadingStrategy(final ProtectionDomain protectionDomain) {
+            this.protectionDomain = protectionDomain;
+        }
+        
+        @Override
+        public Map<TypeDescription, Class<?>> load(final ByteBuddyMockClassLoader classLoader,
+                                                   final Map<TypeDescription, byte[]> types) {
+            final Map<TypeDescription, Class<?>> result = new HashMap<TypeDescription, Class<?>>();
+            
+            for (Entry<TypeDescription, byte[]> entry : types.entrySet()) {
+                final TypeDescription typeDescription = entry.getKey();
+                final Class<?> loaded = defineClass(typeDescription.getName(), protectionDomain, entry.getValue());
+                result.put(typeDescription, loaded);
+            }
+
+            return result;
+        }
     }
 }

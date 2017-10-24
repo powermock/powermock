@@ -223,7 +223,7 @@ public class MainMockTransformerTestSupport {
             if (name == null) {
                 aVoid(lvalue);
             } else {
-                bVoid(lname);
+                voidPrivateMethod(lname);
             }
             
             this.field = field;
@@ -236,13 +236,13 @@ public class MainMockTransformerTestSupport {
             if (name == null) {
                 aVoid(lvalue);
             } else {
-                bVoid(lname);
+                voidPrivateMethod(lname);
             }
             
             this.field = field;
         }
-        
-        private void bVoid(final String lname) {
+    
+        private void voidPrivateMethod(final String lname) {
             this.lname = lname;
         }
         
@@ -257,41 +257,43 @@ public class MainMockTransformerTestSupport {
         private long value;
         
         public String returnMethod(final String name, String field, final double value) {
-            String lname = name + "(a)";
             long lvalue = (long) value * 2;
-            
+    
             if (name == null) {
-                aVoid(lvalue);
+                return aVoid(lvalue);
             } else {
-                bVoid(lname);
+                return privateReturnMethod(name);
             }
-            
-            return lname;
         }
         
         public final String finalReturnMethod(final String name, String field, final double value) {
-            String lname = name + "(a)";
             long lvalue = (long) value * 2;
             
             if (name == null) {
-                aVoid(lvalue);
+                return aVoid(lvalue);
             } else {
-                bVoid(lname);
+                return privateReturnMethod(name);
             }
-            
+        }
+    
+        private String privateReturnMethod(final String name) {
+            final String lname = name + "(a)";
+            this.lname = lname;
             return lname;
         }
-        
-        private void bVoid(final String lname) {
-            this.lname = lname;
-        }
-        
-        private void aVoid(final long value) {
+    
+        private String aVoid(final long value) {
             this.value = value;
+            return "" + value;
         }
     }
     
     public static abstract class AbstractMethodTestClass {
         public abstract String returnMethod(final String name, String field, final double value);
+    }
+    
+    public static class NativeMethodsTestClass {
+        public static native String nativeStaticReturnMethod(final String name);
+        public native String nativeReturnMethod(final String name);
     }
 }
