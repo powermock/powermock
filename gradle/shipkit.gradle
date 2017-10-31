@@ -29,6 +29,7 @@ shipkit {
             'regression': 'Fix regression bug'
     ]
     releaseNotes.ignoreCommitsContaining = ["[ci skip]"]
+    releaseNotes.publicationRepository = "https://bintray.com/powermock/maven/powermock/powermock-"
 }
 
 allprojects {
