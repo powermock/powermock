@@ -16,7 +16,7 @@ Please note that PowerMock is mainly intended for people with expert knowledge i
 ## News
 
 * 2017-09-16: PowerMock 1.7.3 has been released. The release includes bugfix for [#849](https://github.com/powermock/powermock/issues/849). See [release notes](https://github.com/powermock/powermock/releases/tag/powermock-1.7.3) for details. 
-* 2017-09-16: PowerMock 1.7.2 has been released. The first release with using Mockito Shipkit. See [release notes](https://github.com/powermock/powermock/releases/tag/powermock-1.7.2) for details. 
+* 2017-09-16: PowerMock 1.7.2 has been released. The first release with using [Mockito Shipkit](https://github.com/mockito/shipkit). See [release notes](https://github.com/powermock/powermock/releases/tag/powermock-1.7.2) for details. 
 * 2017-08-12: PowerMock 1.7.1 has been released with one, but significant change: the old API for verifying static mock has been deprecated and a new one has been added. Old API will be removed in version PowerMock 2.0 due to incompatibility with Mockito Public API.
 
 [Older News](https://github.com/powermock/powermock/wiki/OldNews)
