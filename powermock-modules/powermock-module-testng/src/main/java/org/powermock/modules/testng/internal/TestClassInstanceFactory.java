@@ -24,9 +24,6 @@ import org.powermock.tests.utils.impl.MockPolicyInitializerImpl;
 
 import java.lang.reflect.Constructor;
 
-/**
- *
- */
 class TestClassInstanceFactory {
     private final Constructor constructor;
     private final Class<?> testClass;

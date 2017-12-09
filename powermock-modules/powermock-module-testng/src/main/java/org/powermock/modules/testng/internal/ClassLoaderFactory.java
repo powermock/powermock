@@ -29,6 +29,7 @@ class ClassLoaderFactory {
     private final TestClassesExtractor testClassesExtractor;
     private final IgnorePackagesExtractor ignorePackagesExtractor;
     private final StaticConstructorSuppressExtractorImpl staticConstructorSuppressExtractor;
+    
     private final ExpectedExceptionsExtractor expectedExceptionsExtractor;
     
     ClassLoaderFactory() {

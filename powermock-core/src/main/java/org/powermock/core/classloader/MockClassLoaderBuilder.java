@@ -17,22 +17,20 @@
 
 package org.powermock.core.classloader;
 
+import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.MockTransformerChainFactory;
 import org.powermock.core.transformers.javassist.JavassistMockTransformerChainFactory;
-import org.powermock.core.transformers.support.DefaultMockTransformerChain;
 import org.powermock.utils.ArrayUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *  MockClassLoader builder.
- */
 public class MockClassLoaderBuilder {
 
     private final MockTransformerChainFactory transformerChainFactory;
+    private final List<MockTransformer> extraMockTransformers;
     private String[] packagesToIgnore;
     private String[] classesToModify;
     
@@ -40,17 +38,19 @@ public class MockClassLoaderBuilder {
         return new MockClassLoaderBuilder();
     }
     
+    private UseClassPathAdjuster useClassPathAdjuster;
+    
     private MockClassLoaderBuilder() {
         transformerChainFactory = new JavassistMockTransformerChainFactory();
+        extraMockTransformers = new ArrayList<MockTransformer>();
     }
 
     public MockClassLoader build() {
     
-        MockClassLoader classLoader = new JavassistMockClassLoader(
-            new MockClassLoaderConfiguration(classesToModify, packagesToIgnore)
+        MockClassLoader classLoader = new JavassistMockClassLoader(new MockClassLoaderConfiguration(classesToModify, packagesToIgnore), useClassPathAdjuster
         );
-
-        classLoader.setMockTransformerChain(transformerChainFactory.createDefaultChain());
+    
+        classLoader.setMockTransformerChain(transformerChainFactory.createDefaultChain(extraMockTransformers));
 
         return classLoader;
     }
@@ -62,6 +62,18 @@ public class MockClassLoaderBuilder {
 
     public MockClassLoaderBuilder addClassesToModify(String[] classesToModify) {
         this.classesToModify = ArrayUtil.addAll(this.classesToModify, classesToModify);
+        return this;
+    }
+    
+    public MockClassLoaderBuilder addExtraMockTransformer(MockTransformer mockTransformer) {
+        if (mockTransformer != null) {
+            extraMockTransformers.add(mockTransformer);
+        }
+        return this;
+    }
+    
+    public MockClassLoaderBuilder addClassPathAdjuster(final UseClassPathAdjuster useClassPathAdjuster) {
+        this.useClassPathAdjuster = useClassPathAdjuster;
         return this;
     }
 }
