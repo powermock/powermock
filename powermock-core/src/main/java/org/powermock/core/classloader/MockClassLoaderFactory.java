@@ -41,14 +41,21 @@ public class MockClassLoaderFactory {
     
     private final String[] packagesToIgnore;
     private final Class<?> testClass;
-    private final TestClassesExtractor prepareForTestExtractor = new PrepareForTestExtractorImpl();
-    private final TestClassesExtractor suppressionExtractor = new StaticConstructorSuppressExtractorImpl();
-    private final ArrayMerger arrayMerger = new ArrayMergerImpl();
+    private final TestClassesExtractor prepareForTestExtractor;
+    private final TestClassesExtractor suppressionExtractor;
+    private final ArrayMerger arrayMerger;
     
     
     public MockClassLoaderFactory(Class<?> testClass) {
+        this(testClass, new PowerMockIgnorePackagesExtractorImpl().getPackagesToIgnore(testClass));
+    }
+    
+    public MockClassLoaderFactory(Class<?> testClass, String[] packagesToIgnore) {
         this.testClass = testClass;
-        this.packagesToIgnore = new PowerMockIgnorePackagesExtractorImpl().getPackagesToIgnore(testClass);
+        this.prepareForTestExtractor = new PrepareForTestExtractorImpl();
+        this.suppressionExtractor = new StaticConstructorSuppressExtractorImpl();
+        this.packagesToIgnore = packagesToIgnore;
+        arrayMerger = new ArrayMergerImpl();
     }
     
     public ClassLoader createForClass(final MockTransformer extraMockTransformer) {

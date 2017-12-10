@@ -30,7 +30,7 @@ class TestClassInstanceFactory {
     private final Object[] params;
     private final ClassLoader mockLoader;
 
-    TestClassInstanceFactory(Constructor constructor, ClassLoaderFactory classLoaderFactory, Object... params) {
+    TestClassInstanceFactory(Constructor constructor, TestNGMockClassLoaderFactory classLoaderFactory, Object... params) {
         this.constructor = constructor;
         this.params = params;
         this.testClass = constructor.getDeclaringClass();
