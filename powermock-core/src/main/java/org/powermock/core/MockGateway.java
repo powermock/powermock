@@ -148,19 +148,16 @@ public class MockGateway {
             return PROCEED;
         }
 
-        MockInvocation mockInvocation = new MockInvocation(object, methodName, sig);
+        MockInvocation mockInvocation = new MockInvocation(object, methodName, sig, args);
         MethodInvocationControl methodInvocationControl = mockInvocation.getMethodInvocationControl();
-        Object returnValue = null;
 
-        // The following describes the equals non-static method.
-
-        if (isEqualsMethod(mockInvocation) && !isStaticMethod(mockInvocation)) {
-            returnValue = tryHandleEqualsMethod(mockInvocation);
+        if (isEqualsMethod(methodName, sig)) {
+            Object returnValue = tryHandleEqualsMethod(mockInvocation);
+            if (returnValue != null) {
+                return returnValue;
+            }
         }
 
-        if (returnValue != null) {
-            return returnValue;
-        }
         return doMethodCall(object, args, returnTypeAsString, mockInvocation, methodInvocationControl);
     }
 
@@ -207,35 +204,20 @@ public class MockGateway {
      * Method handles exception cases with equals method.
      */
     private static Object tryHandleEqualsMethod(MockInvocation mockInvocation) {
-
-        // Fix for Issue http://code.google.com/p/powermock/issues/detail?id=88
-        // For some reason the method call to equals() on final methods is
-        // intercepted and during the further processing in Mockito the same
-        // equals() method is called on the same instance. A StackOverflowError
-        // is the result. The following fix changes this by checking if the
-        // method to be called is a final equals() method. In that case the
-        // original method is called by returning PROCEED.
-
-        if (mockInvocation.getMethod().getParameterTypes().length == 1
-                    && mockInvocation.getMethod().getParameterTypes()[0] == Object.class
-                    && Modifier.isFinal(mockInvocation.getMethod().getModifiers())) {
-            return PROCEED;
-        }
-
         if (calledFromMockito()){
-            return PROCEED;
+            Object[] args = mockInvocation.getArguments();
+            // Mockito resorts to a plain reference check to test mock equality
+            // This should not return PROCEED, calling the actual implementation
+            // should be avoided when called from inside Mockito
+            return mockInvocation.getMockInstance() == args[0];
         }
-
         return null;
     }
 
-
-    private static boolean isEqualsMethod(MockInvocation mockInvocation) {
-        return "equals".equals(mockInvocation.getMethod().getName());
-    }
-
-    private static boolean isStaticMethod(MockInvocation mockInvocation) {
-        return Modifier.isStatic(mockInvocation.getMethod().getModifiers());
+    private static boolean isEqualsMethod(String methodName, Class<?>[] sig) {
+        return "equals".equals(methodName) &&
+                sig.length == 1 &&
+                sig[0] == Object.class;
     }
 
     private static boolean calledFromMockito() {
@@ -256,12 +238,15 @@ public class MockGateway {
             return false;
         } else if (isGetClassMethod(methodName, sig) && !MOCK_GET_CLASS_METHOD) {
             return false;
-        } else { return !(isAnnotationMethod(methodName, sig) && !MOCK_ANNOTATION_METHODS); }
+        } else {
+            return !(isAnnotationMethod(methodName, sig) && !MOCK_ANNOTATION_METHODS);
+        }
     }
 
     private static boolean isJavaStandardMethod(String methodName, Class<?>[] sig) {
-        return (methodName.equals("equals") && sig.length == 1) || (methodName.equals("hashCode") && sig.length == 0)
-                       || (methodName.equals("toString") && sig.length == 0);
+        return isEqualsMethod(methodName, sig)
+                || (methodName.equals("hashCode") && sig.length == 0)
+                || (methodName.equals("toString") && sig.length == 0);
     }
 
     private static boolean isGetClassMethod(String methodName, Class<?>[] sig) {
