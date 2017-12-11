@@ -8,20 +8,22 @@ import org.powermock.reflect.internal.proxy.UnproxiedType;
 import java.lang.reflect.Method;
 
 class MockInvocation {
-    private Object object;
-    private String methodName;
-    private Class<?>[] sig;
+    private final Object object;
+    private final String methodName;
+    private final Class<?>[] sig;
+    private final Object[] args;
     private Class<?> objectType;
     private MethodInvocationControl methodInvocationControl;
     private Method method;
-    
-    MockInvocation(Object object, String methodName, Class<?>... sig) {
+
+    MockInvocation(Object object, String methodName, Class<?>[] sig, Object[] args) {
         this.object = object;
         this.methodName = methodName;
         this.sig = sig;
+        this.args = args;
         init();
     }
-    
+
     private void init() {
         if (object instanceof Class<?>) {
             objectType = (Class<?>) object;
@@ -34,19 +36,27 @@ class MockInvocation {
         }
         method = findMethodToInvoke(methodName, sig, objectType);
     }
-    
+
+    Object getMockInstance() {
+        return object;
+    }
+
+    Object[] getArguments() {
+        return args;
+    }
+
     Class<?> getObjectType() {
         return objectType;
     }
-    
+
     MethodInvocationControl getMethodInvocationControl() {
         return methodInvocationControl;
     }
-    
+
     Method getMethod() {
         return method;
     }
-    
+
     private static Method findMethodToInvoke(String methodName, Class<?>[] sig, Class<?> objectType) {
         /*
         * if invocationControl is null or the method is not mocked, invoke
