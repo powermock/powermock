@@ -4,11 +4,17 @@ First of all, thank you for considering contributing to PowerMock. Please, read 
 
 ## Content ##
 
+* [Triage Issues](#triage-issues-)
 * [If looking for support](#if-looking-for-support)
 * [Pull request criteria](#pull-request-criteria)
 * [General info](#general-info)
 * [More on pull requests](#more-on-pull-requests)
 
+
+## Triage Issues [![Open Source Helpers](https://www.codetriage.com/jayway/powermock/badges/users.svg)](https://www.codetriage.com/jayway/powermock)
+ ##
+
+You can triage issues which may include reproducing bug reports or asking for vital information, such as version numbers or reproduction instructions. If you would like to start triaging issues, one easy way to get started is to [subscribe to powermock on CodeTriage](https://www.codetriage.com/jayway/powermock).
 
 ## If looking for support ##
 
