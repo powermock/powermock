@@ -29,6 +29,7 @@ import samples.expectnew.ExpectNewDemo;
 import samples.expectnew.ExpectNewServiceUser;
 import samples.expectnew.ExpectNewWithMultipleCtorDemo;
 import samples.expectnew.ITarget;
+import samples.expectnew.MultiConstructor;
 import samples.expectnew.SimpleVarArgsConstructorDemo;
 import samples.expectnew.Target;
 import samples.expectnew.VarArgsConstructorDemo;
@@ -57,7 +58,7 @@ import static org.powermock.api.support.membermodification.MemberMatcher.constru
  * Test class to demonstrate new instance mocking using whenConstructionOf(..).
  */
 @PrepareForTest({MyClass.class, ExpectNewDemo.class, ClassWithInnerMembers.class, DataInputStream.class,
-        WhenNewCases.class, Target.class})
+        WhenNewCases.class, Target.class, MultiConstructor.class})
 public class WhenNewCases {
 
     public static final String TARGET_NAME = "MyTarget";
@@ -899,5 +900,25 @@ public class WhenNewCases {
             }
         });
         assertThat(actualTarget).isEqualToComparingFieldByField(expectedTarget);
+    }
+
+    @Test
+    public void multiConstructorMatching() throws Exception {
+
+        MultiConstructor expectedObject = new MultiConstructor("only");
+
+        whenNew(MultiConstructor.class).withAnyArguments().thenReturn(expectedObject);
+
+        MultiConstructor actualObject = new MultiConstructor(null);
+        assertNotNull("withAnyArguments did not match constructor(String=null)", actualObject);
+        assertEquals("only", actualObject.getFirst());
+
+        actualObject = new MultiConstructor("first", null);
+        assertNotNull("withAnyArguments did not match constructor(String, String=null)", actualObject);
+        assertEquals("only", actualObject.getFirst());
+
+        actualObject = new MultiConstructor("first", null, true);
+        assertNotNull("withAnyArguments did not match constructor(Runnable=null, boolean, Object)", actualObject);
+        assertEquals("only", actualObject.getFirst());
     }
 }
