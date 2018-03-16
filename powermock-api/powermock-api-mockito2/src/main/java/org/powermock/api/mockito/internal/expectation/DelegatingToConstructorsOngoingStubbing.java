@@ -143,7 +143,7 @@ public class DelegatingToConstructorsOngoingStubbing<T> implements OngoingStubbi
                 Object[] paramArgs = new Object[parameterTypesForCtor.length];
                 for (int i = 0; i < parameterTypesForCtor.length; i++) {
                     Class<?> paramType = parameterTypesForCtor[i];
-                    paramArgs[i] = ArgumentMatchers.any(paramType);
+                    paramArgs[i] = ArgumentMatchers.nullable(paramType);
                 }
                 try {
                     final OngoingStubbing<T> when = when(mock.performSubstitutionLogic(paramArgs));
