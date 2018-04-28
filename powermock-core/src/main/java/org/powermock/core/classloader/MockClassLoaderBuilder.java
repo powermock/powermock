@@ -25,30 +25,35 @@ import org.powermock.core.transformers.javassist.JavassistMockTransformerChainFa
 import org.powermock.utils.ArrayUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 public class MockClassLoaderBuilder {
 
     private final MockTransformerChainFactory transformerChainFactory;
     private final List<MockTransformer> extraMockTransformers;
+    private final ByteCodeFramework byteCodeFramework;
     private String[] packagesToIgnore;
     private String[] classesToModify;
     
-    public static MockClassLoaderBuilder create() {
-        return new MockClassLoaderBuilder();
+    public static MockClassLoaderBuilder create(ByteCodeFramework byteCodeFramework) {
+        return new MockClassLoaderBuilder(byteCodeFramework);
     }
     
     private UseClassPathAdjuster useClassPathAdjuster;
     
-    private MockClassLoaderBuilder() {
+    private MockClassLoaderBuilder(final ByteCodeFramework byteCodeFramework) {
+        this.byteCodeFramework = byteCodeFramework;
         transformerChainFactory = new JavassistMockTransformerChainFactory();
         extraMockTransformers = new ArrayList<MockTransformer>();
     }
 
     public MockClassLoader build() {
     
-        MockClassLoader classLoader = new JavassistMockClassLoader(new MockClassLoaderConfiguration(classesToModify, packagesToIgnore), useClassPathAdjuster
-        );
+        final MockClassLoaderConfiguration configuration = new MockClassLoaderConfiguration(classesToModify, packagesToIgnore);
+        final MockClassLoader classLoader = byteCodeFramework.createClassloader(configuration, useClassPathAdjuster);
     
         classLoader.setMockTransformerChain(transformerChainFactory.createDefaultChain(extraMockTransformers));
 
@@ -65,9 +70,9 @@ public class MockClassLoaderBuilder {
         return this;
     }
     
-    public MockClassLoaderBuilder addExtraMockTransformer(MockTransformer mockTransformer) {
-        if (mockTransformer != null) {
-            extraMockTransformers.add(mockTransformer);
+    public MockClassLoaderBuilder addExtraMockTransformers(MockTransformer... mockTransformers) {
+        if (mockTransformers != null) {
+            extraMockTransformers.addAll(asList(mockTransformers));
         }
         return this;
     }

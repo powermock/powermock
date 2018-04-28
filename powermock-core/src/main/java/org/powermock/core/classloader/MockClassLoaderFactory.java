@@ -19,6 +19,7 @@ package org.powermock.core.classloader;
 
 import org.powermock.core.classloader.annotations.MockPolicy;
 import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 import org.powermock.core.spi.PowerMockPolicy;
@@ -31,6 +32,7 @@ import org.powermock.tests.utils.impl.PowerMockIgnorePackagesExtractorImpl;
 import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
 import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
 
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -58,36 +60,67 @@ public class MockClassLoaderFactory {
         arrayMerger = new ArrayMergerImpl();
     }
     
-    public ClassLoader createForClass(final MockTransformer extraMockTransformer) {
+    public ClassLoader createForClass(final MockTransformer... extraMockTransformer) {
+        final ByteCodeFramework byteCodeFramework = getByteCodeFramework();
         if (testClass.isAnnotationPresent(PrepareEverythingForTest.class)) {
-            return create(new String[]{MockClassLoader.MODIFY_ALL_CLASSES}, extraMockTransformer);
+            return create(byteCodeFramework, new String[]{MockClassLoader.MODIFY_ALL_CLASSES}, extraMockTransformer);
         } else {
             final String[] prepareForTestClasses = prepareForTestExtractor.getTestClasses(testClass);
             final String[] suppressStaticClasses = suppressionExtractor.getTestClasses(testClass);
-            return create(arrayMerger.mergeArrays(String.class, prepareForTestClasses, suppressStaticClasses), extraMockTransformer);
+            return create(byteCodeFramework, arrayMerger.mergeArrays(String.class, prepareForTestClasses, suppressStaticClasses), extraMockTransformer);
         }
     }
     
-    public ClassLoader createForMethod(final Method method, final MockTransformer extraMockTransformer) {
+    public ClassLoader createForMethod(final Method method, final MockTransformer... extraMockTransformers) {
+        final ByteCodeFramework byteCodeFramework = getByteCodeFrameworkFor(method);
         if (method.isAnnotationPresent(PrepareEverythingForTest.class)) {
             final String[] classesToLoadByMockClassloader = {MockClassLoader.MODIFY_ALL_CLASSES};
-            return create(classesToLoadByMockClassloader, extraMockTransformer);
+            return create(byteCodeFramework, classesToLoadByMockClassloader, extraMockTransformers);
         } else {
             final String[] suppressStaticClasses = getStaticSuppressionClasses(method);
             final String[] prepareForTestClasses = prepareForTestExtractor.getTestClasses(method);
             final String[] classesToLoadByMockClassloader = arrayMerger.mergeArrays(String.class, prepareForTestClasses, suppressStaticClasses);
-            return create(classesToLoadByMockClassloader, extraMockTransformer);
+            return create(byteCodeFramework, classesToLoadByMockClassloader, extraMockTransformers);
         }
     }
     
-    public ClassLoader create(final String[] prepareForTestClasses, final MockTransformer extraMockTransformer) {
+    private ByteCodeFramework getByteCodeFrameworkFor(final Method method) {
+        ByteCodeFramework byteCodeFramework = getByteCodeFramework(method);
+        if (byteCodeFramework == null) {
+            byteCodeFramework = getByteCodeFramework(testClass);
+        }
+        if (byteCodeFramework == null) {
+            throw new IllegalArgumentException(
+                String.format(
+                    "Either method %s or class %s is annotated by PrepareForTest/PrepareEverythingForTest", method.getName(), testClass.getName()
+                )
+            );
+        }
+        return byteCodeFramework;
+    }
+    
+    private ByteCodeFramework getByteCodeFramework() {
+        return getByteCodeFramework(testClass);
+    }
+    
+    private ByteCodeFramework getByteCodeFramework(final AnnotatedElement element) {
+        if (element.isAnnotationPresent(PrepareForTest.class)) {
+            return element.getAnnotation(PrepareForTest.class).byteCodeFramework();
+        } else if (element.isAnnotationPresent(PrepareEverythingForTest.class)) {
+            return element.getAnnotation(PrepareEverythingForTest.class).byteCodeFramework();
+        }
+        return null;
+    }
+    
+    private ClassLoader create(final ByteCodeFramework byteCodeFramework, final String[] prepareForTestClasses,
+                               final MockTransformer... extraMockTransformer) {
         final String[] classesToLoadByMockClassloader = makeSureArrayContainsTestClassName(prepareForTestClasses, testClass.getName());
         
         final ClassLoader mockLoader;
         if (isContextClassLoaderShouldBeUsed(classesToLoadByMockClassloader)) {
             mockLoader = Thread.currentThread().getContextClassLoader();
         } else {
-            mockLoader = createMockClassLoader(classesToLoadByMockClassloader, extraMockTransformer);
+            mockLoader = createMockClassLoader(byteCodeFramework, classesToLoadByMockClassloader, extraMockTransformer);
         }
         return mockLoader;
     }
@@ -102,34 +135,38 @@ public class MockClassLoaderFactory {
         return testClasses;
     }
     
-    private ClassLoader createMockClassLoader(final String[] classesToLoadByMockClassloader, final MockTransformer extraMockTransformer) {
+    private ClassLoader createMockClassLoader(final ByteCodeFramework byteCodeFramework,
+                                              final String[] classesToLoadByMockClassloader,
+                                              final MockTransformer... extraMockTransformer) {
         
-        final ClassLoader mockLoader = createWithPrivilegeAccessController(classesToLoadByMockClassloader, extraMockTransformer);
+        final ClassLoader mockLoader = createWithPrivilegeAccessController(byteCodeFramework, classesToLoadByMockClassloader, extraMockTransformer);
     
         initialize(mockLoader);
         
         return mockLoader;
     }
     
-    private ClassLoader createWithPrivilegeAccessController(final String[] classesToLoadByMockClassloader,
-                                                            final MockTransformer extraMockTransformer) {
+    private ClassLoader createWithPrivilegeAccessController(final ByteCodeFramework byteCodeFramework,
+                                                            final String[] classesToLoadByMockClassloader,
+                                                            final MockTransformer... extraMockTransformer) {
         return AccessController.doPrivileged(new PrivilegedAction<MockClassLoader>() {
                 @Override
                 public MockClassLoader run() {
                     final UseClassPathAdjuster useClassPathAdjuster = testClass.getAnnotation(UseClassPathAdjuster.class);
-                    return MockClassLoaderFactory.this.createMockClassLoader(classesToLoadByMockClassloader, extraMockTransformer, useClassPathAdjuster);
+                    return MockClassLoaderFactory.this.createMockClassLoader(byteCodeFramework, classesToLoadByMockClassloader, useClassPathAdjuster, extraMockTransformer);
                 }
             });
     }
     
-    private MockClassLoader createMockClassLoader(final String[] classesToLoadByMockClassloader,
-                                                  final MockTransformer extraMockTransformer,
-                                                  final UseClassPathAdjuster useClassPathAdjuster) {
-        return MockClassLoaderBuilder.create()
+    private MockClassLoader createMockClassLoader(final ByteCodeFramework byteCodeFramework,
+                                                  final String[] classesToLoadByMockClassloader,
+                                                  final UseClassPathAdjuster useClassPathAdjuster,
+                                                  final MockTransformer... extraMockTransformer) {
+        return MockClassLoaderBuilder.create(byteCodeFramework)
                                      .addIgnorePackage(packagesToIgnore)
                                      .addClassesToModify(classesToLoadByMockClassloader)
                                      .addClassPathAdjuster(useClassPathAdjuster)
-                                     .addExtraMockTransformer(extraMockTransformer)
+                                     .addExtraMockTransformers(extraMockTransformer)
                                      .build();
     }
     

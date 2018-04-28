@@ -48,7 +48,7 @@ public abstract class JavaAssistTestClassTransformer extends TestClassTransforme
             return clazz;
     }
     
-    private CtClass transform(final CtClass clazz) throws Exception {
+    private void transform(final CtClass clazz) throws Exception {
         if (clazz.isFrozen()) {
             clazz.defrost();
         }
@@ -63,8 +63,7 @@ public abstract class JavaAssistTestClassTransformer extends TestClassTransforme
             makeDeferConstructorNonPublic(clazz);
             restoreOriginalConstructorsAccesses(clazz);
         }
-        
-        return clazz;
+    
     }
     
     private boolean isTestClass(CtClass clazz) {
