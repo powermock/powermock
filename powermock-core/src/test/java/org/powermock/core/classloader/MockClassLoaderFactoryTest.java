@@ -7,12 +7,15 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.powermock.configuration.GlobalConfiguration;
 import org.powermock.core.classloader.MockClassLoaderFactoryTest.TestContainer.ByteBuddyTestClass;
 import org.powermock.core.classloader.MockClassLoaderFactoryTest.TestContainer.ExceptionTestClass;
 import org.powermock.core.classloader.MockClassLoaderFactoryTest.TestContainer.JavassistTestClass;
 import org.powermock.core.classloader.MockClassLoaderFactoryTest.TestContainer.PrepareEverythingForTestTestClass;
+import org.powermock.core.classloader.MockClassLoaderFactoryTest.TestContainer.SuppressStaticInitializationForTestClass;
 import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.core.classloader.bytebuddy.ByteBuddyMockClassLoader;
 import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
 import org.powermock.reflect.Whitebox;
@@ -31,14 +34,14 @@ import static org.powermock.core.test.ContainsCondition.contains;
 public class MockClassLoaderFactoryTest {
     
     @RunWith(Parameterized.class)
-    public static class PrepareForTestOnClassLevelCases extends BasePrepareForTestCases {
+    public static class AnnotationTestOnClassLevelCases extends BasePrepareForTestCases {
     
-        public PrepareForTestOnClassLevelCases(final Class<?> testClass, String expectedClassToModify) {
+        public AnnotationTestOnClassLevelCases(final Class<?> testClass, String expectedClassToModify) {
             super(testClass, expectedClassToModify);
         }
     
         @Test
-        public void should_extract_from_prepare_for_test_classes() {
+        public void should_extract_classes_to_modify_from_class_level_annotation() {
             final ClassLoader classLoader = objectUnderTest.createForClass();
             
             assertThat(classLoader)
@@ -53,14 +56,26 @@ public class MockClassLoaderFactoryTest {
     }
     
     @RunWith(Parameterized.class)
-    public static class PrepareForTestOnMethodLevelCases extends BasePrepareForTestCases {
+    public static class AnnotationOnMethodLevelCases extends BasePrepareForTestCases {
     
-        public PrepareForTestOnMethodLevelCases(final Class<?> testClass, String expectedClassToModify) {
+        @Parameters(name = "Test parameter: {0}")
+        public static Collection<Object[]> parameters() {
+            final ArrayList<Object[]> parameters = new ArrayList<Object[]>();
+        
+            parameters.add(new Object[]{JavassistTestClass.class, "powermock.test.support.MainMockTransformerTestSupport$SupportClasses$FinalInnerClass"});
+            parameters.add(new Object[]{ByteBuddyTestClass.class, "powermock.test.support.MainMockTransformerTestSupport$SupportClasses$FinalInnerClass"});
+            parameters.add(new Object[]{SuppressStaticInitializationForTestClass.class, "SupportClasses.FinalInnerClass"});
+            parameters.add(new Object[]{PrepareEverythingForTestTestClass.class, "*"});
+        
+            return parameters;
+        }
+        
+        public AnnotationOnMethodLevelCases(final Class<?> testClass, String expectedClassToModify) {
             super(testClass, expectedClassToModify);
         }
     
         @Test
-        public void should_extract_from_prepare_for_on_method_level_if_exist() {
+        public void should_extract_classes_to_modify_method_level_annotation_if_exist() {
             final Method method = Whitebox.getMethod(testClass, "someTestWithPrepareForTest");
             
             final ClassLoader classLoader = objectUnderTest.createForMethod(method);
@@ -68,8 +83,7 @@ public class MockClassLoaderFactoryTest {
             assertThat(classLoader)
                 .as("An instance of MockClassLoader is created")
                 .isInstanceOf(MockClassLoader.class);
-    
-            final String expectedClassToModify = "powermock.test.support.MainMockTransformerTestSupport$SupportClasses$FinalInnerClass";
+            
             assertThat(((MockClassLoader) classLoader).getConfiguration())
                 .as("MockClassLoader configuration contains expected class: %s", expectedClassToModify)
                 .extracting("modify")
@@ -156,6 +170,17 @@ public class MockClassLoaderFactoryTest {
               .isExactlyInstanceOf(IllegalArgumentException.class);
         
         }
+    
+        @Test
+        public void should_use_default_bytecode_framework_from_global_configuration_for_class_if_there_is_not_annotation_on_class() {
+            GlobalConfiguration.powerMockConfiguration().setByteCodeFramework(ByteCodeFramework.ByteBuddy);
+        
+            final ClassLoader classLoader = objectUnderTest.createForClass();
+        
+            assertThat(classLoader)
+                .as("An instance of MockClassLoader is created")
+                .isInstanceOf(ByteBuddyMockClassLoader.class);
+        }
     }
     
     public abstract static class BasePrepareForTestCases {
@@ -166,6 +191,7 @@ public class MockClassLoaderFactoryTest {
             
             parameters.add(new Object[]{JavassistTestClass.class, "powermock.test.support.MainMockTransformerTestSupport$SupportClasses"});
             parameters.add(new Object[]{ByteBuddyTestClass.class, "powermock.test.support.MainMockTransformerTestSupport$SupportClasses"});
+            parameters.add(new Object[]{SuppressStaticInitializationForTestClass.class, "SupportClasses.FinalInnerClass"});
             parameters.add(new Object[]{PrepareEverythingForTestTestClass.class, "*"});
             
             return parameters;
@@ -187,6 +213,7 @@ public class MockClassLoaderFactoryTest {
         }
     }
     
+    @SuppressWarnings("WeakerAccess")
     public abstract static class TestContainer {
         
         @PrepareForTest(SupportClasses.class)
@@ -207,7 +234,21 @@ public class MockClassLoaderFactoryTest {
         public static class PrepareEverythingForTestTestClass {
             
             @Test
-            @PrepareForTest(SupportClasses.FinalInnerClass.class)
+            @PrepareEverythingForTest
+            public void someTestWithPrepareForTest() {
+            }
+            
+            @Test
+            public void someTestWithoutPrepareForTest() {
+            }
+            
+        }
+        
+        @SuppressStaticInitializationFor("SupportClasses.FinalInnerClass")
+        public static class SuppressStaticInitializationForTestClass {
+            
+            @Test
+            @SuppressStaticInitializationFor("SupportClasses.FinalInnerClass")
             public void someTestWithPrepareForTest() {
             }
             

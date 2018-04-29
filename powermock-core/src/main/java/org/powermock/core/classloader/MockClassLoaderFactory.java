@@ -17,6 +17,7 @@
 
 package org.powermock.core.classloader;
 
+import org.powermock.configuration.GlobalConfiguration;
 import org.powermock.core.classloader.annotations.MockPolicy;
 import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -100,7 +101,13 @@ public class MockClassLoaderFactory {
     }
     
     private ByteCodeFramework getByteCodeFramework() {
-        return getByteCodeFramework(testClass);
+        ByteCodeFramework byteCodeFramework = getByteCodeFramework(testClass);
+        
+        if (byteCodeFramework == null){
+            byteCodeFramework = GlobalConfiguration.powerMockConfiguration().getByteCodeFramework();
+        }
+        
+        return byteCodeFramework;
     }
     
     private ByteCodeFramework getByteCodeFramework(final AnnotatedElement element) {
@@ -108,6 +115,8 @@ public class MockClassLoaderFactory {
             return element.getAnnotation(PrepareForTest.class).byteCodeFramework();
         } else if (element.isAnnotationPresent(PrepareEverythingForTest.class)) {
             return element.getAnnotation(PrepareEverythingForTest.class).byteCodeFramework();
+        } else if (element.isAnnotationPresent(SuppressStaticInitializationFor.class)){
+            return element.getAnnotation(SuppressStaticInitializationFor.class).byteCodeFramework();
         }
         return null;
     }

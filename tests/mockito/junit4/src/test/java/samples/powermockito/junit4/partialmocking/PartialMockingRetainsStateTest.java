@@ -33,14 +33,14 @@ import static junit.framework.Assert.assertEquals;
 public class PartialMockingRetainsStateTest {
 
 	@Test
-	public void spyingOnAnObjectRetainsState() throws Exception {
+    public void spyingOnAnObjectRetainsState() {
 		MockSelfDemo demo = new MockSelfDemo(4);
 		MockSelfDemo spy = PowerMockito.spy(demo);
 		assertEquals(4, spy.getConstructorValue());
 	}
 
 	@Test
-	public void spyingOnAClassRetainsState() throws Exception {
+    public void spyingOnAClassRetainsState() {
 		PowerMockito.spy(MockWithStaticStateDemo.class);
 		assertEquals(5, MockWithStaticStateDemo.getState());
 	}

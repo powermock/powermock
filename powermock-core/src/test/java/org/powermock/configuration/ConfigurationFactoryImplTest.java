@@ -23,6 +23,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.powermock.api.mockito.ConfigurationTestUtils;
 import org.powermock.configuration.support.ConfigurationFactoryImpl;
+import org.powermock.core.classloader.ByteCodeFramework;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
@@ -32,13 +36,13 @@ public class ConfigurationFactoryImplTest {
     private ConfigurationTestUtils util;
     
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         configurationFactory = new ConfigurationFactoryImpl();
         util = new ConfigurationTestUtils();
     }
     
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         util.clear();
     }
     
@@ -85,5 +89,21 @@ public class ConfigurationFactoryImplTest {
         assertThat(configuration.getGlobalIgnore())
             .as("Configuration is read correctly")
             .contains("org.powermock.core*");
+    }
+    
+    @Test
+    public void should_read_enum_values() throws IOException, URISyntaxException {
+    
+        util.copyTemplateToPropertiesFile();
+    
+        PowerMockConfiguration configuration = configurationFactory.create(PowerMockConfiguration.class);
+    
+        assertThat(configuration)
+            .as("Configuration is created")
+            .isNotNull();
+    
+        assertThat(configuration.getByteCodeFramework())
+            .as("Enum from configuration is read correctly")
+            .isEqualTo(ByteCodeFramework.Javassist);
     }
 }

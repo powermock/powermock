@@ -72,7 +72,11 @@ public class MockClassLoaderBuilder {
     
     public MockClassLoaderBuilder addExtraMockTransformers(MockTransformer... mockTransformers) {
         if (mockTransformers != null) {
-            extraMockTransformers.addAll(asList(mockTransformers));
+            for (MockTransformer mockTransformer : mockTransformers) {
+                if (mockTransformer != null) {
+                    extraMockTransformers.add(mockTransformer);
+                }
+            }
         }
         return this;
     }

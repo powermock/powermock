@@ -28,7 +28,8 @@ public class ConfigurationFactoryImpl implements ConfigurationFactory {
     private static final String USER_CONFIGURATION = "org/powermock/extensions/configuration.properties";
     private static final String DEFAULT_CONFIGURATION = "org/powermock/default.properties";
     
-    @Override public <T extends Configuration<T>> T create(final Class<T> configurationType) {
+    @Override
+    public <T extends Configuration<T>> T create(final Class<T> configurationType) {
         T configuration = readUserConfiguration(configurationType);
         T defaultConfiguration = readDefault(configurationType);
         return defaultConfiguration.merge(configuration);

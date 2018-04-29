@@ -56,8 +56,7 @@ class ConfigurationMapper<T extends Configuration> {
         }
     }
     
-    private void mapProperty(final PropertyDescriptor propertyDescriptor, final Properties properties)
-        throws IllegalAccessException, InvocationTargetException {
+    private void mapProperty(final PropertyDescriptor propertyDescriptor, final Properties properties) {
         
         final ConfigurationKey key = new ConfigurationKey(ConfigurationType.forClass(configurationClass), propertyDescriptor.getName());
         final String value = aliases.findValue((String) properties.get(key.toString()));
@@ -97,14 +96,15 @@ class ConfigurationMapper<T extends Configuration> {
         }
     }
     
+    @SuppressWarnings("unchecked")
     private enum PropertyWriter {
         ArrayWriter {
             @Override
-            public void writeProperty(final PropertyDescriptor propertyDescriptor, final Object target, final String value) {
+            public void writeProperty(final PropertyDescriptor pd, final Object target, final String value) {
                 try {
                     if (value != null) {
                         String[] array = value.split(",");
-                        propertyDescriptor.getWriteMethod().invoke(target, (Object) array);
+                        pd.getWriteMethod().invoke(target, (Object) array);
                     }
                 } catch (Exception e) {
                     throw new PowerMockInternalException(e);
@@ -113,25 +113,49 @@ class ConfigurationMapper<T extends Configuration> {
         },
         StringWriter {
             @Override
-            public void writeProperty(final PropertyDescriptor propertyDescriptor, final Object target, final String value) {
+            public void writeProperty(final PropertyDescriptor pd, final Object target, final String value) {
                 try {
                     if (value != null) {
-                        propertyDescriptor.getWriteMethod().invoke(target, value);
+                        pd.getWriteMethod().invoke(target, value);
+                    }
+                } catch (Exception e) {
+                    throw new PowerMockInternalException(e);
+                }
+            }
+        },
+        EnumWriter {
+            @Override
+            public void writeProperty(final PropertyDescriptor pd, final Object target, final String value) {
+                try {
+                    if (value != null) {
+                        final Class<Enum<?>> enumClass = (Class<Enum<?>>) pd.getPropertyType();
+                        final Enum<?>[] constants = enumClass.getEnumConstants();
+                        for (Enum<?> constant : constants) {
+                            if(value.equals(constant.name())){
+                                pd.getWriteMethod().invoke(target, constant);
+                                return;
+                            }
+                        }
+                        throw new PowerMockInternalException(String.format(
+                            "Find unknown enum constant `%s` for type `%s` during reading configuration.", value, enumClass
+                        ));
                     }
                 } catch (Exception e) {
                     throw new PowerMockInternalException(e);
                 }
             }
         };
-        
-        public static PropertyWriter forProperty(final PropertyDescriptor propertyDescriptor) {
-            if (String[].class.isAssignableFrom(propertyDescriptor.getPropertyType())) {
+    
+        private static PropertyWriter forProperty(final PropertyDescriptor pd) {
+            if (String[].class.isAssignableFrom(pd.getPropertyType())) {
                 return ArrayWriter;
+            } else if (Enum.class.isAssignableFrom(pd.getPropertyType())) {
+                return EnumWriter;
             } else {
                 return StringWriter;
             }
         }
         
-        public abstract void writeProperty(final PropertyDescriptor propertyDescriptor, final Object target, final String value);
+        abstract void writeProperty(final PropertyDescriptor propertyDescriptor, final Object target, final String value);
     }
 }

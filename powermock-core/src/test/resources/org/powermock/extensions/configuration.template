@@ -1,1 +1,2 @@
 powermock.global-ignore=org.somepackage
+powermock.byte-code-framework=Javassist
