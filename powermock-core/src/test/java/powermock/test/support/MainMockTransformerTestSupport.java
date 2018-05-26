@@ -296,4 +296,23 @@ public class MainMockTransformerTestSupport {
         public static native String nativeStaticReturnMethod(final String name);
         public native String nativeReturnMethod(final String name);
     }
+    
+    public static class ParentTestClass {
+        
+        public static class NestedTestClass{
+            
+            
+            public NestedTestClass() {}
+            
+            protected NestedTestClass(String s) {}
+            
+            NestedTestClass(int i) {}
+            
+            private NestedTestClass(Boolean[] array) {}
+            
+            protected NestedTestClass(int[] iarray, boolean b, String[] sarray) {}
+            
+        }
+        
+    }
 }

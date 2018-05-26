@@ -31,12 +31,15 @@ import org.powermock.core.transformers.mock.MockGatewaySpy.MethodCall;
 import powermock.test.support.MainMockTransformerTestSupport.ConstructorCall.SupperClassThrowsException;
 import powermock.test.support.MainMockTransformerTestSupport.ParameterImpl;
 import powermock.test.support.MainMockTransformerTestSupport.ParameterInterface;
+import powermock.test.support.MainMockTransformerTestSupport.ParentTestClass;
+import powermock.test.support.MainMockTransformerTestSupport.ParentTestClass.NestedTestClass;
 import powermock.test.support.MainMockTransformerTestSupport.SomeInterface;
 import powermock.test.support.MainMockTransformerTestSupport.SuperClassCallSuperConstructor;
 import powermock.test.support.MainMockTransformerTestSupport.SuperClassCallSuperConstructorWithCast;
 import powermock.test.support.MainMockTransformerTestSupport.SuperClassCallSuperConstructorWithVararg;
 import powermock.test.support.MainMockTransformerTestSupport.SupportClasses;
 import powermock.test.support.MainMockTransformerTestSupport.SupportClasses.EnumClass;
+import powermock.test.support.MainMockTransformerTestSupport.SupportClasses.MultipleConstructors;
 import powermock.test.support.MainMockTransformerTestSupport.SupportClasses.PublicSuperClass;
 import powermock.test.support.MainMockTransformerTestSupport.SupportClasses.SubClass;
 
@@ -45,10 +48,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Java6Assertions.catchThrowable;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assume.assumeThat;
-import static org.junit.Assume.assumeTrue;
 import static org.powermock.core.MockGateway.PROCEED;
 import static org.powermock.core.MockGateway.SUPPRESS;
 import static org.powermock.core.transformers.MockTransformerTestHelper.createTransformerTestDataWithMockGateway;
@@ -69,6 +72,56 @@ public class ConstructorCallMockTransformerTest extends AbstractBaseMockTransfor
                                               final MockTransformerChain mockTransformerChain,
                                               final MockClassLoaderFactory mockClassloaderFactory) {
         super(strategy, mockTransformerChain, mockClassloaderFactory);
+    }
+    
+    
+    @Test
+    public void should_not_change_constructors_of_test_class() throws Exception {
+        assumeClassLoaderMode();
+        assumeClassLoaderIsByteBuddy();
+        
+        final Class<MultipleConstructors> testClass = MultipleConstructors.class;
+        
+        setTestClassToTransformers(testClass);
+        
+        final Class<?> modifiedClass = reloadClass(testClass);
+        
+        assertThat(modifiedClass.getConstructors())
+            .hasSameSizeAs(testClass.getConstructors());
+        
+        assertThatThrownBy(
+            new ThrowingCallable() {
+                @Override
+                public void call() throws Throwable {
+                    modifiedClass.getConstructor(IndicateReloadClass.class);
+                }
+            }
+        ).withFailMessage("A public defer-constructor is added.")
+         .isExactlyInstanceOf(NoSuchMethodException.class);
+    }
+    
+    @Test
+    public void should_not_change_constructors_of_nested_test_classes() throws Exception {
+        assumeClassLoaderMode();
+        assumeClassLoaderIsByteBuddy();
+    
+        setTestClassToTransformers(ParentTestClass.class);
+    
+        final Class<?> originalClazz = NestedTestClass.class;
+        final Class<?> modifiedClass = reloadClass(originalClazz);
+        
+        assertThat(modifiedClass.getConstructors())
+            .hasSameSizeAs(originalClazz.getConstructors());
+        
+        assertThatThrownBy(
+            new ThrowingCallable() {
+                @Override
+                public void call() throws Throwable {
+                    modifiedClass.getConstructor(IndicateReloadClass.class);
+                }
+            }
+        ).withFailMessage("A public defer-constructor is added.")
+         .isExactlyInstanceOf(NoSuchMethodException.class);
     }
     
     @Test
@@ -286,14 +339,6 @@ public class ConstructorCallMockTransformerTest extends AbstractBaseMockTransfor
         assertThat(methodCall.type.getName())
             .as("Correct constructor type is provided")
             .isEqualTo(SupperClassThrowsException.class.getName());
-    }
-    
-    private void assumeClassLoaderIsByteBuddy() {
-        assumeTrue(
-            "ByteBuddy implantation MockClassLoader should always add defer constructor," +
-                " because ByteBuddy cannot add constructor to super class ad-hoc.",
-            mockClassloaderFactory.isByteBuddy()
-        );
     }
     
     private Class<?> reloadClass(final Class<?> originalClazz) throws Exception {

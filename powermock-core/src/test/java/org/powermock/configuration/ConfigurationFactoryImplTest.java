@@ -104,6 +104,6 @@ public class ConfigurationFactoryImplTest {
     
         assertThat(configuration.getByteCodeFramework())
             .as("Enum from configuration is read correctly")
-            .isEqualTo(ByteCodeFramework.Javassist);
+            .isEqualTo(ByteCodeFramework.ByteBuddy);
     }
 }

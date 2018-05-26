@@ -17,10 +17,8 @@
 
 package org.powermock.core.classloader;
 
-import org.powermock.configuration.GlobalConfiguration;
 import org.powermock.core.classloader.annotations.MockPolicy;
 import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 import org.powermock.core.spi.PowerMockPolicy;
@@ -33,7 +31,6 @@ import org.powermock.tests.utils.impl.PowerMockIgnorePackagesExtractorImpl;
 import org.powermock.tests.utils.impl.PrepareForTestExtractorImpl;
 import org.powermock.tests.utils.impl.StaticConstructorSuppressExtractorImpl;
 
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -62,7 +59,7 @@ public class MockClassLoaderFactory {
     }
     
     public ClassLoader createForClass(final MockTransformer... extraMockTransformer) {
-        final ByteCodeFramework byteCodeFramework = getByteCodeFramework();
+        final ByteCodeFramework byteCodeFramework = ByteCodeFramework.getByteCodeFrameworkForTestClass(testClass);
         if (testClass.isAnnotationPresent(PrepareEverythingForTest.class)) {
             return create(byteCodeFramework, new String[]{MockClassLoader.MODIFY_ALL_CLASSES}, extraMockTransformer);
         } else {
@@ -73,7 +70,7 @@ public class MockClassLoaderFactory {
     }
     
     public ClassLoader createForMethod(final Method method, final MockTransformer... extraMockTransformers) {
-        final ByteCodeFramework byteCodeFramework = getByteCodeFrameworkFor(method);
+        final ByteCodeFramework byteCodeFramework = ByteCodeFramework.getByteCodeFrameworkForMethod(testClass, method);
         if (method.isAnnotationPresent(PrepareEverythingForTest.class)) {
             final String[] classesToLoadByMockClassloader = {MockClassLoader.MODIFY_ALL_CLASSES};
             return create(byteCodeFramework, classesToLoadByMockClassloader, extraMockTransformers);
@@ -83,42 +80,6 @@ public class MockClassLoaderFactory {
             final String[] classesToLoadByMockClassloader = arrayMerger.mergeArrays(String.class, prepareForTestClasses, suppressStaticClasses);
             return create(byteCodeFramework, classesToLoadByMockClassloader, extraMockTransformers);
         }
-    }
-    
-    private ByteCodeFramework getByteCodeFrameworkFor(final Method method) {
-        ByteCodeFramework byteCodeFramework = getByteCodeFramework(method);
-        if (byteCodeFramework == null) {
-            byteCodeFramework = getByteCodeFramework(testClass);
-        }
-        if (byteCodeFramework == null) {
-            throw new IllegalArgumentException(
-                String.format(
-                    "Either method %s or class %s is annotated by PrepareForTest/PrepareEverythingForTest", method.getName(), testClass.getName()
-                )
-            );
-        }
-        return byteCodeFramework;
-    }
-    
-    private ByteCodeFramework getByteCodeFramework() {
-        ByteCodeFramework byteCodeFramework = getByteCodeFramework(testClass);
-        
-        if (byteCodeFramework == null){
-            byteCodeFramework = GlobalConfiguration.powerMockConfiguration().getByteCodeFramework();
-        }
-        
-        return byteCodeFramework;
-    }
-    
-    private ByteCodeFramework getByteCodeFramework(final AnnotatedElement element) {
-        if (element.isAnnotationPresent(PrepareForTest.class)) {
-            return element.getAnnotation(PrepareForTest.class).byteCodeFramework();
-        } else if (element.isAnnotationPresent(PrepareEverythingForTest.class)) {
-            return element.getAnnotation(PrepareEverythingForTest.class).byteCodeFramework();
-        } else if (element.isAnnotationPresent(SuppressStaticInitializationFor.class)){
-            return element.getAnnotation(SuppressStaticInitializationFor.class).byteCodeFramework();
-        }
-        return null;
     }
     
     private ClassLoader create(final ByteCodeFramework byteCodeFramework, final String[] prepareForTestClasses,

@@ -14,7 +14,7 @@
  *   limitations under the License.
  *
  */
-package org.powermock.core.transformers.javassist;
+package org.powermock.core.transformers.javassist.testclass;
 
 import javassist.CannotCompileException;
 import javassist.CtClass;
@@ -27,17 +27,19 @@ import javassist.bytecode.AnnotationsAttribute;
 import org.powermock.core.IndicateReloadClass;
 import org.powermock.core.testlisteners.GlobalNotificationBuildSupport;
 import org.powermock.core.transformers.ClassWrapper;
+import org.powermock.core.transformers.MethodSignatureWriter;
 import org.powermock.core.transformers.TestClassTransformer;
 import org.powermock.core.transformers.javassist.support.Primitives;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
-import java.lang.reflect.Method;
 
-public abstract class JavaAssistTestClassTransformer extends TestClassTransformer<CtClass> {
+public abstract class JavaAssistTestClassTransformer extends TestClassTransformer<CtClass, CtMethod> {
     
-    protected JavaAssistTestClassTransformer(Class<?> testClass, Class<? extends Annotation> testMethodAnnotationType) {
-        super(testClass, testMethodAnnotationType);
+    JavaAssistTestClassTransformer(Class<?> testClass,
+                                   Class<? extends Annotation> testMethodAnnotationType,
+                                   MethodSignatureWriter<CtMethod> signatureWriter) {
+        super(testClass, testMethodAnnotationType, signatureWriter);
     }
     
     protected abstract boolean mustHaveTestAnnotationRemoved(CtMethod method) throws Exception;
@@ -68,8 +70,8 @@ public abstract class JavaAssistTestClassTransformer extends TestClassTransforme
     
     private boolean isTestClass(CtClass clazz) {
         try {
-            return Class.forName(clazz.getName(), false, testClass.getClassLoader())
-                        .isAssignableFrom(testClass);
+            return Class.forName(clazz.getName(), false, getTestClass().getClassLoader())
+                        .isAssignableFrom(getTestClass());
         } catch (ClassNotFoundException ex) {
             return false;
         }
@@ -77,8 +79,8 @@ public abstract class JavaAssistTestClassTransformer extends TestClassTransforme
     
     private boolean isNestedWithinTestClass(CtClass clazz) {
         String clazzName = clazz.getName();
-        return clazzName.startsWith(testClass.getName())
-                   && '$' == clazzName.charAt(testClass.getName().length());
+        return clazzName.startsWith(getTestClass().getName())
+                   && '$' == clazzName.charAt(getTestClass().getName().length());
     }
     
     private Class<?> asOriginalClass(CtClass type) throws Exception {
@@ -87,7 +89,7 @@ public abstract class JavaAssistTestClassTransformer extends TestClassTransforme
                        ? Array.newInstance(asOriginalClass(type.getComponentType()), 0).getClass()
                        : type.isPrimitive()
                              ? Primitives.getClassFor((CtPrimitiveType) type)
-                             : Class.forName(type.getName(), true, testClass.getClassLoader());
+                             : Class.forName(type.getName(), true, getTestClass().getClassLoader());
         } catch (Exception ex) {
             throw new RuntimeException("Cannot resolve type: " + type, ex);
         }
@@ -102,15 +104,14 @@ public abstract class JavaAssistTestClassTransformer extends TestClassTransforme
         return classParams;
     }
     
-    private void removeTestMethodAnnotationFrom(CtMethod m)
-        throws ClassNotFoundException {
+    private void removeTestMethodAnnotationFrom(CtMethod m) {
         final AnnotationsAttribute attr = (AnnotationsAttribute)
                                               m.getMethodInfo().getAttribute(AnnotationsAttribute.visibleTag);
         javassist.bytecode.annotation.Annotation[] newAnnotations =
             new javassist.bytecode.annotation.Annotation[attr.numAnnotations() - 1];
         int i = -1;
         for (javassist.bytecode.annotation.Annotation a : attr.getAnnotations()) {
-            if (a.getTypeName().equals(testMethodAnnotationType.getName())) {
+            if (a.getTypeName().equals(getTestMethodAnnotationType().getName())) {
                 continue;
             }
             newAnnotations[++i] = a;
@@ -121,7 +122,7 @@ public abstract class JavaAssistTestClassTransformer extends TestClassTransforme
     private void removeTestAnnotationsForTestMethodsThatRunOnOtherClassLoader(CtClass clazz)
         throws Exception {
         for (CtMethod m : clazz.getDeclaredMethods()) {
-            if (m.hasAnnotation(testMethodAnnotationType) && mustHaveTestAnnotationRemoved(m)) {
+            if (m.hasAnnotation(getTestMethodAnnotationType()) && mustHaveTestAnnotationRemoved(m)) {
                 removeTestMethodAnnotationFrom(m);
             }
         }
@@ -175,9 +176,9 @@ public abstract class JavaAssistTestClassTransformer extends TestClassTransforme
     }
     
     private void restoreOriginalConstructorsAccesses(CtClass clazz) throws Exception {
-        Class<?> originalClass = testClass.getName().equals(clazz.getName())
-                                     ? testClass
-                                     : Class.forName(clazz.getName(), true, testClass.getClassLoader());
+        Class<?> originalClass = getTestClass().getName().equals(clazz.getName())
+                                     ? getTestClass()
+                                     : Class.forName(clazz.getName(), true, getTestClass().getClassLoader());
         for (final CtConstructor ctConstr : clazz.getConstructors()) {
             int ctModifiers = ctConstr.getModifiers();
             if (!Modifier.isPublic(ctModifiers)) {
@@ -218,41 +219,4 @@ public abstract class JavaAssistTestClassTransformer extends TestClassTransforme
             }
         }
     }
-    
-    public static String signatureOf(Method m) {
-        Class<?>[] paramTypes = m.getParameterTypes();
-        String[] paramTypeNames = new String[paramTypes.length];
-        for (int i = 0; i < paramTypeNames.length; ++i) {
-            paramTypeNames[i] = paramTypes[i].getSimpleName();
-        }
-        return createSignature(
-            m.getDeclaringClass().getSimpleName(),
-            m.getReturnType().getSimpleName(),
-            m.getName(), paramTypeNames);
-    }
-    
-    protected static String signatureOf(CtMethod m) throws NotFoundException {
-        CtClass[] paramTypes = m.getParameterTypes();
-        String[] paramTypeNames = new String[paramTypes.length];
-        for (int i = 0; i < paramTypeNames.length; ++i) {
-            paramTypeNames[i] = paramTypes[i].getSimpleName();
-        }
-        return createSignature(
-            m.getDeclaringClass().getSimpleName(),
-            m.getReturnType().getSimpleName(),
-            m.getName(), paramTypeNames);
-    }
-    
-    private static String createSignature(
-                                             String testClass, String returnType, String methodName,
-                                             String[] paramTypes) {
-        StringBuilder builder = new StringBuilder(testClass)
-                                    .append('\n').append(returnType)
-                                    .append('\n').append(methodName);
-        for (String param : paramTypes) {
-            builder.append('\n').append(param);
-        }
-        return builder.toString();
-    }
-    
 }

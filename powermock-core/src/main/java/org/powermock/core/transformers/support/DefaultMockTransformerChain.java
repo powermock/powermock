@@ -24,6 +24,8 @@ import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.MockTransformerChain;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class DefaultMockTransformerChain implements MockTransformerChain {
@@ -31,7 +33,7 @@ public class DefaultMockTransformerChain implements MockTransformerChain {
     private final List<MockTransformer> transformers;
     
     private DefaultMockTransformerChain(final List<MockTransformer> transformers) {
-        this.transformers = transformers;
+        this.transformers = Collections.unmodifiableList(transformers);
     }
     
     @Override
@@ -41,6 +43,19 @@ public class DefaultMockTransformerChain implements MockTransformerChain {
             classWrapper = transformer.transform(classWrapper);
         }
         return classWrapper;
+    }
+    
+    @Override
+    public Collection<MockTransformer> filter(final FilterPredicate predicate) {
+        final ArrayList<MockTransformer> filtered = new ArrayList<MockTransformer>();
+        
+        for (MockTransformer transformer : transformers) {
+            if (predicate.test(transformer)) {
+                filtered.add(transformer);
+            }
+        }
+        
+        return filtered;
     }
     
     @Override

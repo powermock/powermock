@@ -85,7 +85,7 @@ public class ByteBuddyMockClassLoader extends MockClassLoader {
         
         Builder<Object> builder = createByteBuddyBuilder(typeDefinitions);
         
-        ClassWrapper<ByteBuddyClass> wrap = classWrapperFactory.wrap(new ByteBuddyClass(typeDefinitions, builder));
+        ClassWrapper<ByteBuddyClass> wrap = classWrapperFactory.wrap(ByteBuddyClass.from(typeDefinitions, builder));
         
         try {
             wrap = transformClass(wrap);

@@ -18,6 +18,8 @@
 
 package org.powermock.core.transformers;
 
+import java.util.Collection;
+
 /**
  * Interface represent chain of {@link MockTransformer}.
  * Each transformer in chain instruments a class to enable one of mocking feature.
@@ -33,4 +35,16 @@ public interface MockTransformerChain {
      * @return A {@code ClassWrapper} representation of the instrumented class.
      */
     <T> ClassWrapper<T> transform(ClassWrapper<T> clazz) throws Exception;
+    
+    /**
+     * Filter and return collection of {@link MockTransformer} which fit the <code>predicate</code>.
+     * @param predicate to test MockTransformer
+     * @return collection of {@link MockTransformer} which fit the {@link FilterPredicate}
+     */
+    Collection<MockTransformer> filter(FilterPredicate predicate);
+    
+    interface FilterPredicate {
+        boolean test(MockTransformer<?> mockTransformer);
+    }
+    
 }

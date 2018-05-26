@@ -23,7 +23,10 @@ import org.junit.runners.Parameterized;
 import org.powermock.core.test.MockClassLoaderFactory;
 import org.powermock.core.transformers.bytebuddy.ConstructorModifiersMockTransformer;
 import org.powermock.core.transformers.javassist.ConstructorsMockTransformer;
+import powermock.test.support.MainMockTransformerTestSupport.ParentTestClass;
+import powermock.test.support.MainMockTransformerTestSupport.ParentTestClass.NestedTestClass;
 import powermock.test.support.MainMockTransformerTestSupport.SupportClasses;
+import powermock.test.support.MainMockTransformerTestSupport.SupportClasses.MultipleConstructors;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
@@ -36,7 +39,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assume.assumeThat;
 
-public class ConstructorsMockTransformerTest extends AbstractBaseMockTransformerTest {
+public class ConstructorModifiersMockTransformerTest extends AbstractBaseMockTransformerTest {
     
     @Parameterized.Parameters(name = "strategy: {0}, transformerType: {2}")
     public static Iterable<Object[]> data() {
@@ -48,9 +51,9 @@ public class ConstructorsMockTransformerTest extends AbstractBaseMockTransformer
         return data;
     }
     
-    public ConstructorsMockTransformerTest(final TransformStrategy strategy,
-                                           final MockTransformerChain mockTransformerChain,
-                                           final MockClassLoaderFactory mockClassloaderFactory
+    public ConstructorModifiersMockTransformerTest(final TransformStrategy strategy,
+                                                   final MockTransformerChain mockTransformerChain,
+                                                   final MockClassLoaderFactory mockClassloaderFactory
     ) {
         super(strategy, mockTransformerChain, mockClassloaderFactory);
     }
@@ -76,7 +79,39 @@ public class ConstructorsMockTransformerTest extends AbstractBaseMockTransformer
         
         Class<?> clazz = SupportClasses.MultipleConstructors.class;
         Class<?> modifiedClass = loadWithMockClassLoader(SupportClasses.MultipleConstructors.class.getName());
+    
+        assertThatAllConstructorsHaveSameModifier(clazz, modifiedClass);
+    }
+    
+    @Test
+    public void should_not_change_constructors_of_test_class() throws Exception {
+        assumeClassLoaderMode();
+        assumeClassLoaderIsByteBuddy();
         
+        final Class<MultipleConstructors> testClass = MultipleConstructors.class;
+        
+        setTestClassToTransformers(testClass);
+        
+        Class<?> modifiedClass = loadWithMockClassLoader(testClass.getName());
+        
+        assertThatAllConstructorsHaveSameModifier(testClass, modifiedClass);
+    }
+    
+    @Test
+    public void should_not_change_constructors_of_nested_test_classes() throws Exception {
+        assumeClassLoaderMode();
+        assumeClassLoaderIsByteBuddy();
+        
+        setTestClassToTransformers(ParentTestClass.class);
+        
+        final Class<?> originalClazz = NestedTestClass.class;
+        
+        Class<?> modifiedClass = loadWithMockClassLoader(originalClazz.getName());
+        
+        assertThatAllConstructorsHaveSameModifier(originalClazz, modifiedClass);
+    }
+    
+    private void assertThatAllConstructorsHaveSameModifier(final Class<?> clazz, final Class<?> modifiedClass) {
         assertThat(modifiedClass.getConstructors())
             .as("All constructor has same modifiers")
             .hasSameSizeAs(clazz.getConstructors())

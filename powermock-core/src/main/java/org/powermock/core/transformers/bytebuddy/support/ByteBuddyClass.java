@@ -22,23 +22,28 @@ import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.DynamicType.Builder;
 
 public class ByteBuddyClass {
-    private final Builder builder;
-    private final TypeDescription typeDefinitions;
     
-    public ByteBuddyClass(final TypeDescription typeDefinitions, final Builder builder) {
+    public static ByteBuddyClass from(final TypeDescription typeDefinitions, final Builder builder) {
+        return new ByteBuddyClass(typeDefinitions, builder);
+    }
+    
+    private final Builder builder;
+    private final TypeDescription typeDescription;
+    
+    private ByteBuddyClass(final TypeDescription typeDescription, final Builder builder) {
         this.builder = builder;
-        this.typeDefinitions = typeDefinitions;
+        this.typeDescription = typeDescription;
     }
     
     public boolean isInterface() {
-        return typeDefinitions.isInterface();
+        return typeDescription.isInterface();
     }
     
     public Builder getBuilder() {
         return builder;
     }
     
-    public TypeDescription getTypeDefinitions() {
-        return typeDefinitions;
+    public TypeDescription getTypeDescription() {
+        return typeDescription;
     }
 }

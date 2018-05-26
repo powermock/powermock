@@ -368,13 +368,13 @@ public class MockClassLoaderTest {
             ByteBuddyClass bytebuddy = clazz.unwrap();
     
             Builder builder = bytebuddy.getBuilder();
-            TypeDescription typeDefinitions = bytebuddy.getTypeDefinitions();
+            TypeDescription typeDefinitions = bytebuddy.getTypeDescription();
     
             builder = builder.method(isDeclaredBy(typeDefinitions))
                              .intercept(FixedValue.nullValue());
     
             
-            return clazz.wrap(new ByteBuddyClass(typeDefinitions, builder));
+            return clazz.wrap(ByteBuddyClass.from(typeDefinitions, builder));
         }
     }
 }

@@ -6,7 +6,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.core.transformers.MockTransformer;
-import org.powermock.core.transformers.TestClassTransformer;
+import org.powermock.core.transformers.TestClassTransformerBuilder;
 import org.powermock.tests.utils.TestChunk;
 import org.powermock.tests.utils.TestSuiteChunker;
 
@@ -120,7 +120,7 @@ public abstract class AbstractCommonTestSuiteChunkerImpl implements TestSuiteChu
         if (null == testMethodAnnotation()) {
             extraMockTransformer = null;
         } else {
-            extraMockTransformer = TestClassTransformer
+            extraMockTransformer = TestClassTransformerBuilder
                                        .forTestClass(testClass)
                                        .removesTestMethodAnnotation(testMethodAnnotation())
                                        .fromMethods(testMethodsForOtherClassLoaders);
@@ -165,9 +165,10 @@ public abstract class AbstractCommonTestSuiteChunkerImpl implements TestSuiteChu
         if (null == testMethodAnnotation()) {
             extraMockTransformer = null;
         } else {
-            extraMockTransformer = TestClassTransformer.forTestClass(testClass)
-                                                       .removesTestMethodAnnotation(testMethodAnnotation())
-                                                       .fromAllMethodsExcept(method);
+            extraMockTransformer = TestClassTransformerBuilder.forTestClass(testClass)
+                                                              .bytecodeFrameworkClue(method)
+                                                              .removesTestMethodAnnotation(testMethodAnnotation())
+                                                              .fromAllMethodsExcept(method);
         }
         
         final MockClassLoaderFactory classLoaderFactory = new MockClassLoaderFactory(testClass);

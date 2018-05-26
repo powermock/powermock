@@ -18,17 +18,16 @@
 package org.powermock.core.classloader;
 
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
-import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
 import org.powermock.core.transformers.MockTransformer;
+import org.powermock.core.transformers.MockTransformerChain;
 import org.powermock.core.transformers.MockTransformerChainFactory;
-import org.powermock.core.transformers.javassist.JavassistMockTransformerChainFactory;
+import org.powermock.core.transformers.TestClassAwareTransformer;
 import org.powermock.utils.ArrayUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static org.powermock.core.transformers.support.FilterPredicates.isInstanceOf;
 
 public class MockClassLoaderBuilder {
 
@@ -43,10 +42,11 @@ public class MockClassLoaderBuilder {
     }
     
     private UseClassPathAdjuster useClassPathAdjuster;
+    private Class<?> testClass;
     
     private MockClassLoaderBuilder(final ByteCodeFramework byteCodeFramework) {
         this.byteCodeFramework = byteCodeFramework;
-        transformerChainFactory = new JavassistMockTransformerChainFactory();
+        transformerChainFactory = byteCodeFramework.createTransformerChainFactory();
         extraMockTransformers = new ArrayList<MockTransformer>();
     }
 
@@ -55,9 +55,20 @@ public class MockClassLoaderBuilder {
         final MockClassLoaderConfiguration configuration = new MockClassLoaderConfiguration(classesToModify, packagesToIgnore);
         final MockClassLoader classLoader = byteCodeFramework.createClassloader(configuration, useClassPathAdjuster);
     
-        classLoader.setMockTransformerChain(transformerChainFactory.createDefaultChain(extraMockTransformers));
+        classLoader.setMockTransformerChain(createTransformerChain());
 
         return classLoader;
+    }
+    
+    private MockTransformerChain createTransformerChain() {
+        final MockTransformerChain mockTransformerChain = transformerChainFactory.createDefaultChain(extraMockTransformers);
+        
+        final Iterable<MockTransformer> testAwareTransformer = mockTransformerChain.filter(isInstanceOf(TestClassAwareTransformer.class));
+        for (MockTransformer transformer : testAwareTransformer) {
+            ((TestClassAwareTransformer) transformer).setTestClass(testClass);
+        }
+        
+        return mockTransformerChain;
     }
     
     public MockClassLoaderBuilder addIgnorePackage(String[] packagesToIgnore) {
@@ -83,6 +94,11 @@ public class MockClassLoaderBuilder {
     
     public MockClassLoaderBuilder addClassPathAdjuster(final UseClassPathAdjuster useClassPathAdjuster) {
         this.useClassPathAdjuster = useClassPathAdjuster;
+        return this;
+    }
+    
+    public MockClassLoaderBuilder forTestClass(final Class<?> testClass) {
+        this.testClass = testClass;
         return this;
     }
 }

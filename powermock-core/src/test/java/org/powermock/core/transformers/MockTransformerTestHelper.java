@@ -120,6 +120,8 @@ class MockTransformerTestHelper {
     }
     
     private static MockTransformerChain createChainFrom(final MockTransformer transformer) {
-        return DefaultMockTransformerChain.newBuilder().append(transformer).build();
+        return DefaultMockTransformerChain.newBuilder()
+                                          .append(transformer)
+                                          .build();
     }
 }

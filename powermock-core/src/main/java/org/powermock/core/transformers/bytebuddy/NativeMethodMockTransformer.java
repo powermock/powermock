@@ -45,7 +45,7 @@ public class NativeMethodMockTransformer extends AbstractMethodMockTransformer {
                                      .method(isNative().and(ElementMatchers.isStatic()))
                                      .intercept(MethodDelegation.to(StaticInception.class))
                                      .annotateMethod(identifier);
-        return new ByteBuddyClass(clazz.getTypeDefinitions(), builder);
+        return ByteBuddyClass.from(clazz.getTypeDescription(), builder);
     }
     
     public static class InstanceInception {

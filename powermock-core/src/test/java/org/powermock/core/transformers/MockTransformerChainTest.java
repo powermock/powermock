@@ -20,6 +20,7 @@ package org.powermock.core.transformers;
 
 import org.junit.Test;
 import org.powermock.core.transformers.support.DefaultMockTransformerChain;
+import org.powermock.core.transformers.support.FilterPredicates;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
@@ -42,9 +43,25 @@ public class MockTransformerChainTest {
         secondTransformer.assertIsCalled();
     }
     
+    @Test
+    public void should_return_collection_of_mock_transformer_which_fit_predicate() {
+    
+        final FitPredicateMockTransformer expectedTransformer = new FitPredicateMockTransformer();
+        
+        final MockTransformerChain transformerChain = DefaultMockTransformerChain.newBuilder()
+                                                                           .append(new MockTransformerSpy())
+                                                                           .append(new MockTransformerSpy())
+                                                                           .append(expectedTransformer)
+                                                                           .build();
+        
+        assertThat(transformerChain.filter(FilterPredicates.isInstanceOf(TestClassAwareTransformer.class)))
+            .as("Transformer is found.")
+            .containsExactly(expectedTransformer);
+    }
+    
     
     private static class MockTransformerSpy implements MockTransformer<Object> {
-        public boolean classTransformed = false;
+        private boolean classTransformed = false;
         
         @Override
         public ClassWrapper<Object> transform(final ClassWrapper<Object> clazz) throws Exception {
@@ -71,6 +88,19 @@ public class MockTransformerChainTest {
         @Override
         public ClassWrapper<Object> wrap(final Object original) {
             return null;
+        }
+    }
+    
+    private static class FitPredicateMockTransformer implements MockTransformer, TestClassAwareTransformer {
+    
+        @Override
+        public ClassWrapper transform(final ClassWrapper clazz) {
+            return null;
+        }
+    
+        @Override
+        public void setTestClass(final Class<?> testClass) {
+        
         }
     }
 }

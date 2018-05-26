@@ -22,15 +22,15 @@ import net.bytebuddy.asm.AsmVisitorWrapper;
 import org.powermock.core.transformers.TransformStrategy;
 import org.powermock.core.transformers.bytebuddy.support.ByteBuddyClass;
 
-public abstract class VisitorByteBuddyMockTransformer extends AbstractByteBuddyMockTransformer {
+public abstract class VisitorByteBuddyMockTransformer extends AbstractTestAwareMockTransformer {
     
-    protected VisitorByteBuddyMockTransformer(final TransformStrategy strategy) {
+    VisitorByteBuddyMockTransformer(final TransformStrategy strategy) {
         super(strategy);
     }
     
     protected ByteBuddyClass visit(final ByteBuddyClass clazz, final AsmVisitorWrapper asmVisitorWrapper) {
-        return new ByteBuddyClass(
-                                     clazz.getTypeDefinitions(),
+        return ByteBuddyClass.from(
+                                     clazz.getTypeDescription(),
                                      clazz.getBuilder().visit(asmVisitorWrapper)
         );
     }

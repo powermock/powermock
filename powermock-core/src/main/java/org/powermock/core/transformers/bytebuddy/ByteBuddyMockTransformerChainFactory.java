@@ -59,6 +59,8 @@ public class ByteBuddyMockTransformerChainFactory implements MockTransformerChai
         return DefaultMockTransformerChain.newBuilder()
                                           .append(new ClassFinalModifierMockTransformer(transformStrategy))
                                           .append(new ConstructorCallMockTransformer(transformStrategy))
+                                          .append(new ConstructorModifiersMockTransformer(transformStrategy))
+                                          .append(new NativeMethodMockTransformer(transformStrategy))
                                           .append(new StaticFinalFieldsMockTransformer(transformStrategy))
                                           .append(new StaticInitializerMockTransformer(transformStrategy));
     }

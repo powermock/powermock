@@ -21,12 +21,14 @@ package org.powermock.core.transformers.bytebuddy;
 import net.bytebuddy.asm.ModifierAdjustment;
 import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.description.type.TypeDescription;
+import net.bytebuddy.pool.TypePool;
+import org.powermock.core.transformers.TestClassAwareTransformer;
 import org.powermock.core.transformers.TransformStrategy;
 import org.powermock.core.transformers.bytebuddy.support.ByteBuddyClass;
 
 import static net.bytebuddy.matcher.ElementMatchers.isConstructor;
 
-public class ConstructorModifiersMockTransformer extends VisitorByteBuddyMockTransformer {
+public class ConstructorModifiersMockTransformer extends VisitorByteBuddyMockTransformer implements TestClassAwareTransformer {
     
     public ConstructorModifiersMockTransformer(final TransformStrategy strategy) {
         super(strategy);
@@ -34,12 +36,11 @@ public class ConstructorModifiersMockTransformer extends VisitorByteBuddyMockTra
     
     @Override
     protected boolean classShouldTransformed(final TypeDescription typeDefinitions) {
-        return getStrategy() == TransformStrategy.CLASSLOADER;
+        return getStrategy() == TransformStrategy.CLASSLOADER && !isTestClass(typeDefinitions) && !isNestedTestClass(typeDefinitions);
     }
     
     @Override
     public ByteBuddyClass transform(final ByteBuddyClass clazz) throws Exception {
         return visit(clazz, new ModifierAdjustment().withConstructorModifiers(Visibility.PUBLIC));
     }
-    
 }

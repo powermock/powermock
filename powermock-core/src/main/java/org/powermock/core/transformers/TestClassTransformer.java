@@ -18,16 +18,10 @@
 
 package org.powermock.core.transformers;
 
-import javassist.CtMethod;
-import javassist.NotFoundException;
-import org.powermock.core.transformers.javassist.AbstractJavaAssistMockTransformer;
 import org.powermock.core.transformers.javassist.ConstructorsMockTransformer;
-import org.powermock.core.transformers.javassist.JavaAssistTestClassTransformer;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.HashSet;
 
 /**
  * MockTransformer implementation that will make PowerMock test-class
@@ -51,78 +45,32 @@ import java.util.HashSet;
  * The #3 and #4 enhancements will also be enforced on the constructors
  * of classes that are nested within the test-class.
  */
-public abstract class TestClassTransformer<T> implements MockTransformer<T>{
+public abstract class TestClassTransformer<T, M> implements MockTransformer<T> {
     
-    public static ForTestClass forTestClass(final Class<?> testClass) {
-        return new ForTestClass() {
-            @Override
-            public RemovesTestMethodAnnotation removesTestMethodAnnotation(final Class<? extends Annotation> testMethodAnnotation) {
-                return new RemovesTestMethodAnnotation() {
-                    
-                    @Override
-                    public TestClassTransformer fromMethods(final Collection<Method> testMethodsThatRunOnOtherClassLoaders) {
-                        return new ForMethodsJavaAssistTestClassTransformer(testClass, testMethodAnnotation, testMethodsThatRunOnOtherClassLoaders);
-                    }
-                    
-                    @Override
-                    public TestClassTransformer fromAllMethodsExcept(Method singleMethodToRunOnTargetClassLoader) {
-                        final String targetMethodSignature = JavaAssistTestClassTransformer.signatureOf(singleMethodToRunOnTargetClassLoader);
-                        return new FromAllMethodsExceptJavaAssistTestClassTransformer(testClass, testMethodAnnotation, targetMethodSignature);
-                    }
-                };
-            }
-        };
-    }
+    private final Class<?> testClass;
+    private final Class<? extends Annotation> testMethodAnnotationType;
+    private final MethodSignatureWriter<M> methodSignatureWriter;
     
-    protected final Class<?> testClass;
-    protected final Class<? extends Annotation> testMethodAnnotationType;
-    
-    public TestClassTransformer(Class<?> testClass, Class<? extends Annotation> testMethodAnnotationType) {
+    public TestClassTransformer(Class<?> testClass, Class<? extends Annotation> testMethodAnnotationType,
+                                MethodSignatureWriter<M> methodSignatureWriter) {
         this.testClass = testClass;
         this.testMethodAnnotationType = testMethodAnnotationType;
+        this.methodSignatureWriter = methodSignatureWriter;
     }
     
-    private static class ForMethodsJavaAssistTestClassTransformer extends JavaAssistTestClassTransformer {
-        private final Collection<Method> testMethodsThatRunOnOtherClassLoaders;
-        /**
-         * Is lazily initilized because of
-         * AbstractTestSuiteChunkerImpl#chunkClass(Class)
-         */
-        Collection<String> methodsThatRunOnOtherClassLoaders;
-        
-        private ForMethodsJavaAssistTestClassTransformer(final Class<?> testClass, final Class<? extends Annotation> testMethodAnnotation,
-                                                         final Collection<Method> testMethodsThatRunOnOtherClassLoaders) {
-            super(testClass, testMethodAnnotation);
-            this.testMethodsThatRunOnOtherClassLoaders = testMethodsThatRunOnOtherClassLoaders;
-        }
-        
-        @Override
-        protected boolean mustHaveTestAnnotationRemoved(CtMethod method) throws NotFoundException {
-            if (null == methodsThatRunOnOtherClassLoaders) {
-                /* This lazy initialization is necessary - see above */
-                methodsThatRunOnOtherClassLoaders = new HashSet<String>();
-                for (Method m : testMethodsThatRunOnOtherClassLoaders) {
-                    methodsThatRunOnOtherClassLoaders.add(signatureOf(m));
-                }
-                testMethodsThatRunOnOtherClassLoaders.clear();
-            }
-            return methodsThatRunOnOtherClassLoaders.contains(signatureOf(method));
-        }
+    protected String signatureOf(final M method) {
+        return methodSignatureWriter.signatureFor(method);
     }
     
-    private static class FromAllMethodsExceptJavaAssistTestClassTransformer extends JavaAssistTestClassTransformer {
-        private final String targetMethodSignature;
+    protected String signatureOf(final Method m) {
+        return methodSignatureWriter.signatureForReflection(m);
+    }
     
-        private FromAllMethodsExceptJavaAssistTestClassTransformer(final Class<?> testClass,
-                                                           final Class<? extends Annotation> testMethodAnnotation,
-                                                           final String targetMethodSignature) {
-            super(testClass, testMethodAnnotation);
-            this.targetMethodSignature = targetMethodSignature;
-        }
-        
-        @Override
-        protected boolean mustHaveTestAnnotationRemoved(CtMethod method) throws Exception {
-            return !signatureOf(method).equals(targetMethodSignature);
-        }
+    protected Class<? extends Annotation> getTestMethodAnnotationType() {
+        return testMethodAnnotationType;
+    }
+    
+    protected Class<?> getTestClass() {
+        return testClass;
     }
 }

@@ -37,7 +37,7 @@ public abstract class AbstractByteBuddyMockTransformer implements MockTransforme
         ByteBuddyClass byteBuddyClass = clazz.unwrap();
     
         if (byteBuddyClass != null) {
-            TypeDescription typeDefinitions = byteBuddyClass.getTypeDefinitions();
+            TypeDescription typeDefinitions = byteBuddyClass.getTypeDescription();
     
             if (!classShouldTransformed(typeDefinitions)) {
                 return clazz;

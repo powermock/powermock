@@ -27,6 +27,7 @@ import org.powermock.core.test.ClassLoaderTestHelper;
 import org.powermock.core.test.MockClassLoaderFactory;
 import org.powermock.core.transformers.javassist.support.JavaAssistClassWrapperFactory;
 import org.powermock.core.transformers.mock.MockGatewaySpy;
+import org.powermock.core.transformers.support.FilterPredicates;
 
 import static org.junit.Assume.assumeTrue;
 
@@ -73,5 +74,19 @@ abstract class AbstractBaseMockTransformerTest {
     
     protected void assumeAgentMode() {
         assumeTrue("Supported only by class loader mode.", strategy.isAgentMode());
+    }
+    
+    protected void assumeClassLoaderIsByteBuddy() {
+        assumeTrue(
+            "ByteBuddy implantation MockClassLoader should always add defer constructor," +
+                " because ByteBuddy cannot add constructor to super class ad-hoc.",
+            mockClassloaderFactory.isByteBuddy()
+        );
+    }
+    
+    protected void setTestClassToTransformers(final Class<?> testClass) {
+        for (MockTransformer transformer : mockTransformerChain.filter(FilterPredicates.isInstanceOf(TestClassAwareTransformer.class))) {
+            ((TestClassAwareTransformer) transformer).setTestClass(testClass);
+        }
     }
 }

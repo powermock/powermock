@@ -32,19 +32,22 @@ import net.bytebuddy.jar.asm.ClassReader;
 import net.bytebuddy.pool.TypePool;
 import org.powermock.core.IndicateReloadClass;
 import org.powermock.core.MockGateway;
+import org.powermock.core.bytebuddy.MaxLocalsExtractor;
+import org.powermock.core.bytebuddy.MethodMaxLocals;
+import org.powermock.core.transformers.ClassWrapper;
+import org.powermock.core.transformers.TestClassAwareTransformer;
 import org.powermock.core.transformers.TransformStrategy;
 import org.powermock.core.transformers.bytebuddy.constructor.ConstructorCallMethodVisitorWrapper;
 import org.powermock.core.transformers.bytebuddy.support.ByteBuddyClass;
-import org.powermock.core.bytebuddy.MaxLocalsExtractor;
-import org.powermock.core.bytebuddy.MethodMaxLocals;
 
 import java.io.IOException;
 import java.util.Collections;
 
 import static net.bytebuddy.jar.asm.ClassReader.SKIP_DEBUG;
 import static net.bytebuddy.matcher.ElementMatchers.isConstructor;
+import static net.bytebuddy.matcher.ElementMatchers.isDeclaredBy;
 
-public class ConstructorCallMockTransformer extends AbstractByteBuddyMockTransformer {
+public class ConstructorCallMockTransformer extends AbstractTestAwareMockTransformer implements TestClassAwareTransformer {
     
     private final TypePool typePool;
     private Class<?> mockGetawayClass;
@@ -57,12 +60,12 @@ public class ConstructorCallMockTransformer extends AbstractByteBuddyMockTransfo
     
     @Override
     protected boolean classShouldTransformed(final TypeDescription td) {
-        return getStrategy().isClassloaderMode() && !td.isInterface() && !td.isEnum();
+        return getStrategy().isClassloaderMode() && !td.isInterface() && !td.isEnum() && !isTestClass(td) && !isNestedTestClass(td);
     }
     
     @Override
     public ByteBuddyClass transform(final ByteBuddyClass clazz) throws Exception {
-        final TypeDescription td = clazz.getTypeDefinitions();
+        final TypeDescription td = clazz.getTypeDescription();
     
         final MethodMaxLocals methods = extractConstructorMaxLocals(td);
     
@@ -70,8 +73,8 @@ public class ConstructorCallMockTransformer extends AbstractByteBuddyMockTransfo
     
         final DeferConstructor deferConstructor = new DeferConstructor(clazz, superClass).create();
     
-        return new ByteBuddyClass(clazz.getTypeDefinitions(),
-                                  deferConstructor.getBuilder().visit(
+        return ByteBuddyClass.from(clazz.getTypeDescription(),
+                                   deferConstructor.getBuilder().visit(
                                       new AsmVisitorWrapper.ForDeclaredMethods().method(
                                           isConstructor(),
                                           new ConstructorCallMethodVisitorWrapper(

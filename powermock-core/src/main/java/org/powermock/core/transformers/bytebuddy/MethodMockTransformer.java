@@ -3,14 +3,10 @@ package org.powermock.core.transformers.bytebuddy;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.asm.AsmVisitorWrapper.ForDeclaredMethods;
 import net.bytebuddy.description.method.MethodDescription;
-import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.DynamicType.Builder;
 import net.bytebuddy.matcher.ElementMatchers;
-import net.bytebuddy.utility.RandomString;
 import org.powermock.core.transformers.TransformStrategy;
-import org.powermock.core.transformers.bytebuddy.advice.MockGatewayMethodDispatcher;
 import org.powermock.core.transformers.bytebuddy.advice.MockMethodAdvice;
-import org.powermock.core.transformers.bytebuddy.advice.MockMethodDispatchers;
 import org.powermock.core.transformers.bytebuddy.advice.MockStaticMethodAdvice;
 import org.powermock.core.transformers.bytebuddy.support.ByteBuddyClass;
 
@@ -28,7 +24,7 @@ public class MethodMockTransformer extends AbstractMethodMockTransformer {
         final Builder builder = clazz.getBuilder()
                                      .visit(instanceMethods())
                                      .visit(staticMethods());
-        return new ByteBuddyClass(clazz.getTypeDefinitions(), builder);
+        return ByteBuddyClass.from(clazz.getTypeDescription(), builder);
     }
     
     private ForDeclaredMethods staticMethods() {

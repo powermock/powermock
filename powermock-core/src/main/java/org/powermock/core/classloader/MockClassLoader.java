@@ -19,11 +19,14 @@ package org.powermock.core.classloader;
 import org.powermock.core.transformers.ClassWrapper;
 import org.powermock.core.transformers.ClassWrapperFactory;
 import org.powermock.core.transformers.MockTransformer;
+import org.powermock.core.transformers.support.DefaultMockTransformerChain;
 import org.powermock.tests.utils.IgnorePackagesExtractor;
 import org.powermock.core.transformers.MockTransformerChain;
 import org.powermock.core.transformers.javassist.support.JavaAssistClassWrapperFactory;
 
 import java.security.ProtectionDomain;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * <p>
@@ -85,12 +88,7 @@ public abstract class MockClassLoader extends DeferSupportingClassLoader {
     protected MockClassLoader(MockClassLoaderConfiguration configuration, final ClassWrapperFactory classWrapperFactory) {
         super(MockClassLoader.class.getClassLoader(), configuration);
         this.classWrapperFactory = classWrapperFactory;
-        this.mockTransformerChain = new MockTransformerChain() {
-            @Override
-            public <T> ClassWrapper<T> transform(final ClassWrapper<T> clazz) throws Exception {
-                return clazz;
-            }
-        };
+        this.mockTransformerChain = DefaultMockTransformerChain.newBuilder().build();
     }
     
     @Override
@@ -107,6 +105,10 @@ public abstract class MockClassLoader extends DeferSupportingClassLoader {
     
     public void setMockTransformerChain(MockTransformerChain mockTransformerChain) {
         this.mockTransformerChain = mockTransformerChain;
+    }
+    
+    public MockTransformerChain getMockTransformerChain() {
+        return mockTransformerChain;
     }
     
     protected abstract Class<?> loadUnmockedClass(String name, ProtectionDomain protectionDomain) throws ClassFormatError, ClassNotFoundException;
