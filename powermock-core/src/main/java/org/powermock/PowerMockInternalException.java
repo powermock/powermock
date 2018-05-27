@@ -16,7 +16,7 @@
  *
  */
 
-package org.powermock.core;
+package org.powermock;
 
 public class PowerMockInternalException extends RuntimeException{
     
@@ -28,5 +28,9 @@ public class PowerMockInternalException extends RuntimeException{
     
     public PowerMockInternalException(final String message) {
         super(MESSAGE + message);
+    }
+    
+    public PowerMockInternalException(final String message, final Throwable cause) {
+        super(MESSAGE + message, cause);
     }
 }

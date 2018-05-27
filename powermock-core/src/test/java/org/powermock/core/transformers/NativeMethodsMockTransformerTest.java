@@ -30,6 +30,8 @@ import org.powermock.core.transformers.mock.MockGatewaySpy;
 import org.powermock.core.transformers.mock.MockGatewaySpyMethodDispatcher;
 import org.powermock.core.transformers.support.DefaultMockTransformerChain;
 import org.powermock.reflect.internal.WhiteboxImpl;
+import powermock.test.support.MainMockTransformerTestSupport.ChildOfNativeMethodsTestClass;
+import powermock.test.support.MainMockTransformerTestSupport.ClassWithoutHashCode;
 import powermock.test.support.MainMockTransformerTestSupport.NativeMethodsTestClass;
 
 import java.util.ArrayList;
@@ -133,5 +135,37 @@ public class NativeMethodsMockTransformerTest extends AbstractBaseMockTransforme
             }
         })
         .isExactlyInstanceOf(UnsupportedOperationException.class);
+    }
+    
+    @Test
+    public void should_not_handle_hashCode_form_Object() throws Exception {
+        assumeClassLoaderMode();
+        
+        final Class<?> clazz = loadWithMockClassLoader(ClassWithoutHashCode.class.getName());
+        
+        final Object instance = WhiteboxImpl.newInstance(clazz);
+        
+        final Object result = WhiteboxImpl.invokeMethod(instance, "hashCode");
+        
+        assertThat(result)
+            .isEqualTo(System.identityHashCode(instance));
+    }
+    
+    @Test
+    public void should_throw_UnsupportedOperationException_for_native_method_of_parent_instance_if_it_is_PROCEED() throws Exception {
+        assumeClassLoaderMode();
+        
+        final Class<?> clazz = loadWithMockClassLoader(ChildOfNativeMethodsTestClass.class.getName());
+        
+        final String name = "name";
+        
+        assertThatThrownBy(new ThrowingCallable() {
+            @Override
+            public void call() throws Throwable {
+                final Object instance = WhiteboxImpl.newInstance(clazz);
+                WhiteboxImpl.invokeMethod(instance, "nativeReturnMethod", name);
+            }
+        })
+            .isExactlyInstanceOf(UnsupportedOperationException.class);
     }
 }

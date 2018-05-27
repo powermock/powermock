@@ -46,4 +46,9 @@ public class ByteBuddyClass {
     public TypeDescription getTypeDescription() {
         return typeDescription;
     }
+    
+    @Override
+    public String toString() {
+        return typeDescription.getName();
+    }
 }

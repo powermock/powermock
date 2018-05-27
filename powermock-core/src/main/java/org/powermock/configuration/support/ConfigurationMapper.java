@@ -20,12 +20,11 @@ package org.powermock.configuration.support;
 
 import org.powermock.configuration.Configuration;
 import org.powermock.configuration.ConfigurationType;
-import org.powermock.core.PowerMockInternalException;
+import org.powermock.PowerMockInternalException;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
 class ConfigurationMapper<T extends Configuration> {

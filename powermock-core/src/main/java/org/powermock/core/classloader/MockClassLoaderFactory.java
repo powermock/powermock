@@ -133,6 +133,7 @@ public class MockClassLoaderFactory {
                                                   final UseClassPathAdjuster useClassPathAdjuster,
                                                   final MockTransformer... extraMockTransformer) {
         return MockClassLoaderBuilder.create(byteCodeFramework)
+                                     .forTestClass(testClass)
                                      .addIgnorePackage(packagesToIgnore)
                                      .addClassesToModify(classesToLoadByMockClassloader)
                                      .addClassPathAdjuster(useClassPathAdjuster)

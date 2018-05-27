@@ -60,6 +60,7 @@ public class ByteBuddyMockTransformerChainFactory implements MockTransformerChai
                                           .append(new ClassFinalModifierMockTransformer(transformStrategy))
                                           .append(new ConstructorCallMockTransformer(transformStrategy))
                                           .append(new ConstructorModifiersMockTransformer(transformStrategy))
+                                          .append(new MethodMockTransformer(transformStrategy))
                                           .append(new NativeMethodMockTransformer(transformStrategy))
                                           .append(new StaticFinalFieldsMockTransformer(transformStrategy))
                                           .append(new StaticInitializerMockTransformer(transformStrategy));

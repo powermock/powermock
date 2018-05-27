@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 public class SimpleFrameworkUserTest {
 
 	@Test
-	public void testPerformComplexOperation() throws Exception {
+	public void testPerformComplexOperation() {
 		SimpleFrameworkUser tested = new SimpleFrameworkUser();
 		assertEquals(SimpleFrameworkMockPolicy.NATIVE_RESULT_VALUE, tested.performComplexOperation("some complex stuff"));
 	}

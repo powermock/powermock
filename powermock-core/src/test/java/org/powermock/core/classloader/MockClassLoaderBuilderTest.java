@@ -2,7 +2,9 @@ package org.powermock.core.classloader;
 
 
 import javassist.CtClass;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
+import org.powermock.PowerMockInternalException;
 import org.powermock.core.classloader.bytebuddy.ByteBuddyMockClassLoader;
 import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
 import org.powermock.core.transformers.ClassWrapper;
@@ -17,6 +19,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class MockClassLoaderBuilderTest {
     
@@ -24,12 +27,14 @@ public class MockClassLoaderBuilderTest {
     public void should_create_instance_of_MockClassLoader_depends_on_provided_bytecode_framework() {
         MockClassLoader classLoader = MockClassLoaderBuilder
                                           .create(ByteCodeFramework.Javassist)
+                                          .forTestClass(getClass())
                                           .build();
         
         assertThat(classLoader).isExactlyInstanceOf(JavassistMockClassLoader.class);
         
         classLoader = MockClassLoaderBuilder
                           .create(ByteCodeFramework.ByteBuddy)
+                          .forTestClass(getClass())
                           .build();
         
         assertThat(classLoader).isExactlyInstanceOf(ByteBuddyMockClassLoader.class);
@@ -40,6 +45,7 @@ public class MockClassLoaderBuilderTest {
         
         MockClassLoader classLoader = MockClassLoaderBuilder
                                           .create(ByteCodeFramework.Javassist)
+                                          .forTestClass(getClass())
                                           .build();
         
         assertThatJavassistMockTransformerChainCreated(classLoader);
@@ -47,6 +53,7 @@ public class MockClassLoaderBuilderTest {
         
         classLoader = MockClassLoaderBuilder
                           .create(ByteCodeFramework.ByteBuddy)
+                          .forTestClass(getClass())
                           .build();
         
         assertThatByteBuddyMockTransformerChainCreated(classLoader);
@@ -66,6 +73,20 @@ public class MockClassLoaderBuilderTest {
         assertThat(extraMockTransformer.testClass)
             .as("Test class is set ")
             .isEqualTo(MockClassLoaderBuilderTest.class);
+    }
+    
+    @Test
+    public void should_throw_internal_exception_if_test_class_is_null() {
+        
+        assertThatThrownBy(new ThrowingCallable() {
+            @Override
+            public void call() {
+                MockClassLoaderBuilder
+                    .create(ByteCodeFramework.Javassist)
+                    .build();
+            }
+        }).as("Internal exception has been thrown.")
+          .isExactlyInstanceOf(PowerMockInternalException.class);
     }
     
     private void assertThatJavassistMockTransformerChainCreated(final MockClassLoader classLoader) {

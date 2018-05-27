@@ -33,9 +33,12 @@ import java.util.concurrent.ConcurrentMap;
  * @author Arthur Zagretdinov
  */
 abstract class DeferSupportingClassLoader extends ClassLoader {
+    
     private final ConcurrentMap<String, SoftReference<Class<?>>> classes;
+    private final ConcurrentMap<String, Object> parallelLockMap;
     
     private final MockClassLoaderConfiguration configuration;
+    
     ClassLoader deferTo;
     
     DeferSupportingClassLoader(ClassLoader classloader, MockClassLoaderConfiguration configuration) {
@@ -48,6 +51,7 @@ abstract class DeferSupportingClassLoader extends ClassLoader {
         } else {
             deferTo = classloader;
         }
+        parallelLockMap = new ConcurrentHashMap<String,Object>();
     }
     
     @Override
@@ -84,15 +88,29 @@ abstract class DeferSupportingClassLoader extends ClassLoader {
         }
     }
     
-    protected abstract Class<?> loadModifiedClass(String s) throws ClassFormatError, ClassNotFoundException;
+    protected abstract Class<?> loadClassByThisClassLoader(String s) throws ClassFormatError, ClassNotFoundException;
     
     @Override
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-        Class<?> clazz = findLoadedClass1(name);
-        if (clazz == null){
-            clazz = loadClass1(name, resolve);
+        synchronized (getClassLoadingLock(name)) {
+            Class<?> clazz = findLoadedClass1(name);
+            if (clazz == null) {
+                clazz = loadClass1(name, resolve);
+            }
+            return clazz;
         }
-        return clazz;
+    }
+    
+    protected Object getClassLoadingLock(String className) {
+        Object lock = this;
+        if (parallelLockMap != null) {
+            Object newLock = new Object();
+            lock = parallelLockMap.putIfAbsent(className, newLock);
+            if (lock == null) {
+                lock = newLock;
+            }
+        }
+        return lock;
     }
     
     /**
@@ -124,14 +142,20 @@ abstract class DeferSupportingClassLoader extends ClassLoader {
     private Class<?> loadClass1(String name, boolean resolve) throws ClassNotFoundException {
         Class<?> clazz;
         if (shouldDefer(name)) {
-            clazz = deferTo.loadClass(name);
+            clazz = loadByDeferClassLoader(name);
         } else {
-            clazz = loadModifiedClass(name);
+            clazz = loadClassByThisClassLoader(name);
         }
         if (resolve) {
             resolveClass(clazz);
         }
         classes.put(name, new SoftReference<Class<?>>(clazz));
+        return clazz;
+    }
+    
+    private Class<?> loadByDeferClassLoader(final String name) throws ClassNotFoundException {
+        final Class<?> clazz;
+        clazz = deferTo.loadClass(name);
         return clazz;
     }
     

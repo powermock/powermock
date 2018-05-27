@@ -297,6 +297,10 @@ public class MainMockTransformerTestSupport {
         public native String nativeReturnMethod(final String name);
     }
     
+    public static class ChildOfNativeMethodsTestClass extends NativeMethodsTestClass {
+        
+    }
+    
     public static class ParentTestClass {
         
         public static class NestedTestClass{
@@ -313,6 +317,9 @@ public class MainMockTransformerTestSupport {
             protected NestedTestClass(int[] iarray, boolean b, String[] sarray) {}
             
         }
+    }
+    
+    public static class ClassWithoutHashCode {
         
     }
 }

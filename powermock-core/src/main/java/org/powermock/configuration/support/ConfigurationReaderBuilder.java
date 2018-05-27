@@ -20,7 +20,7 @@ package org.powermock.configuration.support;
 
 import org.powermock.configuration.Configuration;
 import org.powermock.configuration.ConfigurationReader;
-import org.powermock.core.PowerMockInternalException;
+import org.powermock.PowerMockInternalException;
 
 import java.util.HashMap;
 import java.util.Map;

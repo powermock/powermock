@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.powermock.core.transformers.support.FilterPredicates.isInstanceOf;
+import static org.powermock.utils.Asserts.internalAssertNotNull;
 
 public class MockClassLoaderBuilder {
 
@@ -51,6 +52,7 @@ public class MockClassLoaderBuilder {
     }
 
     public MockClassLoader build() {
+        internalAssertNotNull(testClass, "Test class is null during building classloader. ");
     
         final MockClassLoaderConfiguration configuration = new MockClassLoaderConfiguration(classesToModify, packagesToIgnore);
         final MockClassLoader classLoader = byteCodeFramework.createClassloader(configuration, useClassPathAdjuster);

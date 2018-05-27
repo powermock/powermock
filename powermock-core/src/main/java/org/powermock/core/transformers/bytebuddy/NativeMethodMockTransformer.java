@@ -1,6 +1,7 @@
 package org.powermock.core.transformers.bytebuddy;
 
 
+import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.DynamicType.Builder;
 import net.bytebuddy.implementation.MethodDelegation;
@@ -39,7 +40,11 @@ public class NativeMethodMockTransformer extends AbstractMethodMockTransformer {
     public ByteBuddyClass transform(final ByteBuddyClass clazz) throws Exception {
         final Identifier identifier = new DefaultIdentifier(getIdentifier());
         final Builder builder = clazz.getBuilder()
-                                     .method(isNative().and(not(ElementMatchers.isStatic())))
+                                     .method(
+                                         isNative()
+                                             .and(not(ElementMatchers.isStatic()))
+                                             .and(ElementMatchers.<MethodDescription>isDeclaredBy(clazz.getTypeDescription()))
+                                     )
                                      .intercept(MethodDelegation.to(InstanceInception.class))
                                      .annotateMethod(identifier)
                                      .method(isNative().and(ElementMatchers.isStatic()))

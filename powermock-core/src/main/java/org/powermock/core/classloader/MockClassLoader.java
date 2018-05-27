@@ -19,14 +19,17 @@ package org.powermock.core.classloader;
 import org.powermock.core.transformers.ClassWrapper;
 import org.powermock.core.transformers.ClassWrapperFactory;
 import org.powermock.core.transformers.MockTransformer;
-import org.powermock.core.transformers.support.DefaultMockTransformerChain;
-import org.powermock.tests.utils.IgnorePackagesExtractor;
 import org.powermock.core.transformers.MockTransformerChain;
 import org.powermock.core.transformers.javassist.support.JavaAssistClassWrapperFactory;
+import org.powermock.core.transformers.support.DefaultMockTransformerChain;
+import org.powermock.tests.utils.IgnorePackagesExtractor;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.security.ProtectionDomain;
-import java.util.Collection;
-import java.util.Collections;
 
 /**
  * <p>
@@ -92,7 +95,7 @@ public abstract class MockClassLoader extends DeferSupportingClassLoader {
     }
     
     @Override
-    protected Class<?> loadModifiedClass(String className) throws ClassFormatError, ClassNotFoundException {
+    protected Class<?> loadClassByThisClassLoader(String className) throws ClassFormatError, ClassNotFoundException {
         final Class<?> loadedClass;
         Class<?> deferClass = deferTo.loadClass(className);
         if (getConfiguration().shouldMockClass(className)) {
@@ -111,7 +114,61 @@ public abstract class MockClassLoader extends DeferSupportingClassLoader {
         return mockTransformerChain;
     }
     
-    protected abstract Class<?> loadUnmockedClass(String name, ProtectionDomain protectionDomain) throws ClassFormatError, ClassNotFoundException;
+    protected Class<?> loadUnmockedClass(final String name, final ProtectionDomain protectionDomain) throws ClassNotFoundException {
+        String path = name.replace('.', '/').concat(".class");
+        URL res = deferTo.getResource(path);
+        if (res != null) {
+            try {
+                return defineClass(name, res, protectionDomain);
+            } catch (IOException e) {
+                throw new ClassNotFoundException(name, e);
+            }
+        } else {
+            throw new ClassNotFoundException(name);
+        }
+    }
+    
+    private Class<?> defineClass(String name, URL url, final ProtectionDomain protectionDomain) throws IOException {
+        byte[] b = readClass(url);
+        return defineClass(name, b, 0, b.length, protectionDomain);
+    }
+    
+    private byte[] readClass(final URL url) throws IOException {
+        final URLConnection connection = url.openConnection();
+        
+        final InputStream in = connection.getInputStream();
+        ByteArrayOutputStream tmpOut = null;
+        
+        try {
+            
+            final int contentLength = connection.getContentLength();
+            
+            // To avoid having to resize the array over and over and over as
+            // bytes are written to the array, provide an accurate estimate of
+            // the ultimate size of the byte array
+            
+            if (contentLength != -1) {
+                tmpOut = new ByteArrayOutputStream(contentLength);
+            } else {
+                tmpOut = new ByteArrayOutputStream(16384);
+            }
+            
+            byte[] buf = new byte[512];
+            while (true) {
+                int len = in.read(buf);
+                if (len == -1) {
+                    break;
+                }
+                tmpOut.write(buf, 0, len);
+            }
+            return tmpOut.toByteArray();
+        } finally {
+            in.close();
+            if (tmpOut != null) {
+                tmpOut.close();
+            }
+        }
+    }
     
     private Class<?> loadMockClass(String name, ProtectionDomain protectionDomain) throws ClassNotFoundException {
         final byte[] clazz = defineAndTransformClass(name, protectionDomain);

@@ -25,6 +25,7 @@ import net.bytebuddy.description.type.TypeDescription.Generic;
 import net.bytebuddy.dynamic.ClassFileLocator.ForClassLoader;
 import net.bytebuddy.dynamic.DynamicType.Builder;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
+import net.bytebuddy.matcher.ElementMatchers;
 import net.bytebuddy.pool.TypePool;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.classloader.MockClassLoaderConfiguration;
@@ -39,10 +40,12 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import static net.bytebuddy.matcher.ElementMatchers.hasMethodName;
+
 public class ByteBuddyMockClassLoader extends MockClassLoader {
     
     private final TypePool typePool;
-    private final ConcurrentMap<String, Class<?>> definedByClassLoadingStrtegy;
+    private final ConcurrentMap<String, Class<?>> definedClasses;
     
     public ByteBuddyMockClassLoader(final String[] classesToMock, final String[] packagesToDefer) {
         this(new MockClassLoaderConfiguration(classesToMock, packagesToDefer));
@@ -51,29 +54,15 @@ public class ByteBuddyMockClassLoader extends MockClassLoader {
     public ByteBuddyMockClassLoader(final MockClassLoaderConfiguration configuration) {
         super(configuration, new ByteBuddyClassWrapperFactory());
         typePool = TypePool.Default.ofClassPath();
-        definedByClassLoadingStrtegy = new ConcurrentHashMap<String, Class<?>>();
-    }
-    
-    @Override
-    protected Class<?> loadUnmockedClass(final String name,
-                                         final ProtectionDomain protectionDomain) throws ClassFormatError, ClassNotFoundException {
-        
-        final TypeDescription typeDefinitions = getTypeDefinitions(name);
-    
-        byte[] clazz = createByteBuddyBuilder(typeDefinitions)
-                           .make()
-                           .load(this, new MockClassLoadingStrategy(protectionDomain))
-                           .getBytes();
-        
-        return defineClass(name, protectionDomain, clazz);
+        definedClasses = new ConcurrentHashMap<String, Class<?>>();
     }
     
     @Override
     public Class<?> defineClass(final String className, final ProtectionDomain protectionDomain, final byte[] clazz) {
-        Class<?> defined = definedByClassLoadingStrtegy.get(className);
+        Class<?> defined = definedClasses.get(className);
         if (defined == null){
             defined = super.defineClass(className, protectionDomain, clazz);
-            definedByClassLoadingStrtegy.put(className, defined);
+            definedClasses.put(className, defined);
         }
         return defined;
     }

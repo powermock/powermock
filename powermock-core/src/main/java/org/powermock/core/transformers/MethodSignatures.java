@@ -4,7 +4,7 @@ import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
 import net.bytebuddy.description.method.MethodDescription;
-import org.powermock.core.PowerMockInternalException;
+import org.powermock.PowerMockInternalException;
 
 import java.lang.reflect.Method;
 
