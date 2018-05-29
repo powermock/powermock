@@ -52,7 +52,7 @@ class MockPolicyExample implements PowerMockPolicy {
 
 	@Override
 	public void applyInterceptionPolicy(MockPolicyInterceptionSettings settings) {
-		Method calculateMethod = Whitebox.getMethod(ResultCalculator.class);
-		settings.stubMethod(calculateMethod, 4);
+		Method calculateMethod = Whitebox.getMethod(ResultCalculator.class, "calculate");
+		settings.stubMethod(calculateMethod, 4d);
 	}
 }

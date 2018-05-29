@@ -18,6 +18,7 @@
 
 package org.powermock.configuration;
 
+import org.powermock.core.classloader.ByteCodeFramework;
 import org.powermock.utils.ArrayUtil;
 
 /**
@@ -29,6 +30,7 @@ import org.powermock.utils.ArrayUtil;
  */
 public class PowerMockConfiguration implements Configuration<PowerMockConfiguration> {
     private String[] globalIgnore;
+    private ByteCodeFramework byteCodeFramework;
     
     public String[] getGlobalIgnore() {
         return globalIgnore;
@@ -36,6 +38,14 @@ public class PowerMockConfiguration implements Configuration<PowerMockConfigurat
     
     public void setGlobalIgnore(final String[] globalIgnore) {
         this.globalIgnore = globalIgnore;
+    }
+    
+    public ByteCodeFramework getByteCodeFramework() {
+        return byteCodeFramework;
+    }
+    
+    public void setByteCodeFramework(final ByteCodeFramework byteCodeFramework) {
+        this.byteCodeFramework = byteCodeFramework;
     }
     
     @Override
@@ -48,9 +58,13 @@ public class PowerMockConfiguration implements Configuration<PowerMockConfigurat
             String[] globalIgnore = ArrayUtil.mergeArrays(this.globalIgnore, configuration.globalIgnore);
             
             powerMockConfiguration.setGlobalIgnore(globalIgnore);
+            if (configuration.byteCodeFramework == null) {
+                powerMockConfiguration.setByteCodeFramework(byteCodeFramework);
+            }else {
+                powerMockConfiguration.setByteCodeFramework(configuration.byteCodeFramework);
+            }
             
             return powerMockConfiguration;
         }
     }
-    
 }

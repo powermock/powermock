@@ -7,7 +7,7 @@ public class GitHub733Test {
 
     @Test
     public void testPowerMockJUnit4MethodValidatorAcceptsTestAnnotatedMethods() throws Exception {
-
+    
         PowerMockJUnit4MethodValidator validator = new PowerMockJUnit4MethodValidator(new UseTestAnnotatedTest(UseTestAnnotatedTest.MethodToTest.class));
         validator.validateInstanceMethods();
     }

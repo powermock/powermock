@@ -26,39 +26,54 @@ import java.lang.reflect.Method;
  * in this interface.
  */
 public interface PowerMockTestNotifier {
-
-	/**
-	 * Notifies all listeners with the "before test method started" event.
-	 */
-	void notifyBeforeTestMethod(final Object testInstance, final Method testMethod, final Object[] arguments);
-
-	/**
-	 * Notifies all listeners with the "after test method ended" event.
-	 */
-	void notifyAfterTestMethod(Object testInstance, Method method, Object[] arguments, TestMethodResult testResult);
-
-	/**
-	 * Notifies all listeners with the "after test method ended" event. Uses
-	 * some state-store to get the needed state. For this method to work
-	 * {@link #notifyBeforeTestMethod(Object, Method, Object[])} must have been
-	 * called before this method. Otherwise revert to using the
-	 * {@link #notifyAfterTestMethod(Object, Method, Object[], TestMethodResult)}
-	 * method.
-	 * 
-	 * @param successful
-	 *            {@code true} if the test was successful,
-	 *            {@code false} otherwise.
-	 */
-	void notifyAfterTestMethod(boolean successful);
-
-	/**
-	 * Notifies all listeners with the "before test suite started" event.
-	 */
-	void notifyBeforeTestSuiteStarted(final Class<?> testClass, final Method[] testMethods);
-
-	/**
-	 * Notifies all listeners with the "after test suite ended" event.
-	 */
-	void notifyAfterTestSuiteEnded(Class<?> testClass, Method[] methods, TestSuiteResult testResult);
-
+    
+    /**
+     * Notifies all listeners with the "before test method started" event.
+     *
+     * @param testInstance instance of test
+     * @param testMethod   test method to be executed
+     * @param arguments    arguments of test methods
+     */
+    void notifyBeforeTestMethod(final Object testInstance, final Method testMethod, final Object[] arguments);
+    
+    /**
+     * Notifies all listeners with the "after test method ended" event.
+     *
+     * @param testInstance instance of test
+     * @param testMethod   test method to be executed
+     * @param arguments    arguments of test methods
+     * @param testResult   result of running of test
+     */
+    void notifyAfterTestMethod(Object testInstance, Method testMethod, Object[] arguments, TestMethodResult testResult);
+    
+    /**
+     * Notifies all listeners with the "after test method ended" event. Uses
+     * some state-store to get the needed state. For this method to work
+     * {@link #notifyBeforeTestMethod(Object, Method, Object[])} must have been
+     * called before this method. Otherwise revert to using the
+     * {@link #notifyAfterTestMethod(Object, Method, Object[], TestMethodResult)}
+     * method.
+     *
+     * @param successful {@code true} if the test was successful,
+     *                   {@code false} otherwise.
+     */
+    void notifyAfterTestMethod(boolean successful);
+    
+    /**
+     * Notifies all listeners with the "before test suite started" event.
+     *
+     * @param testClass   class of test suite
+     * @param testMethods test case methods
+     */
+    void notifyBeforeTestSuiteStarted(final Class<?> testClass, final Method[] testMethods);
+    
+    /**
+     * Notifies all listeners with the "after test suite ended" event.
+     *
+     * @param testClass  class of test suite
+     * @param methods    test case methods
+     * @param testResult result of running of test
+     */
+    void notifyAfterTestSuiteEnded(Class<?> testClass, Method[] methods, TestSuiteResult testResult);
+    
 }

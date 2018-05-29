@@ -42,7 +42,7 @@ public class ArrayUtil {
         return a == null || a.length == 0;
     }
 
-    private static <T> T[] clone(T[] array) {
+    public static <T> T[] clone(T[] array) {
         if (array == null) {
             return null;
         }

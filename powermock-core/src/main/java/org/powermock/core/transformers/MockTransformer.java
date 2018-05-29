@@ -16,24 +16,21 @@
  */
 package org.powermock.core.transformers;
 
-import javassist.CtClass;
-
 /**
  * Interface that all mock transformers must implement. The purpose of a mock
  * transformer is to create a modified version of a {@code Class} so that
  * it is mock enabled.
- * 
+ *
  * @author Johan Haleby
  */
-public interface MockTransformer {
-
-	/**
-	 * Transforms the {@code clazz}.
-	 * 
-	 * @param clazz
-	 *            The class to be
-	 *            transform into a mock enabled class.
-	 * @return A {@code CtClass} representation of the mocked class.
-	 */
-	CtClass transform(CtClass clazz) throws Exception;
+public interface MockTransformer<T> {
+    
+    /**
+     * Transforms the {@code clazz}.
+     *
+     * @param clazz The class to be
+     *              transform into a mock enabled class.
+     * @return A {@code ClassWrapper} representation of the mocked class.
+     */
+    ClassWrapper<T> transform(ClassWrapper<T> clazz) throws Exception;
 }

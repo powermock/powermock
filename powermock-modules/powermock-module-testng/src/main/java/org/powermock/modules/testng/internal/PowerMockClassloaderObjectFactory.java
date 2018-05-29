@@ -23,10 +23,10 @@ import java.lang.reflect.Constructor;
 
 public class PowerMockClassloaderObjectFactory implements IObjectFactory {
 
-    private final ClassLoaderFactory classLoaderFactory;
+    private final TestNGMockClassLoaderFactory classLoaderFactory;
 
     public PowerMockClassloaderObjectFactory() {
-        classLoaderFactory = new ClassLoaderFactory();
+        classLoaderFactory = new TestNGMockClassLoaderFactory();
     }
 
     @Override

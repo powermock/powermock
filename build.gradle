@@ -28,7 +28,7 @@ ext{
     assertjVersion = "2.6.0"
     cglibVersion = "3.2.5"
     objenesisVersion = "2.6"
-    javassistVersion = "3.22.0-CR2"
+    javassistVersion = "3.22.0-GA"
     junitVersion = "4.12"
     junitRulesVersion = "4.8.2"
     testngVersion = "6.9.10"
@@ -39,6 +39,7 @@ ext{
     jacocoVersion = "0.7.7.201606060606"
     eclipseJdt = "3.3.0-v_771"
     checkstyleVersion= "7.6.1"
+    systemRulesVersion="1.18.0"
 }
 
 apply plugin: 'org.shipkit.java'
@@ -64,5 +65,5 @@ jar{
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.3'
+    gradleVersion = '4.7'
 }

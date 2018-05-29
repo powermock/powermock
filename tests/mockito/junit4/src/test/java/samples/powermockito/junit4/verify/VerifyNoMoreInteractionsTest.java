@@ -27,7 +27,7 @@ import samples.newmocking.MyClass;
 import samples.singleton.StaticHelper;
 import samples.singleton.StaticService;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Java6Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.times;
 import static org.powermock.api.mockito.PowerMockito.mock;

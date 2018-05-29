@@ -102,7 +102,7 @@
       <property name="max" value="8"/>
     </module>
     <module name="AbbreviationAsWordInName">
-      <property name="allowedAbbreviationLength" value="5"/>
+      <property name="allowedAbbreviationLength" value="8"/>
     </module>
     <module name="PackageDeclaration">
       <property name="matchDirectoryStructure" value="false"/>

@@ -15,6 +15,8 @@
  */
 package org.powermock.core.classloader.annotations;
 
+import org.powermock.core.classloader.ByteCodeFramework;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -43,4 +45,5 @@ import java.lang.annotation.Target;
 @Documented
 @Inherited
 public @interface PrepareEverythingForTest {
+    ByteCodeFramework byteCodeFramework() default ByteCodeFramework.Javassist;
 }

@@ -72,7 +72,7 @@ public class GlobalNotificationBuildSupport {
 
     private static int countInitializersInTrace(final String className) {
         int initializerCount = 0;
-        for (StackTraceElement ste : new Throwable().getStackTrace()) {
+        for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
             if ("<init>".equals(ste.getMethodName())
                     && className.equals(ste.getClassName())
                     && 2 <= ++initializerCount) {

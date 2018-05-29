@@ -39,7 +39,7 @@ import static org.powermock.api.support.membermodification.MemberMatcher.method;
 public class MockPolicyWithInvocationHandlerTest {
 
 	@Test
-	public void mockPolicyWithInvocationHandlerWorks() throws Exception {
+    public void mockPolicyWithInvocationHandlerWorks() {
 		final SimpleClassWithADependency tested = new SimpleClassWithADependency();
 		Whitebox.setInternalState(tested, new ResultCalculator(0));
 
@@ -57,7 +57,7 @@ class MockPolicyInvocationHandlerExample implements PowerMockPolicy {
 
 	@Override
 	public void applyInterceptionPolicy(MockPolicyInterceptionSettings settings) {
-		settings.proxyMethod(method(ResultCalculator.class), new InvocationHandler() {
+        settings.proxyMethod(method(ResultCalculator.class, "calculate"), new InvocationHandler() {
 
 			@Override
 			public Object invoke(Object object, Method method, Object[] args) throws Throwable {

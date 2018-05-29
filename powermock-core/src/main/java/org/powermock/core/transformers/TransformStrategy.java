@@ -16,6 +16,44 @@
 
 package org.powermock.core.transformers;
 
+/**
+ * The enum provide information for {@link MockTransformer} have PowerMock is started via Runner(FactoryObject), Rule or JavaAgent
+ */
 public enum TransformStrategy {
-    CLASSLOADER, INST_REDEFINE, INST_TRANSFORM
+    CLASSLOADER {
+        @Override
+        public boolean isClassloaderMode() {
+            return true;
+        }
+    
+        @Override
+        public boolean isAgentMode() {
+            return false;
+        }
+    },
+    INST_REDEFINE {
+        @Override
+        public boolean isClassloaderMode() {
+            return false;
+        }
+    
+        @Override
+        public boolean isAgentMode() {
+            return true;
+        }
+    };
+    
+    /**
+     * Check if this strategy is supported by class loader. It means that more byte code instrumenting are allowed: like adding constructor,
+     * changeling method signature and so on
+     * @return <code>true</code> if a strategy is supported by class loader.
+     */
+    public abstract boolean isClassloaderMode();
+    
+    /**
+     * Check if this strategy is supported only by Java Agent. It means that lest byte code instrumenting are allowed and PowerMock should
+     * avoid using some instrument things.
+     * @return <code>true</code> if a strategy is supported only by Java Agent
+     */
+    public abstract boolean isAgentMode();
 }

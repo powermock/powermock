@@ -19,11 +19,19 @@
 package org.powermock.utils;
 
 
+import org.powermock.PowerMockInternalException;
+
 public class Asserts {
     
     public static void assertNotNull(Object value, String message){
         if (value == null) {
             throw new IllegalArgumentException(message);
+        }
+    }
+    
+    public static void internalAssertNotNull(Object value, String message){
+        if (value == null) {
+            throw new PowerMockInternalException(message);
         }
     }
     

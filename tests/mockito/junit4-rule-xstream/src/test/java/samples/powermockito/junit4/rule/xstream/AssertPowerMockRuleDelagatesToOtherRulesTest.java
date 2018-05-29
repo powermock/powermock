@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static junit.framework.Assert.assertTrue;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -49,11 +50,13 @@ public class AssertPowerMockRuleDelagatesToOtherRulesTest {
 
 	@Test
 	public void assertPowerMockRuleDelegatesToOtherRules() throws Exception {
-		assertTrue(this.getClass().getClassLoader().getClass().getName().contains(MockClassLoader.class.getName()));
-		assertEquals(1, objects.size());
-        // Not same using X-Stream
-		assertEquals(BEFORE, objects.get(0));
-		assertEquals("assertPowerMockRuleDelegatesToOtherRules", testName.getMethodName());
+		assertThat(this.getClass().getClassLoader()).isInstanceOf(MockClassLoader.class);
+		
+		assertThat(objects)
+			.hasSize(1)
+			.containsExactly(BEFORE);
+		
+		assertThat(testName.getMethodName()).isEqualTo("assertPowerMockRuleDelegatesToOtherRules");
 	}
 
 	private class MyRule implements MethodRule {
@@ -78,7 +81,7 @@ public class AssertPowerMockRuleDelagatesToOtherRulesTest {
 
             MyObject myObject = (MyObject) o;
 
-	        return state != null ? state.equals(myObject.state) : myObject.state == null;
+	        return state.equals(myObject.state);
         }
 
         @Override

@@ -113,6 +113,10 @@ public class MockGateway {
         }
         return PROCEED;
     }
+    
+    public static boolean suppressConstructorCall(Class<?> type, Object[] args, Class<?>[] sig) throws Throwable {
+        return constructorCall(type, args, sig) != PROCEED;
+    }
 
     /**
      * Tells PowerMock whether or not to mock

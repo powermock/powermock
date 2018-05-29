@@ -17,40 +17,62 @@
 
 package org.powermock.core.classloader;
 
+import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 import org.powermock.core.transformers.MockTransformer;
+import org.powermock.core.transformers.MockTransformerChain;
+import org.powermock.core.transformers.MockTransformerChainFactory;
+import org.powermock.core.transformers.TestClassAwareTransformer;
 import org.powermock.utils.ArrayUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *  MockClassLoader builder.
- */
+import static org.powermock.core.transformers.support.FilterPredicates.isInstanceOf;
+import static org.powermock.utils.Asserts.internalAssertNotNull;
+
 public class MockClassLoaderBuilder {
 
-    private final List<MockTransformer> mockTransformerChain;
+    private final MockTransformerChainFactory transformerChainFactory;
+    private final List<MockTransformer> extraMockTransformers;
+    private final ByteCodeFramework byteCodeFramework;
     private String[] packagesToIgnore;
     private String[] classesToModify;
-
-    MockClassLoaderBuilder() {
-        mockTransformerChain = new ArrayList<MockTransformer>(3);
+    
+    public static MockClassLoaderBuilder create(ByteCodeFramework byteCodeFramework) {
+        return new MockClassLoaderBuilder(byteCodeFramework);
+    }
+    
+    private UseClassPathAdjuster useClassPathAdjuster;
+    private Class<?> testClass;
+    
+    private MockClassLoaderBuilder(final ByteCodeFramework byteCodeFramework) {
+        this.byteCodeFramework = byteCodeFramework;
+        transformerChainFactory = byteCodeFramework.createTransformerChainFactory();
+        extraMockTransformers = new ArrayList<MockTransformer>();
     }
 
     public MockClassLoader build() {
-        MockClassLoader classLoader = new MockClassLoader();
-
-        classLoader.setMockTransformerChain(mockTransformerChain);
-        classLoader.addIgnorePackage(packagesToIgnore);
-        classLoader.addClassesToModify(classesToModify);
+        internalAssertNotNull(testClass, "Test class is null during building classloader. ");
+    
+        final MockClassLoaderConfiguration configuration = new MockClassLoaderConfiguration(classesToModify, packagesToIgnore);
+        final MockClassLoader classLoader = byteCodeFramework.createClassloader(configuration, useClassPathAdjuster);
+    
+        classLoader.setMockTransformerChain(createTransformerChain());
 
         return classLoader;
     }
-
-    public MockClassLoaderBuilder addMockTransformerChain(List<MockTransformer> mockTransformerChain) {
-        this.mockTransformerChain.addAll(mockTransformerChain);
-        return this;
+    
+    private MockTransformerChain createTransformerChain() {
+        final MockTransformerChain mockTransformerChain = transformerChainFactory.createDefaultChain(extraMockTransformers);
+        
+        final Iterable<MockTransformer> testAwareTransformer = mockTransformerChain.filter(isInstanceOf(TestClassAwareTransformer.class));
+        for (MockTransformer transformer : testAwareTransformer) {
+            ((TestClassAwareTransformer) transformer).setTestClass(testClass);
+        }
+        
+        return mockTransformerChain;
     }
-
+    
     public MockClassLoaderBuilder addIgnorePackage(String[] packagesToIgnore) {
         this.packagesToIgnore = ArrayUtil.addAll(this.packagesToIgnore, packagesToIgnore);
         return this;
@@ -58,6 +80,27 @@ public class MockClassLoaderBuilder {
 
     public MockClassLoaderBuilder addClassesToModify(String[] classesToModify) {
         this.classesToModify = ArrayUtil.addAll(this.classesToModify, classesToModify);
+        return this;
+    }
+    
+    public MockClassLoaderBuilder addExtraMockTransformers(MockTransformer... mockTransformers) {
+        if (mockTransformers != null) {
+            for (MockTransformer mockTransformer : mockTransformers) {
+                if (mockTransformer != null) {
+                    extraMockTransformers.add(mockTransformer);
+                }
+            }
+        }
+        return this;
+    }
+    
+    public MockClassLoaderBuilder addClassPathAdjuster(final UseClassPathAdjuster useClassPathAdjuster) {
+        this.useClassPathAdjuster = useClassPathAdjuster;
+        return this;
+    }
+    
+    public MockClassLoaderBuilder forTestClass(final Class<?> testClass) {
+        this.testClass = testClass;
         return this;
     }
 }

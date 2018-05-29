@@ -22,7 +22,9 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import samples.staticinitializer.EvilStaticInitializerExample;
 
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 /**
  * Test that demonstrates a (naive) example of when chunking may be handy.
@@ -32,13 +34,13 @@ public class EvilStaticInitializerExampleTest {
 
 	@Test
 	@SuppressStaticInitializationFor("samples.staticinitializer.EvilStaticInitializerExample")
-	public void assertNativeCodeInvocationWorks() throws Exception {
+    public void assertNativeCodeInvocationWorks() {
 		EvilStaticInitializerExample tested = new EvilStaticInitializerExample();
 		assertThat(tested.doSomeNativeStuffUsingTheLoadedSystemLibrary(), instanceOf(String.class));
 	}
 
 	@Test
-	public void assertCorrectErrorMessageIfLibraryNotFound() throws Exception {
+    public void assertCorrectErrorMessageIfLibraryNotFound() {
 		try {
 			new EvilStaticInitializerExample();
 			fail("Should throw unsatisfied link error!");

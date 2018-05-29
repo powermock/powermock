@@ -16,7 +16,7 @@
 
 package org.powermock.core.classloader.annotations;
 
-import org.powermock.core.classloader.ClassPathAdjuster;
+import org.powermock.core.classloader.javassist.ClassPathAdjuster;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -28,11 +28,13 @@ import java.lang.annotation.Target;
 /**
  * Use this annotation to enable adjusting of the class path used by powermock
  * to locate class files.
+ * @deprecated Class path adjuster is supported only for Javassist and will be removed in next release.
  */
 @Target( { ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
+@Deprecated()
 public @interface UseClassPathAdjuster {
     Class<? extends ClassPathAdjuster>  value();
 }

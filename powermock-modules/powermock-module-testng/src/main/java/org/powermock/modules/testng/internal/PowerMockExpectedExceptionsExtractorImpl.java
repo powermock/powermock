@@ -15,6 +15,7 @@
  */
 package org.powermock.modules.testng.internal;
 
+import org.powermock.tests.utils.IgnorePackagesExtractor;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.AnnotatedElement;
@@ -23,7 +24,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PowerMockExpectedExceptionsExtractorImpl implements ExpectedExceptionsExtractor {
+public class PowerMockExpectedExceptionsExtractorImpl implements IgnorePackagesExtractor {
 
     public String[] getPackagesToIgnore(AnnotatedElement element) {
         List<String> ignoredPackages = new LinkedList<String>();

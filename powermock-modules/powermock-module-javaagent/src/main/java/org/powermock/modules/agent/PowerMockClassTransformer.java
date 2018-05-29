@@ -20,11 +20,15 @@ package org.powermock.modules.agent;
 import javassist.ClassPool;
 import javassist.CtClass;
 import org.powermock.core.agent.JavaAgentClassRegister;
+import org.powermock.core.transformers.ClassWrapper;
+import org.powermock.core.transformers.ClassWrapperFactory;
+import org.powermock.core.transformers.MockTransformerChain;
 import org.powermock.core.transformers.TransformStrategy;
-import org.powermock.core.transformers.impl.ClassMockTransformer;
-import org.powermock.core.transformers.impl.InterfaceMockTransformer;
+import org.powermock.core.transformers.javassist.JavassistMockTransformerChainFactory;
+import org.powermock.core.transformers.javassist.support.JavaAssistClassWrapperFactory;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
@@ -33,41 +37,40 @@ import java.util.HashSet;
 import java.util.Set;
 
 class PowerMockClassTransformer extends AbstractClassTransformer implements ClassFileTransformer {
-
-	private volatile Set<String> classesToTransform;
+    
+    private static final MockTransformerChain MOCK_TRANSFORMER_CHAIN = new JavassistMockTransformerChainFactory()
+                                                                           .createDefaultChain(TransformStrategy.INST_REDEFINE);
+    private final ClassWrapperFactory wrapperFactory;
+    private volatile Set<String> classesToTransform;
     private volatile JavaAgentClassRegister javaAgentClassRegister;
     
-    public void setClassesToTransform(Collection<String> classesToTransform) {
-    	this.classesToTransform = new HashSet<String>(classesToTransform);
+    PowerMockClassTransformer() {
+        super();
+        wrapperFactory = new JavaAssistClassWrapperFactory();
     }
-
+    
+    public void setClassesToTransform(Collection<String> classesToTransform) {
+        this.classesToTransform = new HashSet<String>(classesToTransform);
+    }
+    
     public void setJavaAgentClassRegister(JavaAgentClassRegister javaAgentClassRegister) {
         this.javaAgentClassRegister = javaAgentClassRegister;
     }
-
-    private static final ClassMockTransformer CLASS_MOCK_TRANSFORMER = new ClassMockTransformer(TransformStrategy.INST_REDEFINE);
-    private static final InterfaceMockTransformer INTERFACE_MOCK_TRANSFORMER = new InterfaceMockTransformer(TransformStrategy.INST_REDEFINE);
-
-    public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
+    
+    public byte[] transform(
+                               ClassLoader loader, String className,
+                               Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer
+    ) throws IllegalClassFormatException {
+        
         if (loader == null || shouldIgnore(className)) {
             return null;
         }
         try {
             String normalizedClassName = className.replace("/", ".");
             if (classesToTransform != null && classesToTransform.contains(normalizedClassName)) {
-                ByteArrayInputStream is = new ByteArrayInputStream(classfileBuffer);
-                CtClass ctClass = null;
-                try {
-                    ctClass = ClassPool.getDefault().makeClass(is);                               
-                } finally {
-                    is.close();
-                }
-
-                if (ctClass.isInterface()){
-                    ctClass = INTERFACE_MOCK_TRANSFORMER.transform(ctClass);
-                }else{
-                    ctClass = CLASS_MOCK_TRANSFORMER.transform(ctClass);
-                }
+                CtClass ctClass = getCtClass(classfileBuffer);
+                
+                ctClass = transform(ctClass);
 
                 /*
                  * ClassPool may cause huge memory consumption if the number of CtClass
@@ -78,17 +81,33 @@ class PowerMockClassTransformer extends AbstractClassTransformer implements Clas
                  * CtClass object is removed from the ClassPool.
                  */
                 ctClass.detach();
-
+                
                 javaAgentClassRegister.registerClass(loader, normalizedClassName);
-
-                return ctClass.toBytecode();                      
-            } 
+                
+                return ctClass.toBytecode();
+            }
             
-            return null;           
-        } catch(Exception e) {
-            throw new RuntimeException("Failed to redefine class "+className, e);
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to redefine class " + className, e);
         }
+    }
+    
+    private CtClass getCtClass(final byte[] classfileBuffer) throws IOException {
+        final CtClass ctClass;
         
-
+        ByteArrayInputStream is = new ByteArrayInputStream(classfileBuffer);
+        try {
+            ctClass = ClassPool.getDefault().makeClass(is);
+        } finally {
+            is.close();
+        }
+        return ctClass;
+    }
+    
+    private CtClass transform(CtClass ctClass) throws Exception {
+        ClassWrapper<CtClass> wrapped = wrapperFactory.wrap(ctClass);
+        wrapped = MOCK_TRANSFORMER_CHAIN.transform(wrapped);
+        return wrapped.unwrap();
     }
 }
