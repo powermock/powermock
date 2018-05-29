@@ -83,6 +83,7 @@ project(":powermock-core") {
         }
         testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
         testCompile("org.assertj:assertj-core:${assertjVersion}")
+        testCompile("com.github.stefanbirkner:system-rules:${systemRulesVersion}")
         testCompile(project(":tests:utils"))
 
         testCompile("org.mockito:mockito-core:${mockitoVersion}"){

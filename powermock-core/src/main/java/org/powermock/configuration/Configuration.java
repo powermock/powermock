@@ -34,6 +34,8 @@ public interface Configuration<T extends Configuration> {
     
     /**
      * Merge values of the configuration with values of <code>configuration</code>.
+     * Values with the same keys from the <code>configuration</code>
+     * overwrite value in the current configuration.
      *
      * @param configuration source configurations.
      * @return a new instance of {@link Configuration} with merged values.

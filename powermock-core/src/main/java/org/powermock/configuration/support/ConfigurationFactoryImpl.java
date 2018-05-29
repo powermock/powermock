@@ -20,38 +20,68 @@ package org.powermock.configuration.support;
 
 import org.powermock.configuration.Configuration;
 import org.powermock.configuration.ConfigurationFactory;
+import org.powermock.utils.Asserts;
 
-import static org.powermock.configuration.support.ConfigurationReaderBuilder.newBuilder;
+import java.util.Properties;
+
+import static org.powermock.configuration.support.ConfigurationBuilder.createConfigurationFor;
 
 public class ConfigurationFactoryImpl implements ConfigurationFactory {
     
     private static final String USER_CONFIGURATION = "org/powermock/extensions/configuration.properties";
     private static final String DEFAULT_CONFIGURATION = "org/powermock/default.properties";
     
+    private final String userConfigurationLocation;
+    private final String defaultConfigurationLocation;
+    
+    public ConfigurationFactoryImpl() {
+        this(USER_CONFIGURATION, DEFAULT_CONFIGURATION);
+    }
+    
+    ConfigurationFactoryImpl(final String userConfigurationLocation, final String defaultConfigurationLocation) {
+        this.userConfigurationLocation = userConfigurationLocation;
+        this.defaultConfigurationLocation = defaultConfigurationLocation;
+    }
+    
+    ConfigurationFactoryImpl(final String defaultConfigurationLocation) {
+        this(USER_CONFIGURATION, defaultConfigurationLocation);
+    }
+    
     @Override
     public <T extends Configuration<T>> T create(final Class<T> configurationType) {
+        T environmentConfiguration = readEnvironmentConfiguration(configurationType);
         T configuration = readUserConfiguration(configurationType);
         T defaultConfiguration = readDefault(configurationType);
-        return defaultConfiguration.merge(configuration);
+        return defaultConfiguration.merge(configuration.merge(environmentConfiguration));
+    }
+    
+    private <T extends Configuration<T>> T readEnvironmentConfiguration(final Class<T> configurationType) {
+        final Properties properties = new Properties();
+        properties.putAll(System.getenv());
+        return createConfigurationFor(configurationType)
+                   .fromProperties(properties);
+        
     }
     
     private <T extends Configuration> T  readDefault(final Class<T> configurationType) {
     
-        final T configuration = newBuilder()
-                                    .forConfigurationFile(DEFAULT_CONFIGURATION)
-                                    .build()
-                                    .read(configurationType);
-        if (configuration == null){
-            throw new RuntimeException("Default configuration is null. It should never happen. If you see this exception, it means that something wrong with build." +
-                                           " Please report to PowerMock issues tracker.");
-        }
+        final T configuration = createConfigurationFor(configurationType)
+                                    .fromFile(getDefaultConfigurationLocation());
+    
+        Asserts.internalAssertNotNull(configuration, "Default configuration is null.");
         return configuration;
     }
     
     private <T extends Configuration> T  readUserConfiguration(final Class<T> configurationType) {
-        return newBuilder()
-                   .forConfigurationFile(USER_CONFIGURATION)
-                   .build()
-                   .read(configurationType);
+        return createConfigurationFor(configurationType)
+                   .fromFile(getUserConfigurationLocation());
+    }
+    
+    private String getDefaultConfigurationLocation() {
+        return defaultConfigurationLocation;
+    }
+    
+    private String getUserConfigurationLocation() {
+        return userConfigurationLocation;
     }
 }

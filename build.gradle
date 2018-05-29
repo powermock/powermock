@@ -39,6 +39,7 @@ ext{
     jacocoVersion = "0.7.7.201606060606"
     eclipseJdt = "3.3.0-v_771"
     checkstyleVersion= "7.6.1"
+    systemRulesVersion="1.18.0"
 }
 
 apply plugin: 'org.shipkit.java'

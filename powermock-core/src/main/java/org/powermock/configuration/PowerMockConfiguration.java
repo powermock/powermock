@@ -58,10 +58,10 @@ public class PowerMockConfiguration implements Configuration<PowerMockConfigurat
             String[] globalIgnore = ArrayUtil.mergeArrays(this.globalIgnore, configuration.globalIgnore);
             
             powerMockConfiguration.setGlobalIgnore(globalIgnore);
-            if (byteCodeFramework == null) {
-                powerMockConfiguration.setByteCodeFramework(configuration.byteCodeFramework);
-            }else {
+            if (configuration.byteCodeFramework == null) {
                 powerMockConfiguration.setByteCodeFramework(byteCodeFramework);
+            }else {
+                powerMockConfiguration.setByteCodeFramework(configuration.byteCodeFramework);
             }
             
             return powerMockConfiguration;
