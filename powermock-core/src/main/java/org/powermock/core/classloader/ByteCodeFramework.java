@@ -3,6 +3,7 @@ package org.powermock.core.classloader;
 import org.powermock.configuration.GlobalConfiguration;
 import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
 import org.powermock.core.classloader.bytebuddy.ByteBuddyMockClassLoader;
@@ -68,6 +69,8 @@ public enum ByteCodeFramework {
     private static ByteCodeFramework getByteCodeFramework(final AnnotatedElement element) {
         if (element.isAnnotationPresent(PrepareForTest.class)) {
             return element.getAnnotation(PrepareForTest.class).byteCodeFramework();
+        } else if (element.isAnnotationPresent(PrepareOnlyThisForTest.class)) {
+            return element.getAnnotation(PrepareOnlyThisForTest.class).byteCodeFramework();
         } else if (element.isAnnotationPresent(PrepareEverythingForTest.class)) {
             return element.getAnnotation(PrepareEverythingForTest.class).byteCodeFramework();
         } else if (element.isAnnotationPresent(SuppressStaticInitializationFor.class)){
