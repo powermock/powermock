@@ -16,6 +16,7 @@
 package org.powermock.core.classloader.annotations;
 
 import org.powermock.core.IndicateReloadClass;
+import org.powermock.core.classloader.ByteCodeFramework;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -71,4 +72,6 @@ public @interface PrepareOnlyThisForTest {
 	Class<?>[] value() default IndicateReloadClass.class;
 
 	String[] fullyQualifiedNames() default "";
+    
+    ByteCodeFramework byteCodeFramework() default ByteCodeFramework.Javassist;
 }

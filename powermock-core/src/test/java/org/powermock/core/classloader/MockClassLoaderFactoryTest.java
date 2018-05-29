@@ -12,9 +12,11 @@ import org.powermock.core.classloader.MockClassLoaderFactoryTest.TestContainer.B
 import org.powermock.core.classloader.MockClassLoaderFactoryTest.TestContainer.ExceptionTestClass;
 import org.powermock.core.classloader.MockClassLoaderFactoryTest.TestContainer.JavassistTestClass;
 import org.powermock.core.classloader.MockClassLoaderFactoryTest.TestContainer.PrepareEverythingForTestTestClass;
+import org.powermock.core.classloader.MockClassLoaderFactoryTest.TestContainer.PrepareOnlyThisForTestTestClass;
 import org.powermock.core.classloader.MockClassLoaderFactoryTest.TestContainer.SuppressStaticInitializationForTestClass;
 import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.core.classloader.bytebuddy.ByteBuddyMockClassLoader;
 import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
@@ -100,6 +102,7 @@ public class MockClassLoaderFactoryTest {
             
             parameters.add(new Object[]{JavassistTestClass.class, JavassistMockClassLoader.class});
             parameters.add(new Object[]{ByteBuddyTestClass.class, ByteBuddyMockClassLoader.class});
+            parameters.add(new Object[]{PrepareOnlyThisForTestTestClass.class, ByteBuddyMockClassLoader.class});
             
             return parameters;
         }
@@ -190,6 +193,7 @@ public class MockClassLoaderFactoryTest {
             final ArrayList<Object[]> parameters = new ArrayList<Object[]>();
             
             parameters.add(new Object[]{JavassistTestClass.class, "powermock.test.support.MainMockTransformerTestSupport$SupportClasses"});
+            parameters.add(new Object[]{PrepareOnlyThisForTestTestClass.class, "powermock.test.support.MainMockTransformerTestSupport$SupportClasses"});
             parameters.add(new Object[]{ByteBuddyTestClass.class, "powermock.test.support.MainMockTransformerTestSupport$SupportClasses"});
             parameters.add(new Object[]{SuppressStaticInitializationForTestClass.class, "SupportClasses.FinalInnerClass"});
             parameters.add(new Object[]{PrepareEverythingForTestTestClass.class, "*"});
@@ -242,6 +246,20 @@ public class MockClassLoaderFactoryTest {
             public void someTestWithoutPrepareForTest() {
             }
             
+        }
+    
+        @PrepareOnlyThisForTest(value = SupportClasses.class, byteCodeFramework = ByteCodeFramework.ByteBuddy)
+        public static class PrepareOnlyThisForTestTestClass {
+        
+            @Test
+            @PrepareOnlyThisForTest(value = SupportClasses.class, byteCodeFramework = ByteCodeFramework.ByteBuddy)
+            public void someTestWithPrepareForTest() {
+            }
+        
+            @Test
+            public void someTestWithoutPrepareForTest() {
+            }
+        
         }
         
         @SuppressStaticInitializationFor("SupportClasses.FinalInnerClass")
