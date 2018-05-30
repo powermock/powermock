@@ -15,7 +15,7 @@ shipkit {
     gitHub.writeAuthToken = System.getenv("GH_WRITE_TOKEN")
 
     def buildNo = System.getenv("TRAVIS_BUILD_NUMBER")
-    git.commitMessagePostfix = buildNo? "by CI build $buildNo\n\n[ci skip-release]" : "by local build\n\n[ci skip-release]"
+    git.commitMessagePostfix = buildNo? "by CI build $buildNo\n\n[ci skip]" : "by local build\n\n[ci skip]"
 
     releaseNotes.file = "docs/release-notes/official.md"
     releaseNotes.labelMapping = [
