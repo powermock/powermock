@@ -36,6 +36,18 @@ matrix:
     env:
       - SKIP_RELEASE=true
       - powermock.byte-code-framework=Javassist
+  - jdk: openjdk9
+    env:
+      - SKIP_RELEASE=true
+      - powermock.byte-code-framework=Javassist
+  - jdk: openjdk10
+    env:
+      - SKIP_RELEASE=true
+      - powermock.byte-code-framework=Javassist
+  - jdk: openjdk11
+    env:
+      - SKIP_RELEASE=true
+      - powermock.byte-code-framework=Javassist
   - jdk: oraclejdk8
 
 #Below skips the installation step completely (https://docs.travis-ci.com/user/customizing-the-build/#Skipping-the-Installation-Step)
