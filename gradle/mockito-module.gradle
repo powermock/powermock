@@ -20,7 +20,7 @@ sourceSets {
         targetCompatibility = 1.6
     }
     testMockito2 {
-        java.srcDirs = ['src/test']
+        java.srcDirs = ['src/test/java']
         resources.srcDirs = ['src/test/resources']
         output.resourcesDir = 'build/classes/testmockito2'
         output.classesDir = 'build/classes/testmockito2'
