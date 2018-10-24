@@ -1,10 +1,7 @@
 package org.powermock.core.transformers;
 
 import javassist.CtMethod;
-import net.bytebuddy.description.method.MethodDescription;
 import org.powermock.core.classloader.ByteCodeFramework;
-import org.powermock.core.transformers.bytebuddy.testclass.ForMethodsByteBuddyTestClassTransformer;
-import org.powermock.core.transformers.bytebuddy.testclass.FromAllMethodsExceptByteBuddyTestClassTransformer;
 import org.powermock.core.transformers.javassist.testclass.ForMethodsJavaAssistTestClassTransformer;
 import org.powermock.core.transformers.javassist.testclass.FromAllMethodsExceptJavaAssistTestClassTransformer;
 
@@ -65,10 +62,6 @@ public class TestClassTransformerBuilder {
                     return new ForMethodsJavaAssistTestClassTransformer(
                         testClass, testMethodAnnotation, MethodSignatures.Javassist.<CtMethod>methodSignatureWriter(), testMethodsThatRunOnOtherClassLoaders
                     );
-                case ByteBuddy:
-                    return new ForMethodsByteBuddyTestClassTransformer(
-                        testClass, testMethodAnnotation, MethodSignatures.ByteBuddy.<MethodDescription>methodSignatureWriter(), testMethodsThatRunOnOtherClassLoaders
-                    );
                 default:
                     throw new IllegalArgumentException(String.format("Unknown bytecode framework `%s`", byteCodeFramework));
             }
@@ -79,10 +72,6 @@ public class TestClassTransformerBuilder {
                 case Javassist:
                     return new FromAllMethodsExceptJavaAssistTestClassTransformer(
                         testClass, testMethodAnnotation, MethodSignatures.Javassist.<CtMethod>methodSignatureWriter(), singleMethodToRunOnTargetClassLoader
-                    );
-                case ByteBuddy:
-                    return new FromAllMethodsExceptByteBuddyTestClassTransformer(
-                        testClass, testMethodAnnotation, MethodSignatures.ByteBuddy.<MethodDescription>methodSignatureWriter(), singleMethodToRunOnTargetClassLoader
                     );
                 default:
                     throw new IllegalArgumentException(String.format("Unknown bytecode framework `%s`", byteCodeFramework));

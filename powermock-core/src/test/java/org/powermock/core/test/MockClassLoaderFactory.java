@@ -21,7 +21,6 @@ package org.powermock.core.test;
 import org.powermock.core.classloader.MockClassLoader;
 import org.powermock.core.classloader.MockClassLoaderConfiguration;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
-import org.powermock.core.classloader.bytebuddy.ByteBuddyMockClassLoader;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
 import java.lang.reflect.Constructor;
@@ -52,7 +51,7 @@ public class MockClassLoaderFactory {
     }
     
     public boolean isByteBuddy(){
-        return classLoaderClass.isAssignableFrom(ByteBuddyMockClassLoader.class);
+        return false;
     }
     
     @Override

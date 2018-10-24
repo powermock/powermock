@@ -5,13 +5,11 @@ import javassist.CtClass;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
 import org.powermock.PowerMockInternalException;
-import org.powermock.core.classloader.bytebuddy.ByteBuddyMockClassLoader;
 import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
 import org.powermock.core.transformers.ClassWrapper;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.MockTransformerChain.FilterPredicate;
 import org.powermock.core.transformers.TestClassAwareTransformer;
-import org.powermock.core.transformers.bytebuddy.support.ByteBuddyClass;
 import org.powermock.core.transformers.support.DefaultMockTransformerChain;
 import org.powermock.reflect.internal.WhiteboxImpl;
 
@@ -31,13 +29,6 @@ public class MockClassLoaderBuilderTest {
                                           .build();
         
         assertThat(classLoader).isExactlyInstanceOf(JavassistMockClassLoader.class);
-        
-        classLoader = MockClassLoaderBuilder
-                          .create(ByteCodeFramework.ByteBuddy)
-                          .forTestClass(getClass())
-                          .build();
-        
-        assertThat(classLoader).isExactlyInstanceOf(ByteBuddyMockClassLoader.class);
     }
     
     @Test
@@ -49,14 +40,6 @@ public class MockClassLoaderBuilderTest {
                                           .build();
         
         assertThatJavassistMockTransformerChainCreated(classLoader);
-        
-        
-        classLoader = MockClassLoaderBuilder
-                          .create(ByteCodeFramework.ByteBuddy)
-                          .forTestClass(getClass())
-                          .build();
-        
-        assertThatByteBuddyMockTransformerChainCreated(classLoader);
     }
     
     @Test
@@ -92,11 +75,6 @@ public class MockClassLoaderBuilderTest {
     private void assertThatJavassistMockTransformerChainCreated(final MockClassLoader classLoader) {
         final DefaultMockTransformerChain mockTransformerChain = (DefaultMockTransformerChain) classLoader.getMockTransformerChain();
         assertThatMockTransformerChainWorksWithExpectedClassRepresentation(CtClass.class, mockTransformerChain);
-    }
-    
-    private void assertThatByteBuddyMockTransformerChainCreated(final MockClassLoader classLoader) {
-        final DefaultMockTransformerChain mockTransformerChain = (DefaultMockTransformerChain) classLoader.getMockTransformerChain();
-        assertThatMockTransformerChainWorksWithExpectedClassRepresentation(ByteBuddyClass.class, mockTransformerChain);
     }
     
     private void assertThatMockTransformerChainWorksWithExpectedClassRepresentation(final Class<?> expectedParameterClass,

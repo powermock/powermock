@@ -19,7 +19,6 @@
 package org.powermock.core.transformers;
 
 import org.powermock.core.MockGateway;
-import org.powermock.core.classloader.bytebuddy.ByteBuddyMockClassLoader;
 import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
 import org.powermock.core.test.MockClassLoaderFactory;
 import org.powermock.core.transformers.javassist.AbstractJavaAssistMockTransformer;
@@ -79,10 +78,8 @@ class MockTransformerTestHelper {
     private static MockClassLoaderFactory createClassLoaderFactory(final Class<?> transformerClass) {
         if (AbstractJavaAssistMockTransformer.class.isAssignableFrom(transformerClass)){
             return new MockClassLoaderFactory(JavassistMockClassLoader.class);
-        }else {
-            return new MockClassLoaderFactory(ByteBuddyMockClassLoader.class);
         }
-    
+        throw new UnsupportedOperationException();
     }
     
     private static List<MockTransformerChain> createTransformers(final Class<?> mockGateway, final TransformStrategy strategy, final Class<?>... classes) {

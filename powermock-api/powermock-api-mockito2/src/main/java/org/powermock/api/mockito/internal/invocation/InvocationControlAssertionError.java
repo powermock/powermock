@@ -24,6 +24,7 @@ public class InvocationControlAssertionError {
     private static final String AT = "at";
     private static final String ERROR_LOCATION_MARKER = "->";
     private static final String COLON_NEWLINE = ":\n";
+    private static final String NEWLINE_POINT = "\n.";
     private static final String HERE_TEXT = "here:\n";
     private static final String UNDESIRED_INVOCATION_TEXT = " Undesired invocation:";
     private static final String POWER_MOCKITO_CLASS_NAME = "org.powermock.api.mockito.PowerMockito";
@@ -106,8 +107,8 @@ public class InvocationControlAssertionError {
         removeAndReplaceText(builder, HERE_TEXT, ' ');
 
         removeAndReplaceText(builder, COLON_NEWLINE, ' ');
-        final String finalMessage = builder.toString().trim();
-        return finalMessage;
+    
+        return builder.toString().trim();
     }
 
     private static StringBuilder removeFailureLocations(String message) {
@@ -124,17 +125,25 @@ public class InvocationControlAssertionError {
 
     private static void removeAndReplaceText(StringBuilder builder, String text, char appender) {
         int currentTextIndex = builder.indexOf(text);
-        int previousTextIndex = 0;
+        int previousTextIndex;
         boolean isSingleConcat = true;
+    
         while (currentTextIndex > 0) {
             previousTextIndex = currentTextIndex;
             builder.delete(currentTextIndex, currentTextIndex + text.length());
             currentTextIndex = builder.indexOf(text);
+            
+            final int length = builder.length();
+            
             if (isLastFinding(currentTextIndex) && !isSingleConcat) {
-                builder.replace(builder.length(), builder.length(), ".");
+                final int start = builder.charAt(length - 1) == '\n' ? length - 1 : length;
+                builder.replace(start, length, ".");
             } else {
-                builder.replace(previousTextIndex, previousTextIndex + 1, String.valueOf(
-                        builder.charAt(previousTextIndex)).toLowerCase());
+                final int end = previousTextIndex < length ? previousTextIndex + 1 : length;
+                builder.replace(
+                    previousTextIndex, end,
+                    String.valueOf(builder.charAt(previousTextIndex)).toLowerCase()
+                );
                 builder.insert(previousTextIndex, String.valueOf(appender));
                 currentTextIndex++;
                 isSingleConcat = false;

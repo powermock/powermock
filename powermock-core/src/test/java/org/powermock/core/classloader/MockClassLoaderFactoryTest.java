@@ -7,18 +7,13 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.powermock.configuration.GlobalConfiguration;
-import org.powermock.core.classloader.MockClassLoaderFactoryTest.TestContainer.ByteBuddyTestClass;
 import org.powermock.core.classloader.MockClassLoaderFactoryTest.TestContainer.ExceptionTestClass;
 import org.powermock.core.classloader.MockClassLoaderFactoryTest.TestContainer.JavassistTestClass;
 import org.powermock.core.classloader.MockClassLoaderFactoryTest.TestContainer.PrepareEverythingForTestTestClass;
-import org.powermock.core.classloader.MockClassLoaderFactoryTest.TestContainer.PrepareOnlyThisForTestTestClass;
 import org.powermock.core.classloader.MockClassLoaderFactoryTest.TestContainer.SuppressStaticInitializationForTestClass;
 import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
-import org.powermock.core.classloader.bytebuddy.ByteBuddyMockClassLoader;
 import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
 import org.powermock.reflect.Whitebox;
 import powermock.test.support.MainMockTransformerTestSupport.SupportClasses;
@@ -65,7 +60,6 @@ public class MockClassLoaderFactoryTest {
             final ArrayList<Object[]> parameters = new ArrayList<Object[]>();
         
             parameters.add(new Object[]{JavassistTestClass.class, "powermock.test.support.MainMockTransformerTestSupport$SupportClasses$FinalInnerClass"});
-            parameters.add(new Object[]{ByteBuddyTestClass.class, "powermock.test.support.MainMockTransformerTestSupport$SupportClasses$FinalInnerClass"});
             parameters.add(new Object[]{SuppressStaticInitializationForTestClass.class, "SupportClasses.FinalInnerClass"});
             parameters.add(new Object[]{PrepareEverythingForTestTestClass.class, "*"});
         
@@ -101,8 +95,6 @@ public class MockClassLoaderFactoryTest {
             final ArrayList<Object[]> parameters = new ArrayList<Object[]>();
             
             parameters.add(new Object[]{JavassistTestClass.class, JavassistMockClassLoader.class});
-            parameters.add(new Object[]{ByteBuddyTestClass.class, ByteBuddyMockClassLoader.class});
-            parameters.add(new Object[]{PrepareOnlyThisForTestTestClass.class, ByteBuddyMockClassLoader.class});
             
             return parameters;
         }
@@ -173,17 +165,7 @@ public class MockClassLoaderFactoryTest {
               .isExactlyInstanceOf(IllegalArgumentException.class);
         
         }
-    
-        @Test
-        public void should_use_default_bytecode_framework_from_global_configuration_for_class_if_there_is_not_annotation_on_class() {
-            GlobalConfiguration.powerMockConfiguration().setByteCodeFramework(ByteCodeFramework.ByteBuddy);
-        
-            final ClassLoader classLoader = objectUnderTest.createForClass();
-        
-            assertThat(classLoader)
-                .as("An instance of MockClassLoader is created")
-                .isInstanceOf(ByteBuddyMockClassLoader.class);
-        }
+
     }
     
     public abstract static class BasePrepareForTestCases {
@@ -193,8 +175,6 @@ public class MockClassLoaderFactoryTest {
             final ArrayList<Object[]> parameters = new ArrayList<Object[]>();
             
             parameters.add(new Object[]{JavassistTestClass.class, "powermock.test.support.MainMockTransformerTestSupport$SupportClasses"});
-            parameters.add(new Object[]{PrepareOnlyThisForTestTestClass.class, "powermock.test.support.MainMockTransformerTestSupport$SupportClasses"});
-            parameters.add(new Object[]{ByteBuddyTestClass.class, "powermock.test.support.MainMockTransformerTestSupport$SupportClasses"});
             parameters.add(new Object[]{SuppressStaticInitializationForTestClass.class, "SupportClasses.FinalInnerClass"});
             parameters.add(new Object[]{PrepareEverythingForTestTestClass.class, "*"});
             
@@ -247,20 +227,7 @@ public class MockClassLoaderFactoryTest {
             }
             
         }
-    
-        @PrepareOnlyThisForTest(value = SupportClasses.class, byteCodeFramework = ByteCodeFramework.ByteBuddy)
-        public static class PrepareOnlyThisForTestTestClass {
         
-            @Test
-            @PrepareOnlyThisForTest(value = SupportClasses.class, byteCodeFramework = ByteCodeFramework.ByteBuddy)
-            public void someTestWithPrepareForTest() {
-            }
-        
-            @Test
-            public void someTestWithoutPrepareForTest() {
-            }
-        
-        }
         
         @SuppressStaticInitializationFor("SupportClasses.FinalInnerClass")
         public static class SuppressStaticInitializationForTestClass {
@@ -274,18 +241,6 @@ public class MockClassLoaderFactoryTest {
             public void someTestWithoutPrepareForTest() {
             }
             
-        }
-        
-        @PrepareForTest(value = SupportClasses.class, byteCodeFramework = ByteCodeFramework.ByteBuddy)
-        public static class ByteBuddyTestClass {
-            @Test
-            @PrepareForTest(value = SupportClasses.FinalInnerClass.class, byteCodeFramework = ByteCodeFramework.ByteBuddy)
-            public void someTestWithPrepareForTest() {
-            }
-            
-            @Test
-            public void someTestWithoutPrepareForTest() {
-            }
         }
         
         public static class ExceptionTestClass {

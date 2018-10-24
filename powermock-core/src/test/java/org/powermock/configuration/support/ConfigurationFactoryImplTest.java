@@ -50,7 +50,7 @@ public class ConfigurationFactoryImplTest {
         
         @Test
         public void should_read_byte_code_framework_from_environment_variable_if_defined() {
-            environmentVariables.set("powermock.byte-code-framework", ByteCodeFramework.ByteBuddy.name());
+            environmentVariables.set("powermock.byte-code-framework", ByteCodeFramework.Javassist.name());
             
             PowerMockConfiguration configuration = configurationFactory.create(PowerMockConfiguration.class);
             
@@ -60,7 +60,7 @@ public class ConfigurationFactoryImplTest {
             
             assertThat(configuration.getByteCodeFramework())
                 .as("Enum from configuration is read correctly")
-                .isEqualTo(ByteCodeFramework.ByteBuddy);
+                .isEqualTo(ByteCodeFramework.Javassist);
         }
     }
     
@@ -90,7 +90,7 @@ public class ConfigurationFactoryImplTest {
                 .contains("org.somepackage");
             assertThat(configuration.getByteCodeFramework())
                 .as("Enum from configuration is read correctly")
-                .isEqualTo(ByteCodeFramework.ByteBuddy);
+                .isEqualTo(ByteCodeFramework.Javassist);
         }
         
         @Test
