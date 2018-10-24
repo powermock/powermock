@@ -27,14 +27,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
-import org.powermock.core.classloader.bytebuddy.ByteBuddyMockClassLoader;
 import org.powermock.core.classloader.javassist.ClassPathAdjuster;
 import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
 import org.powermock.core.test.MockClassLoaderFactory;
 import org.powermock.core.transformers.ClassWrapper;
 import org.powermock.core.transformers.MockTransformer;
 import org.powermock.core.transformers.MockTransformerChain;
-import org.powermock.core.transformers.bytebuddy.support.ByteBuddyClass;
 import org.powermock.core.transformers.support.DefaultMockTransformerChain;
 import org.powermock.reflect.Whitebox;
 
@@ -57,16 +55,11 @@ public class MockClassLoaderTest {
     
     @Parameterized.Parameters(name = "ClassLoader: {0}")
     public static List<Object[]> data() {
-        return asList(
-            new Object[]{
-                JavassistMockClassLoader.class,
-                new JavassistMockTransformer()
-            },
-            new Object[]{
-                ByteBuddyMockClassLoader.class,
-                new BytebuddyMockTransformer()
-            }
-        );
+        final Object[] objects = {
+            JavassistMockClassLoader.class,
+            new JavassistMockTransformer()
+        };
+        return asList(new Object[][]{objects});
     }
     
     private final MockClassLoaderFactory mockClassLoaderFactory;
@@ -361,20 +354,4 @@ public class MockClassLoaderTest {
         }
     }
     
-    private static class BytebuddyMockTransformer implements MockTransformer<ByteBuddyClass> {
-        @Override
-        public ClassWrapper<ByteBuddyClass> transform(final ClassWrapper<ByteBuddyClass> clazz) throws Exception {
-    
-            ByteBuddyClass bytebuddy = clazz.unwrap();
-    
-            Builder builder = bytebuddy.getBuilder();
-            TypeDescription typeDefinitions = bytebuddy.getTypeDescription();
-    
-            builder = builder.method(isDeclaredBy(typeDefinitions))
-                             .intercept(FixedValue.nullValue());
-    
-            
-            return clazz.wrap(ByteBuddyClass.from(typeDefinitions, builder));
-        }
-    }
 }

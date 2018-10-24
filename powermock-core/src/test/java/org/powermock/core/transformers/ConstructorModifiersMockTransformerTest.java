@@ -21,7 +21,6 @@ package org.powermock.core.transformers;
 import org.junit.Test;
 import org.junit.runners.Parameterized;
 import org.powermock.core.test.MockClassLoaderFactory;
-import org.powermock.core.transformers.bytebuddy.ConstructorModifiersMockTransformer;
 import org.powermock.core.transformers.javassist.ConstructorsMockTransformer;
 import powermock.test.support.MainMockTransformerTestSupport.ParentTestClass;
 import powermock.test.support.MainMockTransformerTestSupport.ParentTestClass.NestedTestClass;
@@ -46,7 +45,6 @@ public class ConstructorModifiersMockTransformerTest extends AbstractBaseMockTra
         Collection<Object[]> data = new ArrayList<Object[]>();
         
         data.addAll(MockTransformerTestHelper.createTransformerTestData(ConstructorsMockTransformer.class));
-        data.addAll(MockTransformerTestHelper.createTransformerTestData(ConstructorModifiersMockTransformer.class));
         
         return data;
     }

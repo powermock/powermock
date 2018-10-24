@@ -24,7 +24,6 @@ import org.junit.Test;
 import org.junit.runners.Parameterized;
 import org.powermock.core.IndicateReloadClass;
 import org.powermock.core.test.MockClassLoaderFactory;
-import org.powermock.core.transformers.bytebuddy.ConstructorCallMockTransformer;
 import org.powermock.core.transformers.javassist.InstrumentMockTransformer;
 import org.powermock.core.transformers.mock.MockGatewaySpy;
 import org.powermock.core.transformers.mock.MockGatewaySpy.MethodCall;
@@ -63,7 +62,6 @@ public class ConstructorCallMockTransformerTest extends AbstractBaseMockTransfor
         Collection<Object[]> data = new ArrayList<Object[]>();
     
         data.addAll(createTransformerTestDataWithMockGateway(MockGatewaySpy.class, InstrumentMockTransformer.class));
-        data.addAll(createTransformerTestDataWithMockGateway(MockGatewaySpy.class, ConstructorCallMockTransformer.class));
         
         return data;
     }
@@ -78,7 +76,6 @@ public class ConstructorCallMockTransformerTest extends AbstractBaseMockTransfor
     @Test
     public void should_not_change_constructors_of_test_class() throws Exception {
         assumeClassLoaderMode();
-        assumeClassLoaderIsByteBuddy();
         
         final Class<MultipleConstructors> testClass = MultipleConstructors.class;
         
@@ -103,7 +100,6 @@ public class ConstructorCallMockTransformerTest extends AbstractBaseMockTransfor
     @Test
     public void should_not_change_constructors_of_nested_test_classes() throws Exception {
         assumeClassLoaderMode();
-        assumeClassLoaderIsByteBuddy();
     
         setTestClassToTransformers(ParentTestClass.class);
     

@@ -6,10 +6,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.PrepareOnlyThisForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.core.classloader.annotations.UseClassPathAdjuster;
-import org.powermock.core.classloader.bytebuddy.ByteBuddyMockClassLoader;
 import org.powermock.core.classloader.javassist.JavassistMockClassLoader;
 import org.powermock.core.transformers.MockTransformerChainFactory;
-import org.powermock.core.transformers.bytebuddy.ByteBuddyMockTransformerChainFactory;
 import org.powermock.core.transformers.javassist.JavassistMockTransformerChainFactory;
 
 import java.lang.reflect.AnnotatedElement;
@@ -26,18 +24,6 @@ public enum ByteCodeFramework {
         @Override
         MockTransformerChainFactory createTransformerChainFactory() {
             return new JavassistMockTransformerChainFactory();
-        }
-    },
-    ByteBuddy {
-        @Override
-        MockClassLoader createClassloader(final MockClassLoaderConfiguration configuration,
-                                          final UseClassPathAdjuster useClassPathAdjuster) {
-            return new ByteBuddyMockClassLoader(configuration);
-        }
-    
-        @Override
-        MockTransformerChainFactory createTransformerChainFactory() {
-            return new ByteBuddyMockTransformerChainFactory();
         }
     };
     

@@ -43,7 +43,6 @@ public class StaticFinalFieldsMockTransformerTest extends AbstractBaseMockTransf
         Collection<Object[]> data = new ArrayList<Object[]>();
         
         data.addAll(MockTransformerTestHelper.createTransformerTestData(StaticFinalFieldsMockTransformer.class));
-        data.addAll(MockTransformerTestHelper.createTransformerTestData(org.powermock.core.transformers.bytebuddy.StaticFinalFieldsMockTransformer.class));
         
         return data;
     }

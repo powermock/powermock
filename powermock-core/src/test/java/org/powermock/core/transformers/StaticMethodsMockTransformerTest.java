@@ -22,11 +22,8 @@ import org.junit.Test;
 import org.junit.runners.Parameterized;
 import org.powermock.core.MockGateway;
 import org.powermock.core.test.MockClassLoaderFactory;
-import org.powermock.core.transformers.bytebuddy.MethodMockTransformer;
-import org.powermock.core.transformers.bytebuddy.advice.MockMethodDispatchers;
 import org.powermock.core.transformers.javassist.StaticFinalNativeMethodMockTransformer;
 import org.powermock.core.transformers.mock.MockGatewaySpy;
-import org.powermock.core.transformers.mock.MockGatewaySpyMethodDispatcher;
 import org.powermock.core.transformers.support.DefaultMockTransformerChain;
 import org.powermock.reflect.internal.WhiteboxImpl;
 import powermock.test.support.MainMockTransformerTestSupport.StaticVoidMethodsTestClass;
@@ -45,7 +42,6 @@ public class StaticMethodsMockTransformerTest extends AbstractBaseMockTransforme
         Collection<Object[]> data = new ArrayList<Object[]>();
     
         data.addAll(MockTransformerTestHelper.createOneTransformerTestData(MockGatewaySpy.class, StaticFinalNativeMethodMockTransformer.class));
-        data.addAll(MockTransformerTestHelper.createOneTransformerTestData(MethodMockTransformer.class));
         
         return data;
     }
@@ -53,9 +49,6 @@ public class StaticMethodsMockTransformerTest extends AbstractBaseMockTransforme
     public StaticMethodsMockTransformerTest(final TransformStrategy strategy, final MockTransformer transformer,
                                             final MockClassLoaderFactory mockClassloaderFactory) {
         super(strategy, DefaultMockTransformerChain.newBuilder().append(transformer).build(), mockClassloaderFactory);
-        if (transformer instanceof MethodMockTransformer) {
-            MockMethodDispatchers.set(((MethodMockTransformer) transformer).getIdentifier(), new MockGatewaySpyMethodDispatcher());
-        }
     }
     
     @Test

@@ -18,7 +18,6 @@
 
 package samples.powermockito.junit4.bugs.github806;
 
-import javassist.NotFoundException;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -26,10 +25,10 @@ import static org.mockito.Mockito.doThrow;
 
 public class DoThrowTest {
     
-    @Test(expected = NotFoundException.class)
+    @Test(expected = RuntimeException.class)
     public void should_throw_expected_exception() {
         final DoThrowTMockClass mock = Mockito.mock(DoThrowTMockClass.class);
-        doThrow(NotFoundException.class).when(mock).doSomething();
+        doThrow(RuntimeException.class).when(mock).doSomething();
         mock.doSomething();
     }
     
