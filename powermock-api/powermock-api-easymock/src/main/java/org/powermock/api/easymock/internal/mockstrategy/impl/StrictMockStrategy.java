@@ -1,6 +1,6 @@
 package org.powermock.api.easymock.internal.mockstrategy.impl;
 
-import org.easymock.internal.MocksControl.MockType;
+import org.easymock.MockType;
 
 public class StrictMockStrategy extends AbstractMockStrategyBase {
 
