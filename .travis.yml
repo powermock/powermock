@@ -23,14 +23,6 @@ matrix:
   - jdk: oraclejdk8
     env:
       - SKIP_RELEASE=true
-      - powermock.byte-code-framework=ByteBuddy
-  - jdk: oraclejdk9
-    env:
-      - SKIP_RELEASE=true
-      - powermock.byte-code-framework=ByteBuddy
-  - jdk: oraclejdk8
-    env:
-      - SKIP_RELEASE=true
       - powermock.byte-code-framework=Javassist
   - jdk: oraclejdk9
     env:
