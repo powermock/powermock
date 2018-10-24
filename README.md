@@ -14,6 +14,7 @@ When writing unit tests it is often useful to bypass encapsulation and therefore
 Please note that PowerMock is mainly intended for people with expert knowledge in unit testing. Putting it in the hands of junior developers may cause more harm than good.
 
 ## News
+* 2018-10-24: PowerMock 2.0.0-RC.1 has been released. Main changes: offical supporting Mockito 2.x and dropping supporting Mockito 1.x. This release also supports Java 9. Other change read in [release notes](https://github.com/powermock/powermock/releases/tag/powermock-2.0.0-RC.1). 
 * 2017-08-12: PowerMock 1.7.1 has been released with one, but significant change: the old API for verifying static mock has been deprecated and a new one has been added. Old API will be removed in version PowerMock 2.0 due to incompatibility with Mockito Public API.
 * 2017-06-16: PowerMock 1.7.0 has been released with support for Mockito 2 (not only beta versions) and new features such as global `@PowerMockIgnore` as well as bug fixes and other improvements. See [release notes](https://github.com/powermock/powermock/releases/tag/powermock-1.7.0) and [change log](https://raw.githubusercontent.com/powermock/powermock/master/docs/changelog.txt) for details. 
 * 2017-02-03: Johan blogs about how to mock slf4j with PowerMock at his [blog](http://code.haleby.se/2017/02/03/a-case-for-powermock/)
