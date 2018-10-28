@@ -90,23 +90,23 @@ public class EasyMockMethodInvocationControl<T> implements MethodInvocationContr
         return invocationHandler.invoke(mockInstance == null ? proxy : mockInstance, method, arguments);
     }
 
-    public MocksControl.MockType getMockType() {
+    public MockType getMockType() {
         final MocksControl control = invocationHandler.getControl();
-        if (WhiteboxImpl.getFieldsOfType(control, MocksControl.MockType.class).isEmpty()) {
+        if (WhiteboxImpl.getFieldsOfType(control, MockType.class).isEmpty()) {
             // EasyMock is of version 3.2+
             final MockType mockType = WhiteboxImpl.getInternalState(control, MockType.class);
             switch (mockType) {
                 case DEFAULT:
-                    return MocksControl.MockType.DEFAULT;
+                    return MockType.DEFAULT;
                 case NICE:
-                    return MocksControl.MockType.NICE;
+                    return MockType.NICE;
                 case STRICT:
-                    return MocksControl.MockType.STRICT;
+                    return MockType.STRICT;
                 default:
                     throw new IllegalStateException("PowerMock doesn't seem to work with the used EasyMock version. Please report to the PowerMock mailing list");
             }
         } else {
-            return WhiteboxImpl.getInternalState(control, MocksControl.MockType.class);
+            return WhiteboxImpl.getInternalState(control, MockType.class);
         }
     }
 
