@@ -12,3 +12,4 @@ repo
 .gradle
 **/out/**
 **/classes/**
+**/bin/**
