@@ -21,7 +21,7 @@ public class AnnotationDemoTest extends PowerMockTestCase {
     @Mock
     private Service serviceMock;
 
-    @Test
+    @Test(enabled = false)
     public void assertInjectionWorked() throws Exception {
         AnnotationDemo tested = new AnnotationDemo(serviceMock);
         final String expected = "mock";

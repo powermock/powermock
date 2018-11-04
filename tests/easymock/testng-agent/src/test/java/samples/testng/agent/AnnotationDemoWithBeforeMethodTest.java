@@ -29,7 +29,7 @@ public class AnnotationDemoWithBeforeMethodTest extends PowerMockTestCase {
 		tested = new AnnotationDemo(serviceMock);
 	}
 
-	@Test
+	@Test(enabled = false)
     @PrepareForTest
 	public void assertInjectionWorked() throws Exception {
 		final String expected = "mock";
