@@ -23,6 +23,7 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Parameterized;
+import org.easymock.EasyMock;
 import org.powermock.tests.utils.PowerMockTestNotifier;
 
 import java.lang.reflect.Method;
@@ -30,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
@@ -76,7 +76,7 @@ public class PowerMockRunNotifierTest {
         replay(backendRunNotifierMock);
         method.invoke(new PowerMockRunNotifier(
                 backendRunNotifierMock,
-                createNiceMock(PowerMockTestNotifier.class),
+                EasyMock.<PowerMockTestNotifier, PowerMockTestNotifier>createNiceMock(PowerMockTestNotifier.class),
                 new Method[0]),
                 testData);
         verify(backendRunNotifierMock);

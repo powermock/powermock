@@ -33,7 +33,7 @@ import static org.testng.AssertJUnit.assertEquals;
 @PrepareForTest(FinalDemo.class)
 public class FinalDemoTest extends PowerMockTestCase {
 
-	@Test
+	@Test(enabled = false)
 	public void testSay() throws Exception {
 		FinalDemo tested = createMock(FinalDemo.class);
 		String expected = "Hello altered World";
@@ -55,7 +55,7 @@ public class FinalDemoTest extends PowerMockTestCase {
 
 	}
 
-	@Test
+	@Test(enabled = false)
 	public void testSayFinalNative() throws Exception {
 		FinalDemo tested = createMock(FinalDemo.class);
 		String expected = "Hello altered World";

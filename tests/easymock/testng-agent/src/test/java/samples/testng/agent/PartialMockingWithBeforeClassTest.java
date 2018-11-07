@@ -39,7 +39,7 @@ public class PartialMockingWithBeforeClassTest extends PowerMockTestCase {
 		tested = createPartialMock(PrivateFinal.class, "sayIt");
 	}
 
-	@Test
+	@Test(enabled = false)
 	public void partialMockingWithMockCreatedInBeforeClassMethod() throws Exception {
 		String expected = "Hello altered World";
 		expectPrivate(tested, "sayIt", "name").andReturn(expected);

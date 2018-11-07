@@ -35,7 +35,7 @@ import static org.powermock.api.easymock.PowerMock.*;
 @PrepareForTest( { StaticService.class, StaticHelper.class })
 public class MockStaticExtendsPowerMockTestCaseTest extends PowerMockTestCase {
 
-    @Test
+    @Test(enabled = false)
     public void testMockStatic() throws Exception {
         mockStatic(StaticService.class);
         String expected = "Hello altered World";
@@ -56,7 +56,7 @@ public class MockStaticExtendsPowerMockTestCaseTest extends PowerMockTestCase {
         }
     }
 
-    @Test
+    @Test(enabled = false)
     public void testMockStaticFinal() throws Exception {
         mockStatic(StaticService.class);
         String expected = "Hello altered World";
