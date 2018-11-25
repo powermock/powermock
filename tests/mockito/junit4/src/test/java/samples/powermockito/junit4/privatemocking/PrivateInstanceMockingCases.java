@@ -27,7 +27,6 @@ import org.powermock.reflect.Whitebox;
 import samples.privateandfinal.PrivateFinal;
 import samples.privatemocking.PrivateMethodDemo;
 
-import javax.activation.FileDataSource;
 import java.io.File;
 import java.io.StringReader;
 

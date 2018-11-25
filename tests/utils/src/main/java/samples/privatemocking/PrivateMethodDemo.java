@@ -15,7 +15,6 @@
  */
 package samples.privatemocking;
 
-import javax.activation.FileDataSource;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Reader;
