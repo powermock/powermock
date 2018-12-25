@@ -33,8 +33,14 @@ public class DeepCloner implements DeepClonerSPI {
 	 */
 	public DeepCloner(ClassLoader classLoader) {
         xStream = new XStream();
-        xStream.omitField(SingleClassloaderExecutor.class, "classloader");
+		disableSecurity();
+		xStream.omitField(SingleClassloaderExecutor.class, "classloader");
         xStream.setClassLoader(classLoader);
+	}
+
+	private void disableSecurity() {
+		XStream.setupDefaultSecurity(xStream);
+		xStream.allowTypesByRegExp(new String[]{".*"});
 	}
 
 	/**
