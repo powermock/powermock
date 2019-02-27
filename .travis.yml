@@ -29,7 +29,12 @@ matrix:
       - SKIP_RELEASE=true
       - powermock.byte-code-framework=Javassist
   - jdk: oraclejdk8
-
+  - jdk: openjdk9
+    env: SKIP_RELEASE=true
+  - jdk: openjdk10
+    env: SKIP_RELEASE=true
+  - jdk: openjdk11
+    env: SKIP_RELEASE=true
 #Below skips the installation step completely (https://docs.travis-ci.com/user/customizing-the-build/#Skipping-the-Installation-Step)
 #We need it because otherwise Travis CI injects an awkward './gradlew assemble' step into the CI workflow
 #We want to control and decide what Gradle tasks are executed
