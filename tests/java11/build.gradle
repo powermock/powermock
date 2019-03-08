@@ -1,0 +1,41 @@
+configure(project.subprojects) { subproject ->
+
+    // TODO: update gradle which supports JDK11
+//    if (JavaVersion.current() != JavaVersion.VERSION_11) {
+//        project.tasks.all { task -> task.enabled = false }
+//    }
+
+    dependencies {
+        testCompile("junit:junit:${junitVersion}") {
+            exclude group: 'org.hamcrest', module: 'hamcrest-core'
+        }
+        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testCompile("org.assertj:assertj-core:${assertjVersion}")
+
+        testCompile files(project(":tests:mockito:junit4").sourceSets.test.output)
+    }
+
+    compileJava {
+        sourceCompatibility = 11
+        targetCompatibility = 11
+    }
+
+    compileTestJava {
+        sourceCompatibility = 11
+        targetCompatibility = 11
+    }
+}
+
+project(":tests:java11:mockito-junit4") {
+    description = "Tests for Mockito module with JUnit 4.x. and Java11."
+
+    dependencies {
+        testCompile project(":powermock-modules:powermock-module-junit4")
+
+        testCompile project(":powermock-api:powermock-api-mockito2")
+        testCompile ("org.mockito:mockito-core:${mockitoVersion}"){
+            exclude group: 'net.bytebuddy', module: 'byte-buddy'
+            exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
+        }
+    }
+}

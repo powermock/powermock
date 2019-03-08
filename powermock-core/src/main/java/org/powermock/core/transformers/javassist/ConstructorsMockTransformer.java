@@ -21,6 +21,7 @@ package org.powermock.core.transformers.javassist;
 import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.Modifier;
+import javassist.NotFoundException;
 import org.powermock.core.transformers.TransformStrategy;
 
 import static org.powermock.core.transformers.TransformStrategy.CLASSLOADER;
@@ -41,14 +42,28 @@ public class ConstructorsMockTransformer extends AbstractJavaAssistMockTransform
         }
         
         if (getStrategy() == CLASSLOADER) {
-            for (CtConstructor c : clazz.getDeclaredConstructors()) {
+            transform(new CtClass[]{clazz});
+            // we also need to transform nested class at this time due to JEP181 since JDK11
+            // otherwise, we might have trouble during further transformation
+            // see github #958
+            try {
+                CtClass[] nestedClasses = clazz.getDeclaredClasses();
+                transform(nestedClasses);
+            } catch (NotFoundException ignored) {
+                // ignored
+            }
+        }
+        return clazz;
+    }
+
+    private static void transform(final CtClass[] clazzArray) {
+        for (CtClass nestedClazz : clazzArray) {
+            for (CtConstructor c : nestedClazz.getDeclaredConstructors()) {
                 final int modifiers = c.getModifiers();
                 if (!Modifier.isPublic(modifiers)) {
                     c.setModifiers(Modifier.setPublic(modifiers));
                 }
             }
         }
-        return clazz;
     }
-    
 }
