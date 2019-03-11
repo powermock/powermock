@@ -1,6 +1,6 @@
 configure(project.subprojects) { subproject ->
 
-    // TODO: update gradle which supports JDK11
+    // TODO: uncomment the followings once gradle supports JDK11
 //    if (JavaVersion.current() != JavaVersion.VERSION_11) {
 //        project.tasks.all { task -> task.enabled = false }
 //    }
@@ -15,15 +15,16 @@ configure(project.subprojects) { subproject ->
         testCompile files(project(":tests:mockito:junit4").sourceSets.test.output)
     }
 
-    compileJava {
-        sourceCompatibility = 11
-        targetCompatibility = 11
-    }
-
-    compileTestJava {
-        sourceCompatibility = 11
-        targetCompatibility = 11
-    }
+    // TODO: uncomment the followings once JDK11 is supported
+//    compileJava {
+//        sourceCompatibility = 11
+//        targetCompatibility = 11
+//    }
+//
+//    compileTestJava {
+//        sourceCompatibility = 11
+//        targetCompatibility = 11
+//    }
 }
 
 project(":tests:java11:mockito-junit4") {
