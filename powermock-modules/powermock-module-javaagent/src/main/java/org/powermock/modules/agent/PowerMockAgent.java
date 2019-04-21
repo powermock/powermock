@@ -23,6 +23,8 @@
  */
 package org.powermock.modules.agent;
 
+import org.powermock.utils.JavaVersion;
+
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 
@@ -37,16 +39,13 @@ public final class PowerMockAgent
 {
 
 	static final String javaSpecVersion = System.getProperty("java.specification.version");
-    static final boolean jdk6OrLater = "1.6".equals(javaSpecVersion) || "1.7".equals(javaSpecVersion) || "1.8".equals(javaSpecVersion)
-	    || "9".equals(javaSpecVersion);
+    static final boolean jdk6OrLater = JavaVersion.JAVA_RECENT.atLeast(JavaVersion.JAVA_1_6);
 
     private static final PowerMockClassTransformer classTransformer = new PowerMockClassTransformer();
     
     private static Instrumentation instrumentation;
 
     private PowerMockAgent() {}
-
-    public static boolean isJava6OrLater() { return jdk6OrLater; }
 
     /**
      * This method must only be called by the JVM, to provide the instrumentation object.
