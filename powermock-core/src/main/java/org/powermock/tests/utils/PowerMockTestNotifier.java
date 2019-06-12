@@ -21,7 +21,7 @@ import org.powermock.core.spi.testresult.TestSuiteResult;
 import java.lang.reflect.Method;
 
 /**
- * Implementors of this interface that must provide the ability to notify
+ * Implementers of this interface that must provide the ability to notify
  * PowerMock test listeners with the events as specified by the methods declared
  * in this interface.
  */
