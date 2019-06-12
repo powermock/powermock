@@ -116,7 +116,7 @@ public class WhiteBoxTest {
     @Test
     public void testGetInternalState_object() throws Exception {
         ClassWithInternalState tested = new ClassWithInternalState();
-        tested.increaseInteralState();
+        tested.increaseInternalState();
         Object internalState = Whitebox.getInternalState(tested, "internalState");
         assertTrue("InternalState should be instanceof Integer", internalState instanceof Integer);
         assertEquals(1, internalState);
@@ -126,7 +126,7 @@ public class WhiteBoxTest {
     @Test
     public void testGetInternalState_parmaterizedType() throws Exception {
         ClassWithInternalState tested = new ClassWithInternalState();
-        tested.increaseInteralState();
+        tested.increaseInternalState();
         int internalState = Whitebox.getInternalState(tested, "internalState", tested.getClass(), int.class);
         assertEquals(1, internalState);
     }
@@ -134,7 +134,7 @@ public class WhiteBoxTest {
     @Test
     public void testSetInternalState() throws Exception {
         ClassWithInternalState tested = new ClassWithInternalState();
-        tested.increaseInteralState();
+        tested.increaseInternalState();
         Whitebox.setInternalState(tested, "anotherInternalState", 2);
         assertEquals(2, tested.getAnotherInternalState());
     }
@@ -152,7 +152,7 @@ public class WhiteBoxTest {
     @Test
     public void testSetInternalState_superClass() throws Exception {
         ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
-        tested.increaseInteralState();
+        tested.increaseInternalState();
         Whitebox.setInternalState(tested, "anotherInternalState", 2, ClassWithInternalState.class);
         assertEquals(2, tested.getAnotherInternalState());
     }
