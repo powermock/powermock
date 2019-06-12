@@ -366,7 +366,7 @@ Change log 1.3.5 (2009-12-13)
 
 Change log 1.3.1 (released 2009-10-28)
 --------------------------------------
-* Critial bug resolved in the PowerMock JUnit 4.7 runner: Before tests would not be executed at all if a JUnit rule was used in the test (even though it looked like they were). This has now been resolved an thus support for JUnit 4.7 rules should _really_ work.
+* Critical bug resolved in the PowerMock JUnit 4.7 runner: Before tests would not be executed at all if a JUnit rule was used in the test (even though it looked like they were). This has now been resolved an thus support for JUnit 4.7 rules should _really_ work.
 * DeepCloner now supports cloning of one dimensional arrays, primitives, enums and collections.
 * Test case is now always prepared for test even if no @PrepareForTest annotation is specified
 * Fixed a bug in Whitebox#setInternalState so that it now works to supply an array when specifying a method name again.
