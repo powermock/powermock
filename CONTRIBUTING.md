@@ -56,7 +56,7 @@ Issues should always have a [Short, Self Contained, Correct (Compilable)](http:/
 
   For that matter it's possible to commit [_semantic_ changes](http://lemike-de.tumblr.com/post/79041908218/semantic-commits). _Tests are an asset, so is history_.
 
-  _Exemple gratia_:
+  _Exempli gratia_:
 ```
 Fixes #777 : The new feature
 Fixes #777 : Refactors this part of PowerMock to make feature possible
