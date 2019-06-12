@@ -397,7 +397,7 @@ Change log 1.3 (released 2009-10-06)
 * PowerMock now supports mocking instance methods of final system classes (such as java.lang.String). To do this you need to prepare the class that invokes the method of the system class. Note that partial mocking of instance methods in final system classes doesn't yet work if a constructor needs to be invoked on the mock.
 * You can now mock new instance calls to final system classes in the same was you'd mock any other new instance call.
 * Improved error message in Whitebox when getting a method or constructor which was not found and no parameter types were supplied.
-* The state of classes that should have their static intializers suppressed are no longer clear after each atomic test. This means that suppression of static initializers works (again) in test suites.
+* The state of classes that should have their static initializers suppressed are no longer clear after each atomic test. This means that suppression of static initializers works (again) in test suites.
 * Begun working with support for TestNG (thanks to Dan Fabulich for helping us with this).
 * Deprecated Whitebox#getInternalState(Object object, String fieldName, Class<?> where, Class<T> type), use "Whitebox.<Type> getInternalState(Object object, String fieldName, Class<?> where)" instead.
 * Changed return type of Whitebox#getInternalState(Object object, String fieldName) from Object to T. This means that you can avoid cast using e.g. "Whitebox.<MyType> getInternalState(instance, "myFieldName")".
