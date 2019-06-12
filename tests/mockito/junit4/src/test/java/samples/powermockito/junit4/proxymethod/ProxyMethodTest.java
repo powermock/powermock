@@ -94,7 +94,7 @@ public class ProxyMethodTest {
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
-	public void replaceStaticMethodToInstaceMethodDoesntWork() throws Exception {
+	public void replaceStaticMethodToInstanceMethodDoesntWork() throws Exception {
 		replace(method(SuppressMethod.class, "getObjectStatic")).with(method(SuppressMethodExample.class, "getStringObject"));
 	}
 

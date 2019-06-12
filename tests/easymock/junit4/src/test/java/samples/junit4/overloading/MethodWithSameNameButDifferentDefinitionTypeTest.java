@@ -45,7 +45,7 @@ public class MethodWithSameNameButDifferentDefinitionTypeTest {
 
         replayAll();
 
-        new StaticAndInstanceMethodWithSameNameUser().performInstaceInvocation(mock);
+        new StaticAndInstanceMethodWithSameNameUser().performInstanceInvocation(mock);
 
         verifyAll();
     }
