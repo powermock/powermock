@@ -68,4 +68,4 @@ Fixes #777 : Refactors this part of PowerMock to make feature possible
 
 * Documentation !!! Always document the public API with love. Internals could use some love too but it's argubly not as important. In all cases the code should _auto-document_ itself like any [well designed API](rebased and squashed if necessary, so that each commit clearly changes one things and there are no extraneous fix-ups).
 
-* We use (4) spaces instead of tabs. Make sure line ending is Unix style (LF). More on line ending on the [Github help](https://help.github.com/articles/dealing-with-line-endings/).
+* We use (4) spaces instead of tabs. Make sure line ending is Unix style (LF). More on line ending on the [GitHub help](https://help.github.com/articles/dealing-with-line-endings/).
