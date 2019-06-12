@@ -33,7 +33,7 @@ public class SuppressSpecificConstructorDemoTest {
 		suppress(constructor(SuppressSpecificConstructorDemo.class, String.class));
 
 		// This should be fine
-		new SuppressSpecificConstructorDemo("This expection should not occur");
+		new SuppressSpecificConstructorDemo("This exception should not occur");
 		// This should not be fine!
 		try {
 			new SuppressSpecificConstructorDemo();

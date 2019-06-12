@@ -39,14 +39,14 @@ import static org.powermock.api.support.membermodification.MemberModifier.replac
 public class ProxyMethodTest {
 
 	@Test(expected = ArrayStoreException.class)
-	public void expectionThrowingMethodProxyWorksForJavaLangReflectMethods() throws Exception {
+	public void exceptionThrowingMethodProxyWorksForJavaLangReflectMethods() throws Exception {
 		replace(method(SuppressMethod.class, "getObject")).with(new ThrowingInvocationHandler());
 
 		new SuppressMethod().getObject();
 	}
 
 	@Test(expected = ArrayStoreException.class)
-	public void expectionThrowingMethodProxyWorksForMethodNames() throws Exception {
+	public void exceptionThrowingMethodProxyWorksForMethodNames() throws Exception {
 		replace(method(SuppressMethod.class, "getObject")).with(new ThrowingInvocationHandler());
 
 		new SuppressMethod().getObject();
