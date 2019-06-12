@@ -49,7 +49,7 @@ public class ReplayAllForExpectNewTest {
 		replayAll();
 
 		try {
-			tested.throwExceptionAndWrapInRunTimeWhenInvoction();
+			tested.throwExceptionAndWrapInRunTimeWhenInvocation();
 			fail("Should throw a checked Exception!");
 		} catch (RuntimeException e) {
 			assertTrue(e.getCause() instanceof IOException);

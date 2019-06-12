@@ -48,7 +48,7 @@ public abstract class ExpectNewCases {
         replay(MyClass.class);
 
         try {
-            tested.throwExceptionAndWrapInRunTimeWhenInvoction();
+            tested.throwExceptionAndWrapInRunTimeWhenInvocation();
             fail("Should throw a checked Exception!");
         } catch (RuntimeException e) {
             assertTrue(e.getCause() instanceof IOException);
@@ -120,7 +120,7 @@ public abstract class ExpectNewCases {
         replay(MyClass.class);
 
         try {
-            tested.throwExceptionWhenInvoction();
+            tested.throwExceptionWhenInvocation();
             fail("Should throw RuntimeException!");
         } catch (RuntimeException e) {
             assertEquals(expectedFailMessage, e.getMessage());
