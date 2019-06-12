@@ -9,7 +9,7 @@ shipkit {
 
     git.tagPrefix = "powermock-"
 
-    // fix for Intellj Idea, because IDE does not read env properties from ${user.home}/.profile file on MacOS
+    // fix for IntelliJ Idea, because IDE does not read env properties from ${user.home}/.profile file on MacOS
 
     gitHub.writeAuthUser = System.getenv("GH_USER")
     gitHub.writeAuthToken = System.getenv("GH_WRITE_TOKEN")
