@@ -334,7 +334,7 @@ public class WhiteboxImpl {
      * Set the value of a field using reflection. This method will traverse the
      * super class hierarchy until the first field assignable to the
      * <tt>value</tt> type is found. The <tt>value</tt> (or
-     * <tt>additionaValues</tt> if present) will then be assigned to this field.
+     * <tt>additionalValues</tt> if present) will then be assigned to this field.
      *
      * @param object           the object to modify
      * @param value            the new value of the field
