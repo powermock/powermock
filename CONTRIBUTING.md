@@ -66,6 +66,6 @@ Fixes #777 : Refactors this part of PowerMock to make feature possible
 
 * New test methods should follow a snake case convention (`ensure_that_stuff_is_doing_that`), this allows the test name to be fully expressive on intent while still readable.
 
-* Documentation !!! Always document the public API with love. Internals could use some love too but it's argubly not as important. In all cases the code should _auto-document_ itself like any [well designed API](rebased and squashed if necessary, so that each commit clearly changes one things and there are no extraneous fix-ups).
+* Documentation !!! Always document the public API with love. Internals could use some love too but it's arguably not as important. In all cases the code should _auto-document_ itself like any [well designed API](rebased and squashed if necessary, so that each commit clearly changes one things and there are no extraneous fix-ups).
 
 * We use (4) spaces instead of tabs. Make sure line ending is Unix style (LF). More on line ending on the [GitHub help](https://help.github.com/articles/dealing-with-line-endings/).
