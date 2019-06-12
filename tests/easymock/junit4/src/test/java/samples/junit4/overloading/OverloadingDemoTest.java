@@ -90,7 +90,7 @@ public class OverloadingDemoTest {
 		replayAll();
 
 		final OverloadingDemo demo = new OverloadingDemo();
-		demo.performMethodOverloadTestWithOneArgumentSameAndOneDiffernt();
+		demo.performMethodOverloadTestWithOneArgumentSameAndOneDifferent();
 
 		verifyAll();
 	}
