@@ -114,7 +114,7 @@ public abstract class HotSpotVirtualMachine extends VirtualMachine {
             int rc = x.returnValue();
             switch (rc) {
                 case JNI_ENOMEM:
-                    throw new AgentLoadException("Insuffient memory");
+                    throw new AgentLoadException("Insufficient memory");
                 case ATTACH_ERROR_BADJAR:
                     throw new AgentLoadException("Agent JAR not found or no Agent-Class attribute");
                 case ATTACH_ERROR_NOTONCP:
