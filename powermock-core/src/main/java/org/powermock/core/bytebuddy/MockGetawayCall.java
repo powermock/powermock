@@ -103,7 +103,7 @@ public class MockGetawayCall {
             this.targetParameters = targetParameters;
         }
         
-        private List<StackManipulation> loadSignatureParametersClasess() {
+        private List<StackManipulation> loadSignatureParametersClasses() {
             List<StackManipulation> constructorSignature = new ArrayList<StackManipulation>();
             
             for (InDefinedShape targetParameter : targetParameters) {
@@ -133,7 +133,7 @@ public class MockGetawayCall {
         @Override
         public Size apply(final MethodVisitor mv, final Context implementationContext) {
             List<StackManipulation> loadTargetParameters = loadArgumentsFromVariable();
-            List<StackManipulation> constructorSignature = loadSignatureParametersClasess();
+            List<StackManipulation> constructorSignature = loadSignatureParametersClasses();
             
             return new Compound(
                                    ClassConstant.of(targetType),
