@@ -124,7 +124,7 @@ public class WhiteBoxTest {
 
     @SuppressWarnings("deprecation")
     @Test
-    public void testGetInternalState_parmaterizedType() throws Exception {
+    public void testGetInternalState_parameterizedType() throws Exception {
         ClassWithInternalState tested = new ClassWithInternalState();
         tested.increaseInternalState();
         int internalState = Whitebox.getInternalState(tested, "internalState", tested.getClass(), int.class);
