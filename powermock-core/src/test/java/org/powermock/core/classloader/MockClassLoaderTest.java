@@ -134,7 +134,7 @@ public class MockClassLoaderTest {
     }
     
     @Test
-    public void should_ignore_pagackage_added_powerMockIgnore_Annotated() throws Exception {
+    public void should_ignore_package_added_powerMockIgnore_Annotated() throws Exception {
         MockClassLoader mockClassLoader = mockClassLoaderFactory.getInstance(new String[]{"org.ikk.Jux"});
         
         MockClassLoaderConfiguration configuration = mockClassLoader.getConfiguration();
