@@ -525,7 +525,7 @@ public abstract class ExpectNewCases {
     }
 
     @Test
-    public void testNewWithArrayVarArgsWhenFirstArgumentIsNullAndSubseqentArgumentsAreNotNull() throws Exception {
+    public void testNewWithArrayVarArgsWhenFirstArgumentIsNullAndSubsequentArgumentsAreNotNull() throws Exception {
         ExpectNewDemo tested = new ExpectNewDemo();
         VarArgsConstructorDemo varArgsConstructorDemoMock = createMock(VarArgsConstructorDemo.class);
 
@@ -544,7 +544,7 @@ public abstract class ExpectNewCases {
     }
 
     @Test
-    public void testNewWithArrayVarArgsWhenFirstArgumentIsNotNullButSubseqentArgumentsAreNull() throws Exception {
+    public void testNewWithArrayVarArgsWhenFirstArgumentIsNotNullButSubsequentArgumentsAreNull() throws Exception {
         ExpectNewDemo tested = new ExpectNewDemo();
         VarArgsConstructorDemo varArgsConstructorDemoMock = createMock(VarArgsConstructorDemo.class);
 

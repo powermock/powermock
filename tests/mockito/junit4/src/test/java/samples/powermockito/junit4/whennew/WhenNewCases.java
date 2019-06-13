@@ -681,7 +681,7 @@ public class WhenNewCases {
     }
 
     @Test
-    public void testNewWithArrayVarArgsWhenFirstArgumentIsNullAndSubseqentArgumentsAreNotNull() throws Exception {
+    public void testNewWithArrayVarArgsWhenFirstArgumentIsNullAndSubsequentArgumentsAreNotNull() throws Exception {
         ExpectNewDemo tested = new ExpectNewDemo();
         VarArgsConstructorDemo varArgsConstructorDemoMock = mock(VarArgsConstructorDemo.class);
 
@@ -699,7 +699,7 @@ public class WhenNewCases {
     }
 
     @Test
-    public void testNewWithArrayVarArgsWhenFirstArgumentIsNotNullButSubseqentArgumentsAreNull() throws Exception {
+    public void testNewWithArrayVarArgsWhenFirstArgumentIsNotNullButSubsequentArgumentsAreNull() throws Exception {
         ExpectNewDemo tested = new ExpectNewDemo();
         VarArgsConstructorDemo varArgsConstructorDemoMock = mock(VarArgsConstructorDemo.class);
 
