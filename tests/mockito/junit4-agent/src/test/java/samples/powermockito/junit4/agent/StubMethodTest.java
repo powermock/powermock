@@ -55,7 +55,7 @@ public class StubMethodTest {
 	}
 
 	@Test
-	public void whenStubbingInstanceMethodWithPrimiteValueTheMethodReturnsTheStubbedValue() throws Exception {
+	public void whenStubbingInstanceMethodWithPrimitiveValueTheMethodReturnsTheStubbedValue() throws Exception {
 		float expectedValue = 4;
 		stub(method(SuppressMethod.class, "getFloat")).toReturn(expectedValue);
 
