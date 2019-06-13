@@ -45,7 +45,7 @@ import static org.powermock.api.support.membermodification.MemberModifier.*;
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(Parameterized.class)
 @PrepareForTest({SuppressMethod.class, SuppressField.class, SuppressEverything.class})
-public class SupressMethodExampleTest {
+public class SuppressMethodExampleTest {
 
     enum GetObjectSuppression {
 
@@ -115,7 +115,7 @@ public class SupressMethodExampleTest {
     @Rule
     public final ExpectedException expectedException = ExpectedException.none();
 
-    public SupressMethodExampleTest(
+    public SuppressMethodExampleTest(
             GetObjectSuppression getObjectSuppression,
             GetIntSuppression getIntSuppression,
             FieldSuppression fieldSuppression,
