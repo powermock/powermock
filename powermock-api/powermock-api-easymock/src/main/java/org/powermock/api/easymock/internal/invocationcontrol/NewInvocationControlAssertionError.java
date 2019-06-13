@@ -13,9 +13,9 @@ public class NewInvocationControlAssertionError {
          * instance of MyClass has been created less or more times than 3.
          */
         String message = oldError.getMessage();
-        final String newSubsitutionMethodName = InvocationSubstitute.class.getDeclaredMethods()[0].getName();
+        final String newSubstitutionMethodName = InvocationSubstitute.class.getDeclaredMethods()[0].getName();
         final String className = InvocationSubstitute.class.getSimpleName();
-        message = message.replaceAll(className+"."+newSubsitutionMethodName, Matcher.quoteReplacement(type.getName()));
+        message = message.replaceAll(className+"."+newSubstitutionMethodName, Matcher.quoteReplacement(type.getName()));
         message = message.replaceAll("method", "constructor");
 
         throw new AssertionError(message);

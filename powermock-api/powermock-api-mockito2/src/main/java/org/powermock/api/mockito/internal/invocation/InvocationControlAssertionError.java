@@ -83,12 +83,12 @@ public class InvocationControlAssertionError {
          * whenNew(MyClass.class).thenReturn(myMock).times(3) when in fact an
          * instance of MyClass has been created less or more times than 3.
          */
-        final String newSubsitutionClassName = InvocationSubstitute.class.getSimpleName();
-        final String newSubsitutionClassNameInMockito = newSubsitutionClassName.substring(0, 1).toLowerCase()
-                                                                + newSubsitutionClassName.substring(1);
+        final String newSubstitutionClassName = InvocationSubstitute.class.getSimpleName();
+        final String newSubstitutionClassNameInMockito = newSubstitutionClassName.substring(0, 1).toLowerCase()
+                                                                + newSubstitutionClassName.substring(1);
         String message = oldError.getMessage();
-        final String newSubsitutionMethodName = InvocationSubstitute.class.getDeclaredMethods()[0].getName();
-        message = message.replaceAll(newSubsitutionClassNameInMockito + "." + newSubsitutionMethodName, Matcher
+        final String newSubstitutionMethodName = InvocationSubstitute.class.getDeclaredMethods()[0].getName();
+        message = message.replaceAll(newSubstitutionClassNameInMockito + "." + newSubstitutionMethodName, Matcher
                                                                                                                 .quoteReplacement(type.getName()));
         message = message.replaceAll("method", "constructor");
         throw new AssertionError(changeMessageContent(message));
