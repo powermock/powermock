@@ -91,7 +91,7 @@ Change log 1.6.2 (2015-01-03)
 * Tests can now have multiple constructors (thanks to Henrik Kaipe for pull request)
 * Cleanup pom files and added version numbers (thanks to René Scheibe for pull request)
 * Fix "Test class can only have one constructor" issue that occurs when a JUnit or 3rd-party delegate runner (specified by a PowerMockRunnerDelegate annotation) can only deal with one public constructor. (thanks to Henrik Kaipe for pull request)
-* Packaged some of the Mocktio classes internally since Mockito is moving from CgLib to ByteBuddy. (thanks to Brice Dutheil for the pull request).
+* Packaged some of the Mockito classes internally since Mockito is moving from CgLib to ByteBuddy. (thanks to Brice Dutheil for the pull request).
 * Upgraded Javassist dependency to version 3.19.0-GA.
 * Upgraded TestNG dependency to version 6.8.21.
 * The PowerMock EasyMock Api now depends on EasyMock 3.3.1.

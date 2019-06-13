@@ -27,7 +27,7 @@ import org.powermock.reflect.Whitebox;
 import java.lang.reflect.Method;
 
 /**
- * Extension of the standard Mocktio stubber implementation that also support
+ * Extension of the standard Mockito stubber implementation that also support
  * PowerMockito created mocks.
  */
 public class PowerMockitoStubberImpl implements PowerMockitoStubber, Stubber {
