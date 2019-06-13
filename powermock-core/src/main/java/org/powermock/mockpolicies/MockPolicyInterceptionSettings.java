@@ -93,7 +93,7 @@ public interface MockPolicyInterceptionSettings {
 	 * @deprecated Use {@link #stubMethod(Method, Object)} instead.
 	 */
 	@Deprecated
-	void setSubtituteReturnValues(Map<Method, Object> substituteReturnValues);
+	void setSubstituteReturnValues(Map<Method, Object> substituteReturnValues);
 
 	/**
 	 * Add a method that should be intercepted and return another value (
@@ -104,7 +104,7 @@ public interface MockPolicyInterceptionSettings {
 	 * @deprecated Use {@link #stubMethod(Method, Object)} instead.
 	 */
 	@Deprecated
-	void addSubtituteReturnValue(Method method, Object returnObject);
+	void addSubstituteReturnValue(Method method, Object returnObject);
 
 	/**
 	 * Set specific fields that should be suppressed upon invocation. Note that
