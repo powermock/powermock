@@ -854,7 +854,7 @@ public class WhiteBoxTest {
     }
 
     @Test
-    public void invokeMethodInvokesOverridenMethods() throws Exception {
+    public void invokeMethodInvokesOverriddenMethods() throws Exception {
         assertTrue(Whitebox.<Boolean>invokeMethod(new ClassWithOverriddenMethod(), 2.0d));
     }
 

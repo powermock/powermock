@@ -270,7 +270,7 @@ Change log 1.4.6 (2010-10-13)
 * PowerMock can now be built with Maven 3 (issue 283).
 * Prepared pom's for Maven central synching.
 * Upgraded the TestNG module to version 5.14 (issue 275).
-* Fixed a bug in Whitebox which caused some overriden methods to be treated as overloaded (issue 276).
+* Fixed a bug in Whitebox which caused some overridden methods to be treated as overloaded (issue 276).
 
 Change log 1.4.5 (2010-08-30)
 -----------------------------
