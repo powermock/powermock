@@ -69,7 +69,7 @@ public final class PowerMockExpressionEditor extends ExprEditor {
                           "} else {" +
                           "	$_ = $proceed($$);" +
                           "}";
-        // TODO Change to objenisis instead
+        // TODO Change to objenesis instead
         e.replace(code);
     }
     
