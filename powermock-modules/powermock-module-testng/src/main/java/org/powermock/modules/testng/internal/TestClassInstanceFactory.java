@@ -63,7 +63,7 @@ class TestClassInstanceFactory {
     /**
      * We proxy the test class in order to be able to clear state after each
      * test method invocation. It would be much better to be able to register a
-     * testng listener programmtically but I cannot find a way to do so.
+     * testng listener programmatically but I cannot find a way to do so.
      */
     private Class<?> createTestClass(Class<?> actualTestClass) throws Exception {
 
