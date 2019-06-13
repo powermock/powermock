@@ -579,7 +579,7 @@ Change log 0.9 (released 2008-11-10)
 * Changed the clean-up mechanisms of PowerMock.replay(..) and PowerMock.verify(..). Should no longer clear unnecessary state.
 * Implemented two new PowerMock API methods: replayAll and verifyAll(). These can be used to replay and verify all classes and mocks created by the PowerMock API without having to explicitly specify each and everyone.
 
-Change log 0.8.5 (releasd 2008-10-30)
+Change log 0.8.5 (released 2008-10-30)
 -------------------------------------
 * Fixed so that it's now possible to mock abstract methods
 * WhiteBox.getMethod(..) now also returns protected and package-private methods.
