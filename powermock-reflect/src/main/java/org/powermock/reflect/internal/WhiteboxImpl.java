@@ -1893,13 +1893,13 @@ public class WhiteboxImpl {
     }
 
     /**
-     * Gets the all metods except.
+     * Gets the all methods except.
      *
      * @param <T>                 the generic type
      * @param type                the type
      * @param methodNameToExclude the method name to exclude
      * @param argumentTypes       the argument types
-     * @return the all metods except
+     * @return the all methods except
      */
     public static <T> Method[] getAllMethodsExcept(Class<T> type, String methodNameToExclude, Class<?>[] argumentTypes) {
         Method[] methods = getAllMethods(type);
