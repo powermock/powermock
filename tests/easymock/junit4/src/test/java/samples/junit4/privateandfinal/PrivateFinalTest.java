@@ -36,7 +36,7 @@ import static org.powermock.api.easymock.PowerMock.expectPrivate;
 public class PrivateFinalTest {
 
 	@Test
-	public void testMockPrivatAndFinal() throws Exception {
+	public void testMockPrivateAndFinal() throws Exception {
 
 		PrivateFinal tested = createPartialMock(PrivateFinal.class,
 				"sayIt");
