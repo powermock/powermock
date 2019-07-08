@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class PrivateInnerInterfacesInTestClassTest {
 
 	@Test
-	public void privateInterfacesCanBeLoadedAndBytcodeManipulatedByPowerMock() throws Exception {
+	public void privateInterfacesCanBeLoadedAndBytecodeManipulatedByPowerMock() throws Exception {
 		InnerInterface innerInterface = new InnerInterface() {
 			public String aMethod() {
 				return "ok";

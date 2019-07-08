@@ -13,7 +13,7 @@ public class ForMethodsJavaAssistTestClassTransformer extends JavaAssistTestClas
     
     private final Collection<Method> testMethodsThatRunOnOtherClassLoaders;
     /**
-     * Is lazily initilized because of
+     * Is lazily initialized because of
      * AbstractTestSuiteChunkerImpl#chunkClass(Class)
      */
     private Collection<String> methodsThatRunOnOtherClassLoaders;

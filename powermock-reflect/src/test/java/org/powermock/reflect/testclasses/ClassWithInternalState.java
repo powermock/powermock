@@ -47,11 +47,11 @@ public class ClassWithInternalState {
         return finalString;
     }
 
-    public void increaseInteralState() {
+    public void increaseInternalState() {
         internalState++;
     }
 
-    public void decreaseInteralState() {
+    public void decreaseInternalState() {
         internalState--;
     }
 

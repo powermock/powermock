@@ -19,7 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.legacy.PowerMockRunner;
-import samples.suppressconstructor.SuppressConstructorHeirarchyEvilGrandParent;
+import samples.suppressconstructor.SuppressConstructorHierarchyEvilGrandParent;
 import samples.suppressconstructor.SuppressConstructorHierarchy;
 import samples.suppressconstructor.SuppressConstructorHierarchyParent;
 
@@ -29,7 +29,7 @@ import static org.powermock.api.support.membermodification.MemberMatcher.constru
 import static org.powermock.api.support.membermodification.MemberModifier.suppress;
 
 @PrepareForTest( { SuppressConstructorHierarchy.class, SuppressConstructorHierarchyParent.class,
-		SuppressConstructorHeirarchyEvilGrandParent.class })
+		SuppressConstructorHierarchyEvilGrandParent.class })
 @RunWith(PowerMockRunner.class)
 public class SuppressConstructorHierarchyDemoTest {
 

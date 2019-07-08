@@ -34,7 +34,7 @@ import static org.junit.Assert.assertEquals;
 public class ChangeValueOfStaticFinalFieldInInterfacesDefect {
 
 	@Test
-	public void assertThatStaticFinalFieldValuesInInterfacesAreChangable() throws Exception {
+	public void assertThatStaticFinalFieldValuesInInterfacesAreChangeable() throws Exception {
 		final String value = "new value";
 		Whitebox.setInternalState(InterfaceWithStaticFinalField.class, value);
 		assertEquals(value, Whitebox.getInternalState(InterfaceWithStaticFinalField.class, String.class));

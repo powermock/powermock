@@ -57,7 +57,7 @@ public class EnclosedTest {
             mockStatic(StaticAndInstanceDemo.class);
             when(StaticAndInstanceDemo.getStaticMessage())
                     .thenReturn(stubbedReturnValue);
-            assertThat("Stubbed return-value of #getStaticMessag()",
+            assertThat("Stubbed return-value of #getStaticMessage()",
                     StaticAndInstanceDemo.getStaticMessage(),
                     equalTo(stubbedReturnValue));
             verifyStatic(StaticAndInstanceDemo.class);

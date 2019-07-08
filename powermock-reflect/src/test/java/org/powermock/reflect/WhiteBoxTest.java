@@ -116,7 +116,7 @@ public class WhiteBoxTest {
     @Test
     public void testGetInternalState_object() throws Exception {
         ClassWithInternalState tested = new ClassWithInternalState();
-        tested.increaseInteralState();
+        tested.increaseInternalState();
         Object internalState = Whitebox.getInternalState(tested, "internalState");
         assertTrue("InternalState should be instanceof Integer", internalState instanceof Integer);
         assertEquals(1, internalState);
@@ -124,9 +124,9 @@ public class WhiteBoxTest {
 
     @SuppressWarnings("deprecation")
     @Test
-    public void testGetInternalState_parmaterizedType() throws Exception {
+    public void testGetInternalState_parameterizedType() throws Exception {
         ClassWithInternalState tested = new ClassWithInternalState();
-        tested.increaseInteralState();
+        tested.increaseInternalState();
         int internalState = Whitebox.getInternalState(tested, "internalState", tested.getClass(), int.class);
         assertEquals(1, internalState);
     }
@@ -134,7 +134,7 @@ public class WhiteBoxTest {
     @Test
     public void testSetInternalState() throws Exception {
         ClassWithInternalState tested = new ClassWithInternalState();
-        tested.increaseInteralState();
+        tested.increaseInternalState();
         Whitebox.setInternalState(tested, "anotherInternalState", 2);
         assertEquals(2, tested.getAnotherInternalState());
     }
@@ -152,7 +152,7 @@ public class WhiteBoxTest {
     @Test
     public void testSetInternalState_superClass() throws Exception {
         ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
-        tested.increaseInteralState();
+        tested.increaseInternalState();
         Whitebox.setInternalState(tested, "anotherInternalState", 2, ClassWithInternalState.class);
         assertEquals(2, tested.getAnotherInternalState());
     }
@@ -173,12 +173,12 @@ public class WhiteBoxTest {
     }
 
     @Test
-    public void testInvokePrivateMethod_primtiveType() throws Exception {
+    public void testInvokePrivateMethod_primitiveType() throws Exception {
         assertTrue(Whitebox.<Boolean>invokeMethod(new ClassWithPrivateMethods(), "primitiveMethod", 8.2));
     }
 
     @Test
-    public void testInvokePrivateMethod_primtiveType_withoutSpecifyingMethodName() throws Exception {
+    public void testInvokePrivateMethod_primitiveType_withoutSpecifyingMethodName() throws Exception {
         assertTrue((Boolean) Whitebox.invokeMethod(new ClassWithUniquePrivateMethods(), 8.2d, 8.4d));
     }
 
@@ -220,7 +220,7 @@ public class WhiteBoxTest {
     }
 
     @Test
-    public void testInvokePrivateMethod_primtiveType_Wrapped() throws Exception {
+    public void testInvokePrivateMethod_primitiveType_Wrapped() throws Exception {
         assertTrue((Boolean) Whitebox.invokeMethod(new ClassWithPrivateMethods(), "primitiveMethod", new Double(8.2)));
     }
 
@@ -247,7 +247,7 @@ public class WhiteBoxTest {
     }
 
     @Test
-    public void testMethodWithPrimitiveAndWrappedInt_primtive_wrapped() throws Exception {
+    public void testMethodWithPrimitiveAndWrappedInt_primitive_wrapped() throws Exception {
         assertEquals(17, Whitebox.invokeMethod(new ClassWithPrivateMethods(), "methodWithPrimitiveAndWrappedInt",
                                                new Class[]{int.class, Integer.class}, 9, Integer.valueOf(8)));
     }
@@ -854,7 +854,7 @@ public class WhiteBoxTest {
     }
 
     @Test
-    public void invokeMethodInvokesOverridenMethods() throws Exception {
+    public void invokeMethodInvokesOverriddenMethods() throws Exception {
         assertTrue(Whitebox.<Boolean>invokeMethod(new ClassWithOverriddenMethod(), 2.0d));
     }
 

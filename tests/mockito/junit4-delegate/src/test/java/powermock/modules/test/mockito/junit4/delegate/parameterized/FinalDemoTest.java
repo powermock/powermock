@@ -48,7 +48,7 @@ public class FinalDemoTest {
     public String expected;
 
     @Parameterized.Parameters(name = "expected={0}")
-    public static Collection<?> expections() {
+    public static Collection<?> exceptions() {
         return java.util.Arrays.asList(new Object[][]{
             {"Hello altered World"}, {"something"}, {"test"}
         });

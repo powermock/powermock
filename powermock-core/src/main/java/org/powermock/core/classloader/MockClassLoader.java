@@ -48,7 +48,7 @@ import java.security.ProtectionDomain;
  *
  * @author Johan Haleby
  * @author Jan Kronquist
- * @author Artur Zagretdinov
+ * @author Arthur Zagretdinov
  *
  * @see MockClassLoaderConfiguration
  * @see ClassLoader#getSystemClassLoader()

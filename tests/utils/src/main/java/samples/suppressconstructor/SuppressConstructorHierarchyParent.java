@@ -16,7 +16,7 @@
 package samples.suppressconstructor;
 
 public class SuppressConstructorHierarchyParent extends
-		SuppressConstructorHeirarchyEvilGrandParent {
+		SuppressConstructorHierarchyEvilGrandParent {
 
 	private String message;
 

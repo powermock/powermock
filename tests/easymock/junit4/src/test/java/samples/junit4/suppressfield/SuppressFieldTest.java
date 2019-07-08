@@ -63,7 +63,7 @@ public class SuppressFieldTest {
 	}
 
 	@Test
-	public void assertThatSpecificInstanceFieldSuppressionWhenSpecifingClassAndFieldNameWorks() throws Exception {
+	public void assertThatSpecificInstanceFieldSuppressionWhenSpecifyingClassAndFieldNameWorks() throws Exception {
 		suppress(field(SuppressField.class, "mySecondValue"));
 		SuppressField suppressField = new SuppressField();
 		assertNull(suppressField.getMySecondValue());
@@ -90,7 +90,7 @@ public class SuppressFieldTest {
 	}
 
 	@Test
-	public void assertThatObjectIsNeverInstansiated() throws Exception {
+	public void assertThatObjectIsNeverInstantiated() throws Exception {
 		suppress(field(SuppressField.class, "domainObject"));
 		SuppressField suppressField = new SuppressField();
 		assertNull(suppressField.getDomainObject());

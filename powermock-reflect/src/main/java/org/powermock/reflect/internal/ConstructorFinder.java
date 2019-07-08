@@ -42,7 +42,7 @@ class ConstructorFinder {
 
             // if a constructor is found and it has varargs parameters then the constructor will be used even if
             // other constructor is matcher the given arguments. It is done, because when Argument Matchers are used
-            // arguments passed to the method are null value and it's imposable to determinate whether parameters
+            // arguments passed to the method are null value and it's impossible to determinate whether parameters
             // match to arguments or not.
 
             if (isVarArgConstructorFound()){

@@ -35,7 +35,7 @@ public class OverloadingDemo {
         OverloadedMethodsExample.overloadedMethodWithTwoArguments(object1, object2);
     }
 
-    public void performMethodOverloadTestWithOneArgumentSameAndOneDiffernt() {
+    public void performMethodOverloadTestWithOneArgumentSameAndOneDifferent() {
         Parent object1 = new ChildA();
         Parent object2 = new Parent();
         OverloadedMethodsExample.overloadedMethodWithTwoArguments(object2, object1);

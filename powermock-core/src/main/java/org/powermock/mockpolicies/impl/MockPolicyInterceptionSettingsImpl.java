@@ -123,12 +123,12 @@ public class MockPolicyInterceptionSettingsImpl implements MockPolicyInterceptio
 	}
 
     @Override
-	public void addSubtituteReturnValue(Method method, Object returnObject) {
+	public void addSubstituteReturnValue(Method method, Object returnObject) {
 		substituteReturnValues.put(method, returnObject);
 	}
 
     @Override
-	public void setSubtituteReturnValues(Map<Method, Object> substituteReturnValues) {
+	public void setSubstituteReturnValues(Map<Method, Object> substituteReturnValues) {
 		this.substituteReturnValues = substituteReturnValues;
 	}
 

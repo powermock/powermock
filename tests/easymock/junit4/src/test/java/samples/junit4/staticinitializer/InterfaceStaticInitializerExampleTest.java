@@ -29,12 +29,12 @@ import static org.junit.Assert.assertEquals;
 public class InterfaceStaticInitializerExampleTest {
 
 	@Test
-	public void testSupressStaticInitializer() throws Exception {
+	public void testSuppressStaticInitializer() throws Exception {
 		assertEquals(0, InterfaceComputation.calculateWithinHierarchy());
 	}
 
 	@Test
-	public void testSupressStaticInitializer2() throws Exception {
+	public void testSuppressStaticInitializer2() throws Exception {
 		assertEquals(0, InterfaceComputation.calculateWithReference());
 	}
 }

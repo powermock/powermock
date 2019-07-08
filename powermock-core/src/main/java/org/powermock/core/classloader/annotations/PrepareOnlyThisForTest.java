@@ -43,7 +43,7 @@ import java.lang.annotation.Target;
  * {@link #value()} list.
  * <p>
  * Sometimes you need to prepare inner classes for testing, this can be done by
- * suppling the fully-qualified name of the inner-class that should be mocked to
+ * supplying the fully-qualified name of the inner-class that should be mocked to
  * the {@link #fullyQualifiedNames()} list.
  * 
  * <p>

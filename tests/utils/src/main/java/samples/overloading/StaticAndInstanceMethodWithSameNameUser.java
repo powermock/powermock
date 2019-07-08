@@ -24,7 +24,7 @@ import samples.classhierarchy.Parent;
  */
 public class StaticAndInstanceMethodWithSameNameUser {
 
-    public void performInstaceInvocation(StaticAndInstanceMethodWithSameName object) {
+    public void performInstanceInvocation(StaticAndInstanceMethodWithSameName object) {
         Parent child = new ChildA();
         object.overloaded(child);
     }

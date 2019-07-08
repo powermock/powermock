@@ -29,12 +29,12 @@ import org.powermock.modules.testng.PowerMockTestCase;
 public class StaticInitializerExampleTest extends PowerMockTestCase {
 
 	@Test
-	public void testSupressStaticInitializer() throws Exception {
+	public void testSuppressStaticInitializer() throws Exception {
 		assertNull(StaticInitializerExample.getMySet(), "Should be null because the static initializer should be suppressed");
 	}
 
 	@Test
-	public void testSupressStaticInitializerAndSetFinalField() throws Exception {
+	public void testSuppressStaticInitializerAndSetFinalField() throws Exception {
 		assertNull(StaticInitializerExample.getMySet(), "Should be null because the static initializer should be suppressed");
 		final HashSet<String> hashSet = new HashSet<String>();
 		Whitebox.setInternalState(StaticInitializerExample.class, "mySet", hashSet);

@@ -35,7 +35,7 @@ public class MockitoFinalClassMockingTest {
     @Test
     public void should_mock_final_class_with_using_mockito_inline_mock_creator() {
         
-        assumeTrue("Test make seances only for Mockito 2", MockitoVersion.isMockito2());
+        assumeTrue("Test make sense only for Mockito 2", MockitoVersion.isMockito2());
         
         FinalClass mock = Mockito.mock(FinalClass.class);
         
@@ -51,7 +51,7 @@ public class MockitoFinalClassMockingTest {
     @Test
     public void should_mock_final_method_with_using_mockito_inline_mock_creator() {
         
-        assumeTrue("Test make seances only for Mockito 2", MockitoVersion.isMockito2());
+        assumeTrue("Test make sense only for Mockito 2", MockitoVersion.isMockito2());
         
         final FinalClass mock = Mockito.mock(FinalClass.class);
         

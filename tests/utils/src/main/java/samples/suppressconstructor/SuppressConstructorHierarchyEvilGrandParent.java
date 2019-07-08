@@ -15,9 +15,9 @@
  */
 package samples.suppressconstructor;
 
-public class SuppressConstructorHeirarchyEvilGrandParent {
+public class SuppressConstructorHierarchyEvilGrandParent {
 
-	SuppressConstructorHeirarchyEvilGrandParent() {
+	SuppressConstructorHierarchyEvilGrandParent() {
 		throw new RuntimeException("This should be suppressed!!");
 	}
 }

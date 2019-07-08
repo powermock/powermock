@@ -66,7 +66,7 @@ public class ExpectNewDemo {
 	 * The purpose of the method is to demonstrate that a test case can mock the
 	 * new instance call and throw an exception upon instantiation.
 	 */
-	public void throwExceptionWhenInvoction() {
+	public void throwExceptionWhenInvocation() {
 		new MyClass();
 	}
 
@@ -74,7 +74,7 @@ public class ExpectNewDemo {
 	 * The purpose of the method is to demonstrate that a test case can mock the
 	 * new instance call and throw an exception upon instantiation.
 	 */
-	public void throwExceptionAndWrapInRunTimeWhenInvoction() {
+	public void throwExceptionAndWrapInRunTimeWhenInvocation() {
 		try {
 			new MyClass();
 		} catch (Exception e) {

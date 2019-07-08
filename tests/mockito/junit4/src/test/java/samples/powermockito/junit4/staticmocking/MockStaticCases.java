@@ -131,7 +131,7 @@ public class MockStaticCases {
     }
     
     @Test
-    public void errorousVerificationOfStaticMethodsGivesANonMockitoStandardMessage() throws Exception {
+    public void erroneousVerificationOfStaticMethodsGivesANonMockitoStandardMessage() throws Exception {
         final String expected = "Hello world";
         final String argument = "hello";
         

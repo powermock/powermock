@@ -19,7 +19,7 @@ public class ClassLoaderUtil {
 
     /**
      * Loads a class with a specific classloader, wraps the
-     * {@link ClassNotFoundException} in a runtime exeception.
+     * {@link ClassNotFoundException} in a runtime exception.
      */
     @SuppressWarnings("unchecked")
     public static <T> Class<T> loadClass(Class<T> type, ClassLoader classloader) {

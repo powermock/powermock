@@ -28,7 +28,7 @@ import java.lang.reflect.Constructor;
 
 public class EasyMockNewInvocationControl<T> implements NewInvocationControl<IExpectationSetters<T>> {
     private final InvocationSubstitute<T> substitute;
-    private final Class<T> subsitutionType;
+    private final Class<T> substitutionType;
     private boolean hasReplayed;
     private boolean hasVerified;
 
@@ -36,7 +36,7 @@ public class EasyMockNewInvocationControl<T> implements NewInvocationControl<IEx
         if (substitute == null) {
             throw new IllegalArgumentException("Internal error: substitute cannot be null.");
         }
-        this.subsitutionType = type;
+        this.substitutionType = type;
         this.substitute = substitute;
     }
 
@@ -58,7 +58,7 @@ public class EasyMockNewInvocationControl<T> implements NewInvocationControl<IEx
 
             if (result == null) {
                 if (mockType == MockType.NICE) {
-                    result = EasyMock.createNiceMock(subsitutionType);
+                    result = EasyMock.createNiceMock(substitutionType);
                 } else {
                     throw new IllegalStateException("Must replay class " + type.getName() + " to get configured expectation.");
                 }

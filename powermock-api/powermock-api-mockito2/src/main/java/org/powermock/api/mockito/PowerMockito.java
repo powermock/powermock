@@ -97,7 +97,7 @@ public class PowerMockito extends MemberModifier {
      * <p>
      * <pre>
      *   mockStatic(Listener.class, withSettings()
-     *     .name(&quot;firstListner&quot;).defaultBehavior(RETURNS_SMART_NULLS));
+     *     .name(&quot;firstListener&quot;).defaultBehavior(RETURNS_SMART_NULLS));
      *   );
      * </pre>
      * <p>
@@ -160,7 +160,7 @@ public class PowerMockito extends MemberModifier {
      * <p>
      * <pre>
      *   Listener mock = mock(Listener.class, withSettings()
-     *     .name(&quot;firstListner&quot;).defaultBehavior(RETURNS_SMART_NULLS));
+     *     .name(&quot;firstListener&quot;).defaultBehavior(RETURNS_SMART_NULLS));
      *   );
      * </pre>
      * <p>

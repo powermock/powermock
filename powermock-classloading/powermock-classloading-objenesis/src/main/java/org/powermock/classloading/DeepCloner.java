@@ -172,12 +172,12 @@ public class DeepCloner implements DeepClonerSPI {
 
 	private <T> boolean isSerializableCandidate(Class<T> targetClass, Object source) {
 		return isStandardJavaType(targetClass)
-				&& (isSerializable(targetClass) || isImpliticlySerializable(targetClass))
+				&& (isSerializable(targetClass) || isImplicitlySerializable(targetClass))
 				&& !Map.class.isAssignableFrom(source.getClass())
 				&& !Iterable.class.isAssignableFrom(source.getClass());
 	}
 
-	private static boolean isImpliticlySerializable(Class<?> cls) {
+	private static boolean isImplicitlySerializable(Class<?> cls) {
 		return cls.isPrimitive();
 	}
 

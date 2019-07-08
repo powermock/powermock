@@ -20,7 +20,7 @@ package org.powermock;
 
 public class PowerMockInternalException extends RuntimeException{
     
-    private static final String MESSAGE = "PowerMock internal error has happened. This exception is thrown in unexpected cases, that normally should never happen. Please, report about the issue to PowerMock issues tacker. ";
+    private static final String MESSAGE = "PowerMock internal error has happened. This exception is thrown in unexpected cases, that normally should never happen. Please, report about the issue to PowerMock issues tracker. ";
     
     public PowerMockInternalException(final Throwable cause) {
         super(MESSAGE, cause);

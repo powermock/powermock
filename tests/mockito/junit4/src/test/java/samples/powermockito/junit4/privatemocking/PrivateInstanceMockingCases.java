@@ -124,7 +124,7 @@ public class PrivateInstanceMockingCases {
     }
     
     @Test
-    public void errorousVerificationOnPrivateMethodGivesFilteredErrorMessage() throws Exception {
+    public void erroneousVerificationOnPrivateMethodGivesFilteredErrorMessage() throws Exception {
         PrivateMethodDemo tested = spy(new PrivateMethodDemo());
         assertEquals("Hello Temp, you are 50 old.", tested.sayYear("Temp", 50));
 

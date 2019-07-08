@@ -57,7 +57,7 @@ public class ExpectNewDemoUsingThePrepareEverythingAnnotationTest {
         replayAll();
 
         try {
-            tested.throwExceptionAndWrapInRunTimeWhenInvoction();
+            tested.throwExceptionAndWrapInRunTimeWhenInvocation();
             fail("Should throw a checked Exception!");
         } catch (RuntimeException e) {
             assertTrue(e.getCause() instanceof IOException);
@@ -130,7 +130,7 @@ public class ExpectNewDemoUsingThePrepareEverythingAnnotationTest {
         replayAll();
 
         try {
-            tested.throwExceptionWhenInvoction();
+            tested.throwExceptionWhenInvocation();
             fail("Should throw RuntimeException!");
         } catch (RuntimeException e) {
             assertEquals(expectedFailMessage, e.getMessage());
@@ -535,7 +535,7 @@ public class ExpectNewDemoUsingThePrepareEverythingAnnotationTest {
     }
 
     @Test
-    public void testNewWithArrayVarArgsWhenFirstArgumentIsNullAndSubseqentArgumentsAreNotNull() throws Exception {
+    public void testNewWithArrayVarArgsWhenFirstArgumentIsNullAndSubsequentArgumentsAreNotNull() throws Exception {
         ExpectNewDemo tested = new ExpectNewDemo();
         VarArgsConstructorDemo varArgsConstructorDemoMock = createMock(VarArgsConstructorDemo.class);
 
@@ -554,7 +554,7 @@ public class ExpectNewDemoUsingThePrepareEverythingAnnotationTest {
     }
 
     @Test
-    public void testNewWithArrayVarArgsWhenFirstArgumentIsNotNullButSubseqentArgumentsAreNull() throws Exception {
+    public void testNewWithArrayVarArgsWhenFirstArgumentIsNotNullButSubsequentArgumentsAreNull() throws Exception {
         ExpectNewDemo tested = new ExpectNewDemo();
         VarArgsConstructorDemo varArgsConstructorDemoMock = createMock(VarArgsConstructorDemo.class);
 

@@ -266,7 +266,7 @@ public class WhenNewCases {
         whenNew(MyClass.class).withNoArguments().thenThrow(new IOException(expectedFailMessage));
 
         try {
-            tested.throwExceptionAndWrapInRunTimeWhenInvoction();
+            tested.throwExceptionAndWrapInRunTimeWhenInvocation();
             fail("Should throw a checked Exception!");
         } catch (RuntimeException e) {
             assertTrue(e.getCause() instanceof IOException);
@@ -333,7 +333,7 @@ public class WhenNewCases {
         whenNew(MyClass.class).withNoArguments().thenThrow(new RuntimeException(expectedFailMessage));
 
         try {
-            tested.throwExceptionWhenInvoction();
+            tested.throwExceptionWhenInvocation();
             fail("Should throw RuntimeException!");
         } catch (RuntimeException e) {
             assertEquals(expectedFailMessage, e.getMessage());
@@ -681,7 +681,7 @@ public class WhenNewCases {
     }
 
     @Test
-    public void testNewWithArrayVarArgsWhenFirstArgumentIsNullAndSubseqentArgumentsAreNotNull() throws Exception {
+    public void testNewWithArrayVarArgsWhenFirstArgumentIsNullAndSubsequentArgumentsAreNotNull() throws Exception {
         ExpectNewDemo tested = new ExpectNewDemo();
         VarArgsConstructorDemo varArgsConstructorDemoMock = mock(VarArgsConstructorDemo.class);
 
@@ -699,7 +699,7 @@ public class WhenNewCases {
     }
 
     @Test
-    public void testNewWithArrayVarArgsWhenFirstArgumentIsNotNullButSubseqentArgumentsAreNull() throws Exception {
+    public void testNewWithArrayVarArgsWhenFirstArgumentIsNotNullButSubsequentArgumentsAreNull() throws Exception {
         ExpectNewDemo tested = new ExpectNewDemo();
         VarArgsConstructorDemo varArgsConstructorDemoMock = mock(VarArgsConstructorDemo.class);
 

@@ -207,7 +207,7 @@ public abstract class AttachProvider {
      * (using the zero-arg constructor) at the first invocation of this method.
      * The list returned by the first invocation of this method is the list
      * of providers. Subsequent invocations of this method return a list of the same
-     * providers. The list is unmodifable.</p>
+     * providers. The list is unmodifiable.</p>
      *
      * @return A list of the installed attach providers.
      */

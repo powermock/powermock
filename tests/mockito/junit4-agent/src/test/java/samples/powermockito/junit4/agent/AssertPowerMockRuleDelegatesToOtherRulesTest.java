@@ -32,7 +32,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 /**
  * This test demonstrates that the PowerMockRule delegates to other rules.
  */
-public class AssertPowerMockRuleDelagatesToOtherRulesTest {
+public class AssertPowerMockRuleDelegatesToOtherRulesTest {
     private static final MyObject BEFORE = new MyObject();
     
     private final List<Object> objects = new LinkedList<Object>();

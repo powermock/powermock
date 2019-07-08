@@ -38,7 +38,7 @@ Change log 1.6.6 (2016-11-04)
 * Fixed #645 jacoco offline instrumentation incompatibility with powermock byte-code manipulation when using @SuppressStaticInitializationFor 
 * Fixed #704 PowerMockito 1.6.5 throws java.lang.SecurityException signer information mismatch 
 * Refactoring: Move ProxyFramework from api modules to `reflect` module.
-* Renamed org.powermock.reflect.internal.WhiteboxImpl.getAllMetodsExcept to org.powermock.reflect.internal.WhiteboxImpl.getAllMethodsExcept (typo)
+* Renamed org.powermock.reflect.internal.WhiteboxImpl.getAllMethodsExcept to org.powermock.reflect.internal.WhiteboxImpl.getAllMethodsExcept (typo)
 * Refactoring: Fix performance issues, fix error handling issues, remove unused imports, remove verbose or redundant code constructs. (thanks to Mykhailo Kovalskyi @kovalsky for pull request)
 * Upgraded Assertj dependency from 3.4.1 to version 3.5.2
 * Upgraded Javaassist dependency from 3.20.0-GA to version 3.21.0-GA
@@ -51,7 +51,7 @@ Change log 1.6.5 (2016-04-30)
 * PowerMockRunner now processes JUnit Rules correctly (thanks to Stefan Birkner for pull request) (issue 427)
 * Added support for @TestSubject in EasyMock API. This is the equivalent of @InjectMocks in Mockito (big thanks to Arthur Zagretdinov for pull request)
 * Added experimental support for mockito 2.x
-* Ensuring JVM method size limit is never exceeded. Throw an user frendly exception if method size is exceeded. (thanks to Tomasz Przybyla for pull request) (issue #661)
+* Ensuring JVM method size limit is never exceeded. Throw an user friendly exception if method size is exceeded. (thanks to Tomasz Przybyla for pull request) (issue #661)
 * Fix #214: Whitebox.invokeConstructor may not work as expected with overloaded constructors
 * Fix #352: PowerMockRunner should run tests defined in super class
 * Fix #510: Static method mocking with Mockito 1.9.5 and Powermock fails with Java 8 Consumer Interface
@@ -91,7 +91,7 @@ Change log 1.6.2 (2015-01-03)
 * Tests can now have multiple constructors (thanks to Henrik Kaipe for pull request)
 * Cleanup pom files and added version numbers (thanks to René Scheibe for pull request)
 * Fix "Test class can only have one constructor" issue that occurs when a JUnit or 3rd-party delegate runner (specified by a PowerMockRunnerDelegate annotation) can only deal with one public constructor. (thanks to Henrik Kaipe for pull request)
-* Packaged some of the Mocktio classes internally since Mockito is moving from CgLib to ByteBuddy. (thanks to Brice Dutheil for the pull request).
+* Packaged some of the Mockito classes internally since Mockito is moving from CgLib to ByteBuddy. (thanks to Brice Dutheil for the pull request).
 * Upgraded Javassist dependency to version 3.19.0-GA.
 * Upgraded TestNG dependency to version 6.8.21.
 * The PowerMock EasyMock Api now depends on EasyMock 3.3.1.
@@ -253,7 +253,7 @@ Change log 1.4.7 (2010-12-27)
 * Fixed a bug which made it impossible to mock private methods with multiple arguments (issue 289).
 * Removed some unwanted debug messages from the TestNG module.
 * Updated javadoc in Whitebox and WhiteboxImpl.
-* EasyMock and Mockito extension API now supports mocking new invocations with var args parameters when var args paramters is not the first parameter (issue 163).
+* EasyMock and Mockito extension API now supports mocking new invocations with var args parameters when var args parameters is not the first parameter (issue 163).
 * Various improvements to var args handling for both methods and constructors.
 * Upgraded to Javassist 3.14 (issue 295).
 * Upgraded junit module to use JUnit 4.8.2 (issue 296).
@@ -270,7 +270,7 @@ Change log 1.4.6 (2010-10-13)
 * PowerMock can now be built with Maven 3 (issue 283).
 * Prepared pom's for Maven central synching.
 * Upgraded the TestNG module to version 5.14 (issue 275).
-* Fixed a bug in Whitebox which caused some overriden methods to be treated as overloaded (issue 276).
+* Fixed a bug in Whitebox which caused some overridden methods to be treated as overloaded (issue 276).
 
 Change log 1.4.5 (2010-08-30)
 -----------------------------
@@ -285,7 +285,7 @@ Change log 1.4.5 (2010-08-30)
 
 Change log 1.4 (2010-07-22)
 ---------------------------
-* Implemeted support for mocking instance methods of final system classes with the Mockito extension API (issue 169)
+* Implemented support for mocking instance methods of final system classes with the Mockito extension API (issue 169)
 * Partial mocking of instance methods in final system classes not having a default constructor now works in the EasyMock extension API (issue 170)
 * The deep cloner can now clone java.reflect.Method objects correctly to a different classloader.
 * Fixed a critical bug in the ClassloaderExecutor which prevented it from running methods returning void. This affected the PowerMockRule which prevented it from executing test methods (even though it looked like it did) (issue 268, also closes issue 245)
@@ -357,7 +357,7 @@ Change log 1.3.5 (2009-12-13)
 * DeepCloner should now support cloning of static final fields on SUN JVM.
 * Fixed a minor bug in Whitebox#getInternalState so that a better error message is given when the instance argument is null (issue 205).
 * Fixed some typos in the javadoc of PowerMockito#verifyNew (issue 187).
-* Fixed so that Whitebox#getInternalState(..) now supports passing in super types as field-type critiera (issue 210).
+* Fixed so that Whitebox#getInternalState(..) now supports passing in super types as field-type criteria (issue 210).
 * Fixed so that Whitebox#getInternalState(..) and Whitebox#setInternalState(..) doesn't cause NPE when too many fields matched the criteria (issue 211).
 * Basic support for TestNG (5.11) implemented.
 * Fixed so that Whitebox#invokeMethod now works for overridden methods.
@@ -366,7 +366,7 @@ Change log 1.3.5 (2009-12-13)
 
 Change log 1.3.1 (released 2009-10-28)
 --------------------------------------
-* Critial bug resolved in the PowerMock JUnit 4.7 runner: Before tests would not be executed at all if a JUnit rule was used in the test (even though it looked like they were). This has now been resolved an thus support for JUnit 4.7 rules should _really_ work.
+* Critical bug resolved in the PowerMock JUnit 4.7 runner: Before tests would not be executed at all if a JUnit rule was used in the test (even though it looked like they were). This has now been resolved an thus support for JUnit 4.7 rules should _really_ work.
 * DeepCloner now supports cloning of one dimensional arrays, primitives, enums and collections.
 * Test case is now always prepared for test even if no @PrepareForTest annotation is specified
 * Fixed a bug in Whitebox#setInternalState so that it now works to supply an array when specifying a method name again.
@@ -397,7 +397,7 @@ Change log 1.3 (released 2009-10-06)
 * PowerMock now supports mocking instance methods of final system classes (such as java.lang.String). To do this you need to prepare the class that invokes the method of the system class. Note that partial mocking of instance methods in final system classes doesn't yet work if a constructor needs to be invoked on the mock.
 * You can now mock new instance calls to final system classes in the same was you'd mock any other new instance call.
 * Improved error message in Whitebox when getting a method or constructor which was not found and no parameter types were supplied.
-* The state of classes that should have their static intializers suppressed are no longer clear after each atomic test. This means that suppression of static initializers works (again) in test suites.
+* The state of classes that should have their static initializers suppressed are no longer clear after each atomic test. This means that suppression of static initializers works (again) in test suites.
 * Begun working with support for TestNG (thanks to Dan Fabulich for helping us with this).
 * Deprecated Whitebox#getInternalState(Object object, String fieldName, Class<?> where, Class<T> type), use "Whitebox.<Type> getInternalState(Object object, String fieldName, Class<?> where)" instead.
 * Changed return type of Whitebox#getInternalState(Object object, String fieldName) from Object to T. This means that you can avoid cast using e.g. "Whitebox.<MyType> getInternalState(instance, "myFieldName")".
@@ -429,7 +429,7 @@ Change log 1.3 (released 2009-10-06)
 * Mockito extension API now supports verification of private methods (for both static and instance methods). Use verifyPrivate(..).invoke(..), e.g. verifyPrivate(myObject, times(2)).invoke("myMethod", argument1, argument2).
 * Verification behavior of static method in the Mockito extension API has changed. Before you did "verifyStatic(MyClass.class); MyClass.methodToVerify(argument);", now you do "verifyStatic(); MyClass.methodToVerify(argument);". You can also pass a verification mode when verifying static methods: "verifyStatic(times(2)); MyClass.methodToVerify(argument);". This change is NOT backward compatible with version 1.2.5.
 * Mockito extension API now supports "verifyNoMoreInteractions" and "verifyZeroInteractions" for both instance mocks, class mocks and new instance mocks.
-* Deprecated setSubstituteReturnValues, getSubstituteReturnValues and addSubtituteReturnValue in MockPolicyInterceptionSettings, you should now use setMethodsToStub, getStubbedMethods and stubMethod instead.
+* Deprecated setSubstituteReturnValues, getSubstituteReturnValues and addSubstituteReturnValue in MockPolicyInterceptionSettings, you should now use setMethodsToStub, getStubbedMethods and stubMethod instead.
 * Renamed MockRepository#getSubstituteReturnValue to getMethodToStub and MockRepository#putSubstituteReturnValue to putMethodToStub.
 * PowerMockito now supports, doAnswer, doThrow, doCallRealMethod, doNothing and doReturn for void methods defined in final classes, final void methods and static methods. Note that if a method is a private void method you should still use PowerMockito#when.
 * Removed the deprecated classes "org.powermock.PowerMock" and "org.powermock.Whitebox".
@@ -452,8 +452,8 @@ Change log 1.3 (released 2009-10-06)
 * PowerMock and PowerMockito now supports stubbing methods (including private methods). Use PowerMock#stub or PowerMockito#stub to accomplish this.
 * PowerMock and PowerMockito now supports proxying methods, including private methods using replace(..), e.g. replace(method(MyClass.class, "methodToProxy")).with(myInvocationHandler). Every call to the "methodToProxy" method will be routed to the supplied invocation handler instead.
 * PowerMock and PowerMockito now supports duck typing of static methods, including static private methods using replace(..), e.g. replace(method(MyClass.class, "methodToDuckType")).with(method(MyOtherClass.class, "methodToInvoke")). Every call to the "methodToDuckType" method will be routed to the "methodToInvoke" method instead.
-* Mock policies now supports proxing methods using proxyMethod(..).
-* Private inner memeber interfaces are not changed to public anymore during the byte-code manipulation session
+* Mock policies now supports proxying methods using proxyMethod(..).
+* Private inner member interfaces are not changed to public anymore during the byte-code manipulation session
 * PowerMock JUnit4 Runner can now instantiate test classes that have a String constructor if the test class extends from junit.framework.TestCase.
 
 Change log 1.2.5 (released 2009-05-05)
@@ -508,17 +508,17 @@ Change log 1.1 (released 2008-12-12)
 * Added three new methods to the PowerMock API, reset(Object...mocks), reset(Class<?>...classMocks) and resetAll(). The methods can be used to reset instance mocks, class mocks or let PowerMock reset all mocks automatically.
 * mockStaticNice(Class<?> clazz, String... methodNames) was renamed to mockStaticPartialNice in the PowerMock API.
 * PowerMock and PowerMockito now _really_ follows the EasyMock semantics for partial mocking (e.g. PowerMock.createMock(MyClass.class, null) now mocks all methods of a class whereas PowerMock.createMock(MyClass.class, new Method[0]) mocks no methods of a class).
-* The @PrepareForTest annotation now accepts interfaces as types. This is useful in situations where you wan't to make sure that a certain interface is loaded by the same classloader as the rest of the mocks.
+* The @PrepareForTest annotation now accepts interfaces as types. This is useful in situations where you want to make sure that a certain interface is loaded by the same classloader as the rest of the mocks.
 * Updated the tutorial projects to reflect the latest changes in PowerMock.
 * Errors are propagated correctly when invoking the PowerMock.replay(..) method (i.e. they are no longer wrapped in run-time exceptions).
 * Added a MockNice and MockStrict annotation which can be placed on fields to allow for the AnnotationEnabler of the EasyMock api to create and inject mock objects.
 * Changed so that the default suppression value for methods returning java.lang.String is null to conform with EasyMock and Mockito.
-* Added Whitebox.getFieldsOfType(..) that can be used to retreive all fields of a particular type in a class hierarchy.
+* Added Whitebox.getFieldsOfType(..) that can be used to retrieve all fields of a particular type in a class hierarchy.
 * Added support for mock policies. A mock policy can be used to make it easier to unit test some code with PowerMock in isolation from a certain framework. Three mock policies are available in the EasyMock API, JclMockPolicy, Slf4jMockPolicy and Log4jMockPolicy which helps with mocking java commons-lang, log4j or slf4j in PowerMock. Use the @MockPolicy annotation at the class-level of the test case to use one of the mock policies.
-* Whitebox.getMethod(..) sets the accessable flag to true if a method is found.
+* Whitebox.getMethod(..) sets the accessible flag to true if a method is found.
 * Added Whitebox.getMethod(Class<?> type, Class<?>... parameterTypes) that let's you get a single method without specifying the method name.
 * Fixed a bug in WhiteboxImpl.checkIfTypesAreSame(..) that prevented classes to be identified correctly.
-* Fixed a bug in the PowerMockJUnit44RunnerDelegateImpl that caused a NoClassDefFoundError to be thrown when using JUnit 4.5 when a AssumptionViolatedException was thrown. The reason for this was that JUnit has changed to locatation of this exception.
+* Fixed a bug in the PowerMockJUnit44RunnerDelegateImpl that caused a NoClassDefFoundError to be thrown when using JUnit 4.5 when a AssumptionViolatedException was thrown. The reason for this was that JUnit has changed to location of this exception.
 * Added spy functionality of final classes and methods to the Mockito API (experimental).
 * Fixed so that it works to place the PrepareForTest annotation at methods without specifying it at the class-level first.
 * Added Whitebox.getField(..) method to get a field somewhere in the hierarchy.
@@ -560,7 +560,7 @@ Change log 0.9 (released 2008-11-10)
 * Structural refactoring to remove Structure 101 XS: moved WhiteBox implementation to separate class in core and moved IndicateReloadClass
 * By default Whitebox.getInternalState and Whitebox.setInternalState now traverses the class hierarchy when looking for a field.
 * Better error message if a NPE is caught in a subclass of a class being prepared for test.
-* The PrepareForTest annotation now manipulates the full (super) class hierachy by default. This makes it easier to perform mocking of super class methods.
+* The PrepareForTest annotation now manipulates the full (super) class hierarchy by default. This makes it easier to perform mocking of super class methods.
 * A new annotation called PrepareOnlyThisForTest has been added and works in the same way that PrepareForTest previously did, i.e. ONLY the specified classes are prepared and not the entire hierarchy.
 * Fixed a bug that made it impossible to invoke vararg constructors.
 * createMockAndExpectNew now takes expected arguments as the second parameter.
@@ -579,7 +579,7 @@ Change log 0.9 (released 2008-11-10)
 * Changed the clean-up mechanisms of PowerMock.replay(..) and PowerMock.verify(..). Should no longer clear unnecessary state.
 * Implemented two new PowerMock API methods: replayAll and verifyAll(). These can be used to replay and verify all classes and mocks created by the PowerMock API without having to explicitly specify each and everyone.
 
-Change log 0.8.5 (releasd 2008-10-30)
+Change log 0.8.5 (released 2008-10-30)
 -------------------------------------
 * Fixed so that it's now possible to mock abstract methods
 * WhiteBox.getMethod(..) now also returns protected and package-private methods.

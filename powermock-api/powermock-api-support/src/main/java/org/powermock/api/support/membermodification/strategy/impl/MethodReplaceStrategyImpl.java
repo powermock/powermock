@@ -37,7 +37,7 @@ public class MethodReplaceStrategyImpl implements MethodReplaceStrategy {
     @Override
     public void with(Method method) {
         if (method == null) {
-            throw new IllegalArgumentException("A metod cannot be replaced with null.");
+            throw new IllegalArgumentException("A method cannot be replaced with null.");
         }
         if (!Modifier.isStatic(this.method.getModifiers())) {
             throw new IllegalArgumentException(String.format("Replace requires static methods, '%s' is not static", this.method));

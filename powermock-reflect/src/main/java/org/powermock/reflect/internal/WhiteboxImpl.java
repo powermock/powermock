@@ -334,7 +334,7 @@ public class WhiteboxImpl {
      * Set the value of a field using reflection. This method will traverse the
      * super class hierarchy until the first field assignable to the
      * <tt>value</tt> type is found. The <tt>value</tt> (or
-     * <tt>additionaValues</tt> if present) will then be assigned to this field.
+     * <tt>additionalValues</tt> if present) will then be assigned to this field.
      *
      * @param object           the object to modify
      * @param value            the new value of the field
@@ -1893,13 +1893,13 @@ public class WhiteboxImpl {
     }
 
     /**
-     * Gets the all metods except.
+     * Gets the all methods except.
      *
      * @param <T>                 the generic type
      * @param type                the type
      * @param methodNameToExclude the method name to exclude
      * @param argumentTypes       the argument types
-     * @return the all metods except
+     * @return the all methods except
      */
     public static <T> Method[] getAllMethodsExcept(Class<T> type, String methodNameToExclude, Class<?>[] argumentTypes) {
         Method[] methods = getAllMethods(type);
