@@ -82,7 +82,8 @@ public class SystemClassUserCases {
     public void assertThatPartialMockingOfFinalSystemClassesWorks() throws Exception {
         spy(System.class);
 
-        when(System.nanoTime()).thenReturn(2L);
+        doReturn(2L).when(System.class);
+        System.nanoTime();
 
         new SystemClassUser().doMoreComplicatedStuff();
 
@@ -106,10 +107,13 @@ public class SystemClassUserCases {
     public void assertThatPartialMockingOfFinalSystemClassesWorksForNonVoidMethods() throws Exception {
         spy(System.class);
 
-        when(System.getProperty("property")).thenReturn("my property");
+        doReturn("my property").when(System.class);
+        System.getProperty("property");
 
         final SystemClassUser systemClassUser = new SystemClassUser();
         systemClassUser.copyProperty("to", "property");
+
+        assertEquals("my property", System.getProperty("to"));
     }
 
     @Test

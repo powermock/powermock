@@ -90,7 +90,11 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
         if (isCanBeHandledByMockito(method) && hasBeenCaughtByMockitoProxy()) {
             returnValue = MockGateway.PROCEED;
         } else {
-            returnValue = mockHandlerAdaptor.performIntercept(mock, method, arguments);
+            if (mock instanceof Class) {
+                returnValue = mockHandlerAdaptor.performIntercept(mockHandlerAdaptor.getMockSettings().getTypeToMock(), method, arguments);
+            } else {
+                returnValue = mockHandlerAdaptor.performIntercept(mock, method, arguments);
+            }
             if (returnValue == null) {
                 return MockGateway.SUPPRESS;
             }

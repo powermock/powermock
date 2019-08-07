@@ -29,11 +29,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.times;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
  * Demonstrates PowerMockito's ability to mock non-final and final system
@@ -88,7 +84,8 @@ public class SystemClassUserTest {
     public void assertThatPartialMockingOfFinalSystemClassesWorks() throws Exception {
         spy(System.class);
 
-        when(System.nanoTime()).thenReturn(2L);
+        doReturn(2L).when(System.class);
+        System.nanoTime();
 
         new SystemClassUser().doMoreComplicatedStuff();
 
@@ -112,10 +109,13 @@ public class SystemClassUserTest {
     public void assertThatPartialMockingOfFinalSystemClassesWorksForNonVoidMethods() throws Exception {
         spy(System.class);
 
-        when(System.getProperty("property")).thenReturn("my property");
+        doReturn("my property").when(System.class);
+        System.getProperty("property");
 
         final SystemClassUser systemClassUser = new SystemClassUser();
         systemClassUser.copyProperty("to", "property");
+
+        assertEquals("my property", System.getProperty("to"));
     }
 
     @Test
