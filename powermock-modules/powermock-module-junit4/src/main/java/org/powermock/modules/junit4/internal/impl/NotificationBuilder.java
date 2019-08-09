@@ -47,7 +47,7 @@ class NotificationBuilder {
     }
 
     private static final Pattern methodDisplayNameRgx =
-            Pattern.compile("^[^\\(\\[]++");
+            Pattern.compile("(^[^\\(\\[]++)|([^(]+(?=\\)))");
     private final Method[] testMethods;
     private final List<?> pendingTestInstances;
     private final PowerMockTestNotifier powerMockTestNotifier;
