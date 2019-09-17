@@ -2347,7 +2347,33 @@ public class WhiteboxImpl {
 
     private static void sedModifiersToField(Field fieldToRemoveFinalFrom, int fieldModifiersMaskWithoutFinal) throws IllegalAccessException {
         try {
-            Field modifiersField = Field.class.getDeclaredField("modifiers");
+            Field modifiersField = null;
+            try {
+                modifiersField = Field.class.getDeclaredField("modifiers");
+            } catch (NoSuchFieldException e) {
+                try {
+                    Method getDeclaredFields0 = Class.class.getDeclaredMethod("getDeclaredFields0", boolean.class);
+                    boolean accessibleBeforeSet = getDeclaredFields0.isAccessible();
+                    getDeclaredFields0.setAccessible(true);
+                    Field[] fields = (Field[]) getDeclaredFields0.invoke(Field.class, false);
+                    getDeclaredFields0.setAccessible(accessibleBeforeSet);
+                    for (Field field : fields) {
+                        if ("modifiers".equals(field.getName())) {
+                            modifiersField = field;
+                            break;
+                        }
+                    }
+                    if (modifiersField == null) {
+                        throw e;
+                    }
+                } catch (NoSuchMethodException ex) {
+                    e.addSuppressed(ex);
+                    throw e;
+                } catch (InvocationTargetException ex) {
+                    e.addSuppressed(ex);
+                    throw e;
+                }
+            }
             boolean accessibleBeforeSet = modifiersField.isAccessible();
             modifiersField.setAccessible(true);
             modifiersField.setInt(fieldToRemoveFinalFrom, fieldModifiersMaskWithoutFinal);
