@@ -483,7 +483,7 @@ public class WhiteboxImpl {
         while (startClass != null) {
             final Field[] declaredFields = startClass.getDeclaredFields();
             for (Field field : declaredFields) {
-                if (strategy.matches(field) && hasFieldProperModifier(object, field)) {
+                if (strategy.matches(field) && hasFieldProperModifier(object, field, false)) {
                     if (foundField != null) {
                         throw new TooManyFieldsFoundException("Two or more fields matching " + strategy + ".");
                     }
@@ -507,21 +507,23 @@ public class WhiteboxImpl {
     /**
      * Find all fields using strategy.
      *
-     * @param strategy       the strategy
-     * @param object         the object
-     * @param checkHierarchy the check hierarchy
-     * @param startClass     the start class
+     * @param strategy           the strategy
+     * @param object             the object
+     * @param checkHierarchy     the check hierarchy
+     * @param onlyInstanceFields whether to only allow instance fields
+     * @param startClass         the start class
      * @return the set
      */
     private static Set<Field> findAllFieldsUsingStrategy(FieldMatcherStrategy strategy, Object object,
-                                                         boolean checkHierarchy, Class<?> startClass) {
+                                                         boolean checkHierarchy, boolean onlyInstanceFields,
+                                                         Class<?> startClass) {
         assertObjectInGetInternalStateIsNotNull(object);
         final Set<Field> foundFields = new LinkedHashSet<Field>();
         while (startClass != null) {
             final Field[] declaredFields = startClass.getDeclaredFields();
             for (Field field : declaredFields) {
-                if (strategy.matches(field) && hasFieldProperModifier(object, field)) {
-                    // TODO replace by the class 
+                if (strategy.matches(field) && hasFieldProperModifier(object, field, onlyInstanceFields)) {
+                    // TODO replace by the class
                     try {
                         field.setAccessible(true);
                         foundFields.add(field);
@@ -543,13 +545,19 @@ public class WhiteboxImpl {
     /**
      * Checks for field proper modifier.
      *
-     * @param object the object
-     * @param field  the field
+     * @param object             the object
+     * @param field              the field
+     * @param onlyInstanceFields whether to only allow instance fields
      * @return true, if successful
      */
-    private static boolean hasFieldProperModifier(Object object, Field field) {
-        return ((object instanceof Class<?> && Modifier.isStatic(field.getModifiers())) || ((object instanceof Class<?> == false && Modifier
-                                                                                                                                            .isStatic(field.getModifiers()) == false)));
+    private static boolean hasFieldProperModifier(Object object, Field field, boolean onlyInstanceFields) {
+        if (onlyInstanceFields) {
+            return !Modifier.isStatic(field.getModifiers());
+        } else if (object instanceof Class<?>) {
+            return Modifier.isStatic(field.getModifiers());
+        } else {
+            return !Modifier.isStatic(field.getModifiers());
+        }
     }
 
     /**
@@ -2171,7 +2179,7 @@ public class WhiteboxImpl {
      */
     public static Set<Field> getFieldsAnnotatedWith(Object object, Class<? extends Annotation>[] annotationTypes) {
         return findAllFieldsUsingStrategy(new FieldAnnotationMatcherStrategy(annotationTypes), object, true,
-                getType(object));
+                false, getType(object));
     }
 
     /**
@@ -2186,7 +2194,7 @@ public class WhiteboxImpl {
      */
     public static Set<Field> getFieldsOfType(Object object, Class<?> type) {
         return findAllFieldsUsingStrategy(new AssignableFromFieldTypeMatcherStrategy(type), object, true,
-                getType(object));
+                false, getType(object));
     }
 
     /**
@@ -2199,25 +2207,18 @@ public class WhiteboxImpl {
      * accessible
      */
     public static Set<Field> getAllInstanceFields(Object object) {
-        return findAllFieldsUsingStrategy(new AllFieldsMatcherStrategy(), object, true, getUnproxyType(object));
+        return findAllFieldsUsingStrategy(new AllFieldsMatcherStrategy(), object, true, true,
+                getUnproxyType(object));
     }
 
     /**
      * Get all static fields for a particular type.
      *
      * @param type The class whose static fields to get.
-     * @return All static fields in . All fields are set to accessible.
+     * @return All static fields. All fields are set to accessible.
      */
     public static Set<Field> getAllStaticFields(Class<?> type) {
-        final Set<Field> fields = new LinkedHashSet<Field>();
-        final Field[] declaredFields = type.getDeclaredFields();
-        for (Field field : declaredFields) {
-            if (Modifier.isStatic(field.getModifiers())) {
-                field.setAccessible(true);
-                fields.add(field);
-            }
-        }
-        return fields;
+        return findAllFieldsUsingStrategy(new AllFieldsMatcherStrategy(), type, false, false, type);
     }
 
     /**

@@ -535,6 +535,12 @@ public class WhiteBoxTest {
     }
 
     @Test
+    public void testGetAllInstanceFieldsOnClass() {
+        Set<Field> allFields = Whitebox.getAllInstanceFields(ClassWithChildThatHasInternalState.class);
+        assertEquals(8, allFields.size());
+    }
+
+    @Test
     public void testGetAllStaticFields_assertNoFieldsFromParent() throws Exception {
         Set<Field> allFields = Whitebox.getAllStaticFields(ClassWithChildThatHasInternalState.class);
         assertEquals(0, allFields.size());
