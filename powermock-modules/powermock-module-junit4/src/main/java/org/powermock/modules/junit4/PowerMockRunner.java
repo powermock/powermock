@@ -58,16 +58,7 @@ public class PowerMockRunner extends AbstractCommonPowerMockRunner {
         try {
             super.run(notifier);
         } finally {
-            try {
-               Whitebox.setInternalState(description, "fAnnotations", new Annotation[]{});
-            } catch (RuntimeException err) {
-               if (err.getCause() instanceof java.lang.NoSuchFieldException
-                    && err.getCause().getMessage().equals("modifiers")) {
-                // on JDK12 you cannot change 'modifiers'
-               } else {
-                  throw err;
-               }
-            }
+            Whitebox.setInternalState(description, "fAnnotations", new Annotation[]{});
         }
     }
 }
