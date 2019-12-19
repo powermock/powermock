@@ -11,8 +11,8 @@ shipkit {
 
     // fix for Intellj Idea, because IDE does not read env properties from ${user.home}/.profile file on MacOS
 
-    gitHub.writeAuthUser = System.getenv("GH_USER")
-    gitHub.writeAuthToken = System.getenv("GH_WRITE_TOKEN")
+    gitHub.writeAuthUser = System.getenv("GH_USER") != null ? System.getenv("GH_USER") : "GH_USER-not-set-dev-mode";
+    gitHub.writeAuthToken = System.getenv("GH_WRITE_TOKEN") != null ? System.getenv("GH_WRITE_TOKEN"): "GH_WRITE_TOKEN-not-set-dev-mode";
 
     def buildNo = System.getenv("TRAVIS_BUILD_NUMBER")
     git.commitMessagePostfix = buildNo? "by CI build $buildNo\n\n[ci skip]" : "by local build\n\n[ci skip]"
