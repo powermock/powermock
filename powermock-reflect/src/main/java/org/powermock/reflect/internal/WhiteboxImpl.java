@@ -60,6 +60,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import sun.misc.Unsafe;
 
 /**
  * Various utilities for accessing internals of a class. Basically a simplified
@@ -2300,15 +2301,77 @@ public class WhiteboxImpl {
      * @param value      the value
      * @param foundField the found field
      */
-    private static void setField(Object object, Object value, Field foundField) {
-        foundField.setAccessible(true);
-        try {
-            int fieldModifiersMask = foundField.getModifiers();
-            removeFinalModifierIfPresent(foundField);
-            foundField.set(object, value);
-            restoreModifiersToFieldIfChanged(fieldModifiersMask, foundField);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("Internal error: Failed to set field in method setInternalState.", e);
+    private static void setField(Object object, Object value, Field foundField) {      
+        boolean isStatic = (foundField.getModifiers() & Modifier.STATIC) == Modifier.STATIC;
+        if (isStatic) {
+            setStaticFieldUsingUnsafe(foundField, value);
+        } else {
+            setFieldUsingUnsafe(foundField, object, value);
+        }      
+    }
+    
+    private static void setStaticFieldUsingUnsafe(final Field field, final Object newValue) {
+        try {            
+            field.setAccessible(true);
+            int fieldModifiersMask = field.getModifiers();
+            boolean isFinalModifierPresent = (fieldModifiersMask & Modifier.FINAL) == Modifier.FINAL;
+            if (isFinalModifierPresent) {
+                AccessController.doPrivileged(new PrivilegedAction<Object>() {
+                    @Override                    
+                    public Object run() {                                        
+                    try {
+                        Field field1 = Unsafe.class.getDeclaredField("theUnsafe");
+                        field1.setAccessible(true);
+                        Unsafe unsafe = (Unsafe) field1.get(null);
+                        long offset = unsafe.staticFieldOffset(field);
+                        unsafe.putObject(unsafe.staticFieldBase(field), offset, newValue);
+                        return null;
+                    } catch (Throwable t) {
+                        throw new RuntimeException(t);
+                    }
+                }});
+            } else {
+                field.set(null, newValue);
+            }
+        } catch (SecurityException ex) {
+            throw new RuntimeException(ex);
+        } catch (IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        } catch (IllegalArgumentException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    private static void setFieldUsingUnsafe(final Field field, final Object object, final Object newValue) {
+        try {            
+            field.setAccessible(true);
+            int fieldModifiersMask = field.getModifiers();
+            boolean isFinalModifierPresent = (fieldModifiersMask & Modifier.FINAL) == Modifier.FINAL;
+            if (isFinalModifierPresent) {
+                AccessController.doPrivileged(new PrivilegedAction<Object>() {
+                    @Override
+                    public Object run() {
+                        try {
+                            Field field1 = Unsafe.class.getDeclaredField("theUnsafe");
+                            field1.setAccessible(true);
+                            Unsafe unsafe = (Unsafe) field1.get(null);
+                            long offset = unsafe.objectFieldOffset(field);
+                            unsafe.putObject(object, offset, newValue);
+                            return null;
+                        } catch (Throwable t) {
+                            throw new RuntimeException(t);
+                        }
+                    }
+                });
+            } else {
+                field.set(object, newValue);
+            }
+        } catch (SecurityException ex) {
+            throw new RuntimeException(ex);
+        } catch (IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        } catch (IllegalArgumentException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
