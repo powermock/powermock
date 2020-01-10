@@ -262,18 +262,14 @@ public class WhiteBoxTest {
 
 	@Test
 	public void testStaticFinalPrimitiveState() {
-		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("You are trying to set a private static final primitive. Try using an object like Integer instead of int!");
-
 		Whitebox.setInternalState(ClassWithInternalState.class, "staticFinalIntState", 123);
+                assertEquals(123, Whitebox.getInternalState(ClassWithInternalState.class, "staticFinalIntState"));
 	}
 
 	@Test
 	public void testStaticFinalStringState() throws NoSuchFieldException {
-		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("You are trying to set a private static final String. Cannot set such fields!");
-
 		Whitebox.setInternalState(ClassWithInternalState.class, "staticFinalStringState", "Brand new string");
+                assertEquals("Brand new string", Whitebox.getInternalState(ClassWithInternalState.class, "staticFinalStringState"));
 	}
 
 	@Test
