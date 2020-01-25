@@ -60,6 +60,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import sun.misc.Unsafe;
 
 /**
  * Various utilities for accessing internals of a class. Basically a simplified
@@ -82,7 +83,7 @@ public class WhiteboxImpl {
      * Convenience method to get a method from a class type without having to
      * catch the checked exceptions otherwise required. These exceptions are
      * wrapped as runtime exceptions.
-     * 
+     *
      * The method will first try to look for a declared method in the same
      * class. If the method is not declared in this class it will look for the
      * method in the super class. This will continue throughout the whole class
@@ -143,7 +144,7 @@ public class WhiteboxImpl {
      * Convenience method to get a method from a class type without having to
      * catch the checked exceptions otherwise required. These exceptions are
      * wrapped as runtime exceptions.
-     * 
+     *
      * The method will first try to look for a declared method in the same
      * class. If the method is not declared in this class it will look for the
      * method in the super class. This will continue throughout the whole class
@@ -185,7 +186,7 @@ public class WhiteboxImpl {
 
     /**
      * Convenience method to get a field from a class type.
-     * 
+     *
      * The method will first try to look for a declared field in the same class.
      * If the method is not declared in this class it will look for the field in
      * the super class. This will continue throughout the whole class hierarchy.
@@ -226,7 +227,7 @@ public class WhiteboxImpl {
 
     /**
      * Create a new instance of a class without invoking its constructor.
-     * 
+     *
      * No byte-code manipulation is needed to perform this operation and thus
      * it's not necessary use the {@code PowerMockRunner} or
      * {@code PrepareForTest} annotation to use this functionality.
@@ -761,7 +762,7 @@ public class WhiteboxImpl {
     /**
      * Invoke a private method in that is located in a subclass of an instance.
      * This might be useful to test overloaded private methods.
-     * 
+     *
      * Use this for overloaded methods only, if possible use
      *
      * @param <T>             the generic type
@@ -1230,7 +1231,7 @@ public class WhiteboxImpl {
      * This only happens if you have two constructors with the same number of
      * arguments where one is using primitive data types and the other is using
      * the wrapped counter part. For example:
-     * 
+     *
      * <pre>
      * public class MyClass {
      * private MyClass(Integer i) {
@@ -1241,7 +1242,7 @@ public class WhiteboxImpl {
      * ...
      * }
      * </pre>
-     * 
+     *
      * This ought to be a really rare case. So for most situation, use
      *
      * @param <T>                                   the generic type
@@ -1654,11 +1655,11 @@ public class WhiteboxImpl {
     public static <T> Class<?> getOriginalUnmockedType(Class<T> type) {
         return getUnproxiedType(type).getOriginalType();
     }
-    
+
     public static <T> UnproxiedType getUnproxiedType(Class<T> type) {
         return proxyFrameworks.getUnproxiedType(type);
     }
-    
+
     /**
      * Throw exception when multiple method matches found.
      *
@@ -2301,86 +2302,102 @@ public class WhiteboxImpl {
      * @param foundField the found field
      */
     private static void setField(Object object, Object value, Field foundField) {
-        foundField.setAccessible(true);
+        boolean isStatic = (foundField.getModifiers() & Modifier.STATIC) == Modifier.STATIC;
+        if (isStatic) {
+            setStaticFieldUsingUnsafe(foundField, value);
+        } else {
+            setFieldUsingUnsafe(foundField, object, value);
+        }
+    }
+
+    private static void setStaticFieldUsingUnsafe(final Field field, final Object newValue) {
         try {
-            int fieldModifiersMask = foundField.getModifiers();
-            removeFinalModifierIfPresent(foundField);
-            foundField.set(object, value);
-            restoreModifiersToFieldIfChanged(fieldModifiersMask, foundField);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("Internal error: Failed to set field in method setInternalState.", e);
-        }
-    }
-
-    private static void removeFinalModifierIfPresent(Field fieldToRemoveFinalFrom) throws IllegalAccessException {
-        int fieldModifiersMask = fieldToRemoveFinalFrom.getModifiers();
-        boolean isFinalModifierPresent = (fieldModifiersMask & Modifier.FINAL) == Modifier.FINAL;
-        if (isFinalModifierPresent) {
-            checkIfCanSetNewValue(fieldToRemoveFinalFrom);
-            int fieldModifiersMaskWithoutFinal = fieldModifiersMask & ~Modifier.FINAL;
-            sedModifiersToField(fieldToRemoveFinalFrom, fieldModifiersMaskWithoutFinal);
-        }
-    }
-
-    private static void checkIfCanSetNewValue(Field fieldToSetNewValueTo) {
-        int fieldModifiersMask = fieldToSetNewValueTo.getModifiers();
-        boolean isFinalModifierPresent = (fieldModifiersMask & Modifier.FINAL) == Modifier.FINAL;
-        boolean isStaticModifierPresent = (fieldModifiersMask & Modifier.STATIC) == Modifier.STATIC;
-
-        if(isFinalModifierPresent && isStaticModifierPresent){
-            boolean fieldTypeIsPrimitive = fieldToSetNewValueTo.getType().isPrimitive();
-            if (fieldTypeIsPrimitive) {
-                throw new IllegalArgumentException("You are trying to set a private static final primitive. Try using an object like Integer instead of int!");
+            field.setAccessible(true);
+            int fieldModifiersMask = field.getModifiers();
+            boolean isFinalModifierPresent = (fieldModifiersMask & Modifier.FINAL) == Modifier.FINAL;
+            if (isFinalModifierPresent) {
+                AccessController.doPrivileged(new PrivilegedAction<Object>() {
+                    @Override
+                    public Object run() {
+                    try {
+                        Unsafe unsafe = getUnsafe();
+                        long offset = unsafe.staticFieldOffset(field);
+                        Object base = unsafe.staticFieldBase(field);
+                        setFieldUsingUnsafe(base, field.getType(), offset, newValue, unsafe);
+                        return null;
+                    } catch (Throwable t) {
+                        throw new RuntimeException(t);
+                    }
+                }});
+            } else {
+                field.set(null, newValue);
             }
-            boolean fieldTypeIsString = fieldToSetNewValueTo.getType().equals(String.class);
-            if (fieldTypeIsString) {
-                throw new IllegalArgumentException("You are trying to set a private static final String. Cannot set such fields!");
-            }
+        } catch (SecurityException ex) {
+            throw new RuntimeException(ex);
+        } catch (IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        } catch (IllegalArgumentException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
-    private static void restoreModifiersToFieldIfChanged(int initialFieldModifiersMask, Field fieldToRestoreModifiersTo) throws IllegalAccessException {
-        int newFieldModifiersMask = fieldToRestoreModifiersTo.getModifiers();
-        if(initialFieldModifiersMask != newFieldModifiersMask){
-            sedModifiersToField(fieldToRestoreModifiersTo, initialFieldModifiersMask);
-        }
-    }
-
-    private static void sedModifiersToField(Field fieldToRemoveFinalFrom, int fieldModifiersMaskWithoutFinal) throws IllegalAccessException {
+    private static void setFieldUsingUnsafe(final Field field, final Object object, final Object newValue) {
         try {
-            Field modifiersField = null;
-            try {
-                modifiersField = Field.class.getDeclaredField("modifiers");
-            } catch (NoSuchFieldException e) {
-                try {
-                    Method getDeclaredFields0 = Class.class.getDeclaredMethod("getDeclaredFields0", boolean.class);
-                    boolean accessibleBeforeSet = getDeclaredFields0.isAccessible();
-                    getDeclaredFields0.setAccessible(true);
-                    Field[] fields = (Field[]) getDeclaredFields0.invoke(Field.class, false);
-                    getDeclaredFields0.setAccessible(accessibleBeforeSet);
-                    for (Field field : fields) {
-                        if ("modifiers".equals(field.getName())) {
-                            modifiersField = field;
-                            break;
+            field.setAccessible(true);
+            int fieldModifiersMask = field.getModifiers();
+            boolean isFinalModifierPresent = (fieldModifiersMask & Modifier.FINAL) == Modifier.FINAL;
+            if (isFinalModifierPresent) {
+                AccessController.doPrivileged(new PrivilegedAction<Object>() {
+                    @Override
+                    public Object run() {
+                        try {
+                            Unsafe unsafe = getUnsafe();
+                            long offset = unsafe.objectFieldOffset(field);
+                            setFieldUsingUnsafe(object, field.getType(), offset, newValue, unsafe);
+                            return null;
+                        } catch (Throwable t) {
+                            throw new RuntimeException(t);
                         }
                     }
-                    if (modifiersField == null) {
-                        throw e;
-                    }
-                } catch (NoSuchMethodException ex) {
-                    e.addSuppressed(ex);
-                    throw e;
-                } catch (InvocationTargetException ex) {
-                    e.addSuppressed(ex);
-                    throw e;
+                });
+            } else {
+                try {
+                    field.set(object, newValue);
+                } catch (IllegalAccessException ex) {
+                    throw new RuntimeException(ex);
                 }
             }
-            boolean accessibleBeforeSet = modifiersField.isAccessible();
-            modifiersField.setAccessible(true);
-            modifiersField.setInt(fieldToRemoveFinalFrom, fieldModifiersMaskWithoutFinal);
-            modifiersField.setAccessible(accessibleBeforeSet);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException("Internal error: Failed to find the \"modifiers\" field in method setInternalState.", e);
+        } catch (SecurityException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+    
+    private static Unsafe getUnsafe() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+        Field field1 = Unsafe.class.getDeclaredField("theUnsafe");
+        field1.setAccessible(true);
+        Unsafe unsafe = (Unsafe) field1.get(null);
+        return unsafe;
+    }
+
+    private static void setFieldUsingUnsafe(Object base, Class type, long offset, Object newValue, Unsafe unsafe) {
+        if (type == Integer.TYPE) {
+            unsafe.putInt(base, offset, ((Integer) newValue));
+        } else if (type == Short.TYPE) {
+            unsafe.putShort(base, offset, ((Short) newValue));
+        } else if (type == Long.TYPE) {
+            unsafe.putLong(base, offset, ((Long) newValue));
+        } else if (type == Byte.TYPE) {
+            unsafe.putByte(base, offset, ((Byte) newValue));
+        } else if (type == Boolean.TYPE) {
+            unsafe.putBoolean(base, offset, ((Boolean) newValue));
+        } else if (type == Float.TYPE) {
+            unsafe.putFloat(base, offset, ((Float) newValue));
+        } else if (type == Double.TYPE) {
+            unsafe.putDouble(base, offset, ((Double) newValue));
+        } else if (type == Character.TYPE) {
+            unsafe.putChar(base, offset, ((Character) newValue));
+        } else {
+            unsafe.putObject(base, offset, newValue);
         }
     }
 
@@ -2462,9 +2479,9 @@ public class WhiteboxImpl {
      * reflection. The values in the context will be assigned to values on the
      * {@code instance}. This method will traverse the class hierarchy when
      * searching for the fields. Example usage:
-     * 
+     *
      * Given:
-     * 
+     *
      * <pre>
      * public class MyContext {
      * 	private String myString = &quot;myString&quot;;
@@ -2477,13 +2494,13 @@ public class WhiteboxImpl {
      *
      * }
      * </pre>
-     * 
+     *
      * then
-     * 
+     *
      * <pre>
      * Whitebox.setInternalStateFromContext(new MyInstance(), new MyContext());
      * </pre>
-     * 
+     *
      * will set the instance variables of {@code myInstance} to the values
      * specified in {@code MyContext}.
      *
@@ -2513,9 +2530,9 @@ public class WhiteboxImpl {
      * reflection. The values in the context will be assigned to values on the
      * {@code classOrInstance}. This method will traverse the class
      * hierarchy when searching for the fields. Example usage:
-     * 
+     *
      * Given:
-     * 
+     *
      * <pre>
      * public class MyContext {
      * 	private static String myString = &quot;myString&quot;;
@@ -2528,13 +2545,13 @@ public class WhiteboxImpl {
      *
      * }
      * </pre>
-     * 
+     *
      * then
-     * 
+     *
      * <pre>
      * Whitebox.setInternalStateFromContext(MyInstance.class, MyContext.class);
      * </pre>
-     * 
+     *
      * will set the static variables of {@code MyInstance} to the values
      * specified in {@code MyContext}.
      *
@@ -2613,25 +2630,25 @@ public class WhiteboxImpl {
         }
         return converted;
     }
-    
+
     public static <T> void copyToMock(T from, T mock) {
         copy(from, mock, from.getClass());
     }
-    
+
     public static<T> void copyToRealObject(T from, T to) {
         copy(from, to, from.getClass());
     }
-    
+
     private static<T> void copy(T from, T to, Class<?> fromClazz) {
         while (fromClazz != Object.class) {
             copyValues(from, to, fromClazz);
             fromClazz = fromClazz.getSuperclass();
         }
     }
-    
+
     private static<T> void copyValues(T from, T mock, Class<?> classFrom) {
         Field[] fields = classFrom.getDeclaredFields();
-        
+
         for (Field field : fields) {
             // ignore static fields
             if (Modifier.isStatic(field.getModifiers())) {
@@ -2648,7 +2665,7 @@ public class WhiteboxImpl {
             }
         }
     }
-    
+
     private static <T> void copyValue(T from, T to, Field field) throws IllegalAccessException {
         Object value = field.get(from);
         field.set(to, value);
