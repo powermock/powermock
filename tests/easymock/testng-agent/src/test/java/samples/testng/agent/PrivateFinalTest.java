@@ -31,7 +31,7 @@ import static org.powermock.api.easymock.PowerMock.expectPrivate;
 @PrepareForTest(PrivateFinal.class)
 public class PrivateFinalTest {
 
-  @Test(enabled = false)
+  @Test
   public void testSay() throws Exception {
     PrivateFinal tested = createPartialMock(PrivateFinal.class, "sayIt");
     String expected = "Hello altered World";
@@ -44,7 +44,7 @@ public class PrivateFinalTest {
     Assert.assertEquals(expected, actual);
   }
 
-  @Test(enabled = false)
+  @Test
   public void testMultiMock() throws Exception {
     PrivateFinal tested1 = createPartialMock(PrivateFinal.class, "sayIt");
     String expected1 = "Hello altered World";
@@ -62,6 +62,4 @@ public class PrivateFinalTest {
     verify(tested2);
     Assert.assertEquals(expected2, actual2);
   }
-
-  
 }

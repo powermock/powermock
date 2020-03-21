@@ -32,7 +32,7 @@ import static org.powermock.api.easymock.PowerMock.*;
 @PrepareForTest(SampleServlet.class)
 public class SampleServletTest {
 
-    @Test(enabled = false)
+    @Test
     public void doGet() throws Exception {
         SampleServlet servlet = new SampleServlet();
 

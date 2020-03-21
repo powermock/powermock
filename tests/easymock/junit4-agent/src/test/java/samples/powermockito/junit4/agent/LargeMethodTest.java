@@ -1,6 +1,5 @@
 package samples.powermockito.junit4.agent;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -24,7 +23,6 @@ public class LargeMethodTest {
     @Rule
     public PowerMockRule powerMockRule = new PowerMockRule();
 
-    @Ignore
     @Test
     public void largeMethodShouldBeOverridden() {
         try {
@@ -36,14 +34,12 @@ public class LargeMethodTest {
         }
     }
 
-    @Ignore
     @Test
     public void largeMethodShouldBeAbleToBeSuppressed() {
         suppress(method(MethodExceedingJvmLimit.class, "init"));
         assertNull("Suppressed method should return: null", MethodExceedingJvmLimit.init());
     }
 
-    @Ignore
     @Test
     public void largeMethodShouldBeAbleToBeMocked() {
         mockStatic(MethodExceedingJvmLimit.class);
@@ -52,7 +48,6 @@ public class LargeMethodTest {
         assertEquals("Mocked method should return: ok", "ok", MethodExceedingJvmLimit.init());
     }
 
-    @Ignore
     @Test(expected = IllegalStateException.class)
     public void largeMethodShouldBeAbleToBeMockedAndThrowException() {
         mockStatic(MethodExceedingJvmLimit.class);

@@ -19,7 +19,6 @@ package samples.powermockito.junit4.agent;
 import org.easymock.Mock;
 import org.easymock.TestSubject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -72,8 +71,6 @@ public class AnnotationUsageTest {
         replay(server);
     }
 
-
-    @Ignore
     @Test
     public void annotationsAreEnabledWhenUsingTheJUnitRule() {
         String serviceMessage = tested.getServiceMessage();
