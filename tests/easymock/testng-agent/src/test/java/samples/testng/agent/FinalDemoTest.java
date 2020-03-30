@@ -28,12 +28,12 @@ import static org.testng.AssertJUnit.assertEquals;
 
 /**
  * Test class to demonstrate non-static final mocking.
- * 
+ *
  */
 @PrepareForTest(FinalDemo.class)
 public class FinalDemoTest extends PowerMockTestCase {
 
-	@Test(enabled = false)
+	@Test
 	public void testSay() throws Exception {
 		FinalDemo tested = createMock(FinalDemo.class);
 		String expected = "Hello altered World";
@@ -55,7 +55,7 @@ public class FinalDemoTest extends PowerMockTestCase {
 
 	}
 
-	@Test(enabled = false)
+	@Test
 	public void testSayFinalNative() throws Exception {
 		FinalDemo tested = createMock(FinalDemo.class);
 		String expected = "Hello altered World";

@@ -4,9 +4,9 @@ import net.bytebuddy.jar.asm.ClassVisitor;
 import net.bytebuddy.jar.asm.MethodVisitor;
 import net.bytebuddy.jar.asm.Opcodes;
 
-class PowerMockClassVisitor extends ClassVisitor {
+class DefinalizingClassVisitor extends ClassVisitor {
 
-    public PowerMockClassVisitor(ClassVisitor classVisitor) {
+    public DefinalizingClassVisitor(ClassVisitor classVisitor) {
         super(Opcodes.ASM5, classVisitor);
     }
 

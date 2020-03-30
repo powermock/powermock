@@ -28,14 +28,14 @@ import static org.powermock.api.easymock.PowerMock.*;
 /**
  * Test class to demonstrate static, static+final, static+native and
  * static+final+native methods mocking.
- * 
+ *
  * @author Johan Haleby
  * @author Jan Kronquist
  */
 @PrepareForTest( { StaticService.class, StaticHelper.class })
 public class MockStaticExtendsPowerMockTestCaseTest extends PowerMockTestCase {
 
-    @Test(enabled = false)
+    @Test
     public void testMockStatic() throws Exception {
         mockStatic(StaticService.class);
         String expected = "Hello altered World";
@@ -56,7 +56,7 @@ public class MockStaticExtendsPowerMockTestCaseTest extends PowerMockTestCase {
         }
     }
 
-    @Test(enabled = false)
+    @Test
     public void testMockStaticFinal() throws Exception {
         mockStatic(StaticService.class);
         String expected = "Hello altered World";

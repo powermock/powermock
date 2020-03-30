@@ -20,22 +20,18 @@ import net.bytebuddy.jar.asm.ClassReader;
 import net.bytebuddy.jar.asm.ClassWriter;
 
 import java.lang.instrument.ClassFileTransformer;
-import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 
 public class DefinalizingClassTransformer extends AbstractClassTransformer implements ClassFileTransformer {
+    private static final int NO_FLAGS_OR_OPTIONS = 0;
 
-     
-    
-    public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
+    public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) {
         if (loader == null || shouldIgnore(className)) {
             return null;
         }
         final ClassReader reader = new ClassReader(classfileBuffer);
-        final ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-        reader.accept(new PowerMockClassVisitor(writer),
-                ClassReader.SKIP_FRAMES);
+        final ClassWriter writer = new ClassWriter(NO_FLAGS_OR_OPTIONS);
+        reader.accept(new DefinalizingClassVisitor(writer), NO_FLAGS_OR_OPTIONS);
         return writer.toByteArray();
     }
-
 }

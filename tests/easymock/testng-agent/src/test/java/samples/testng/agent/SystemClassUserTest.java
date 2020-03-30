@@ -50,7 +50,7 @@ import static org.testng.AssertJUnit.assertEquals;
 @PrepareForTest( { SystemClassUser.class })
 public class SystemClassUserTest extends PowerMockTestCase {
 
-    @Test(enabled = false)
+    @Test
     public void assertThatMockingOfNonFinalSystemClassesWorks() throws Exception {
         mockStatic(URLEncoder.class);
 
@@ -62,7 +62,7 @@ public class SystemClassUserTest extends PowerMockTestCase {
         verifyAll();
     }
 
-    @Test(enabled = false)
+    @Test
     public void assertThatMockingOfTheRuntimeSystemClassWorks() throws Exception {
         mockStatic(Runtime.class);
 
@@ -79,7 +79,7 @@ public class SystemClassUserTest extends PowerMockTestCase {
         verifyAll();
     }
 
-    @Test(enabled = false)
+    @Test
     public void assertThatMockingOfFinalSystemClassesWorks() throws Exception {
         mockStatic(System.class);
 
@@ -92,7 +92,7 @@ public class SystemClassUserTest extends PowerMockTestCase {
         verifyAll();
     }
 
-    @Test(enabled = false)
+    @Test
     public void assertThatPartialMockingOfFinalSystemClassesWorks() throws Exception {
         mockStaticPartial(System.class, "nanoTime");
 
@@ -107,7 +107,7 @@ public class SystemClassUserTest extends PowerMockTestCase {
         verifyAll();
     }
 
-    @Test(enabled = false)
+    @Test
     public void assertThatPartialMockingOfFinalSystemClassesWorksForNonVoidMethods() throws Exception {
         mockStaticPartial(System.class, "getProperty");
 
@@ -121,7 +121,7 @@ public class SystemClassUserTest extends PowerMockTestCase {
         verifyAll();
     }
 
-    @Test(enabled = false)
+    @Test
     public void assertThatMockingOfCollectionsWork() throws Exception {
         List<?> list = new LinkedList<Object>();
         mockStatic(Collections.class);
@@ -136,7 +136,7 @@ public class SystemClassUserTest extends PowerMockTestCase {
         verifyAll();
     }
 
-    @Test(enabled = false)
+    @Test
     public void assertThatMockingStringWorks() throws Exception {
         mockStatic(String.class);
         final String string = "string";
@@ -153,7 +153,7 @@ public class SystemClassUserTest extends PowerMockTestCase {
         verifyAll();
     }
 
-    @Test(enabled = false)
+    @Test
     public void mockingStaticVoidMethodWorks() throws Exception {
         mockStatic(Thread.class);
 
@@ -171,7 +171,7 @@ public class SystemClassUserTest extends PowerMockTestCase {
         verifyAll();
     }
 
-    @Test(enabled = false)
+    @Test
     public void mockingInstanceMethodOfFinalSystemClassWorks() throws Exception {
         URL url = createMock(URL.class);
         URLConnection urlConnection = createMock(URLConnection.class);
@@ -184,7 +184,7 @@ public class SystemClassUserTest extends PowerMockTestCase {
         verifyAll();
     }
 
-    @Test(enabled = false)
+    @Test
     public void mockingURLWorks() throws Exception {
         URL url = createMock(URL.class);
         URLConnection urlConnectionMock = createMock(URLConnection.class);
@@ -198,7 +198,7 @@ public class SystemClassUserTest extends PowerMockTestCase {
         verifyAll();
     }
 
-    @Test(enabled = false)
+    @Test
     public void mockingInetAddressWorks() throws Exception {
         final InetAddress mock = createMock(InetAddress.class);
         mockStatic(InetAddress.class);
