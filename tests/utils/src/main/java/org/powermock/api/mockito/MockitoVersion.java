@@ -29,6 +29,10 @@ public class MockitoVersion {
     public static boolean isMockito2(){
         return MOCKITO_VERSION.isMockito2_0();
     }
+
+    public static boolean isMockito3(){
+        return MOCKITO_VERSION.isMockito3_0();
+    }
     
     private static final MockitoVersion MOCKITO_VERSION = new MockitoVersion();
     
@@ -58,5 +62,9 @@ public class MockitoVersion {
     
     private boolean isMockito2_0() {
         return version.startsWith("2");
+    }
+
+    private boolean isMockito3_0() {
+        return version.startsWith("3");
     }
 }
