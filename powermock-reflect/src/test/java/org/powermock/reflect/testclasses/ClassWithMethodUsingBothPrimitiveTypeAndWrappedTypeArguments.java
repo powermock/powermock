@@ -15,9 +15,9 @@
  */
 package org.powermock.reflect.testclasses;
 
-public class ClassWithMethodUsingBothPrimitiveTypeAndWrappedTypeArgument {
+public class ClassWithMethodUsingBothPrimitiveTypeAndWrappedTypeArguments {
 
-    public void methodHavingBothPrimitiveTypeAndWrappedTypeArgument(Integer arg0, int arg1) {
+    public void methodHavingBothPrimitiveTypeAndWrappedTypeArguments(Integer arg0, int arg1) {
 
     }
 }

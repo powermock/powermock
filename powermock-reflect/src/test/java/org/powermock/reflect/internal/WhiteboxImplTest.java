@@ -16,10 +16,7 @@
 package org.powermock.reflect.internal;
 
 import org.junit.Test;
-import org.powermock.reflect.testclasses.Child;
-import org.powermock.reflect.testclasses.ClassWithMethodUsingBothPrimitiveTypeAndWrappedTypeArgument;
-import org.powermock.reflect.testclasses.ClassWithOverloadedMethods;
-import org.powermock.reflect.testclasses.ClassWithStandardMethod;
+import org.powermock.reflect.testclasses.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -91,13 +88,13 @@ public class WhiteboxImplTest {
 	public void testGetMethodNotExactParameterTypeMatch() throws NoSuchMethodException {
 		Method[] methods =
 			WhiteboxImpl.getMethods(
-				ClassWithMethodUsingBothPrimitiveTypeAndWrappedTypeArgument.class,
-				"methodHavingBothPrimitiveTypeAndWrappedTypeArgument",
+				ClassWithMethodUsingBothPrimitiveTypeAndWrappedTypeArguments.class,
+				"methodHavingBothPrimitiveTypeAndWrappedTypeArguments",
 				new Class<?>[]{Integer.class, Integer.class},
 				false
 			);
-		Method method = ClassWithMethodUsingBothPrimitiveTypeAndWrappedTypeArgument.class.getMethod(
-				"methodHavingBothPrimitiveTypeAndWrappedTypeArgument",
+		Method method = ClassWithMethodUsingBothPrimitiveTypeAndWrappedTypeArguments.class.getMethod(
+				"methodHavingBothPrimitiveTypeAndWrappedTypeArguments",
 				Integer.class,
 				int.class
 		);
