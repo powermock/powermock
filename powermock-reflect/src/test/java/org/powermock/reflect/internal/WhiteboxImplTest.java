@@ -16,9 +16,7 @@
 package org.powermock.reflect.internal;
 
 import org.junit.Test;
-import org.powermock.reflect.testclasses.Child;
-import org.powermock.reflect.testclasses.ClassWithOverloadedMethods;
-import org.powermock.reflect.testclasses.ClassWithStandardMethod;
+import org.powermock.reflect.testclasses.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -26,6 +24,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assume.assumeTrue;
 
 
@@ -84,4 +83,21 @@ public class WhiteboxImplTest {
 
         assertThat(methodNames).contains("stream");
     }
+
+    @Test
+	public void testGetMethodNotExactParameterTypeMatch() throws NoSuchMethodException {
+		Method[] methods =
+			WhiteboxImpl.getMethods(
+				ClassWithMethodUsingBothPrimitiveTypeAndWrappedTypeArguments.class,
+				"methodHavingBothPrimitiveTypeAndWrappedTypeArguments",
+				new Class<?>[]{Integer.class, Integer.class},
+				false
+			);
+		Method method = ClassWithMethodUsingBothPrimitiveTypeAndWrappedTypeArguments.class.getMethod(
+				"methodHavingBothPrimitiveTypeAndWrappedTypeArguments",
+				Integer.class,
+				int.class
+		);
+		assertEquals(methods[0], method);
+	}
 }

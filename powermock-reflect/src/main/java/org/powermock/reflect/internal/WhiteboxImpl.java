@@ -1791,7 +1791,8 @@ public class WhiteboxImpl {
             final Class<?>[] parameterTypes = method.getParameterTypes();
             if (checkIfParameterTypesAreSame(method.isVarArgs(), expectedTypes, parameterTypes)
                         || (!exactParameterTypeMatch && checkIfParameterTypesAreSame(method.isVarArgs(),
-                    convertParameterTypesToPrimitive(expectedTypes), parameterTypes))) {
+                    convertParameterTypesToPrimitive(expectedTypes),
+                    convertParameterTypesToPrimitive(parameterTypes)))) {
                 matchingArgumentTypes.add(method);
             }
         }
