@@ -20,6 +20,7 @@ package org.powermock.api.mockito.invocation;
 
 import org.mockito.Mockito;
 import org.mockito.invocation.Invocation;
+import org.mockito.invocation.InvocationFactory.RealMethodBehavior;
 import org.mockito.mock.MockCreationSettings;
 import org.powermock.api.support.SafeExceptionRethrower;
 import org.powermock.core.MockGateway;
@@ -29,21 +30,20 @@ import org.powermock.reflect.Whitebox;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.concurrent.Callable;
 
 class InvocationFactory {
     
     Invocation createInvocation(final Object mock, final Method method, final MockCreationSettings settings,
                                 final Object... arguments) {
-        final Callable realMethod = createRealMethod(mock, method, arguments);
+        final RealMethodBehavior realMethod = createRealMethod(mock, method, arguments);
         return Mockito.framework()
                       .getInvocationFactory()
                       .createInvocation(mock, settings, method, realMethod, arguments);
     }
     
-    private Callable createRealMethod(final Object delegator, final Method method,
-                                      final Object... arguments) {
-        return new Callable() {
+    private RealMethodBehavior createRealMethod(final Object delegator, final Method method,
+                                                                                         final Object... arguments) {
+        return new RealMethodBehavior() {
             @Override
             public Object call() throws Exception {
                 final Class<?> type = Whitebox.getType(delegator);

@@ -16,27 +16,11 @@
 package samples.powermockito.junit4.agent;
 
 import org.junit.Rule;
-import org.junit.Test;
-import org.mockito.exceptions.base.MockitoAssertionError;
-import org.mockito.exceptions.verification.TooLittleActualInvocations;
-import org.mockito.exceptions.verification.junit.ArgumentsAreDifferent;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import samples.powermockito.junit4.staticmocking.MockStaticCases;
 import samples.singleton.SimpleStaticService;
-import samples.singleton.StaticHelper;
 import samples.singleton.StaticService;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.doThrow;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 /**
  * Test class to demonstrate static mocking with PowerMockito.

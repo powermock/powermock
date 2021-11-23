@@ -34,7 +34,7 @@ public class PowerMockitoSpyAnnotationEngine extends SpyAnnotationEngine {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void process(Class<?> context, Object testClass) {
+	public AutoCloseable process(Class<?> context, Object testClass) {
 		Field[] fields = context.getDeclaredFields();
 		for (Field field : fields) {
 			if (field.isAnnotationPresent(Spy.class)) {
@@ -63,5 +63,6 @@ public class PowerMockitoSpyAnnotationEngine extends SpyAnnotationEngine {
 				}
 			}
 		}
+		return null;
 	}
 }

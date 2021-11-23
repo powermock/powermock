@@ -30,7 +30,7 @@ public class PowerMockitoInjectingAnnotationEngine extends InjectingAnnotationEn
     
     @SuppressWarnings("deprecation")
     @Override
-    public void process(Class<?> context, Object testClass) {
+    public AutoCloseable process(Class<?> context, Object testClass) {
         // this will create @Spies:
         new PowerMockitoSpyAnnotationEngine().process(context, testClass);
         
@@ -38,6 +38,7 @@ public class PowerMockitoInjectingAnnotationEngine extends InjectingAnnotationEn
         
         // this injects mocks
         injectMocks(testClass);
+        return null;
     }
     
     private void preLoadPluginLoader() {

@@ -43,7 +43,7 @@ public class LocationFromStackTraceTest {
                         MockRepository.getStaticMethodInvocationControl(SomethingWithStaticMethod.class);
         MockHandlerAdaptor mockHandlerAdaptor = invocationControl.getMockHandlerAdaptor();
         Object mock = mockHandlerAdaptor.getMock();
-        MockHandler<Object> mockHandler = MockUtil.getMockHandler(mock);
+        MockHandler<?> mockHandler = MockUtil.getMockHandler(mock);
         InvocationContainerImpl invocationContainer = (InvocationContainerImpl)mockHandler.getInvocationContainer();
         List<Stubbing> stubbings = new ArrayList<Stubbing>(invocationContainer.getStubbingsAscending());
         assertThat(stubbings.size(), is(3));
