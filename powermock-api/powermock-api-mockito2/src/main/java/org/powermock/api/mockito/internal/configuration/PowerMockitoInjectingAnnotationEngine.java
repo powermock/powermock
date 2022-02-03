@@ -17,6 +17,7 @@
 package org.powermock.api.mockito.internal.configuration;
 
 import org.mockito.Mock;
+import org.mockito.internal.MockitoCore;
 import org.mockito.internal.configuration.InjectingAnnotationEngine;
 import org.mockito.internal.configuration.plugins.Plugins;
 import org.powermock.api.mockito.internal.mockcreation.DefaultMockCreator;
@@ -27,7 +28,7 @@ import org.powermock.api.mockito.internal.mockcreation.DefaultMockCreator;
  * {@link Mock}.
  */
 public class PowerMockitoInjectingAnnotationEngine extends InjectingAnnotationEngine {
-    
+
     @SuppressWarnings("deprecation")
     @Override
     public AutoCloseable process(Class<?> context, Object testClass) {
@@ -43,10 +44,11 @@ public class PowerMockitoInjectingAnnotationEngine extends InjectingAnnotationEn
     
     private void preLoadPluginLoader() {
         final ClassLoader originalCL = Thread.currentThread().getContextClassLoader();
-        
+
         Thread.currentThread().setContextClassLoader(DefaultMockCreator.class.getClassLoader());
         
         try {
+            MockitoCore mc = new MockitoCore();
             Plugins.getMockMaker();
         } finally {
             Thread.currentThread().setContextClassLoader(originalCL);
