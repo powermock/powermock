@@ -27,7 +27,7 @@ ext{
     hamcrestVersion = "1.3"
     assertjVersion = "2.6.0"
     cglibVersion = "3.2.9"
-    objenesisVersion = "3.0.1"
+    objenesisVersion = "3.2"
     javassistVersion = "3.27.0-GA"
     junitVersion = "4.12"
     junitRulesVersion = "4.8.2"
