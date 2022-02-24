@@ -39,8 +39,8 @@ public class PowerMockStaticMockingTest {
     @Test
     public void should_mock_static_method_when_mockito_inline_mock_creator_for_mockito_tests() {
 
-        assumeTrue("Test makes sense only for Mockito 2 & 3",
-                MockitoVersion.isMockito2() || MockitoVersion.isMockito3());
+        assumeTrue("Test makes sense only for Mockito 2 & 3 & 4",
+                MockitoVersion.isMockito2() || MockitoVersion.isMockito3() || MockitoVersion.isMockito4());
     
         PowerMockito.mockStatic(StaticClass.class);
         
@@ -56,8 +56,8 @@ public class PowerMockStaticMockingTest {
     @Test
     public void should_verify_static_method_when_mockito_inline_mock_creator_for_mockito_tests() throws Exception {
 
-        assumeTrue("Test makes sense only for Mockito 2 & 3",
-                MockitoVersion.isMockito2() || MockitoVersion.isMockito3());
+        assumeTrue("Test makes sense only for Mockito 2 & 3 & 4",
+                MockitoVersion.isMockito2() || MockitoVersion.isMockito3() || MockitoVersion.isMockito4());
     
         PowerMockito.mockStatic(StaticClass.class);
     

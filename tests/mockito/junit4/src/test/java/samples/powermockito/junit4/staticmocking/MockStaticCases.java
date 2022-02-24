@@ -22,7 +22,7 @@ import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.exceptions.base.MockitoAssertionError;
-import org.mockito.exceptions.verification.TooLittleActualInvocations;
+import org.mockito.exceptions.verification.TooFewActualInvocations;
 import org.mockito.exceptions.verification.junit.ArgumentsAreDifferent;
 import samples.singleton.SimpleStaticService;
 import samples.singleton.StaticService;
@@ -194,7 +194,7 @@ public class MockStaticCases {
         StaticService.say("hello");
     }
     
-    @Test(expected = TooLittleActualInvocations.class)
+    @Test(expected = TooFewActualInvocations.class)
     public void testMockStaticIncorrectTimes() throws Exception {
         mockStatic(StaticService.class);
         assertNull(StaticService.say("hello"));

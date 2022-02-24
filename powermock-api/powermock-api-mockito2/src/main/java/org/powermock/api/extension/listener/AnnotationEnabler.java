@@ -82,7 +82,7 @@ public class AnnotationEnabler extends AbstractPowerMockTestListenerBase impleme
                 MockSettings mockSettings = withSettings();
                 Answers answers = mockAnnotation.answer();
                 if (answers != null) {
-                    mockSettings.defaultAnswer(answers.get());
+                    mockSettings.defaultAnswer(answers);
                 }
 
                 Class<?>[] extraInterfaces = mockAnnotation.extraInterfaces();
