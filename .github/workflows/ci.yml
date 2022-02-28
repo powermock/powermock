@@ -1,0 +1,37 @@
+name: PowerMock CI
+
+on:
+  push:
+    branches: [ release/3.x ]
+  pull_request:
+    branches: [ release/3.x ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ 8, 11 ]
+      fail-fast: false
+    name: Java ${{ matrix.java }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK
+      uses: actions/setup-java@v2
+      with:
+        java-version: '${{ matrix.java }}'
+        distribution: 'temurin'
+        cache: 'gradle'
+    - name: Build
+      env:
+          SKIP_RELEASE: true
+          powermock.byte-code-framework: Javassist
+      # We are using && below on purpose
+      # ciPerformRelease must run only when the entire build has completed
+      # This guarantees that no release steps are executed when the build or tests fail
+      run: |
+        ./gradlew assemble --stacktrace -PcheckJava6Compatibility \
+            && ./gradlew -i --stacktrace check \
+            && ./gradlew -i ciPerformRelease
