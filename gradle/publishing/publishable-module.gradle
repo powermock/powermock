@@ -21,7 +21,7 @@ jar {
 javadoc {
     description = "Generates project-level javadoc for use in -javadoc jar"
 
-    options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+    options.memberLevel = JavadocMemberLevel.PROTECTED
     options.author = true
     options.header = project.name
     options.addStringOption('-quiet')
