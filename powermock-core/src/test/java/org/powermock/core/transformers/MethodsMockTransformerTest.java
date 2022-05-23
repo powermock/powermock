@@ -45,8 +45,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.assertj.core.api.Java6Assertions.catchThrowable;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.powermock.core.transformers.mock.MockGatewaySpy.ConditionBuilder.registered;
 import static org.powermock.core.transformers.mock.MockGatewaySpy.methodCalls;
 

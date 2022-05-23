@@ -20,7 +20,7 @@ import org.powermock.reflect.internal.WhiteboxImpl;
 
 import java.lang.reflect.Field;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * A test case to demonstrate an issue

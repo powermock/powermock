@@ -28,7 +28,7 @@ import org.powermock.configuration.ConfigurationFactory;
 import org.powermock.configuration.PowerMockConfiguration;
 import org.powermock.core.classloader.ByteCodeFramework;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Enclosed.class)
 public class ConfigurationFactoryImplTest {

@@ -34,7 +34,7 @@ import powermock.test.support.MainMockTransformerTestSupport.SuperClassWithObjec
 
 import java.lang.reflect.Field;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.powermock.core.test.ClassLoaderTestHelper.runTestWithNewClassLoader;
 
 public class InstrumentMockTransformerTest extends AbstractBaseMockTransformerTest {

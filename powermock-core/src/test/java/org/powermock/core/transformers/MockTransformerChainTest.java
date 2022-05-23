@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.powermock.core.transformers.support.DefaultMockTransformerChain;
 import org.powermock.core.transformers.support.FilterPredicates;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class MockTransformerChainTest {
     

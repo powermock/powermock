@@ -3,7 +3,7 @@ package org.powermock.utils;
 import org.assertj.core.data.Offset;
 import org.junit.Test;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class NumberUtilsTest {
 

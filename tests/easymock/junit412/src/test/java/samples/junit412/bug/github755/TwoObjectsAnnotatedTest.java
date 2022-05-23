@@ -8,7 +8,7 @@ import org.powermock.api.easymock.annotation.MockNice;
 import org.powermock.modules.junit4.PowerMockRunner;
 import samples.newmocking.SomeDependency;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(PowerMockRunner.class)
 public class TwoObjectsAnnotatedTest {

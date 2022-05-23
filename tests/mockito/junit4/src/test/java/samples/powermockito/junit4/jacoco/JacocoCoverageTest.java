@@ -25,7 +25,7 @@ import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class JacocoCoverageTest {
 

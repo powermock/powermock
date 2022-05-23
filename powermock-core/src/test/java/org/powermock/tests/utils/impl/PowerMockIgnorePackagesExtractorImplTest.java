@@ -24,7 +24,7 @@ import org.powermock.configuration.GlobalConfiguration;
 import org.powermock.configuration.PowerMockConfiguration;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("unchecked")
 public class PowerMockIgnorePackagesExtractorImplTest {

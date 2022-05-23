@@ -65,7 +65,7 @@ import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.util.Set;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

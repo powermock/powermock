@@ -7,7 +7,7 @@ import org.junit.runner.Result;
 import org.junit.runner.Runner;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class GitHub352Test {
 
