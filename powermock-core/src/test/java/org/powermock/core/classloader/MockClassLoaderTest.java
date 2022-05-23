@@ -41,7 +41,7 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.List;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static java.util.Arrays.asList;
 import static net.bytebuddy.matcher.ElementMatchers.isDeclaredBy;
 import static org.hamcrest.CoreMatchers.equalTo;

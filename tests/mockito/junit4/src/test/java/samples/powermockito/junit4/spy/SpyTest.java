@@ -16,7 +16,6 @@
 package samples.powermockito.junit4.spy;
 
 import org.assertj.core.api.Assertions;
-import org.assertj.core.api.Java6Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,7 +55,7 @@ public class SpyTest {
     
     @Test
     public void should_call_real_method_when_spy_method_is_not_stubbed() {
-        Java6Assertions.assertThat(partialMock.getMyString())
+        Assertions.assertThat(partialMock.getMyString())
                        .as("Real method is called")
                        .isEqualTo(new SpyObject().getMyString());
     }

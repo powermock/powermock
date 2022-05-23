@@ -30,7 +30,7 @@ import samples.privatemocking.PrivateMethodDemo;
 import java.io.File;
 import java.io.StringReader;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;

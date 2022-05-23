@@ -8,7 +8,7 @@ import org.powermock.reflect.Whitebox;
 
 import java.lang.reflect.Method;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class GitHub722Test {
 

@@ -22,8 +22,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.assertj.core.api.Java6Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.powermock.core.test.ContainsCondition.contains;
 
 
@@ -48,7 +48,7 @@ public class MockClassLoaderFactoryTest {
             assertThat(((MockClassLoader) classLoader).getConfiguration())
                 .as("MockClassLoader configuration contains expected class: %s", expectedClassToModify)
                 .extracting("modify")
-                .are(contains(expectedClassToModify));
+                .is(contains(expectedClassToModify));
         }
     }
     
@@ -83,7 +83,7 @@ public class MockClassLoaderFactoryTest {
             assertThat(((MockClassLoader) classLoader).getConfiguration())
                 .as("MockClassLoader configuration contains expected class: %s", expectedClassToModify)
                 .extracting("modify")
-                .are(contains(expectedClassToModify));
+                .is(contains(expectedClassToModify));
         }
     
     }

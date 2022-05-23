@@ -36,8 +36,8 @@ import java.lang.reflect.Method;
 import java.net.URLClassLoader;
 import java.util.List;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.assertj.core.api.Java6Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.junit.Assume.assumeFalse;
 
 public class PowerMockMakerTestCase {

@@ -23,7 +23,7 @@ import org.powermock.configuration.Configuration;
 import org.powermock.configuration.MockitoConfiguration;
 import org.powermock.configuration.PowerMockConfiguration;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.powermock.configuration.support.ConfigurationBuilder.createConfigurationFor;
 
 public class ConfigurationBuilderTest {

@@ -27,7 +27,7 @@ import org.powermock.modules.junit4.rule.PowerMockRule;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * This test demonstrates that the PowerMockRule delegates to other rules.

@@ -34,8 +34,8 @@ import powermock.test.support.MainMockTransformerTestSupport.NativeMethodsTestCl
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.assertj.core.api.Java6Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.powermock.core.transformers.mock.MockGatewaySpy.ConditionBuilder.registered;
 import static org.powermock.core.transformers.mock.MockGatewaySpy.methodCalls;
 
