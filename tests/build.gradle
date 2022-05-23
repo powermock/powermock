@@ -17,9 +17,6 @@ configure(subprojects) { project ->
 
     apply from: "${gradleScriptDir}/java-module.gradle"
 
-    test {
-        jvmArgs "-XX:MaxPermSize=256m"
-    }
 }
 
 project(":tests:utils"){

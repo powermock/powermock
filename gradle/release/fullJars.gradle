@@ -14,7 +14,6 @@ configure(fullJars){ project ->
     repositories {
         mavenLocal()
         mavenCentral()
-        jcenter()
     }
 
     group = "org.powermock"
