@@ -139,6 +139,23 @@ project(":tests:mockito:junit4-delegate") {
     }
 }
 
+project(":tests:mockito:junit-jupiter-agent") {
+    description = "Tests for PowerMock JUnit Jupiter extension with Java agent and Mockito."
+
+    targetCompatibility = 1.8
+    sourceCompatibility = 1.8
+
+    dependencies {
+        testCompile project(":powermock-modules:powermock-module-junit-jupiter-agent")
+
+        testCompile("org.junit.jupiter:junit-jupiter:${junitJupiterVersion}")
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
+
 project(":tests:mockito:testng"){
     description = "Tests for Mockito module with TestNG."
 

@@ -308,6 +308,16 @@ project(":powermock-modules:powermock-module-junit4-rule-agent") {
     }
 }
 
+project(":powermock-modules:powermock-module-junit-jupiter-agent") {
+    description = "PowerMock support module for JUnit Jupiter extension with Java agent"
+
+    dependencies {
+        compile(project(":powermock-core"))
+        compile(project(":powermock-modules:powermock-module-javaagent"))
+        compile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
+    }
+}
+
 project(":powermock-modules:powermock-module-testng-common") {
     description = "PowerMock module for TestNG. Common classes"
 
