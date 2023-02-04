@@ -30,6 +30,7 @@ ext{
     objenesisVersion = "3.2"
     javassistVersion = "3.27.0-GA"
     junitVersion = "4.12"
+    junitJupiterVersion = "5.9.2"
     junitRulesVersion = "4.8.2"
     testngVersion = "6.9.10"
     xstreamVersion = "1.4.10"
