@@ -58,6 +58,16 @@ public class ConstructorsMockTransformer extends AbstractJavaAssistMockTransform
 
     private static void transform(final CtClass[] clazzArray) {
         for (CtClass nestedClazz : clazzArray) {
+            // nestedClazz could be already loaded hence frozen
+            // e.g. in case of a complex structure of classes with several
+            // levels of nesting. This nestedClazz might have been used e.g.
+            // in a sibling of the outer class (which is also nested)
+            // so mocking that sibling class might cause a class load of
+            // this nestedClazz as a side-effect.
+            // Workaround this by checking the frozen state and defrost.
+            if (nestedClazz.isFrozen()) {
+              nestedClazz.defrost();
+            }
             for (CtConstructor c : nestedClazz.getDeclaredConstructors()) {
                 final int modifiers = c.getModifiers();
                 if (!Modifier.isPublic(modifiers)) {
