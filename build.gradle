@@ -31,7 +31,7 @@ ext{
     javassistVersion = "3.27.0-GA"
     junitVersion = "4.12"
     junitRulesVersion = "4.8.2"
-    testngVersion = "6.9.10"
+    testngVersion = "7.5"
     xstreamVersion = "1.4.10"
     mockitoVersion = "4.3.1"
     servletVersion = "2.5"
