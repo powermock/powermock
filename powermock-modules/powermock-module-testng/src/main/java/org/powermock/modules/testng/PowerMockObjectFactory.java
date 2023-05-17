@@ -19,7 +19,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
 import org.powermock.modules.testng.internal.PowerMockClassloaderObjectFactory;
 import org.testng.IObjectFactory;
-import org.testng.internal.ObjectFactoryImpl;
+import org.testng.internal.objects.ObjectFactoryImpl;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;

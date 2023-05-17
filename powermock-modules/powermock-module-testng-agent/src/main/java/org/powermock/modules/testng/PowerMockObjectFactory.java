@@ -20,7 +20,7 @@ import org.powermock.modules.agent.PowerMockAgent;
 import org.powermock.modules.agent.support.JavaAgentClassRegisterImpl;
 import org.powermock.modules.agent.support.PowerMockAgentTestInitializer;
 import org.testng.IObjectFactory;
-import org.testng.internal.ObjectFactoryImpl;
+import org.testng.internal.objects.ObjectFactoryImpl;
 
 import java.lang.reflect.Constructor;
 
