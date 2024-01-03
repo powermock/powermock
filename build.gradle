@@ -3,14 +3,14 @@ buildscript {
         mavenCentral()
         jcenter()
         maven {
-            url 'https://repo.spring.io/plugins-release'
+            url 'https://repo.spring.io/plugins-snapshot'
         }
         maven {
             url 'https://plugins.gradle.org/m2/'
         }
     }
     dependencies {
-        classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.7'
+        classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.7-SNAPSHOT'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath 'net.researchgate:gradle-release:2.4.0'
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
