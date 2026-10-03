@@ -55,8 +55,33 @@ public class JavassistMockClassLoader extends MockClassLoader {
         classPool = new ClassPoolFactory(useClassPathAdjuster).create();
         classMarker = JavaAssistClassMarkerFactory.createClassMarker(classPool);
     }
-    
-    
+
+    /**
+     * Cleans up the ClassPool to allow garbage collection.
+     * Removes cached classes and breaks reference chains to enable memory reclamation.
+     * Should be called after all tests using this classloader complete.
+     *
+     * Fixes issue #1169 (MockClassLoader memory leak in Metaspace)
+     */
+    public void cleanup() {
+        try {
+            if (classPool != null) {
+                classPool.clearImportedPackages();
+                ClassPool.doPruning = true;
+                int classPathCount = classPool.numClassPath();
+                for (int i = classPathCount - 1; i >= 0; i--) {
+                    try {
+                        classPool.removeClassPath(classPool.getClassPath(i));
+                    } catch (Exception ignored) {
+                        // Continue cleanup even if individual path removal fails
+                    }
+                }
+            }
+        } catch (Exception ignored) {
+            // Log and ignore cleanup errors
+        }
+    }
+
     @Override
     protected Class<?> loadUnmockedClass(String name, ProtectionDomain protectionDomain)
         throws ClassFormatError, ClassNotFoundException {
@@ -92,15 +117,18 @@ public class JavassistMockClassLoader extends MockClassLoader {
     
     protected byte[] defineAndTransformClass(String name, ProtectionDomain protectionDomain) {
         final byte[] clazz;
-        
-        ClassPool.doPruning = false;
+
+        // Enable pruning to allow JavaAssist to manage memory automatically (fixes #1169)
+        boolean oldPruningState = ClassPool.doPruning;
+        ClassPool.doPruning = true;
+
         try {
             CtClass type = classPool.get(name);
-            
+
             ClassWrapper<CtClass> wrappedType = classWrapperFactory.wrap(type);
-            
+
             wrappedType = transformClass(wrappedType);
-            
+
             type = wrappedType.unwrap();
 
             /*
@@ -112,11 +140,14 @@ public class JavassistMockClassLoader extends MockClassLoader {
              * CtClass object is removed from the ClassPool.
              */
             type.detach();
-            
-            
+
+
             clazz = type.toBytecode();
         } catch (Exception e) {
             throw new IllegalStateException("Failed to transform class with name " + name + ". Reason: " + e.getMessage(), e);
+        } finally {
+            // Restore original pruning state
+            ClassPool.doPruning = oldPruningState;
         }
         return clazz;
     }
