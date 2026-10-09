@@ -55,6 +55,30 @@ public class WhiteboxImplTest {
 	}
 
 	@Test
+	public void getMethodsFindsMethodsOfJdkClassInPackageNotOpenedToPowerMock() throws Exception {
+		// java.util.logging is not opened to the unnamed module on Java 17, so its private methods stay inaccessible
+		final Method[] methods = WhiteboxImpl.getMethods(java.util.logging.Logger.class, "getLogger");
+		assertThat(methods).isNotEmpty();
+	}
+
+	@Test
+	public void getMethodsStillMakesPrivateMethodsOfUserClassesAccessible() throws Exception {
+		final Method[] methods = WhiteboxImpl.getMethods(WhiteboxImpl.class, "checkIfParameterTypesAreSame");
+		assertThat(methods).hasSize(1);
+		assertThat(methods[0].isAccessible()).isTrue();
+	}
+
+	@Test
+	public void setAndGetInternalStateWorksForFieldOfJdkClassInPackageNotOpenedToPowerMock() throws Exception {
+		// java.lang.Throwable#detailMessage is private and, without opening the module, cannot be
+		// made accessible via plain reflection on Java 17+; PowerMock falls back to sun.misc.Unsafe.
+		Throwable throwable = new RuntimeException("original");
+		WhiteboxImpl.setInternalState(throwable, "detailMessage", "updated");
+		assertThat((String) WhiteboxImpl.getInternalState(throwable, "detailMessage")).isEqualTo("updated");
+		assertThat(throwable.getMessage()).isEqualTo("updated");
+	}
+
+	@Test
 	public void getBestCandidateMethodReturnsMatchingMethodWhenNoOverloading() throws Exception {
 		final Method expectedMethod = ClassWithStandardMethod.class.getDeclaredMethod("myMethod", double.class);
 		final Method actualMethod = WhiteboxImpl.getBestMethodCandidate(ClassWithStandardMethod.class, "myMethod",

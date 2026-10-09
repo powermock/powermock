@@ -248,7 +248,7 @@ public class WhiteBoxTest {
 
     @Test
     public void testMethodWithPrimitiveAndWrappedInt_primtive_wrapped() throws Exception {
-        assertEquals(17, Whitebox.invokeMethod(new ClassWithPrivateMethods(), "methodWithPrimitiveAndWrappedInt",
+        assertEquals(17, (Object) Whitebox.invokeMethod(new ClassWithPrivateMethods(), "methodWithPrimitiveAndWrappedInt",
                                                new Class[]{int.class, Integer.class}, 9, Integer.valueOf(8)));
     }
 
@@ -257,13 +257,13 @@ public class WhiteBoxTest {
         int expected = 123;
         Whitebox.setInternalState(ClassWithInternalState.class, "staticState", expected);
         assertEquals(expected, ClassWithInternalState.getStaticState());
-        assertEquals(expected, Whitebox.getInternalState(ClassWithInternalState.class, "staticState"));
+        assertEquals(expected, (Object) Whitebox.getInternalState(ClassWithInternalState.class, "staticState"));
     }
 
 	@Test
 	public void testStaticFinalPrimitiveState() {
 		Whitebox.setInternalState(ClassWithInternalState.class, "staticFinalIntState", 123);
-                assertEquals(123, Whitebox.getInternalState(ClassWithInternalState.class, "staticFinalIntState"));
+                assertEquals(123, (Object) Whitebox.getInternalState(ClassWithInternalState.class, "staticFinalIntState"));
 	}
 
 	@Test
@@ -330,25 +330,25 @@ public class WhiteBoxTest {
     @Test
     public void testInvokeVarArgsMethod_multipleValues() throws Exception {
         ClassWithPrivateMethods tested = new ClassWithPrivateMethods();
-        assertEquals(6, Whitebox.invokeMethod(tested, "varArgsMethod", 1, 2, 3));
+        assertEquals(6, (Object) Whitebox.invokeMethod(tested, "varArgsMethod", 1, 2, 3));
     }
 
     @Test
     public void testInvokeVarArgsMethod_noArguments() throws Exception {
         ClassWithPrivateMethods tested = new ClassWithPrivateMethods();
-        assertEquals(0, Whitebox.invokeMethod(tested, "varArgsMethod"));
+        assertEquals(0, (Object) Whitebox.invokeMethod(tested, "varArgsMethod"));
     }
 
     @Test
     public void testInvokeVarArgsMethod_oneArgument() throws Exception {
         ClassWithPrivateMethods tested = new ClassWithPrivateMethods();
-        assertEquals(4, Whitebox.invokeMethod(tested, "varArgsMethod", 2));
+        assertEquals(4, (Object) Whitebox.invokeMethod(tested, "varArgsMethod", 2));
     }
 
     @Test
     public void testInvokeVarArgsMethod_invokeVarArgsWithOneArgument() throws Exception {
         ClassWithPrivateMethods tested = new ClassWithPrivateMethods();
-        assertEquals(1, Whitebox.invokeMethod(tested, "varArgsMethod", new Class<?>[]{int[].class}, 1));
+        assertEquals(1, (Object) Whitebox.invokeMethod(tested, "varArgsMethod", new Class<?>[]{int[].class}, 1));
     }
 
     @Test
@@ -372,7 +372,7 @@ public class WhiteBoxTest {
         ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState() {
         };
         Whitebox.setInternalState(tested, fieldName, value);
-        assertEquals(value, Whitebox.getInternalState(tested, fieldName));
+        assertEquals(value, (Object) Whitebox.getInternalState(tested, fieldName));
     }
 
     @Test
@@ -383,8 +383,8 @@ public class WhiteBoxTest {
         ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState() {
         };
         Whitebox.setInternalState(tested, fieldName, value);
-        assertEquals(value, Whitebox.getInternalState(tested, fieldName));
-        assertEquals(-1, Whitebox.getInternalState(tested, fieldName, ClassWithInternalState.class));
+        assertEquals(value, (Object) Whitebox.getInternalState(tested, fieldName));
+        assertEquals(-1, (Object) Whitebox.getInternalState(tested, fieldName, ClassWithInternalState.class));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -394,7 +394,7 @@ public class WhiteBoxTest {
         ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState() {
         };
         Whitebox.setInternalState(tested, fieldName, new Object());
-        assertEquals(value, Whitebox.getInternalState(tested, fieldName));
+        assertEquals(value, (Object) Whitebox.getInternalState(tested, fieldName));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -404,7 +404,7 @@ public class WhiteBoxTest {
         ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState() {
         };
         Whitebox.setInternalState(tested, fieldName, (Object) null);
-        assertEquals(value, Whitebox.getInternalState(tested, fieldName));
+        assertEquals(value, (Object) Whitebox.getInternalState(tested, fieldName));
     }
 
     @Test
@@ -413,8 +413,8 @@ public class WhiteBoxTest {
         ClassWithChildThatHasInternalState tested = new ClassWithChildThatHasInternalState();
         Whitebox.setInternalState(tested, int.class, value);
         assertEquals(value, (int) Whitebox.getInternalState(tested, int.class));
-        assertEquals(value, Whitebox.getInternalState(tested, "anotherInternalState"));
-        assertEquals(value, Whitebox.getInternalState(tested, "anotherInternalState",
+        assertEquals(value, (Object) Whitebox.getInternalState(tested, "anotherInternalState"));
+        assertEquals(value, (Object) Whitebox.getInternalState(tested, "anotherInternalState",
                                                       ClassWithChildThatHasInternalState.class));
     }
 
@@ -425,7 +425,7 @@ public class WhiteBoxTest {
         Whitebox.setInternalState(tested, int.class, value, ClassWithInternalState.class);
         assertEquals(42, (int) Whitebox.getInternalState(tested, int.class));
         assertEquals(value, (int) Whitebox.getInternalState(tested, int.class, ClassWithInternalState.class));
-        assertEquals(value, Whitebox.getInternalState(tested, "staticState", ClassWithInternalState.class));
+        assertEquals(value, (Object) Whitebox.getInternalState(tested, "staticState", ClassWithInternalState.class));
     }
 
     @Test
@@ -621,7 +621,7 @@ public class WhiteBoxTest {
     @Test
     public void testInvokeMethodWithBothNormalAndVarArgsParameter() throws Exception {
         ClassWithPrivateMethods tested = new ClassWithPrivateMethods();
-        assertEquals(4, Whitebox.invokeMethod(tested, "varArgsMethod2", 1, 2, 3));
+        assertEquals(4, (Object) Whitebox.invokeMethod(tested, "varArgsMethod2", 1, 2, 3));
     }
 
     @Test
@@ -959,5 +959,16 @@ public class WhiteBoxTest {
         Whitebox.setInternalState(state, "finalString", expected);
         assertEquals(expected, state.getFinalString());
         assertEquals(expected, Whitebox.getInternalState(state, "finalString"));
+    }
+
+    @Test
+    public void canSetPrivateFieldOfJdkClassInPackageNotOpened() {
+        Exception exception = new Exception("original");
+
+        Whitebox.setInternalState(exception, "detailMessage", "changed");
+        assertEquals("changed", exception.getMessage());
+
+        Whitebox.setInternalState(exception, "detailMessage", "changed again", Throwable.class);
+        assertEquals("changed again", exception.getMessage());
     }
 }

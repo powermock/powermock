@@ -5,13 +5,13 @@ configure(project.subprojects) { subproject ->
     }
 
     dependencies {
-        testCompile("junit:junit:${junitVersion}") {
+        testImplementation("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
-        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
+        testImplementation("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
 
-        testCompile files(project(":tests:mockito:junit4").sourceSets.test.output)
+        testImplementation files(project(":tests:mockito:junit4").sourceSets.test.output)
     }
 
     compileJava {
@@ -29,10 +29,10 @@ project(":tests:java8:mockito-junit4") {
     description = "Tests for Mockito module with JUnit 4.x. and Java8."
 
     dependencies {
-        testCompile project(":powermock-modules:powermock-module-junit4")
+        testImplementation project(":powermock-modules:powermock-module-junit4")
 
-        testCompile project(":powermock-api:powermock-api-mockito2")
-        testCompile ("org.mockito:mockito-core:${mockitoVersion}"){
+        testImplementation project(":powermock-api:powermock-api-mockito2")
+        testImplementation ("org.mockito:mockito-core:${mockitoVersion}"){
             exclude group: 'net.bytebuddy', module: 'byte-buddy'
             exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
         }
@@ -43,11 +43,11 @@ project(":tests:java8:easymock-junit4") {
     description = "Tests for Easymock module with JUnit 4.x. and Java8."
 
     dependencies {
-        testCompile project(":powermock-api:powermock-api-easymock")
-        testCompile project(":powermock-modules:powermock-module-junit4")
-        testCompile("org.easymock:easymock:${easymockVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
-        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation project(":powermock-api:powermock-api-easymock")
+        testImplementation project(":powermock-modules:powermock-module-junit4")
+        testImplementation("org.easymock:easymock:${easymockVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
+        testImplementation("org.hamcrest:hamcrest-core:${hamcrestVersion}")
     }
 }
 
@@ -55,13 +55,13 @@ project(":tests:java8:mockito-junit4-agent") {
     description = "Tests for Mockito module with JUnit 4.x. and Java8."
 
     dependencies {
-        testCompile project(":powermock-api:powermock-api-mockito2")
-        testCompile ("org.mockito:mockito-core:${mockitoVersion}"){
+        testImplementation project(":powermock-api:powermock-api-mockito2")
+        testImplementation ("org.mockito:mockito-core:${mockitoVersion}"){
             exclude group: 'net.bytebuddy', module: 'byte-buddy'
             exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
         }
 
-        testCompile project(":powermock-modules:powermock-module-junit4-rule-agent")
+        testImplementation project(":powermock-modules:powermock-module-junit4-rule-agent")
     }
 
     def pathToAgent = project(":powermock-modules:powermock-module-javaagent").jar.outputs.files.getFiles().getAt(0)
@@ -75,15 +75,15 @@ project(":tests:java8:mockito-junit4-rule-xstream") {
     description = "Tests for Mockito module with JUnit 4.x, Java8 and rules-xstream."
 
     dependencies {
-        testCompile project(":powermock-modules:powermock-module-junit4-rule")
-        testCompile project(":powermock-classloading:powermock-classloading-xstream")
+        testImplementation project(":powermock-modules:powermock-module-junit4-rule")
+        testImplementation project(":powermock-classloading:powermock-classloading-xstream")
 
-        testCompile project(":powermock-api:powermock-api-mockito2")
-        testCompile ("org.mockito:mockito-core:${mockitoVersion}"){
+        testImplementation project(":powermock-api:powermock-api-mockito2")
+        testImplementation ("org.mockito:mockito-core:${mockitoVersion}"){
             exclude group: 'net.bytebuddy', module: 'byte-buddy'
             exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
         }
 
-        testCompile files(project(":tests:mockito:junit4").sourceSets.test.output)
+        testImplementation files(project(":tests:mockito:junit4").sourceSets.test.output)
     }
 }

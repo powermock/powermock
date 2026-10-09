@@ -42,6 +42,13 @@ public class ClassReplicaCreator {
     private static final String POWERMOCK_INSTANCE_DELEGATOR_FIELD_NAME = "powerMockInstanceDelegatorField";
     // Used to make each new replica class of a specific type unique.
     private static AtomicInteger counter = new AtomicInteger(0);
+    // On JDK 9+ CtClass#toClass(ClassLoader, ProtectionDomain) reflectively calls the JDK's
+    // ClassLoader#defineClass, which is blocked by the module system on JDK 17+ unless opened.
+    // CtClass#toClass(Class) avoids that by using java.lang.invoke.MethodHandles instead, but
+    // that codepath itself requires JDK 9+ (java.lang.Class#getModule), so it cannot be used
+    // unconditionally while this module still targets Java 8.
+    private static final boolean IS_JAVA8_OR_EARLIER =
+            System.getProperty("java.specification.version", "").startsWith("1.");
 
     public <T> Class<T> createClassReplica(Class<T> clazz) {
         if (clazz == null) {
@@ -60,7 +67,7 @@ public class ClassReplicaCreator {
                         code, newClass);
             }
 
-            return (Class<T>) newClass.toClass(this.getClass().getClassLoader(), this.getClass().getProtectionDomain());
+            return (Class<T>) defineClass(newClass);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -105,7 +112,7 @@ public class ClassReplicaCreator {
                 CtConstructor copy = CtNewConstructor.copy(ctConstructor, newClass, null);
                 newClass.addConstructor(copy);
             }
-            return (Class<T>) newClass.toClass(this.getClass().getClassLoader(), this.getClass().getProtectionDomain());
+            return (Class<T>) defineClass(newClass);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -117,6 +124,13 @@ public class ClassReplicaCreator {
      * methods adds a new field of type {@code delegator.getClass()} to the
      * replica class.
      */
+    private Class<?> defineClass(CtClass newClass) throws CannotCompileException {
+        if (IS_JAVA8_OR_EARLIER) {
+            return newClass.toClass(this.getClass().getClassLoader(), this.getClass().getProtectionDomain());
+        }
+        return newClass.toClass(this.getClass());
+    }
+
     private <T> void addDelegatorField(T delegator, final CtClass replicaClass) throws CannotCompileException {
         CtField f = CtField.make(String.format("private %s %s = null;", delegator.getClass().getName(),
                 POWERMOCK_INSTANCE_DELEGATOR_FIELD_NAME), replicaClass);
@@ -124,7 +138,13 @@ public class ClassReplicaCreator {
     }
 
     private <T> String generateReplicaClassName(final Class<T> clazz) {
-        return "replica." + clazz.getName() + "$$PowerMock" + counter.getAndIncrement();
+        // Note: the replica class must live in the same package (and be defined by the same
+        // class loader) as ClassReplicaCreator itself, because CtClass#toClass(Class) defines
+        // it via MethodHandles.Lookup.defineClass(byte[]), which requires the new class to be
+        // in the same runtime package as the lookup class (this class). Using a dot here would
+        // put the class in a different package, so the original class name is flattened with '$'.
+        return ClassReplicaCreator.class.getPackage().getName() + ".Replica$$" + clazz.getName().replace('.', '$')
+                + "$$PowerMock" + counter.getAndIncrement();
     }
 
     private void copyFields(CtClass originalClassAsCtClass, final CtClass newClass) throws CannotCompileException, NotFoundException {

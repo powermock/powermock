@@ -45,6 +45,7 @@ public class MockClassLoaderConfiguration {
         "jdk.*",
         "java.*",
         "javax.accessibility.*",
+        "javax.crypto.*",
         "sun.*",
         "org.junit.*",
         "org.testng.*",
@@ -66,6 +67,9 @@ public class MockClassLoaderConfiguration {
         "org.testng.",
         "org.easymock.",
         "net.sf.cglib.",
+        // EasyMock 5 generates class mocks with Byte Buddy (EasyMock 4 used its own repackaged cglib under org.easymock.);
+        // modifying Byte Buddy breaks its annotation-based dispatchers under @PrepareEverythingForTest
+        "net.bytebuddy.",
         "javassist.",
         "org.powermock.modules.junit4.internal.",
         "org.powermock.modules.junit4.legacy.internal.",

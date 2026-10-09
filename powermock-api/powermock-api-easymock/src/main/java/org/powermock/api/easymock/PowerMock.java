@@ -1265,6 +1265,21 @@ public class PowerMock extends MemberModifier {
     }
 
     /**
+     * A sealed class cannot be subclassed by a class mock any more than a final one (JDK 21 seals e.g.
+     * {@code java.net.InetAddress} and {@code java.io.Console}), so sealed system classes take the replica path too.
+     * {@code Class.isSealed()} exists from Java 17 on; earlier runtimes have no sealed classes.
+     */
+    private static boolean isSealed(Class<?> type) {
+        try {
+            return (Boolean) Class.class.getMethod("isSealed").invoke(type);
+        } catch (NoSuchMethodException e) {
+            return false;
+        } catch (Exception e) {
+            throw new IllegalStateException("Cannot determine whether " + type + " is sealed", e);
+        }
+    }
+
+    /**
      * Test if a object is a mock created by EasyMock or not.
      */
     private static boolean isEasyMocked(Object mock) {
@@ -1936,7 +1951,7 @@ public class PowerMock extends MemberModifier {
         T mock;
         if (type.isInterface()) {
             mock = control.createMock(type);
-        } else if (type.getName().startsWith("java.") && Modifier.isFinal(type.getModifiers())) {
+        } else if (type.getName().startsWith("java.") && (Modifier.isFinal(type.getModifiers()) || isSealed(type))) {
             Class<?> replicaType = createReplicaType(type, isStatic, constructorArgs);
             final Object replica = doCreateMock(replicaType, constructorArgs, control, methods);
             control = mockStrategy.createMockControl(replicaType);

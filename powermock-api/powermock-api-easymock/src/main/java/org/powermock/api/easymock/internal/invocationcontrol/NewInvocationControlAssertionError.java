@@ -13,6 +13,8 @@ public class NewInvocationControlAssertionError {
          * instance of MyClass has been created less or more times than 3.
          */
         String message = oldError.getMessage();
+        // EasyMock 5 prefixes every invocation with the mock's toString and " -> "; the substitute mock is internal
+        message = message.replace("EasyMock for interface " + InvocationSubstitute.class.getName() + " -> ", "");
         final String newSubsitutionMethodName = InvocationSubstitute.class.getDeclaredMethods()[0].getName();
         final String className = InvocationSubstitute.class.getSimpleName();
         message = message.replaceAll(className+"."+newSubsitutionMethodName, Matcher.quoteReplacement(type.getName()));

@@ -1,13 +1,13 @@
 configure(project.subprojects){ subproject ->
 
     dependencies {
-        testCompile project(":tests:utils")
+        testImplementation project(":tests:utils")
 
-        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
+        testImplementation("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
 
-        testCompile project(":powermock-api:powermock-api-mockito2")
-        testCompile ("org.mockito:mockito-core:${mockitoVersion}"){
+        testImplementation project(":powermock-api:powermock-api-mockito2")
+        testImplementation ("org.mockito:mockito-core:${mockitoVersion}"){
             exclude group: 'net.bytebuddy', module: 'byte-buddy'
             exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
         }
@@ -18,14 +18,14 @@ project(":tests:mockito:junit4") {
     description = "Tests for Mockito module with JUnit 4.x."
 
     dependencies {
-        testCompile project(":powermock-modules:powermock-module-junit4")
+        testImplementation project(":powermock-modules:powermock-module-junit4")
 
-        testCompile("junit:junit:${junitVersion}"){
+        testImplementation("junit:junit:${junitVersion}"){
             exclude group:'org.hamcrest', module:'hamcrest-core'
         }
 
-        testCompile ("org.jacoco:org.jacoco.core:${jacocoVersion}")
-        testCompile ("org.eclipse.jdt:core:${eclipseJdt}")
+        testImplementation ("org.jacoco:org.jacoco.core:${jacocoVersion}")
+        testImplementation ("org.eclipse.jdt:core:${eclipseJdt}")
     }
 
     test{
@@ -37,9 +37,9 @@ project(":tests:mockito:inline") {
     description = "Tests for Mockito 2 inline mock maker"
 
     dependencies {
-        testCompile project(":powermock-modules:powermock-module-junit4")
+        testImplementation project(":powermock-modules:powermock-module-junit4")
 
-        testCompile("junit:junit:${junitVersion}"){
+        testImplementation("junit:junit:${junitVersion}"){
             exclude group:'org.hamcrest', module:'hamcrest-core'
         }
     }
@@ -53,10 +53,10 @@ project(":tests:mockito:junit49") {
     description = "Tests for Mockito module with JUnit 4.9.x."
 
     dependencies {
-        testCompile project(":tests:utils")
-        testCompile project(":powermock-modules:powermock-module-junit4")
+        testImplementation project(":tests:utils")
+        testImplementation project(":powermock-modules:powermock-module-junit4")
 
-        testCompile("junit:junit:4.9"){
+        testImplementation("junit:junit:4.9"){
             exclude group:'org.hamcrest', module:'hamcrest-core'
         }
     }
@@ -67,13 +67,13 @@ project(":tests:mockito:junit4-agent"){
 
     dependencies {
 
-        testCompile project(":powermock-modules:powermock-module-junit4-rule-agent")
+        testImplementation project(":powermock-modules:powermock-module-junit4-rule-agent")
 
-        testCompile("junit:junit:${junitVersion}"){
+        testImplementation("junit:junit:${junitVersion}"){
             exclude group:'org.hamcrest', module:'hamcrest-core'
         }
 
-        testCompile files(project(":tests:mockito:junit4").sourceSets.test.output)
+        testImplementation files(project(":tests:mockito:junit4").sourceSets.test.output)
     }
 
     def pathToAgent = project(":powermock-modules:powermock-module-javaagent").jar.outputs.files.getFiles().getAt(0)
@@ -88,14 +88,14 @@ project(":tests:mockito:junit4-rule-objenesis") {
     description = "Tests for PowerMock Rule using Objenesis Deepcloning."
 
     dependencies {
-        testCompile project(":powermock-modules:powermock-module-junit4-rule")
-        testCompile project(":powermock-classloading:powermock-classloading-objenesis")
+        testImplementation project(":powermock-modules:powermock-module-junit4-rule")
+        testImplementation project(":powermock-classloading:powermock-classloading-objenesis")
 
-        testCompile("junit:junit:${junitVersion}"){
+        testImplementation("junit:junit:${junitVersion}"){
             exclude group:'org.hamcrest', module:'hamcrest-core'
         }
 
-        testCompile files(project(":tests:mockito:junit4").sourceSets.test.output)
+        testImplementation files(project(":tests:mockito:junit4").sourceSets.test.output)
     }
 }
 
@@ -103,14 +103,14 @@ project(":tests:mockito:junit4-rule-xstream") {
     description = "Tests for PowerMock Rule using Xstream Deepcloning."
 
     dependencies {
-        testCompile project(":powermock-modules:powermock-module-junit4-rule")
-        testCompile project(":powermock-classloading:powermock-classloading-xstream")
+        testImplementation project(":powermock-modules:powermock-module-junit4-rule")
+        testImplementation project(":powermock-classloading:powermock-classloading-xstream")
 
-        testCompile("junit:junit:${junitVersion}"){
+        testImplementation("junit:junit:${junitVersion}"){
             exclude group:'org.hamcrest', module:'hamcrest-core'
         }
 
-        testCompile files(project(":tests:mockito:junit4").sourceSets.test.output)
+        testImplementation files(project(":tests:mockito:junit4").sourceSets.test.output)
     }
 }
 
@@ -118,15 +118,15 @@ project(":tests:mockito:junit4-delegate") {
     description = "Tests for PowerMock JUnit4 runner-delegate and Mockito."
 
     dependencies {
-        testCompile project(":powermock-modules:powermock-module-junit4")
+        testImplementation project(":powermock-modules:powermock-module-junit4")
 
-        testCompile("junit:junit:${junitVersion}"){
+        testImplementation("junit:junit:${junitVersion}"){
             exclude group:'org.hamcrest', module:'hamcrest-core'
         }
 
-        testCompile("pl.pragmatists:JUnitParams:1.0.5")
+        testImplementation("pl.pragmatists:JUnitParams:1.0.5")
 
-        testCompile files(project(":tests:mockito:junit4").sourceSets.test.output)
+        testImplementation files(project(":tests:mockito:junit4").sourceSets.test.output)
     }
 
     test{
@@ -143,12 +143,12 @@ project(":tests:mockito:testng"){
     description = "Tests for Mockito module with TestNG."
 
     dependencies {
-        testCompile(project(":powermock-core"))
-        testCompile(project(":powermock-modules:powermock-module-testng"))
+        testImplementation(project(":powermock-core"))
+        testImplementation(project(":powermock-modules:powermock-module-testng"))
 
-        testCompile("org.testng:testng:${testngVersion}")
+        testImplementation("org.testng:testng:${testngVersion}")
 
-        testCompile files(project(":tests:mockito:junit4").sourceSets.test.output)
+        testImplementation files(project(":tests:mockito:junit4").sourceSets.test.output)
     }
 
     test{

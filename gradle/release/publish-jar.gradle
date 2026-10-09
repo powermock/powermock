@@ -1,7 +1,1 @@
 apply from: "${gradleScriptDir}/publishing/publish-maven.gradle"
-
-tasks.bintrayUpload.mustRunAfter "build"
-
-bintray {
-    publications = project.ext.bintrayPublications
-}

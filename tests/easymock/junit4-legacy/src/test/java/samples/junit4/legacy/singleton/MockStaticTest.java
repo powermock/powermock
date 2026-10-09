@@ -58,7 +58,7 @@ public class MockStaticTest {
 			StaticService.say("world");
 			fail("Should throw AssertionError!");
 		} catch (AssertionError e) {
-			assertEquals("\n  Unexpected method call StaticService.say(\"world\"):", e.getMessage());
+			assertEquals("\n  Unexpected method call EasyMock for class samples.singleton.StaticService -> StaticService.say(\"world\")", e.getMessage());
 		}
 	}
 
@@ -79,7 +79,7 @@ public class MockStaticTest {
 			StaticService.sayFinal("world");
 			fail("Should throw AssertionError!");
 		} catch (AssertionError e) {
-			assertEquals("\n  Unexpected method call StaticService.sayFinal(\"world\"):", e.getMessage());
+			assertEquals("\n  Unexpected method call EasyMock for class samples.singleton.StaticService -> StaticService.sayFinal(\"world\")", e.getMessage());
 		}
 	}
 

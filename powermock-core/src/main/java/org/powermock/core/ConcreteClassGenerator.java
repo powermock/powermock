@@ -34,6 +34,13 @@ public class ConcreteClassGenerator {
 
 	// Used to make each new subclass of a specific type unique.
 	private static AtomicInteger counter = new AtomicInteger(0);
+	// On JDK 9+ CtClass#toClass(ClassLoader, ProtectionDomain) reflectively calls the JDK's
+	// ClassLoader#defineClass, which is blocked by the module system on JDK 17+ unless opened.
+	// CtClass#toClass(Class) avoids that by using java.lang.invoke.MethodHandles instead, but
+	// that codepath itself requires JDK 9+ (java.lang.Class#getModule), so it cannot be used
+	// unconditionally while this module still targets Java 8.
+	private static final boolean IS_JAVA8_OR_EARLIER =
+			System.getProperty("java.specification.version", "").startsWith("1.");
 
 	public Class<?> createConcreteSubClass(Class<?> clazz) {
 		if (clazz == null) {
@@ -64,10 +71,17 @@ public class ConcreteClassGenerator {
 			if (!hasInheritableConstructor(originalClassAsCtClass)) {
 				return null;
 			}
-			return newClass.toClass(this.getClass().getClassLoader(), this.getClass().getProtectionDomain());
+			return defineClass(newClass);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private Class<?> defineClass(CtClass newClass) throws javassist.CannotCompileException {
+		if (IS_JAVA8_OR_EARLIER) {
+			return newClass.toClass(this.getClass().getClassLoader(), this.getClass().getProtectionDomain());
+		}
+		return newClass.toClass(this.getClass());
 	}
 
 	private boolean hasInheritableConstructor(CtClass cls) throws NotFoundException {
@@ -93,6 +107,12 @@ public class ConcreteClassGenerator {
 	}
 
 	private <T> String generateClassName(final Class<T> clazz) {
-		return "subclass." + clazz.getName() + "$$PowerMock" + counter.getAndIncrement();
+		// Note: the subclass must live in the same package (and be defined by the same class
+		// loader) as ConcreteClassGenerator itself, because CtClass#toClass(Class) defines it via
+		// MethodHandles.Lookup.defineClass(byte[]), which requires the new class to be in the
+		// same runtime package as the lookup class (this class). Using a dot here would put the
+		// class in a different package, so the original class name is flattened with '$'.
+		return ConcreteClassGenerator.class.getPackage().getName() + ".Subclass$$" + clazz.getName().replace('.', '$')
+				+ "$$PowerMock" + counter.getAndIncrement();
 	}
 }

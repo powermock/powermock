@@ -1,10 +1,3 @@
-ext {
-    bintrayRepo = 'maven'
-    bintrayAutoPublish = true
-    mavenCentralSync = false
-    bintrayPublications = ['javaLibrary']
-}
-
 jar {
     manifest.attributes["Created-By"] =
             "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
@@ -27,9 +20,4 @@ javadoc {
     options.addStringOption('-quiet')
 
     failOnError = false
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
 }

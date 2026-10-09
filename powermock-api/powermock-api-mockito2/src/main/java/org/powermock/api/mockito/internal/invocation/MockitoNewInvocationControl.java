@@ -88,8 +88,7 @@ public class MockitoNewInvocationControl<T> implements NewInvocationControl<Ongo
 		try {
 			Mockito.verifyNoMoreInteractions(substitute);
 		} catch (MockitoAssertionError e) {
-			InvocationControlAssertionError.updateErrorMessageForVerifyNoMoreInteractions(e);
-			throw e;
+			throw InvocationControlAssertionError.updateErrorMessageForVerifyNoMoreInteractions(e);
 		}
 	}
 }

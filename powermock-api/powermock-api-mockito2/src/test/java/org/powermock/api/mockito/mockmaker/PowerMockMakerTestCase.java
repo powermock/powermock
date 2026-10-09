@@ -32,7 +32,9 @@ import org.powermock.api.mockito.ConfigurationTestUtils;
 import org.powermock.configuration.GlobalConfiguration;
 import org.powermock.reflect.Whitebox;
 
+import java.io.File;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
 
@@ -52,7 +54,12 @@ public class PowerMockMakerTestCase {
         ClassLoader currentCL = Thread.currentThread().getContextClassLoader();
     
         try {
-            ClassLoader classLoader = new URLClassLoader(((URLClassLoader) currentCL).getURLs(), null);
+            final String[] classPath = System.getProperty("java.class.path").split(File.pathSeparator);
+            final URL[] urls = new URL[classPath.length];
+            for (int i = 0; i < classPath.length; i++) {
+                urls[i] = new File(classPath[i]).toURI().toURL();
+            }
+            ClassLoader classLoader = new URLClassLoader(urls, null);
             Thread.currentThread().setContextClassLoader(classLoader);
         
             final Class<?> jUnitCoreClass = classLoader.loadClass(JUnitCore.class.getName());
@@ -86,8 +93,8 @@ public class PowerMockMakerTestCase {
         }
         
         @Override
-        public <T> T createMock(final MockCreationSettings<T> settings, final MockHandler handler) {
-            return (T) mock;
+        public Object createMock(final MockCreationSettings settings, final MockHandler handler) {
+            return mock;
         }
         
         @Override

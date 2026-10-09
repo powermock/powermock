@@ -72,8 +72,7 @@ public class MockHandlerAdaptor<T> {
                 throw e;
             }
         } catch (MockitoAssertionError e) {
-            InvocationControlAssertionError.updateErrorMessageForMethodInvocation(e);
-            throw e;
+            throw InvocationControlAssertionError.updateErrorMessageForMethodInvocation(e);
         }
     }
     

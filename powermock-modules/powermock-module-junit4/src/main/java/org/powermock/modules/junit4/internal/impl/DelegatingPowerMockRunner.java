@@ -98,10 +98,10 @@ implements PowerMockJUnitRunnerDelegate, Filterable {
             @Override
             public Runner call() throws Exception {
                 try {
-                    return Whitebox.invokeConstructor(
-                            testClass.isAnnotationPresent(PowerMockRunnerDelegate.class)
+                    return (Runner) Whitebox.invokeConstructor(
+                            (Class<? extends Runner>) (testClass.isAnnotationPresent(PowerMockRunnerDelegate.class)
                             ? testClass.getAnnotation(PowerMockRunnerDelegate.class).value()
-                            : PowerMockRunnerDelegate.DefaultJUnitRunner.class,
+                            : PowerMockRunnerDelegate.DefaultJUnitRunner.class),
                             new Class[] {Class.class},
                             new Object[] {testClass});
                 } catch (ConstructorNotFoundException rootProblem) {

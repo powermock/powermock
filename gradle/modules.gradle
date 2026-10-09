@@ -3,7 +3,6 @@ def publishableModules = allprojects - rootProject - project(":powermock-api") -
 configure(publishableModules) { project ->
     apply from: "${gradleScriptDir}/java-module.gradle"
     apply from: "${gradleScriptDir}/publishing/publishable-module.gradle"
-    apply from: "${gradleScriptDir}/publishing/publish.gradle"
 }
 
 def skippedTasksForUnpublishableModules = [
@@ -12,7 +11,6 @@ def skippedTasksForUnpublishableModules = [
     'javadoc',
     'javadocJar',
     'sourcesJar',
-    'bintrayUpload',
     'install'
 ]
 
@@ -48,7 +46,7 @@ if (project.hasProperty('checkJava6Compatibility') && !System.getenv("SKIP_RELEA
     configure(publishableModules) { project ->
         project.apply plugin: 'ru.vyarus.animalsniffer'
         project.dependencies {
-            signature 'org.codehaus.mojo.signature:java16:1.0@signature'
+            signature 'org.codehaus.mojo.signature:java18:1.0@signature'
         }
     }
 }
@@ -57,15 +55,15 @@ project(":powermock-reflect") {
     description = "Various utilities for accessing internals of a class."
 
     dependencies {
-        compile("org.objenesis:objenesis:${objenesisVersion}")
-        compile("net.bytebuddy:byte-buddy:${byteBuddy}")
-        compile("net.bytebuddy:byte-buddy-agent:${byteBuddy}")
-        testCompile("junit:junit:${junitVersion}") {
+        api("org.objenesis:objenesis:${objenesisVersion}")
+        api("net.bytebuddy:byte-buddy:${byteBuddy}")
+        api("net.bytebuddy:byte-buddy-agent:${byteBuddy}")
+        testImplementation("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
-        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
-        testCompile("cglib:cglib-nodep:${cglibVersion}")
+        testImplementation("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
+        testImplementation("cglib:cglib-nodep:${cglibVersion}")
     }
 }
 
@@ -73,20 +71,20 @@ project(":powermock-core") {
     description = "Various utilities for accessing internals of a class."
 
     dependencies {
-        compile(project(":powermock-reflect"))
-        compile("org.javassist:javassist:${javassistVersion}")
-        compile("net.bytebuddy:byte-buddy:${byteBuddy}")
-        compile("net.bytebuddy:byte-buddy-agent:${byteBuddy}")
+        api(project(":powermock-reflect"))
+        api("org.javassist:javassist:${javassistVersion}")
+        api("net.bytebuddy:byte-buddy:${byteBuddy}")
+        api("net.bytebuddy:byte-buddy-agent:${byteBuddy}")
 
-        testCompile("junit:junit:${junitVersion}") {
+        testImplementation("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
-        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
-        testCompile("com.github.stefanbirkner:system-rules:${systemRulesVersion}")
-        testCompile(project(":tests:utils"))
+        testImplementation("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
+        testImplementation("com.github.stefanbirkner:system-rules:${systemRulesVersion}")
+        testImplementation(project(":tests:utils"))
 
-        testCompile("org.mockito:mockito-core:${mockitoVersion}"){
+        testImplementation("org.mockito:mockito-core:${mockitoVersion}"){
             exclude group: 'net.bytebuddy', module: 'byte-buddy'
             exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
         }
@@ -103,13 +101,13 @@ project(":powermock-api:powermock-api-support") {
     description = "PowerMock API Utility classes."
 
     dependencies {
-        compile(project(":powermock-reflect"))
-        compile(project(":powermock-core"))
-        testCompile("junit:junit:${junitVersion}") {
+        api(project(":powermock-reflect"))
+        api(project(":powermock-core"))
+        testImplementation("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
-        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
+        testImplementation("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
     }
 }
 
@@ -117,15 +115,15 @@ project(":powermock-api:powermock-api-easymock") {
     description = "PowerMock API for EasyMock."
 
     dependencies {
-        compile(project(":powermock-api:powermock-api-support"))
-        compile("cglib:cglib-nodep:${cglibVersion}")
-        compile("org.easymock:easymock:${easymockVersion}")
+        api(project(":powermock-api:powermock-api-support"))
+        api("cglib:cglib-nodep:${cglibVersion}")
+        api("org.easymock:easymock:${easymockVersion}")
 
-        testCompile("junit:junit:${junitVersion}") {
+        testImplementation("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
-        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
+        testImplementation("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
     }
 }
 
@@ -136,19 +134,19 @@ project(":powermock-api:powermock-api-mockito2"){
 
     dependencies {
 
-        compile(project(":powermock-api:powermock-api-support"))
-        compile("org.mockito:mockito-core:${mockitoVersion}"){
+        api(project(":powermock-api:powermock-api-support"))
+        api("org.mockito:mockito-core:${mockitoVersion}"){
             exclude group: 'net.bytebuddy', module: 'byte-buddy'
             exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
         }
 
-        testCompile("junit:junit:${junitVersion}") {
+        testImplementation("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
-        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
+        testImplementation("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
 
-        testCompile(project(":tests:utils"))
+        testImplementation(project(":tests:utils"))
     }
 }
 
@@ -162,14 +160,14 @@ project(":powermock-classloading:powermock-classloading-base") {
     description = "Utilities for loading and executing classes."
 
     dependencies {
-        compile(project(":powermock-api:powermock-api-support"))
-        compile(project(":powermock-reflect"))
-        compile(project(":powermock-core"))
-        testCompile("junit:junit:${junitVersion}") {
+        api(project(":powermock-api:powermock-api-support"))
+        api(project(":powermock-reflect"))
+        api(project(":powermock-core"))
+        testImplementation("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
-        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
+        testImplementation("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
     }
 }
 
@@ -177,12 +175,12 @@ project(":powermock-classloading:powermock-classloading-objenesis") {
     description = "Performs classloader deep-cloning using Objenesis."
 
     dependencies {
-        compile(project(":powermock-classloading:powermock-classloading-base"))
-        testCompile("junit:junit:${junitVersion}") {
+        api(project(":powermock-classloading:powermock-classloading-base"))
+        testImplementation("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
-        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
+        testImplementation("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
     }
 }
 
@@ -190,13 +188,13 @@ project(":powermock-classloading:powermock-classloading-xstream") {
     description = "Performs classloader deep-cloning using X-Stream."
 
     dependencies {
-        compile(project(":powermock-classloading:powermock-classloading-base"))
-        compile("com.thoughtworks.xstream:xstream:${xstreamVersion}")
-        testCompile("junit:junit:${junitVersion}") {
+        api(project(":powermock-classloading:powermock-classloading-base"))
+        api("com.thoughtworks.xstream:xstream:${xstreamVersion}")
+        testImplementation("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
-        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
+        testImplementation("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
     }
 }
 
@@ -210,12 +208,12 @@ project(":powermock-modules:powermock-module-javaagent") {
     description = "PowerMock Java agent support."
 
     dependencies {
-        compile(project(":powermock-core"))
-        testCompile("junit:junit:${junitVersion}") {
+        api(project(":powermock-core"))
+        testImplementation("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
-        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
+        testImplementation("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
     }
 
     jar {
@@ -235,13 +233,13 @@ project(":powermock-modules:powermock-module-junit4-common") {
     description = "PowerMock support module for all versions of JUnit 4.x."
 
     dependencies {
-        compile(project(":powermock-reflect"))
-        compile(project(":powermock-core"))
-        compile("junit:junit:${junitVersion}") {
+        api(project(":powermock-reflect"))
+        api(project(":powermock-core"))
+        api("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
-        compile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
+        api("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
     }
 }
 
@@ -249,13 +247,13 @@ project(":powermock-modules:powermock-module-junit4") {
     description = "PowerMock support module for JUnit 4.x."
 
     dependencies {
-        compile(project(":powermock-modules:powermock-module-junit4-common"))
-        compile("junit:junit:${junitVersion}") {
+        api(project(":powermock-modules:powermock-module-junit4-common"))
+        api("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
-        compile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
-        testCompile("org.easymock:easymock:${easymockVersion}")
+        api("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
+        testImplementation("org.easymock:easymock:${easymockVersion}")
     }
 }
 
@@ -263,14 +261,14 @@ project(":powermock-modules:powermock-module-junit4-legacy") {
     description = "PowerMock support module for JUnit 4.0-4.3."
 
     dependencies {
-        compile(project(":powermock-modules:powermock-module-junit4-common")) {
+        api(project(":powermock-modules:powermock-module-junit4-common")) {
             exclude group: 'junit', module: 'junit'
         }
-        compile("junit:junit:4.3") {
+        api("junit:junit:4.3") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
-        compile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
+        api("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
     }
 }
 
@@ -279,16 +277,16 @@ project(":powermock-modules:powermock-module-junit4-rule") {
     description = "PowerMock support module for JUnit 4.x rules."
 
     dependencies {
-        compile(project(":powermock-core"))
-        compile(project(":powermock-modules:powermock-module-junit4-common"))
+        api(project(":powermock-core"))
+        api(project(":powermock-modules:powermock-module-junit4-common"))
 
         provided(project(":powermock-classloading:powermock-classloading-base"))
 
-        compile("junit:junit:${junitVersion}") {
+        api("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
-        compile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
+        api("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
     }
 }
 
@@ -297,14 +295,14 @@ project(":powermock-modules:powermock-module-junit4-rule-agent") {
     description = "PowerMock support module for JUnit 4.x rules with Java agent"
 
     dependencies {
-        compile(project(":powermock-core"))
-        compile(project(":powermock-modules:powermock-module-javaagent"))
+        api(project(":powermock-core"))
+        api(project(":powermock-modules:powermock-module-javaagent"))
 
-        compile("junit:junit:${junitVersion}") {
+        api("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
-        compile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
+        api("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
     }
 }
 
@@ -312,11 +310,11 @@ project(":powermock-modules:powermock-module-testng-common") {
     description = "PowerMock module for TestNG. Common classes"
 
     dependencies {
-        compile(project(":powermock-reflect"))
-        compile(project(":powermock-core"))
-        compile("org.testng:testng:${testngVersion}")
-        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
+        api(project(":powermock-reflect"))
+        api(project(":powermock-core"))
+        api("org.testng:testng:${testngVersion}")
+        testImplementation("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
     }
 }
 
@@ -324,11 +322,11 @@ project(":powermock-modules:powermock-module-testng") {
     description = "PowerMock module for TestNG."
 
     dependencies {
-        compile(project(":powermock-core"))
-        compile(project(":powermock-modules:powermock-module-testng-common"))
-        compile("org.testng:testng:${testngVersion}")
-        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
+        api(project(":powermock-core"))
+        api(project(":powermock-modules:powermock-module-testng-common"))
+        api("org.testng:testng:${testngVersion}")
+        testImplementation("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
     }
 }
 
@@ -336,12 +334,21 @@ project(":powermock-modules:powermock-module-testng-agent") {
     description = "PowerMock module for TestNG with using Javaagent."
 
     dependencies {
-        compile(project(":powermock-core"))
-        compile(project(":powermock-modules:powermock-module-testng-common"))
-        compile(project(":powermock-modules:powermock-module-javaagent"))
-        compile("org.testng:testng:${testngVersion}")
-        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
+        api(project(":powermock-core"))
+        api(project(":powermock-modules:powermock-module-testng-common"))
+        api(project(":powermock-modules:powermock-module-javaagent"))
+        api("org.testng:testng:${testngVersion}")
+        testImplementation("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
+    }
+}
+
+project(":powermock-modules:powermock-module-junit5") {
+    description = "PowerMock module for JUnit Jupiter (JUnit 5)."
+
+    dependencies {
+        api(project(":powermock-core"))
+        api("org.junit.jupiter:junit-jupiter-api:5.14.4")
     }
 }
 

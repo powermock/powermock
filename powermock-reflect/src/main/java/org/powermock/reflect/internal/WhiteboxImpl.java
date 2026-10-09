@@ -39,6 +39,7 @@ import org.powermock.reflect.internal.proxy.UnproxiedType;
 import org.powermock.reflect.matching.FieldMatchingStrategy;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -80,6 +81,48 @@ public class WhiteboxImpl {
     private static ConcurrentMap<Class, Method[]> allClassMethodsCache = new ConcurrentHashMap<Class, Method[]>();
 
     /**
+     * {@code AccessibleObject.trySetAccessible()} (Java 9+), looked up reflectively so the code stays
+     * Java 8 compatible. {@code null} on Java 8, where every object can be made accessible.
+     */
+    private static final Method TRY_SET_ACCESSIBLE = findTrySetAccessible();
+
+    private static Method findTrySetAccessible() {
+        try {
+            return AccessibleObject.class.getMethod("trySetAccessible");
+        } catch (NoSuchMethodException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Makes {@code object} accessible if the module system allows it. On Java 9+ a member of a JDK class in
+     * a package that is not opened to PowerMock stays inaccessible instead of throwing
+     * {@code InaccessibleObjectException}; everything else behaves like {@code setAccessible(true)}.
+     *
+     * @return whether the object is now accessible
+     */
+    private static boolean trySetAccessible(AccessibleObject object) {
+        if (TRY_SET_ACCESSIBLE == null) {
+            object.setAccessible(true);
+            return true;
+        }
+        try {
+            return (Boolean) TRY_SET_ACCESSIBLE.invoke(object);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException("AccessibleObject.trySetAccessible is public", e);
+        } catch (InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            if (cause instanceof Error) {
+                throw (Error) cause;
+            }
+            throw new IllegalStateException(cause);
+        }
+    }
+
+    /**
      * Convenience method to get a method from a class type without having to
      * catch the checked exceptions otherwise required. These exceptions are
      * wrapped as runtime exceptions.
@@ -114,14 +157,17 @@ public class WhiteboxImpl {
             for (Method method : methodsToTraverse) {
                 if (checkIfParameterTypesAreSame(method.isVarArgs(), parameterTypes, method.getParameterTypes())) {
                     foundMethods.add(method);
-                    if (foundMethods.size() == 1) {
-                        method.setAccessible(true);
-                    }
                 }
 
             }
             if (foundMethods.size() == 1) {
-                return foundMethods.get(0);
+                // Only make the method accessible once we know it is the single match: an eager
+                // setAccessible on the first candidate could throw InaccessibleObjectException for
+                // a non-public JDK method (e.g. Object.finalize()) even though a later candidate in
+                // the same class would have made this a "too many methods found" case instead.
+                Method foundMethod = foundMethods.get(0);
+                trySetAccessible(foundMethod);
+                return foundMethod;
             } else if (foundMethods.size() > 1) {
                 break;
             }
@@ -207,7 +253,7 @@ public class WhiteboxImpl {
             final Field[] declaredField = thisType.getDeclaredFields();
             for (Field field : declaredField) {
                 if (fieldName.equals(field.getName())) {
-                    field.setAccessible(true);
+                    trySetAccessible(field);
                     return field;
                 }
             }
@@ -404,7 +450,7 @@ public class WhiteboxImpl {
 
         final Field field = getField(fieldName, where);
         try {
-            field.set(object, value);
+            setField(object, value, field);
         } catch (Exception e) {
             throw new RuntimeException("Internal Error: Failed to set field in method setInternalState.", e);
         }
@@ -426,7 +472,7 @@ public class WhiteboxImpl {
     public static <T> T getInternalState(Object object, String fieldName) {
         Field foundField = findFieldInHierarchy(object, fieldName);
         try {
-            return (T) foundField.get(object);
+            return getFieldValue(foundField, object);
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Internal error: Failed to get field in method getInternalState.", e);
         }
@@ -501,7 +547,10 @@ public class WhiteboxImpl {
         if (foundField == null) {
             strategy.notFound(originalStartClass, !isClass(object));
         }
-        foundField.setAccessible(true);
+        // Best effort only: a JDK field in a package not opened to PowerMock stays
+        // inaccessible instead of aborting the lookup with an InaccessibleObjectException.
+        // Reading/writing such a field falls back to sun.misc.Unsafe, see getFieldValue and setField.
+        trySetAccessible(foundField);
         return foundField;
     }
 
@@ -575,7 +624,7 @@ public class WhiteboxImpl {
     public static <T> T getInternalState(Object object, Class<T> fieldType) {
         Field foundField = findFieldInHierarchy(object, new AssignableToFieldTypeMatcherStrategy(fieldType));
         try {
-            return (T) foundField.get(object);
+            return getFieldValue(foundField, object);
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Internal error: Failed to get field in method getInternalState.", e);
         }
@@ -600,7 +649,7 @@ public class WhiteboxImpl {
         }
 
         try {
-            return (T) findFieldOrThrowException(fieldType, where).get(object);
+            return getFieldValue(findFieldOrThrowException(fieldType, where), object);
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Internal error: Failed to get field in method getInternalState.", e);
         }
@@ -627,8 +676,7 @@ public class WhiteboxImpl {
         Field field = null;
         try {
             field = where.getDeclaredField(fieldName);
-            field.setAccessible(true);
-            return (T) field.get(object);
+            return getFieldValue(field, object);
         } catch (NoSuchFieldException e) {
             throw new FieldNotFoundException("Field '" + fieldName + "' was not found in class " + where.getName()
                                                      + ".");
@@ -1505,7 +1553,7 @@ public class WhiteboxImpl {
             });
             for (Method method : declaredMethods) {
                 if(!"finalize".equals(method.getName())) {
-                    method.setAccessible(true);
+                    trySetAccessible(method);
                     methods.add(method);
                 }
             }
@@ -1529,7 +1577,7 @@ public class WhiteboxImpl {
         Set<Method> methods = new LinkedHashSet<Method>();
 
         for (Method method : clazz.getMethods()) {
-            method.setAccessible(true);
+            trySetAccessible(method);
             methods.add(method);
         }
         return methods.toArray(new Method[0]);
@@ -1553,7 +1601,7 @@ public class WhiteboxImpl {
         while (thisType != null) {
             final Field[] declaredFields = thisType.getDeclaredFields();
             for (Field field : declaredFields) {
-                field.setAccessible(true);
+                trySetAccessible(field);
                 fields.add(field);
             }
             thisType = thisType.getSuperclass();
@@ -1753,7 +1801,7 @@ public class WhiteboxImpl {
         for (Method method : allMethods) {
             for (String methodName : methodNames) {
                 if (method.getName().equals(methodName)) {
-                    method.setAccessible(true);
+                    trySetAccessible(method);
                     methodsToMock.add(method);
                 }
             }
@@ -2262,7 +2310,7 @@ public class WhiteboxImpl {
         Field field = null;
         try {
             field = where.getDeclaredField(fieldName);
-            field.setAccessible(true);
+            trySetAccessible(field);
         } catch (NoSuchFieldException e) {
             throw new FieldNotFoundException("Field '" + fieldName + "' was not found in class " + where.getName()
                                                      + ".");
@@ -2283,7 +2331,7 @@ public class WhiteboxImpl {
         }
         Field field = null;
         for (Field currentField : where.getDeclaredFields()) {
-            currentField.setAccessible(true);
+            trySetAccessible(currentField);
             if (currentField.getType().equals(fieldType)) {
                 field = currentField;
                 break;
@@ -2313,10 +2361,13 @@ public class WhiteboxImpl {
 
     private static void setStaticFieldUsingUnsafe(final Field field, final Object newValue) {
         try {
-            field.setAccessible(true);
+            boolean isAccessible = trySetAccessible(field);
             int fieldModifiersMask = field.getModifiers();
             boolean isFinalModifierPresent = (fieldModifiersMask & Modifier.FINAL) == Modifier.FINAL;
-            if (isFinalModifierPresent) {
+            // A final field, or a JDK field in a package not opened to PowerMock, cannot be
+            // written through Field.set: fall back to sun.misc.Unsafe, which bypasses both
+            // the final check and the module system's accessibility check.
+            if (isFinalModifierPresent || !isAccessible) {
                 AccessController.doPrivileged(new PrivilegedAction<Object>() {
                     @Override
                     public Object run() {
@@ -2344,10 +2395,13 @@ public class WhiteboxImpl {
 
     private static void setFieldUsingUnsafe(final Field field, final Object object, final Object newValue) {
         try {
-            field.setAccessible(true);
+            boolean isAccessible = trySetAccessible(field);
             int fieldModifiersMask = field.getModifiers();
             boolean isFinalModifierPresent = (fieldModifiersMask & Modifier.FINAL) == Modifier.FINAL;
-            if (isFinalModifierPresent) {
+            // A final field, or a JDK field in a package not opened to PowerMock, cannot be
+            // written through Field.set: fall back to sun.misc.Unsafe, which bypasses both
+            // the final check and the module system's accessibility check.
+            if (isFinalModifierPresent || !isAccessible) {
                 AccessController.doPrivileged(new PrivilegedAction<Object>() {
                     @Override
                     public Object run() {
@@ -2399,6 +2453,49 @@ public class WhiteboxImpl {
             unsafe.putChar(base, offset, ((Character) newValue));
         } else {
             unsafe.putObject(base, offset, newValue);
+        }
+    }
+
+    /**
+     * Reads the value of {@code field} from {@code object}. If the field cannot be made
+     * accessible (a JDK field in a package not opened to PowerMock), it is read through
+     * sun.misc.Unsafe instead, which bypasses the module system's accessibility check.
+     */
+    @SuppressWarnings("unchecked")
+    private static <T> T getFieldValue(Field field, Object object) throws IllegalAccessException {
+        if (trySetAccessible(field)) {
+            return (T) field.get(object);
+        }
+        try {
+            Unsafe unsafe = getUnsafe();
+            boolean isStatic = Modifier.isStatic(field.getModifiers());
+            long offset = isStatic ? unsafe.staticFieldOffset(field) : unsafe.objectFieldOffset(field);
+            Object base = isStatic ? unsafe.staticFieldBase(field) : object;
+            return (T) getFieldUsingUnsafe(base, field.getType(), offset, unsafe);
+        } catch (NoSuchFieldException e) {
+            throw new IllegalAccessException(e.getMessage());
+        }
+    }
+
+    private static Object getFieldUsingUnsafe(Object base, Class type, long offset, Unsafe unsafe) {
+        if (type == Integer.TYPE) {
+            return unsafe.getInt(base, offset);
+        } else if (type == Short.TYPE) {
+            return unsafe.getShort(base, offset);
+        } else if (type == Long.TYPE) {
+            return unsafe.getLong(base, offset);
+        } else if (type == Byte.TYPE) {
+            return unsafe.getByte(base, offset);
+        } else if (type == Boolean.TYPE) {
+            return unsafe.getBoolean(base, offset);
+        } else if (type == Float.TYPE) {
+            return unsafe.getFloat(base, offset);
+        } else if (type == Double.TYPE) {
+            return unsafe.getDouble(base, offset);
+        } else if (type == Character.TYPE) {
+            return unsafe.getChar(base, offset);
+        } else {
+            return unsafe.getObject(base, offset);
         }
     }
 

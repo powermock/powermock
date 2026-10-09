@@ -1,7 +1,0 @@
-bintray {
-    pkg {
-        repo = project.ext.bintrayRepo
-    }
-}
-
-

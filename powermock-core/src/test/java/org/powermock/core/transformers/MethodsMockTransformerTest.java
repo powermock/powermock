@@ -77,7 +77,7 @@ public class MethodsMockTransformerTest extends AbstractBaseMockTransformerTest 
         
         WhiteboxImpl.invokeMethod(instance, "voidPrivateMethod", "name");
         
-        assertThat(WhiteboxImpl.getInternalState(instance, "lname"))
+        assertThat((Object) WhiteboxImpl.getInternalState(instance, "lname"))
             .as("Field name is not set")
             .isNull();
         
@@ -96,7 +96,7 @@ public class MethodsMockTransformerTest extends AbstractBaseMockTransformerTest 
         
         WhiteboxImpl.invokeMethod(instance, "voidMethod", "name", "field", 100d);
         
-        assertThat(WhiteboxImpl.getInternalState(instance, "field"))
+        assertThat((Object) WhiteboxImpl.getInternalState(instance, "field"))
             .as("Field name is not set")
             .isNull();
         
@@ -117,7 +117,7 @@ public class MethodsMockTransformerTest extends AbstractBaseMockTransformerTest 
         
         WhiteboxImpl.invokeMethod(instance, "finalVoidMethod", "name", "field", 100d);
         
-        assertThat(WhiteboxImpl.getInternalState(instance, "field"))
+        assertThat((Object) WhiteboxImpl.getInternalState(instance, "field"))
             .as("Field name is not set")
             .isNull();
         
@@ -138,7 +138,7 @@ public class MethodsMockTransformerTest extends AbstractBaseMockTransformerTest 
         final String fieldValue = RandomString.make(10);
         WhiteboxImpl.invokeMethod(instance, "finalVoidMethod", "name", fieldValue, 100d);
         
-        assertThat(WhiteboxImpl.getInternalState(instance, "field"))
+        assertThat((Object) WhiteboxImpl.getInternalState(instance, "field"))
             .as("Field name is not set")
             .isEqualTo(fieldValue);
         
@@ -315,7 +315,7 @@ public class MethodsMockTransformerTest extends AbstractBaseMockTransformerTest 
         assertThat(methodCalls())
             .isNot(registered().forMethod(SYNTHETIC_METHOD_NAME));
         
-        assertThat(WhiteboxImpl.getInternalState(clazz, "syntheticMethodIsCalled"))
+        assertThat((Object) WhiteboxImpl.getInternalState(clazz, "syntheticMethodIsCalled"))
             .isEqualTo(true);
     }
     

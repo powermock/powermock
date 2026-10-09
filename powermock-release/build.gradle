@@ -1,5 +1,4 @@
 apply from: "${gradleScriptDir}/release/fullJars.gradle"
-apply from: "${gradleScriptDir}/release/distZip.gradle"
 
 jar {
     enabled = false
@@ -23,7 +22,7 @@ project(":powermock-release:powermock-easymock") {
     ]
 
     dependencies {
-        runtime shadowDependencies
+        runtimeOnly shadowDependencies
     }
 
     shadowJar {
@@ -53,7 +52,7 @@ project(":powermock-release:powermock-mockito2") {
     ]
 
     dependencies {
-        runtime shadowDependencies
+        runtimeOnly shadowDependencies
     }
 
     shadowJar {
@@ -70,15 +69,15 @@ project(":powermock-release:powermock-easymock-junit") {
     description = "Single jar containing binaries for PowerMock core, JUnit and EasyMock modules."
 
     dependencies {
-        compile(project(path:":powermock-release:powermock-easymock", configuration: "shadow"))
-        compile("junit:junit:${junitVersion}") {
+        api(project(path:":powermock-release:powermock-easymock", configuration: "shadow"))
+        api("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
-        compile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        compile("org.easymock:easymock:${easymockVersion}")
-        compile("org.objenesis:objenesis:${objenesisVersion}")
-        compile("org.javassist:javassist:${javassistVersion}")
-        compile("cglib:cglib-nodep:${cglibVersion}")
+        api("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        api("org.easymock:easymock:${easymockVersion}")
+        api("org.objenesis:objenesis:${objenesisVersion}")
+        api("org.javassist:javassist:${javassistVersion}")
+        api("cglib:cglib-nodep:${cglibVersion}")
     }
 }
 
@@ -87,13 +86,13 @@ project(":powermock-release:powermock-easymock-testng") {
     description = "Single jar containing binaries for PowerMock core, TestNG and EasyMock modules."
 
     dependencies {
-        compile(project(path:":powermock-release:powermock-easymock", configuration: "shadow"))
-        compile("org.testng:testng:${testngVersion}")
-        compile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        compile("org.easymock:easymock:${easymockVersion}")
-        compile("org.objenesis:objenesis:${objenesisVersion}")
-        compile("org.javassist:javassist:${javassistVersion}")
-        compile("cglib:cglib-nodep:${cglibVersion}")
+        api(project(path:":powermock-release:powermock-easymock", configuration: "shadow"))
+        api("org.testng:testng:${testngVersion}")
+        api("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        api("org.easymock:easymock:${easymockVersion}")
+        api("org.objenesis:objenesis:${objenesisVersion}")
+        api("org.javassist:javassist:${javassistVersion}")
+        api("cglib:cglib-nodep:${cglibVersion}")
     }
 }
 
@@ -102,18 +101,18 @@ project(":powermock-release:powermock-mockito2-junit") {
     description = "Single jar containing binaries for PowerMock core, JUnit and Mockito modules."
 
     dependencies {
-        compile(project(path:":powermock-release:powermock-mockito2", configuration: "shadow"))
-        compile("junit:junit:${junitVersion}") {
+        api(project(path:":powermock-release:powermock-mockito2", configuration: "shadow"))
+        api("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
-        compile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        compile("org.mockito:mockito-core:${mockitoVersion}"){
+        api("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        api("org.mockito:mockito-core:${mockitoVersion}"){
             exclude group: 'net.bytebuddy', module: 'byte-buddy'
             exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
         }
-        compile("org.objenesis:objenesis:${objenesisVersion}")
-        compile("org.javassist:javassist:${javassistVersion}")
-        compile("cglib:cglib-nodep:${cglibVersion}")
+        api("org.objenesis:objenesis:${objenesisVersion}")
+        api("org.javassist:javassist:${javassistVersion}")
+        api("cglib:cglib-nodep:${cglibVersion}")
     }
 }
 
@@ -122,15 +121,15 @@ project(":powermock-release:powermock-mockito2-testng") {
     description = "Single jar containing binaries for PowerMock core, TestNG and Mockito modules."
 
     dependencies {
-        compile(project(path:":powermock-release:powermock-mockito2", configuration: "shadow"))
-        compile("org.testng:testng:${testngVersion}")
-        compile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        compile("org.mockito:mockito-core:${mockitoVersion}"){
+        api(project(path:":powermock-release:powermock-mockito2", configuration: "shadow"))
+        api("org.testng:testng:${testngVersion}")
+        api("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        api("org.mockito:mockito-core:${mockitoVersion}"){
             exclude group: 'net.bytebuddy', module: 'byte-buddy'
             exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
         }
-        compile("org.objenesis:objenesis:${objenesisVersion}")
-        compile("org.javassist:javassist:${javassistVersion}")
-        compile("cglib:cglib-nodep:${cglibVersion}")
+        api("org.objenesis:objenesis:${objenesisVersion}")
+        api("org.javassist:javassist:${javassistVersion}")
+        api("cglib:cglib-nodep:${cglibVersion}")
     }
 }

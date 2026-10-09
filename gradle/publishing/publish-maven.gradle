@@ -28,7 +28,7 @@ publishing.publications.all {
         }
 
         root.dependencies.'*'.findAll() {
-            it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
+            it.scope.text() == 'runtime' && project.configurations.api.allDependencies.find { dep ->
                 dep.name == it.artifactId.text()
             }
         }.each() {

@@ -1,20 +1,12 @@
 buildscript {
     repositories {
         mavenCentral()
-        jcenter()
-        maven {
-            url 'https://repo.spring.io/plugins-release'
-        }
         maven {
             url 'https://plugins.gradle.org/m2/'
         }
     }
     dependencies {
-        classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.7'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
-        classpath 'net.researchgate:gradle-release:2.4.0'
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
-        classpath 'org.shipkit:shipkit:2.3.4'
+        classpath 'com.github.johnrengelman:shadow:8.1.1'
         classpath 'ru.vyarus:gradle-animalsniffer-plugin:1.4.1'
     }
 }
@@ -22,18 +14,21 @@ buildscript {
 ext{
     gradleScriptDir = "${rootProject.projectDir}/gradle"
 
-    byteBuddy = "1.12.7"
-    easymockVersion = "4.0.1"
+    // Mockito 5 needs Java 11; JDK 8 builds stay on Mockito 4.3.1 with the Java-8-capable Byte Buddy
+    // that already covers JDK 21 class files (1.14.11, from the JDK 21 work in Lab 6).
+    java11 = JavaVersion.current().isJava11Compatible()
+    byteBuddy = java11 ? "1.17.7" : "1.14.11"
+    easymockVersion = "5.7.0"
     hamcrestVersion = "1.3"
     assertjVersion = "2.6.0"
     cglibVersion = "3.2.9"
     objenesisVersion = "3.2"
-    javassistVersion = "3.27.0-GA"
+    javassistVersion = "3.30.2-GA"
     junitVersion = "4.12"
     junitRulesVersion = "4.8.2"
     testngVersion = "6.9.10"
-    xstreamVersion = "1.4.10"
-    mockitoVersion = "4.3.1"
+    xstreamVersion = "1.4.21"
+    mockitoVersion = java11 ? "5.24.0" : "4.3.1"
     servletVersion = "2.5"
     jacocoVersion = "0.7.7.201606060606"
     eclipseJdt = "3.3.0-v_771"
@@ -41,7 +36,24 @@ ext{
     systemRulesVersion="1.18.0"
 }
 
-apply plugin: 'org.shipkit.java'
+// shipkit (Bintray-based release tooling, dead since Bintray shutdown) used to apply 'java' to all projects
+allprojects { apply plugin: 'java-library' }
+
+// Test JVMs on Java 9+ need two packages opened for the unnamed module (JDK 16+ denies illegal reflective
+// access by default; JDK 9-15 only warn). Measured on JDK 21 by dropping one open at a time (.lab/11_harden D_*):
+//   java.base/java.lang  ClassLoader.defineClass for javassist/cglib classes (MockClassLoaderTest, ProxyFrameworksTest,
+//                        EasyMock replicas of final system classes, PowerMock.isEasyMocked via cglib Enhancer)
+//   java.base/java.util  system-rules EnvironmentVariables (ConfigurationFactoryImplTest)
+// java.lang.reflect and java.desktop/java.awt.font, which the labs also opened, are not needed with EasyMock 5.
+// Java 8 has no module system and is left unchanged. Users of PowerMock on Java 17+ need the java.lang open too.
+if (JavaVersion.current().isJava9Compatible()) {
+    allprojects {
+        tasks.withType(Test).configureEach {
+            jvmArgs(['java.base/java.lang', 'java.base/java.util']
+                    .collect { "--add-opens=${it}=ALL-UNNAMED" })
+        }
+    }
+}
 
 description = 'PowerMock allows you to unit test code normally regarded as untestable.\n' +
         '        For instance it is possible to mock static methods, remove static initializers, allow mocking without dependency\n' +
@@ -53,16 +65,8 @@ description = 'PowerMock allows you to unit test code normally regarded as untes
 
 apply from: "${gradleScriptDir}/version.gradle"
 
-allprojects{
-    apply plugin: 'propdeps-idea'
-}
-
 apply from: "${gradleScriptDir}/modules.gradle"
 
 jar{
     enabled = false
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.10.2'
 }

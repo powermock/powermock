@@ -319,7 +319,12 @@ public class MockClassLoaderTest {
                 ClassPool cp = ClassPool.getDefault();
                 final CtClass ctClass = cp.makeClass("my.ABCTestClass");
                 classBytes = ctClass.toBytecode();
-                clazz = ctClass.toClass();
+                // define via own ClassLoader subclass: CtClass.toClass() needs reflective access to ClassLoader.defineClass
+                clazz = new ClassLoader(MockClassLoaderTest.class.getClassLoader()) {
+                    Class<?> define() {
+                        return defineClass(ctClass.getName(), classBytes, 0, classBytes.length);
+                    }
+                }.define();
             } catch (Exception e) {
                 throw new RuntimeException("Problem constructing custom class", e);
             }

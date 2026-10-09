@@ -76,7 +76,7 @@ public class PowerMockRunNotifierTest {
         replay(backendRunNotifierMock);
         method.invoke(new PowerMockRunNotifier(
                 backendRunNotifierMock,
-                EasyMock.<PowerMockTestNotifier, PowerMockTestNotifier>createNiceMock(PowerMockTestNotifier.class),
+                EasyMock.createNiceMock(PowerMockTestNotifier.class),
                 new Method[0]),
                 testData);
         verify(backendRunNotifierMock);

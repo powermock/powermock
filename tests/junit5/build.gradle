@@ -1,0 +1,17 @@
+// Lab 08 infrastructure (coordinator): JUnit Platform for the Jupiter acceptance tests.
+// Dependencies and test sources are added by the acceptance-test author.
+dependencies {
+    testImplementation project(":powermock-modules:powermock-module-junit5")
+    testImplementation project(":powermock-api:powermock-api-mockito2")
+    testImplementation project(":tests:utils")
+    testImplementation("org.mockito:mockito-core:${mockitoVersion}") {
+        exclude group: 'net.bytebuddy', module: 'byte-buddy'
+        exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
+    }
+    testImplementation("org.junit.jupiter:junit-jupiter:5.14.4")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.14.4")
+}
+
+test {
+    useJUnitPlatform()
+}

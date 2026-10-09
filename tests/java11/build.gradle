@@ -6,13 +6,13 @@ configure(project.subprojects) { subproject ->
 //    }
 
     dependencies {
-        testCompile("junit:junit:${junitVersion}") {
+        testImplementation("junit:junit:${junitVersion}") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
         }
-        testCompile("org.hamcrest:hamcrest-core:${hamcrestVersion}")
-        testCompile("org.assertj:assertj-core:${assertjVersion}")
+        testImplementation("org.hamcrest:hamcrest-core:${hamcrestVersion}")
+        testImplementation("org.assertj:assertj-core:${assertjVersion}")
 
-        testCompile files(project(":tests:mockito:junit4").sourceSets.test.output)
+        testImplementation files(project(":tests:mockito:junit4").sourceSets.test.output)
     }
 
     // TODO: uncomment the followings once JDK11 is supported
@@ -31,10 +31,10 @@ project(":tests:java11:mockito-junit4") {
     description = "Tests for Mockito module with JUnit 4.x. and Java11."
 
     dependencies {
-        testCompile project(":powermock-modules:powermock-module-junit4")
+        testImplementation project(":powermock-modules:powermock-module-junit4")
 
-        testCompile project(":powermock-api:powermock-api-mockito2")
-        testCompile ("org.mockito:mockito-core:${mockitoVersion}"){
+        testImplementation project(":powermock-api:powermock-api-mockito2")
+        testImplementation ("org.mockito:mockito-core:${mockitoVersion}"){
             exclude group: 'net.bytebuddy', module: 'byte-buddy'
             exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
         }

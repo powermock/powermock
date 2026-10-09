@@ -1,0 +1,6 @@
+// JDK 17 test run: exactly these --add-opens, nothing more (usage: ./gradlew test --init-script <this file>)
+allprojects {
+    tasks.withType(Test).configureEach {
+        jvmArgs(['java.base/java.lang', 'java.base/java.util', 'java.base/java.lang.reflect', 'java.desktop/java.awt.font'].collect { "--add-opens=${it}=ALL-UNNAMED" })
+    }
+}

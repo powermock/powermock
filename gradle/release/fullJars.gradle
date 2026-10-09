@@ -5,21 +5,14 @@ def fullJars = [
 
 configure(fullJars){ project ->
 
-    ext {
-        bintrayRepo = 'generic'
-        bintrayAutoPublish = true
-        mavenCentralSync = false
-    }
-
     repositories {
         mavenLocal()
         mavenCentral()
-        jcenter()
     }
 
     group = "org.powermock"
 
-    apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'com.github.johnrengelman.shadow'
 
     jar{
@@ -27,9 +20,9 @@ configure(fullJars){ project ->
     }
 
     shadowJar {
-        baseName = project.name
-        version = project.version
-        classifier = "full"
+        archiveBaseName = project.name
+        archiveVersion = project.version
+        archiveClassifier = "full"
 
         manifest.attributes["Created-By"] =
                 "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
@@ -48,6 +41,4 @@ configure(fullJars){ project ->
             })
         }
     }
-
-    apply from: "${gradleScriptDir}/release/publish-fullJar.gradle"
 }

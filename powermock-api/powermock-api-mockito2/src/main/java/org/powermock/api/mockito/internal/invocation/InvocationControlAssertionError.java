@@ -16,8 +16,8 @@
 package org.powermock.api.mockito.internal.invocation;
 
 import org.powermock.core.spi.support.InvocationSubstitute;
-import org.powermock.reflect.Whitebox;
 
+import java.lang.reflect.Constructor;
 import java.util.regex.Matcher;
 
 public class InvocationControlAssertionError {
@@ -29,7 +29,7 @@ public class InvocationControlAssertionError {
     private static final String UNDESIRED_INVOCATION_TEXT = " Undesired invocation:";
     private static final String POWER_MOCKITO_CLASS_NAME = "org.powermock.api.mockito.PowerMockito";
 
-    public static void updateErrorMessageForVerifyNoMoreInteractions(AssertionError errorToUpdate) {
+    public static AssertionError updateErrorMessageForVerifyNoMoreInteractions(AssertionError errorToUpdate) {
         /*
          * VerifyNoMoreInteractions failed, we need to update the error message.
          */
@@ -52,7 +52,7 @@ public class InvocationControlAssertionError {
 
         if (verifyNoMoreInteractionsInvocation == null) {
             // Something unexpected happened, just return
-            return;
+            return errorToUpdate;
         }
         String message = errorToUpdate.getMessage();
         StringBuilder builder = new StringBuilder();
@@ -63,17 +63,46 @@ public class InvocationControlAssertionError {
         builder.replace(startOfVerifyNoMoreInteractionsInvocation, endOfVerifyNoMoreInteractionsInvocation,
                         verifyNoMoreInteractionsInvocation);
         builder.delete(builder.indexOf("\n", endOfVerifyNoMoreInteractionsInvocation + 1), builder.lastIndexOf("\n"));
-        Whitebox.setInternalState(errorToUpdate, "detailMessage", builder.toString());
+        return withUpdatedMessage(errorToUpdate, builder.toString());
     }
 
-    public static void updateErrorMessageForMethodInvocation(AssertionError errorToUpdate) {
+    public static AssertionError updateErrorMessageForMethodInvocation(AssertionError errorToUpdate) {
         /*
          * We failed to verify the new substitution mock. This happens when, for
          * example, the user has done something like
          * whenNew(MyClass.class).thenReturn(myMock).times(3) when in fact an
          * instance of MyClass has been created less or more times than 3.
          */
-        Whitebox.setInternalState(errorToUpdate, "detailMessage", "\n" + changeMessageContent(errorToUpdate.getMessage()));
+        return withUpdatedMessage(errorToUpdate, "\n" + changeMessageContent(errorToUpdate.getMessage()));
+    }
+
+    /**
+     * Builds a new {@link AssertionError} of the exact same runtime type as {@code errorToUpdate} but
+     * with an updated message, preserving the stack trace and cause.
+     * <p>
+     * We used to mutate the private {@code Throwable.detailMessage} field via reflection
+     * ({@code Whitebox.setInternalState}), but the module system blocks that on JDK 9+ unless the
+     * JVM is launched with extra module-opening flags for {@code java.base/java.lang}. Constructing a
+     * fresh instance via the class's own {@code (String)} constructor avoids touching any JDK-internal
+     * field, so it works the same way on every JDK version with no extra flags at all.
+     */
+    private static AssertionError withUpdatedMessage(AssertionError errorToUpdate, String newMessage) {
+        AssertionError replacement = null;
+        try {
+            Constructor<?> constructor = errorToUpdate.getClass().getDeclaredConstructor(String.class);
+            constructor.setAccessible(true);
+            replacement = (AssertionError) constructor.newInstance(newMessage);
+        } catch (ReflectiveOperationException | ClassCastException ignored) {
+            // Fall back to a plain AssertionError below.
+        }
+        if (replacement == null) {
+            replacement = new AssertionError(newMessage);
+        }
+        replacement.setStackTrace(errorToUpdate.getStackTrace());
+        if (errorToUpdate.getCause() != null) {
+            replacement.initCause(errorToUpdate.getCause());
+        }
+        return replacement;
     }
 
     public static void throwAssertionErrorForNewSubstitutionFailure(AssertionError oldError, Class<?> type) {

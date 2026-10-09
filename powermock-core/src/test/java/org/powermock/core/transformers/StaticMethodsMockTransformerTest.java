@@ -60,7 +60,7 @@ public class StaticMethodsMockTransformerTest extends AbstractBaseMockTransforme
         
         WhiteboxImpl.invokeMethod(clazz, "voidMethod", "name", "field", 100d);
         
-        assertThat(WhiteboxImpl.getInternalState(clazz, "field"))
+        assertThat((Object) WhiteboxImpl.getInternalState(clazz, "field"))
             .as("Field name is not set")
             .isNull();
         
@@ -78,7 +78,7 @@ public class StaticMethodsMockTransformerTest extends AbstractBaseMockTransforme
         final String expectedFieldValue = "field";
         WhiteboxImpl.invokeMethod(clazz, "voidMethod", "name", expectedFieldValue, 100d);
         
-        assertThat(WhiteboxImpl.getInternalState(clazz, "field"))
+        assertThat((Object) WhiteboxImpl.getInternalState(clazz, "field"))
             .as("Field name is not set")
             .isEqualTo(expectedFieldValue);
         

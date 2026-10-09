@@ -1,0 +1,13 @@
+#!/bin/bash
+# Runs the static harness rules on the staged change; rejects the commit on any FAIL.
+out=$(harness/verify.sh --fast --cached 2>&1); rc=$?
+log=$(git config harness.log)
+if [ -n "$log" ]; then
+  { echo "=== $(date '+%F %T') branch=$(git rev-parse --abbrev-ref HEAD) head=$(git rev-parse --short HEAD) tree=$(git write-tree) rc=$rc"
+    [ $rc = 0 ] || echo "$out"; } >> "$log"
+fi
+if [ $rc != 0 ]; then
+  echo "$out"
+  echo "pre-commit: commit rejected by harness (harness/verify.sh --fast). Fix the violations above; see harness/README.md."
+  exit 1
+fi

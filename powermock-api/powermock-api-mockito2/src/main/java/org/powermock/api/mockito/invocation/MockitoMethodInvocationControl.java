@@ -126,8 +126,7 @@ public class MockitoMethodInvocationControl<T> implements MethodInvocationContro
             Mockito.verifyNoMoreInteractions(getMockHandlerAdaptor().getMock());
         } catch (MockitoAssertionError e) {
             //TODO replace this dirty hack
-            InvocationControlAssertionError.updateErrorMessageForVerifyNoMoreInteractions(e);
-            throw e;
+            throw InvocationControlAssertionError.updateErrorMessageForVerifyNoMoreInteractions(e);
         } catch (Exception e) {
             throw new RuntimeException("PowerMock internal error", e);
         }

@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.powermock.configuration.Configuration;
 import org.powermock.configuration.ConfigurationFactory;
 import org.powermock.configuration.GlobalConfiguration;
+import org.powermock.configuration.MockitoConfiguration;
 import org.powermock.configuration.PowerMockConfiguration;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 
@@ -77,6 +78,9 @@ public class PowerMockIgnorePackagesExtractorImplTest {
         GlobalConfiguration.setConfigurationFactory(new ConfigurationFactory() {
             @Override
             public <T extends Configuration<T>> T create(final Class<T> configurationType) {
+                if (configurationType == MockitoConfiguration.class) {
+                    return (T) new MockitoConfiguration();
+                }
                 PowerMockConfiguration powerMockConfiguration = new PowerMockConfiguration();
                 
                 powerMockConfiguration.setGlobalIgnore(globalIgnore);

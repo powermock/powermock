@@ -77,6 +77,6 @@ public class SimpleMixTest {
 
         when(System.currentTimeMillis()).thenReturn(2000L);
 
-        assertEquals(2, Whitebox.invokeMethod(tested, "getValue"));
+        assertEquals(2, (Object) Whitebox.invokeMethod(tested, "getValue"));
     }
 }
